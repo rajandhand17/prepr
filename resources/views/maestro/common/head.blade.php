@@ -42,3 +42,4 @@
 <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/dropzone/min/dropzone.min.css'}}">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">

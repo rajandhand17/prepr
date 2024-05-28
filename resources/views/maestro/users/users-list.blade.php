@@ -49,56 +49,68 @@
 </section>
 <!-- /.content -->
 @stop
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @section('scripts')
-{!! $html->scripts() !!}
+    
+    {!! $html->scripts() !!}
+    
+    <script>
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
 
-<script>
-    function deleteUser(url) {
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    },
-                    success: function (result) {
-                        Swal.fire(
-                            'Deleted!',
-                            result.message,
-                            'success'
-                        );
-                        setTimeout(
-                        function () {
-                            window.location.reload(true);
-                        }, 1500);
-                    },
-                    error: function (error) {
-                        Swal.fire(
-                            'Error!',
-                            'An error occurred while deleting the user.',
-                            'error'
-                        );
-                    }
-                });
-            }else {
-                Swal.fire(
-                    'Canceled!',
-                    'You are safe , Record is not deleted!',
-                    'error'
-                );
-            }
-        });
-    }
-</script>
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+    </script>
+
+    <script>
+        function deleteUser(url) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function (result) {
+                            Swal.fire(
+                                'Deleted!',
+                                result.message,
+                                'success'
+                            );
+                            setTimeout(
+                            function () {
+                                window.location.reload(true);
+                            }, 1500);
+                        },
+                        error: function (error) {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while deleting the user.',
+                                'error'
+                            );
+                        }
+                    });
+                }else {
+                    Swal.fire(
+                        'Canceled!',
+                        'You are safe , Record is not deleted!',
+                        'error'
+                    );
+                }
+            });
+        }
+    </script>
 @endsection

@@ -29,14 +29,14 @@ class MaestroUsersController extends Controller
                         })
                         ->editColumn('status', static function (User $user) {
                             if ($user->status === 'active') {
-                                $html = "<span class='label label-success' >Active</span>";
+                                $html = "<span class='badge badge-success'>Success</span>";
                             } else {
-                                $html = "<span class='label label-danger' >Deactive</span>";
+                                $html = "<span class='badge badge-danger' >Deactive</span>";
                             }
                             return $html;
                         })
                         ->addColumn('action', static function (User $user) {
-                            return '<a href="javascript:void(0)" class="mr-10 viewUser" data-id="' . $user->id . '"><i class="fa fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="' . route('users.edit', ['user' => $user->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\'' . route('users.destroy', ['user' => $user->id]) . '\')"><i class="far fa-calendar-times"></i></a>';
+                            return '<a style="padding-left:50px" class="mr-10" href="' . route('users.show', ['user' => $user->id]) . '"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="' . route('users.edit', ['user' => $user->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\'' . route('users.destroy', ['user' => $user->id]) . '\')"><i class="fas fa-trash"></i></a>';
                         })
                         ->addIndexColumn()
                         ->rawColumns(['status', 'action'])
@@ -94,7 +94,12 @@ class MaestroUsersController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $user = MaestroUsersHelper::getUserById($id);
+            return view('maestro.users.users-view', compact('user'));
+        } catch (Exception $e) {
+            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     /**
