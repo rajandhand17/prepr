@@ -3,6 +3,9 @@
 namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -25,7 +28,6 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
-
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -49,6 +51,9 @@ class OrganizationResource extends JsonResource
             'liked'                        => $this->liked(),
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
+            'labs'                         => LabResource::collection($this->labs),
+            'challenges'                   => ChallengeResource::collection($this->challenges_count),
+            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
