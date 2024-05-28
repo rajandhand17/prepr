@@ -174,7 +174,7 @@ class UserSkillsService
                                 $skills = new stdClass();
                                 $skills->skill_id = $dbSkill->id;
                                 $checkSkillExistsOrNot=self::checkUserSkillExists($skills);
-                                if($checkSkillExistsOrNot->count()>0){
+                                if($checkSkillExistsOrNot->count()==0){
                                     $response = self::addSingleSkill($skills);
                                 }
                             }
