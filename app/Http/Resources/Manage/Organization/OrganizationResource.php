@@ -59,7 +59,7 @@ class OrganizationResource extends JsonResource
             'organization_people'          => MemberManagementResource::collection($this->members),
             'labs'                         => LabResource::collection($this->labs),
             'challenges'                   => ChallengeResource::collection($this->challenges_count),
-            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count)
+            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
         ];
     }
 }
