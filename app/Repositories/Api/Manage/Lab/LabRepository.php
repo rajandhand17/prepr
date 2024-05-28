@@ -6,6 +6,8 @@ use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\Manage\AirmeetEventService;
 use App\Services\Manage\AIService;
+use App\Services\Manage\CampusConnectOpportunityService;
+use App\Services\Manage\CampusConnectStoryService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -14,6 +16,7 @@ use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
 use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\OrganizationService;
 use App\Services\SkillService;
 use DB;
 use Exception;
@@ -34,7 +37,11 @@ class LabRepository implements LabInterface
     private $aiService;
     private $airmeetEventService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, AirmeetEventService $airmeetEventService)
+    private $campusConnectOpportunityService;
+    private $campusConnectStoryService;
+    private $organizationService;
+
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -48,6 +55,9 @@ class LabRepository implements LabInterface
         $this->durationService = $durationService;
         $this->aiService = $aiService;
         $this->airmeetEventService = $airmeetEventService;
+        $this->campusConnectOpportunityService = $campusConnectOpportunityService;
+        $this->campusConnectStoryService = $campusConnectStoryService;
+        $this->organizationService = $organizationService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -90,6 +100,7 @@ class LabRepository implements LabInterface
     {
         try {
             $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
+                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
                 $createLab = $this->labService->createLab($request, $upload_profile_image);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
@@ -110,6 +121,30 @@ class LabRepository implements LabInterface
                     );
                 }
 
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($createLab, 'id'),
+                        data_get($createLab, 'slug', '-'),
+                        Lab::class,
+                        $request->all(),
+                        $organization,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($createLab, 'id'),
+                        data_get($createLab, 'slug', '-'),
+                        Lab::class,
+                        $request->all(),
+                        $organization,
+                    );
+                }
+
                 return [
                     'createdLab'                  => $createLab,
                     'createdLabAddress'           => $createdLabAddress,
@@ -119,6 +154,8 @@ class LabRepository implements LabInterface
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
                     'createdEvent'                => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
+                    'campusConnectOpportunity'    => $campusConnectOpportunity,
+                    'campusConnectStory'          => $campusConnectStory,
                 ];
             });
             if (
@@ -129,7 +166,9 @@ class LabRepository implements LabInterface
                 $createdLab['createdLabExternalLinks'] &&
                 $createdLab['createdLabAchievement'] &&
                 $createdLab['createdLabAssociations'] &&
-                $createdLab['createdEvent']
+                $createdLab['createdEvent'] &&
+                $createdLab['campusConnectOpportunity'] &&
+                $createdLab['campusConnectStory']
             ) {
                 DB::commit();
 
@@ -149,6 +188,7 @@ class LabRepository implements LabInterface
     {
         try {
             $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
+                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
                 $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updateLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updateLab->id);
@@ -171,6 +211,30 @@ class LabRepository implements LabInterface
                     );
                 }
 
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($updateLab, 'id'),
+                        data_get($updateLab, 'slug', '-'),
+                        Lab::class,
+                        $request->all(),
+                        $organization,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($updateLab, 'id'),
+                        data_get($updateLab, 'slug', '-'),
+                        Lab::class,
+                        $request->all(),
+                        $organization,
+                    );
+                }
+
                 return [
                     'updatedLab'                  => $updateLab,
                     'updatedLabAddress'           => $updatedLabAddress,
@@ -180,6 +244,8 @@ class LabRepository implements LabInterface
                     'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
                     'updatedLabAssociations'      => $updatedLabAssociations,
                     'updatedEvent'                => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
+                    'campusConnectOpportunity'    => $campusConnectOpportunity,
+                    'campusConnectStory'          => $campusConnectStory,
                 ];
             });
             if (
@@ -189,7 +255,9 @@ class LabRepository implements LabInterface
                 $updatedLab['updatedLabTagAssociations'] &&
                 $updatedLab['updatedLabExternalLinks'] &&
                 $updatedLab['updatedLabAchievement'] &&
-                $updatedLab['updatedLabAssociations']
+                $updatedLab['updatedLabAssociations'] &&
+                $updatedLab['campusConnectOpportunity'] &&
+                $updatedLab['campusConnectStory']
             ) {
                 DB::commit();
 

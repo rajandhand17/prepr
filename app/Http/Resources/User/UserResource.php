@@ -28,14 +28,14 @@ class UserResource extends JsonResource
         }
 
         $organization_details = null;
-        if ($this->verify_flag) {
+        $fetchOrganization = OrganizationService::getOrganizationExistBasedOnId($this->preferred_organization);
+        if (!$fetchOrganization) {
             $fetchOrganization = OrganizationService::fetchOrganizationBasedOnUserId($this->id);
-            if ($fetchOrganization) {
-                $organization_details['id'] = $fetchOrganization->uuid;
-                $organization_details['title'] = $fetchOrganization->title;
-                $organization_details['slug'] = $fetchOrganization->slug;
-                $organization_details['plan_name'] = 'seed_plan_yearly';
-            }
+        }
+        if ($fetchOrganization) {
+            $organization_details['id'] = $fetchOrganization->uuid;
+            $organization_details['title'] = $fetchOrganization->title;
+            $organization_details['slug'] = $fetchOrganization->slug;
         }
         $memberManagement = new MemberManagementService();
 

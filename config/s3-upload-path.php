@@ -19,4 +19,5 @@ return [
     'certificate'               => 'certificate/upload/',
     'discussion'                => 'discussion/upload',
     'chat'                      => 'chat/upload',
+    'campus_connect'            => 'campus_connect/upload',
 ];

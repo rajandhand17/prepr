@@ -134,6 +134,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/lab-marketplace/')->middleware('api')->group(base_path('routes/v1/manage/lab-marketplace.php'));
         Route::prefix('api/v1/manage/challenge-template/')->middleware('api')->group(base_path('routes/v1/manage/challenge-template.php'));
         Route::prefix('api/v1/manage/airmeet/')->middleware('api')->group(base_path('routes/v1/manage/airmeet.php'));
+        Route::prefix('api/v1/manage/campus-connect/')->middleware('api')->group(base_path('routes/v1/campus-connect.php'));
     }
 
     protected function mapPublicRoutes()
