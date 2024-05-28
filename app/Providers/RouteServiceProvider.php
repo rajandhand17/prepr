@@ -30,6 +30,9 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             $this->mapApiRoutes();
             $this->mapWebRoutes();
+            $this->mapMaestroAuthRoutes();
+            $this->mapMaestroDashboardRoutes();
+            $this->mapMaestroUsersRoutes();
 
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
@@ -168,5 +171,20 @@ class RouteServiceProvider extends ServiceProvider
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
+    }
+
+    public function mapMaestroDashboardRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard/dashboard-route.php'));
+    }
+
+    public function mapMaestroAuthRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/auth/auth-route.php'));
+    }
+
+    public function mapMaestroUsersRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/users/users-route.php'));
     }
 }
