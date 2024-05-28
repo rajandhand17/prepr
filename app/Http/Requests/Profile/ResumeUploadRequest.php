@@ -25,7 +25,7 @@ class ResumeUploadRequest extends FormRequest
     {
         $base_rules = [
 
-            'resume'          => 'required|mimes:pdf,doc,docx,txt|max:1024',
+            'resume' => 'required|file|max:1024|mimeTypes:application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain',
         ];
 
         return $base_rules;
@@ -36,7 +36,7 @@ class ResumeUploadRequest extends FormRequest
         return [
             'file.required'             => __('responses.required_field'),
             'file.max'                  => __('responses.mimes_image_max'),
-            'file.mimes'                => __('responses.files_mimes_image'),
+            'file.mimeTypes'                => __('responses.files_mimes_image'),
         ];
     }
 

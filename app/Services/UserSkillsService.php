@@ -161,13 +161,9 @@ class UserSkillsService
         }
     }
 
-    public static function addUserSkillsByUsingResumeData($data, $user)
+    public static function addUserSkillsByUsingResumeData($data)
     {
         try {
-            $deleteExistingSkills = self::deleteUserSkillsBasedOnUserId($user->id);
-            if (!$deleteExistingSkills) {
-                return false;
-            }
             foreach ($data['data']['skills']['overall_skills'] as $skillName) {
                 $skillResponse = WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($skillName));
                 if (is_array($skillResponse)) {
@@ -177,9 +173,9 @@ class UserSkillsService
                             if ($dbSkill) {
                                 $skills = new stdClass();
                                 $skills->skill_id = $dbSkill->id;
-                                $response = self::addSingleSkill($skills);
-                                if (!$response && $response !== 'already') {
-                                    return false;
+                                $checkSkillExistsOrNot=self::checkUserSkillExists($skills);
+                                if($checkSkillExistsOrNot->count()>0){
+                                    $response = self::addSingleSkill($skills);
                                 }
                             }
                             break;

@@ -142,7 +142,7 @@ class ProfileRepository implements ProfileInterface
             if (!empty($getResumeData)) {
                 if ($getResumeData['data']) {
                     $getResume = DB::transaction(function () use ($getResumeData, $user) {
-                        $userSKills = $this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData, $user);
+                        $userSKills = $this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData);
                         $userExperience = $this->userExperienceService->addUserExperienceByUsingResumeData($getResumeData, $user);
 
                         return [
