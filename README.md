@@ -64,3 +64,5 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+React Api Project Setup:- https://preprme.atlassian.net/wiki/spaces/DOC/pages/2533654531/React+Backend+API+-+Project+Setup
