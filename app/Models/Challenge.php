@@ -76,6 +76,11 @@ class Challenge extends Model
         return $this->hasMany(ChallengeSkillsGroupsStack::class, 'challenge_id', 'id')->where('type', '2');
     }
 
+    public function jobs()
+    {
+        return $this->hasMany(ChallengeJobTitles::class, 'challenge_id', 'id');
+    }
+
     public function tags()
     {
         return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '0');

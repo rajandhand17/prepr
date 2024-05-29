@@ -83,8 +83,8 @@ class ChallengeResource extends JsonResource
         }
 
         if ($this->jobs) {
-            $associatedJobs = $this->jobs->pluck('foreign_id');
-            $jobs = JobTitleService::getJobBasedOnIdArray($associatedJobs)->pluck('title', 'uuid');
+            $associatedJobs = $this->jobs->pluck('job_title_id');
+            $jobs = JobTitleService::getJobBasedOnIds($associatedJobs)->pluck('title', 'id');
         }
 
         if ($this->skill_groups) {
