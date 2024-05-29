@@ -8,6 +8,7 @@ use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Log;
@@ -298,6 +299,7 @@ class ChallengeService
             $challenge->is_auto_created = $is_auto_created;
             $challenge->is_ai_created = $is_ai_created;
             $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+            $challenge->allow_winner_change = '0';
             $challenge->save();
 
             return $challenge;
@@ -429,6 +431,7 @@ class ChallengeService
                 $challenge->is_open = $is_open;
                 $challenge->is_auto_created = $is_auto_created;
                 $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+                $challenge->allow_winner_change = '0';
                 $challenge->save();
 
                 return $challenge;
@@ -534,6 +537,7 @@ class ChallengeService
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
+            $clonedChallenge->allow_winner_change = '0';
             $clonedChallenge->save();
 
             return $clonedChallenge;
@@ -751,6 +755,18 @@ class ChallengeService
                 return $challenge_details;
             }
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateWinnerSelectionTimeLine($challengeData)
+    {
+        try {
+            $challengeData->winner_select_date = date('Y-m-d H:i:s', strtotime(Carbon::now()->toDateTimeString()));
+            $challengeData->save();
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

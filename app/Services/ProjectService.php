@@ -626,4 +626,13 @@ class ProjectService
             return false;
         }
     }
+
+    public static function getProjectBasedOnUuid($projectUuid)
+    {
+        try {
+            return Project::where('uuid', $projectUuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

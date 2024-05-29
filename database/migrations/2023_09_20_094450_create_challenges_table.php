@@ -33,6 +33,8 @@ return new class() extends Migration {
             $table->enum('is_pre_built', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->enum('is_open', ['0', '1', '2'])->comment('0 -> open,1 -> close, 3 -> completed')->default('0');
             $table->enum('is_auto_created', ['0', '1'])->comment('0->no,1->yes')->default('0');
+            $table->enum('allow_winner_change', ['0', '1'])->comment('Winner change is allowed, 0->yes ,1->no')->default('0');
+            $table->string('winner_select_date', 255)->nullable()->comment('Date of start challenge winner selection');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->timestamps();
