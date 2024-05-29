@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Duration;
+use Illuminate\Database\Seeder;
 
 class DurationsTableSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class DurationsTableSeeder extends Seeder
             ['title' => '4 -8 hours', 'min_minutes' => 241, 'max_minutes' => 480],
             ['title' => '1 -2 Days', 'min_minutes' => 1441, 'max_minutes' => 2880],
             ['title' => '3 -5 Days', 'min_minutes' => 4321, 'max_minutes' => 7200],
-            ['title' => '5+ Days', 'min_minutes' => 7201, 'max_minutes' => null]
+            ['title' => '5+ Days', 'min_minutes' => 7201, 'max_minutes' => null],
         ];
 
         foreach ($durations as $duration) {
@@ -28,7 +28,7 @@ class DurationsTableSeeder extends Seeder
                 ['title' => $duration['title']],
                 [
                     'min_minutes' => $duration['min_minutes'],
-                    'max_minutes' => $duration['max_minutes']
+                    'max_minutes' => $duration['max_minutes'],
                 ]
             );
         }

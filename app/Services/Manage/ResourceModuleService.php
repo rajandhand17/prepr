@@ -221,7 +221,8 @@ class ResourceModuleService
                     $privacy = null;
             }
 
-            function getIsAiCreatedValue($isAiCreatedInput) {
+            function getIsAiCreatedValue($isAiCreatedInput)
+            {
                 if ($isAiCreatedInput === 'yes' || $isAiCreatedInput === true) {
                     return config('constants.challenge_ai_created.yes');
                 } elseif ($isAiCreatedInput === 'no' || $isAiCreatedInput === false) {
@@ -232,13 +233,12 @@ class ResourceModuleService
             }
 
             $is_ai_created = config('constants.challenge_ai_created.no');
-                        
+
             if ($request->is_ai_created !== null) {
                 $is_ai_created = getIsAiCreatedValue($request->is_ai_created);
             } elseif (isset($request->go1_course['is_ai_created'])) {
                 $is_ai_created = getIsAiCreatedValue($request->go1_course['is_ai_created']);
             }
-            
 
             $go1Course = $is_go1 ? $request->go1_course : null;
             $title = $is_go1 ? data_get($go1Course, 'title') : $request->title;
