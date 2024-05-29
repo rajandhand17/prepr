@@ -557,7 +557,7 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }
-    
+
     public function selectWinner($slug, SelectChallengeWinnerRequest $request)
     {
         try {
@@ -586,6 +586,7 @@ class ChallengeController extends AppBaseController
             if ($selectChallengeWinner == true) {
                 return $this->sendResponse([], __('responses.challenge_winner_selected_successfully'), 200);
             }
+
             return $this->sendError(__('responses.challenge_winner_selected_not_successfully'), 400);
         } catch (Exception $e) {
             return $this->sendError(__('responses.server_failed'), 500);

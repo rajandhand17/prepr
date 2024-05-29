@@ -643,6 +643,7 @@ class ChallengeRepository implements ChallengeInterface
                 if ($challengeData->winner_select_date === null) {
                     $updateWinnerSelectionTimeLine = $this->challengeService->updateWinnerSelectionTimeLine($challengeData);
                 }
+
                 return [
                     'addWinnerAchievement'          => $addWinnerAchievement,
                     'updateWinnerSelectionTimeLine' => $updateWinnerSelectionTimeLine,

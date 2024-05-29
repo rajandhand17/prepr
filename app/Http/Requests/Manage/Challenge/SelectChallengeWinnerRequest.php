@@ -8,7 +8,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use Intervention\Image\Exception\NotFoundException;
 
 class SelectChallengeWinnerRequest extends FormRequest
@@ -26,7 +25,6 @@ class SelectChallengeWinnerRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
-
     public function rules(): array
     {
         $challengeId = ChallengeService::getChallengeBasedOnSlug(request()->route('slug'))->id;
@@ -36,9 +34,9 @@ class SelectChallengeWinnerRequest extends FormRequest
         $requiredWinnerCount = ChallengeAchievement::where(['challenge_id' => $challengeId, 'achievement_type' => '1'])->count();
 
         $base_rules = [
-            'project_id'                => ['array', 'required', 'size:' . $requiredWinnerCount, 'distinct'],
+            'project_id'                => ['array', 'required', 'size:'.$requiredWinnerCount, 'distinct'],
             'project_id.*'              => ['exists:projects,uuid'],
-            'winner_achievement_id'     => ['array', 'required', 'size:' . $requiredWinnerCount, 'distinct'],
+            'winner_achievement_id'     => ['array', 'required', 'size:'.$requiredWinnerCount, 'distinct'],
             'winner_achievement_id.*'   => [
                 'required', 'integer',
                 Rule::exists('challenge_achievements', 'id')->where(function ($query) {
@@ -73,7 +71,6 @@ class SelectChallengeWinnerRequest extends FormRequest
             }
         });
     }
-
 
     public function messages()
     {
