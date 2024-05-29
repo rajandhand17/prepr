@@ -52,6 +52,7 @@ class AchievementService
     {
         try {
             if (isset($request->project_id, $request->winner_achievement_id) && is_array($request->project_id) && is_array($request->winner_achievement_id) && count($request->project_id) === count($request->winner_achievement_id)) {
+                $deleteExistingAchievements = UserAchievement::where(['module_parent_id' => $challengeData->id, 'achievement_type' => config('constants.user_achievement_type.winner_award')])->delete();
                 foreach ($request->project_id as $key => $value) {
                     $projectId = $request['project_id'][$key];
                     $winnerAchievementId = $request['winner_achievement_id'][$key];
