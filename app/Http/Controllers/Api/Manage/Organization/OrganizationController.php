@@ -86,7 +86,6 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
