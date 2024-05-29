@@ -1074,9 +1074,10 @@ class AIService
             $modules = ResourceModule::whereNull('deleted_at')
                 ->where('is_global', 1)
                 ->where('language', $language)
+                ->where('duration_id', '<=', $durationID)
                 ->whereHas('skills', function ($query) use ($firstThreeSkills) {
                     $query->whereIn('foreign_id', $firstThreeSkills)
-                        ->where('type', '0');
+                          ->where('type', '0');
                 })
                 ->with(['skills'])
                 ->get();
@@ -1188,12 +1189,13 @@ class AIService
                         try {
                             $queryParams = http_build_query(
                                 [
-                                    'keyword'    => $keyword,
-                                    'sort'       => 'relevance',
-                                    'type'       => $type,
-                                    'limit'      => '15',
-                                    'offset'     => 0,
-                                    'language[]' => 'en',
+                                    'keyword'               => $keyword,
+                                    'sort'                  => 'relevance',
+                                    'type'                  => $type,
+                                    'limit'                 => '15',
+                                    'offset'                => 0,
+                                    'language[]'            => 'en',
+                                    'duration[max]'      => Duration::where('id', $durationID)->pluck('max_minutes')->first(),
                                 ]
                             );
 
@@ -1202,12 +1204,11 @@ class AIService
                             if (is_array($response) && isset($response['hits']) && is_array($response['hits'])) {
                                 $count = 0;
                                 foreach ($response['hits'] as $item) {
+                                    if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
+                                        break;
+                                    }
                                     if ($count < 3) {
                                         $module = [];
-
-                                        if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
-                                            break;
-                                        }
 
                                         $module['id'] = $item['id'] ?? null;
                                         $module['type'] = $item['type'] ?? null;
@@ -1235,6 +1236,7 @@ class AIService
                                         $module['authors'] = $item['authors'] ?? null;
                                         $module['ratings'] = $item['ratings'] ?? null;
                                         $module['from_go1'] = true;
+                                        $module['is_ai_created'] = true;
 
                                         $skills = Arr::pluck($item['skills'] ?? [], 'name');
                                         $processedSkills = $this->processSkills($skills, 0.75);
@@ -1242,6 +1244,24 @@ class AIService
                                         $item['skills'] = array_map(function ($name) {
                                             return ['name' => $name];
                                         }, $processedSkills);
+
+
+                                        $duration = $item['delivery']['duration'] ?? null;
+
+                                        if ($duration) {
+                                            $durationDetails = Duration::where(function($query) use ($duration) {
+                                                                        $query->whereNull('min_minutes')
+                                                                              ->orWhere('min_minutes', '<=', $duration);
+                                                                    })
+                                                                    ->where(function($query) use ($duration) {
+                                                                        $query->whereNull('max_minutes')
+                                                                              ->orWhere('max_minutes', '>=', $duration);
+                                                                    })
+                                                                    ->first(['id', 'title']);
+                                        
+                                            $module['duration'] = $durationDetails->title;
+                                            $module['duration_id'] = $durationDetails->id;
+                                        }
 
                                         $module['skills'] = $item['skills'] ?? null;
                                         $go1_resource_modules[] = $module;

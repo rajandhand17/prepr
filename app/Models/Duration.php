@@ -16,6 +16,8 @@ class Duration extends Model
     protected $fillable = [
         'title',
         'fr_CA_title',
+        'min_minutes',
+        'max_minutes'
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
