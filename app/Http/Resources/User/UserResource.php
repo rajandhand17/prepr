@@ -28,7 +28,10 @@ class UserResource extends JsonResource
         }
 
         $organization_details = null;
-        $fetchOrganization = OrganizationService::fetchOrganizationBasedOnUserId($this->id);
+        $fetchOrganization = OrganizationService::getOrganizationExistBasedOnId($this->preferred_organization);
+        if (!$fetchOrganization) {
+            $fetchOrganization = OrganizationService::fetchOrganizationBasedOnUserId($this->id);
+        }
         if ($fetchOrganization) {
             $organization_details['id'] = $fetchOrganization->uuid;
             $organization_details['title'] = $fetchOrganization->title;
