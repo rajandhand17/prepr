@@ -165,6 +165,21 @@ class JobTitleService
         }
     }
 
+    public static function getJobBasedOnIds($job_ids)
+    {
+        try {
+            $getJobsList = JobTitle::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+                ->whereIn('id', $job_ids)->get();
+            if ($getJobsList) {
+                return $getJobsList;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function gettrendingJobs($job)
     {
         try {
