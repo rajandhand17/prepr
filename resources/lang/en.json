@@ -71,7 +71,7 @@
     "responses.purpose_required": "This purpose field is required",
     "responses.unique_username": "Please provide unique username, this username already taken!",
     "responses.username_field_required": "This username field is required",
-    "responses.username_regex_pattern": "Username should contain letters, numbers and `-_`",
+    "responses.username_regex_pattern": "Username should only contain letters, numbers or underscore( _ )",
     "responses.user_type_required": "This user type field is required",
     "responses.password_confirmation_required_field": "This password confirmation field is required",
     "responses.match_confirmed_password": "The password does not match the confirmed password!",
@@ -1178,5 +1178,6 @@
     "responses.challenge_incentive_not_found": "No Incentives found in this challenge.",
     "responses.challenge_winner_selected_successfully": "Challenge Winner selected successfully.",
     "responses.challenge_winner_selected_not_successfully": "Something went wrong while selecting the Challenge winner.",
-    "responses.challenge_winner_timeline_fail": "The Challenge(s) which you are looking has passed the updating winner date."
+    "responses.challenge_winner_timeline_fail": "The Challenge(s) which you are looking has passed the updating winner date.",
+    "responses.preferred_organization_updated": "Preferred Organization has been updated successfully."
 }

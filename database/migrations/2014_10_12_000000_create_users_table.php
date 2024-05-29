@@ -16,6 +16,7 @@ return new class() extends Migration {
             $table->bigIncrements('id');
             $table->string('preferred_language')->default('en');
             $table->string('preferred_timezone')->nullable();
+            $table->string('preferred_organization')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('full_name')->nullable();
