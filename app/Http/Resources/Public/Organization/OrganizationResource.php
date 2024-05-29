@@ -3,9 +3,6 @@
 namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\Public\Challenge\ChallengeResource;
-use App\Http\Resources\Public\Lab\LabResource;
-use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
