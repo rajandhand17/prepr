@@ -34,7 +34,6 @@ class OrganizationResource extends JsonResource
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
-
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -57,9 +56,6 @@ class OrganizationResource extends JsonResource
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'          => MemberManagementResource::collection($this->members),
-            'labs'                         => LabResource::collection($this->labs),
-            'challenges'                   => ChallengeResource::collection($this->challenges_count),
-            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
         ];
     }
 }

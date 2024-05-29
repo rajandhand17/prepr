@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
+use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Exception;
@@ -85,6 +86,7 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -143,7 +145,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
+                return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.organization_not_exists'), 404);

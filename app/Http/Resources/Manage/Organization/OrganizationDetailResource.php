@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Resources\Public\Organization;
+namespace App\Http\Resources\Manage\Organization;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\Public\Challenge\ChallengeResource;
-use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Manage\Challenge\ChallengeResource;
+use App\Http\Resources\Manage\Lab\LabResource;
+use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrganizationResource extends JsonResource
+class OrganizationDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
+        $status = ($this->status == '0') ? 'Draft' : (($this->status == '1') ? 'Published' : (($this->status == '2') ? 'Deactivated' : 'Archived'));
         $category = $this->getCategory;
-
         if ($category) {
             $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
@@ -29,6 +30,9 @@ class OrganizationResource extends JsonResource
             $category_id = null;
         }
 
+        if (empty($this->chargebee_details)) {
+            $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
+        }
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -39,6 +43,7 @@ class OrganizationResource extends JsonResource
             'profile_image'                => $this->profile_image,
             'website'                      => $this->website,
             'about'                        => $this->about,
+            'status'                       => $status,
             'total_employees'              => $this->total_employees,
             'category_id'                  => $category_id,
             'category'                     => $category,
@@ -46,15 +51,13 @@ class OrganizationResource extends JsonResource
             'challenge_count'              => $this->challenges_count()->count(),
             'resource_count'               => $this->resource_modules_count()->count(),
             'organization_users_count'     => $this->members->count(),
-            'likes'                        => $this->likes()->count(),
-            'followers'                    => $this->followers()->count(),
-            'shares'                       => $this->shares()->count(),
-            'liked'                        => $this->liked(),
-            'followed'                     => $this->followed(),
-            'favourite'                    => $this->favourite(),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_people'          => MemberManagementResource::collection($this->members),
+            'labs'                         => LabResource::collection($this->labs->take(config('site-settings.jobs_details_par_module_limit'))),
+            'challenges'                   => ChallengeResource::collection($this->challenges_count->take(config('site-settings.jobs_details_par_module_limit'))),
+            'resource_modules'              => ResourceModuleResource::collection($this->resource_modules_count->take(config('site-settings.jobs_details_par_module_limit'))),
         ];
     }
 }
