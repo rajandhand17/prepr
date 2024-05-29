@@ -112,6 +112,11 @@ class LabProgram extends Model
         return 'NA';
     }
 
+    public function likes()
+    {
+        return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('like_dislike', '1');
+    }
+
     public function shares()
     {
         return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('share', '1');
