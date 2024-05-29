@@ -4,10 +4,7 @@ namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -34,6 +31,7 @@ class OrganizationResource extends JsonResource
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
