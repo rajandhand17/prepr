@@ -4,10 +4,7 @@ namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -57,9 +54,6 @@ class OrganizationResource extends JsonResource
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'          => MemberManagementResource::collection($this->members),
-            'labs'                         => LabResource::collection($this->labs),
-            'challenges'                   => ChallengeResource::collection($this->challenges_count),
-            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
         ];
     }
 }
