@@ -1195,7 +1195,7 @@ class AIService
                                     'limit'                 => '15',
                                     'offset'                => 0,
                                     'language[]'            => 'en',
-                                    'duration[max]'      => Duration::where('id', $durationID)->pluck('max_minutes')->first(),
+                                    'duration[max]'         => Duration::where('id', $durationID)->pluck('max_minutes')->first(),
                                 ]
                             );
 
@@ -1245,20 +1245,19 @@ class AIService
                                             return ['name' => $name];
                                         }, $processedSkills);
 
-
                                         $duration = $item['delivery']['duration'] ?? null;
 
                                         if ($duration) {
-                                            $durationDetails = Duration::where(function($query) use ($duration) {
-                                                                        $query->whereNull('min_minutes')
-                                                                              ->orWhere('min_minutes', '<=', $duration);
-                                                                    })
-                                                                    ->where(function($query) use ($duration) {
+                                            $durationDetails = Duration::where(function ($query) use ($duration) {
+                                                $query->whereNull('min_minutes')
+                                                      ->orWhere('min_minutes', '<=', $duration);
+                                            })
+                                                                    ->where(function ($query) use ($duration) {
                                                                         $query->whereNull('max_minutes')
                                                                               ->orWhere('max_minutes', '>=', $duration);
                                                                     })
                                                                     ->first(['id', 'title']);
-                                        
+
                                             $module['duration'] = $durationDetails->title;
                                             $module['duration_id'] = $durationDetails->id;
                                         }
