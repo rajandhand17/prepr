@@ -40,7 +40,7 @@ class UpdateChallengePassedWinnerDate extends Command
                     $checkHoursDifference = $currentDateTime->diffInHours($challengeDateTime);
                     if ($checkHoursDifference >= 24) {
                         $challengeData->update(['allow_winner_change' => '1']);
-                        $this->info('This challenge id has been updated:- ' . $challengeData->id);
+                        $this->info('This challenge id has been updated:- '.$challengeData->id);
                     }
                 }
             }
