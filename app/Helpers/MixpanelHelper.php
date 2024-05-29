@@ -1,0 +1,403 @@
+<?php
+
+
+namespace App\Helpers;
+
+use Mixpanel;
+use Exception;
+use App\Models\MemberManagement;
+use App\Models\Category;
+use App\Models\User;
+use App\Models\Organization;
+use App\Models\Project;
+use App\Models\ProjectIndustry;
+use App\Models\ProjectType;
+use App\Models\Lab;
+use App\Models\Challenge;
+use Carbon\Carbon;
+use App\Models\OrganizationInviteUser;
+use App\Models\Skill;
+use App\Models\Tag;
+use Illuminate\Support\Facades\Log;
+use App\Models\LabChallenges;
+
+class MixpanelHelper
+{
+    // Mixpanel function used my phpunit to test connection
+    public static function connection()
+    {
+        try {
+            $mp = Mixpanel::getInstance(env('MIXPANEL_KEY'));
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function mixpanel_tracking($event, $data, $user = null, $ip = 0, $lab_groups = [], $user_id = null)
+    {
+        try {
+            $organization = null;
+            $user_type = null;
+            $user_type = null;
+            $profile_section = null;
+            $profile_section_data = null;
+            $quantity = 1;
+            $data_array = [];
+            switch ($event) {
+                case config('mixpanel.sign_up'): // Mixpanel data: user sign up
+                    $user_type = $data['user_type'];
+                    $data_array = array(
+                        'sign_up_type' => 'network',
+                        'user_status' => $data['status'],
+                        'user_type' => $data['user_type']
+                    );
+                    break;
+                case config('mixpanel.org_sign_up'): // Mixpanel data: organization manager sign up
+                    $user_type = $data['user_type'];
+                    $data_array = array(
+                        'sign_up_type' => 'network',
+                        'organization_name' => $data['organization_name'],
+                        'organization_type' => $data['user_type']
+                    );
+                    break;
+                case config('mixpanel.login_success'): // Mixpanel data: login success
+                case config('mixpanel.login_fail'): // Mixpanel data: login fail
+                    $data_array = array(
+                        'status' => $data
+                    );
+                    break;
+                case config('mixpanel.update_profile'): // Mixpanel data: update profile
+                    $profile_section = $data['type'];
+                    $profile_section_data = json_encode($data['info']);
+                    $data_array = array(
+                        'profile_section' => $profile_section,
+                        'updated_info' => $profile_section_data
+                    );
+                    break;
+                case config('mixpanel.complete_profile'): // Mixpanel data: complete profile
+                    $data_array = array(
+                        'last_update' => $data
+                    );
+                    break;
+                case config('mixpanel.create_lab'): // Mixpanel data: create lab
+                case config('mixpanel.edit_lab'): // Mixpanel data: edit lab
+                case config('mixpanel.delete_lab'): // Mixpanel data: delete lab
+                    $final_lab_skills = [];
+                    foreach ($data->lab_skills as $lab_skill) {
+                        $final_lab_skills[] = Skill::find($lab_skill)->skill;
+                    }
+
+                    $final_lab_tags = [];
+                    $new_tags = substr($data->tags, 1, -1);
+                    $new_tags = str_replace('"', '', $new_tags); // remove " from the string
+                    $new_tags = explode(',', $new_tags);
+                    foreach ($new_tags as $lab_tag) {
+                        $tag = Tag::find(intval($lab_tag));
+                        if ($tag) {
+                            $final_lab_tags[] = $tag->tag;
+                        }
+                    }
+
+                    $organization = $data->organisation;
+                    $data_array = array(
+                        'lab_title' => $data->title,
+                        'lab_tags' => $final_lab_tags,
+                        'lab_skills' => $final_lab_skills,
+                        'lab_groups' => $lab_groups,
+                        'lab_category' => Category::find($data->category)->name,
+                        "lab_privacy" => $data->privacy
+                    );
+                    break;
+                case config('mixpanel.join_lab'): // Mixpanel data: join lab
+                    $organization = $data->organisation;
+                    $data_array = array(
+                        "lab_privacy" => $data->privacy,
+                        "lab_title" => $data->title,
+                        'lab_category' => Category::find($data->category)->name
+                    );
+                    break;
+                case config('mixpanel.leave_lab'): // Mixpanel data: leave lab
+                    $organization = $data->organisation;
+                    $quantity = -1;
+                    $data_array = array(
+                        "lab_privacy" => $data->privacy,
+                        "lab_title" => $data->title,
+                        'lab_category' => Category::find($data->category)->name
+                    );
+                    break;
+                case config('mixpanel.complete_challenge_path'): // Mixpanel data: complete challenge path
+                    $organization = $data->organisation;
+                    $path_challenges = [];
+                    $all_path_challenges = explode(',', $data->challenge_id);
+                    foreach ($all_path_challenges as $path_challenge) {
+                        $path_challenges[] = Challange::find($path_challenge)->title;
+                    }
+
+                    $data_array = [
+                        'title' => $data->title,
+                        'challenges' => $path_challenges,
+                        'points' => $data->points
+                    ];
+                    break;
+                case config('mixpanel.create_challenge'): // Mixpanel data: create challenge
+                case config('mixpanel.edit_challenge'): // Mixpanel data: edit challenge
+                case config('mixpanel.delete_challenge'): // Mixpanel data: delete challenge
+                    $final_challenge_skills = [];
+                    foreach ($data->challange_skill as $challenge_skill) {
+                        $final_challenge_skills[] = Skill::find($challenge_skill)->skill;
+                    }
+
+                    $final_challenge_tags = [];
+                    $new_tags = substr($data->challange_tag, 1, -1);
+                    $new_tags = str_replace('"', '', $new_tags); // remove " from the string
+                    $new_tags = explode(',', $new_tags);
+                    foreach ($new_tags as $challenge_tag) {
+                        $tag = Tag::find($challenge_tag);
+                        if ($tag) {
+                            $final_challenge_tags[] = $tag->tag;
+                        }
+                    }
+
+                    $final_associate_labs = [];
+                    $associated_lab_ids = LabChallenges::where('challenge_id', $data->id)->whereNotNull('lab_id')->pluck('lab_id')->toArray();
+                    foreach ($associated_lab_ids as $associate_lab) {
+                        $final_associate_labs[] = Lab::find($associate_lab)->title;
+                    }
+
+                    $organization = $data->organisation;
+                    $data_array = array(
+                        'challenge_title' => $data->title,
+                        'challenge_category' => Category::find($data->category)->name,
+                        'associated_lab' => $final_associate_labs,
+                        'challenge_skills' => $final_challenge_skills,
+                        'challenge_tags' => $final_challenge_tags,
+                        'challenge_status' => $data->status,
+                        'challenge_privacy' => $data->privacy,
+                        'minimum_rank' => $data->min_ranks,
+                        'minimum_points' => $data->min_points,
+                        'project_submission_requirements' => $data->projectSubmissionRequirements,
+                        'dates_type' => $data->dates
+                    );
+                    break;
+                case config('mixpanel.create_resource'): // Mixpanel data: create resource
+                case config('mixpanel.edit_resource'): // Mixpanel data: edit resource
+                case config('mixpanel.delete_resource'): // Mixpanel data: delete resource
+                    $organization = $data->org_id;
+                    $data_array = array(
+                        'resource_title' => $data->res_title,
+                        'resource_status' => $data->status,
+                        'resource_skills' => $data->resource_skills
+                    );
+                    break;
+                case config('mixpanel.view_resource'): // Mixpanel data: view resource
+                    $organization = $data->org_id;
+                    $data_array = array(
+                        'resource_title' => $data->res_title,
+                        'resource_status' => $data->status,
+                        'resource_skills' => $data->resource_skills
+                    );
+                    break;
+                case config('mixpanel.view_resource_collection'): // Mixpanel data: view resource collection
+                    $organization = $data->org_id;
+                    $data_array = array(
+                        'title' => $data->title,
+                        'status' => $data->status,
+                    );
+                    break;
+                case config('mixpanel.view_resource_group'): // Mixpanel data: view resource group
+                    $organization = $data->organisation;
+                    $data_array = array(
+                        'title' => $data->title,
+                        'status' => $data->status,
+                    );
+                    break;
+
+                case config('mixpanel.create_org'): // Mixpanel data: create organization
+                    $data_array = array(
+                        'org_name' => $data->name,
+                        "org_category" => Category::where('id', $data->category)->first()->name,
+                        'org_plan' => $data->plan
+                    );
+                    break;
+                case config('mixpanel.send_trophy'): // Mixpanel data: send trophy (via maestro)
+                    $users_list = array();
+                    foreach ($data as $single_data) {
+                        $users_list[] = $single_data['to_name'];
+                    }
+                    $data_array = array(
+                        'trophy_name' => $data[0]['trophyName'],
+                        "trophy_code" => $data[0]['trophyCodeID'],
+                        'trophy_receivers' => $users_list
+                    );
+                    break;
+                case config('mixpanel.update_sent_trophy'): // Mixpanel data: update sent trophy (via maestro)
+                    $users_list = [];
+                    foreach ($data as $single_data) {
+                        $users_list[] = $single_data['to_name'];
+                    }
+                    $data_array = array(
+                        'trophy_name' => $data[0]['trophyName'],
+                        "trophy_code" => $data[0]['trophyCodeID'],
+                        'trophy_receivers' => $users_list
+                    );
+                    break;
+                case config('mixpanel.redeem_trophy'): // Mixpanel data: redeem trophy
+                    $user = User::find($user_id);
+                    $data_array = array(
+                        'trophy_name' => $data['name'],
+                        "trophy_code" => $data['trophy_code_id'],
+                        'points_gained' => $data['points_gained']
+                    );
+                    break;
+                case config('mixpanel.send_invite'): // Mixpanel data: update sent invite
+                    $memberData = MemberManagement::where('id', $data)->first();
+                    $user = User::where('id', $memberData->inviter_id)->first();
+                    $module_name = null;
+                    if ($memberData->module_type == 'lab') {
+                        $organization = Lab::where('id', $memberData->module_id)->first()->organisation;
+                        $module_name = Lab::where('id', $memberData->module_id)->first()->title;
+                    } elseif ($memberData->module_type == 'challenge') {
+                        $organization = Challange::where('id', $memberData->module_id)->first()->organisation;
+                        $module_name = Challange::where('id', $memberData->module_id)->first()->title;
+                    } elseif ($memberData->module_type == 'project') {
+                        $challenge_id = Project::where('id', $memberData->module_id)->first()->challenge_id;
+                        $module_name = Project::where('id', $memberData->module_id)->first()->title;
+                        $organization = Challange::where('id', $challenge_id)->first()->organisation;
+                    }
+                    $data_array = array(
+                        'invite_type' => $memberData->invite_type,
+                        'invitee_id' => $memberData->invitee_id,
+                        'invitee_email' => $memberData->email,
+                        'module_type' => $memberData->module_type,
+                        'module_name' => $module_name
+                    );
+                    break;
+                case config('mixpanel.send_org_member_invite'):
+                    $memberData = OrganizationInviteUser::where('id', $data)->first();
+                    $user = User::where('id', $memberData->inviter_id)->first();
+                    $organization = $memberData->organisation_id;
+                    $data_array = array(
+                        'invite_type' => $memberData->invite_type,
+                        'invitee_id' => $memberData->user_id,
+                        'invitee_email' => $memberData->email,
+                        'role' => $memberData->role,
+                    );
+                    break;
+                case config('mixpanel.create_project'): // Mixpanel data: create project
+                case config('mixpanel.submit_project'): // Mixpanel data: submit project
+                    $project_associated_lab = [];
+                    $project_associated_challenge = null;
+                    $project_associated_type = null;
+                    $project_associated_category = null;
+                    $project_associated_industry = null;
+                    if (!empty($data->associate_lab)) {
+                        foreach ($data->associate_lab as $lab) {
+                            if (Lab::where('id', $lab)->count() > 0) {
+                                $project_associated_lab[] = Lab::where('id', $lab)->first()->title;
+                            }
+                        }
+                    }
+                    if ($data->challenge_id != null) {
+                        if (Challange::where('id', $data->challenge_id)->count() > 0) {
+                            $project_associated_challenge = Challange::where('id', $data->challenge_id)->first()->title;
+                        }
+                    }
+                    if ($data->type != null) {
+                        if (ProjectType::where('id', $data->type)->count() > 0) {
+                            $project_associated_type = ProjectType::where('id', $data->type)->first()->name;
+                        }
+                    }
+                    if ($data->category != null) {
+                        if (Category::where('id', $data->category)->count() > 0) {
+                            $project_associated_category = Category::where('id', $data->category)->first()->name;
+                        }
+                    }
+                    if ($data->industry != null) {
+                        if (ProjectIndustry::where('id', $data->industry)->count() > 0) {
+                            $project_associated_industry = ProjectIndustry::where('id', $data->industry)->first()->name;
+                        }
+                    }
+                    if ($project_associated_challenge != null) {
+                        $organization = Challange::where('id', $data->challenge_id)->first()->organisation;
+                    }
+                    $data_array = array(
+                        'project_title' => $data->title,
+                        'associated_lab' => $project_associated_lab,
+                        'associated_challenge' => $project_associated_challenge,
+                        'project_type' => $project_associated_type,
+                        'project_category' => $project_associated_category,
+                        'project_industry' => $project_associated_industry
+                    );
+                    break;
+                case config('mixpanel.fav_or_unfav'): // Mixpanel data: favourite a lab/challenge
+                    $data_array = array(
+                        'fav_or_unfav' => $data['fav_or_unfav'],
+                        'type' => $data['fav_type']
+                    );
+                    if ($data['fav_or_unfav'] == 'unfav') {
+                        $quantity = -1;
+                    }
+                    break;
+                case config('mixpanel.user_comment'):
+                case config('mixpanel.vote_project'):
+                    $data_array = $data;
+                    break;
+                case config('mixpanel.unvote_project'):
+                    $data_array = $data;
+                    $quantity = -1;
+                    break;
+                case config('mixpanel.push_notification'): // Mixpanel data: push notifications
+                    $data_array = $data;
+                    break;
+                case config('mixpanel.earn_achievement'): // Mixpanel data: earn achievements
+                    $data_array = $data;
+                    $organization = $data['org'];
+                    break;
+                default:
+                    # code...
+                    break;
+            }
+
+            $mp = Mixpanel::getInstance(env('MIXPANEL_KEY'));
+            $data_array['ip'] = $ip;
+            // if ($organization != null) {
+            //     $mp->identify($organization);
+            //     $mp->track($event['event_name'], $data_array);
+            //     $mp->people->set($organization, array(
+            //         'type' => 'organization',
+            //         '$name' => Organisation::where('id', $organization)->first()->name,
+            //     ), $ip = 0, $ignore_time = true);
+            //     $mp->people->increment($organization, $event['variable_name'], $quantity);
+            //     $mp->unregister($organization);
+            // }
+            if ($user != null) {
+                if (OrganizationInviteUser::where('user_id', $user->id)->count() > 0) {
+                    $user_role = OrganizationInviteUser::where('user_id', $user->id)->latest()->first()->role;
+                } else {
+                    $user_role = 'user';
+                }
+                $mp->identify($user->id);
+                if ($organization != null) {
+                    $mp->register('organization_name', Organisation::where('id', $organization)->first()->name);
+                }
+                $mp->track($event['event_name'], $data_array);
+                $mp->people->set($user->id, array(
+                    '$name' => $user->name,
+                    '$email' => $user->email,
+                    'user_role' => $user_role,
+                    'type' => $user_type,
+                    $profile_section => $profile_section_data
+                ), $ip, $ignore_time = true);
+                $mp->people->increment($user->id, $event['variable_name'], $quantity);
+                $mp->unregister($user->id);
+            } else {
+                $mp->track($event['event_name'], $data_array);
+            }
+            return true;
+        } catch (Exception $e) {
+            Log::info($e->getMessage());
+            return false;
+        }
+    }
+}
