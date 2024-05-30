@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;
@@ -389,6 +390,7 @@ class ProjectRepository implements ProjectInterface
             ) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
+                dispatch(new ProcessChallengePathAchievementJob($fetchAcceptedMemberIds, $fetchChallenge->id));
                 DB::commit();
 
                 return $submitProject['submitProject'];

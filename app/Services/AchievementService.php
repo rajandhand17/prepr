@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
+use App\Services\Public\ChallengePathService;
 use Carbon\Carbon;
 use Exception;
 
@@ -89,6 +90,42 @@ class AchievementService
                     }
                 }
             }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addChallengePathAchievement($challengePathId, $userId)
+    {
+        try {
+            $fetchChallengePath = ChallengePathService::getChallengePathBasedOnId($challengePathId);
+            $key = 1;
+            $achievement_type = config('constants.user_achievement_type.challenge_path');
+            $certificate_date = (int) date('ymd');
+            $olddata = $key - 1;
+            $certificate_id = $olddata . '00' . $key;
+            $certificate_number = $certificate_date . $certificate_id;
+
+            $userAchievement = new UserAchievement();
+            $userAchievement->user_id = $userId;
+            $userAchievement->certificate_number = $certificate_number;
+            $userAchievement->title = $fetchChallengePath->achievement->achievement_name;
+            $userAchievement->description = $fetchChallengePath->achievement->achievement_name;
+            $userAchievement->achievement_type = $achievement_type;
+            $userAchievement->module_id = $fetchChallengePath->id;
+            $userAchievement->module_title = $fetchChallengePath->title;
+            $userAchievement->module_parent_id = $fetchChallengePath->getOrganization->id;
+            $userAchievement->module_parent_title = $fetchChallengePath->getOrganization->title;
+            $userAchievement->achievement_prize = $fetchChallengePath->achievement->achievement_name;
+            $userAchievement->achievement_points = $fetchChallengePath->achievement->achievement_points;
+            $userAchievement->achievement_image = $fetchChallengePath->achievement->achievement_image;
+            $userAchievement->issue_date = Carbon::now()->toDateTimeString();
+            $userAchievement->valid_date = null;
+            $userAchievement->user_notified = '0';
+            $userAchievement->promo_code = null;
+            $userAchievement->save();
 
             return true;
         } catch (Exception $e) {
