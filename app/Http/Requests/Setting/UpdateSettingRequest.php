@@ -31,7 +31,7 @@ class UpdateSettingRequest extends FormRequest
                 'last_name'                => 'required|string',
                 'username'                 => 'required',
                 'phone_number'             => 'required|regex:/^\+?(\d{1,3})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/',
-                'preferred_timezone'       => 'required',
+                'preferred_timezone'       => 'required|in:EST,CST,MST,PST,AST,NST,IST',
                 'preferred_language'       => 'required',
                 'two_factor_verification'  => 'required|in:yes,no',
 
