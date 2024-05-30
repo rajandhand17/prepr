@@ -31,7 +31,7 @@ class FeedChargebeeDataToDataBase extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating of old data for Organization table started.');
+            $this->info('Migrating of old data for Chargebee Organization table started.');
             DB::beginTransaction();
             $fetchOrganizations = Organization::orderBy('id', 'ASC')->get();
             foreach ($fetchOrganizations as $organization) {
@@ -41,7 +41,7 @@ class FeedChargebeeDataToDataBase extends Command
                 }
             }
             DB::commit();
-            $this->info('Migrating of old data for Challanges table completed.');
+            $this->info('Migrating of old data for Chargebee Organization table completed.');
 
             return;
         } catch (Exception $e) {
