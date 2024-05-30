@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -89,6 +90,13 @@ class AuthController extends AppBaseController
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
+                // Mixpanel Tracking Code: login attempt (successful)
+                MixpanelHelper::mixpanel_tracking(
+                    config('mixpanel.login_success'),
+                    'successful',
+                    auth()->user(),
+                    $request->ip()
+                );
                 if ($login['code'] === 2) {
                     $response = ['message'=>$login['message'], 'code'=>$login['code']];
 

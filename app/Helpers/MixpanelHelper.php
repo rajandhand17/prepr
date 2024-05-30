@@ -379,7 +379,7 @@ class MixpanelHelper
                 }
                 $mp->identify($user->id);
                 if ($organization != null) {
-                    $mp->register('organization_name', Organisation::where('id', $organization)->first()->name);
+                    $mp->register('organization_name', Organization::where('id', $organization)->first()->name);
                 }
                 $mp->track($event['event_name'], $data_array);
                 $mp->people->set($user->id, array(
