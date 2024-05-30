@@ -16,9 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('errors.404');
+    return view('welcome');
 });
-
 
 /*** SCORM PROXY URL */
 Route::get('scorm/{url}', [ScormProxyController::class, 'scormFileLink'])->name('scormFileLink')->where('url', '.*');

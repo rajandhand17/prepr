@@ -24,12 +24,12 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="{{ route('superAdminLogin') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}"> </img> </a>
+        <a href="{{ route('login') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}"> </img> </a>
       </div>
       <div class="card-body">
         <p class="login-box-msg">Sign in to Prepr Network</p>
 
-        <form method="POST" action="{{ route('loginSubmit') }}">
+        <form method="POST" action="{{ route('login') }}">
           @csrf
           <div class="input-group mb-3">
             <input id="email" type="email" placeholder="Email Address" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
