@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ProjectSubmissionRequirementTableSeeder::class,
             ChallengeAnnouncementRecipientSeeder::class,
             ProjectAccessLevelSeeder::class,
+            DurationsTableSeeder::class,
         ];
 
         if (app()->environment('testing')) {
