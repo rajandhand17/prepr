@@ -105,8 +105,8 @@ class AchievementService
             $achievement_type = config('constants.user_achievement_type.challenge_path');
             $certificate_date = (int) date('ymd');
             $olddata = $key - 1;
-            $certificate_id = $olddata . '00' . $key;
-            $certificate_number = $certificate_date . $certificate_id;
+            $certificate_id = $olddata.'00'.$key;
+            $certificate_number = $certificate_date.$certificate_id;
 
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;

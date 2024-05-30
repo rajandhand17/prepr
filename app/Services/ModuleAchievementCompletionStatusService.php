@@ -11,9 +11,9 @@ class ModuleAchievementCompletionStatusService
     {
         try {
             $checkChallengePathAchievementAssignedOrNot = ModuleAchievementCompletionStatus::where([
-                'module_id' => $challengePathId,
-                'user_id' => $userId,
-                'module_type'   => '0'
+                'module_id'     => $challengePathId,
+                'user_id'       => $userId,
+                'module_type'   => '0',
             ])->exists();
 
             return $checkChallengePathAchievementAssignedOrNot;
@@ -26,9 +26,9 @@ class ModuleAchievementCompletionStatusService
     {
         try {
             $markChallengePathCompleted = ModuleAchievementCompletionStatus::create([
-                'module_id' => $challengePathId,
-                'user_id' => $userId,
-                'module_type'   => '0'
+                'module_id'     => $challengePathId,
+                'user_id'       => $userId,
+                'module_type'   => '0',
             ]);
 
             return true;

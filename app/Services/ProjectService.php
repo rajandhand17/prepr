@@ -643,7 +643,7 @@ class ProjectService
             $getOwnProjectIds = self::getMyProjectIds($userData->id);
 
             $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
-            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck("challenge_id");
+            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck('challenge_id');
 
             return $fetchSubmittedProjectIds;
         } catch (Exception $e) {
