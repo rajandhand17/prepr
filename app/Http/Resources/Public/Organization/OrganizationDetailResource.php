@@ -3,18 +3,20 @@
 namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrganizationResource extends JsonResource
+class OrganizationDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @return array<string, mixed>
      */
-    public function toArray($request)
+    public function toArray(Request $request): array
     {
         $category = $this->getCategory;
 
@@ -49,6 +51,9 @@ class OrganizationResource extends JsonResource
             'liked'                        => $this->liked(),
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
+            'labs'                         => LabResource::collection($this->labs),
+            'challenges'                   => ChallengeResource::collection($this->challenges_count),
+            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),

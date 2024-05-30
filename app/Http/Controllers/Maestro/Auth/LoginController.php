@@ -84,6 +84,6 @@ class LoginController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([], 204)
-            : redirect('/maestro/login');
+            : redirect()->route('login');
     }
 }

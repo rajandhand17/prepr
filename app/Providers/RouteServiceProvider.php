@@ -176,17 +176,17 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroDashboardRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard/dashboard-route.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard/dashboard.php'));
     }
 
     public function mapMaestroAuthRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/auth/auth-route.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/auth/auth.php'));
     }
 
     public function mapMaestroUsersRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/users/users-route.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/users/users.php'));
     }
 
     public function mapMaestroRoleAndPermissionRoutes()

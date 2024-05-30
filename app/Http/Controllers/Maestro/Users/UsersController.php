@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Maestro\Users;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Helpers\Maestro\Users\MaestroUsersHelper;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
+use App\Traits\Maestro\User\UserTrait;
+use App\Models\User;
 use Exception;
 
-class MaestroUsersController extends Controller
+class UsersController extends Controller
 {
+    use UserTrait;
     public function __construct()
     {
         $this->middleware('web');
@@ -20,23 +21,23 @@ class MaestroUsersController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $usersInfo = MaestroUsersHelper::getUserForTableBuilder();
+            $usersInfo = $this->getUsers();
             if (!empty($usersInfo)) {
                 if ($request->ajax()) {
                     return DataTables::eloquent($usersInfo)
-                        ->editColumn('full_name', static function (User $user) {
-                            return $user->first_name . ' ' . $user->last_name;
+                        ->editColumn('full_name', static function (User $usersInfo) {
+                            return $usersInfo->first_name . ' ' . $usersInfo->last_name;
                         })
-                        ->editColumn('status', static function (User $user) {
-                            if ($user->status === 'active') {
+                        ->editColumn('status', static function (User $usersInfo) {
+                            if ($usersInfo->status === 'active') {
                                 $html = "<span class='badge badge-success'>Success</span>";
                             } else {
                                 $html = "<span class='badge badge-danger' >Deactive</span>";
                             }
                             return $html;
                         })
-                        ->addColumn('action', static function (User $user) {
-                            return '<a style="padding-left:50px" class="mr-10" href="' . route('users.show', ['user' => $user->id]) . '"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="' . route('users.edit', ['user' => $user->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\'' . route('users.destroy', ['user' => $user->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        ->addColumn('action', static function (User $usersInfo) {
+                            return '<a style="padding-left:50px" class="mr-10" href="' . route('users.show', ['user' => $usersInfo->id]) . '"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="' . route('users.edit', ['user' => $usersInfo->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\'' . route('users.destroy', ['user' => $usersInfo->id]) . '\')"><i class="fas fa-trash"></i></a>';
                         })
                         ->addIndexColumn()
                         ->rawColumns(['status', 'action'])
@@ -52,7 +53,7 @@ class MaestroUsersController extends Controller
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', "width" => "15%", 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.users.users-list', compact('html'));
+            return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
         }
@@ -64,7 +65,7 @@ class MaestroUsersController extends Controller
     public function create()
     {
         try {
-            return view('maestro.users.users-create');
+            return view('maestro.users.create');
         } catch (Exception $e) {
             return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
         }
@@ -77,7 +78,7 @@ class MaestroUsersController extends Controller
     {
         try {
             DB::beginTransaction();
-            if (MaestroUsersHelper::createUser($request)) {
+            if ($this->createUser($request)) {
                 DB::commit();
                 return redirect()->route('users.index')->with('success', 'User created successfully');
             }
@@ -95,8 +96,11 @@ class MaestroUsersController extends Controller
     public function show(string $id)
     {
         try {
-            $user = MaestroUsersHelper::getUserById($id);
-            return view('maestro.users.users-view', compact('user'));
+            $user = $this->getUserById($id);
+            if(empty($user)){
+                return redirect()->route('users.index')->with(['error' => 'User not found.']);
+            }
+            return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
         }
@@ -108,8 +112,11 @@ class MaestroUsersController extends Controller
     public function edit(string $id)
     {
         try {
-            $user = MaestroUsersHelper::getUserById($id);
-            return view('maestro.users.users-edit', compact('user'));
+            $user = $this->getUserById($id);
+            if(empty($user)){
+                return redirect()->route('users.index')->with(['error' => 'User not found.']);
+            }
+            return view('maestro.users.edit', compact('user'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
         }
@@ -122,8 +129,7 @@ class MaestroUsersController extends Controller
     {
         try {
             DB::beginTransaction();
-            $userInfo = MaestroUsersHelper::getUserById($id);
-            if (MaestroUsersHelper::updateUser($userInfo, $request)) {
+            if ($this->updateUserById($id,$request)) {
                 DB::commit();
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
@@ -142,8 +148,7 @@ class MaestroUsersController extends Controller
     {
         try {
             DB::beginTransaction();
-            $user = MaestroUsersHelper::getUserById($id);
-            if ($user->delete()) {
+            if ($this->deleteUserById($id)) {
                 DB::commit();
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
