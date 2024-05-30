@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\UserTrait;
+use App\Traits\Maestro\User\UserTrait;
 use App\Models\User;
 use Exception;
 

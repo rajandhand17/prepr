@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro;
+namespace App\Services\Maestro\User;
 
 use App\Models\User;
 use Exception;

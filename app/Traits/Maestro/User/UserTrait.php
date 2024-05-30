@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Traits\Maestro;
+namespace App\Traits\Maestro\User;
 
-use App\Services\Maestro\UserService;
+use App\Services\Maestro\User\UserService;
 use Exception;
 
 trait UserTrait
