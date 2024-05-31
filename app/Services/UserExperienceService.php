@@ -80,21 +80,6 @@ class UserExperienceService
             return false;
         }
     }
-
-    public static function deleteExperienceBasedOnUserId($userId)
-    {
-        try {
-            $userExperience = UserExperience::where('user_id', $userId)->delete();
-            if ($userExperience) {
-                return true;
-            }
-
-            return false;
-        } catch(\Exception $e) {
-            return false;
-        }
-    }
-
     public static function addUserExperienceByUsingResumeData($response, $user)
     {
         try {
