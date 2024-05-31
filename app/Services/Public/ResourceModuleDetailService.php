@@ -19,30 +19,36 @@ class ResourceModuleDetailService
         }
     }
 
-    public function checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType)
+    public static function checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType)
     {
         try {
             switch ($assetType) {
                 case '0':
-                    $file_type = config('constants.file_type.document');
+                    $file_type = config('constants.file_type_id.document');
                     break;
                 case '1':
-                    $file_type = config('constants.file_type.video');
+                    $file_type = config('constants.file_type_id.video');
                     break;
                 case '2':
-                    $file_type = config('constants.file_type.audio');
+                    $file_type = config('constants.file_type_id.audio');
                     break;
                 case '3':
-                    $file_type = config('constants.file_type.embedded');
+                    $file_type = config('constants.file_type_id.embedded');
                     break;
                 case '4':
-                    $file_type = config('constants.file_type.embedded_audio');
+                    $file_type = config('constants.file_type_id.embedded_audio');
                     break;
                 case '5':
-                    $file_type = config('constants.file_type.url');
+                    $file_type = config('constants.file_type_id.url');
                     break;
                 case '6':
-                    $file_type = config('constants.file_type.image');
+                    $file_type = config('constants.file_type_id.image');
+                    break;
+                case '7':
+                    $file_type = config('constants.file_type_id.scrom');
+                    break;
+                case '8':
+                    $file_type = config('constants.file_type_id.go1');
                     break;
             }
             $checkResourceModuleAssetVisit = ResourceModuleVisit::where(['user_id' => $userId, 'module_id' => $resourceModuleId, 'module_asset_id' => $assetId, 'asset_type' => $file_type])->exists();
@@ -53,30 +59,36 @@ class ResourceModuleDetailService
         }
     }
 
-    public function addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType)
+    public static function addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType)
     {
         try {
             switch ($assetType) {
                 case '0':
-                    $file_type = config('constants.file_type.document');
+                    $file_type = config('constants.file_type_id.document');
                     break;
                 case '1':
-                    $file_type = config('constants.file_type.video');
+                    $file_type = config('constants.file_type_id.video');
                     break;
                 case '2':
-                    $file_type = config('constants.file_type.audio');
+                    $file_type = config('constants.file_type_id.audio');
                     break;
                 case '3':
-                    $file_type = config('constants.file_type.embedded');
+                    $file_type = config('constants.file_type_id.embedded');
                     break;
                 case '4':
-                    $file_type = config('constants.file_type.embedded_audio');
+                    $file_type = config('constants.file_type_id.embedded_audio');
                     break;
                 case '5':
-                    $file_type = config('constants.file_type.url');
+                    $file_type = config('constants.file_type_id.url');
                     break;
                 case '6':
-                    $file_type = config('constants.file_type.image');
+                    $file_type = config('constants.file_type_id.image');
+                    break;
+                case '7':
+                    $file_type = config('constants.file_type_id.scrom');
+                    break;
+                case '8':
+                    $file_type = config('constants.file_type_id.go1');
                     break;
             }
 

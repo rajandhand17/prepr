@@ -306,13 +306,15 @@ return [
     ],
 
     'file_type_id' => [
-        'document'             => '0',
-        'video'                => '1',
-        'audio'                => '2',
-        'embedded'             => '3',
-        'embedded_audio'       => '4',
-        'url'                  => '5',
-        'image'                => '6',
+        'document'              => '0',
+        'video'                 => '1',
+        'audio'                 => '2',
+        'embedded'              => '3',
+        'embedded_audio'        => '4',
+        'url'                   => '5',
+        'image'                 => '6',
+        'scorm'                 => '7',
+        'go1'                   => '8',
     ],
 
     'project_view_enabled' => [
