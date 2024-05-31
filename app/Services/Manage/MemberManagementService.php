@@ -399,7 +399,7 @@ class MemberManagementService
                                 'module_id'     => $componentCollectionObject->id,
                                 'module_type'   => $module_type,
                                 'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
-                                'role'          => $request->role,
+                                'role'          => $member['role'] ?? $request->role,
                                 'email'         => $member['invitee_email'],
                                 'auto_invite'   => $auto_invite,
                                 'invite_status' => $invite_status,
