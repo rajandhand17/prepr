@@ -3,6 +3,7 @@
 
 namespace App\Helpers;
 
+use App\Models\RoleUser;
 use Mixpanel;
 use Exception;
 use App\Models\MemberManagement;
@@ -358,37 +359,53 @@ class MixpanelHelper
                     # code...
                     break;
             }
-
-            $mp = Mixpanel::getInstance(env('MIXPANEL_KEY'));
+            $mp= app(Mixpanel::class);
             $data_array['ip'] = $ip;
-            // if ($organization != null) {
-            //     $mp->identify($organization);
-            //     $mp->track($event['event_name'], $data_array);
-            //     $mp->people->set($organization, array(
-            //         'type' => 'organization',
-            //         '$name' => Organisation::where('id', $organization)->first()->name,
-            //     ), $ip = 0, $ignore_time = true);
-            //     $mp->people->increment($organization, $event['variable_name'], $quantity);
-            //     $mp->unregister($organization);
-            // }
+
             if ($user != null) {
-                if (OrganizationInviteUser::where('user_id', $user->id)->count() > 0) {
-                    $user_role = OrganizationInviteUser::where('user_id', $user->id)->latest()->first()->role;
+                if (MemberManagement::where('user_id', $user->id)->count() > 0) {
+                    $user_role = MemberManagement::where('user_id', $user->id)->latest()->first()->role;
                 } else {
                     $user_role = 'user';
                 }
                 $mp->identify($user->id);
                 if ($organization != null) {
-                    $mp->register('organization_name', Organization::where('id', $organization)->first()->name);
+                    $organization_name = Organization::where('id', $organization)->first()->name;
+                    $mp->register('organization_name', $organization_name);
                 }
+                // Log the event being tracked
+                Log::info('Tracking event', [
+                    'event_name' => $event['event_name'],
+                    'data_array' => $data_array,
+                ]);
                 $mp->track($event['event_name'], $data_array);
-                $mp->people->set($user->id, array(
-                    '$name' => $user->name,
+                $profile_data = array(
+                    '$first_name' =>$user->first_name,
+                    '$last_name' =>$user->last_name,
                     '$email' => $user->email,
                     'user_role' => $user_role,
                     'type' => $user_type,
                     $profile_section => $profile_section_data
-                ), $ip, $ignore_time = true);
+                );
+
+                // Set user profile properties in Mixpanel People
+                $mp->people->set($user->id, $profile_data, $ip, true);
+//                $mp->people->set($user->id, array(
+//                    '$name' => $user->name,
+//                    '$email' => $user->email,
+//                    'user_role' => $user_role,
+//                    'type' => $user_type,
+//                    $profile_section => $profile_section_data
+//                ), $ip, $ignore_time = true);
+
+
+                // Log the increment action
+                Log::info('Incrementing user profile property', [
+                    'user_id' => $user->id,
+                    'property' => $event['variable_name'],
+                    'quantity' => $quantity,
+                ]);
+
                 $mp->people->increment($user->id, $event['variable_name'], $quantity);
                 $mp->unregister($user->id);
             } else {
@@ -396,6 +413,7 @@ class MixpanelHelper
             }
             return true;
         } catch (Exception $e) {
+            dd($e);
             Log::info($e->getMessage());
             return false;
         }

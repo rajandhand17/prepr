@@ -90,21 +90,21 @@ class AuthController extends AppBaseController
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
-                // Mixpanel Tracking Code: login attempt (successful)
-                MixpanelHelper::mixpanel_tracking(
-                    config('mixpanel.login_success'),
-                    'successful',
-                    auth()->user(),
-                    $request->ip()
-                );
+
                 if ($login['code'] === 2) {
                     $response = ['message'=>$login['message'], 'code'=>$login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
+                    // Mixpanel Tracking Code: login attempt (successful)
+                    MixpanelHelper::mixpanel_tracking(
+                        config('mixpanel.login_success'),
+                        'successful',
+                        $login['user'],
+                        $request->ip()
+                    );
                     $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
-
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }

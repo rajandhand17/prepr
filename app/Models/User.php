@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
@@ -346,6 +347,12 @@ class User extends Authenticatable
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.org_sign_up'),
+                         $request,
+                         $user,
+                         $request->ip()
+                    );
+
                     $data = ['subject' => __('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                     $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                     if ($mail) {
