@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Organization;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization) {
-                return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
+                return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
