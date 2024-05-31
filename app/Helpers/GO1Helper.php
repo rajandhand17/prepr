@@ -340,7 +340,7 @@ class GO1Helper
             }
 
             // Tracking completion status in resource module visit
-            if ($data->completion_status === "completed") {
+            if ($data->completion_status === 'completed') {
                 $userId = $data->user_id;
                 $resourceModuleId = $data->resource_module_id;
                 $assetId = $data->id;
@@ -350,7 +350,6 @@ class GO1Helper
                     $addResourceModuleAssetVisit = ResourceModuleDetailService::addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
                 }
             }
-            
 
             WebhookMetadataService::create($type, $payload, $parentData['id']);
 
