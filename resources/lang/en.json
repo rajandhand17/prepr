@@ -1179,5 +1179,9 @@
     "responses.challenge_winner_selected_successfully": "Challenge Winner selected successfully.",
     "responses.challenge_winner_selected_not_successfully": "Something went wrong while selecting the Challenge winner.",
     "responses.challenge_winner_timeline_fail": "The Challenge(s) which you are looking has passed the updating winner date.",
-    "responses.preferred_organization_updated": "Preferred Organization has been updated successfully."
+    "responses.preferred_organization_updated": "Preferred Organization has been updated successfully.",
+    "responses.resource_module_asset_visited": "Resource Module Asset visited successfully.",
+    "responses.resource_module_asset_visit_gone_wrong": "Something went wrong marking the Resource Module Asset as visited",
+    "responses.resource_module_asset_already_visited": "Resource Module Asset already visited.",
+    "responses.resource_module_asset_not_available": "Resource Module Asset not available, please try again later."
 }

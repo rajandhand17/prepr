@@ -14,7 +14,7 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('resource_module_id');
             $table->string('title');
-            $table->enum('type', ['0', '1', '2', '3', '4', '5', '6', '7'])->comment('0->document, 1->video, 2->audio, 3->embedded, 4->embedded_audio, 5->url, 6->image, 7->Embedded_Cover_Video')->nullable();
+            $table->enum('type', ['0', '1', '2', '3', '4', '5', '6'])->comment('0->document, 1->video, 2->audio, 3->embedded_video, 4->embedded_audio, 5->url, 6->image')->nullable();
             $table->string('path', 255)->nullable();
             $table->string('social_link_id')->nullable();
             $table->timestamps();

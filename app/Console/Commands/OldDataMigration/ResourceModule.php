@@ -210,7 +210,7 @@ class ResourceModule extends Command
                     }
 
                     // For Resource Module Attachments
-                    $resourceModuleDetails = DB::connection('mysql2')->table('resource_module_details')->where('type', '!=', 'header')->where('resource_id', $single_resource->id)->get();
+                    $resourceModuleDetails = DB::connection('mysql2')->table('resource_module_details')->whereNotIn('type', ['header', 'Embedded_Cover_Video'])->where('resource_id', $single_resource->id)->get();
                     if ($resourceModuleDetails->isNotEmpty()) {
                         foreach ($resourceModuleDetails as $moduleData) {
                             switch ($moduleData->type) {
@@ -234,9 +234,6 @@ class ResourceModule extends Command
                                     break;
                                 case 'image':
                                     $type = config('constants.resource_module_type.image');
-                                    break;
-                                case 'Embedded_Cover_Video':
-                                    $type = config('constants.resource_module_type.Embedded_Cover_Video');
                                     break;
                                 default:
                                     $type = null;

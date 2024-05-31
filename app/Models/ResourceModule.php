@@ -93,11 +93,6 @@ class ResourceModule extends Model
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '6');
     }
 
-    public function embedded_cover_videos()
-    {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->where('type', '=', '7');
-    }
-
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
