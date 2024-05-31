@@ -55,11 +55,12 @@ class UserExperienceService
     public static function checkUserExperienceBasedOnTitle($companyName)
     {
         try {
-            return UserExperience::where(['user_id'=>auth()->user()->id,'company'=>$companyName])->first();
+            return UserExperience::where(['user_id'=>auth()->user()->id, 'company'=>$companyName])->first();
         } catch(\Exception $e) {
             return false;
         }
     }
+
     public static function fileUpload($request)
     {
         try {
@@ -80,6 +81,7 @@ class UserExperienceService
             return false;
         }
     }
+
     public static function addUserExperienceByUsingResumeData($response, $user)
     {
         try {
@@ -92,9 +94,9 @@ class UserExperienceService
                     $endDate = isset($value['to_year'], $value['to_month'])
                         ? date('Y-m-d', strtotime($value['to_year'].'-'.$value['to_month'].'-01'))
                         : now()->toDateString();
-                    $companyName=trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
-                    $checkUserExperience=self::checkUserExperienceBasedOnTitle($companyName);
-                    if($checkUserExperience->count==0){
+                    $companyName = trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
+                    $checkUserExperience = self::checkUserExperienceBasedOnTitle($companyName);
+                    if ($checkUserExperience->count == 0) {
                         UserExperience::create([
                             'user_id'     => $user->id,
                             'company'     => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
@@ -108,6 +110,7 @@ class UserExperienceService
                     }
                 }
             }
+
             return true;
         } catch(\Exception $e) {
             return false;
