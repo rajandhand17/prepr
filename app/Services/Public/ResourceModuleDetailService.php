@@ -4,9 +4,7 @@ namespace App\Services\Public;
 
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
-use Aws\RetryMiddleware;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class ResourceModuleDetailService
 {
