@@ -13,9 +13,9 @@ class ResourceModuleVisit extends Model
 
     protected $table = 'resource_module_visits';
     protected $fillable = [
-            'user_id',
-            'module_id',
-            'module_asset_id',
-            'asset_type',
+        'user_id',
+        'module_id',
+        'module_asset_id',
+        'asset_type',
     ];
 }

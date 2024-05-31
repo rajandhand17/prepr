@@ -128,6 +128,7 @@ class ResourceModuleController extends AppBaseController
                 if ($addResourceModuleAssetVisit === false) {
                     return $this->sendError(__('responses.resource_module_asset_visit_gone_wrong'), 403);
                 }
+
                 return $this->sendResponse([], __('responses.resource_module_asset_visited'));
             }
 
