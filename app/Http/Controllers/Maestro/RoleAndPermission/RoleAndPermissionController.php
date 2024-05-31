@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Maestro\RoleAndPermission;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Helpers\Maestro\Users\MaestroUsersHelper;
+use App\Traits\Maestro\RoleAndPermission\RoleAndPermissionTrait;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
@@ -13,15 +12,16 @@ use App\Models\Role;
 use App\Models\Permission;
 use Exception;
 
-class MaestroRoleAndPermission extends Controller
+class RoleAndPermissionController extends Controller
 {
+    use RoleAndPermissionTrait;
     /**
      * Display a listing of the resource.
      */
     public function index(Builder $builder, Request $request)
     {
         try {
-            $roles = Role::query();
+            $roles = $this->getRoles();
             if (request()->ajax()) {
                 return DataTables::eloquent($roles)
                     ->editColumn('display_name', function (Role $role) {
@@ -67,7 +67,7 @@ class MaestroRoleAndPermission extends Controller
     public function create()
     {
         try {
-            $permissions = Permission::orderBy('id', 'asc')->get();
+            $permissions = $this->getPermissions();
             return view('maestro.roleandpermission.role-and-permission-create', compact('permissions'));
         } catch (Exception $e) {
             return redirect()->route('role.index')->with(['error' => $e->getMessage()]);
@@ -80,21 +80,18 @@ class MaestroRoleAndPermission extends Controller
     public function store(Request $request)
     {
         try {
-            $roleName = strtolower(str_replace(' ', '_', trim($request->display_name)));
-            $role = Role::create(['name' => $roleName,'display_name' => trim($request->display_name),'description' => trim($request->description)]);
-            $role->syncPermissions(!empty($request->permission) ? $request->permission : []);
-            return redirect()->route('role.index')->with('success', 'Role Created Successfully');
+            DB::beginTransaction();
+            if($this->createRole($request))
+            {
+                DB::commit();
+                return redirect()->route('role.index')->with('success', 'Role Created Successfully');
+            }
+            DB::rollback();
+            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
         } catch (Exception $e) {
+            DB::rollback();
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -103,9 +100,9 @@ class MaestroRoleAndPermission extends Controller
     public function edit(string $id)
     {
         try {
-            $permissions = Permission::orderBy('id', 'asc')->get();
-            $role = Role::find($id);
-            $role_permission = $role->permissions()->pluck('id')->toArray();
+            $role = $this->getRoleById($id);
+            $permissions = $this->getPermissions();
+            $role_permission = $this->getPermissionBYRoleId($id);
             return view('maestro.roleandpermission.role-and-permission-edit', compact('role', 'role_permission','permissions'));
         } catch (Exception $e) {
             return redirect()->route('role.index')->with(['error' => $e->getMessage()]);
@@ -118,13 +115,15 @@ class MaestroRoleAndPermission extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $role = Role::find($id);
-            $role->name = $request->name;
-            $role->save();
-            $role->syncPermissions(!empty($request->permission) ? $request->permission : []);
-            
-            return redirect()->route('role.index')->with('success', 'Data Updated successfully.');
+            DB::beginTransaction();
+            if($this->updateRole($id,$request)){
+                DB::commit();
+                return redirect()->route('role.index')->with('success', 'Data Updated successfully.');
+            }
+            DB::rollback();
+            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
         } catch (Exception $e) {
+            DB::rollback();
             return redirect()->route('role.index')->with(['error' => $e->getMessage()]);
         }
     }
