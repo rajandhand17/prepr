@@ -13,6 +13,7 @@ use App\Http\Requests\Profile\AddTagsRequest;
 use App\Http\Requests\Profile\FileUploadRequest;
 use App\Http\Requests\Profile\FriendRequest;
 use App\Http\Requests\Profile\ProfileUploadRequest;
+use App\Http\Requests\Profile\ResumeUploadRequest;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
@@ -22,6 +23,7 @@ use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Profile\UserTagsResource;
+use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Profile\ProfileRepository;
 
 class ProfileController extends AppBaseController
@@ -259,6 +261,20 @@ class ProfileController extends AppBaseController
             $uploadFile = $this->profileRepository->fileUpload($request);
             if ($uploadFile) {
                 return $this->sendResponse(UserPersonalFilesResource::make($uploadFile), __('responses.successfully_upload_file'));
+            }
+
+            return $this->sendError(__('responses.upload_file_failed'), 400);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function resumeUpload(ResumeUploadRequest $request)
+    {
+        try {
+            $resumeFile = $this->profileRepository->resumeUpload($request);
+            if ($resumeFile) {
+                return $this->sendResponse(UserResource::make($resumeFile), __('responses.successfully_upload_file'));
             }
 
             return $this->sendError(__('responses.upload_file_failed'), 400);
