@@ -28,7 +28,7 @@ class MemberManagementResource extends JsonResource
             '1' => 'Network',
             '2' => 'Join Request',
             '3' => 'CSV Upload',
-            '4' => 'From HR Integration'
+            '4' => 'From HR Integration',
         ];
         $invite_type = data_get($invite_types, $this->invite_type);
         $invtee_user = UserService::getUserById($this->inviter_id);
