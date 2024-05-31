@@ -147,20 +147,6 @@ class UserSkillsService
         }
     }
 
-    public static function deleteUserSkillsBasedOnUserId($userId)
-    {
-        try {
-            $checkExists = UserSkills::where('user_id', $userId)->first();
-            if ($checkExists) {
-                UserSkills::where('user_id', $userId)->delete();
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public static function addUserSkillsByUsingResumeData($data)
     {
         try {
