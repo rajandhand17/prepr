@@ -213,21 +213,21 @@ class AIService
 
             $stepsArray = $request['steps'];
             $challengeSteps = implode(', ', $stepsArray);
-            
+
             while ($attempt < 3) {
                 $attempt++;
                 $openAIResponse = $this->fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle);
-                        
+
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     continue;
                 }
-            
+
                 $criterias = json_decode($openAIResponse['choices'][0]['message']['content'], true);
-            
+
                 if ($criterias === null || json_last_error() !== JSON_ERROR_NONE) {
                     continue;
                 }
-            
+
                 $isValid = true;
                 foreach ($criterias as $criteria) {
                     if (!isset($criteria['title']) || !isset($criteria['description']) || !isset($criteria['weight'])) {
@@ -235,24 +235,24 @@ class AIService
                         break;
                     }
                 }
-            
+
                 if (!$isValid) {
                     continue;
                 }
-            
+
                 // Add 'score' => '10' to each criterion
                 foreach ($criterias as $key => $value) {
                     $criterias[$key]['score'] = '10';
                 }
-            
+
                 $assessment = [
-                    'assessment_type' => 'ai',
-                    'assessment_title' => [],
+                    'assessment_type'        => 'ai',
+                    'assessment_title'       => [],
                     'assessment_description' => [],
-                    'assessment_score' => [],
-                    'assessment_weight' => []
+                    'assessment_score'       => [],
+                    'assessment_weight'      => [],
                 ];
-            
+
                 foreach ($criterias as $criteria) {
                     $assessment['assessment_title'][] = $criteria['title'];
                     $assessment['assessment_description'][] = $criteria['description'];
@@ -261,7 +261,7 @@ class AIService
                 }
 
                 break;
-            }                               
+            }
 
             return $assessment;
         } catch (Exception $e) {
@@ -312,20 +312,20 @@ class AIService
             foreach ($resourceModulesDetails as $detail) {
                 $url = $detail->path;
                 $type = '';
-            
+
                 $cloudFrontPrefix = config('site-settings.aws_url');
                 if (strpos($url, $cloudFrontPrefix) === 0) {
                     $url = substr($url, strlen($cloudFrontPrefix));
                 }
-            
+
                 if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
@@ -358,17 +358,17 @@ class AIService
                             $type = 'file';
                     }
                 }
-            
+
                 if (!preg_match('/^https?:\/\//', $url)) {
-                    $url = $cloudFrontPrefix . ltrim($url, '/');
+                    $url = $cloudFrontPrefix.ltrim($url, '/');
                 }
-            
+
                 if ($type == 'url' && strpos($url, $cloudFrontPrefix) === 0) {
                     $url = substr($url, strlen($cloudFrontPrefix));
                 }
-            
+
                 $items[] = ['url' => $url, 'type' => $type];
-            }            
+            }
 
             if (empty($items)) {
                 $resourceModulesSummary = '';
@@ -826,7 +826,7 @@ class AIService
                         ',
                     ],
                 ],
-            ];            
+            ];
 
             $retry = 0;
             $maxRetries = 1;
@@ -1475,20 +1475,20 @@ class AIService
             foreach ($projectFiles as $file) {
                 $url = $file->path;
                 $type = '';
-            
+
                 $cloudFrontPrefix = config('site-settings.aws_url');
                 if (strpos($url, $cloudFrontPrefix) === 0) {
                     $url = substr($url, strlen($cloudFrontPrefix));
                 }
-            
+
                 if (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v=' . $match[1];
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
@@ -1509,9 +1509,9 @@ class AIService
                             $type = 'file';
                     }
                 }
-            
+
                 $items[] = ['url' => $url, 'type' => $type];
-            }                           
+            }
 
             try {
                 $requestBody = [
