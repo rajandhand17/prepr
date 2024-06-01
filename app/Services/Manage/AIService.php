@@ -214,6 +214,8 @@ class AIService
             $stepsArray = $request['steps'];
             $challengeSteps = implode(', ', $stepsArray);
 
+            $assessment = [];
+            
             while ($attempt < 3) {
                 $attempt++;
                 $openAIResponse = $this->fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle);
