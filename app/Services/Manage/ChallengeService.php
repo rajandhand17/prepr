@@ -232,17 +232,21 @@ class ChallengeService
                     break;
             }
 
-            $is_open = config('constants.challenge_open_close.no');
-            switch ($request->is_open) {
-                case 'yes':
-                    $is_open = config('constants.challenge_open_close.yes');
-                    break;
-                case 'no':
-                    $is_open = config('constants.challenge_open_close.no');
-                    break;
-                default:
-                    $is_open = config('constants.challenge_open_close.no');
-                    break;
+            if ($request->is_ai_created) {
+                $is_open = config('constants.challenge_open_close.yes');
+            } else {
+                $is_open = config('constants.challenge_open_close.no');
+                switch ($request->is_open) {
+                    case 'yes':
+                        $is_open = config('constants.challenge_open_close.yes');
+                        break;
+                    case 'no':
+                        $is_open = config('constants.challenge_open_close.no');
+                        break;
+                    default:
+                        $is_open = config('constants.challenge_open_close.no');
+                        break;
+                }
             }
 
             $is_auto_created = config('constants.challenge_auto_created.no');
