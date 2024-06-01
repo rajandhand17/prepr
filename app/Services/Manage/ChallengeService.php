@@ -172,20 +172,25 @@ class ChallengeService
     {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            $status = config('constants.challenge_status.draft');
-            switch ($request->request_type) {
-                case 'draft':
-                    $status = config('constants.challenge_status.draft');
-                    break;
-                case 'publish':
-                    $status = config('constants.challenge_status.publish');
-                    break;
-                case 'archive':
-                    $status = config('constants.challenge_status.archive');
-                    break;
-                default:
-                    $status = config('constants.challenge_status.draft');
-                    break;
+
+            if ($request->is_ai_created) {
+                $status = config('constants.challenge_status.publish');
+            } else {
+                $status = config('constants.challenge_status.draft');
+                switch ($request->request_type) {
+                    case 'draft':
+                        $status = config('constants.challenge_status.draft');
+                        break;
+                    case 'publish':
+                        $status = config('constants.challenge_status.publish');
+                        break;
+                    case 'archive':
+                        $status = config('constants.challenge_status.archive');
+                        break;
+                    default:
+                        $status = config('constants.challenge_status.draft');
+                        break;
+                }
             }
 
             $challenge_privacy = config('constants.challenge_privacy.no');

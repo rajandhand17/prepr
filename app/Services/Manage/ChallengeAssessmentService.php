@@ -37,6 +37,9 @@ class ChallengeAssessmentService
                     case 'open':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.open');
                         break;
+                    case 'ai':
+                        $challenge_assessment_type = config('constants.challenge_assessment_type.ai');
+                        break;
                     default:
                         $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                         break;
@@ -98,6 +101,9 @@ class ChallengeAssessmentService
                         break;
                     case 'open':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.open');
+                        break;
+                    case 'ai':
+                        $challenge_assessment_type = config('constants.challenge_assessment_type.ai');
                         break;
                     default:
                         $challenge_assessment_type = config('constants.challenge_assessment_type.null');
