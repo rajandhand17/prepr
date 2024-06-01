@@ -539,7 +539,7 @@ class ChallengeController extends AppBaseController
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
-            
+
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
             $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
