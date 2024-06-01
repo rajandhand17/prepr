@@ -173,10 +173,10 @@ class ChallengeService
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
 
+            $status = config('constants.challenge_status.draft');
             if ($request->is_ai_created) {
                 $status = config('constants.challenge_status.publish');
             } else {
-                $status = config('constants.challenge_status.draft');
                 switch ($request->request_type) {
                     case 'draft':
                         $status = config('constants.challenge_status.draft');
@@ -232,10 +232,10 @@ class ChallengeService
                     break;
             }
 
+            $is_open = config('constants.challenge_open_close.no');
             if ($request->is_ai_created) {
                 $is_open = config('constants.challenge_open_close.yes');
             } else {
-                $is_open = config('constants.challenge_open_close.no');
                 switch ($request->is_open) {
                     case 'yes':
                         $is_open = config('constants.challenge_open_close.yes');
