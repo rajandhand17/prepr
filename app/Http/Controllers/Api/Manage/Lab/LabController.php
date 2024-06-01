@@ -31,8 +31,7 @@ class LabController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $userOrganizationIdPreference = auth()->user()->preferred_organization;
-            $organization = OrganizationService::getOrganizationExistBasedOnId($userOrganizationIdPreference);
+            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
