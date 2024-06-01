@@ -2,7 +2,9 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChargebeeSubscription;
+use Carbon\Carbon;
 use Exception;
 
 class ChargebeeSubscriptionService
@@ -30,11 +32,16 @@ class ChargebeeSubscriptionService
             $resourceGroup = (isset($chargebeeDetails['featureLimits']['resourceGroup']) && $chargebeeDetails['featureLimits']['resourceGroup'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['resourceGroup'] ?? 0);
             $preBuiltLab = (isset($chargebeeDetails['featureLimits']['preBuiltLab']) && $chargebeeDetails['featureLimits']['preBuiltLab'] === 'Unlimited') ? -1 : (int) ($chargebeeDetails['featureLimits']['preBuiltLab'] ?? 0);
 
+            // Create a Carbon instance from the timestamp
+            $date = Carbon::createFromTimestamp($chargebeeDetails['subscriptionDetail']->nextBillingAt);
+            $trial_end_date = $date->format('Y-m-d H:i:s');
+
             $chargebeeSubscription = new ChargebeeSubscription();
             $chargebeeSubscription->organization_id = $organizationId;
             $chargebeeSubscription->plan = $chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId;
             $chargebeeSubscription->plan_validity = '0';
             $chargebeeSubscription->plan_limitations = ($chargebeeDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId === 'Unlimited-Plan-CAD-Yearly') ? '1' : '0';
+            $chargebeeSubscription->trial_end_date = $trial_end_date ?? null;
             $chargebeeSubscription->challenge_limits = $challenge;
             $chargebeeSubscription->challenge_path_limits = $challengePath;
             $chargebeeSubscription->lab_limits = $lab;
