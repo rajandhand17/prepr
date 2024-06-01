@@ -220,19 +220,23 @@ class AIService
                 $attempt++;
                 $openAIResponse = $this->fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle);
 
-                if (!$openAIResponse || empty($openAIResponse['choices'])) {
+                if (empty($openAIResponse['choices'])) {
                     continue;
                 }
 
                 $criterias = json_decode($openAIResponse['choices'][0]['message']['content'], true);
+                if (is_null($criterias) || json_last_error() !== JSON_ERROR_NONE) {
+                    continue;
+                }
 
-                if ($criterias === null || json_last_error() !== JSON_ERROR_NONE) {
+                $criterias = $criterias['criteria'] ?? [];
+                if (empty($criterias)) {
                     continue;
                 }
 
                 $isValid = true;
                 foreach ($criterias as $criteria) {
-                    if (!isset($criteria['title']) || !isset($criteria['description']) || !isset($criteria['weight'])) {
+                    if (!isset($criteria['title'], $criteria['description'], $criteria['weight'])) {
                         $isValid = false;
                         break;
                     }
@@ -247,20 +251,25 @@ class AIService
                     $criterias[$key]['score'] = '10';
                 }
 
-                $assessment = [
-                    'assessment_type'        => 'ai',
-                    'assessment_title'       => [],
-                    'assessment_description' => [],
-                    'assessment_score'       => [],
-                    'assessment_weight'      => [],
-                ];
+                $assessmentTitles = [];
+                $assessmentDescriptions = [];
+                $assessmentScores = [];
+                $assessmentWeights = [];
 
                 foreach ($criterias as $criteria) {
-                    $assessment['assessment_title'][] = $criteria['title'];
-                    $assessment['assessment_description'][] = $criteria['description'];
-                    $assessment['assessment_score'][] = $criteria['score'];
-                    $assessment['assessment_weight'][] = $criteria['weight'];
+                    $assessmentTitles[] = $criteria['title'];
+                    $assessmentDescriptions[] = $criteria['description'];
+                    $assessmentScores[] = $criteria['score'];
+                    $assessmentWeights[] = $criteria['weight'];
                 }
+
+                $assessment = [
+                    'assessment_type'        => 'ai',
+                    'assessment_title'       => $assessmentTitles,
+                    'assessment_description' => $assessmentDescriptions,
+                    'assessment_score'       => $assessmentScores,
+                    'assessment_weight'      => $assessmentWeights,
+                ];
 
                 break;
             }
