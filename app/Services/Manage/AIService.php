@@ -1138,12 +1138,13 @@ class AIService
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
                         $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
-                            ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
+                            ' Example json format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
-                            'model'    => 'gpt-4o',
-                            'n'        => 1,
-                            'messages' => [
+                            'model'           => 'gpt-4o',
+                            'n'               => 1,
+                            'response_format' => ['type' => 'json_object'],
+                            'messages'        => [
                                 [
                                     'role'    => 'user',
                                     'content' => $prompt,
@@ -1308,12 +1309,13 @@ class AIService
 
                 $fullQueryString = implode(', ', $queryParts).'.';
                 $payload = [
-                    'model'    => 'gpt-4o',
-                    'n'        => 1,
-                    'messages' => [
+                    'model'           => 'gpt-4o',
+                    'n'               => 1,
+                    'response_format' => ['type' => 'json_object'],
+                    'messages'        => [
                         [
                             'role'    => 'user',
-                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
+                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output json format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
                         ],
                     ],
                 ];
