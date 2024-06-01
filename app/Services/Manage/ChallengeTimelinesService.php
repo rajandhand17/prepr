@@ -57,7 +57,7 @@ class ChallengeTimelinesService
                     $flexibleDeadlineDate = date('Y-m-d H:i:s', strtotime($request->flexible_expire_deadline));
                 }
                 $flexible_date_number = $request->flexible_date_number ?? 2;
-                $flexible_date_duration = $request->flexible_date_duration ?? "weeks";
+                $flexible_date_duration = $request->flexible_date_duration ?? 'weeks';
                 $automatic_alert = $request->automatic_alert ?? '0';
 
                 $challengeFlexibleTimeLine = new ChallengeTimelines();
