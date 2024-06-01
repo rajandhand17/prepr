@@ -581,7 +581,7 @@ class ChallengeService
     public static function getChallengeBasedOnUUID($uuid)
     {
         try {
-            return Challenge::where('UUID', $uuid)->first();
+            return Challenge::where('uuid', $uuid)->first();
         } catch (Exception $e) {
             return false;
         }
