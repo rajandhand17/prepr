@@ -2,7 +2,6 @@
 
 namespace App\Services\Manage;
 
-use App\Helpers\UtilityHelper;
 use App\Models\ChargebeeSubscription;
 use Carbon\Carbon;
 use Exception;
