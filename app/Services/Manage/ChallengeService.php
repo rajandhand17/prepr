@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
+use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
 use Exception;
@@ -750,6 +751,19 @@ class ChallengeService
 
                 return $challenge_details;
             }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function challengeUserInviteCount($organizationId)
+    {
+        try {
+            $getChallengeAcceptedMembersBasedOnIds = [];
+            $getChallengeBasedOnOrganization = Challenge::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id');
+            $getChallengeAcceptedMembersBasedOnIds = ManageMemberManagementService::getComponentAcceptedMembersBasedOnIds($getChallengeBasedOnOrganization, 'challenge');
+
+            return $getChallengeAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
             return false;
         }
