@@ -17,6 +17,7 @@ class ChargebeeSubscription extends Model
         'plan',
         'plan_validity',
         'plan_limitations',
+        'trial_end_date',
         'challenge_limits',
         'challenge_path_limits',
         'lab_limits',
