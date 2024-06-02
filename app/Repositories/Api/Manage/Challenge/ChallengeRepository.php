@@ -233,10 +233,15 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image)
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
     {
         try {
-            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
+            $createChallengeAssessmentUsingAi = $this->aiService->createChallengeAssessmentUsingAi($request);
+
+            $updatedData = array_merge($request->json()->all(), $createChallengeAssessmentUsingAi);
+            $request->json()->replace($updatedData);
+
+            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
@@ -246,17 +251,21 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id, $createChallengeProjectPitch);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
                 $createChallengeAssociations = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
+                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
 
                 return [
-                    'createChallenge'                  => $createChallenge,
-                    'createChallengeAchievement'       => $createChallengeAchievement,
-                    'createChallengeSkillsGroupsStack' => $createChallengeSkillsGroupsStack,
-                    'createChallengeRequirement'       => $createChallengeRequirement,
-                    'createChallengeJobs'              => $createChallengeJobs,
-                    'createChallengeProjectPitch'      => $createChallengeProjectPitch,
-                    'createChallengeProjectTemplate'   => $createChallengeProjectTemplate,
-                    'createChallengeTimelines'         => $createChallengeTimelines,
-                    'createChallengeAssociations'      => $createChallengeAssociations,
+                    'createChallenge'                       => $createChallenge,
+                    'createChallengeAchievement'            => $createChallengeAchievement,
+                    'createChallengeSkillsGroupsStack'      => $createChallengeSkillsGroupsStack,
+                    'createChallengeRequirement'            => $createChallengeRequirement,
+                    'createChallengeJobs'                   => $createChallengeJobs,
+                    'createChallengeProjectPitch'           => $createChallengeProjectPitch,
+                    'createChallengeProjectTemplate'        => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'              => $createChallengeTimelines,
+                    'createChallengeAssociations'           => $createChallengeAssociations,
+                    'createChallengeAssessment'             => $createChallengeAssessment,
+                    'createChallengeAssessmentCriteria'     => $createChallengeAssessmentCriteria,
                 ];
             });
 

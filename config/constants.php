@@ -188,6 +188,7 @@ return [
         'null'  => '0',
         'open'  => '1',
         'close' => '2',
+        'ai'    => '3',
     ],
 
     'challenge_visibility_type' => [

@@ -11,8 +11,11 @@ use App\Models\MemberManagement;
 use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChargebeeSubscriptionService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
+use App\Services\UserService;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Customer;
 use ChargeBee\ChargeBee\Models\Subscription;
@@ -347,6 +350,33 @@ class ChargebeeHelper
             $data = ['organizationId' => $organization->id, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
 
             return $data;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserCount($organizationId)
+    {
+        try {
+            $labUserInviteCount = LabService::labUserInviteCount($organizationId);
+            $challengeUserInviteCount = ChallengeService::challengeUserInviteCount($organizationId);
+            $organizationUserInviteCount = OrganizationService::organizationUserInviteCount($organizationId);
+            $mergedMemberEmails = $labUserInviteCount->merge($challengeUserInviteCount)->merge($organizationUserInviteCount);
+            $userInviteCount = UserService::getUserByEmailArray($mergedMemberEmails->unique());
+
+            return $userInviteCount;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getManagerCount($organizationId)
+    {
+        try {
+            $organizationManagerInviteCount = OrganizationService::organizationManagerInviteCount($organizationId);
+            $managerInviteCount = UserService::getUserByEmailArray($organizationManagerInviteCount);
+
+            return $managerInviteCount;
         } catch (Exception $e) {
             return false;
         }
