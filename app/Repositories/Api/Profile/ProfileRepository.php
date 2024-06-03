@@ -139,7 +139,7 @@ class ProfileRepository implements ProfileInterface
         try {
             $getResumeData = ResumeParserHelper::getResumeData($request);
             $user = auth()->user();
-            if ($getResumeData && $getResumeData['status']=='success'){
+            if ($getResumeData && $getResumeData['status'] == 'success') {
                 if ($getResumeData['data']) {
                     $getResume = DB::transaction(function () use ($getResumeData, $user) {
                         $userSKills = $this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData);
@@ -153,12 +153,14 @@ class ProfileRepository implements ProfileInterface
                 }
                 if ($getResume['skills'] && $getResume['experience']) {
                     DB::commit();
+
                     return $user;
                 }
                 DB::rollBack();
             }
         } catch (\Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
