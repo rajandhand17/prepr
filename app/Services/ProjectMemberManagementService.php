@@ -238,7 +238,7 @@ class ProjectMemberManagementService
                         $invite_status = config('constants.project_member_management_invite_status.invited');
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
-                        switch ($pariticipateData['access_level']) {
+                        switch (strtolower($pariticipateData['access_level'])) {
                             case 'editor':
                                 $access_level = config('constants.project_access_level.editor');
                                 break;
