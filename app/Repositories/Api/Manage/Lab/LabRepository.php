@@ -146,16 +146,16 @@ class LabRepository implements LabInterface
                 }
 
                 return [
-                    'createdLab' => $createLab,
-                    'createdLabAddress' => $createdLabAddress,
+                    'createdLab'                  => $createLab,
+                    'createdLabAddress'           => $createdLabAddress,
                     'createdLabSkillAssociations' => $createdLabSkillAssociations,
-                    'createdLabTagAssociations' => $createdLabTagAssociations,
-                    'createdLabExternalLinks' => $createdLabExternalLinks,
-                    'createdLabAchievement' => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
-                    'createdLabAssociations' => $createdLabAssociations,
-                    'createdEvent' => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
-                    'campusConnectOpportunity' => $campusConnectOpportunity,
-                    'campusConnectStory' => $campusConnectStory,
+                    'createdLabTagAssociations'   => $createdLabTagAssociations,
+                    'createdLabExternalLinks'     => $createdLabExternalLinks,
+                    'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
+                    'createdLabAssociations'      => $createdLabAssociations,
+                    'createdEvent'                => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
+                    'campusConnectOpportunity'    => $campusConnectOpportunity,
+                    'campusConnectStory'          => $campusConnectStory,
                 ];
             });
             if (
@@ -235,16 +235,16 @@ class LabRepository implements LabInterface
                 }
 
                 return [
-                    'updatedLab' => $updateLab,
-                    'updatedLabAddress' => $updatedLabAddress,
+                    'updatedLab'                  => $updateLab,
+                    'updatedLabAddress'           => $updatedLabAddress,
                     'updatedLabSkillAssociations' => $updatedLabSkillAssociations,
-                    'updatedLabTagAssociations' => $updatedLabTagAssociations,
-                    'updatedLabExternalLinks' => $updatedLabExternalLinks,
-                    'updatedLabAchievement' => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
-                    'updatedLabAssociations' => $updatedLabAssociations,
-                    'updatedEvent' => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
-                    'campusConnectOpportunity' => $campusConnectOpportunity,
-                    'campusConnectStory' => $campusConnectStory,
+                    'updatedLabTagAssociations'   => $updatedLabTagAssociations,
+                    'updatedLabExternalLinks'     => $updatedLabExternalLinks,
+                    'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
+                    'updatedLabAssociations'      => $updatedLabAssociations,
+                    'updatedEvent'                => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
+                    'campusConnectOpportunity'    => $campusConnectOpportunity,
+                    'campusConnectStory'          => $campusConnectStory,
                 ];
             });
             if (
@@ -327,7 +327,7 @@ class LabRepository implements LabInterface
 
             return $createLabUsingAIPreview;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAIPreview in LabRepository.php: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAIPreview in LabRepository.php: '.$e->getMessage());
 
             return false;
         }
@@ -342,9 +342,9 @@ class LabRepository implements LabInterface
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLabUsingAI);
 
                 return [
-                    'createdLabUsingAI' => $createLabUsingAI,
+                    'createdLabUsingAI'           => $createLabUsingAI,
                     'createdLabSkillAssociations' => $createdLabSkillAssociations,
-                    'createdLabAssociations' => $createdLabAssociations,
+                    'createdLabAssociations'      => $createdLabAssociations,
                 ];
             });
 
@@ -352,7 +352,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (Exception $e) {
-            Log::error('Error in createLabUsingAI in LabRepository.php: ' . $e->getMessage());
+            Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
 
             return false;
         }
