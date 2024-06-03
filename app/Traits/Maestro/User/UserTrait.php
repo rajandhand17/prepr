@@ -3,6 +3,7 @@
 namespace App\Traits\Maestro\User;
 
 use App\Services\Maestro\User\UserService;
+use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use Exception;
 
 trait UserTrait
@@ -52,6 +53,30 @@ trait UserTrait
     {
         try {
             $users = UserService::getUsers();
+            if($users){
+                return $users;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getAllRoles()
+    {
+        try {
+            $users = RoleAndPermissionService::getAllRoles();
+            if($users){
+                return $users;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getAllPermissions()
+    {
+        try {
+            $users = RoleAndPermissionService::permissions();
             if($users){
                 return $users;
             }

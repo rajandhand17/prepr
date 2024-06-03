@@ -60,13 +60,49 @@
                                     <input type="password" name="password" class="form-control" value="" id="password" placeholder="Enter Password">
                                 </div>
                             </div>
-
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Role</label>
+                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
+                                  @if(!empty($roles))
+                                    @foreach($roles as $key => $role)
+                                      <option value="{{ $role->name }}" @selected(in_array($role->name, $selected_role)) >{{ $role->display_name }}</option>
+                                    @endforeach
+                                  @endif
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                            @php
+                              $chunks = $permissions->chunk(ceil($permissions->count() / 4));
+                            @endphp
+                            <div class="row">
+                              @if(!empty($chunks))
+                                @foreach($chunks as $chunk)
+                                    <div class="col-sm-3">
+                                        @foreach($chunk as $permission)
+                                            <div class="form-group">
+                                                <label class="text-uppercase">
+                                                    <input type="checkbox" name="permission[]" @if(isset($permission->id) && in_array($permission->id, $assigned_all_permission)) checked @endif value="{{ $permission->name }}">
+                                                    {{ $permission->display_name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
+                              @endif
+                            </div>
+                          <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                     <a class="btn btn-danger mr-1" href="{{ route('users.index') }}"><i class="icon-cross2"></i> Cancel</a>
                                 </div>
                             </div>
+                          </div>
+                        </div>
                         </div>
                     {!!Form::close()!!}
                 </div>
