@@ -493,4 +493,17 @@ class LabService
             return false;
         }
     }
+
+    public static function labUserInviteCount($organizationId)
+    {
+        try {
+            $getLabAcceptedMembersBasedOnIds = [];
+            $getLabBasedOnOrganization = Lab::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id');
+            $getLabAcceptedMembersBasedOnIds = MemberManagementService::getComponentAcceptedMembersBasedOnIds($getLabBasedOnOrganization, 'lab');
+
+            return $getLabAcceptedMembersBasedOnIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

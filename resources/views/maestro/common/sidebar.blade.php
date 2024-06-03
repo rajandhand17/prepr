@@ -1,5 +1,5 @@
 <!-- Brand Logo -->
-  <a href="{{ route('superAdminDashboard') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
+  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -9,7 +9,7 @@
         <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="{{ route('superAdminDashboard') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
+        <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ route('superAdminDashboard') }}" class="nav-link active">
+              <a href="{{ route('dashboard.index') }}" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard</p>
               </a>
@@ -55,6 +55,12 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ route('role.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                  <p>Role And Permission</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="pages/charts/chartjs.html" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>

@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Users</h1>
+                <h1 class="m-0">Roles & Permissions</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('superAdminDashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Roles & Permissions</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -29,7 +29,7 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('users.create')}}" role="menuitem">Create User</a>
+                            href="{{route('role.create')}}" role="menuitem">Create Role</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -66,7 +66,7 @@
     </script>
 
     <script>
-        function deleteUser(url) {
+        function deleteRole(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',

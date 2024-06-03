@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Helpers\ResumeParserHelper;
 use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
@@ -128,6 +129,35 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userExperienceService->fileUpload($request);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function resumeUpload($request)
+    {
+        try {
+            $getResumeData = ResumeParserHelper::getResumeData($request);
+            $user = auth()->user();
+            if (!empty($getResumeData)) {
+                if ($getResumeData['data']) {
+                    $getResume = DB::transaction(function () use ($getResumeData, $user) {
+                        $userSKills = $this->userSkillsService->addUserSkillsByUsingResumeData($getResumeData);
+                        $userExperience = $this->userExperienceService->addUserExperienceByUsingResumeData($getResumeData, $user);
+
+                        return [
+                            'skills'     => $userSKills,
+                            'experience' => $userExperience,
+                        ];
+                    });
+                }
+                if ($getResume['skills'] && $getResume['experience']) {
+                    DB::commit();
+
+                    return $user;
+                }
+                DB::rollBack();
+            }
         } catch (\Exception $e) {
             return false;
         }

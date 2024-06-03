@@ -180,6 +180,108 @@ class AIService
         }
     }
 
+    public function createChallengeAssessmentUsingAi($request)
+    {
+        try {
+            $attempt = 0;
+
+            // $language = $request->language;
+
+            // Extract job IDs and titles
+            $jobIdsArray = $request['jobs'];
+            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
+            $jobTitles = implode(', ', $jobTitlesArray);
+
+            // Extract skill titles
+            $skillIdsArray = $request['skills'];
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
+            $skillTitles = implode(', ', $skillTitlesArray);
+
+            // Extract duration and level IDs and titles
+            $durationID = $request['duration_id'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
+
+            $levelID = $request['level_id'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
+
+            $categoryID = $request['category_id'];
+            $categoryTitle = Category::where('id', $categoryID)->pluck('title')->first();
+
+            $challengeTitle = $request['challengeTitle'];
+            $challengeDescription = $request['challengeDescription'];
+            $challengeSteps = $request['steps'];
+
+            $stepsArray = $request['steps'];
+            $challengeSteps = implode(', ', $stepsArray);
+
+            $assessment = [];
+
+            while ($attempt < 3) {
+                $attempt++;
+                $openAIResponse = $this->fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle);
+
+                if (empty($openAIResponse['choices'])) {
+                    continue;
+                }
+
+                $criterias = json_decode($openAIResponse['choices'][0]['message']['content'], true);
+                if (is_null($criterias) || json_last_error() !== JSON_ERROR_NONE) {
+                    continue;
+                }
+
+                $criterias = $criterias['criteria'] ?? [];
+                if (empty($criterias)) {
+                    continue;
+                }
+
+                $isValid = true;
+                foreach ($criterias as $criteria) {
+                    if (!isset($criteria['title'], $criteria['description'], $criteria['weight'])) {
+                        $isValid = false;
+                        break;
+                    }
+                }
+
+                if (!$isValid) {
+                    continue;
+                }
+
+                // Add 'score' => '10' to each criterion
+                foreach ($criterias as $key => $value) {
+                    $criterias[$key]['score'] = '10';
+                }
+
+                $assessmentTitles = [];
+                $assessmentDescriptions = [];
+                $assessmentScores = [];
+                $assessmentWeights = [];
+
+                foreach ($criterias as $criteria) {
+                    $assessmentTitles[] = $criteria['title'];
+                    $assessmentDescriptions[] = $criteria['description'];
+                    $assessmentScores[] = $criteria['score'];
+                    $assessmentWeights[] = $criteria['weight'];
+                }
+
+                $assessment = [
+                    'assessment_type'        => 'ai',
+                    'assessment_title'       => $assessmentTitles,
+                    'assessment_description' => $assessmentDescriptions,
+                    'assessment_score'       => $assessmentScores,
+                    'assessment_weight'      => $assessmentWeights,
+                ];
+
+                break;
+            }
+
+            return $assessment;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeAssessmentUsingAi in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
     public function createChallengeFromResourceUsingAIPreview($request)
     {
         try {
@@ -220,8 +322,13 @@ class AIService
 
             foreach ($resourceModulesDetails as $detail) {
                 $url = $detail->path;
+                $type = '';
 
-                // Check for YouTube URLs embedded in iframe tags and capture only the video ID
+                $cloudFrontPrefix = config('site-settings.aws_url');
+                if (strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
+                }
+
                 if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
                     $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
@@ -229,7 +336,7 @@ class AIService
                     $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1]; // Convert embed URL to watch URL
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
@@ -263,14 +370,12 @@ class AIService
                     }
                 }
 
-                // Ensure all non-YouTube and non-iframe URLs are prefixed properly
                 if (!preg_match('/^https?:\/\//', $url)) {
-                    $url = config('site-settings.aws_url').ltrim($url, '/');
+                    $url = $cloudFrontPrefix.ltrim($url, '/');
                 }
 
-                // Remove the prefix if it's a URL
-                if ($type == 'url' && strpos($url, config('site-settings.aws_url')) === 0) {
-                    $url = substr($url, strlen(config('site-settings.aws_url')));
+                if ($type == 'url' && strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
                 }
 
                 $items[] = ['url' => $url, 'type' => $type];
@@ -501,7 +606,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-3.5-turbo',
+                'model'           => 'gpt-4o',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -561,7 +666,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-3.5-turbo',
+                'model'           => 'gpt-4o',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -630,7 +735,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-3.5-turbo',
+                'model'           => 'gpt-4o',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -689,6 +794,71 @@ class AIService
             return json_decode($response->getBody()->getContents(), true);
         } catch (Exception $e) {
             Log::error('Error in fetchChallengesForLabByOpenAI in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    protected function fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle)
+    {
+        try {
+            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
+            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
+
+            $payload = [
+                'model'           => 'gpt-4o',
+                'n'               => 1,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
+                    [
+                        'role'    => 'user',
+                        'content' => '
+                            Please generate 4-6 assessment criteria for evaluating projects submitted for the following challenge. Ensure that the total weight of all criteria adds up to 100.
+                            1. **Challenge Title**: "'.$challengeTitle.'".
+                            2. **Challenge Description**: "'.$challengeDescription.'".
+                            3. **Challenge Steps**: "'.$challengeSteps.'".
+                            4. **Required Skills**: "'.$skillTitlesStr.'".
+                            5. **Targeted Careers**: "'.$jobTitlesStr.'".
+                            6. **Challenge Duration**: "'.$durationTitle.'".
+                            7. **Difficulty Level**: "'.$levelTitle.'".
+                            8. **Challenge Category**: "'.$categoryTitle.'".
+            
+                            JSON output format (Ensure precise adherence):
+                            {
+                                "criteria": [
+                                    {
+                                        "title": "Criteria Title 1",
+                                        "description": "Brief explanation of how this criteria applies to the challenge",
+                                        "weight": "Percentage of total score"
+                                    },
+                                    ... (additional criteria up to 6)
+                                ]
+                            }
+                        ',
+                    ],
+                ],
+            ];
+
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception('OpenAI call failed: '.$e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
+
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (Exception $e) {
+            Log::error('Error in fetchCriteriasByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -979,12 +1149,13 @@ class AIService
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
                         $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
-                            ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
+                            ' Example json format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
-                            'model'    => 'gpt-3.5-turbo',
-                            'n'        => 1,
-                            'messages' => [
+                            'model'           => 'gpt-4o',
+                            'n'               => 1,
+                            'response_format' => ['type' => 'json_object'],
+                            'messages'        => [
                                 [
                                     'role'    => 'user',
                                     'content' => $prompt,
@@ -1074,9 +1245,10 @@ class AIService
             $modules = ResourceModule::whereNull('deleted_at')
                 ->where('is_global', 1)
                 ->where('language', $language)
+                ->where('duration_id', '<=', $durationID)
                 ->whereHas('skills', function ($query) use ($firstThreeSkills) {
                     $query->whereIn('foreign_id', $firstThreeSkills)
-                        ->where('type', '0');
+                          ->where('type', '0');
                 })
                 ->with(['skills'])
                 ->get();
@@ -1148,12 +1320,13 @@ class AIService
 
                 $fullQueryString = implode(', ', $queryParts).'.';
                 $payload = [
-                    'model'    => 'gpt-3.5-turbo',
-                    'n'        => 1,
-                    'messages' => [
+                    'model'           => 'gpt-4o',
+                    'n'               => 1,
+                    'response_format' => ['type' => 'json_object'],
+                    'messages'        => [
                         [
                             'role'    => 'user',
-                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
+                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output json format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
                         ],
                     ],
                 ];
@@ -1188,12 +1361,13 @@ class AIService
                         try {
                             $queryParams = http_build_query(
                                 [
-                                    'keyword'    => $keyword,
-                                    'sort'       => 'relevance',
-                                    'type'       => $type,
-                                    'limit'      => '15',
-                                    'offset'     => 0,
-                                    'language[]' => 'en',
+                                    'keyword'               => $keyword,
+                                    'sort'                  => 'relevance',
+                                    'type'                  => $type,
+                                    'limit'                 => '15',
+                                    'offset'                => 0,
+                                    'language[]'            => 'en',
+                                    'duration[max]'         => Duration::where('id', $durationID)->pluck('max_minutes')->first(),
                                 ]
                             );
 
@@ -1202,12 +1376,11 @@ class AIService
                             if (is_array($response) && isset($response['hits']) && is_array($response['hits'])) {
                                 $count = 0;
                                 foreach ($response['hits'] as $item) {
+                                    if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
+                                        break;
+                                    }
                                     if ($count < 3) {
                                         $module = [];
-
-                                        if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
-                                            break;
-                                        }
 
                                         $module['id'] = $item['id'] ?? null;
                                         $module['type'] = $item['type'] ?? null;
@@ -1235,6 +1408,7 @@ class AIService
                                         $module['authors'] = $item['authors'] ?? null;
                                         $module['ratings'] = $item['ratings'] ?? null;
                                         $module['from_go1'] = true;
+                                        $module['is_ai_created'] = true;
 
                                         $skills = Arr::pluck($item['skills'] ?? [], 'name');
                                         $processedSkills = $this->processSkills($skills, 0.75);
@@ -1242,6 +1416,23 @@ class AIService
                                         $item['skills'] = array_map(function ($name) {
                                             return ['name' => $name];
                                         }, $processedSkills);
+
+                                        $duration = $item['delivery']['duration'] ?? null;
+
+                                        if ($duration) {
+                                            $durationDetails = Duration::where(function ($query) use ($duration) {
+                                                $query->whereNull('min_minutes')
+                                                      ->orWhere('min_minutes', '<=', $duration);
+                                            })
+                                                                    ->where(function ($query) use ($duration) {
+                                                                        $query->whereNull('max_minutes')
+                                                                              ->orWhere('max_minutes', '>=', $duration);
+                                                                    })
+                                                                    ->first(['id', 'title']);
+
+                                            $module['duration'] = $durationDetails->title;
+                                            $module['duration_id'] = $durationDetails->id;
+                                        }
 
                                         $module['skills'] = $item['skills'] ?? null;
                                         $go1_resource_modules[] = $module;
@@ -1296,15 +1487,19 @@ class AIService
                 $url = $file->path;
                 $type = '';
 
-                // Check for YouTube URLs embedded in iframe tags and capture only the video ID
-                if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1];
-                    $type = 'youtube_video';
-                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
+                $cloudFrontPrefix = config('site-settings.aws_url');
+                if (strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
+                }
+
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
                     $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1]; // Convert embed URL to watch URL
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+                } elseif (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
@@ -1324,16 +1519,6 @@ class AIService
                         default:
                             $type = 'file';
                     }
-                }
-
-                // Ensure all non-YouTube and non-iframe URLs are prefixed properly
-                if (!preg_match('/^https?:\/\//', $url)) {
-                    $url = config('site-settings.aws_url').ltrim($url, '/');
-                }
-
-                // Remove the prefix if it's a URL
-                if ($type == 'url' && strpos($url, config('site-settings.aws_url')) === 0) {
-                    $url = substr($url, strlen(config('site-settings.aws_url')));
                 }
 
                 $items[] = ['url' => $url, 'type' => $type];

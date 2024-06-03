@@ -28,6 +28,7 @@ class ResourceModule extends Model
         'media',
         'privacy',
         'is_auto_created',
+        'is_ai_created',
         'status',
         'is_global',
         'go1_course_id',
