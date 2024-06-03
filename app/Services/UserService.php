@@ -274,4 +274,15 @@ class UserService
             return null;
         }
     }
+
+    public static function getUserByEmailArray($emailArrayIds)
+    {
+        try {
+            $getUserByEmailArray = User::whereIn('email', $emailArrayIds)->get()->pluck('email');
+
+            return $getUserByEmailArray;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

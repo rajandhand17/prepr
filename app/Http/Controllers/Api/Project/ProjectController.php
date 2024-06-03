@@ -126,7 +126,7 @@ class ProjectController extends AppBaseController
         try {
             $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
             if ($checkChallenge) {
-                $challengeStatus = ($checkChallenge->status === '1' && $checkChallenge->is_open === '0');
+                $challengeStatus = ($checkChallenge->status == '1' && $checkChallenge->is_open == '0');
                 if ($challengeStatus) {
                     $checkChallengeTimelineType = $checkChallenge->challenge_timelines->timeline_type;
                     if ($checkChallengeTimelineType === '1') {

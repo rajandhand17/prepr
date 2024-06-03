@@ -64,7 +64,7 @@ class ChallengeRequirementService
 
             $min_rank = $request->min_rank ?? 0;
             $min_points = $request->min_points ?? null;
-            $project_submission_requirement_ids = $request->project_submission_requirement_ids ?? ['false'];
+            $project_submission_requirement_ids = $request->project_submission_requirement_ids ?? [];
             $max_project_submission = $request->max_project_submission ?? 5;
             $max_project_associated = $request->max_project_associated ?? 5;
             $min_experience = $request->min_experience ?? null;

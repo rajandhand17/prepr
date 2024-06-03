@@ -35,7 +35,7 @@ class FileUploadRequest extends FormRequest
     {
         return [
             'file.required'             => __('responses.required_field'),
-            'file.max'                  => __('responses.mimes_image_max'),
+            'file.max'                  => __('responses.mimes_file_max'),
             'file.mimes'                => __('responses.files_mimes_image'),
         ];
     }
