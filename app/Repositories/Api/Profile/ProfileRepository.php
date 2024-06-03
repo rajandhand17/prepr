@@ -157,6 +157,8 @@ class ProfileRepository implements ProfileInterface
                     return $user;
                 }
                 DB::rollBack();
+
+                return false;
             }
         } catch (\Exception $e) {
             DB::rollBack();
