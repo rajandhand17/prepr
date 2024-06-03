@@ -39,6 +39,11 @@ class OrganizationService
                 $organization_list = $organization_list->where('organizations.status', '1');
             }
 
+            if ($request->has('is_verified') && !empty($request->is_verified)) {
+                $is_verified = ($request->is_verified == 'yes') ? '1' : '0';
+                $organization_list = $organization_list->where('organizations.is_verified', $is_verified);
+            }
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
