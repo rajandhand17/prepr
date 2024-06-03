@@ -224,11 +224,12 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
-                $response = ['success' => false, 'message' => __('responses.verify_email')];
-
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                 $response = ['success' => false, 'message' => __('responses.verify_email')];
                 return $response;
             }
             if ($user->is_deactivated == 1) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'not_active', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -247,21 +248,26 @@ class User extends Authenticatable
                         $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
+
                             return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
                         }
-
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
-
-                    return $response;
+                    // Mixpanel Tracking Code: login attempt (successful)
+                    MixpanelHelper::mixpanel_tracking(
+                        config('mixpanel.login_success'),
+                        'successful',
+                        $data,
+                        $request->ip()
+                    );
+                    return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    $response = ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
-
-                    return $response;
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
+                    return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
@@ -343,16 +349,11 @@ class User extends Authenticatable
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);
+
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
                 if ($userpersonal && $usersetting) {
-                    MixpanelHelper::mixpanel_tracking(config('mixpanel.org_sign_up'),
-                         $request,
-                         $user,
-                         $request->ip()
-                    );
-
                     $data = ['subject' => __('responses.verify_your_email'), 'first_name' => $user->first_name, 'last_name' => $user->last_name, 'otp' => $user->otp];
                     $mail = SendMailHelper::sendMail($user, 'email.verify_otp', $data);
                     if ($mail) {
@@ -360,7 +361,19 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
-
+                        if ($request->register_type == 'organization') {
+                            MixpanelHelper::mixpanel_tracking(config('mixpanel.org_sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        }else{
+                            MixpanelHelper::mixpanel_tracking(config('mixpanel.sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        }
                         return $success;
                     }
                     DB::rollback();

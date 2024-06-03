@@ -46,7 +46,8 @@ class MixpanelHelper
             $quantity = 1;
             $data_array = [];
             switch ($event) {
-                case config('mixpanel.sign_up'): // Mixpanel data: user sign up
+                // Mixpanel data: user sign up
+                case config('mixpanel.sign_up'):
                     $user_type = $data['user_type'];
                     $data_array = array(
                         'sign_up_type' => 'network',
@@ -363,8 +364,8 @@ class MixpanelHelper
             $data_array['ip'] = $ip;
 
             if ($user != null) {
-                if (MemberManagement::where('user_id', $user->id)->count() > 0) {
-                    $user_role = MemberManagement::where('user_id', $user->id)->latest()->first()->role;
+                if (MemberManagement::where('email', $user->email)->count() > 0) {
+                    $user_role = MemberManagement::where('email',$user->email)->latest()->first()->role;
                 } else {
                     $user_role = 'user';
                 }
