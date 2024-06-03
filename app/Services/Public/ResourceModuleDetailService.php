@@ -24,31 +24,31 @@ class ResourceModuleDetailService
         try {
             switch ($assetType) {
                 case '0':
-                    $file_type = config('constants.file_type_id.document');
+                    $file_type = config('constants.visit_type_id.document');
                     break;
                 case '1':
-                    $file_type = config('constants.file_type_id.video');
+                    $file_type = config('constants.visit_type_id.video');
                     break;
                 case '2':
-                    $file_type = config('constants.file_type_id.audio');
+                    $file_type = config('constants.visit_type_id.audio');
                     break;
                 case '3':
-                    $file_type = config('constants.file_type_id.embedded');
+                    $file_type = config('constants.visit_type_id.embedded');
                     break;
                 case '4':
-                    $file_type = config('constants.file_type_id.embedded_audio');
+                    $file_type = config('constants.visit_type_id.embedded_audio');
                     break;
                 case '5':
-                    $file_type = config('constants.file_type_id.url');
+                    $file_type = config('constants.visit_type_id.url');
                     break;
                 case '6':
-                    $file_type = config('constants.file_type_id.image');
+                    $file_type = config('constants.visit_type_id.image');
                     break;
                 case '7':
-                    $file_type = config('constants.file_type_id.scrom');
+                    $file_type = config('constants.visit_type_id.scrom');
                     break;
                 case '8':
-                    $file_type = config('constants.file_type_id.go1');
+                    $file_type = config('constants.visit_type_id.go1');
                     break;
             }
             $checkResourceModuleAssetVisit = ResourceModuleVisit::where(['user_id' => $userId, 'module_id' => $resourceModuleId, 'module_asset_id' => $assetId, 'asset_type' => $file_type])->exists();
@@ -64,31 +64,31 @@ class ResourceModuleDetailService
         try {
             switch ($assetType) {
                 case '0':
-                    $file_type = config('constants.file_type_id.document');
+                    $file_type = config('constants.visit_type_id.document');
                     break;
                 case '1':
-                    $file_type = config('constants.file_type_id.video');
+                    $file_type = config('constants.visit_type_id.video');
                     break;
                 case '2':
-                    $file_type = config('constants.file_type_id.audio');
+                    $file_type = config('constants.visit_type_id.audio');
                     break;
                 case '3':
-                    $file_type = config('constants.file_type_id.embedded');
+                    $file_type = config('constants.visit_type_id.embedded');
                     break;
                 case '4':
-                    $file_type = config('constants.file_type_id.embedded_audio');
+                    $file_type = config('constants.visit_type_id.embedded_audio');
                     break;
                 case '5':
-                    $file_type = config('constants.file_type_id.url');
+                    $file_type = config('constants.visit_type_id.url');
                     break;
                 case '6':
-                    $file_type = config('constants.file_type_id.image');
+                    $file_type = config('constants.visit_type_id.image');
                     break;
                 case '7':
-                    $file_type = config('constants.file_type_id.scrom');
+                    $file_type = config('constants.visit_type_id.scrom');
                     break;
                 case '8':
-                    $file_type = config('constants.file_type_id.go1');
+                    $file_type = config('constants.visit_type_id.go1');
                     break;
             }
 

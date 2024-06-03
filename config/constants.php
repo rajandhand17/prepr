@@ -307,18 +307,6 @@ return [
         'image'                => '6',
     ],
 
-    'file_type_id' => [
-        'document'              => '0',
-        'video'                 => '1',
-        'audio'                 => '2',
-        'embedded'              => '3',
-        'embedded_audio'        => '4',
-        'url'                   => '5',
-        'image'                 => '6',
-        'scorm'                 => '7',
-        'go1'                   => '8',
-    ],
-
     'project_view_enabled' => [
         'no'        => '0',
         'yes'       => '1',
@@ -496,5 +484,17 @@ return [
         '1' => 'story',
         '2' => 'both',
         '3' => 'no',
+    ],
+
+    'visit_type_id' => [
+        'document'              => '0',
+        'video'                 => '1',
+        'audio'                 => '2',
+        'embedded'              => '3',
+        'embedded_audio'        => '4',
+        'url'                   => '5',
+        'image'                 => '6',
+        'scorm'                 => '7',
+        'go1'                   => '8',
     ],
 ];
