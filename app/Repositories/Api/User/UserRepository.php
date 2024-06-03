@@ -43,7 +43,13 @@ class UserRepository implements UserInterface
                 $fetchOrganizationIds = $this->memberManagementService->fetchComponentBasedOrganizationIds($userEmail);
             }
 
-            return $this->organizationService->fetchOrganizations($request, $fetchOrganizationIds);
+            $organizationData = $this->organizationService->fetchOrganizations($request, $fetchOrganizationIds);
+            // Marking the organization as default if the count of retrived organization is only 1.
+            if ($organizationData->count() === (int) '1') {
+                $this->setOrganizationPreference($organizationData[0]->id);
+            }
+
+            return $organizationData;
         } catch (\Exception $e) {
             return false;
         }

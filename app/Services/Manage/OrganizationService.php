@@ -384,4 +384,29 @@ class OrganizationService
             return false;
         }
     }
+
+    public static function organizationUserInviteCount($organizationId)
+    {
+        try {
+            $getOrganizationAcceptedMembersBasedOnIds = [];
+            $getOrganizationBasedOnOrganization = Organization::where(['id' => $organizationId])->pluck('id');
+            $getOrganizationAcceptedMembersBasedOnIds = MemberManagementService::getComponentAcceptedMembersBasedOnIds($getOrganizationBasedOnOrganization, 'organization');
+
+            return $getOrganizationAcceptedMembersBasedOnIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function organizationManagerInviteCount($organizationId)
+    {
+        try {
+            $getOrganizationAcceptedManagerMembersBasedOnIds = [];
+            $getOrganizationAcceptedManagerMembersBasedOnIds = MemberManagementService::getComponentAcceptedManagerMembersBasedOnIds($organizationId);
+
+            return $getOrganizationAcceptedManagerMembersBasedOnIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

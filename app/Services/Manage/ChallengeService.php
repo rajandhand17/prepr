@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
+use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
 use Exception;
@@ -171,20 +172,25 @@ class ChallengeService
     {
         try {
             $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
             $status = config('constants.challenge_status.draft');
-            switch ($request->request_type) {
-                case 'draft':
-                    $status = config('constants.challenge_status.draft');
-                    break;
-                case 'publish':
-                    $status = config('constants.challenge_status.publish');
-                    break;
-                case 'archive':
-                    $status = config('constants.challenge_status.archive');
-                    break;
-                default:
-                    $status = config('constants.challenge_status.draft');
-                    break;
+            if ($request->is_ai_created) {
+                $status = config('constants.challenge_status.publish');
+            } else {
+                switch ($request->request_type) {
+                    case 'draft':
+                        $status = config('constants.challenge_status.draft');
+                        break;
+                    case 'publish':
+                        $status = config('constants.challenge_status.publish');
+                        break;
+                    case 'archive':
+                        $status = config('constants.challenge_status.archive');
+                        break;
+                    default:
+                        $status = config('constants.challenge_status.draft');
+                        break;
+                }
             }
 
             $challenge_privacy = config('constants.challenge_privacy.no');
@@ -227,16 +233,20 @@ class ChallengeService
             }
 
             $is_open = config('constants.challenge_open_close.no');
-            switch ($request->is_open) {
-                case 'yes':
-                    $is_open = config('constants.challenge_open_close.yes');
-                    break;
-                case 'no':
-                    $is_open = config('constants.challenge_open_close.no');
-                    break;
-                default:
-                    $is_open = config('constants.challenge_open_close.no');
-                    break;
+            if ($request->is_ai_created) {
+                $is_open = config('constants.challenge_open_close.yes');
+            } else {
+                switch ($request->is_open) {
+                    case 'yes':
+                        $is_open = config('constants.challenge_open_close.yes');
+                        break;
+                    case 'no':
+                        $is_open = config('constants.challenge_open_close.no');
+                        break;
+                    default:
+                        $is_open = config('constants.challenge_open_close.no');
+                        break;
+                }
             }
 
             $is_auto_created = config('constants.challenge_auto_created.no');
@@ -571,7 +581,7 @@ class ChallengeService
     public static function getChallengeBasedOnUUID($uuid)
     {
         try {
-            return Challenge::where('UUID', $uuid)->first();
+            return Challenge::where('uuid', $uuid)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -750,6 +760,19 @@ class ChallengeService
 
                 return $challenge_details;
             }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function challengeUserInviteCount($organizationId)
+    {
+        try {
+            $getChallengeAcceptedMembersBasedOnIds = [];
+            $getChallengeBasedOnOrganization = Challenge::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->pluck('id');
+            $getChallengeAcceptedMembersBasedOnIds = ManageMemberManagementService::getComponentAcceptedMembersBasedOnIds($getChallengeBasedOnOrganization, 'challenge');
+
+            return $getChallengeAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
             return false;
         }

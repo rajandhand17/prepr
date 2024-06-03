@@ -15,6 +15,7 @@ return new class() extends Migration {
             $table->unsignedBigInteger('challenge_template_id');
             $table->unsignedBigInteger('template_assessment_id');
             $table->string('title');
+            $table->text('description')->nullable();
             $table->integer('score');
             $table->integer('weight');
             $table->foreign('challenge_template_id', 'fk_challenge_template_assessment_criterias')->references('id')->on('challenge_templates')->onDelete('cascade');
