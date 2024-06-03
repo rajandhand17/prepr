@@ -276,7 +276,8 @@ class ProfileController extends AppBaseController
             if ($resumeFile) {
                 return $this->sendResponse(UserResource::make($resumeFile), __('responses.successfully_upload_file'));
             }
-         return $this->sendError(__('responses.upload_file_failed'), 400);
+
+            return $this->sendError(__('responses.upload_file_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
