@@ -30,8 +30,9 @@ Route::get('/clean-up', static function () {
     Artisan::call('view:cache');
     Artisan::call('clear-compiled');
     Artisan::call('optimize:clear');
+
     return response()->json([
-        'message' => 'All cache removed successfully.'
+        'message' => 'All cache removed successfully.',
     ]);
 });
 
