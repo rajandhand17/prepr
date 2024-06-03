@@ -20,7 +20,7 @@ return [
         'sprout_plan_monthly' => 'Sprout-Plan-CAD-Monthly',
         'budd_plan_monthly'   => 'Budd-Plan-CAD-Monthly',
         'bloom_plan_monthly'  => 'Bloom-Plan-CAD-Monthly',
-        'unlimited_plan'     => 'Unlimited-Plan-CAD-Monthly',
+        'unlimited_plan'      => 'Unlimited-Plan-CAD-Monthly',
     ],
 
     // Addon Yearly Keys
