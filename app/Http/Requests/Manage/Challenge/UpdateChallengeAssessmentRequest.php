@@ -24,9 +24,9 @@ class UpdateChallengeAssessmentRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'assessment_type'       => 'in:open,closed',
-            'guidelines'            => 'required_if:assessment_type,open,closed',
-            'attachments'           => 'required_if:assessment_type,open,closed|mimes:jpeg,jpg,png,webp|max:1024',
+            'assessment_type'       => 'in:open,closed,ai',
+            'guidelines'            => 'required_if:assessment_type,open,closed,ai',
+            'attachments'           => 'required_if:assessment_type,open,closed,ai|mimes:jpeg,jpg,png,webp|max:1024',
         ];
 
         if ($this->request->get('assessment_type') == 'closed') {
@@ -50,7 +50,7 @@ class UpdateChallengeAssessmentRequest extends FormRequest
     public function messages()
     {
         return [
-            'assessment_type.in'            => __('responses.choose_open_closed'),
+            'assessment_type.in'            => __('responses.choose_open_closed_ai'),
             'visibility.in'                 => __('responses.choose_users_hidden'),
             'visibility.required_if'        => __('responses.choose_users_hidden'),
             'guidelines.required_if'        => __('responses.guidelines_required'),

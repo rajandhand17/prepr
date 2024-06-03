@@ -36,6 +36,7 @@ class UserService
                     $user->password = Hash::make($request->input('password'));
                 }
                 if ($user->save()) {
+                    self::userAttachRole($user,$request->roles);
                     return true;
                 }
                 return false;
@@ -62,7 +63,7 @@ class UserService
         try {
             $createUser = User::create(['first_name' => $request->first_name, 'last_name' => $request->last_name, 'full_name' => $request->first_name . ' ' . $request->last_name, 'username' => $request->username, 'email' => $request->email, 'password' => Hash::make($request->password)]);
             if (!empty($createUser)) {
-                $createUser->attachRole('user');
+                self::userAttachRole($createUser,$request->roles);
                 return true;
             }
             return false;
@@ -74,6 +75,18 @@ class UserService
     {
         try {
             return User::orderBy('id', 'desc');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function userAttachRole($user,$roles)
+    {
+        try {
+            if(!empty($roles)){
+                $user->syncRoles($roles);
+                return true;
+            }
+            return false;
         } catch (Exception $e) {
             return false;
         }

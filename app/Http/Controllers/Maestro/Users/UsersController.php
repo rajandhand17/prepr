@@ -55,7 +55,7 @@ class UsersController extends Controller
 
             return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -65,9 +65,10 @@ class UsersController extends Controller
     public function create()
     {
         try {
-            return view('maestro.users.create');
+            $roles = $this->getAllRoles();
+            return view('maestro.users.create', compact('roles'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -83,10 +84,10 @@ class UsersController extends Controller
                 return redirect()->route('users.index')->with('success', 'User created successfully');
             }
             DB::rollback();
-            return redirect()->route('users.index')->withErrors(['error' => 'Something want wrong']);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -102,7 +103,7 @@ class UsersController extends Controller
             }
             return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -116,9 +117,13 @@ class UsersController extends Controller
             if(empty($user)){
                 return redirect()->route('users.index')->with(['error' => 'User not found.']);
             }
-            return view('maestro.users.edit', compact('user'));
+            $roles = $this->getAllRoles();
+            $permissions = $this->getAllPermissions();
+            $selected_role = $user->getRoles();
+            $assigned_all_permission = $user->allPermissions()->pluck('id')->toArray();
+            return view('maestro.users.edit', compact('user','permissions','assigned_all_permission','roles','selected_role'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 
@@ -134,10 +139,10 @@ class UsersController extends Controller
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
             DB::rollback();
-            return redirect()->route('users.index')->withErrors(['error' => 'Something want wrong']);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('users.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
         }
     }
 

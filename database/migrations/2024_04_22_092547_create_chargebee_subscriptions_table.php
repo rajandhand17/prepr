@@ -16,6 +16,7 @@ return new class() extends Migration {
             $table->string('plan')->comment('name of plan');
             $table->enum('plan_validity', ['0', '1'])->default('0')->comment('0 -> monthly, 1 -> yearly');
             $table->enum('plan_limitations', ['0', '1'])->default('0')->comment('0 -> limited, 1 -> unlimited');
+            $table->string('trial_end_date')->nullable()->comment('Plan next billing date');
             $table->integer('challenge_limits')->nullable()->comment('Challenge Creation Limit, if null then it has no limits in challenge');
             $table->integer('challenge_path_limits')->nullable()->comment('Challenge Path Creation Limit, if null then it has no limits in challenge path');
             $table->integer('lab_limits')->nullable()->comment('Lab Creation Limit, if null then it has no limits in lab');
