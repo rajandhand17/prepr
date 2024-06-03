@@ -85,7 +85,7 @@ class UserExperienceService
     public static function addUserExperienceByUsingResumeData($response, $user)
     {
         try {
-            if(isset($response['data']['employer']) && $response['data']['employer']!==null){
+            if (isset($response['data']['employer']) && $response['data']['employer'] !== null) {
                 foreach ($response['data']['employer'] as $key => $value) {
                     if ($value && isset($value['company_name']) && isset($value['role'])) {
                         $startDate = isset($value['from_year'], $value['from_month'])
@@ -112,6 +112,7 @@ class UserExperienceService
                     }
                 }
             }
+
             return true;
         } catch(\Exception $e) {
             return false;

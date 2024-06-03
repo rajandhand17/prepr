@@ -98,6 +98,7 @@ class UserSkillsService
             } else {
                 return 'already';
             }
+
             return false;
         } catch(\Exception $e) {
             return false;
@@ -149,7 +150,7 @@ class UserSkillsService
     public static function addUserSkillsByUsingResumeData($data)
     {
         try {
-            if(isset($data['data']['skills']['overall_skills']) && $data['data']['skills']['overall_skills']!==null){
+            if (isset($data['data']['skills']['overall_skills']) && $data['data']['skills']['overall_skills'] !== null) {
                 foreach ($data['data']['skills']['overall_skills'] as $skillName) {
                     $skillResponse = WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($skillName));
                     if (is_array($skillResponse)) {
@@ -160,7 +161,7 @@ class UserSkillsService
                                     $skills = new stdClass();
                                     $skills->skill_id = $dbSkill->id;
                                     $checkSkillExistsOrNot = self::checkUserSkillExists($dbSkill->id);
-                                    if($checkSkillExistsOrNot==null){
+                                    if ($checkSkillExistsOrNot == null) {
                                         // if ($checkSkillExistsOrNot->count() == 0) {
                                         self::addSingleSkill($skills);
                                     }
@@ -171,6 +172,7 @@ class UserSkillsService
                     }
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             return false;
