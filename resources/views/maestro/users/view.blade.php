@@ -1,4 +1,5 @@
 @extends('maestro.layouts.default')
+@section('title', 'View User')
 @section('content')
      <!-- Content Header (Page header) -->
      <section class="content-header">
