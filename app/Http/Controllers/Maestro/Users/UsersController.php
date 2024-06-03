@@ -55,7 +55,7 @@ class UsersController extends Controller
 
             return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -68,7 +68,7 @@ class UsersController extends Controller
             $roles = $this->getAllRoles();
             return view('maestro.users.create', compact('roles'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -84,10 +84,10 @@ class UsersController extends Controller
                 return redirect()->route('users.index')->with('success', 'User created successfully');
             }
             DB::rollback();
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -98,12 +98,12 @@ class UsersController extends Controller
     {
         try {
             $user = $this->getUserById($id);
-            if(empty($user)){
+            if(!$user->exists){
                 return redirect()->route('users.index')->with(['error' => 'User not found.']);
             }
             return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -114,7 +114,7 @@ class UsersController extends Controller
     {
         try {
             $user = $this->getUserById($id);
-            if(empty($user)){
+            if(!$user->exists){
                 return redirect()->route('users.index')->with(['error' => 'User not found.']);
             }
             $roles = $this->getAllRoles();
@@ -123,7 +123,7 @@ class UsersController extends Controller
             $assigned_all_permission = $user->allPermissions()->pluck('id')->toArray();
             return view('maestro.users.edit', compact('user','permissions','assigned_all_permission','roles','selected_role'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -142,7 +142,7 @@ class UsersController extends Controller
             return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('users.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -160,7 +160,7 @@ class UsersController extends Controller
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
-            return response()->json(['status' => 'fail', 'message' => $e->getMessage()]);
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
 }
