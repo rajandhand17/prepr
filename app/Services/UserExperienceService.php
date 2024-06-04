@@ -97,7 +97,7 @@ class UserExperienceService
                             : now()->toDateString();
                         $companyName = trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
                         $checkUserExperience = self::checkUserExperienceBasedOnTitle($companyName);
-                        if ($checkUserExperience->count == 0) {
+                        if ($checkUserExperience == null) {
                             UserExperience::create([
                                 'user_id'     => $user->id,
                                 'company'     => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
