@@ -1184,5 +1184,6 @@
     "responses.unified_invalid_usage_type_value": "The usage_type field have invalid value",
     "responses.unified_members_field_required": "The member field is required",
     "responses.unified_members_field_must_be_array": "The member field should be array",
-    "responses.unified_valid_email_pattern": "The email should be valid"
+    "responses.unified_valid_email_pattern": "The email should be valid",
+    "responses.not_visible_for_others": "This Account is private, You cannot access this"
 }

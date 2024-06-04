@@ -10,7 +10,14 @@ class CampusConnectRepository implements CampusConnectInterface
     public function listSchools()
     {
         try {
-            return CampusConnectHelper::listSchools();
+            $schools = CampusConnectHelper::listSchools();
+
+            return array_map(function ($item) {
+                return [
+                    'id'    => $item,
+                    'title' => $item,
+                ];
+            }, $schools);
         } catch (Exception $exception) {
             return false;
         }
