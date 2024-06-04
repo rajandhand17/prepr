@@ -16,7 +16,6 @@ class ProfileResource extends JsonResource
      */
     public function toArray(Request $request)
     {
-
         $purpose = null;
         $user_type = null;
         if ($this->userPersonal !== null) {
