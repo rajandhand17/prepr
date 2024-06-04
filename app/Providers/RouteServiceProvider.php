@@ -197,6 +197,6 @@ class RouteServiceProvider extends ServiceProvider
     }
     public function mapMaestroCategoryRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/category/category.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/categories/categories.php'));
     }
 }

@@ -7,10 +7,70 @@ use Exception;
 
 trait CategoryTrait
 {
-    private function createUser($request)
+    private function getLanguage()
     {
         try {
-            if(CategoryService::createUser($request)){
+            $languages = CategoryService::getLanguage();
+            if ($languages) {
+                return $languages;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getCategories()
+    {
+        try {
+            $categories = CategoryService::getCategories();
+            if ($categories) {
+                return $categories;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getCategoryById($id)
+    {
+        try {
+            $category = CategoryService::getCategoryById($id);
+            if ($category) {
+                return $category;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getComponentsById($category)
+    {
+        try {
+            $components = CategoryService::getComponentsById($category);
+            if ($components) {
+                return $components;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function getFirstCategoryById($id)
+    {
+        try {
+            $category = CategoryService::getFirstCategoryById($id);
+            if ($category) {
+                return $category;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function storeUpdateCategory($request, $id, $moduleMode)
+    {
+        try {
+            if (CategoryService::storeUpdateCategory($request, $id, $moduleMode)) {
                 return true;
             }
             return false;
@@ -18,18 +78,22 @@ trait CategoryTrait
             return false;
         }
     }
-    private function getUserById($id)
+    private function findCategory($id)
     {
         try {
-            return CategoryService::getUserById($id);
+            $category = CategoryService::findCategory($id);
+            if ($category) {
+                return $category;
+            }
+            return false;
         } catch (Exception $e) {
             return false;
         }
     }
-    private function updateUserById($id,$request)
+    private function deleteCategory($category)
     {
         try {
-            if(CategoryService::updateUserById($id,$request)){
+            if (CategoryService::deleteCategory($category)) {
                 return true;
             }
             return false;
@@ -37,23 +101,24 @@ trait CategoryTrait
             return false;
         }
     }
-    private function deleteUserById($id)
+    private function getSubCategoryById($id)
     {
         try {
-            if(CategoryService::deleteUser($id)){
-                return true;
+            $subCategory = CategoryService::getSubCategoryById($id);
+            if ($subCategory) {
+                return $subCategory;
             }
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
-    private function getUsers()
+    private function getCategory()
     {
         try {
-            $users = CategoryService::getUsers();
-            if($users){
-                return $users;
+            $subCategory = CategoryService::getCategory();
+            if ($subCategory) {
+                return $subCategory;
             }
             return false;
         } catch (Exception $e) {
