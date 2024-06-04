@@ -32,6 +32,7 @@ return [
         'network'      => '1',
         'join_request' => '2',
         'csv'          => '3',
+        'unified'      => '4',
     ],
 
     'member_management_component_type' => [
@@ -187,6 +188,7 @@ return [
         'null'  => '0',
         'open'  => '1',
         'close' => '2',
+        'ai'    => '3',
     ],
 
     'challenge_visibility_type' => [

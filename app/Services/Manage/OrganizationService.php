@@ -39,6 +39,11 @@ class OrganizationService
                 $organization_list = $organization_list->where('organizations.status', '1');
             }
 
+            if ($request->has('is_verified') && !empty($request->is_verified)) {
+                $is_verified = ($request->is_verified == 'yes') ? '1' : '0';
+                $organization_list = $organization_list->where('organizations.is_verified', $is_verified);
+            }
+
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
@@ -380,6 +385,31 @@ class OrganizationService
     {
         try {
             return Organization::where('user_id', $userId)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function organizationUserInviteCount($organizationId)
+    {
+        try {
+            $getOrganizationAcceptedMembersBasedOnIds = [];
+            $getOrganizationBasedOnOrganization = Organization::where(['id' => $organizationId])->pluck('id');
+            $getOrganizationAcceptedMembersBasedOnIds = MemberManagementService::getComponentAcceptedMembersBasedOnIds($getOrganizationBasedOnOrganization, 'organization');
+
+            return $getOrganizationAcceptedMembersBasedOnIds;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function organizationManagerInviteCount($organizationId)
+    {
+        try {
+            $getOrganizationAcceptedManagerMembersBasedOnIds = [];
+            $getOrganizationAcceptedManagerMembersBasedOnIds = MemberManagementService::getComponentAcceptedManagerMembersBasedOnIds($organizationId);
+
+            return $getOrganizationAcceptedManagerMembersBasedOnIds;
         } catch (\Exception $e) {
             return false;
         }

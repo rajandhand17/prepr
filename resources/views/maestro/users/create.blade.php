@@ -1,4 +1,5 @@
 @extends('maestro.layouts.default')
+@section('title', 'Create User')
 @section('content')
      <!-- Content Header (Page header) -->
      <section class="content-header">
@@ -60,7 +61,22 @@
                                     <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password" required>
                                 </div>
                             </div>
-
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Role</label>
+                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
+                                  @if(!empty($roles))
+                                    @foreach($roles as $key => $role)
+                                      <option value="{{ $role->name }}" >{{ $role->display_name }}</option>
+                                    @endforeach
+                                  @endif
+                                </select>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Submit</button>

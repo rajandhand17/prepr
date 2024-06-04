@@ -399,7 +399,7 @@ class MemberManagementService
                                 'module_id'     => $componentCollectionObject->id,
                                 'module_type'   => $module_type,
                                 'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
-                                'role'          => $request->role,
+                                'role'          => $member['role'] ?? $request->role,
                                 'email'         => $member['invitee_email'],
                                 'auto_invite'   => $auto_invite,
                                 'invite_status' => $invite_status,
@@ -799,6 +799,51 @@ class MemberManagementService
         } catch (\Exception $e) {
             dd($e);
 
+            return false;
+        }
+    }
+
+    public static function getComponentAcceptedMembersBasedOnIds($moduleIds, $component)
+    {
+        try {
+            switch ($component) {
+                case 'organization':
+                    $memberManagement = MemberManagement::whereIn('module_id', $moduleIds)->where('role', 'User')->where([
+                        'module_type'   => config('constants.module_component_type.organization'),
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
+                    ])->pluck('email');
+                    break;
+                case 'lab':
+                    $memberManagement = MemberManagement::whereIn('module_id', $moduleIds)->where([
+                        'module_type'   => config('constants.module_component_type.lab'),
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
+                    ])->pluck('email');
+                    break;
+                case 'challenge':
+                    $memberManagement = MemberManagement::whereIn('module_id', $moduleIds)->where([
+                        'module_type'   => config('constants.module_component_type.challenge'),
+                        'invite_status' => config('constants.member_management_invite_status.accepted'),
+                    ])->pluck('email');
+                    break;
+            }
+
+            return $memberManagement;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getComponentAcceptedManagerMembersBasedOnIds($organizationId)
+    {
+        try {
+            $memberManagement = MemberManagement::where('role', '!=', 'User')->where([
+                'module_id'     => $organizationId,
+                'module_type'   => config('constants.module_component_type.organization'),
+                'invite_status' => config('constants.member_management_invite_status.accepted'),
+            ])->pluck('email');
+
+            return $memberManagement;
+        } catch (\Exception $e) {
             return false;
         }
     }
