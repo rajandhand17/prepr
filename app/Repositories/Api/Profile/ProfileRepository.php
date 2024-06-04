@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Helpers\MixpanelHelper;
 use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
@@ -75,7 +76,11 @@ class ProfileRepository implements ProfileInterface
             });
             if ($personalDetail['updateUser'] && $personalDetail['updatePersonalDetail'] && $personalDetail['updateAddress']) {
                 DB::commit();
-
+                $profile_data = [
+                    'type' => 'certificate',
+                    'info' => $request->all()
+                ];
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
                 return $personalDetail['updateUser'];
             }
             DB::rollBack();

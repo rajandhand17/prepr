@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +28,11 @@ class UserExperienceService
                 ]);
                 $insertRecords[] = $userExperience;
             }
-
+            $profile_data = [
+                'type' => 'experience',
+                'info' => $input
+            ];
+           MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
             return $insertRecords;
         } catch(\Exception $e) {
             return false;

@@ -249,7 +249,6 @@ class MemberManagementService
                 if (!empty($memberList)) {
                     return $memberList;
                 }
-
                 return false;
             }
 

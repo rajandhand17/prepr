@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
 use App\Models\UserSkills;
 
 class UserSkillsService
@@ -23,6 +24,11 @@ class UserSkillsService
                     $allSkills[] = $addSkill;
                 }
             }
+            $profile_data = [
+                'type' => 'skills',
+                'info' => $inputAllSkills
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $allSkills;
         } catch(\Exception $e) {
