@@ -248,8 +248,8 @@ class LabResource extends JsonResource
             'resource_collection'              => $resource_collections,
             'resource_group'                   => $resource_groups,
             'last_updated'                     => UtilityHelper::formatDateTime($this->updated_at),
-            'campus_connect_opportunity'       => data_get($this, 'campusConnectOpportunity.metadata'),
-            'campus_connect_story'             => data_get($this, 'campusConnectStory.metadata'),
+            'campus_connect_opportunity'       => $campusConnectOpportunity,
+            'campus_connect_story'             => $campusConnectStory,
             'campus_connect_status'            => data_get($this, 'campus_connect_status'),
         ];
     }

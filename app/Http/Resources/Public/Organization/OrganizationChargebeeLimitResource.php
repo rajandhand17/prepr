@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Manage\Organization;
+namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;

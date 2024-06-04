@@ -14,6 +14,15 @@ return [
         'unlimited_plan'     => 'Unlimited-Plan-CAD-Yearly',
     ],
 
+    //plans yearly keys
+    'chargebee_plan_monthly' => [
+        'seed_plan_monthly'   => 'free-plan-CAD-Monthly',
+        'sprout_plan_monthly' => 'Sprout-Plan-CAD-Monthly',
+        'budd_plan_monthly'   => 'Budd-Plan-CAD-Monthly',
+        'bloom_plan_monthly'  => 'Bloom-Plan-CAD-Monthly',
+        'unlimited_plan'      => 'Unlimited-Plan-CAD-Monthly',
+    ],
+
     // Addon Yearly Keys
     'chargebee_addon' => [
         'challenge_addon_yearly'           => 'challenge-creation-CAD-Yearly',
