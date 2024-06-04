@@ -1185,6 +1185,7 @@
     "responses.unified_members_field_required": "The member field is required",
     "responses.unified_members_field_must_be_array": "The member field should be array",
     "responses.unified_valid_email_pattern": "The email should be valid",
+    "responses.not_visible_for_others": "This Account is private, You cannot access this",
     "responses.winner_changing_not_allowed": "Winner changing is not allowed for this Challenge.",
     "responses.project_ids_not_exists": "Sorry, this project id has not been registered with us!",
     "responses.project_ids_array": "The project ids should be an array!",
