@@ -47,7 +47,16 @@ class UserController extends AppBaseController
         try {
             $organizationListing = $this->userRepository->organizationListing($request);
             if ($organizationListing != false) {
-                return $this->sendResponse(UserOrganizationListResource::collection($organizationListing), __('responses.found_organization_list'));
+                $response = [
+                    'total_count'  => $organizationListing->total(),
+                    'per_page'     => $organizationListing->perPage(),
+                    'count'        => $organizationListing->count(),
+                    'current_page' => $organizationListing->currentPage(),
+                    'total_pages'  => $organizationListing->lastPage(),
+                    'list'         => UserOrganizationListResource::collection($organizationListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.found_organization_list'), 404);

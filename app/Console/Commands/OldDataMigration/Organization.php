@@ -85,6 +85,7 @@ class Organization extends Command
                     $newOrganization->category = $category;
                     $newOrganization->status = ($organization->status == '0') ? '0' : (($organization->status == '1') ? '1' : '3');
                     $newOrganization->total_employees = isset($organizationDetails->number_employees) ? $organizationDetails->number_employees : 0;
+                    $newOrganization->is_verified = $organization->is_verified;
                     $newOrganization->save();
                     $checkUser->attachRole('organization_owner', $newOrganization->id);
 
