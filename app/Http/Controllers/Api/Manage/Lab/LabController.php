@@ -83,7 +83,6 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.reached_lab_limit'), 400);
                 }
             }
-
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
             if ($request->cover_image !== null) {
@@ -101,13 +100,10 @@ class LabController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image);
-
             if ($createdLab != false) {
                 return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
             }
-
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -156,11 +152,11 @@ class LabController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
-                return $this->sendError(__('responses.lab_not_accessible'), 403);
-            }
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $lab = $this->labRepository->deleteLab($checkComponentBasedOnSlug->id, $request);
             if ($lab) {
@@ -169,6 +165,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_not_delete'), 400);
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

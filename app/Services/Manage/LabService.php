@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
@@ -105,7 +106,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description','organization_id')->where('id', $Id)->first();
         } catch (Exception $e) {
             return false;
         }

@@ -4,6 +4,9 @@
 namespace App\Helpers;
 
 use App\Models\RoleUser;
+use App\Services\CategoryService;
+use App\Services\Manage\OrganizationService;
+use App\Services\SkillService;
 use Mixpanel;
 use Exception;
 use App\Models\MemberManagement;
@@ -86,28 +89,24 @@ class MixpanelHelper
                 case config('mixpanel.edit_lab'): // Mixpanel data: edit lab
                 case config('mixpanel.delete_lab'): // Mixpanel data: delete lab
                     $final_lab_skills = [];
-                    foreach ($data->lab_skills as $lab_skill) {
-                        $final_lab_skills[] = Skill::find($lab_skill)->skill;
+                    foreach ($data->skills as $lab_skill) {
+                        $final_lab_skills[] =SkillService::getSkillBasedOnId($lab_skill)->title;
                     }
-
                     $final_lab_tags = [];
-                    $new_tags = substr($data->tags, 1, -1);
-                    $new_tags = str_replace('"', '', $new_tags); // remove " from the string
-                    $new_tags = explode(',', $new_tags);
+                    $new_tags=$data->tags;
                     foreach ($new_tags as $lab_tag) {
                         $tag = Tag::find(intval($lab_tag));
                         if ($tag) {
                             $final_lab_tags[] = $tag->tag;
                         }
                     }
-
-                    $organization = $data->organisation;
+                    $organization =OrganizationService::getOrganizationExistBasedOnUuid($data->organization_id)->id;
                     $data_array = array(
                         'lab_title' => $data->title,
                         'lab_tags' => $final_lab_tags,
                         'lab_skills' => $final_lab_skills,
                         'lab_groups' => $lab_groups,
-                        'lab_category' => Category::find($data->category)->name,
+                        'lab_category' =>Category::find($data->category_id)->title,
                         "lab_privacy" => $data->privacy
                     );
                     break;
@@ -185,7 +184,7 @@ class MixpanelHelper
                 case config('mixpanel.create_resource'): // Mixpanel data: create resource
                 case config('mixpanel.edit_resource'): // Mixpanel data: edit resource
                 case config('mixpanel.delete_resource'): // Mixpanel data: delete resource
-                    $organization = $data->org_id;
+                    $organization = $data->organization_id;
                     $data_array = array(
                         'resource_title' => $data->res_title,
                         'resource_status' => $data->status,
@@ -374,11 +373,6 @@ class MixpanelHelper
                     $organization_name = Organization::where('id', $organization)->first()->name;
                     $mp->register('organization_name', $organization_name);
                 }
-                // Log the event being tracked
-                Log::info('Tracking event', [
-                    'event_name' => $event['event_name'],
-                    'data_array' => $data_array,
-                ]);
                 $mp->track($event['event_name'], $data_array);
                 $profile_data = array(
                     '$first_name' =>$user->first_name,
@@ -399,14 +393,6 @@ class MixpanelHelper
 //                    $profile_section => $profile_section_data
 //                ), $ip, $ignore_time = true);
 
-
-                // Log the increment action
-                Log::info('Incrementing user profile property', [
-                    'user_id' => $user->id,
-                    'property' => $event['variable_name'],
-                    'quantity' => $quantity,
-                ]);
-
                 $mp->people->increment($user->id, $event['variable_name'], $quantity);
                 $mp->unregister($user->id);
             } else {
@@ -415,7 +401,6 @@ class MixpanelHelper
             return true;
         } catch (Exception $e) {
             dd($e);
-            Log::info($e->getMessage());
             return false;
         }
     }
