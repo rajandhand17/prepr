@@ -153,6 +153,7 @@ class Organization extends LaratrustTeam
     {
         return $this->hasOne(ChargebeeSubscription::class, 'organization_id', 'id');
     }
+
     public function external_links()
     {
         return $this->hasMany(OrganizationExternalLink::class, 'organization_id', 'id');
