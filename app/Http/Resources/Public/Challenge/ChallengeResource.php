@@ -199,7 +199,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
         }
 
         if ($this->challenge_assessment_criteria) {
