@@ -114,10 +114,10 @@ class ChallengeController extends AppBaseController
     {
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            if ($challenge->is_accessible === '0') {
+            if ($challenge) {
+                if ($challenge->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
-            if ($challenge) {
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
 
