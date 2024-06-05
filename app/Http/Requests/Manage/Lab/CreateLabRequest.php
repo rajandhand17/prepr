@@ -29,7 +29,7 @@ class CreateLabRequest extends FormRequest
         $base_rules = [
             'request_type'             => 'required|in:draft,publish,archive',
             'type'                     => 'required|in:assess,onboard,engage,grow,na',
-            'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1536',
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
             'organization_id'          => 'required|exists:organizations,uuid',
@@ -181,6 +181,7 @@ class CreateLabRequest extends FormRequest
     public function messages()
     {
         return [
+            'cover_image.max'                                  => __('responses.max_image_1_5_mb'),
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
             'type.required'                                    => __('responses.type_required'),
