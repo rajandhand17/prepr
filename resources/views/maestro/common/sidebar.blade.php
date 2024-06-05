@@ -103,13 +103,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('organisationList') }}" class="nav-link">
+              <a href="{{ route('organization.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Organization</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/UI/icons.html" class="nav-link">
+              <a href="{{ route('lab.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lab</p>
               </a>
