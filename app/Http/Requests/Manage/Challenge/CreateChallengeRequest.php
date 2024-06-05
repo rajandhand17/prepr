@@ -173,10 +173,10 @@ class CreateChallengeRequest extends FormRequest
         }
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
-            $base_rules['automatic_alert']              = 'required|in:0,1';
-            $base_rules['flexible_date_number']         = 'required_if:request_type,publish';
-            $base_rules['flexible_date_duration']       = 'required_if:request_type,publish';
-            $base_rules['flexible_expire_deadline']     = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['automatic_alert'] = 'required|in:0,1';
+            $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
+            $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
         }
 
         if ($this->request->has('labs')) {
