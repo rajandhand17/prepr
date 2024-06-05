@@ -57,6 +57,7 @@ class OrganizationDetailResource extends JsonResource
             'organization_address'          => OrganizationAddressResource::collection($this->address),
             'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'           => MemberManagementResource::collection($this->members),
+            'external_links'                => OrganizationExternalLinkResource::collection($this->external_links),
             'organization_details'          => OrganizationChargebeeLimitResource::make($this),
             'labs'                          => LabResource::collection($this->labs->take(config('site-settings.jobs_details_par_module_limit'))),
             'challenges'                    => ChallengeResource::collection($this->challenges_count->take(config('site-settings.jobs_details_par_module_limit'))),

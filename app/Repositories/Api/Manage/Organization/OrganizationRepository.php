@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Manage\Organization;
 
 use App\Models\Organization;
 use App\Services\Manage\OrganizationAddressService;
+use App\Services\Manage\OrganizationExternalLinkService;
 use App\Services\Manage\OrganizationMemberService;
 use App\Services\Manage\OrganizationService;
 
@@ -13,13 +14,15 @@ class OrganizationRepository implements OrganizationInterface
     private $organizationAddressService;
     private $organizationMemberService;
     private $organizationService;
+    private $organizationExternalLinkService;
 
-    public function __construct(Organization $organization, OrganizationService $organizationService, OrganizationAddressService $organizationAddressService, OrganizationMemberService $organizationMemberService, OrganizationAddressService $organizationAddressService2)
+    public function __construct(Organization $organization, OrganizationService $organizationService, OrganizationAddressService $organizationAddressService, OrganizationMemberService $organizationMemberService, OrganizationExternalLinkService $organizationExternalLinkService, OrganizationAddressService $organizationAddressService2)
     {
         $this->organization = $organization;
         $this->organizationAddressService = $organizationAddressService;
         $this->organizationMemberService = $organizationMemberService;
         $this->organizationService = $organizationService;
+        $this->organizationExternalLinkService = $organizationExternalLinkService;
     }
 
     public function getOrganizationList($request)
@@ -103,6 +106,15 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
+    public function createOrganizationExternalLinks($request, $organizationId)
+    {
+        try {
+            return $this->organizationExternalLinkService->createOrganizationExternalLinks($request, $organizationId);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug)
     {
         try {
@@ -125,6 +137,15 @@ class OrganizationRepository implements OrganizationInterface
     {
         try {
             return $this->organizationMemberService->updatesOrganizationMembers($request, $organization_id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateOrganizationExternalLinks($request, $organizationId)
+    {
+        try {
+            return $this->organizationExternalLinkService->updateOrganizationExternalLinks($request, $organizationId);
         } catch (\Exception $e) {
             return false;
         }

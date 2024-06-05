@@ -32,14 +32,18 @@ class UpdateOrganizationRequest extends FormRequest
             throw new NotFoundException();
         }
         $base_rules = [
-            'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
-            'description'     => 'required',
-            'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'category'        => 'required|numeric|exists:categories,id',
-            'website'         => 'required|url',
-            'status'          => 'required|in:draft,publish,archive',
-            'total_employees' => 'integer',
+            'title'                     => 'required|max:255|unique:organizations,title,'.$organization->id,
+            'description'               => 'required',
+            'profile_image'             => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'               => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'category'                  => 'required|numeric|exists:categories,id',
+            'website'                   => 'required|url',
+            'status'                    => 'required|in:draft,publish,archive',
+            'total_employees'           => 'integer',
+            'external_links'            => 'array|required',
+            'external_link_ids'         => 'array|exists:social_links,id|required',
+            'external_links.*'          => 'url',
+            'external_link_ids.*'       => 'numeric',
         ];
 
         if ($this->request->has('organization_address')) {
@@ -126,6 +130,11 @@ class UpdateOrganizationRequest extends FormRequest
             'organization_members.*.image.max'                => __('responses.mimes_image_max'),
             'organization_members.*.image.dimensions'         => __('responses.dimensions'),
             'total_employees.integer'                         => __('responses.total_employees_integer'),
+            'external_links.array'                            => __('responses.external_links_array'),
+            'external_links.url'                              => __('responses.external_links_valid_url_pattern'),
+            'external_link_ids.exists'                        => __('responses.external_link_ids_not_exists'),
+            'external_link_ids.array'                         => __('responses.external_link_ids_array'),
+            'external_link_ids.numeric'                       => __('responses.external_link_ids_numeric'),
         ];
     }
 }
