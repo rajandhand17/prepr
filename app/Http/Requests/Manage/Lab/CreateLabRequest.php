@@ -181,7 +181,7 @@ class CreateLabRequest extends FormRequest
     public function messages()
     {
         return [
-            'cover_image.max'                                  =>__('responses.max_image_1_5_mb'),
+            'cover_image.max'                                  => __('responses.max_image_1_5_mb'),
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
             'type.required'                                    => __('responses.type_required'),
