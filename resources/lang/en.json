@@ -111,6 +111,7 @@
     "responses.files_mimes_image": "Allowed Image extensions are pdf,doc, and docx",
     "responses.resource_file_upload_mimes_image": "Allowed Image extensions are jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv, and mpeg-2",
     "responses.mimes_image_max": "Maximum image size allowed is 1 mb",
+    "responses.max_image_1_5_mb": "Maximum image size allowed is 1.5 mb",
     "responses.mimes_file_max": "Maximum file size allowed is 1 mb",
     "responses.category_required": "This category field is required",
     "responses.category_numeric": "Category should be in numeric",
