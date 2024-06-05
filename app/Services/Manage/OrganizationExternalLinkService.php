@@ -27,9 +27,11 @@ class OrganizationExternalLinkService
             }
 
             DB::commit();
+
             return true;
         } catch (Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
@@ -52,9 +54,11 @@ class OrganizationExternalLinkService
             }
 
             DB::commit();
+
             return true;
         } catch (Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
