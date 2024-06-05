@@ -293,6 +293,11 @@ class LabRepository implements LabInterface
                 DB::rollBack();
                 return false;
             }
+            $lab->organization_id=OrganizationService::getOrganizationExistBasedOnId($lab->id);
+            // Mixpanel tracking code: delete lab
+            $lab->skills=LabSkillsGroupsStackService::getSkillsBasedOnLabId($lab->id);
+            $lab->tags=LabTagsGroupsService::getTagIdBasedOnLabId($lab->id);
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
             DB::commit();
             return true;
         } catch (\Exception $e) {

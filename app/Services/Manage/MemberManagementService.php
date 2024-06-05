@@ -562,7 +562,9 @@ class MemberManagementService
                 $member->inviter_id = auth()->user()->id;
                 $member->save();
             }
+            if($action=='accept' && $component=='lab'){
 
+            }
             return true;
         } catch (\Exception $e) {
             return false;

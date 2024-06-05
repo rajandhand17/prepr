@@ -145,7 +145,6 @@ class OrganizationController extends AppBaseController
             if ($organization) {
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.found_organization_list'));
             }
-
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
