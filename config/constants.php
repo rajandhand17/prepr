@@ -348,8 +348,8 @@ return [
         '2' => 'signed-in',
     ],
     'user_privacy_options' => [
-        'public' => '0',
-        'private' => '1',
+        'public'    => '0',
+        'private'   => '1',
         'signed-in' => '2',
     ],
     'friend_request_options' => [
@@ -490,8 +490,8 @@ return [
         '2' => 'both',
         '3' => 'no',
     ],
-    'notification_permission' =>[
-        'yes' =>'0',
-        'no'  =>'1',
+    'notification_permission' => [
+        'yes' => '0',
+        'no'  => '1',
     ],
 ];
