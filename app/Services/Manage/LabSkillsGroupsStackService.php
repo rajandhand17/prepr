@@ -146,14 +146,15 @@ class LabSkillsGroupsStackService
     public static function getLabIdBasesOnSKillsId($usersSkills)
     {
         try {
-            if(count($usersSkills)>0){
+            if (count($usersSkills) > 0) {
                 $getSkills = LabSkillsGroupsStack::where('type', 0)
                     ->whereIn('foreign_id', $usersSkills)
                     ->pluck('foreign_id');
-            }else{
+            } else {
                 $getSkills = LabSkillsGroupsStack::where('type', 0)
                     ->pluck('foreign_id')->random();
             }
+
             return $getSkills;
         } catch (\Exception $e) {
             return false;
