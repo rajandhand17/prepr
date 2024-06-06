@@ -6,6 +6,7 @@ use App\Models\Challenge;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\MemberManagement;
+use App\Models\PitchTemplate;
 use App\Models\Project;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
@@ -247,6 +248,31 @@ class ChallengeService
 
             return $fetchChallengeOrganizations;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTemplate($templateId)
+    {
+        try {
+            $templateData = [];
+            if ($templateId == '0') {
+                $templateData = [
+                    'template_id'       => $templateId,
+                    'template_title'    => __('responses.any_pitch_template'),
+                ];
+            } else {
+                $template = PitchTemplate::where('id', $templateId)->first();
+                if ($template) {
+                    $templateData = [
+                        'template_id'       => $template->id,
+                        'template_title'    => $template->title,
+                    ];
+                }
+            }
+
+            return $templateData;
+        } catch (Exception $e) {
             return false;
         }
     }

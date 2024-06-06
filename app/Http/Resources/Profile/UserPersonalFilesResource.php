@@ -18,7 +18,7 @@ class UserPersonalFilesResource extends JsonResource
 
         return [
             'id'        => $this->id,
-            'path'      => $this->original,
+            'path'      => $this->name,
             'name'      => end($array),
         ];
     }
