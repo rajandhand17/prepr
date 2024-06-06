@@ -16,7 +16,6 @@ use App\Models\Lab;
 use App\Models\Challenge;
 use App\Models\User;
 use App\Models\ProjectFile;
-use App\Models\ProjectFile;
 
 class ProjectService
 {
