@@ -39,10 +39,8 @@ class SkillController extends AppBaseController
                     $response = $resource::make($skillList);
                     $message = __('responses.skills_list_detailed');
                 }
-
                 return $this->sendResponse($response, $message);
             }
-
             return $this->sendError(__('responses.not_found_skill_list'), 404);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
