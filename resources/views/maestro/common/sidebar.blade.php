@@ -147,6 +147,59 @@
           </ul>
         </li>
         <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Project Management
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Project</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Stage</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Vertical</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Type</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Industry</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Status</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pitch Templates</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                 @csrf
