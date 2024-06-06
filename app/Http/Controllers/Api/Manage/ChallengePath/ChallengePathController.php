@@ -190,6 +190,7 @@ class ChallengePathController extends AppBaseController
                 if ($challengePath->is_accessible === '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
 

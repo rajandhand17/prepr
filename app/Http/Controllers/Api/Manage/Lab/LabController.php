@@ -65,6 +65,7 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible === '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
 

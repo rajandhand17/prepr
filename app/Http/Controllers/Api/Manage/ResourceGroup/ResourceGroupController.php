@@ -70,6 +70,7 @@ class ResourceGroupController extends AppBaseController
                 if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 

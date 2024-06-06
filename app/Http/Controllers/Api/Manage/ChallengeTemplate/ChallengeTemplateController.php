@@ -8,7 +8,6 @@ use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
