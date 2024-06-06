@@ -181,9 +181,11 @@ class AIService
             }
 
             Log::info('createChallengeUsingAIPreview completed successfully', ['validChallenges' => $validChallenges]);
+
             return $validChallenges;
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -291,9 +293,11 @@ class AIService
             }
 
             Log::info('createChallengeAssessmentUsingAi completed successfully', ['assessment' => $assessment]);
+
             return $assessment;
         } catch (Exception $e) {
             Log::error('Error in createChallengeAssessmentUsingAi in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -462,9 +466,11 @@ class AIService
             }
 
             Log::info('createChallengeFromResourceUsingAIPreview completed successfully', ['validChallenges' => $validChallenges]);
+
             return $validChallenges;
         } catch (Exception $e) {
             Log::error('Error in createChallengeFromResourceUsingAIPreview in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -480,6 +486,7 @@ class AIService
         $result = json_decode($response->getBody()->getContents(), true);
 
         Log::info('resourceSummarizer completed', ['result' => $result]);
+
         return $result;
     }
 
@@ -625,9 +632,11 @@ class AIService
             }
 
             Log::info('createLabUsingAIPreview completed successfully', ['validLabs' => $validLabs]);
+
             return $validLabs;
         } catch (Exception $e) {
             Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
+
             return false;
         }
     }
@@ -691,9 +700,11 @@ class AIService
             $result = json_decode($response->getBody()->getContents(), true);
 
             Log::info('fetchChallengesByOpenAI completed', ['result' => $result]);
+
             return $result;
         } catch (Exception $e) {
             Log::error('Error in fetchChallengesByOpenAI in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -762,9 +773,11 @@ class AIService
             $result = json_decode($response->getBody()->getContents(), true);
 
             Log::info('fetchChallengesFromResourcesByOpenAI completed', ['result' => $result]);
+
             return $result;
         } catch (Exception $e) {
             Log::error('Error in fetchChallengesFromResourcesByOpenAI in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -838,9 +851,11 @@ class AIService
             $result = json_decode($response->getBody()->getContents(), true);
 
             Log::info('fetchChallengesForLabByOpenAI completed', ['result' => $result]);
+
             return $result;
         } catch (Exception $e) {
             Log::error('Error in fetchChallengesForLabByOpenAI in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -907,9 +922,11 @@ class AIService
             $result = json_decode($response->getBody()->getContents(), true);
 
             Log::info('fetchCriteriasByOpenAI completed', ['result' => $result]);
+
             return $result;
         } catch (Exception $e) {
             Log::error('Error in fetchCriteriasByOpenAI in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -933,9 +950,11 @@ class AIService
             }
 
             Log::info('processSkills completed', ['updatedSkills' => $updatedSkills]);
+
             return $updatedSkills;
         } catch (Exception $e) {
             Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -958,9 +977,11 @@ class AIService
             $result = ['skill' => $highestScoreSkill, 'score' => $highestScore];
 
             Log::info('selectHighestScoreSkill completed', ['result' => $result]);
+
             return $result;
         } catch (Exception $e) {
             Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -1522,6 +1543,7 @@ class AIService
         $shuffledModules = $combinedModules;
 
         Log::info('createResourceModuleUsingAIPreview completed successfully', ['shuffledModules' => $shuffledModules]);
+
         return $shuffledModules;
     }
 
@@ -1624,6 +1646,7 @@ class AIService
             return false;
         } catch (Exception $e) {
             Log::error('Error in addAIProjectEvaluation in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
