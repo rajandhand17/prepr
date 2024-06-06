@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Models\User;
+use App\Models\UserSetting as UserSettings;
 use DB;
 use Illuminate\Console\Command;
-use \App\Models\User;
-use \App\Models\UserSetting as UserSettings;
 
 class UserSetting extends Command
 {
@@ -51,8 +51,8 @@ class UserSetting extends Command
                     if (!$existsUsers) {
                         continue;
                     }
-                    $existInUserSettings=UserSettings::where('user_id',$single_user->id)->first();
-                    if($existInUserSettings){
+                    $existInUserSettings = UserSettings::where('user_id', $single_user->id)->first();
+                    if ($existInUserSettings) {
                         continue;
                     }
                     if ($single_user->profile == 'public') {
@@ -139,6 +139,7 @@ class UserSetting extends Command
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
+
             return;
         }
     }
