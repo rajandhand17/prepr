@@ -188,7 +188,7 @@ class UpdateLabRequest extends FormRequest
     public function messages()
     {
         return [
-            'cover_image.max'                                  =>__('responses.max_image_1_5_mb'),
+            'cover_image.max'                                  => __('responses.max_image_1_5_mb'),
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
             'privacy.in'                                       => __('responses.choose_yes_no'),
