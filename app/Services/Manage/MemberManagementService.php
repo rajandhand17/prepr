@@ -413,11 +413,11 @@ class MemberManagementService
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
                         } else {
-                            if($checkMemberExists['invite_status']=='3'){
+                            if ($checkMemberExists['invite_status'] == '3') {
                                 $subject = $request->subject_line;
                                 $emailBody = $request->email_body;
                                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
-                                 if ($emailBody) {
+                                if ($emailBody) {
                                     $emailBody = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $emailBody));
                                 }
                                 if (empty($request->subject_line) || empty($request->email_body)) {
@@ -436,13 +436,13 @@ class MemberManagementService
                                 }
                                 MemberManagement::where('id', $checkMemberExists['id'])
                                     ->update([
-                                        'invite_status' => config('constants.member_management_invite_status.invited')
+                                        'invite_status' => config('constants.member_management_invite_status.invited'),
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                                 $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                                 Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                                 $invited_emails[] = $member['invitee_email'];
-                            }else{
+                            } else {
                                 $already_members[] = $member['invitee_email'];
                             }
                         }
