@@ -7,7 +7,6 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Repositories\Api\Manage\LabMarketplace\LabMarketplaceRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
