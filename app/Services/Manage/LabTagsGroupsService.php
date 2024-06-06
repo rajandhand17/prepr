@@ -106,14 +106,15 @@ class LabTagsGroupsService
     public static function getLabsIdBasedOnTagsId($tagIds)
     {
         try {
-            if(count($tagIds)>0){
+            if (count($tagIds) > 0) {
                 $getTags = LabTagsGroups::whereIn('foreign_id', $tagIds)
                     ->where('type', '0')
                     ->pluck('lab_id');
-            }else{
+            } else {
                 $getTags = LabTagsGroups::where('type', '0')
                     ->pluck('lab_id')->random();
             }
+
             return $getTags;
         } catch (\Exception $e) {
             return false;
