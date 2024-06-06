@@ -30,10 +30,6 @@ trait ProjectTrait
             return false;
         }
     }
-
-
-
-
     private function getProjectById($id)
     {
         try {
@@ -59,42 +55,6 @@ trait ProjectTrait
             $associateItems = ProjectService::getProjectAssociateItems($type);
             if($associateItems){
                 return $associateItems;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    private function getUsers()
-    {
-        try {
-            $users = ProjectService::getUsers();
-            if($users){
-                return $users;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    private function getAllRoles()
-    {
-        try {
-            $users = RoleAndPermissionService::getAllRoles();
-            if($users){
-                return $users;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    private function getAllPermissions()
-    {
-        try {
-            $users = RoleAndPermissionService::permissions();
-            if($users){
-                return $users;
             }
             return false;
         } catch (Exception $e) {

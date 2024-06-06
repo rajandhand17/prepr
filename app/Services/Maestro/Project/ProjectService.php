@@ -15,6 +15,8 @@ use App\Models\Category;
 use App\Models\Lab;
 use App\Models\Challenge;
 use App\Models\User;
+use App\Models\ProjectFile;
+use App\Models\ProjectFile;
 
 class ProjectService
 {
@@ -146,26 +148,12 @@ class ProjectService
 
 
 
-    public static function getUsers()
-    {
-        try {
-            return User::orderBy('id', 'desc');
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    public static function userAttachRole($user,$roles)
-    {
-        try {
-            if(!empty($roles)){
-                $user->syncRoles($roles);
-                return true;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
+
+
+
+
+
+
 
     public function addProjectFile($projectId, $request)
     {
@@ -206,7 +194,6 @@ class ProjectService
             return false;
         }
     }
-
     public static function uploadData($projectId, $uploadedFile, $file_type, $file_upload)
     {
         try {
