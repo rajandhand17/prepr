@@ -23,11 +23,11 @@ class Skill extends Model
 
     public function user_pinned()
     {
-        if (auth('api')->check()){
+        if (auth('api')->check()) {
             return $this->hasOne(UserSkills::class, 'skill', 'id')->where('user_id', auth('api')->user()->id);
         }
-        return 'N/A';
 
+        return 'N/A';
     }
 
     public function getChallenges()
