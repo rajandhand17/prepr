@@ -4,6 +4,8 @@ namespace App\Console\Commands\OldDataMigration;
 
 use DB;
 use Illuminate\Console\Command;
+use \App\Models\User;
+use \App\Models\UserSetting as UserSettings;
 
 class UserSetting extends Command
 {
@@ -45,8 +47,12 @@ class UserSetting extends Command
 
             DB::connection('mysql2')->table('users')->chunkById(1000, function ($users) {
                 foreach ($users as $key => $single_user) {
-                    $existsUsers = \App\Models\User::where('id', $single_user->id)->first();
+                    $existsUsers = User::where('id', $single_user->id)->first();
                     if (!$existsUsers) {
+                        continue;
+                    }
+                    $existInUserSettings=UserSettings::where('user_id',$single_user->id)->first();
+                    if($existInUserSettings){
                         continue;
                     }
                     if ($single_user->profile == 'public') {
@@ -105,11 +111,11 @@ class UserSetting extends Command
                     } else {
                         $display_org_minionboarding = config('constants.notification_permission.no');
                     }
-                    $checkUserSetting = \App\Models\UserSetting::where('user_id', $single_user->id)->first();
+                    $checkUserSetting = UserSetting::where('user_id', $single_user->id)->first();
                     if ($checkUserSetting) {
                         $userSetting = $checkUserSetting;
                     } else {
-                        $userSetting = new \App\Models\UserSetting();
+                        $userSetting = new UserSetting();
                     }
                     $userSetting->user_id = $single_user->id;
                     $userSetting->profile_privacy = $profile_privacy;
@@ -128,13 +134,11 @@ class UserSetting extends Command
                     $userSetting->save();
                 }
             });
-
             DB::commit();
-            $this->info('Migrating of old data for users table completed.');
+            $this->info('Migrating of old data  for user setting table completed.');
         } catch (\Exception $e) {
             DB::rollback();
             $this->error($e->getMessage());
-
             return;
         }
     }
