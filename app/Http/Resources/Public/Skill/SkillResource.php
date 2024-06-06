@@ -48,7 +48,7 @@ class SkillResource extends JsonResource
             $data['saved_on'] = isset($this->saved_skill->created_at) ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null;
         }
         if (isset($this->user_pinned->pinned)) {
-            $data['pinned'] = $this->user_pinned->pinned == 1 ? 'yes' : 'no';
+            $data['pinned'] = $this->user_pinned->pinned == '1' ? 'yes' : 'no';
         }
 
         return $data;

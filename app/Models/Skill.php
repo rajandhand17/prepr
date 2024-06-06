@@ -23,7 +23,7 @@ class Skill extends Model
 
     public function user_pinned()
     {
-        return $this->hasOne(UserSkills::class, 'skill', 'id');
+        return $this->hasOne(UserSkills::class, 'skill', 'id')->where('user_id', auth('api')->user()->id);
     }
 
     public function getChallenges()
