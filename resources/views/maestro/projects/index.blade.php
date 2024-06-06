@@ -1,17 +1,17 @@
 @extends('maestro.layouts.default')
-@section('title', 'Categories')
+@section('title', 'Project')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Sub Categories</h1>
+                <h1 class="m-0">Projects</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('category.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Sub Categories</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Projects</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -29,8 +29,8 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"></h3>
-                        <a class="btn btn-secoundary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('category.index')}}" role="menuitem">Back</a>
+                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
+                            href="{{route('projects.create')}}" role="menuitem">Create Project</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -67,7 +67,7 @@
     </script>
 
     <script>
-        function deleteSubCategory(url) {
+        function deleteProject(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -107,7 +107,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while deleting the Sub category.',
+                                'An error occurred while deleting the Project.',
                                 'error'
                             );
                         }
