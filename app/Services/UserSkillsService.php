@@ -66,7 +66,6 @@ class UserSkillsService
             }
             $userSkills = $userSkills->pluck('skill');
             $userSkills = SkillService::getSkills($language, $search, $sortBy = null, $userSkills);
-
             return $userSkills;
         } catch(\Exception $e) {
             return false;
