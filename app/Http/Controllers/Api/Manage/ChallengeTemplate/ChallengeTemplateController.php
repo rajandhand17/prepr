@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
@@ -25,7 +26,8 @@ class ChallengeTemplateController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -74,10 +76,11 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug, Request $request)
+    public function show($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -93,10 +96,11 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function redeemChallenge($slug, Request $request)
+    public function redeemChallenge($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
@@ -31,7 +32,8 @@ class LabController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -59,10 +61,10 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
-            if ($lab->is_accessible === '0') {
-                return $this->sendError(__('responses.lab_not_accessible'), 403);
-            }
             if ($lab) {
+                if ($lab->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
 
@@ -156,11 +158,11 @@ class LabController extends AppBaseController
     {
         try {
             $checkComponentBasedOnSlug = $this->labRepository->checkSlug($slug);
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
-                return $this->sendError(__('responses.lab_not_accessible'), 403);
-            }
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_not_found'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $lab = $this->labRepository->deleteLab($checkComponentBasedOnSlug->id, $request);
             if ($lab) {

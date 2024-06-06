@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
@@ -84,10 +85,10 @@ class ResourceCollectionController extends AppBaseController
     {
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
-            }
             if ($checkResourceCollectionExistsOrNot) {
+                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+                }
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
@@ -132,7 +133,8 @@ class ResourceCollectionController extends AppBaseController
 
     public function index(Request $request)
     {
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+        $userData = auth()->user();
+        $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
         if (!$organization) {
             return $this->sendError(__('responses.organization_not_found'), 404);
         }

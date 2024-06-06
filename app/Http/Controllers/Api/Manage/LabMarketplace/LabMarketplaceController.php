@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\LabMarketplace;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
@@ -22,7 +23,8 @@ class LabMarketplaceController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -71,10 +73,11 @@ class LabMarketplaceController extends AppBaseController
         }
     }
 
-    public function show($slug, Request $request)
+    public function show($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -108,10 +111,11 @@ class LabMarketplaceController extends AppBaseController
         }
     }
 
-    public function redeemLab($slug, Request $request)
+    public function redeemLab($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
 use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
@@ -25,7 +26,8 @@ class ChallengePathController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -184,10 +186,10 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $challengePath = $this->challengePathRepository->checkSlug($slug);
-            if ($challengePath->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
-            }
             if ($challengePath) {
+                if ($challengePath->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+                }
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
 

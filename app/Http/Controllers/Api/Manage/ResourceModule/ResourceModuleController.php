@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
@@ -34,7 +35,8 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('view_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -62,11 +64,10 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
-            }
-
             if ($checkResourceModuleExistsOrNot) {
+                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 

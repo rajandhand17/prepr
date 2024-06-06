@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\LabProgram;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
 use App\Http\Requests\Manage\LabProgram\UpdateLabProgramRequest;
@@ -28,7 +29,8 @@ class LabProgramController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -57,10 +59,10 @@ class LabProgramController extends AppBaseController
     {
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
-            if ($labProgram->is_accessible === '0') {
-                return $this->sendError(__('responses.lab_program_not_accessible'), 403);
-            }
             if ($labProgram) {
+                if ($labProgram->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+                }
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
