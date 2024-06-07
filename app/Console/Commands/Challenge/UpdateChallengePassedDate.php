@@ -7,6 +7,8 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UpdateChallengePassedDate extends Command
 {
     /**
@@ -39,7 +41,7 @@ class UpdateChallengePassedDate extends Command
                     $challengeTimeline = $challengeData->challenge_timelines()->first();
 
                     if ($challengeTimeline) {
-                        if ($challengeTimeline->timeline_type === '0' && $challengeTimeline->flexible_expire_deadline !== '1969-12-31 00:00:00' && $challengeTimeline->flexible_expire_deadline < $currentDate) {
+                        if ($challengeTimeline->timeline_type === '0' && $challengeTimeline->flexible_expire_deadline !== '1969-12-31 00:00:00' && !isEmpty($challengeTimeline->flexible_expire_deadline) && $challengeTimeline->flexible_expire_deadline < $currentDate) {
                             $challengeData->update(['is_open' => '1']);
                             $this->info('This challenge id has been updated:- '.$challengeData->id);
                         } elseif ($challengeTimeline->timeline_type === '1' && $challengeTimeline->submission_deadline_date < $currentDate) {

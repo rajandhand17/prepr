@@ -227,6 +227,7 @@ return [
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
         App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventServiceProvider::class,
+        App\Repositories\Api\Manage\UnifiedConnection\UnifiedConnectionServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,

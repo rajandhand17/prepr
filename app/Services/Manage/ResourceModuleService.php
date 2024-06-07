@@ -221,17 +221,23 @@ class ResourceModuleService
                     $privacy = null;
             }
 
+            function getIsAiCreatedValue($isAiCreatedInput)
+            {
+                if ($isAiCreatedInput === 'yes' || $isAiCreatedInput === true) {
+                    return config('constants.challenge_ai_created.yes');
+                } elseif ($isAiCreatedInput === 'no' || $isAiCreatedInput === false) {
+                    return config('constants.challenge_ai_created.no');
+                } else {
+                    return config('constants.challenge_ai_created.no');
+                }
+            }
+
             $is_ai_created = config('constants.challenge_ai_created.no');
-            switch ($request->is_ai_created) {
-                case 'yes':
-                    $is_ai_created = config('constants.challenge_ai_created.yes');
-                    break;
-                case 'no':
-                    $is_ai_created = config('constants.challenge_ai_created.no');
-                    break;
-                default:
-                    $is_ai_created = config('constants.challenge_ai_created.no');
-                    break;
+
+            if ($request->is_ai_created !== null) {
+                $is_ai_created = getIsAiCreatedValue($request->is_ai_created);
+            } elseif (isset($request->go1_course['is_ai_created'])) {
+                $is_ai_created = getIsAiCreatedValue($request->go1_course['is_ai_created']);
             }
 
             $go1Course = $is_go1 ? $request->go1_course : null;
@@ -242,7 +248,9 @@ class ResourceModuleService
                 $privacy = config('constants.resource_module_privacy.yes');
                 $status = config('constants.resource_module_status.draft');
                 $is_global = config('constants.resource_module_is_global.no');
-                $is_ai_created = config('constants.challenge_ai_created.no');
+                $duration_id = $request->go1_course['duration_id'] ?? null;
+            } else {
+                $duration_id = $request->duration_id;
             }
 
             $model = new ResourceModule();
@@ -252,7 +260,7 @@ class ResourceModuleService
             $resourceModule->language = $request->language;
             $resourceModule->user_id = auth()->user()->id;
             $resourceModule->organization_id = $organizationId;
-            $resourceModule->duration_id = $request->duration_id;
+            $resourceModule->duration_id = $duration_id;
             $resourceModule->level_id = $request->level_id;
             $resourceModule->title = $title;
             $resourceModule->slug = $slug;
