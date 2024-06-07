@@ -9,16 +9,7 @@ use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Traits\Maestro\Project\ProjectTrait;
 use App\Models\Project;
-use App\Models\User;
 use Exception;
-use App\Models\ProjectStage;
-use App\Models\ProjectType;
-use App\Models\ProjectStatus;
-use App\Models\ProjectIndustry;
-use App\Models\ProjectVertical;
-use App\Models\Category;
-use App\Models\Lab;
-use App\Models\Challenge;
 
 class ProjectsController extends Controller
 {
@@ -31,7 +22,7 @@ class ProjectsController extends Controller
     {
         try {
             $language = 'en';//Helper::getCurrentSelectedLanguageIso();
-            $projectes = Project::query()->where('language', $language)->with(['getUser', 'getStage', 'getStatus', 'getCategory'])->orderBy('id', 'desc');
+            $projectes = Project::query()->where('language', $language)->orderBy('id', 'desc');
             if (request()->ajax()) {
                 return DataTables::eloquent($projectes)
                     ->addColumn('action', static function (Project $projectes) {
@@ -82,7 +73,7 @@ class ProjectsController extends Controller
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '15%'],
             ]);
             $module_name = 'Project';
-            return view('maestro.projects.index', compact('html','module_name'));
+            return view('maestro.projects.project.index', compact('html','module_name'));
         } catch (Exception $e) {
             return response()->route('projects.index')->with(['error' => $e->getMessage()]);
         }
@@ -105,7 +96,7 @@ class ProjectsController extends Controller
             $project_team   = $this->getProjectAssociateItems('team');
             $project_lab    = $this->getProjectAssociateItems('lab');
             $project_challenge  = $this->getProjectAssociateItems('challenge');
-            return view('maestro.projects.create', compact('project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
+            return view('maestro.projects.project.create', compact('project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
@@ -140,7 +131,7 @@ class ProjectsController extends Controller
             if(!$project->exists){
                 return redirect()->route('projects.index')->with(['error' => 'Project not found.']);
             }
-            return view('maestro.projects.view', compact('project'));
+            return view('maestro.projects.project.view', compact('project'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
@@ -168,7 +159,7 @@ class ProjectsController extends Controller
             $project_team   = $this->getProjectAssociateItems('team');
             $project_lab    = $this->getProjectAssociateItems('lab');
             $project_challenge  = $this->getProjectAssociateItems('challenge');
-            return view('maestro.projects.edit', compact('project','selected_member','project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
+            return view('maestro.projects.project.edit', compact('project','selected_member','project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
