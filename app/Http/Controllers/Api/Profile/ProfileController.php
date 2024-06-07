@@ -39,7 +39,7 @@ class ProfileController extends AppBaseController
     {
         try {
             $getUserDetails = $this->profileRepository->getUserByUsername($user_name);
-            if($getUserDetails->userSetting!==null){
+            if ($getUserDetails->userSetting !== null) {
                 $checkProfile = $getUserDetails->userSetting->project_privacy;
                 if ($checkProfile == '1' && $getUserDetails->id !== auth()->user()->id) {
                     return $this->sendError(__('responses.not_visible_for_others'));
