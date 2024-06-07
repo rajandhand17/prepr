@@ -174,7 +174,6 @@ class ChallengeRepository implements ChallengeInterface
                     'campusConnectStory'                  => $campusConnectStory,
                 ];
             });
-
             if (
                 $createChallenge['createChallenge'] &&
                 $createChallenge['createChallengeAchievement'] &&
@@ -193,6 +192,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectStory']
             ) {
                 DB::commit();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
                 return $createChallenge['createChallenge'];
             }
             DB::rollback();
@@ -400,7 +400,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectStory']
             ) {
                 DB::commit();
-
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
                 return $updateChallenge['updateChallenge'];
             }
             DB::rollback();

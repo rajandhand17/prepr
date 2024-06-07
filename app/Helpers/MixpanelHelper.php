@@ -3,10 +3,14 @@
 
 namespace App\Helpers;
 
+use App\Models\ComponentAssociation;
 use App\Models\RoleUser;
 use App\Services\CategoryService;
+use App\Services\Manage\ChallengeService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
 use App\Services\SkillService;
+use App\Services\TagService;
 use Mixpanel;
 use Exception;
 use App\Models\MemberManagement;
@@ -144,33 +148,18 @@ class MixpanelHelper
                 case config('mixpanel.create_challenge'): // Mixpanel data: create challenge
                 case config('mixpanel.edit_challenge'): // Mixpanel data: edit challenge
                 case config('mixpanel.delete_challenge'): // Mixpanel data: delete challenge
-                    $final_challenge_skills = [];
-                    dd($data);
-                    $final_challenge_skills[] =SkillService::getSkillBasedOnIds($data->skills)->title;
-                    dd($final_challenge_skills);
-//                    foreach ($data->skills as $challenge_skill) {
-//                        $final_challenge_skills[] =SkillService::getSkillBasedOnIds($challenge_skill); //Skill::find($challenge_skill)->title;
-//                    }
-
-                    $final_challenge_tags = [];
-
-                    foreach ($data->tag as $challenge_tag) {
-                        $tag = Tag::find($challenge_tag);
-                        if ($tag) {
-                            $final_challenge_tags[] = $tag->title;
-                        }
-                    }
-
+                    $final_challenge_skills=SkillService::getSkillBasedOnIds($data->skills)->pluck('title');
+                    $final_challenge_tags=TagService::getTagsBasedOnIds($data->tags)->pluck('title');
                     $final_associate_labs = [];
-                    $associated_lab_ids = LabChallenges::where('challenge_id', $data->id)->whereNotNull('lab_id')->pluck('lab_id')->toArray();
+                    $associated_lab_ids = ComponentAssociation::where('challenge_id', $data->id)->whereNotNull('lab_id')->pluck('lab_id');
                     foreach ($associated_lab_ids as $associate_lab) {
-                        $final_associate_labs[] = Lab::find($associate_lab)->title;
+                        $final_associate_labs[] =LabService::getLabBasedOnId($associate_lab);
                     }
 
-                    $organization = $data->organisation;
+                    $organization = $data->organisation_id;
                     $data_array = array(
                         'challenge_title' => $data->title,
-                        'challenge_category' => Category::find($data->category)->name,
+                        'challenge_category' => Category::find($data->category_id)->title,
                         'associated_lab' => $final_associate_labs,
                         'challenge_skills' => $final_challenge_skills,
                         'challenge_tags' => $final_challenge_tags,

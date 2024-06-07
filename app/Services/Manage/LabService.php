@@ -119,7 +119,6 @@ class LabService
             if ($upload_lab_cover_image == false) {
                 return false;
             }
-
             return $upload_lab_cover_image;
         } catch (Exception $e) {
             return false;
@@ -446,7 +445,6 @@ class LabService
             $lab = Lab::find($id);
             $lab->is_pre_built = $is_pre_built;
             $lab->save();
-
             return true;
         } catch (Exception $e) {
             return false;

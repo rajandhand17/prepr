@@ -273,6 +273,7 @@ class LabRepository implements LabInterface
                 }
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_lab'), $request, auth()->user(), $request->ip(),
                     $groups_for_mixpanel);
+
                 return $updatedLab['updatedLab'];
             }
             DB::rollBack();
