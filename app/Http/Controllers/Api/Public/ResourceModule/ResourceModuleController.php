@@ -44,10 +44,11 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
-            }
             if ($checkResourceModuleExistsOrNot) {
+                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 

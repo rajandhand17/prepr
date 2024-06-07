@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeFromResourceUsingAIPreviewRequest;
@@ -34,7 +35,8 @@ class ChallengeController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -114,10 +116,11 @@ class ChallengeController extends AppBaseController
     {
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            if ($challenge->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_not_accessible'), 403);
-            }
             if ($challenge) {
+                if ($challenge->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
 
@@ -539,10 +542,12 @@ class ChallengeController extends AppBaseController
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
+
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
+            $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
 
-            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image);
+            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
 
             if ($createChallengeUsingAI) {
                 return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_successfully'), 200);

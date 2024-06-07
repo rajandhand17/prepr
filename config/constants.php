@@ -32,6 +32,7 @@ return [
         'network'      => '1',
         'join_request' => '2',
         'csv'          => '3',
+        'unified'      => '4',
     ],
 
     'member_management_component_type' => [
@@ -187,6 +188,7 @@ return [
         'null'  => '0',
         'open'  => '1',
         'close' => '2',
+        'ai'    => '3',
     ],
 
     'challenge_visibility_type' => [
@@ -345,7 +347,11 @@ return [
         '1' => 'private',
         '2' => 'signed-in',
     ],
-
+    'user_privacy_options' => [
+        'public'    => '0',
+        'private'   => '1',
+        'signed-in' => '2',
+    ],
     'friend_request_options' => [
         '0' => 'public',
         '1' => 'private',
@@ -483,5 +489,9 @@ return [
         '1' => 'story',
         '2' => 'both',
         '3' => 'no',
+    ],
+    'notification_permission' => [
+        'yes' => '0',
+        'no'  => '1',
     ],
 ];

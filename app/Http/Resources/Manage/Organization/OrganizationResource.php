@@ -4,10 +4,7 @@ namespace App\Http\Resources\Manage\Organization;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -49,6 +46,7 @@ class OrganizationResource extends JsonResource
             'total_employees'              => $this->total_employees,
             'category_id'                  => $category_id,
             'category'                     => $category,
+            'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'lab_count'                    => $this->labs_count()->count(),
             'challenge_count'              => $this->challenges_count()->count(),
             'resource_count'               => $this->resource_modules_count()->count(),
@@ -57,9 +55,7 @@ class OrganizationResource extends JsonResource
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'          => MemberManagementResource::collection($this->members),
-            'labs'                         => LabResource::collection($this->labs),
-            'challenges'                   => ChallengeResource::collection($this->challenges_count),
-            'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
+            'organization_details'         => OrganizationChargebeeLimitResource::make($this),
         ];
     }
 }

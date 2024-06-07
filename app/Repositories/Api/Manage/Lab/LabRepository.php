@@ -210,7 +210,6 @@ class LabRepository implements LabInterface
                         ]
                     );
                 }
-
                 $campusConnectOpportunity = true;
                 $campusConnectStory = true;
                 if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
