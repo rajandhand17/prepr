@@ -424,19 +424,18 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             DB::beginTransaction();
-
+            $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
             if ($deleteChallenge == false) {
                 DB::rollBack();
-
                 return false;
             }
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
             DB::commit();
-
             return true;
         } catch (Exception $e) {
             DB::rollBack();
-
             return false;
         }
     }

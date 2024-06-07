@@ -148,8 +148,14 @@ class MixpanelHelper
                 case config('mixpanel.create_challenge'): // Mixpanel data: create challenge
                 case config('mixpanel.edit_challenge'): // Mixpanel data: edit challenge
                 case config('mixpanel.delete_challenge'): // Mixpanel data: delete challenge
-                    $final_challenge_skills=SkillService::getSkillBasedOnIds($data->skills)->pluck('title');
+                $final_challenge_skills=[];
+                $final_challenge_tags=[];
+                if(isset($data->skills)){
+                        $final_challenge_skills=SkillService::getSkillBasedOnIds($data->skills)->pluck('title');
+                }
+                if(isset($data->tags)){
                     $final_challenge_tags=TagService::getTagsBasedOnIds($data->tags)->pluck('title');
+                }
                     $final_associate_labs = [];
                     $associated_lab_ids = ComponentAssociation::where('challenge_id', $data->id)->whereNotNull('lab_id')->pluck('lab_id');
                     foreach ($associated_lab_ids as $associate_lab) {
