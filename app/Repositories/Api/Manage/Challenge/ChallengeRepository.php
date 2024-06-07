@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
+use App\Helpers\MixpanelHelper;
 use App\Models\Challenge;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
@@ -151,7 +152,8 @@ class ChallengeRepository implements ChallengeInterface
                         Challenge::class,
                         $request->all(),
                         $organization,
-                    );
+
+                );
                 }
 
                 return [
@@ -191,7 +193,6 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectStory']
             ) {
                 DB::commit();
-
                 return $createChallenge['createChallenge'];
             }
             DB::rollback();

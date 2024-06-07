@@ -70,7 +70,6 @@ class ChallengeController extends AppBaseController
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
-
             $upload_cover_image = config('site-settings.default_challenge_cover_image');
             if ($request->cover_image !== null) {
                 $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
@@ -79,7 +78,6 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
             if ($request->achievement_image !== null) {
                 $uploaded_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
@@ -88,7 +86,6 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-
             $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
             if ($request->attachments !== null) {
                 $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
@@ -103,9 +100,8 @@ class ChallengeController extends AppBaseController
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
             }
-
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -145,18 +145,19 @@ class MixpanelHelper
                 case config('mixpanel.edit_challenge'): // Mixpanel data: edit challenge
                 case config('mixpanel.delete_challenge'): // Mixpanel data: delete challenge
                     $final_challenge_skills = [];
-                    foreach ($data->challange_skill as $challenge_skill) {
-                        $final_challenge_skills[] = Skill::find($challenge_skill)->skill;
-                    }
+                    dd($data);
+                    $final_challenge_skills[] =SkillService::getSkillBasedOnIds($data->skills)->title;
+                    dd($final_challenge_skills);
+//                    foreach ($data->skills as $challenge_skill) {
+//                        $final_challenge_skills[] =SkillService::getSkillBasedOnIds($challenge_skill); //Skill::find($challenge_skill)->title;
+//                    }
 
                     $final_challenge_tags = [];
-                    $new_tags = substr($data->challange_tag, 1, -1);
-                    $new_tags = str_replace('"', '', $new_tags); // remove " from the string
-                    $new_tags = explode(',', $new_tags);
-                    foreach ($new_tags as $challenge_tag) {
+
+                    foreach ($data->tag as $challenge_tag) {
                         $tag = Tag::find($challenge_tag);
                         if ($tag) {
-                            $final_challenge_tags[] = $tag->tag;
+                            $final_challenge_tags[] = $tag->title;
                         }
                     }
 
