@@ -34,7 +34,7 @@ class UpdateLabRequest extends FormRequest
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
 
         $base_rules = [
-            'cover_image'              => 'image|mimes:jpeg,jpg,png,webp|max:1024',
+            'cover_image'              => 'image|mimes:jpeg,jpg,png,webp|max:1536',
             'title'                    => 'required|max:255|unique:labs,title,'.$lab->id,
             'request_type'             => 'required|in:draft,publish,archive',
             'type'                     => 'required|in:assess,onboard,engage,grow,na',
@@ -188,6 +188,7 @@ class UpdateLabRequest extends FormRequest
     public function messages()
     {
         return [
+            'cover_image.max'                                  => __('responses.max_image_1_5_mb'),
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
             'privacy.in'                                       => __('responses.choose_yes_no'),
