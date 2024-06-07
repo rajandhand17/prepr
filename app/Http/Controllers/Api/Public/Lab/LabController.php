@@ -9,7 +9,6 @@ use App\Models\AirmeetEvent;
 use App\Models\User;
 use App\Repositories\Api\Public\AirmeetEvent\AirmeetEventRepository;
 use App\Repositories\Api\Public\Lab\LabRepository;
-use App\Services\Manage\OrganizationService;
 use App\Services\Public\ChallengeService;
 use Illuminate\Http\Request;
 use stdClass;
@@ -58,6 +57,7 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible === '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
