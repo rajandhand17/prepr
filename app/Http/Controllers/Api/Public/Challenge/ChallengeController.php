@@ -23,13 +23,6 @@ class ChallengeController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
-                }
-                $request->merge(['organization_id' => $organization]);
-            }
             $challenges = $this->challengeRepository->getList($request);
             if ($challenges !== false) {
                 $response = [
@@ -54,10 +47,10 @@ class ChallengeController extends AppBaseController
     {
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
-            if ($challenge->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_not_accessible'), 403);
-            }
             if ($challenge) {
+                if ($challenge->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                }
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));
             }
 

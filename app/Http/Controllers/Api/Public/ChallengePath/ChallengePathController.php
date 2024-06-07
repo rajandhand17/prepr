@@ -21,13 +21,6 @@ class ChallengePathController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
-                }
-                $request->merge(['organization_id' => $organization]);
-            }
             $challengePath = $this->challengePathRepository->getList($request);
             if ($challengePath !== false) {
                 $response = [
@@ -52,10 +45,10 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $challengePath = $this->challengePathRepository->getChallengePathBasedOnSlug($slug);
-            if ($challengePath->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
-            }
             if ($challengePath) {
+                if ($challengePath->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
+                }
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
 

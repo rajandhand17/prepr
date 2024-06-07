@@ -44,10 +44,10 @@ class ResourceCollectionController extends AppBaseController
     {
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
-            }
             if ($checkResourceCollectionExistsOrNot) {
+                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+                }
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 

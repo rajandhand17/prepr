@@ -44,10 +44,10 @@ class ResourceGroupController extends AppBaseController
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
-            }
             if ($checkResourceGroupExistsOrNot) {
+                if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
