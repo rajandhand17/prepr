@@ -276,6 +276,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
+            $update_assessment_attachment = null;
             if ($checkComponentBasedOnSlug->challenge_assessment) {
                 $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment->attachments);
             }
