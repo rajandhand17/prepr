@@ -180,12 +180,11 @@ class AIService
                 throw new Exception('Failed to generate sufficient valid challenges.');
             }
 
-            Log::info('createChallengeUsingAIPreview completed successfully', ['validChallenges' => $validChallenges]);
+            Log::info('createChallengeUsingAIPreview completed successfully');
 
             return $validChallenges;
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
-
             return false;
         }
     }
@@ -200,9 +199,12 @@ class AIService
             // $language = $request->language;
 
             // Extract job IDs and titles
-            $jobIdsArray = $request['jobs'];
-            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
-            $jobTitles = implode(', ', $jobTitlesArray);
+            $jobTitles = "N/A";
+            $jobIdsArray = $request['jobs'] ?? null;
+            if ($jobIdsArray) {
+                $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
+                $jobTitles = implode(', ', $jobTitlesArray);
+            }
 
             // Extract skill titles
             $skillIdsArray = $request['skills'];
@@ -292,7 +294,7 @@ class AIService
                 break;
             }
 
-            Log::info('createChallengeAssessmentUsingAi completed successfully', ['assessment' => $assessment]);
+            Log::info('createChallengeAssessmentUsingAi completed successfully');
 
             return $assessment;
         } catch (Exception $e) {
@@ -425,7 +427,7 @@ class AIService
                     $challenge = json_decode($choice['message']['content'], true);
 
                     if (empty($challenge['skills'])) {
-                        Log::info('Skipping challenge due to empty skills', ['challenge' => $challenge]);
+                        Log::info('Skipping challenge due to empty skills');
                         continue;
                     }
 
@@ -434,7 +436,7 @@ class AIService
 
                     // Making sure each challenge has more than 5 verified skill
                     if (count($updatedSkills) < 5 || !isset($challenge['challengeTitle'])) {
-                        Log::info('Skipping challenge due to insufficient skills or missing title', ['challenge' => $challenge]);
+                        Log::info('Skipping challenge due to insufficient skills or missing title');
                         continue;
                     }
 
@@ -457,7 +459,7 @@ class AIService
                     $challenge['category_id'] = $categoryID;
 
                     $validChallenges[] = $challenge;
-                    Log::info('Valid challenge added', ['challenge' => $challenge]);
+                    Log::info('Valid challenge added');
                 }
             }
 
@@ -465,7 +467,7 @@ class AIService
                 throw new Exception('Failed to generate sufficient valid challenges.');
             }
 
-            Log::info('createChallengeFromResourceUsingAIPreview completed successfully', ['validChallenges' => $validChallenges]);
+            Log::info('createChallengeFromResourceUsingAIPreview completed successfully');
 
             return $validChallenges;
         } catch (Exception $e) {
@@ -631,7 +633,7 @@ class AIService
                 throw new Exception('Failed to generate sufficient valid labs.');
             }
 
-            Log::info('createLabUsingAIPreview completed successfully', ['validLabs' => $validLabs]);
+            Log::info('createLabUsingAIPreview completed successfully');
 
             return $validLabs;
         } catch (Exception $e) {
@@ -643,7 +645,7 @@ class AIService
 
     protected function fetchChallengesByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
     {
-        Log::info('fetchChallengesByOpenAI started', compact('jobTitles', 'skillTitles', 'durationTitle', 'levelTitle', 'additionalInformation', 'categoryTitles'));
+        Log::info('fetchChallengesByOpenAI started');
 
         try {
             $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
@@ -772,7 +774,7 @@ class AIService
 
             $result = json_decode($response->getBody()->getContents(), true);
 
-            Log::info('fetchChallengesFromResourcesByOpenAI completed', ['result' => $result]);
+            Log::info('fetchChallengesFromResourcesByOpenAI completed');
 
             return $result;
         } catch (Exception $e) {
@@ -850,7 +852,7 @@ class AIService
 
             $result = json_decode($response->getBody()->getContents(), true);
 
-            Log::info('fetchChallengesForLabByOpenAI completed', ['result' => $result]);
+            Log::info('fetchChallengesForLabByOpenAI completed');
 
             return $result;
         } catch (Exception $e) {
@@ -933,7 +935,7 @@ class AIService
 
     protected function processSkills($skills, $score = 0.92)
     {
-        Log::info('processSkills started', ['skills' => $skills, 'score' => $score]);
+        Log::info('processSkills started');
 
         $updatedSkills = [];
         $lowercaseSkills = array_map('strtolower', $skills);
@@ -949,7 +951,7 @@ class AIService
                 }
             }
 
-            Log::info('processSkills completed', ['updatedSkills' => $updatedSkills]);
+            Log::info('processSkills completed');
 
             return $updatedSkills;
         } catch (Exception $e) {
@@ -961,7 +963,7 @@ class AIService
 
     protected function selectHighestScoreSkill($recommendations)
     {
-        Log::info('selectHighestScoreSkill started', ['recommendations' => $recommendations]);
+        Log::info('selectHighestScoreSkill started');
 
         $highestScore = 0;
         $highestScoreSkill = null;
@@ -976,7 +978,7 @@ class AIService
 
             $result = ['skill' => $highestScoreSkill, 'score' => $highestScore];
 
-            Log::info('selectHighestScoreSkill completed', ['result' => $result]);
+            Log::info('selectHighestScoreSkill completed');
 
             return $result;
         } catch (Exception $e) {
@@ -1542,7 +1544,7 @@ class AIService
 
         $shuffledModules = $combinedModules;
 
-        Log::info('createResourceModuleUsingAIPreview completed successfully', ['shuffledModules' => $shuffledModules]);
+        Log::info('createResourceModuleUsingAIPreview completed successfully');
 
         return $shuffledModules;
     }
@@ -1627,14 +1629,14 @@ class AIService
                     'items' => $items,
                 ];
 
-                Log::info('Request body prepared for projectAssessor', ['requestBody' => $requestBody]);
+                Log::info('Request body prepared for projectAssessor');
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
 
             try {
                 $response = $this->projectAssessor($requestBody);
-                Log::info('Response from projectAssessor', ['response' => $response]);
+                Log::info('Response from projectAssessor');
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
@@ -1653,7 +1655,7 @@ class AIService
 
     public function projectAssessor($data)
     {
-        Log::info('projectAssessor started', ['data' => $data]);
+        Log::info('projectAssessor started');
 
         $request = new Request('POST', '', [], json_encode($data));
 
