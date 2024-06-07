@@ -152,7 +152,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->request->has('assessment_type')) {
             $base_rules['assessment_type'] = 'in:open,closed,ai';
             $base_rules['guidelines'] = 'required_if:assessment_type,open,closed,ai';
-            $base_rules['attachments'] = 'required_if:assessment_type,open,closed,ai|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['attachments'] = 'required_if:assessment_type,open,closed,ai|max:5120';
 
             if ($this->request->get('assessment_type') == 'closed') {
                 $base_rules['visibility'] = 'in:users,hidden';
