@@ -47,6 +47,7 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible === '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
             }
 

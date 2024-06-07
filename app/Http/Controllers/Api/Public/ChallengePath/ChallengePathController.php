@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Public\ChallengePath;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Public\ChallengePath\ChallengePathRepository;
-use App\Services\Public\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -49,6 +48,7 @@ class ChallengePathController extends AppBaseController
                 if ($challengePath->is_accessible === '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
+
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
 
