@@ -9,7 +9,6 @@ use App\Models\AirmeetEvent;
 use App\Models\User;
 use App\Repositories\Api\Public\AirmeetEvent\AirmeetEventRepository;
 use App\Repositories\Api\Public\Lab\LabRepository;
-use App\Services\Manage\OrganizationService;
 use App\Services\Public\ChallengeService;
 use Illuminate\Http\Request;
 use stdClass;
@@ -30,14 +29,6 @@ class LabController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            if ($request->organization_id && is_array($request->organization_id)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id);
-                if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
-                }
-                $organization = $organization->pluck('id');
-                $request->merge(['organization_id' => $organization]);
-            }
             $lab = $this->labRepository->getList($request);
             if ($lab !== false) {
                 $response = [
@@ -62,10 +53,11 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
-            if ($lab->is_accessible === '0') {
-                return $this->sendError(__('responses.lab_not_accessible'), 403);
-            }
             if ($lab) {
+                if ($lab->is_accessible === '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
@@ -108,10 +100,10 @@ class LabController extends AppBaseController
     {
         try {
             $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
-            if ($checkChallenge->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_not_accessible'), 403);
-            }
             if ($checkChallenge) {
+                if ($checkChallenge->is_accessible === '0') {
+                    return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                }
                 $getProjectLabList = $this->labRepository->getProjectLabs($request, $checkChallenge->id);
                 if ($getProjectLabList) {
                     return $this->sendResponse(LabNameListResource::collection($getProjectLabList), __('responses.found_labs_list'));

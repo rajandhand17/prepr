@@ -113,4 +113,18 @@ class UtilityHelper
 
         return $url;
     }
+
+    public static function UserIdBasedPreferredOrganization($userData)
+    {
+        try {
+            $getOrganization = false;
+            if ($userData->preferred_organization != null) {
+                $getOrganization = OrganizationService::getOrganizationExistBasedOnId($userData->preferred_organization);
+            }
+
+            return $getOrganization;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
