@@ -44,9 +44,7 @@ class ChallengeService
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $challenge_list = $challenge_list->whereIn('organization_id', $getOrganizationIds);
-                }
+                $challenge_list = $challenge_list->whereIn('organization_id', $getOrganizationIds);
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
