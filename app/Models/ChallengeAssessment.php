@@ -35,6 +35,7 @@ class ChallengeAssessment extends Model
         if ($value == null) {
             return null;
         }
+
         return config('site-settings.aws_url').$value;
     }
 
