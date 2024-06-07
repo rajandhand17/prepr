@@ -168,25 +168,25 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link">
+              <a href="{{ route('projects-vertical.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Vertical</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link">
+              <a href="{{ route('projects-type.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Type</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link">
+              <a href="{{ route('projects-industry.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Industry</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link">
+              <a href="{{ route('projects-status.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Status</p>
               </a>
