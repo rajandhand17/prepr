@@ -185,6 +185,7 @@ class AIService
             return $validChallenges;
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
+
             return false;
         }
     }
@@ -199,7 +200,7 @@ class AIService
             // $language = $request->language;
 
             // Extract job IDs and titles
-            $jobTitles = "N/A";
+            $jobTitles = 'N/A';
             $jobIdsArray = $request['jobs'] ?? null;
             if ($jobIdsArray) {
                 $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
