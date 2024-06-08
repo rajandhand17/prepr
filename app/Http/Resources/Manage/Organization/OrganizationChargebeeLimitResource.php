@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\Manage\Organization;
 
-use App\Helpers\ChargebeeHelper;
-use App\Helpers\UtilityHelper;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
