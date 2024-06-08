@@ -80,7 +80,6 @@ class ChallengeService
                 }
             }
 
-
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
                     case 'public':
