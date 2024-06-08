@@ -80,20 +80,14 @@ class ChallengeService
                 }
             }
 
-            if ($request->has('privacy')) {
-                $privacy = null;
+            if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
-                    case 'yes':
-                        $privacy = config('constants.challenge_privacy.yes');
+                    case 'public':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '0');
                         break;
-                    case 'no':
-                        $privacy = config('constants.challenge_privacy.no');
+                    case 'private':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '1');
                         break;
-                    default:
-                        $privacy = null;
-                }
-                if ($privacy != null) {
-                    $challenge_list = $challenge_list->where('privacy', $privacy);
                 }
             }
 

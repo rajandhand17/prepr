@@ -51,6 +51,10 @@ class ChallengeTemplateService
                 }
             }
 
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $challenge_template_list = $challenge_template_list->whereIn('challenge_templates.category_id', $request->category);
+            }
+
             if ($request->has('status') && !empty($request->status)) {
                 $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
                 $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
