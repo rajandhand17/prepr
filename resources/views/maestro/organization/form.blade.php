@@ -60,7 +60,7 @@
                                 <input type="file" title="{{ __('labels.labels_click_to_add_files') }}" name="cover_image" id="coverImage"
                                        onchange="loadFile1(event)"/>
                             </div>
-                            @if(Request::route()->getName() == 'organisation.edit')
+                            @if(Request::route()->getName() == 'organization.edit')
                                 @if(!empty($data->cover_image))
 
                                     <div class="col-sm-3 col-xs-3">
@@ -105,7 +105,7 @@
                                        onchange="loadFile2(event)"/>
 
                             </div>
-                            @if(Request::route()->getName() == 'organisation.edit')
+                            @if(Request::route()->getName() == 'organization.edit')
                                 @if(!empty($data->profile_image))
 
                                     <div class="col-sm-3 col-xs-3">
@@ -187,7 +187,7 @@
         <div class="col-sm-6 col-xs-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
                 {!! Form::label('user_id', 'Organization User', ['class' => 'control-label ']) !!}
-                {!! Form::select('user_id', $org_user, old('user_id'),['class' => 'form-control ', 'id'=>'users_multi_select2','placeholder'=>'Select User']) !!}
+                {!! Form::select('user_id', $users, old('user_id'),['class' => 'form-control ', 'id'=>'users_multi_select2','placeholder'=>'Select User']) !!}
                 <span class="help-block">{{ $errors->first('user_id')}}</span>
             </div>
         </div>
@@ -202,9 +202,9 @@
         <div class="form-group {{($errors->has('category')) ? 'has-error' : ''}}">
             {!! Form::label('category', 'Category', ['class' => 'control-label ']) !!}
             @if((strpos(Request::url(),'edit')) !== false )
-                {{ Form::select('category', $categories, @$data->category, ['class' => 'form-control','id' => 'listCategory']) }}
+                {{ Form::select('category', $categories, @$data->category, ['class' => 'form-control','id' => '']) }}
             @else
-                {{ Form::select('category', $categories, old('category'), ['class' => 'form-control','id' => 'listCategory']) }}
+                {{ Form::select('category', $categories, old('category'), ['class' => 'form-control','id' => '']) }}
             @endif
             <span class="help-block">{{ $errors->first('category')}}</span>
         </div>
@@ -238,13 +238,13 @@
     </div>
 
     {!! Form::hidden('slug',null, ['class' => 'form-control','id'=>'vanity_slug']) !!}
-    <div class="col-sm-6 col-xs-6">
+    <!-- <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('vanity_link')) ? 'has-error' : ''}}">
             {!! Form::label('vanity_link', 'Vanity link', ['class' => 'control-label ']) !!}
             {!! Form::url('vanity_link',null, ['class' => 'form-control','id'=>'vanity_link']) !!}
             <span class="help-block">{{ $errors->first('vanity_link')}}</span>
         </div>
-    </div>
+    </div> -->
 
     <div class="clearfix"></div>
 </div>

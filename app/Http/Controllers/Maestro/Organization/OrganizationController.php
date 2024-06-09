@@ -99,13 +99,13 @@ class OrganizationController extends Controller
             $data = collect();
             $orgSocialLink = [];
             $categories = Category::pluck('title', 'id')->prepend('Select category', '');
-
+            $users= User::pluck('username', 'id');
             $social_name = SocialLink::pluck('title', 'id')->prepend('Social', '')->toArray();
             unset($social_name[15]);
             View::share('org_user', $org_user);
             View::share('social_name', $social_name);
             $languages = Language::where(['status' => 1])->pluck('name', 'iso');
-             return view('maestro.organization.create',compact('data', 'orgSocialLink', 'languages', 'categories'));
+             return view('maestro.organization.create',compact('data', 'orgSocialLink', 'languages', 'categories', 'users'));
         }  catch (Exception $e) {
             dd($e);
             DB::rollback();
@@ -151,6 +151,7 @@ class OrganizationController extends Controller
             $this->construct();
             $data = Organization::find($id);
             $org_user = User::where('id', $data->user_id)->pluck('username', 'id');
+            $users= User::pluck('username', 'id');
             $orgSocialLink = OrganizationSocialLink::where('organization_id', $id)->get();
             $org_members = OrganizationMember::where('organization_id', $id)->get();
             foreach ($orgSocialLink as $value) {
@@ -159,13 +160,12 @@ class OrganizationController extends Controller
             }
             $social_name = SocialLink::pluck('title', 'id')->prepend('Social', '')->toArray();
             $org_address = OrganizationAddress::where('organization_id',$id)->get();
-            //dd( $org_address );
             unset($social_name[15]);
             View::share('social_name', $social_name);
             View::share('org_user', $org_user);
             View::share('people', '');
             $languages = Language::where(['status' => 1])->pluck('name', 'iso');
-            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages','org_address', 'org_members'));
+            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages','org_address', 'org_members', 'users'));
         } catch (Exception $e) {
             dd($e);
             return redirect()->back()->with('error', $e->getMessage());

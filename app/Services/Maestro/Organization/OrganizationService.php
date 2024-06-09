@@ -3,6 +3,7 @@
 namespace App\Services\Maestro\Organization;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Models\Organization;
 use Exception;
@@ -134,13 +135,13 @@ class organizationservice
                 if ($request->file('cover_image')) {
                     $cover_image = $request->file('cover_image')->store('uploads/organization', 's3');
                 }
-            
+                $model = new Organization();
                //$vanityUpdatedSlug = $this->removeHttp($request->vanity_link);
-                $vanityUpdatedSlug = "jbhjv";
+                $vanityUpdatedSlug =  UtilityHelper::generateSlug($request->title, $model);;
                 $data = [
                     'uuid' =>  Randomize::chars(10)->alphanumeric()->unique()->generate(),
                    // 'user_id' => $request->user_id,
-                   'user_id' => '4',
+                   'user_id' => $request->user_id,
                     'title' => $request->title,
                     'language' => $request->language,
                     'slug' => $vanityUpdatedSlug,
@@ -158,7 +159,9 @@ class organizationservice
                     'organization_id' =>  $organization->id,
                     'latitude' => $request->latitude,
                     'longitude' => $request->longitude,
-                    'address' => $request->address,
+                    'full_address' => $request->address,
+                    'city' =>  $request->city2,
+
                 ];
                 
                 OrganizationAddress::create($org_address);
