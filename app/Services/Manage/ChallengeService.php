@@ -19,7 +19,7 @@ class ChallengeService
     public function getChallengeCountBasedOnOrganization($organizationId)
     {
         try {
-            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->count();
 
             return $challenge_count;
         } catch (Exception $e) {
