@@ -30,6 +30,7 @@ class ChallengeTemplateController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
+            $request->merge(['organization_id' => $organization->id]);
 
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateList($request);
             if ($challengeTemplate) {
