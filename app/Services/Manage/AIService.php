@@ -10,6 +10,7 @@ use App\Models\Duration;
 use App\Models\JobTitle;
 // use App\Models\Lab;
 use App\Models\Levels;
+use App\Models\ProjectExternalLink;
 use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
@@ -354,15 +355,13 @@ class AIService
                     $url = substr($url, strlen($cloudFrontPrefix));
                 }
 
-                if (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
                     $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
-                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1];
-                    $type = 'youtube_video';
-                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1];
-                    $type = 'youtube_video';
+                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
                     $type = 'video';
@@ -1568,8 +1567,10 @@ class AIService
             $challengeID = $challengeAssessment[0]->challenge_id;
             $challenge = ChallengeService::getChallengeBasedOnId($challengeID);
 
-            $projectFiles = ProjectFile::where('project_id', $projectData['id'])->get();
             $items = [];
+
+            $projectFiles = ProjectFile::where('project_id', $projectData['id'])
+                ->get(['path', 'type']);
 
             foreach ($projectFiles as $file) {
                 $url = $file->path;
@@ -1580,13 +1581,8 @@ class AIService
                     $url = substr($url, strlen($cloudFrontPrefix));
                 }
 
-                if (preg_match('/^https?:\/\/www\.youtube\.com\/watch\?v=([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1];
-                    $type = 'youtube_video';
-                } elseif (preg_match('/^https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?$/i', $url, $match)) {
-                    $url = 'https://www.youtube.com/watch?v='.$match[1];
-                    $type = 'youtube_video';
-                } elseif (preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
                     $url = 'https://www.youtube.com/watch?v='.$match[1];
                     $type = 'youtube_video';
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
@@ -1610,6 +1606,31 @@ class AIService
                 }
 
                 $items[] = ['url' => $url, 'type' => $type];
+            }
+
+            $youtubeLinks = ProjectExternalLink::where('project_id', $projectData['id'])
+                ->whereHas('social_link', function ($query) {
+                    $query->where('title', 'YouTube');
+                })
+                ->with('social_link')
+                ->select('social_media_link')
+                ->get();
+
+            foreach ($youtubeLinks as $link) {
+                $url = $link->social_media_link;
+                $type = '';
+
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+
+                    // append the YouTue item
+                    $items[] = [
+                        'url'  => $url,
+                        'type' => $type,
+                    ];
+                }
             }
 
             try {
