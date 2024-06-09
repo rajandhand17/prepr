@@ -2,6 +2,8 @@
 
 namespace App\Services\Maestro\Organization;
 
+use App\Helpers\ChargebeeHelper;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Models\Organization;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -10,6 +12,7 @@ use App\Models\OrganizationMember;
 use App\Models\OrganizationSocialLink;
 use App\Models\SocialLink;
 use App\Models\User;
+use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Yajra\DataTables\Html\Builder;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Validator;
@@ -189,7 +192,7 @@ class organizationservice
                 }
 
                 $profile_image = $organization->profile_image;
-               // $selectPlan = $this->selectPlan($organization, $request);
+                $selectPlan = self::selectPlan($organization, $request);
             return true;
         } catch (Exception $e) {
             dd($e);
@@ -202,6 +205,42 @@ class organizationservice
         try {
             return Organization::orderBy('id', 'desc');
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function selectPlan($organization, $request)
+    {
+        try {
+            switch ($request->plan_name) {
+                case 'seed_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.seed_plan_yearly');
+                    break;
+                case 'sprout_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.sprout_plan_yearly');
+                    break;
+                case 'budd_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.budd_plan_yearly');
+                    break;
+                case 'bloom_plan_yearly':
+                    $detailsPlan = config('chargebee.chargebee_plan.bloom_plan_yearly');
+                    break;
+                case 'unlimited_plan':
+                    $detailsPlan = config('chargebee.chargebee_plan.unlimited_plan');
+                    break;
+                default:
+                    $detailsPlan = config('chargebee.chargebee_plan.seed_plan_yearly');
+                    break;
+            }
+            $userData = auth()->user();
+            dispatch(new SubscribePlanJob($userData, $organization, $detailsPlan));
+            $checkLocalEntry = ChargebeeHelper                                                                                                                                                                                                                                                                                                                                                ::createChargebeePlanDetails($organization->id);
+            if ($checkLocalEntry) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
             return false;
         }
     }

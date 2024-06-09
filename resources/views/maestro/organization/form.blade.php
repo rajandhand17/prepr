@@ -145,7 +145,7 @@
         <div class="col-sm-6 col-xs-6">
             <div class="form-group {{($errors->has('name')) ? 'has-error' : ''}}">
                 {!! Form::label('name', 'Name', ['class' => 'control-label']) !!}
-                {!! Form::text('title',null, ['class' => 'form-control  col-sm-5', 'id'=>'name']) !!}
+                {!! Form::text('title',null, ['class' => 'form-control', 'id'=>'name']) !!}
                 <span class="help-block">{{ $errors->first('title')}}</span>
             </div>
         </div>
@@ -153,9 +153,9 @@
             <div class="form-group {{($errors->has('language')) ? 'has-error' : ''}}">
                 {!! Form::label('language', 'Language', ['class' => 'control-label ']) !!}
                 @if((strpos(Request::url(),'edit')) !== false )
-                    {!! Form::select('language', $languages, $data->language, ['class' => 'form-control  col-sm-5','id' => 'languageId','disabled' => 'disabled']) !!}
+                    {!! Form::select('language', $languages, $data->language, ['class' => 'form-control','id' => 'languageId','disabled' => 'disabled']) !!}
                 @else
-                    {!! Form::select('language', $languages, old('language'), ['class' => 'form-control  col-sm-5','id' => 'languageId']) !!}            
+                    {!! Form::select('language', $languages, old('language'), ['class' => 'form-control','id' => 'languageId']) !!}            
                 @endif
                 <span class="help-block">{{ $errors->first('language')}}</span>
             </div>
@@ -167,7 +167,7 @@
 <div class="col-sm-12 col-xs-12">
     <div class="form-group {{($errors->has('about')) ? 'has-error' : ''}}">
         {!! Form::label('about', 'Description', ['class' => 'control-label ']) !!}
-        {!! Form::textarea('about',null, ['class' => 'form-control  col-sm-5', 'id' => 'about_description']) !!}
+        {!! Form::textarea('about',null, ['class' => 'form-control', 'id' => 'about_description']) !!}
         <span class="help-block">{{ $errors->first('about')}}</span>
     </div>
 </div>
@@ -178,7 +178,7 @@
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('website')) ? 'has-error' : ''}}">
             {!! Form::label('website', 'Website', ['class' => 'control-label ']) !!}
-            {!! Form::url('website', null , ['class' => 'form-control  col-sm-5']) !!}
+            {!! Form::url('website', null , ['class' => 'form-control ']) !!}
             <span class="help-block">{{ $errors->first('title')}}</span>
         </div>
     </div>
@@ -202,9 +202,9 @@
         <div class="form-group {{($errors->has('category')) ? 'has-error' : ''}}">
             {!! Form::label('category', 'Category', ['class' => 'control-label ']) !!}
             @if((strpos(Request::url(),'edit')) !== false )
-                {{ Form::select('category', $categories, @$data->category, ['class' => 'form-control  col-sm-5','id' => 'listCategory']) }}
+                {{ Form::select('category', $categories, @$data->category, ['class' => 'form-control','id' => 'listCategory']) }}
             @else
-                {{ Form::select('category', $categories, old('category'), ['class' => 'form-control  col-sm-5','id' => 'listCategory']) }}
+                {{ Form::select('category', $categories, old('category'), ['class' => 'form-control','id' => 'listCategory']) }}
             @endif
             <span class="help-block">{{ $errors->first('category')}}</span>
         </div>
@@ -213,15 +213,15 @@
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('address')) ? 'has-error' : ''}}">
             {!! Form::label('address', 'Location', ['class' => 'control-label ']) !!}
-            {!! Form::text('address', null, ['class' => 'form-control  col-sm-5','id'=>'searchTextField']) !!}
+            {!! Form::text('address', null, ['class' => 'form-control','id'=>'searchTextField']) !!}
             <span class="help-block">{{ $errors->first('address')}}</span>
             <span class="help-block">{{ $errors->first('city2')}}</span>
         <!-- <input type="hidden" id="city2" name="city2"  value="{{ old('city2') }}"/> -->
-            {!! Form::hidden('city2',null, ['class' => 'form-control  col-sm-5','id'=>'city2']) !!}
+            {!! Form::hidden('city2',null, ['class' => 'form-control','id'=>'city2']) !!}
             {{-- <input type="hidden" id="cityLat" name="cityLat"  value="{{ old('cityLat') }}"/> --}}
-            {!! Form::hidden('latitude',null, ['class' => 'form-control  col-sm-5','id'=>'cityLat']) !!}
+            {!! Form::hidden('latitude',null, ['class' => 'form-control','id'=>'cityLat']) !!}
             {{-- <input type="hidden" id="cityLng" name="cityLng"  value="{{ old('cityLng') }}"/>  --}}
-            {!! Form::hidden('longitude',null, ['class' => 'form-control  col-sm-5','id'=>'cityLng']) !!}
+            {!! Form::hidden('longitude',null, ['class' => 'form-control','id'=>'cityLng']) !!}
 
         </div>
     </div>
@@ -232,16 +232,16 @@
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
             {!! Form::label('status', 'Status', ['class' => 'control-label ']) !!}
-            {!! Form::select('status',$status_array,null, ['class' => 'form-control  col-sm-5']) !!}
+            {!! Form::select('status',$status_array,null, ['class' => 'form-control']) !!}
             <span class="help-block">{{ $errors->first('status')}}</span>
         </div>
     </div>
 
-    {!! Form::hidden('slug',null, ['class' => 'form-control  col-sm-5','id'=>'vanity_slug']) !!}
+    {!! Form::hidden('slug',null, ['class' => 'form-control','id'=>'vanity_slug']) !!}
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('vanity_link')) ? 'has-error' : ''}}">
             {!! Form::label('vanity_link', 'Vanity link', ['class' => 'control-label ']) !!}
-            {!! Form::url('vanity_link',null, ['class' => 'form-control  col-sm-5','id'=>'vanity_link']) !!}
+            {!! Form::url('vanity_link',null, ['class' => 'form-control','id'=>'vanity_link']) !!}
             <span class="help-block">{{ $errors->first('vanity_link')}}</span>
         </div>
     </div>
@@ -263,14 +263,14 @@
                 <div class="col-sm-3 col-xs-3">
                     <div class="form-group {{($errors->has('org_social')) ? 'has-error' : ''}}">
                         {!! Form::label('org_social', 'Social Media', ['class' => 'control-label ']) !!}
-                        {!! Form::select('org_social[]',$social_name,$link->social_link_id, ['class' => 'form-control col-sm-5 org_social']) !!}
+                        {!! Form::select('org_social[]',$social_name,$link->social_link_id, ['class' => 'form-control org_social']) !!}
                         <span class="help-block">{{ $errors->first('org_social')}}</span>
                     </div>
                 </div>
                 <div class="col-sm-3 col-xs-3">
                     <div class="form-group {{($errors->has('social_url')) ? 'has-error' : ''}}">
                         {!! Form::label('social_url', 'Enter URL', ['class' => 'control-label ']) !!}
-                        {!! Form::text('social_url[]',$link->social_media_link , ['class' => 'form-control col-sm-5 social_url social_length']) !!}
+                        {!! Form::text('social_url[]',$link->social_media_link , ['class' => 'form-control social_url social_length']) !!}
                         <span class="help-block">{{ $errors->first('social_url')}}</span>
                     </div>
                 </div>
@@ -292,14 +292,14 @@
             <div class="col-sm-3 col-xs-3">
                 <div class="form-group {{($errors->has('org_social')) ? 'has-error' : ''}}">
                     {!! Form::label('org_social', 'Social Media', ['class' => 'control-label ']) !!}
-                    {!! Form::select('org_social[]',$social_name,null, ['class' => 'form-control col-sm-5 org_social']) !!}
+                    {!! Form::select('org_social[]',$social_name,null, ['class' => 'form-control org_social']) !!}
                     <span class="help-block">{{ $errors->first('org_social')}}</span>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-3">
                 <div class="form-group {{($errors->has('social_url')) ? 'has-error' : ''}}">
                     {!! Form::label('social_url', 'Enter URL', ['class' => 'control-label ']) !!}
-                    {!! Form::text('social_url[]',null, ['class' => 'form-control col-sm-5 social_url social_length']) !!}
+                    {!! Form::text('social_url[]',null, ['class' => 'form-control social_url social_length']) !!}
                     <span class="help-block">{{ $errors->first('social_url')}}</span>
                 </div>
             </div>
@@ -325,14 +325,14 @@
                 <div class="col-sm-3 col-xs-3">
                     <div class="form-group {{($errors->has('people_name')) ? 'has-error' : ''}}">
                         {!! Form::label('people_name', 'People Name', ['class' => 'control-label ']) !!}
-                        {!! Form::text('people_name[]',$peoples->name, ['class' => 'form-control col-sm-5 incentive_name','maxlength'=>'150']) !!}
+                        {!! Form::text('people_name[]',$peoples->name, ['class' => 'form-control incentive_name','maxlength'=>'150']) !!}
                         <span class="help-block">{{ $errors->first('people_name')}}</span>
                     </div>
                 </div>
                 <div class="col-sm-3 col-xs-3">
                     <div class="form-group {{($errors->has('people_des')) ? 'has-error' : ''}}">
                         {!! Form::label('people_des', 'People Description', ['class' => 'control-label ']) !!}
-                        {!! Form::text('people_des[]',$peoples->description, ['class' => 'form-control col-sm-5 incentive_prize','min'=>'0','maxlength'=>'500']) !!}
+                        {!! Form::text('people_des[]',$peoples->description, ['class' => 'form-control  incentive_prize','min'=>'0','maxlength'=>'500']) !!}
                         <span class="help-block">{{ $errors->first('people_des')}}</span>
                     </div>
                 </div>
@@ -372,14 +372,14 @@
             <div class="col-sm-3 col-xs-3">
                 <div class="form-group {{($errors->has('incentive_name')) ? 'has-error' : ''}}">
                     {!! Form::label('people_name', 'People Name', ['class' => 'control-label ']) !!}
-                    {!! Form::text('people_name[]',null, ['class' => 'form-control col-sm-5 incentive_name','maxlength'=>'150']) !!}
+                    {!! Form::text('people_name[]',null, ['class' => 'form-control  incentive_name','maxlength'=>'150']) !!}
                     <span class="help-block">{{ $errors->first('people_name')}}</span>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-3">
                 <div class="form-group {{($errors->has('incentive_prize')) ? 'has-error' : ''}}">
                     {!! Form::label('people_des', 'People Description', ['class' => 'control-label ']) !!}
-                    {!! Form::text('people_des[]',null, ['class' => 'form-control col-sm-5 incentive_prize','maxlength'=>'500']) !!}
+                    {!! Form::text('people_des[]',null, ['class' => 'form-control  incentive_prize','maxlength'=>'500']) !!}
                     <span class="help-block">{{ $errors->first('people_des')}}</span>
                 </div>
             </div>
