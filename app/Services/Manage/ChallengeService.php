@@ -484,7 +484,6 @@ class ChallengeService
     {
         try {
             Challenge::find($challenge_id)->delete();
-
             return true;
         } catch (Exception $e) {
             return false;
