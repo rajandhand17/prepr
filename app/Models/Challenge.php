@@ -32,7 +32,7 @@ class Challenge extends Model
         'agreement',
         'is_notification_enabled',
         'project_privacy',
-        'is_pre_build',
+        'is_pre_built',
         'is_open',
         'is_auto_created',
         'is_ai_created',
