@@ -11,7 +11,6 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
