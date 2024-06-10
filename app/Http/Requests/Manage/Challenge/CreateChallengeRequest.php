@@ -67,7 +67,6 @@ class CreateChallengeRequest extends FormRequest
             'requirement_program'                => 'in:yes,no',
             'complete_education_program'         => 'in:yes,no',
             'complete_experience'                => 'in:yes,no',
-            'automatic_alert'                    => 'required|in:0,1',
             'timeline_type'                      => 'required|in:restricted,flexible',
             'integrate_campus_connect'           => 'in:both,job,story,no',
         ];
@@ -153,7 +152,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->request->has('assessment_type')) {
             $base_rules['assessment_type'] = 'in:open,closed,ai';
             $base_rules['guidelines'] = 'required_if:assessment_type,open,closed,ai';
-            $base_rules['attachments'] = 'required_if:assessment_type,open,closed,ai|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['attachments'] = 'max:5120';
 
             if ($this->request->get('assessment_type') == 'closed') {
                 $base_rules['visibility'] = 'in:users,hidden';
@@ -174,6 +173,7 @@ class CreateChallengeRequest extends FormRequest
         }
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
+            $base_rules['automatic_alert'] = 'required|in:0,1';
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
             $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
