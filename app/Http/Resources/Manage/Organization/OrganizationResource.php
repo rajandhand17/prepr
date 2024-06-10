@@ -55,7 +55,7 @@ class OrganizationResource extends JsonResource
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'          => MemberManagementResource::collection($this->members),
             'organization_limits'          => OrganizationChargebeeLimitResource::make($this),
-            'liked'                        =>$this->liked()
+            'liked'                        => $this->liked(),
         ];
     }
 }

@@ -22,5 +22,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequestActivity']);
     Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getFriendListingBasedOnActivity']);
-
 });
