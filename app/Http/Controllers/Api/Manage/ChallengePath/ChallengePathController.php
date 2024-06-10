@@ -10,7 +10,6 @@ use App\Http\Requests\Manage\ChallengePath\UpdateChallengePathRequest;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Manage\ChallengePath\ChallengePathRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -55,8 +54,13 @@ class ChallengePathController extends AppBaseController
     public function create(CreateChallengePathRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
             // checks creation limits of the Challenge Path
-            $checkChallengePathLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challengePath');
+            $checkChallengePathLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challengePath');
             if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengePathCount = $this->challengePathRepository->getChallengePathCountBasedOnOrganization($checkChallengePathLimit['organizationId']);
                 if ($checkChallengePathLimit['fetchOrganizationPlanDetails'] <= $checkChallengePathCount) {
@@ -82,7 +86,7 @@ class ChallengePathController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
 
-            $createChallengePath = $this->challengePathRepository->createChallengePath($upload_cover_image, $upload_achievement_image, $request);
+            $createChallengePath = $this->challengePathRepository->createChallengePath($upload_cover_image, $upload_achievement_image, $request, $organization->id);
             if ($createChallengePath != false) {
                 return $this->sendResponse(ChallengePathResource::make($createChallengePath), __('responses.challenge_path_stored_success'), 200);
             }
@@ -99,6 +103,14 @@ class ChallengePathController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengePathRepository->checkSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 403);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
             }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
@@ -122,7 +134,7 @@ class ChallengePathController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateChallengePath = $this->challengePathRepository->updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image);
+            $updateChallengePath = $this->challengePathRepository->updateChallengePath($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateChallengePath != false) {
                 return $this->sendResponse(ChallengePathResource::make($updateChallengePath), __('responses.challenge_path_update_successfully'), 200);
             }
@@ -133,7 +145,7 @@ class ChallengePathController extends AppBaseController
         }
     }
 
-    public function checkSlug($slug, Request $request)
+    public function checkSlug($slug)
     {
         try {
             $checkChallengePathSlugExistsOrNot = $this->challengePathRepository->checkSlug($slug);
@@ -168,6 +180,14 @@ class ChallengePathController extends AppBaseController
             if ($checkChallengePathSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.challenge_path_not_found'), 404);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkChallengePathSlugExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
+            }
             if ($checkChallengePathSlugExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
             }
@@ -187,6 +207,14 @@ class ChallengePathController extends AppBaseController
         try {
             $challengePath = $this->challengePathRepository->checkSlug($slug);
             if ($challengePath) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.organization_not_found'), 404);
+                }
+                if ($challengePath->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
+                }
                 if ($challengePath->is_accessible === '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
@@ -203,7 +231,8 @@ class ChallengePathController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
