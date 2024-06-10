@@ -212,6 +212,20 @@ class organizationservice
         }
     }
 
+    public static function getOrganizationExistBasedOnUuid($uuid)
+    {
+        try {
+            $organization = Organization::where('uuid', $uuid)->first();
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function selectPlan($organization, $request)
     {
         try {

@@ -64,7 +64,7 @@ class OrganizationController extends Controller
                         return "<a class='longWrap' target='_blank' title=" . $organizations->website . ' href=' . $organizations->website . '>' . $organizations->website . "</a>";
                     })
                     ->addColumn('action', static function (Organization $organizations) {
-                        return '<input type="checkbox" name="verifiedorgs" value="'.$organizations->id.'" data-val="'.$organizations->is_verified.'" class="custom-control-input" id="verifiedorgs" '. ($organizations->is_verified == "1"  ?  "checked"  : "").'><a href="' . route('organization.edit', ['organization' => $organizations->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $organizations->id . '"><i class="fas fa-edit"></i></a><a href="javascript:void(0)" onclick="deleteOrg(\'' . route('organization.destroy', ['organization' => $organizations->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                        return '<input type="checkbox" name="verifiedorgs" value="'.$organizations->id.'" data-val="'.$organizations->is_verified.'" class="form-check-input" id="verifiedorgs" '. ($organizations->is_verified == "1"  ?  "checked"  : "").'><a href="' . route('organization.edit', ['organization' => $organizations->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $organizations->id . '"><i class="fas fa-edit"></i></a><a href="javascript:void(0)" onclick="deleteOrg(\'' . route('organization.destroy', ['organization' => $organizations->id]) . '\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['profile_image', 'cover_image', 'action', 'website'])
                     ->toJson();
@@ -209,6 +209,22 @@ class OrganizationController extends Controller
             dd($e);
             DB::rollback();
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+    public function verifyingOrgs(Request $request)
+    {
+        try {
+            if ($request->org_v == '0') {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '1']);
+                $message = "Organization has been successfully verified.";
+            } else {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '0']);
+                $message = "Organization verification has been removed.";
+            }
+            return response()->json(['status' => 'success','message' => $message], 200);
+        } catch (Exception $e) {
+            $message = __('notification.notification_sww');
+            return response()->json(['status' => 'error', 'message' => $message], 500);
         }
     }
 }

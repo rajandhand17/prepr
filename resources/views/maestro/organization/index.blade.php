@@ -114,7 +114,7 @@
             var org_id = $(this).val();
             var org_v = $(this).attr('data-val');
             var this_ = $(this);
-            $.post("", {org_id : org_id, org_v: org_v}, function (data) {
+            $.post("{{route('verifyingOrgs')}}", {org_id : org_id, org_v: org_v}, function (data) {
                 if (data.status == 'success') {
                     if (org_v == "1")
                     this_.attr('data-val' , "0");
@@ -128,5 +128,12 @@
                 });
             });
         });
+        @if(Session::has('success'))
+              toastr.success("{{ Session::get('success') }}");
+                @endif
+
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
     </script>
 @endsection
