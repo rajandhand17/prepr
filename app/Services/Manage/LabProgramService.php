@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
-use App\Models\Organization;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
