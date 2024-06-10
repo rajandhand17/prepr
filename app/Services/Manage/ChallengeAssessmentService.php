@@ -13,7 +13,15 @@ class ChallengeAssessmentService
     public static function uploadChallengeAssessment($attachment)
     {
         try {
-            $upload_assessment_image = FileUploadHelper::uploadImageToS3($attachment, 'assessment');
+            if (false !== mb_strpos($attachment->getMimeType(), 'image')) {
+                $upload_assessment_image = FileUploadHelper::uploadImageToS3($attachment, 'assessment');
+            } elseif (false !== mb_strpos($attachment->getMimeType(), 'video')) {
+                $upload_assessment_image = FileUploadHelper::uploadVideoToS3($attachment, 'assessment');
+            } elseif (false !== mb_strpos($attachment->getMimeType(), 'audio')) {
+                $upload_assessment_image = FileUploadHelper::uploadDocToS3($attachment, 'assessment');
+            } else {
+                $upload_assessment_image = FileUploadHelper::uploadDocToS3($attachment, 'assessment');
+            }
             if ($upload_assessment_image == false) {
                 return false;
             }
@@ -36,6 +44,9 @@ class ChallengeAssessmentService
                         break;
                     case 'open':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.open');
+                        break;
+                    case 'ai':
+                        $challenge_assessment_type = config('constants.challenge_assessment_type.ai');
                         break;
                     default:
                         $challenge_assessment_type = config('constants.challenge_assessment_type.null');
@@ -98,6 +109,9 @@ class ChallengeAssessmentService
                         break;
                     case 'open':
                         $challenge_assessment_type = config('constants.challenge_assessment_type.open');
+                        break;
+                    case 'ai':
+                        $challenge_assessment_type = config('constants.challenge_assessment_type.ai');
                         break;
                     default:
                         $challenge_assessment_type = config('constants.challenge_assessment_type.null');
@@ -216,7 +230,9 @@ class ChallengeAssessmentService
         try {
             //  Fetch Open Assessment Challenge Ids
             $getMyProjectChallengeIds = Project::where('user_id', $userData->id)->pluck('challenge_id');
-            $fetchOpenChallenge = ChallengeAssessment::whereIn('challenge_id', $getMyProjectChallengeIds)->where('assessment_type', '1')->pluck('challenge_id');
+            $fetchOpenChallenge = ChallengeAssessment::whereIn('challenge_id', $getMyProjectChallengeIds)
+                ->whereIn('assessment_type', ['1', '3'])
+                ->pluck('challenge_id');
 
             //  Fetch Closed Assessment Challenge Ids
             $closeAssessment = ChallengeAssessment::where('assessment_type', '2')->pluck('members_email', 'challenge_id');

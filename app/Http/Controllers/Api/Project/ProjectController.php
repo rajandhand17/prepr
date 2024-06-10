@@ -21,6 +21,7 @@ use App\Services\Manage\ChallengeService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends AppBaseController
 {
@@ -125,7 +126,7 @@ class ProjectController extends AppBaseController
         try {
             $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
             if ($checkChallenge) {
-                $challengeStatus = ($checkChallenge->status === '1' && $checkChallenge->is_open === '0');
+                $challengeStatus = ($checkChallenge->status == '1' && $checkChallenge->is_open == '0');
                 if ($challengeStatus) {
                     $checkChallengeTimelineType = $checkChallenge->challenge_timelines->timeline_type;
                     if ($checkChallengeTimelineType === '1') {
@@ -450,6 +451,60 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function captureAIAssessmentProject($slug, Request $request)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $checkAssessmentChallenges = $this->projectRepository->checkAssessmentChallenges(auth()->user());
+            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) === false) {
+                return $this->sendError(__('responses.project_not_allowed_assessment'), 403);
+            }
+
+            $captureProjectAssessment = $this->projectRepository->captureProjectAIAssessment($checkProjectSlugExistsOrNot, auth()->user(), $request);
+
+            if ($captureProjectAssessment) {
+                $responseMessage = __('responses.project_assessment_submitted');
+
+                return $this->sendResponse(null, $responseMessage, 200);
+            }
+
+            return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
+        } catch (Exception $e) {
+            Log::error('Error in captureAIAssessmentProject in ProjectController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function scoreAIAssessmentProject($slug, Request $request)
+    {
+        try {
+            $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
+            if (!$checkProjectSlugExistsOrNot) {
+                return $this->sendError(__('responses.project_not_found'), 403);
+            }
+
+            $assessProjectAI = $this->projectRepository->assessProjectAI($request);
+
+            if ($assessProjectAI) {
+                ChallengeAssessmentUserService::getProjectAssessmentData($checkProjectSlugExistsOrNot, auth()->user()->id);
+                $responseMessage = __('responses.project_assessment_received');
+
+                return $this->sendResponse(null, $responseMessage, 200);
+            }
+
+            return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
+        } catch (Exception $e) {
+            Log::error('Error in scoreAIAssessmentProject in ProjectController.php: '.$e->getMessage());
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

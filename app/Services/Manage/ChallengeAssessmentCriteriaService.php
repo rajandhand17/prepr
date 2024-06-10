@@ -15,7 +15,8 @@ class ChallengeAssessmentCriteriaService
                     $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
                     $challengeAssessmentCriteria->challenge_id = $challenge;
                     $challengeAssessmentCriteria->assessment_id = $challengeAssessment->id;
-                    $challengeAssessmentCriteria->title = $request->assessment_title[$key];
+                    $challengeAssessmentCriteria->title = $value;
+                    $challengeAssessmentCriteria->description = $request->assessment_description[$key] ?? null;
                     $challengeAssessmentCriteria->score = $request->assessment_score[$key];
                     $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];
                     $challengeAssessmentCriteria->save();
@@ -39,6 +40,7 @@ class ChallengeAssessmentCriteriaService
                         $challengeAssessmentCriteria->challenge_id = $challenge_id;
                         $challengeAssessmentCriteria->assessment_id = $updateChallengeAssessment->id;
                         $challengeAssessmentCriteria->title = $request->assessment_title[$key];
+                        $challengeAssessmentCriteria->description = $request->assessment_description[$key] ?? null;
                         $challengeAssessmentCriteria->score = $request->assessment_score[$key];
                         $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];
                         $challengeAssessmentCriteria->save();

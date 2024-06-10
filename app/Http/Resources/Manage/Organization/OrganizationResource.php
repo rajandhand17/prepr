@@ -46,6 +46,7 @@ class OrganizationResource extends JsonResource
             'total_employees'              => $this->total_employees,
             'category_id'                  => $category_id,
             'category'                     => $category,
+            'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'lab_count'                    => $this->labs_count()->count(),
             'challenge_count'              => $this->challenges_count()->count(),
             'resource_count'               => $this->resource_modules_count()->count(),

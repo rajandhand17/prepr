@@ -227,6 +227,7 @@ return [
         App\Repositories\Api\Manage\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
         App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventServiceProvider::class,
+        App\Repositories\Api\Manage\UnifiedConnection\UnifiedConnectionServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -247,6 +248,9 @@ return [
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
+
+        /* Campus Connect */
+        App\Repositories\Api\Manage\CampusConnect\CampusConnectServiceProvider::class,
     ],
 
     /*

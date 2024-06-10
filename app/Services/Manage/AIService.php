@@ -7,12 +7,17 @@ use App\Helpers\RecommendationEngineHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
+use App\Models\JobTitle;
 // use App\Models\Lab;
 use App\Models\Levels;
+use App\Models\ProjectExternalLink;
+use App\Models\ProjectFile;
 use App\Models\ResourceModule;
+use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -22,15 +27,18 @@ class AIService
     protected $openAIClient;
     protected $bingArticleClient;
     protected $bingVideoClient;
-    protected $go1ResourceModuleClient;
+    protected $resourceSummarizerClient;
+    protected $projectAssessorClient;
 
     public function __construct()
     {
         $openAIAPIKey = config('ai.openai_api_key');
         $bingAPIKey = config('ai.bing_api_key');
+        $resourceSummarizerApiKey = config('ai.resource_summarizer_api_key');
+        $projectAssessorApiKey = config('ai.project_assessor_api_key');
 
         $this->openAIClient = new Client([
-            'base_uri' => 'https://api.openai.com/v1/chat/completions',
+            'base_uri' => config('ai.openai_endpoint'),
             'headers'  => [
                 'Content-Type'  => 'application/json',
                 'Authorization' => 'Bearer '.$openAIAPIKey,
@@ -38,7 +46,7 @@ class AIService
         ]);
 
         $this->bingArticleClient = new Client([
-            'base_uri' => 'https://api.bing.microsoft.com/v7.0/search',
+            'base_uri' => config('ai.bing_default_endpoint'),
             'headers'  => [
                 'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
@@ -46,16 +54,35 @@ class AIService
         ]);
 
         $this->bingVideoClient = new Client([
-            'base_uri' => 'https://api.bing.microsoft.com/v7.0/videos/search',
+            'base_uri' => config('ai.bing_video_endpoint'),
             'headers'  => [
                 'Content-Type'              => 'application/json',
                 'Ocp-Apim-Subscription-Key' => $bingAPIKey,
             ],
         ]);
+
+        $this->resourceSummarizerClient = new Client([
+            'base_uri' => config('ai.resource_summarizer_endpoint'),
+            'headers'  => [
+                'Content-Type'        => 'application/json',
+                'authorization'       => $resourceSummarizerApiKey,
+            ],
+        ]);
+
+        $this->projectAssessorClient = new Client([
+            'base_uri' => config('ai.project_assessor_endpoint'),
+            'headers'  => [
+                'Content-Type'  => 'application/json',
+                'authorization' => $projectAssessorApiKey,
+            ],
+            'timeout'  => .5,
+        ]);
     }
 
     public function createChallengeUsingAIPreview($request)
     {
+        Log::info('createChallengeUsingAIPreview started');
+
         try {
             $attempt = 0;
             $validChallenges = [];
@@ -64,19 +91,20 @@ class AIService
 
             // Extract job IDs and titles
             $jobIdsArray = array_column($request['jobs'], 'key');
-            $jobTitlesArray = array_column($request['jobs'], 'value');
+            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
             $jobTitles = implode(', ', $jobTitlesArray);
 
             // Extract skill titles
-            $skillTitlesArray = array_column($request['skills'], 'value');
+            $skillIdsArray = array_column($request['skills'], 'key');
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
             $skillTitles = implode(', ', $skillTitlesArray);
 
             // Extract duration and level IDs and titles
             $durationID = $request['duration_id'][0]['key'];
-            $durationTitle = $request['duration_id'][0]['value'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
             $levelID = $request['level_id'][0]['key'];
-            $levelTitle = $request['level_id'][0]['value'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
             $additionalInformation = $request['additional_information'] ?? 'No additional information';
 
@@ -84,9 +112,12 @@ class AIService
 
             while ($attempt < 3 && count($validChallenges) < 2) {
                 $attempt++;
-                $openAIResponse = $this->fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
+                Log::info('Attempting to fetch challenges from OpenAI', ['attempt' => $attempt]);
+
+                $openAIResponse = $this->fetchChallengesByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
+                    Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
                     continue;
                 }
 
@@ -101,6 +132,7 @@ class AIService
                     // }
 
                     if (empty($challenge['skills'])) {
+                        Log::info('Skipping challenge due to empty skills', ['challenge' => $challenge]);
                         continue;
                     }
 
@@ -110,6 +142,7 @@ class AIService
 
                     // Making sure each challenge has more than 5 verified skill
                     if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
+                        Log::info('Skipping challenge due to insufficient skills or missing title', ['challenge' => $challenge]);
                         continue;
                     }
 
@@ -140,12 +173,15 @@ class AIService
                     $challenge['category_id'] = $categoryID;
 
                     $validChallenges[] = $challenge;
+                    Log::info('Valid challenge added', ['challenge' => $challenge]);
                 }
             }
 
             if (count($validChallenges) < 2) {
                 throw new Exception('Failed to generate sufficient valid challenges.');
             }
+
+            Log::info('createChallengeUsingAIPreview completed successfully');
 
             return $validChallenges;
         } catch (Exception $e) {
@@ -155,8 +191,311 @@ class AIService
         }
     }
 
+    public function createChallengeAssessmentUsingAi($request)
+    {
+        Log::info('createChallengeAssessmentUsingAi started');
+
+        try {
+            $attempt = 0;
+
+            // $language = $request->language;
+
+            // Extract job IDs and titles
+            $jobTitles = 'N/A';
+            $jobIdsArray = $request['jobs'] ?? null;
+            if ($jobIdsArray) {
+                $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
+                $jobTitles = implode(', ', $jobTitlesArray);
+            }
+
+            // Extract skill titles
+            $skillIdsArray = $request['skills'];
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
+            $skillTitles = implode(', ', $skillTitlesArray);
+
+            // Extract duration and level IDs and titles
+            $durationID = $request['duration_id'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
+
+            $levelID = $request['level_id'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
+
+            $categoryID = $request['category_id'];
+            $categoryTitle = Category::where('id', $categoryID)->pluck('title')->first();
+
+            $challengeTitle = $request['challengeTitle'];
+            $challengeDescription = $request['challengeDescription'];
+            $challengeSteps = $request['steps'];
+
+            $stepsArray = $request['steps'];
+            $challengeSteps = implode(', ', $stepsArray);
+
+            $assessment = [];
+
+            while ($attempt < 3) {
+                $attempt++;
+                Log::info('Attempting to fetch criteria from OpenAI', ['attempt' => $attempt]);
+
+                $openAIResponse = $this->fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle);
+
+                if (empty($openAIResponse['choices'])) {
+                    Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
+                    continue;
+                }
+
+                $criterias = json_decode($openAIResponse['choices'][0]['message']['content'], true);
+                if (is_null($criterias) || json_last_error() !== JSON_ERROR_NONE) {
+                    Log::warning('Failed to decode OpenAI response', ['response' => $openAIResponse]);
+                    continue;
+                }
+
+                $criterias = $criterias['criteria'] ?? [];
+                if (empty($criterias)) {
+                    Log::warning('OpenAI response contains empty criteria', ['response' => $openAIResponse]);
+                    continue;
+                }
+
+                $isValid = true;
+                foreach ($criterias as $criteria) {
+                    if (!isset($criteria['title'], $criteria['description'], $criteria['weight'])) {
+                        $isValid = false;
+                        break;
+                    }
+                }
+
+                if (!$isValid) {
+                    Log::warning('Invalid criteria found in OpenAI response', ['criterias' => $criterias]);
+                    continue;
+                }
+
+                // Add 'score' => '10' to each criterion
+                foreach ($criterias as $key => $value) {
+                    $criterias[$key]['score'] = '10';
+                }
+
+                $assessmentTitles = [];
+                $assessmentDescriptions = [];
+                $assessmentScores = [];
+                $assessmentWeights = [];
+
+                foreach ($criterias as $criteria) {
+                    $assessmentTitles[] = $criteria['title'];
+                    $assessmentDescriptions[] = $criteria['description'];
+                    $assessmentScores[] = $criteria['score'];
+                    $assessmentWeights[] = $criteria['weight'];
+                }
+
+                $assessment = [
+                    'assessment_type'        => 'ai',
+                    'assessment_title'       => $assessmentTitles,
+                    'assessment_description' => $assessmentDescriptions,
+                    'assessment_score'       => $assessmentScores,
+                    'assessment_weight'      => $assessmentWeights,
+                ];
+
+                break;
+            }
+
+            Log::info('createChallengeAssessmentUsingAi completed successfully');
+
+            return $assessment;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeAssessmentUsingAi in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function createChallengeFromResourceUsingAIPreview($request)
+    {
+        Log::info('createChallengeFromResourceUsingAIPreview started');
+
+        try {
+            $attempt = 0;
+            $validChallenges = [];
+
+            // $language = $request->language;
+
+            $additionalInformation = $request['additional_information'] ?? 'No additional information';
+
+            $categoryTitles = Category::pluck('title')->map(function ($title) {
+                return '"'.$title.'"';
+            })->implode(', ');
+
+            $levelTitles = Levels::pluck('title')->map(function ($title) {
+                return '"'.$title.'"';
+            })->implode(', ');
+
+            $durationTitles = Duration::pluck('title')->map(function ($title) {
+                return '"'.$title.'"';
+            })->implode(', ');
+
+            $resourceModules = ResourceModule::whereIn('uuid', $request->resource_modules)
+                ->get();
+
+            $resourceModulesTitlesAndDescriptions = array_map(function ($module) {
+                return [
+                    'title'       => $module['title'],
+                    'description' => $module['description'],
+                ];
+            }, $resourceModules->toArray());
+
+            $resourceModulesTitlesAndDescriptions = json_encode($resourceModulesTitlesAndDescriptions);
+
+            $resourceModulesDetails = ResourceModuleDetail::whereIn('resource_module_id', $resourceModules->pluck('id'))->get(['type', 'path']);
+
+            $items = [];
+
+            foreach ($resourceModulesDetails as $detail) {
+                $url = $detail->path;
+                $type = '';
+
+                $cloudFrontPrefix = config('site-settings.aws_url');
+                if (strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
+                }
+
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
+                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
+                } else {
+                    switch ($detail->type) {
+                        case 0: // document
+                            $type = 'file';
+                            break;
+                        case 5: // url
+                            $type = 'url';
+                            break;
+                        case 3: // embedded
+                            $type = 'video';
+                            break;
+                        case 1: // video
+                        case 2: // audio
+                            $type = 'video';
+                            break;
+                        case 4: // embedded_audio
+                            $type = 'audio';
+                            break;
+                        case 7: // Embedded_Cover_Video
+                            $type = 'video';
+                            break;
+                        case 6: // image
+                            $type = 'image';
+                            break;
+                        default:
+                            $type = 'file';
+                    }
+                }
+
+                if (!preg_match('/^https?:\/\//', $url)) {
+                    $url = $cloudFrontPrefix.ltrim($url, '/');
+                }
+
+                if ($type == 'url' && strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
+                }
+
+                $items[] = ['url' => $url, 'type' => $type];
+            }
+
+            if (empty($items)) {
+                $resourceModulesSummary = '';
+            } else {
+                $finalObject = ['items' => $items];
+                $resourceModulesSummary = $this->resourceSummarizer($finalObject)['summary'];
+            }
+
+            while ($attempt < 3 && count($validChallenges) < 2) {
+                $attempt++;
+                Log::info('Attempting to fetch challenges from OpenAI', ['attempt' => $attempt]);
+
+                $openAIResponse = $this->fetchChallengesFromResourcesByOpenAI($durationTitles, $levelTitles, $additionalInformation, $categoryTitles, $resourceModulesTitlesAndDescriptions, $resourceModulesSummary);
+
+                if (!$openAIResponse || empty($openAIResponse['choices'])) {
+                    Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
+                    continue;
+                }
+
+                foreach ($openAIResponse['choices'] as $choice) {
+                    $challenge = json_decode($choice['message']['content'], true);
+
+                    if (empty($challenge['skills'])) {
+                        Log::info('Skipping challenge due to empty skills');
+                        continue;
+                    }
+
+                    $updatedSkills = $this->processSkills($challenge['skills']);
+                    $updatedSkills = array_values($updatedSkills);
+
+                    // Making sure each challenge has more than 5 verified skill
+                    if (count($updatedSkills) < 5 || !isset($challenge['challengeTitle'])) {
+                        Log::info('Skipping challenge due to insufficient skills or missing title');
+                        continue;
+                    }
+
+                    $orderedTitles = implode(',', array_fill(0, count($updatedSkills), '?'));
+                    $skills = Skill::whereIn('title', $updatedSkills)
+                        ->orderByRaw("FIELD(title, $orderedTitles)", $updatedSkills)
+                        ->get(['id', 'title']);
+                    $skillIds = $skills->pluck('id')->toArray();
+                    $skillTitles = array_unique($skills->pluck('title')->toArray());
+
+                    $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
+                    $levelID = Levels::where('title', $challenge['level'])->pluck('id')->first();
+                    $durationID = Duration::where('title', $challenge['duration'])->pluck('id')->first();
+
+                    $challenge['level_id'] = $levelID;
+                    $challenge['duration_id'] = $durationID;
+                    $challenge['is_ai_created'] = $request->is_ai_created;
+                    $challenge['skill_titles'] = $skillTitles;
+                    $challenge['skills'] = $skillIds;
+                    $challenge['category_id'] = $categoryID;
+
+                    $validChallenges[] = $challenge;
+                    Log::info('Valid challenge added');
+                }
+            }
+
+            if (count($validChallenges) < 2) {
+                throw new Exception('Failed to generate sufficient valid challenges.');
+            }
+
+            Log::info('createChallengeFromResourceUsingAIPreview completed successfully');
+
+            return $validChallenges;
+        } catch (Exception $e) {
+            Log::error('Error in createChallengeFromResourceUsingAIPreview in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function resourceSummarizer($data)
+    {
+        Log::info('resourceSummarizer started', ['data' => $data]);
+
+        $response = $this->resourceSummarizerClient->request('POST', '', [
+            'json' => $data,
+        ]);
+
+        $result = json_decode($response->getBody()->getContents(), true);
+
+        Log::info('resourceSummarizer completed', ['result' => $result]);
+
+        return $result;
+    }
+
     public function createLabUsingAIPreview($request)
     {
+        Log::info('createLabUsingAIPreview started');
+
         try {
             $attempt = 0;
             $validLabs = [];
@@ -165,19 +504,20 @@ class AIService
 
             // Extract job IDs and titles
             $jobIdsArray = array_column($request['jobs'], 'key');
-            $jobTitlesArray = array_column($request['jobs'], 'value');
+            $jobTitlesArray = JobTitle::whereIn('id', $jobIdsArray)->pluck('title')->toArray();
             $jobTitles = implode(', ', $jobTitlesArray);
 
             // Extract skill titles
-            $skillTitlesArray = array_column($request['skills'], 'value');
+            $skillIdsArray = array_column($request['skills'], 'key');
+            $skillTitlesArray = Skill::whereIn('id', $skillIdsArray)->pluck('title')->toArray();
             $skillTitles = implode(', ', $skillTitlesArray);
 
             // Extract duration and level IDs and titles
             $durationID = $request['duration_id'][0]['key'];
-            $durationTitle = $request['duration_id'][0]['value'];
+            $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
             $levelID = $request['level_id'][0]['key'];
-            $levelTitle = $request['level_id'][0]['value'];
+            $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
             $additionalInformation = $request['additional_information'] ?? 'No additional information';
 
@@ -185,10 +525,12 @@ class AIService
 
             while ($attempt < 3 && count($validLabs) < 2) {
                 $attempt++;
+                Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
 
-                $openAIResponse = $this->fetchChallengesForLabFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
+                $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
+                    Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
                     continue;
                 }
 
@@ -219,8 +561,8 @@ class AIService
                             $updatedSkills = $this->processSkills($challenge['skills']);
                             $updatedSkills = array_values($updatedSkills);
                             $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
-                            // Making sure each challenge has more than 5 verified skill
 
+                            // Making sure each challenge has more than 5 verified skill
                             if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                                 continue;
                             }
@@ -281,6 +623,7 @@ class AIService
                                 'openai_resource_module_types'  => $request->openai_resource_module_types,
                                 'go1_resource_module_types'     => $request->go1_resource_module_types,
                             ];
+                            Log::info('Valid lab added', ['lab' => $lab]);
                         }
                     }
                 }
@@ -290,6 +633,8 @@ class AIService
                 throw new Exception('Failed to generate sufficient valid labs.');
             }
 
+            Log::info('createLabUsingAIPreview completed successfully');
+
             return $validLabs;
         } catch (Exception $e) {
             Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
@@ -298,37 +643,41 @@ class AIService
         }
     }
 
-    protected function fetchChallengesFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
+    protected function fetchChallengesByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
     {
+        Log::info('fetchChallengesByOpenAI started');
+
         try {
             $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
             $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
-                'messages' => [
+                'model'           => 'gpt-4o',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational challenge for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the challenge to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'").
-                            1. **Title**: Craft a brief creative title for the challenge.
-                            2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
-                            6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-                
-                            Output format (Make sure you exactly follow it):
+                            Please create an educational challenge tailored for the following careers: "'.$jobTitlesStr.'", focusing on the specified skills: "'.$skillTitlesStr.'", designed for "'.$levelTitle.'" level, with a duration of "'.$durationTitle.'". Additional prioritized information includes: ("'.$additionalInformation.'").
+                            1. **Challenge Title**: Develop a succinct and creative title for the challenge.
+                            2. **Challenge Description**: Present a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array format.
+                            4. **Essential Skills**: Enumerate 10 essential skills required for this challenge, with emphasis on the provided and important skills.
+                            5. **Category Selection**: Based on the specified careers, skills, and level, select one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should prompt participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            
+                            JSON output format (Ensure precise adherence):
                             {
-                            "challengeTitle": "Challenge Title",
-                            "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
-                            "category": "Selected Category",
-                            "steps": ["Step 1", "Step 2", (all the steps)],
-                            "skills": ["Skill 1", "Skill 2", (all the skills)],
-                            "reflections": ["Reflection 1", "Reflection 2", (all the reflections)]
-                        }',
+                                "challengeTitle": "Challenge Title",
+                                "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
+                                "category": "Selected Category",
+                                "steps": ["Step 1", "Step 2", (all steps)],
+                                "skills": ["Skill 1", "Skill 2", (all skills)],
+                                "reflections": ["Reflection 1", "Reflection 2", (all reflections)]
+                            }
+                        ',
                     ],
                 ],
             ];
@@ -350,56 +699,58 @@ class AIService
                 }
             } while ($retry <= $maxRetries);
 
-            return json_decode($response->getBody()->getContents(), true);
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            Log::info('fetchChallengesByOpenAI completed', ['result' => $result]);
+
+            return $result;
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
     }
 
-    protected function fetchChallengesForLabFromOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
+    protected function fetchChallengesFromResourcesByOpenAI($durationTitles, $levelTitles, $additionalInformation, $categoryTitles, $resourceModulesTitlesAndDescriptions, $resourceModulesSummary)
     {
+        Log::info('fetchChallengesFromResourcesByOpenAI started', compact('durationTitles', 'levelTitles', 'additionalInformation', 'categoryTitles', 'resourceModulesTitlesAndDescriptions', 'resourceModulesSummary'));
+
         try {
-            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
-            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'    => 'gpt-3.5-turbo',
-                'n'        => 10,
-                'messages' => [
+                'model'           => 'gpt-4o',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
                     [
                         'role'    => 'user',
                         'content' => '
-                            Please design an educational lab with 5 challenges for the careers: "'.$jobTitlesStr.'", with skills: "'.$skillTitlesStr.'", at level: "'.$levelTitle.'", for the duration of "'.$durationTitle.'" for the lab to finish. Additional information that needs to be prioritize would be ("'.$additionalInformation.'"). The challenges must be in order and preferably follow each other to reach the lab\'s goal.
-                            1. **Title**: Craft a brief creative title for the challenge without counting it (ex. without saying challenge 1, challenge 2, or similar). Write just the title.
-                            2. **Description**: Provide a paragraph description about the challenge and a detailed, step-by-step guide in HTML format suitable for online implementation.
-                            3. **Steps**: Write the exact same steps mentioned in description in an array as well.
-                            4. **Skills**: Enumerate 10 vital skills necessary for this challenge. Add the given and important skills first.
-                            5. **Category**: Based on the specified careers, skills, and level, select one category from these options: "'.$categoryTitlesStr.'".
-                            6. **Reflections**: provide 5 reflective questions that participants can answer after completing the challenge. These questions should help participants reflect on their approach to the challenge, the skills they applied, any roadblocks they encountered, and their overall learning experience.
-                            6. **Lab Title**: Craft a brief title for the lab.
-                            6. **Lab Description**: Provide a paragraph description about the lab and what it focuses on.
-                
-                            Output format (Make sure you exactly follow it):
-                                {
-                                    "labTitle": "Lab Title",
-                                    "labDescription": "Lab Description"
-                                    "challenges": [
-                                        {
-                                            "challengeTitle": "Creative Challenge Title",
-                                            "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so on)",
-                                            "category": "Selected Category",
-                                            "steps": ["Step 1", "Step 2", (all the steps)],
-                                            "skills": ["Skill 1", "Skill 2", (all the skills)],
-                                            "reflections": ["Reflection 1", "Reflection 2", (all the reflections)]
-                                        },
-                                        ...
-                                        (5 challenges)
-                                    ]
-                                }
-                            ',
+                            Please craft a distinct educational challenge utilizing the insights provided in the summaries of one or more resource modules. Emphasize any additional information as follows: ("'.$additionalInformation.'").
+                            1. **Challenge Title**: Create an inventive title for the challenge.
+                            2. **Challenge Description**: Compose a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array.
+                            4. **Essential Skills**: Enumerate 10 crucial skills necessary for this challenge, with priority given to the provided and important skills.
+                            5. **Category Selection**: Choose one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 questions for participants to contemplate after completing the challenge, focusing on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            7. **Challenge Level**: Specify the difficulty level of the challenge: "'.$levelTitles.'".
+                            8. **Challenge Duration**: Determine the duration for the challenge to end: "'.$durationTitles.'".
+            
+                            JSON output format (Ensure precise adherence):
+                            {
+                                "challengeTitle": "Challenge Title",
+                                "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
+                                "category": "Selected Category",
+                                "steps": ["Step 1", "Step 2", (all steps)],
+                                "skills": ["Skill 1", "Skill 2", (all skills)],
+                                "reflections": ["Reflection 1", "Reflection 2", (all reflections)],
+                                "level": "Selected Level",
+                                "duration": "Selected Duration"
+                            }
+            
+                            Utilize the titles and descriptions of the resource modules creatively: "'.$resourceModulesTitlesAndDescriptions.'".
+                            Summarize the contents of the resource modules: "'.$resourceModulesSummary.'".
+                        ',
                     ],
                 ],
             ];
@@ -421,9 +772,162 @@ class AIService
                 }
             } while ($retry <= $maxRetries);
 
-            return json_decode($response->getBody()->getContents(), true);
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            Log::info('fetchChallengesFromResourcesByOpenAI completed');
+
+            return $result;
         } catch (Exception $e) {
-            Log::error('Error in fetchChallengesForLabFromOpenAI in AIService.php: '.$e->getMessage());
+            Log::error('Error in fetchChallengesFromResourcesByOpenAI in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    protected function fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles)
+    {
+        Log::info('fetchChallengesForLabByOpenAI started', compact('jobTitles', 'skillTitles', 'durationTitle', 'levelTitle', 'additionalInformation', 'categoryTitles'));
+
+        try {
+            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
+            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
+            $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
+
+            $payload = [
+                'model'           => 'gpt-4o',
+                'n'               => 10,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
+                    [
+                        'role'    => 'user',
+                        'content' => '
+                            Please design an educational lab comprising 5 sequential challenges tailored for the following careers: "'.$jobTitlesStr.'", focusing on the specified skills: "'.$skillTitlesStr.'", designed for "'.$levelTitle.'" level, with a duration of "'.$durationTitle.'" for the lab to finish. Additional prioritized information includes: ("'.$additionalInformation.'"). The challenges must be arranged in order and preferably build upon each other to achieve the lab\'s objective.
+                            1. **Challenge Title**: Devise a brief and creative title for the challenge without numbering (e.g., avoid "Challenge 1," "Challenge 2," etc.). Only provide the title.
+                            2. **Challenge Description**: Present a paragraph describing the challenge and provide a detailed, step-by-step guide in HTML format suitable for online implementation.
+                            3. **Challenge Steps**: List the exact steps mentioned in the description in an array format.
+                            4. **Essential Skills**: Enumerate 10 vital skills required for this challenge, prioritizing the provided and important skills.
+                            5. **Category Selection**: Based on the specified careers, skills, and level, select one category from the following options: "'.$categoryTitlesStr.'".
+                            6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should encourage participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
+                            7. **Lab Title**: Craft a concise title for the lab.
+                            8. **Lab Description**: Provide a paragraph description about the lab and its focus.
+            
+                            JSON output format (Ensure precise adherence):
+                            {
+                                "labTitle": "Lab Title",
+                                "labDescription": "Lab Description",
+                                "challenges": [
+                                    {
+                                        "challengeTitle": "Creative Challenge Title",
+                                        "challengeDescription": "<p>Brief Challenge Description</p><br /><p>1. Initial Step.</p><p>2. Next Step.</p> (and so forth)",
+                                        "category": "Selected Category",
+                                        "steps": ["Step 1", "Step 2", (all steps)],
+                                        "skills": ["Skill 1", "Skill 2", (all skills)],
+                                        "reflections": ["Reflection 1", "Reflection 2", (all reflections)]
+                                    },
+                                    ...
+                                    (5 challenges)
+                                ]
+                            }
+                        ',
+                    ],
+                ],
+            ];
+
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception('OpenAI call failed: '.$e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            Log::info('fetchChallengesForLabByOpenAI completed');
+
+            return $result;
+        } catch (Exception $e) {
+            Log::error('Error in fetchChallengesForLabByOpenAI in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    protected function fetchCriteriasByOpenAI($challengeTitle, $challengeDescription, $challengeSteps, $jobTitles, $skillTitles, $durationTitle, $levelTitle, $categoryTitle)
+    {
+        Log::info('fetchCriteriasByOpenAI started', compact('challengeTitle', 'challengeDescription', 'challengeSteps', 'jobTitles', 'skillTitles', 'durationTitle', 'levelTitle', 'categoryTitle'));
+
+        try {
+            $jobTitlesStr = is_array($jobTitles) ? implode(', ', $jobTitles) : $jobTitles;
+            $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
+
+            $payload = [
+                'model'           => 'gpt-4o',
+                'n'               => 1,
+                'response_format' => ['type' => 'json_object'],
+                'messages'        => [
+                    [
+                        'role'    => 'user',
+                        'content' => '
+                            Please generate 4-6 assessment criteria for evaluating projects submitted for the following challenge. Ensure that the total weight of all criteria adds up to 100.
+                            1. **Challenge Title**: "'.$challengeTitle.'".
+                            2. **Challenge Description**: "'.$challengeDescription.'".
+                            3. **Challenge Steps**: "'.$challengeSteps.'".
+                            4. **Required Skills**: "'.$skillTitlesStr.'".
+                            5. **Targeted Careers**: "'.$jobTitlesStr.'".
+                            6. **Challenge Duration**: "'.$durationTitle.'".
+                            7. **Difficulty Level**: "'.$levelTitle.'".
+                            8. **Challenge Category**: "'.$categoryTitle.'".
+            
+                            JSON output format (Ensure precise adherence):
+                            {
+                                "criteria": [
+                                    {
+                                        "title": "Criteria Title 1",
+                                        "description": "Brief explanation of how this criteria applies to the challenge",
+                                        "weight": "Percentage of total score"
+                                    },
+                                    ... (additional criteria up to 6)
+                                ]
+                            }
+                        ',
+                    ],
+                ],
+            ];
+
+            $retry = 0;
+            $maxRetries = 1;
+
+            do {
+                try {
+                    $response = $this->openAIClient->post('', ['json' => $payload]);
+                    break;
+                } catch (Exception $e) {
+                    if ($retry >= $maxRetries) {
+                        throw new Exception('OpenAI call failed: '.$e->getMessage());
+                    }
+                    $retry++;
+
+                    usleep(500000);
+                }
+            } while ($retry <= $maxRetries);
+
+            $result = json_decode($response->getBody()->getContents(), true);
+
+            Log::info('fetchCriteriasByOpenAI completed', ['result' => $result]);
+
+            return $result;
+        } catch (Exception $e) {
+            Log::error('Error in fetchCriteriasByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
         }
@@ -431,6 +935,8 @@ class AIService
 
     protected function processSkills($skills, $score = 0.92)
     {
+        Log::info('processSkills started');
+
         $updatedSkills = [];
         $lowercaseSkills = array_map('strtolower', $skills);
 
@@ -445,6 +951,8 @@ class AIService
                 }
             }
 
+            Log::info('processSkills completed');
+
             return $updatedSkills;
         } catch (Exception $e) {
             Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
@@ -455,6 +963,8 @@ class AIService
 
     protected function selectHighestScoreSkill($recommendations)
     {
+        Log::info('selectHighestScoreSkill started');
+
         $highestScore = 0;
         $highestScoreSkill = null;
 
@@ -466,7 +976,11 @@ class AIService
                 }
             }
 
-            return ['skill' => $highestScoreSkill, 'score' => $highestScore];
+            $result = ['skill' => $highestScoreSkill, 'score' => $highestScore];
+
+            Log::info('selectHighestScoreSkill completed');
+
+            return $result;
         } catch (Exception $e) {
             Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
 
@@ -476,6 +990,8 @@ class AIService
 
     public function createResourceModuleUsingAIPreview($request)
     {
+        Log::info('createResourceModuleUsingAIPreview started');
+
         $title = $request->challengeTitle ?? $request->labTitle ?? '';
 
         $language = $request->language;
@@ -488,11 +1004,12 @@ class AIService
 
         $additionalInformation = $request['additional_information'] ?? '';
 
+        // Extract duration and level IDs and titles
         $durationID = $request->duration_id;
-        $durationTitle = $request->duration;
+        $durationTitle = Duration::where('id', $durationID)->pluck('title')->first();
 
         $levelID = $request->level_id;
-        $levelTitle = $request->level;
+        $levelTitle = Levels::where('id', $levelID)->pluck('title')->first();
 
         $aiCombinedGroups = [];
 
@@ -510,6 +1027,8 @@ class AIService
             try {
                 while ($attempts < $maxAttempts && ($collectArticles ? !$articlesCollected : true) && ($collectVideos ? !$videosCollected : true)) {
                     $attempts++;
+                    Log::info('Attempting to collect resources from OpenAI', ['attempt' => $attempts]);
+
                     $currentData = ['articles' => [], 'videos' => []];
 
                     if ($collectArticles && !$articlesCollected) {
@@ -608,7 +1127,7 @@ class AIService
                                     'url'         => $video['contentUrl'],
                                     'embedHTML'   => $video['embedHtml'] ?? '',
                                 ];
-                                if (!empty($videoData['title'])) {
+                                if (!empty($videoData['title']) && strlen($videoData['title']) < 100) {
                                     $currentData['videos'][] = $videoData;
                                 }
                             }
@@ -713,12 +1232,13 @@ class AIService
                         $combinedChunkDescription = implode(' ', $chunkGroupDescriptions);
 
                         $prompt = "For each group described below, generate a creative title and a super brief complete description. Format your response as a JSON object with a 'results' key containing an array of objects, each with 'title' and 'description' keys: ".$combinedChunkDescription.
-                            ' Example format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
+                            ' Example json format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
-                            'model'    => 'gpt-3.5-turbo',
-                            'n'        => 1,
-                            'messages' => [
+                            'model'           => 'gpt-4o',
+                            'n'               => 1,
+                            'response_format' => ['type' => 'json_object'],
+                            'messages'        => [
                                 [
                                     'role'    => 'user',
                                     'content' => $prompt,
@@ -808,9 +1328,10 @@ class AIService
             $modules = ResourceModule::whereNull('deleted_at')
                 ->where('is_global', 1)
                 ->where('language', $language)
+                ->where('duration_id', '<=', $durationID)
                 ->whereHas('skills', function ($query) use ($firstThreeSkills) {
                     $query->whereIn('foreign_id', $firstThreeSkills)
-                        ->where('type', '0');
+                          ->where('type', '0');
                 })
                 ->with(['skills'])
                 ->get();
@@ -882,12 +1403,13 @@ class AIService
 
                 $fullQueryString = implode(', ', $queryParts).'.';
                 $payload = [
-                    'model'    => 'gpt-3.5-turbo',
-                    'n'        => 1,
-                    'messages' => [
+                    'model'           => 'gpt-4o',
+                    'n'               => 1,
+                    'response_format' => ['type' => 'json_object'],
+                    'messages'        => [
                         [
                             'role'    => 'user',
-                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
+                            'content' => 'According to the following information, I want you to find 3 most relevant keywords to them. Pint exactly at the main topics of it not something general. '.$fullQueryString.' Output json format: { "keywords": ["Keyword 1", "Keyword 2", "Keyword 3"] }',
                         ],
                     ],
                 ];
@@ -922,12 +1444,13 @@ class AIService
                         try {
                             $queryParams = http_build_query(
                                 [
-                                    'keyword'    => $keyword,
-                                    'sort'       => 'relevance',
-                                    'type'       => $type,
-                                    'limit'      => '15',
-                                    'offset'     => 0,
-                                    'language[]' => 'en',
+                                    'keyword'               => $keyword,
+                                    'sort'                  => 'relevance',
+                                    'type'                  => $type,
+                                    'limit'                 => '15',
+                                    'offset'                => 0,
+                                    'language[]'            => 'en',
+                                    'duration[max]'         => Duration::where('id', $durationID)->pluck('max_minutes')->first(),
                                 ]
                             );
 
@@ -936,12 +1459,11 @@ class AIService
                             if (is_array($response) && isset($response['hits']) && is_array($response['hits'])) {
                                 $count = 0;
                                 foreach ($response['hits'] as $item) {
+                                    if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
+                                        break;
+                                    }
                                     if ($count < 3) {
                                         $module = [];
-
-                                        if (!isset($item['title']) || !isset($item['description']) || !isset($item['skills'])) {
-                                            break;
-                                        }
 
                                         $module['id'] = $item['id'] ?? null;
                                         $module['type'] = $item['type'] ?? null;
@@ -969,6 +1491,7 @@ class AIService
                                         $module['authors'] = $item['authors'] ?? null;
                                         $module['ratings'] = $item['ratings'] ?? null;
                                         $module['from_go1'] = true;
+                                        $module['is_ai_created'] = true;
 
                                         $skills = Arr::pluck($item['skills'] ?? [], 'name');
                                         $processedSkills = $this->processSkills($skills, 0.75);
@@ -976,6 +1499,23 @@ class AIService
                                         $item['skills'] = array_map(function ($name) {
                                             return ['name' => $name];
                                         }, $processedSkills);
+
+                                        $duration = $item['delivery']['duration'] ?? null;
+
+                                        if ($duration) {
+                                            $durationDetails = Duration::where(function ($query) use ($duration) {
+                                                $query->whereNull('min_minutes')
+                                                      ->orWhere('min_minutes', '<=', $duration);
+                                            })
+                                                                    ->where(function ($query) use ($duration) {
+                                                                        $query->whereNull('max_minutes')
+                                                                              ->orWhere('max_minutes', '>=', $duration);
+                                                                    })
+                                                                    ->first(['id', 'title']);
+
+                                            $module['duration'] = $durationDetails->title;
+                                            $module['duration_id'] = $durationDetails->id;
+                                        }
 
                                         $module['skills'] = $item['skills'] ?? null;
                                         $go1_resource_modules[] = $module;
@@ -1004,6 +1544,150 @@ class AIService
 
         $shuffledModules = $combinedModules;
 
+        Log::info('createResourceModuleUsingAIPreview completed successfully');
+
         return $shuffledModules;
+    }
+
+    public function addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request)
+    {
+        Log::info('addAIProjectEvaluation started', ['challengeAssessment' => $challengeAssessment, 'projectData' => $projectData, 'userData' => $userData, 'request' => $request]);
+
+        try {
+            $criteria = collect($challengeAssessment)->map(function ($item) {
+                return [
+                    'id'          => $item['id'],
+                    'title'       => $item['title'],
+                    'description' => $item['description'] ?? null,
+                    'score'       => $item['score'],
+                    'weight'      => $item['weight'],
+                ];
+            })->values()->all();
+
+            $challengeID = $challengeAssessment[0]->challenge_id;
+            $challenge = ChallengeService::getChallengeBasedOnId($challengeID);
+
+            $items = [];
+
+            $projectFiles = ProjectFile::where('project_id', $projectData['id'])
+                ->get(['path', 'type']);
+
+            foreach ($projectFiles as $file) {
+                $url = $file->path;
+                $type = '';
+
+                $cloudFrontPrefix = config('site-settings.aws_url');
+                if (strpos($url, $cloudFrontPrefix) === 0) {
+                    $url = substr($url, strlen($cloudFrontPrefix));
+                }
+
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
+                    $url = $match[1];
+                    $type = 'video';
+                } else {
+                    switch ($file->type) {
+                        case 'docs':
+                            $type = 'file';
+                            break;
+                        case 'video':
+                        case 'audio':
+                            $type = 'video';
+                            break;
+                        case 'image':
+                            $type = 'image';
+                            break;
+                        default:
+                            $type = 'file';
+                    }
+                }
+
+                $items[] = ['url' => $url, 'type' => $type];
+            }
+
+            $youtubeLinks = ProjectExternalLink::where('project_id', $projectData['id'])
+                ->whereHas('social_link', function ($query) {
+                    $query->where('title', 'YouTube');
+                })
+                ->with('social_link')
+                ->select('social_media_link')
+                ->get();
+
+            foreach ($youtubeLinks as $link) {
+                $url = $link->social_media_link;
+                $type = '';
+
+                if (preg_match('/^https?:\/\/www\.youtube\.com\/(?:watch\?v=|embed\/)([\w\-_]+)(\?.*)?$/i', $url, $match) ||
+                    preg_match('/<iframe.*src="https?:\/\/www\.youtube\.com\/embed\/([\w\-_]+)(\?.*)?".*<\/iframe>/i', $url, $match)) {
+                    $url = 'https://www.youtube.com/watch?v='.$match[1];
+                    $type = 'youtube_video';
+
+                    // append the YouTue item
+                    $items[] = [
+                        'url'  => $url,
+                        'type' => $type,
+                    ];
+                }
+            }
+
+            try {
+                $requestBody = [
+                    'language'              => 'en',
+                    'status'                => 'published',
+                    'app_url'               => config('app.url'),
+                    'user_id'               => $userData['id'],
+                    'project_id'            => $projectData['id'],
+                    'project_slug'          => $projectData['slug'],
+                    'project_title'         => $projectData['title'],
+                    'project_description'   => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($projectData['description'], ENT_QUOTES | ENT_HTML5))),
+                    'challenge_title'       => $challenge['title'],
+                    'challenge_description' => preg_replace(['/[\r\n\t\x{00A0}]+/u', '/[\x{2019}\x{2018}]/u'], ['', "'"], strip_tags(html_entity_decode($challenge['description'], ENT_QUOTES | ENT_HTML5))),
+                    'criteria'              => $criteria,
+                    // We are not retrieving the below fields yet due to not having the necessary tables. 5/20/2024
+                    // Give the "pitch" with "question" and "answer" just like criteria (table project_pitches)
+                    'items' => $items,
+                ];
+
+                Log::info('Request body prepared for projectAssessor');
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            try {
+                $response = $this->projectAssessor($requestBody);
+                Log::info('Response from projectAssessor');
+            } catch (Exception $e) {
+                Log::error($e->getMessage());
+            }
+
+            if ($response) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in addAIProjectEvaluation in AIService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function projectAssessor($data)
+    {
+        Log::info('projectAssessor started');
+
+        $request = new Request('POST', '', [], json_encode($data));
+
+        try {
+            $response = $this->projectAssessorClient->send($request);
+            Log::info('Done calling projectAssessor');
+        } catch (Exception $e) {
+            Log::error('Error in projectAssessor in AIService.php: '.$e->getMessage());
+        }
+
+        return true;
     }
 }

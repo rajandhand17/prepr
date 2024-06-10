@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\User;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\User\UserOrganizationListResource;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserSearchResource;
 use App\Repositories\Api\User\UserRepository;
@@ -36,6 +38,43 @@ class UserController extends AppBaseController
         try {
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getOrganizationList(Request $request)
+    {
+        try {
+            $organizationListing = $this->userRepository->organizationListing($request);
+            if ($organizationListing != false) {
+                $response = [
+                    'total_count'  => $organizationListing->total(),
+                    'per_page'     => $organizationListing->perPage(),
+                    'count'        => $organizationListing->count(),
+                    'current_page' => $organizationListing->currentPage(),
+                    'total_pages'  => $organizationListing->lastPage(),
+                    'list'         => UserOrganizationListResource::collection($organizationListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_organization_list'));
+            }
+
+            return $this->sendError(__('responses.found_organization_list'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function setOrganizationPreference($slug)
+    {
+        try {
+            $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
+            if ($checkComponentSlugExistOrNot) {
+                $setOrganizationPreference = $this->userRepository->setOrganizationPreference($checkComponentSlugExistOrNot->id);
+
+                return $this->sendResponse(UserResource::make(auth()->user()), __('responses.preferred_organization_updated'));
+            }
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

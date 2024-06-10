@@ -6,7 +6,7 @@ return [
     'achievement'               => 'achievement/upload/',
     'lab_program'               => 'lab_program/upload/',
     'challenge'                 => 'challenge/upload/',
-    'assessment'                => 'assessment/upload/',
+    'assessment'                => 'assessment/upload',
     'resource_module'           => 'resource_modules/upload/',
     'resource_file'             => 'resource_modules/upload',
     'challenge_path'            => 'challenge_path/upload/',
@@ -19,4 +19,5 @@ return [
     'certificate'               => 'certificate/upload/',
     'discussion'                => 'discussion/upload',
     'chat'                      => 'chat/upload',
+    'campus_connect'            => 'campus_connect/upload',
 ];

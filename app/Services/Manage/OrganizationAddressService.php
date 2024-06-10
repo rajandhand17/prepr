@@ -17,9 +17,9 @@ class OrganizationAddressService
                     $organization_address->organization_id = $organization_id;
                     $organization_address->latitude = isset($data['latitude']) ? $data['latitude'] : null;
                     $organization_address->longitude = isset($data['longitude']) ? $data['longitude'] : null;
-                    $organization_address->full_address = $data['address_1'].', '.$data['address_2'];
+                    $organization_address->full_address = $data['address_1'].', '.(isset($data['address_2']) ? $data['address_2'] : '');
                     $organization_address->address_1 = $data['address_1'];
-                    $organization_address->address_2 = $data['address_2'];
+                    $organization_address->address_2 = isset($data['address_2']) ? $data['address_2'] : null;
                     $organization_address->city = $data['city'];
                     $organization_address->state = $data['state'];
                     $organization_address->country = $data['country'];

@@ -16,6 +16,7 @@ class ChallengeTemplateAssessmentCriterias extends Model
         'challenge_template_id',
         'template_assessment_id',
         'title',
+        'description',
         'score',
         'weight',
     ];

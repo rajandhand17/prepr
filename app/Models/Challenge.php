@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Challenge extends Model
@@ -31,7 +32,7 @@ class Challenge extends Model
         'agreement',
         'is_notification_enabled',
         'project_privacy',
-        'is_pre_build',
+        'is_pre_built',
         'is_open',
         'is_auto_created',
         'is_ai_created',
@@ -71,6 +72,11 @@ class Challenge extends Model
     public function skill_stacks()
     {
         return $this->hasMany(ChallengeSkillsGroupsStack::class, 'challenge_id', 'id')->where('type', '2');
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(ChallengeJobTitles::class, 'challenge_id', 'id');
     }
 
     public function tags()
@@ -198,5 +204,20 @@ class Challenge extends Model
     public function challenge_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
+    }
+
+    public function campusConnectOpportunity(): MorphOne
+    {
+        return $this->morphOne(CampusConnectOpportunity::class, 'model');
+    }
+
+    public function campusConnectStory(): MorphOne
+    {
+        return $this->morphOne(CampusConnectStory::class, 'model');
+    }
+
+    public function getCampusConnectStatusAttribute($value)
+    {
+        return config('constants.campus_connect_status_id.'.$value);
     }
 }

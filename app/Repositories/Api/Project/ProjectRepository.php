@@ -4,6 +4,7 @@ namespace App\Repositories\Api\Project;
 
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
@@ -19,6 +20,7 @@ use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProjectRepository implements ProjectInterface
 {
@@ -36,8 +38,9 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentUserService;
     private $projectSkillsService;
     private $projectHistoryService;
+    private $aiService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, AIService $aiService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -53,6 +56,7 @@ class ProjectRepository implements ProjectInterface
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->projectSkillsService = $projectSkillsService;
         $this->projectHistoryService = $projectHistoryService;
+        $this->aiService = $aiService;
     }
 
     public function getMyProjectIds($userId)
@@ -376,8 +380,10 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
 
-            if ($submitProject['submitProject'] &&
-                $submitProject['addAchievement']) {
+            if (
+                $submitProject['submitProject'] &&
+                $submitProject['addAchievement']
+            ) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 DB::commit();
@@ -456,6 +462,51 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
+    public function captureProjectAIAssessment($projectData, $userData, $request)
+    {
+        try {
+            $fetchChallengeData = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
+            if ($fetchChallengeData->challenge_assessment_criteria->isNotEmpty()) {
+                $challengeAssessment = $fetchChallengeData->challenge_assessment_criteria;
+                $addProjectAIEvaluation = $this->aiService->addAIProjectEvaluation($challengeAssessment, $projectData, $userData, $request);
+
+                if ($addProjectAIEvaluation) {
+                    return true;
+                }
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function assessProjectAI($request)
+    {
+        try {
+            $addProjectAIEvaluation = DB::transaction(function () use ($request) {
+                $addProjectAIEvaluation = $this->challengeAssessmentUserService->addProjectEvaluation($challengeAssessment = null, $projectData = null, $userData = null, $request);
+
+                return $addProjectAIEvaluation;
+            });
+
+            if ($addProjectAIEvaluation) {
+                DB::commit();
+
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            Log::error('Error in assessProjectAI in ProjectRepository.php: '.$e->getMessage());
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
     public function addUpdateProjectSkillsRecruitingStatus($projectId, $request)
     {
         try {
@@ -469,7 +520,8 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
 
-            if ($addUpdateProjectSkillsRecruitingStatus['addUpdateProjectSkills'] &&
+            if (
+                $addUpdateProjectSkillsRecruitingStatus['addUpdateProjectSkills'] &&
                 $addUpdateProjectSkillsRecruitingStatus['updateProjectRecruitingStatus']
             ) {
                 DB::commit();

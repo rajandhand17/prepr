@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\Chargebee\CreateCustomerJob;
+use App\Jobs\Chargebee\SubscribePlanJob;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,6 +33,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'preferred_language',
+        'preferred_organization',
         'first_name',
         'last_name',
         'full_name',
@@ -333,6 +336,12 @@ class User extends Authenticatable
                     $user = User::find($user->id);
                     $user->attachRole('organization_owner', $organization->id);
                     $request->user_type = 'employee';
+
+                    // Jobs for creating customer and subscribe plan
+                    $planDetail = config('chargebee.chargebee_plan.seed_plan_yearly'); //Default plan selected
+                    CreateCustomerJob::withChain([
+                        new SubscribePlanJob($user, $organization, $planDetail),
+                    ])->dispatch($user);
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
@@ -483,13 +492,15 @@ class User extends Authenticatable
             }
             /**Matching otp is same or not */
             if ($user->otp == $request->otp) {
+                $token = $user->createToken(env('APP_NAME'))->accessToken;
                 $user->email_verified_at = Carbon::now();
                 $user->verified_user = '1';
                 if ($user->save()) {
                     $data = ['subject' => __('responses.email_subject_verified_successfully'), 'first_name' => $user->first_name, 'last_name' => $user->last_name];
                     $mail = SendMailHelper::sendMail($user, 'email.verified_successfully', $data);
                     if ($mail) {
-                        $success = ['success' => true, 'user' => $user, 'code' => 2];
+                        $data = User::where('email', $request->email)->first();
+                        $success = ['success' => true, 'user' => $data, 'token' => $token, 'message' => __('responses.user_login_success')];
 
                         return $success;
                     }

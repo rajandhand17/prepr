@@ -129,7 +129,9 @@ class ChallengeTemplateResource extends JsonResource
             $challenge_conditions = [];
             foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
                 $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                if ($check_achievement_condition) {
+                    $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             switch ($this->challenge_requirements->allow_submit_project) {
                 case '0':
@@ -204,9 +206,10 @@ class ChallengeTemplateResource extends JsonResource
         if ($this->challenge_assessment_criteria) {
             $challenge_assessment_criteria = $this->challenge_assessment_criteria->map(function ($item) {
                 return [
-                    'assessment_title'   => $item->title,
-                    'assessment_score'   => $item->score,
-                    'assessment_weight'  => $item->weight,
+                    'assessment_title'        => $item->title,
+                    'assessment_description'  => $item->description,
+                    'assessment_score'        => $item->score,
+                    'assessment_weight'       => $item->weight,
                 ];
             });
         }
@@ -270,7 +273,8 @@ class ChallengeTemplateResource extends JsonResource
             $organizationCheck = $request->organization_id;
         }
 
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationCheck);
+        $organizationCheck = auth()->user()->preferred_organization;
+        $organization = OrganizationService::getOrganizationExistBasedOnId($organizationCheck);
         $checkChallengeRedeem = ChallengeTemplateService::checkChallengeRedeemedOrNot($this->id, $organization->id);
         if ($checkChallengeRedeem) {
             $is_redeemed = 'no';

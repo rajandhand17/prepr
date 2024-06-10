@@ -38,6 +38,7 @@ class Lab extends Model
         'is_achievement_enabled',
         'is_notification_enabled',
         'is_verified',
+        'campus_connect_status',
         'is_accessible',
         'is_live_event_enabled',
     ];
@@ -146,7 +147,7 @@ class Lab extends Model
 
     public function members()
     {
-        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type'=>'1', 'invite_status'=>'1']);
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
     }
 
     public function durations()
@@ -165,5 +166,20 @@ class Lab extends Model
     public function airMeet(): MorphOne
     {
         return $this->morphOne(AirmeetEvent::class, 'model')->latest();
+    }
+
+    public function campusConnectOpportunity(): MorphOne
+    {
+        return $this->morphOne(CampusConnectOpportunity::class, 'model')->latest();
+    }
+
+    public function campusConnectStory(): MorphOne
+    {
+        return $this->morphOne(CampusConnectStory::class, 'model')->latest();
+    }
+
+    public function getCampusConnectStatusAttribute($value)
+    {
+        return config('constants.campus_connect_status_id.'.$value);
     }
 }

@@ -29,6 +29,11 @@ class OrganizationService
                 $organization_list = $organization_list->whereIn('organizations.category', $request->category);
             }
 
+            if ($request->has('is_verified') && !empty($request->is_verified)) {
+                $is_verified = ($request->is_verified == 'yes') ? '1' : '0';
+                $organization_list = $organization_list->where('organizations.is_verified', $is_verified);
+            }
+
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getOrganizationLikedList = OrganizationSocialActivitiesService::getOrganizationsBasedOnActivity('like');
                 if ($getOrganizationLikedList && $getOrganizationLikedList->count() > 0) {
@@ -90,6 +95,34 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchOrganizationIds($userId)
+    {
+        try {
+            $organizations = Organization::where('user_id', $userId)->pluck('id');
+
+            return $organizations;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchOrganizations($request, $organizationIds)
+    {
+        try {
+            $limit = config('site-settings.listing_limit');
+            $organization_list = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->whereIn('id', $organizationIds);
+            $fetchOrganizations = self::filterOrganizationList($request, $organization_list);
+            if ($fetchOrganizations->get()->isEmpty()) {
+                //Statically sending back if no org is available then sending back Prepr organization
+                $fetchOrganizations = Organization::select('id', 'uuid', 'title', 'slug', 'cover_image', 'profile_image')->where('id', '19');
+            }
+
+            return $fetchOrganizations->paginate(config('site-settings.switcher_listing_limit'));
+        } catch (\Exception $e) {
             return false;
         }
     }
