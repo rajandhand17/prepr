@@ -153,6 +153,7 @@ class ChallengeRepository implements ChallengeInterface
                         $organization,
                     );
                 }
+
                 return [
                     'createChallenge'                     => $createChallenge,
                     'createChallengeAchievement'          => $createChallengeAchievement,
