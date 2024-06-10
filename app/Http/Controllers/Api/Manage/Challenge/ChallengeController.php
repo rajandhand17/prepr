@@ -17,7 +17,6 @@ use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
