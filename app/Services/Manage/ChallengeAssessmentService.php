@@ -13,7 +13,15 @@ class ChallengeAssessmentService
     public static function uploadChallengeAssessment($attachment)
     {
         try {
-            $upload_assessment_image = FileUploadHelper::uploadImageToS3($attachment, 'assessment');
+            if (false !== mb_strpos($attachment->getMimeType(), 'image')) {
+                $upload_assessment_image = FileUploadHelper::uploadImageToS3($attachment, 'assessment');
+            } elseif (false !== mb_strpos($attachment->getMimeType(), 'video')) {
+                $upload_assessment_image = FileUploadHelper::uploadVideoToS3($attachment, 'assessment');
+            } elseif (false !== mb_strpos($attachment->getMimeType(), 'audio')) {
+                $upload_assessment_image = FileUploadHelper::uploadDocToS3($attachment, 'assessment');
+            } else {
+                $upload_assessment_image = FileUploadHelper::uploadDocToS3($attachment, 'assessment');
+            }
             if ($upload_assessment_image == false) {
                 return false;
             }
