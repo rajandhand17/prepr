@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
@@ -80,19 +81,20 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug,Request $request)
     {
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+            if (isset($checkResourceCollectionExistsOrNot->is_accessible) && $checkResourceCollectionExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
             if ($checkResourceCollectionExistsOrNot) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), $request->ip());
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
-
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

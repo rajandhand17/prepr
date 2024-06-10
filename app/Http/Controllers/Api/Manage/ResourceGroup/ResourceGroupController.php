@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
@@ -61,14 +62,15 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug,Request $request)
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+            if (isset($checkResourceGroupExistsOrNot->is_accessible) && $checkResourceGroupExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             if ($checkResourceGroupExistsOrNot) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, auth()->user(), $request->ip());
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 

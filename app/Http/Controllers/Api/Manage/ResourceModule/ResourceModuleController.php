@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
@@ -58,16 +59,16 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function show($slug)
+    public function show($slug,Request $request)
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-
             if ($checkResourceModuleExistsOrNot) {
-                return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
+               MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), $request->ip());
+               return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
@@ -222,7 +223,7 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function delete($slug)
+    public function delete($slug,Request $request)
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
@@ -232,7 +233,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id,$request);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
             }

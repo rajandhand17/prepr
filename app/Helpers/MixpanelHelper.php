@@ -180,19 +180,19 @@ class MixpanelHelper
                 case config('mixpanel.create_resource'): // Mixpanel data: create resource
                 case config('mixpanel.edit_resource'): // Mixpanel data: edit resource
                 case config('mixpanel.delete_resource'): // Mixpanel data: delete resource
-                    $organization = $data->organization_id;
+                $organization = $data->organization_id;
                     $data_array = array(
-                        'resource_title' => $data->res_title,
+                        'resource_title' => $data->title,
                         'resource_status' => $data->status,
-                        'resource_skills' => $data->resource_skills
+                        'resource_skills' => $data->skills
                     );
                     break;
                 case config('mixpanel.view_resource'): // Mixpanel data: view resource
                     $organization = $data->org_id;
                     $data_array = array(
-                        'resource_title' => $data->res_title,
+                        'resource_title' => $data->title,
                         'resource_status' => $data->status,
-                        'resource_skills' => $data->resource_skills
+                     //   'resource_skills' => $data->skills
                     );
                     break;
                 case config('mixpanel.view_resource_collection'): // Mixpanel data: view resource collection
@@ -366,7 +366,7 @@ class MixpanelHelper
                 }
                 $mp->identify($user->id);
                 if ($organization != null) {
-                    $organization_name = Organization::where('id', $organization)->first()->name;
+                    $organization_name = Organization::where('id', $organization)->first()->title;
                     $mp->register('organization_name', $organization_name);
                 }
                 $mp->track($event['event_name'], $data_array);

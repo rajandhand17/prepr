@@ -14,7 +14,7 @@ interface ResourceModuleInterface
 
     public function checkName($title);
 
-    public function deleteResourceModule($slug, $resource_module_id);
+    public function deleteResourceModule($slug, $resource_module_id,$request);
 
     public function addLinks($request, $resource_module_id);
 
