@@ -19,7 +19,7 @@ class ChallengeService
     public function getChallengeCountBasedOnOrganization($organizationId)
     {
         try {
-            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->count();
 
             return $challenge_count;
         } catch (Exception $e) {
@@ -80,20 +80,14 @@ class ChallengeService
                 }
             }
 
-            if ($request->has('privacy')) {
-                $privacy = null;
+            if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
-                    case 'yes':
-                        $privacy = config('constants.challenge_privacy.yes');
+                    case 'public':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '0');
                         break;
-                    case 'no':
-                        $privacy = config('constants.challenge_privacy.no');
+                    case 'private':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '1');
                         break;
-                    default:
-                        $privacy = null;
-                }
-                if ($privacy != null) {
-                    $challenge_list = $challenge_list->where('privacy', $privacy);
                 }
             }
 

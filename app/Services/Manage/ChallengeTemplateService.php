@@ -51,9 +51,12 @@ class ChallengeTemplateService
                 }
             }
 
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $challenge_template_list = $challenge_template_list->whereIn('challenge_templates.category_id', $request->category);
+            }
+
             if ($request->has('status') && !empty($request->status)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-                $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
+                $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
                 if (!empty($getChallengeRedeemedIds)) {
                     switch ($request->status) {
                         case 'redeemed':
@@ -74,13 +77,6 @@ class ChallengeTemplateService
             }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $challenge_template_list = $challenge_template_list->whereIn('level_id', $request->level_id);
-            }
-
-            if ($request->has('organization_id') && !empty($request->organization_id) && is_array($request->organization_id)) {
-                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $challenge_template_list = $challenge_template_list->whereIn('organization_id', $getOrganizationIds);
-                }
             }
 
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

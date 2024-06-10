@@ -18,6 +18,7 @@ class ProjectExternalLinkResource extends JsonResource
         return [
             'id'        => $this->id,
             'link'      => $this->social_media_link,
+            'title'     => $this->social_link['title'],
             'image'     => $this->social_link['icon'],
         ];
     }
