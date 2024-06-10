@@ -26,7 +26,7 @@ class UpdateChallengeAssessmentRequest extends FormRequest
         $base_rules = [
             'assessment_type'       => 'in:open,closed,ai',
             'guidelines'            => 'required_if:assessment_type,open,closed,ai',
-            'attachments'           => 'required_if:assessment_type,open,closed,ai|mimes:jpeg,jpg,png,webp|max:1024',
+            'attachments'           => 'max:5120',
         ];
 
         if ($this->request->get('assessment_type') == 'closed') {

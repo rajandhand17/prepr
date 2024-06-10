@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeFromResourceUsingAIPreviewRequest;
@@ -34,7 +35,8 @@ class ChallengeController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
@@ -89,7 +91,7 @@ class ChallengeController extends AppBaseController
                 $upload_achievement_image = $uploaded_achievement_image;
             }
 
-            $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
+            $upload_assessment_attachment = null;
             if ($request->attachments !== null) {
                 $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
                 if (!$uploaded_assessment_attachment) {
@@ -274,6 +276,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
+            $update_assessment_attachment = null;
             if ($checkComponentBasedOnSlug->challenge_assessment) {
                 $update_assessment_attachment = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment->attachments);
             }
