@@ -130,7 +130,7 @@ class ChallengeController extends AppBaseController
                 if ($challenge->organization_id != $organization->id) {
                     return $this->sendError(__('responses.challenge_switcher_error'), 403);
                 }
-                if ($challenge->is_accessible === '0') {
+                if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
 
@@ -158,7 +158,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
@@ -214,7 +214,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $challenge = $this->challengeRepository->deleteChallenge($checkComponentBasedOnSlug->id, $request);
@@ -271,7 +271,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $getChallengeAssessment = [];
@@ -318,7 +318,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $update_assessment_attachment = null;
@@ -360,7 +360,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             // checks creation limits of the Challenge
@@ -398,7 +398,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 
@@ -461,7 +461,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 
@@ -519,7 +519,7 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             $challengeAnnouncement = $this->challengeRepository->deleteChallengeAnnouncement($request->announcement_id);

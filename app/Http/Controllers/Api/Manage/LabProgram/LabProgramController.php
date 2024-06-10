@@ -67,7 +67,7 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->organization_id != $organization->id) {
                     return $this->sendError(__('responses.lab_program_switcher_error'), 403);
                 }
-                if ($labProgram->is_accessible === '0') {
+                if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
 
@@ -139,7 +139,7 @@ class LabProgramController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_program_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
@@ -212,7 +212,7 @@ class LabProgramController extends AppBaseController
             if ($checkLabProgramSlugExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_program_switcher_error'), 403);
             }
-            if ($checkLabProgramSlugExistsOrNot->is_accessible === '0') {
+            if ($checkLabProgramSlugExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $deletLabProgram = $this->labProgramRepository->delete($slug);

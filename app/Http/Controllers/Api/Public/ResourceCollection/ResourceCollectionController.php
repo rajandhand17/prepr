@@ -45,7 +45,7 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
-                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
 
@@ -63,7 +63,7 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot !== null) {
-                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->resourceCollectionRepository->getColumnNameValue($action);
@@ -94,7 +94,7 @@ class ResourceCollectionController extends AppBaseController
             if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+            if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
             $addRating = $this->resourceCollectionRepository->addRating($checkResourceCollectionExistsOrNot->id, $request);

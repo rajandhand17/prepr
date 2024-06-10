@@ -69,7 +69,7 @@ class LabController extends AppBaseController
                 if ($lab->organization_id != $organization->id) {
                     return $this->sendError(__('responses.lab_switcher_error'), 403);
                 }
-                if ($lab->is_accessible === '0') {
+                if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
 
@@ -146,7 +146,7 @@ class LabController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
@@ -192,7 +192,7 @@ class LabController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $lab = $this->labRepository->deleteLab($checkComponentBasedOnSlug->id, $request);

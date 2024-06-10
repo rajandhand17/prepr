@@ -70,7 +70,7 @@ class ChallengeTemplateController extends AppBaseController
                 return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
 
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 

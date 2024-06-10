@@ -66,7 +66,7 @@ class LabMarketplaceController extends AppBaseController
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
             }
 
-            if ($checkLabExistsOrNot->is_accessible === '0') {
+            if ($checkLabExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
 

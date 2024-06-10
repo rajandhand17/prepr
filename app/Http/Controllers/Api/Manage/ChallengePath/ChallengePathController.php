@@ -112,7 +112,7 @@ class ChallengePathController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
@@ -188,7 +188,7 @@ class ChallengePathController extends AppBaseController
             if ($checkChallengePathSlugExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
             }
-            if ($checkChallengePathSlugExistsOrNot->is_accessible === '0') {
+            if ($checkChallengePathSlugExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
             }
             $deleteChallengePath = $this->challengePathRepository->delete($checkChallengePathSlugExistsOrNot->id);
@@ -215,7 +215,7 @@ class ChallengePathController extends AppBaseController
                 if ($challengePath->organization_id != $organization->id) {
                     return $this->sendError(__('responses.challenge_path_switcher_error'), 403);
                 }
-                if ($challengePath->is_accessible === '0') {
+                if ($challengePath->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
 
