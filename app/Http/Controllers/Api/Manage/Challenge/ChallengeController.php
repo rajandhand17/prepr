@@ -64,8 +64,14 @@ class ChallengeController extends AppBaseController
     public function create(CreateChallengeRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
@@ -100,7 +106,7 @@ class ChallengeController extends AppBaseController
                 $upload_assessment_attachment = $uploaded_assessment_attachment;
             }
 
-            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
 
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
@@ -117,6 +123,14 @@ class ChallengeController extends AppBaseController
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if ($challenge) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.organization_not_found'), 404);
+                }
+                if ($challenge->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.challenge_switcher_error'), 403);
+                }
                 if ($challenge->is_accessible === '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
@@ -136,6 +150,14 @@ class ChallengeController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
@@ -167,7 +189,7 @@ class ChallengeController extends AppBaseController
                 $update_assessment_attachment = $updated_assessment_attachment;
             }
 
-            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment);
+            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, organization);
             if ($updateChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($updateChallenge), __('responses.challenge_update_successfully'), 200);
             }
@@ -184,6 +206,14 @@ class ChallengeController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
@@ -234,6 +264,14 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
@@ -273,6 +311,14 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
@@ -303,21 +349,20 @@ class ChallengeController extends AppBaseController
     public function cloneChallenge($slug, Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
-            }
-
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
-            }
-
-            if ($checkComponentBasedOnSlug->organization_id !== $organization->id) {
-                return $this->sendError(__('responses.organization_challlenge_not_same'), 404);
             }
             // checks creation limits of the Challenge
             $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
@@ -345,6 +390,14 @@ class ChallengeController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
             }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
@@ -401,6 +454,14 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
@@ -451,6 +512,14 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
             if ($checkComponentBasedOnSlug->is_accessible === '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
@@ -468,7 +537,8 @@ class ChallengeController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }

@@ -1187,5 +1187,6 @@
     "responses.unified_members_field_must_be_array": "The member field should be array",
     "responses.unified_valid_email_pattern": "The email should be valid",
     "responses.not_visible_for_others": "This Account is private, You cannot access this",
-    "responses.any_pitch_template": "Any pitch template"
+    "responses.any_pitch_template": "Any pitch template",
+    "responses.challenge_switcher_error": "The Challenge you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Challenge."
 }
