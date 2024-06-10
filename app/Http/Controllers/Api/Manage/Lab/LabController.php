@@ -13,7 +13,6 @@ use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
