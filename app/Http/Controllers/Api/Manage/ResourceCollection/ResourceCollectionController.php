@@ -10,7 +10,6 @@ use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
