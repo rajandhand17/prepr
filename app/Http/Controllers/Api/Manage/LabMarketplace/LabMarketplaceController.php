@@ -63,11 +63,11 @@ class LabMarketplaceController extends AppBaseController
             }
 
             if ($checkLabExistsOrNot->organization_id != $organization->id) {
-                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
             }
 
             if ($checkLabExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
 
             $checkLabMarketplace = $this->labMarketplaceRepository->getCheckLabUuid($checkLabExistsOrNot->uuid);
