@@ -1190,5 +1190,6 @@
     "responses.any_pitch_template": "Any pitch template",
     "responses.challenge_switcher_error": "The Challenge you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Challenge.",
     "responses.challenge_path_switcher_error": "The Challenge Path you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Challenge Path.",
+    "responses.lab_switcher_error": "The Lab you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Lab.",
     "responses.lab_program_switcher_error": "The Lab Program you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Lab Program."
 }
