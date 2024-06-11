@@ -16,8 +16,10 @@ class OrganizationExternalLinkResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'social_media_link' => $this->social_media_link,
-            'social_link_id'    => $this->social_link_id,
+            'id'        => $this->id,
+            'link'      => $this->social_media_link,
+            'title'     => $this->social_link['title'],
+            'image'     => $this->social_link['icon'],
         ];
     }
 }
