@@ -28,46 +28,6 @@
             <!-- /.card-header -->
                 <div class="card-body">
                     {!!Form::open(array('method'=>'POST','route'=>'organization.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
-                        <!-- <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="first_name">First Name</label>
-                                    <input type="text" name="first_name" class="form-control" id="first_name" placeholder="Enter First Name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="last_name">Last Name</label>
-                                    <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Enter Last Name" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="username">User Name</label>
-                                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter User Name" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="email">E-Mail Address</label>
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Enter E-Mail Address" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" name="password" class="form-control" id="password" placeholder="Enter Password" required>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                    <a class="btn btn-danger mr-1" href="{{ route('users.index') }}"><i class="icon-cross2"></i> Cancel</a>
-                                </div>
-                            </div>
-                        </div> -->
                         @include('maestro.organization.form')
                         <div class="form-actions mt-10">
                             {!!Form::submit('save',array('class'=>'btn btn-primary mr-10'))!!}

@@ -185,10 +185,10 @@ class OrganizationController extends Controller
                 return redirect()->route('organization.index')->with('success', 'Organization Updated successfully');
             }
             DB::rollback();
-            return redirect()->route('organization.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('organization.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('organization.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
