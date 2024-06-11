@@ -9,7 +9,6 @@ use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
-use Exception;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
@@ -667,38 +666,20 @@ class OrganizationController extends AppBaseController
         }
     }
 
-    public function selectPlan($slug, Request $request)
-    {
-        try {
-            if (!in_array($request->plan_name, ['seed_plan_yearly', 'sprout_plan_yearly', 'budd_plan_yearly', 'bloom_plan_yearly', 'unlimited_plan'])) {
-                return $this->sendError(__('responses.handler_bad_request'), 402);
-            }
-
-            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if (!$checkOrganization) {
-                return $this->sendError(__('responses.organization_not_exists'), 422);
-            }
-
-            $selectPlan = $this->organizationRepository->selectPlan($checkOrganization, $request);
-            if ($selectPlan) {
-                return $this->sendResponse(OrganizationChargebeeLimitResource::make($checkOrganization), __('responses.plan_selected'));
-            }
-
-            return $this->sendError(__('responses.plan_not_selected'), 400);
-        } catch (Exception $e) {
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
     public function subscriptionDetails($slug)
     {
         try {
-            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
-            if (!$checkOrganization) {
+            $organizationDetail = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!$organizationDetail) {
                 return $this->sendError(__('responses.organization_not_exists'), 422);
             }
 
-            return $this->sendResponse(OrganizationChargebeeLimitResource::make($checkOrganization), __('responses.plan_details_retrived'));
+            $planData = $this->organizationRepository->planData($organizationDetail);
+            if ($planData) {
+                return $this->sendResponse(OrganizationChargebeeLimitResource::make($organizationDetail), __('responses.plan_details_retrived'));
+            }
+
+            return $this->sendError(__('responses.plan_not_retrived'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

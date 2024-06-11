@@ -33,9 +33,11 @@ class UserResource extends JsonResource
             $fetchOrganization = OrganizationService::fetchOrganizationBasedOnUserId($this->id);
         }
         if ($fetchOrganization) {
+            $upgrade_plan_enable = ($this->id == $fetchOrganization->user_id) ? 'yes' : 'no';
             $organization_details['id'] = $fetchOrganization->uuid;
             $organization_details['title'] = $fetchOrganization->title;
             $organization_details['slug'] = $fetchOrganization->slug;
+            $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
         }
         $memberManagement = new MemberManagementService();
 

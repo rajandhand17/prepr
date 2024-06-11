@@ -4,7 +4,9 @@ namespace App\Repositories\Api\Manage\ResourceGroup;
 
 interface ResourceGroupInterface
 {
-    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image);
+    public function getResourceGroupCountBasedOnOrganization($organizationId);
+
+    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId);
 
     public function uploadResourceGroupCoverImage($cover_image);
 
@@ -16,7 +18,9 @@ interface ResourceGroupInterface
 
     public function checkName($slug);
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image);
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId);
 
     public function getResourceGroupList($request, $organization);
+
+    public function getResourceGroupListName($request, $organization);
 }

@@ -25,7 +25,7 @@ class ResourceCollectionService
         }
     }
 
-    public static function createResourceCollection($request, $upload_cover_image)
+    public static function createResourceCollection($request, $upload_cover_image, $organizationId)
     {
         try {
             $status = config('constants.resource_collection_status.draft');
@@ -61,13 +61,12 @@ class ResourceCollectionService
                 default:
                     $is_accessible = config('constants.resource_collection_is_accessible.no');
             }
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceCollection = new ResourceCollection();
             $slug = UtilityHelper::generateSlug($request->title, $resourceCollection);
             $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceCollection->language = $request->language;
             $resourceCollection->user_id = auth()->user()->id;
-            $resourceCollection->organization_id = $organization->id;
+            $resourceCollection->organization_id = $organizationId;
             $resourceCollection->title = $request->title;
             $resourceCollection->slug = $slug;
             $resourceCollection->description = $request->description;
@@ -117,11 +116,10 @@ class ResourceCollectionService
         }
     }
 
-    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    public function updateResourceCollection($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
             $resourceCollection = ResourceCollection::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($resourceCollection !== null) {
                 $status = $resourceCollection->status;
                 $privacy = $resourceCollection->privacy;
@@ -159,7 +157,7 @@ class ResourceCollectionService
                         $is_accessible = config('constants.resource_collection_is_accessible.no');
                 }
                 $resourceCollection->language = ($request->has('language')) ? $request->language : $resourceCollection->language;
-                $resourceCollection->organization_id = $organization->id;
+                $resourceCollection->organization_id = $organizationId;
                 $resourceCollection->title = ($request->has('title')) ? $request->title : $resourceCollection->title;
                 $resourceCollection->description = ($request->has('description')) ? $request->description : $resourceCollection->description;
                 $resourceCollection->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceCollection->cover_image;
