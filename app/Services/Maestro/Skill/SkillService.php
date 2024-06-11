@@ -94,7 +94,6 @@ class SkillService
             }
             return false;
         } catch (Exception $e) {
-            dd($e);
             return false;
         }
     }

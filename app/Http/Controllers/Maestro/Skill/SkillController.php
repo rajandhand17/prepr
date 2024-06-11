@@ -27,7 +27,6 @@ class SkillController extends Controller
         try {
             $skills = Skill::orderBy('id', 'DESC');
             if (request()->ajax()) {
-                //<a href="#" class="btn btn-primary btn-sm viewDetail" data-id="'.$template->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;
                 $i = 1;
                 return DataTables::eloquent($skills)
                     ->addIndexColumn()
@@ -65,7 +64,6 @@ class SkillController extends Controller
                     $columName = $columName . '_title';
                 }
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Skill Title'];
-               // dd($singleLangCol );
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
@@ -73,9 +71,7 @@ class SkillController extends Controller
             view()->share('module_name', 'Challenge');
             $languages = Language::where('status', 1)->get();
             return view('maestro.skills.index', compact('html', 'languages'));
-            // return view('admin.categories.index', compact('categories'));
         } catch (Exception $e) {
-            dd($e);
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -89,7 +85,6 @@ class SkillController extends Controller
             $languages = Language::where('status', 1)->get();
             return view('maestro.skills.create', compact('languages'));
         } catch (Exception $e) {
-            dd($e);
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -108,7 +103,6 @@ class SkillController extends Controller
             DB::rollback();
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            dd($e);
             DB::rollback();
             return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }

@@ -54,11 +54,6 @@
                             <td style="width: 25%;"><code>{{$lableName}}</code></td>
                             <td>{{$skill->$inputName}}</td>
                         </tr>
-                <!-- <div class="form-group {{($errors->has('skill')) ? 'has-error' : ''}}">
-                    {!! Form::label($lableName, 'Enter '.$lableName, ['class' => 'control-label']) !!}
-                    {!! Form::text($inputName,null, ['class' => 'form-control', 'id'=>'skill']) !!}
-                    <span class="help-block">{{ $errors->first('skill')}}</span>
-                </div> -->
             @endforeach
         @endif
                         
