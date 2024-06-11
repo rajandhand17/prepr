@@ -9,7 +9,6 @@ use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
-use Exception;
 use Illuminate\Http\Request;
 
 class OrganizationController extends AppBaseController
