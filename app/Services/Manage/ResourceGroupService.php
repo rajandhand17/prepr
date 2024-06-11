@@ -38,7 +38,7 @@ class ResourceGroupService
         }
     }
 
-    public static function createResourceGroup($request, $upload_cover_image)
+    public static function createResourceGroup($request, $upload_cover_image, $organizationId)
     {
         try {
             $status = config('constants.resource_group_status.draft');
@@ -64,13 +64,12 @@ class ResourceGroupService
                 default:
                     $privacy = null;
             }
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceGroup = new ResourceGroup();
             $slug = UtilityHelper::generateSlug($request->title, $resourceGroup);
             $resourceGroup->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
-            $resourceGroup->organization_id = $organization->id;
+            $resourceGroup->organization_id = $organizationId;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
@@ -122,12 +121,10 @@ class ResourceGroupService
         }
     }
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image)
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
             $resourceGroup = ResourceGroup::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-
             $status = $resourceGroup->status;
             $privacy = $resourceGroup->privacy;
             switch($request->status) {
@@ -152,9 +149,8 @@ class ResourceGroupService
                 default:
                     $privacy = null;
             }
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
-            $resourceGroup->organization_id = $organization->id;
+            $resourceGroup->organization_id = $organizationId;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $request->media_type : $resourceGroup->media_type;

@@ -52,11 +52,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModule($request, $upload_cover_image)
+    public function createResourceModule($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+            $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
 
@@ -169,11 +169,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function updateResourceModule($slug, $request, $upload_cover_image)
+    public function updateResourceModule($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
-            $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
-                $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image);
+            $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
+                $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
 

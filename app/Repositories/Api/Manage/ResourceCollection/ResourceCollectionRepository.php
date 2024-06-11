@@ -36,11 +36,11 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function createResourceCollection($request, $upload_cover_image)
+    public function createResourceCollection($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image);
+            $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
                 $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
@@ -94,11 +94,11 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
-    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    public function updateResourceCollection($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
-            $updateResourceCollection = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
-                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image);
+            $updateResourceCollection = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
+                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
                 $updateResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->updateCollectionModuleTagsGroups($request, $updateResourceCollection->id);
