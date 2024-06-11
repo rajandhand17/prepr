@@ -115,15 +115,22 @@ class MixpanelHelper
                     );
                     break;
                 case config('mixpanel.join_lab'): // Mixpanel data: join lab
-                    $organization = $data->organisation;
+                    $organization = $data->organization_id;
                     $data_array = array(
                         "lab_privacy" => $data->privacy,
                         "lab_title" => $data->title,
                         'lab_category' => Category::find($data->category)->name
                     );
                     break;
+                case config('mixpanel.view_lab'):
+                    $organization = $data->organization_id;
+                    $data_array = array(
+                        'title' => $data->title,
+                        'status' => $data->status,
+                    );
+                    break;
                 case config('mixpanel.leave_lab'): // Mixpanel data: leave lab
-                    $organization = $data->organisation;
+                    $organization = $data->organisation_id;
                     $quantity = -1;
                     $data_array = array(
                         "lab_privacy" => $data->privacy,
@@ -212,9 +219,14 @@ class MixpanelHelper
 
                 case config('mixpanel.create_org'): // Mixpanel data: create organization
                     $data_array = array(
-                        'org_name' => $data->name,
-                        "org_category" => Category::where('id', $data->category)->first()->name,
-                        'org_plan' => $data->plan
+                        'org_name' => $data->title,
+                        "org_category" => Category::where('id', $data->category)->first()->title,
+                    );
+                    break;
+                case config('mixpanel.view_org'): // Mixpanel data: view organization
+                    $data_array = array(
+                        'org_name' => $data->title,
+                        "org_category" => Category::where('id', $data->category)->first()->title,
                     );
                     break;
                 case config('mixpanel.send_trophy'): // Mixpanel data: send trophy (via maestro)

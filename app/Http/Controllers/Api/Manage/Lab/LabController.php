@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
 use App\Http\Requests\Manage\Lab\CreateLabUsingAIPreviewRequest;
@@ -63,6 +64,7 @@ class LabController extends AppBaseController
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             if ($lab) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(),request()->ip());
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
 
