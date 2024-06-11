@@ -334,6 +334,14 @@ class ResourceCollectionService
         }
     }
 
+    public static function getResourceCollectionsBasedOnId($id)
+    {
+        try {
+            return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function getResourceCollectionGetBasedId($id)
     {
         try {
