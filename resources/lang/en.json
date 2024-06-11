@@ -1136,6 +1136,7 @@
     "responses.plan_selected": "Congratulations, you have successfully subscribed.",
     "responses.plan_details_retrived": "Organization subscription details retrieved successfully.",
     "responses.plan_not_selected": "Sorry, Something went wrong will subscribing the plan, please try later",
+    "responses.plan_not_retrived": "Sorry, Something went wrong will fetching the plan details, please try later",
     "responses.resource_modules_exists": "This resource module does not exist!",
     "responses.is_ai_created_required": "is_ai_created value is required!",
     "responses.project_assessment_received": "The project assessment has been received successfully!",
