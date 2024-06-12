@@ -37,7 +37,6 @@ class ResourceCollectionResource extends JsonResource
         $organization_id = null;
         if ($this->resource_modules) {
             foreach ($this->resource_modules as $resource_module) {
-                $resourceModuleService=ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
                 $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
                 $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
                 $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
