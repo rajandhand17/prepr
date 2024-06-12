@@ -35,7 +35,6 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
         if ($this->resource_modules) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
