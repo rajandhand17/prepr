@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
-use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use App\Models\PitchTemplate;
 use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
@@ -801,16 +800,6 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getRandomChallenges($challengeIds,$limit)
-    {
-        try {
-            $challengeIds=Challenge::select('id')->where('user_id', '!=', auth()->user()->id)->whereNotIn('id',$challengeIds)->pluck('id')->random(min($limit, $challengeIds->count()));
-            return $challengeIds;
-        }catch (Exception $e){
             return false;
         }
     }
