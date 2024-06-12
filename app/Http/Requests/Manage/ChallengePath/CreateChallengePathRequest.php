@@ -28,7 +28,6 @@ class CreateChallengePathRequest extends FormRequest
             'status'                  => 'required|in:draft,publish,archive',
             'title'                   => 'required|unique:challenge_paths,title',
             'description'             => 'required',
-            'organization_id'         => 'required|exists:organizations,uuid',
             'category_id'             => 'required|exists:categories,id',
             'level_id'                => 'required|exists:levels,id',
             'duration_id'             => 'required|exists:durations,id',
@@ -73,8 +72,6 @@ class CreateChallengePathRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.challenge_path_title_unique'),
-            'organization_id.required'       => __('responses.organization_id_required'),
-            'organization_id.exists'         => __('responses.organization_not_exists'),
             'description.required'           => __('responses.description_required'),
             'category_id.required'           => __('responses.category_id_required'),
             'category_id.exists'             => __('responses.category_not_found'),

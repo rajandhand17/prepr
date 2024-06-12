@@ -67,11 +67,11 @@ class LabProgramRepository implements LabProgramInterface
         }
     }
 
-    public function createLabProgram($request, $upload_media, $upload_achievement_image)
+    public function createLabProgram($request, $upload_media, $upload_achievement_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image) {
-                $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media);
+            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image, $organizationId) {
+                $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media, $organizationId);
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->createLabProgramSkillsGroupsStack($request, $createdLabProgram->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $labProgramAchievement = $this->labProgramAchievementService->createLabProgramAchievement($request, $createdLabProgram->id, $upload_achievement_image);
@@ -101,11 +101,11 @@ class LabProgramRepository implements LabProgramInterface
         }
     }
 
-    public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image)
+    public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image) {
-                $updateLabProgram = $this->labProgramService->updateLabProgram($slug, $request, $upload_media);
+            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image, $organizationId) {
+                $updateLabProgram = $this->labProgramService->updateLabProgram($slug, $request, $upload_media, $organizationId);
                 if ($request->is_achievement_enabled == 'yes') {
                     $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);
                 }

@@ -45,7 +45,7 @@ class ChallengePathController extends AppBaseController
         try {
             $challengePath = $this->challengePathRepository->getChallengePathBasedOnSlug($slug);
             if ($challengePath) {
-                if ($challengePath->is_accessible === '0') {
+                if ($challengePath->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
 
@@ -63,7 +63,7 @@ class ChallengePathController extends AppBaseController
         try {
             $challengePath = $this->challengePathRepository->getChallengePathBasedOnSlug($slug);
             if ($challengePath !== null) {
-                if ($challengePath->is_accessible === '0') {
+                if ($challengePath->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->challengePathRepository->getColumnNameValue($action);
