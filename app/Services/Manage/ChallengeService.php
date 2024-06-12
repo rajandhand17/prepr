@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use App\Models\PitchTemplate;
 use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
@@ -692,14 +693,18 @@ class ChallengeService
             $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
             $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
-            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
+            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique()->take('11');
             if (!empty($challengeIds)) {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->take(config('site-settings.explore_page_limit_max'));
+                $challenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_min'));
             }
-
-            return $challenges->get();
+            if(count($challenges)<config('site-settings.explore_page_limit_max')){
+                $limit=config('site-settings.explore_page_limit_max')-count($challenges);
+                $getNewChallengeIds=Challenge::where('user_id', '!=', auth()->user()->id)->whereNotIn('id',$challenges)->pluck('id')->take($limit);
+                $challenges=$challenges->merge($getNewChallengeIds)->unique();
+            }
+            return Challenge::whereIn('id',$challenges)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (Exception $e) {
             return false;
         }
@@ -796,6 +801,16 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getRandomChallenges($challengeIds,$limit)
+    {
+        try {
+            $challengeIds=Challenge::select('id')->where('user_id', '!=', auth()->user()->id)->whereNotIn('id',$challengeIds)->pluck('id')->random(min($limit, $challengeIds->count()));
+            return $challengeIds;
+        }catch (Exception $e){
             return false;
         }
     }
