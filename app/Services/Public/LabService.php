@@ -186,8 +186,7 @@ class LabService
                 $labNewIds=Lab::where('user_id', '!=', auth()->user()->id)->whereNotIn('id',$lab)->pluck('id')->take($limit);
                 $lab=$lab->merge($labNewIds)->unique();
             }
-            $labList = Lab::whereIn('id',$lab)->take(config('site-settings.explore_page_limit_max'));
-            return $labList->get();
+            return Lab::whereIn('id',$lab)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (\Exception $e) {
             return false;
         }
