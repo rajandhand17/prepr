@@ -16,4 +16,11 @@ interface ScormInterface
      * @return mixed
      */
     public function upload(string $modelType, int $modelId, UploadedFile $file, ?Scorm $existing = null);
+
+    /**
+     * @param Scorm $scorm
+     *
+     * @return mixed
+     */
+    public function delete(Scorm $scorm);
 }

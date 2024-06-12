@@ -36,7 +36,6 @@ class UpdateChallengeRequest extends FormRequest
             'title'                              => 'required_if:request_type,publish|max:255|unique:challenges,title,'.$challenge->id,
             'request_type'                       => 'required|in:draft,publish,archive',
             'description'                        => 'required_if:request_type,publish|nullable',
-            'organization_id'                    => 'required|exists:organizations,uuid',
             'category_id'                        => 'required|exists:categories,id',
             'duration_id'                        => 'required|exists:durations,id',
             'level_id'                           => 'required|exists:levels,id',
@@ -226,8 +225,6 @@ class UpdateChallengeRequest extends FormRequest
     public function messages()
     {
         return [
-            'organization_id.required'                         => __('responses.organization_id_required'),
-            'organization_id.exists'                           => __('responses.organization_not_found'),
             'category_id.required'                             => __('responses.category_id_required'),
             'category_id.exists'                               => __('responses.category_not_found'),
             'duration_id.required'                             => __('responses.duration_id_required'),

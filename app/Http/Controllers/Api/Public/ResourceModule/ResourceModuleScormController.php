@@ -28,7 +28,7 @@ class ResourceModuleScormController extends AppBaseController
             if (!$resource) {
                 return $this->sendError(__('responses.resource_module_not_found'), Response::HTTP_NOT_FOUND);
             }
-            if ($resource->is_accessible === '0') {
+            if ($resource->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
 
