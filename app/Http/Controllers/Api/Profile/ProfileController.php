@@ -46,7 +46,6 @@ class ProfileController extends AppBaseController
                         return $this->sendError(__('responses.not_visible_for_others'));
                     }
                 }
-
                 return $this->sendResponse(ProfileResource::make($getUserDetails), __('responses.found_user_profile_detail'));
             }
 
