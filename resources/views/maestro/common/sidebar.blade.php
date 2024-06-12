@@ -162,7 +162,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('skills.index') }}" class="nav-link">
+              <a href="{{ route('skillstack.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Stacks</p>
               </a>
