@@ -100,4 +100,23 @@ class OrganizationCustomizationService
             return false;
         }
     }
+
+    public static function organizationCustomization($organizationId)
+    {
+        try {
+            $organizationCustomizationCheck = OrganizationCustomization::where('organization_id', $organizationId)->first();
+            if ($organizationCustomizationCheck) {
+                $organizationCustomizationCheck = OrganizationCustomization::where('organization_id', $organizationId)->delete();
+                if (!$organizationCustomizationCheck) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -316,4 +316,23 @@ class LabProgramService
             return false;
         }
     }
+
+    public static function deleteOrganizationLabProgram($organizationId)
+    {
+        try {
+            $fetchOrganizationLabPrograms = LabProgram::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationLabPrograms)) {
+                foreach ($fetchOrganizationLabPrograms as $organizationLabProgram) {
+                    $deleteOrganizationLabProgram = self::delete($organizationLabProgram->slug);
+                    if (!$deleteOrganizationLabProgram) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

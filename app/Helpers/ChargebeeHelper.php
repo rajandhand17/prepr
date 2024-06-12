@@ -380,4 +380,25 @@ class ChargebeeHelper
             return false;
         }
     }
+
+    public static function deleteOrganizationSubscription($organizationID)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $fetchAllSubscriptions = Subscription::all([
+                'cf_org_id[is]' => $organizationID,
+            ]);
+            if ($fetchAllSubscriptions->count() > 0) {
+                $subscriptionData = $fetchAllSubscriptions[0]->subscription();
+                $result = Subscription::delete($subscriptionData->id);
+                $subscription = $result->subscription();
+                $customer = $result->customer();
+                $card = $result->card();
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

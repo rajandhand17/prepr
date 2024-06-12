@@ -306,4 +306,23 @@ class ChallengeTemplateService
             return false;
         }
     }
+
+    public static function deleteOrganizationChallengeTemplate($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengeTemplates = ChallengeTemplate::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationChallengeTemplates)) {
+                foreach ($fetchOrganizationChallengeTemplates as $organizationChallengeTemplate) {
+                    $deleteOrganizationChallengeTemplate = self::deleteChallengeTemplate($organizationChallengeTemplate->slug, $organizationChallengeTemplate->id);
+                    if (!$deleteOrganizationChallengeTemplate) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
