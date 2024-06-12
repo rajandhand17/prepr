@@ -44,6 +44,7 @@ class UpdateOrganizationRequest extends FormRequest
             'external_link_ids'         => 'array|exists:social_links,id|required',
             'external_links.*'          => 'url',
             'external_link_ids.*'       => 'numeric',
+            'enable_custom_login_and_registration'  => 'required|in:yes,no,none',
         ];
 
         if ($this->request->has('organization_address')) {
@@ -63,6 +64,14 @@ class UpdateOrganizationRequest extends FormRequest
             $base_rules['organization_members.*.name'] = 'required|string';
             $base_rules['organization_members.*.position'] = 'required|string';
             $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024';
+        }
+
+        if ($this->input('enable_custom_login_and_registration') == 'yes') {
+            $base_rules['use_main_org_logo']        = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
+            $base_rules['custom_login_url']         = 'required_if:enable_custom_login_and_registration,yes';
+            $base_rules['custom_logo_image']        = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['custom_hero_image']        = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['custom_background_color'] = ['regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'];
         }
 
         return $base_rules;

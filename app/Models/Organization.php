@@ -158,4 +158,9 @@ class Organization extends LaratrustTeam
     {
         return $this->hasMany(OrganizationExternalLink::class, 'organization_id', 'id');
     }
+
+    public function customization_login_register()
+    {
+        return $this->hasOne(OrganizationCustomization::class, 'organization_id', 'id');
+    }
 }

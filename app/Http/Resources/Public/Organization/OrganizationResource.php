@@ -54,6 +54,7 @@ class OrganizationResource extends JsonResource
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_details'         => OrganizationChargebeeLimitResource::make($this),
+            'external_links'               => OrganizationExternalLinkResource::collection($this->external_links),
         ];
     }
 }

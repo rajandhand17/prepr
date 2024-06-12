@@ -37,4 +37,6 @@ interface OrganizationInterface
     public function selectPlan($organization, $request);
 
     public function planData($organizationData);
+
+    public function createOrganizationCustomLoginRegistration($request, $organizationId);
 }

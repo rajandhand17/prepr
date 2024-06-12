@@ -59,6 +59,7 @@ class OrganizationResource extends JsonResource
             'liked'                        => $this->liked(),
             'external_links'               => OrganizationExternalLinkResource::collection($this->external_links),
             'organization_details'         => OrganizationChargebeeLimitResource::make($this),
+            'custom_login_register'         => OrganizationCustomizationResource::make($this->customization_login_register),
         ];
     }
 }
