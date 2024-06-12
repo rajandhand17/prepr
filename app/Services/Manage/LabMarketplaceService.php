@@ -40,6 +40,10 @@ class LabMarketplaceService
                 $lab_marketplace_list = $lab_marketplace_list->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
+                $lab_marketplace_list = $lab_marketplace_list->whereIn('lab_marketplace.category_id', $request->category);
+            }
+
             if ($request->has('organization_ids') && !empty($request->organization_ids) && is_array($request->organization_ids)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_ids)->pluck('id');
                 if (!empty($getOrganizationIds)) {
