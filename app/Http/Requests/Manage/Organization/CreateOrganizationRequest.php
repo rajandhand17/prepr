@@ -60,12 +60,13 @@ class CreateOrganizationRequest extends FormRequest
         }
 
         if ($this->input('enable_custom_login_and_registration') == 'yes') {
-            $base_rules['use_main_org_logo']        = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
-            $base_rules['custom_login_url']         = 'required_if:enable_custom_login_and_registration,yes';
-            $base_rules['custom_logo_image']        = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
-            $base_rules['custom_hero_image']        = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['use_main_org_logo'] = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
+            $base_rules['custom_login_url'] = 'required_if:enable_custom_login_and_registration,yes';
+            $base_rules['custom_logo_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['custom_hero_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
             $base_rules['custom_background_color'] = ['regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'];
         }
+
         return $base_rules;
     }
 

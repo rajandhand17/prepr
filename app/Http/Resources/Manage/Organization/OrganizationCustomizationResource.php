@@ -40,6 +40,7 @@ class OrganizationCustomizationResource extends JsonResource
         }
         $custom_logo_image = ($this->getRawOriginal('custom_logo_image') != null) ? $this->custom_logo_image : null;
         $custom_hero_image = ($this->getRawOriginal('custom_hero_image') != null) ? $this->custom_hero_image : null;
+
         return [
             'enable_custom_login_and_registration'          => $enable_custom_login_and_registration,
             'use_main_org_logo'                             => $use_main_org_logo,
