@@ -30,7 +30,7 @@ class ResourceModuleScormController extends AppBaseController
     {
         try {
             $resource = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($resource->is_accessible === '0') {
+            if ($resource->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             if (!$resource) {

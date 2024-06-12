@@ -46,9 +46,7 @@ class LabMarketplaceService
 
             if ($request->has('organization_ids') && !empty($request->organization_ids) && is_array($request->organization_ids)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_ids)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
-                }
+                $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
             }
 
             if ($request->has('status') && !empty($request->status)) {
