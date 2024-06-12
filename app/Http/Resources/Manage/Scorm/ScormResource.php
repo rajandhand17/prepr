@@ -22,6 +22,7 @@ class ScormResource extends JsonResource
             'uuid'    => $this->uuid,
             'title'   => $this->title,
             'version' => $this->version,
+            'origin_file' => $this->origin_file
         ];
     }
 }
