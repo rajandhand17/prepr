@@ -14,15 +14,14 @@ class ResourceModuleScormController extends AppBaseController
 {
     public function __construct(
         protected ResourceModuleRepository $resourceModuleRepository,
-        protected ScormRepository          $scormRepository
-    )
-    {
+        protected ScormRepository $scormRepository
+    ) {
     }
 
     /**
      * @tutorial Upload Scorm File
      *
-     * @param string $slug
+     * @param string             $slug
      * @param UploadScormRequest $request
      *
      * @return JsonResponse
@@ -72,6 +71,7 @@ class ResourceModuleScormController extends AppBaseController
                 if ($deleteScorm !== false) {
                     return $this->sendResponse([], __('responses.scorm_file_deleted'));
                 }
+
                 return $this->sendError(__('responses.failed_to_delete_scorm_file'), Response::HTTP_BAD_REQUEST);
             } else {
                 return $this->sendError(__('responses.no_scorm_file_associated_with_the_resource'), Response::HTTP_NOT_FOUND);
