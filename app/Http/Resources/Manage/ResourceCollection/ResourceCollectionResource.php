@@ -35,7 +35,7 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        if (count($this->resource_modules)>0) {
+        if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
                 if ($resourceModuleData !== null) {
@@ -44,8 +44,8 @@ class ResourceCollectionResource extends JsonResource
                     $resourceModules[$resource_module->resource_module_id]['image'] = $resourceModuleData->media;
                     $resourceModules[$resource_module->resource_module_id]['description'] = $resourceModuleData->description;
                     $resourceModules[$resource_module->resource_module_id]['slug'] = $resourceModuleData->slug;
+                }
             }
-        }
         }
         if ($this->challenges) {
             foreach ($this->challenges as $challenge_records) {
