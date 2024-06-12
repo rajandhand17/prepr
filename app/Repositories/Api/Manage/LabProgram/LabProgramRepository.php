@@ -104,7 +104,7 @@ class LabProgramRepository implements LabProgramInterface
     public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image) {
+            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image, $organizationId) {
                 $updateLabProgram = $this->labProgramService->updateLabProgram($slug, $request, $upload_media, $organizationId);
                 if ($request->is_achievement_enabled == 'yes') {
                     $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);

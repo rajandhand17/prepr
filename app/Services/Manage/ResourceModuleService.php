@@ -372,6 +372,15 @@ class ResourceModuleService
         }
     }
 
+    public static function getResourceModulesBasedOnId($id)
+    {
+        try {
+            return ResourceModule::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function getResourceModuleGetBasedId($id)
     {
         try {
