@@ -216,7 +216,7 @@ class LabResource extends JsonResource
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 
-        return [
+       return [
             'id'                               => $this->uuid,
             'type'                             => $type,
             'language'                         => $this->language,
