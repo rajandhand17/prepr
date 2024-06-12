@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
@@ -65,10 +66,11 @@ class ResourceGroupController extends AppBaseController
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
-            }
             if ($checkResourceGroupExistsOrNot) {
+                if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
@@ -167,7 +169,8 @@ class ResourceGroupController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
