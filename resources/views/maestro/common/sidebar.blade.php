@@ -91,6 +91,12 @@
                 <p>Type</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('sponsors.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Sponsor Management</p>
+              </a>
+            </li>
           </ul>
         </li>
         <li class="nav-item">
