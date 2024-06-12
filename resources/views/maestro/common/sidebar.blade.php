@@ -173,6 +173,58 @@
                 <p>Skill Groups</p>
               </a>
             </li>
+</ul>
+<li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Project Management
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Project</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-stage.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Stage</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-vertical.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Vertical</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-type.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Type</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-industry.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Industry</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-status.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Projects Status</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pitch Templates</p>
+              </a>
+            </li>
           </ul>
         </li>
         <li class="nav-item">
