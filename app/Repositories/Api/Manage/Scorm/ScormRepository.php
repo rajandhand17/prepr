@@ -34,6 +34,7 @@ class ScormRepository implements ScormInterface
 
     /**
      * @param Scorm $scorm
+     *
      * @return bool
      */
     public function delete(Scorm $scorm): bool

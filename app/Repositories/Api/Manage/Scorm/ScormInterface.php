@@ -19,6 +19,7 @@ interface ScormInterface
 
     /**
      * @param Scorm $scorm
+     *
      * @return mixed
      */
     public function delete(Scorm $scorm);
