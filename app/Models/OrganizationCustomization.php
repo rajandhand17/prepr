@@ -24,11 +24,11 @@ class OrganizationCustomization extends Model
 
     public function getCustomLogoImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     public function getCustomHeroImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 }

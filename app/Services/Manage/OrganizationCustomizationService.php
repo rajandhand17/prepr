@@ -34,7 +34,7 @@ class OrganizationCustomizationService
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = '1';
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url  = $request->custom_login_url;
+                $organizationCustomization->custom_login_url = $request->custom_login_url;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
                 $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
@@ -61,7 +61,7 @@ class OrganizationCustomizationService
                 } else {
                     $customLogoImage = !empty($request->custom_logo_image) ? FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization') : null;
                 }
-                
+
                 if ($request->old_custom_hero_image) {
                     $customHeroImage = str_replace(config('site-settings.aws_url'), '', $request->old_custom_hero_image);
                 } else {
@@ -85,7 +85,7 @@ class OrganizationCustomizationService
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = '1';
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url  = $request->custom_login_url;
+                $organizationCustomization->custom_login_url = $request->custom_login_url;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
                 $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
