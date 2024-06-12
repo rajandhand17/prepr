@@ -234,6 +234,7 @@ class LabMarketplaceService
             return false;
         }
     }
+
     public static function deleteOrganizationLabMarketPlace($organizationId)
     {
         try {
