@@ -342,6 +342,7 @@ class ResourceCollectionService
             return false;
         }
     }
+
     public static function getResourceCollectionGetBasedId($id)
     {
         try {
