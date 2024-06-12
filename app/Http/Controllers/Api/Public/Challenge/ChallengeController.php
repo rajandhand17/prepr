@@ -47,7 +47,7 @@ class ChallengeController extends AppBaseController
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if ($challenge) {
-                if ($challenge->is_accessible === '0') {
+                if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
 
@@ -65,7 +65,7 @@ class ChallengeController extends AppBaseController
         try {
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if ($challenge !== null) {
-                if ($challenge->is_accessible === '0') {
+                if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->challengeRepository->getColumnNameValue($action);
@@ -108,7 +108,7 @@ class ChallengeController extends AppBaseController
             if (!$fetchChallengeExistsOrNot) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
-            if ($fetchChallengeExistsOrNot->is_accessible === '0') {
+            if ($fetchChallengeExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 

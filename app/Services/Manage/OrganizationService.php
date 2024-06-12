@@ -518,4 +518,18 @@ class OrganizationService
             return false;
         }
     }
+
+    public function planData($organizationData)
+    {
+        try {
+            $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organizationData->id);
+            if ($checkLocalEntry) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
 }

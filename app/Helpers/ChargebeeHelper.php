@@ -311,11 +311,10 @@ class ChargebeeHelper
         }
     }
 
-    public static function checkComponentLimitBasedOnOrganization($organizationUUID, $component)
+    public static function checkComponentLimitBasedOnOrganization($organizationID, $component)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationUUID);
-            $fetchOrganizationPlan = ChargebeeSubscription::where('organization_id', $organization->id)->first();
+            $fetchOrganizationPlan = ChargebeeSubscription::where('organization_id', $organizationID)->first();
             if ($fetchOrganizationPlan) {
                 switch ($component) {
                     case 'lab':
@@ -344,10 +343,10 @@ class ChargebeeHelper
                         break;
                 }
             } else {
-                $fetchOrganizationPlanDetails = self::getTotalLimits($organization->id, $component);
+                $fetchOrganizationPlanDetails = self::getTotalLimits($organizationID, $component);
             }
 
-            $data = ['organizationId' => $organization->id, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
+            $data = ['organizationId' => $organizationID, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
 
             return $data;
         } catch (Exception $e) {
