@@ -125,10 +125,9 @@ class LabService
         }
     }
 
-    public static function createLab($request, $upload_cover_image)
+    public static function createLab($request, $upload_cover_image, $organizationId)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.lab_status.draft');
             switch ($request->request_type) {
                 case 'draft':
@@ -200,7 +199,7 @@ class LabService
             $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $lab->language = $request->language;
             $lab->user_id = auth()->user()->id;
-            $lab->organization_id = $organization->id;
+            $lab->organization_id = $organizationId;
             $lab->category_id = $request->category_id;
             $lab->duration_id = $request->duration_id;
             $lab->level_id = $request->level_id;
