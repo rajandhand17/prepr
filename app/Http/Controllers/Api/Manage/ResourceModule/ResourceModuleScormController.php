@@ -52,4 +52,32 @@ class ResourceModuleScormController extends AppBaseController
             return $this->sendError(__('responses.failed_to_upload_scorm_file'), Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function deleteScorm(string $slug)
+    {
+        try {
+            $resource = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+
+            if ($resource->is_accessible === '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+            }
+
+            if (!$resource) {
+                return $this->sendError(__('responses.resource_module_not_found'), Response::HTTP_NOT_FOUND);
+            }
+
+            if ($resource->scorm) {
+                $deleteScorm = $this->scormRepository->delete($resource->scorm);
+                if ($deleteScorm !== false) {
+                    return $this->sendResponse([], __('responses.scorm_file_deleted'));
+                }
+
+                return $this->sendError(__('responses.failed_to_delete_scorm_file'), Response::HTTP_BAD_REQUEST);
+            } else {
+                return $this->sendError(__('responses.no_scorm_file_associated_with_the_resource'), Response::HTTP_NOT_FOUND);
+            }
+        } catch (\Exception $exception) {
+            return $this->sendError(__('responses.failed_to_delete_scorm_file'), Response::HTTP_BAD_REQUEST);
+        }
+    }
 }

@@ -35,7 +35,7 @@ class SkillResource extends JsonResource
             'title'                  => $this->title,
             'description'            => $skillDescription !== false ? $skillDescription : '',
             'related_skills'         => $key !== false ? $key : [],
-            'related_skill_url'      => $relatedKeyUrl,
+            'skill_url'              => $relatedKeyUrl,
             'is_saved'               => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? 'yes' : 'no',
             'related_skills_count'   => $count_related_skills,
             'related_challenges'     => $this->getChallenges != null ? $this->getChallenges->count() : '0',
