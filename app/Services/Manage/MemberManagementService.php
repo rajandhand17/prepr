@@ -392,7 +392,7 @@ class MemberManagementService
                                     }
                                 }
                             }
-                            MemberManagement::create([
+                            $invitedMember=MemberManagement::create([
                                 'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
@@ -408,6 +408,7 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
+                            MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));

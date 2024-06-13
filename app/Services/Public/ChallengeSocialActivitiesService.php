@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\MixpanelHelper;
 use App\Models\ChallengeSocialActivity;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,7 +42,14 @@ class ChallengeSocialActivitiesService
                 ], [
                     $column => $action,
                 ]);
-
+                if($column = 'favourite'){
+                    $fav_or_unfav = $action == 1 ? "favourite" : "un-favourite";
+                    $fav_data = [
+                        'fav_or_unfav' => $fav_or_unfav,
+                        'fav_type' => 'challenge',
+                    ];
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.fav_or_unfav'), $fav_data,auth()->user(),request()->ip());
+                }
                 return true;
             }
 

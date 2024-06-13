@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Manage\MemberManagement;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\MemberManagement\ChangeRoleRequest;

@@ -143,7 +143,7 @@ class MixpanelHelper
                     $path_challenges = [];
                     $all_path_challenges = explode(',', $data->challenge_id);
                     foreach ($all_path_challenges as $path_challenge) {
-                        $path_challenges[] = Challange::find($path_challenge)->title;
+                        $path_challenges[] = Challenge::find($path_challenge)->title;
                     }
 
                     $data_array = [
@@ -231,7 +231,7 @@ class MixpanelHelper
                     break;
                 case config('mixpanel.send_trophy'): // Mixpanel data: send trophy (via maestro)
                     $users_list = array();
-                    foreach ($data as $single_data) {
+                    foreach ($data as $single_data){
                         $users_list[] = $single_data['to_name'];
                     }
                     $data_array = array(
@@ -263,23 +263,46 @@ class MixpanelHelper
                     $memberData = MemberManagement::where('id', $data)->first();
                     $user = User::where('id', $memberData->inviter_id)->first();
                     $module_name = null;
-                    if ($memberData->module_type == 'lab') {
+                    if ($memberData->module_type == '1') {
+                        $type='lab';
                         $organization = Lab::where('id', $memberData->module_id)->first()->organisation;
                         $module_name = Lab::where('id', $memberData->module_id)->first()->title;
-                    } elseif ($memberData->module_type == 'challenge') {
-                        $organization = Challange::where('id', $memberData->module_id)->first()->organisation;
-                        $module_name = Challange::where('id', $memberData->module_id)->first()->title;
-                    } elseif ($memberData->module_type == 'project') {
+                    } elseif ($memberData->module_type == '2') {
+                        $type='challenge';
+                        $organization = Challenge::where('id', $memberData->module_id)->first()->organisation;
+                        $module_name = Challenge::where('id', $memberData->module_id)->first()->title;
+                    } elseif ($memberData->module_type == '3') {
+                        $type='project';
                         $challenge_id = Project::where('id', $memberData->module_id)->first()->challenge_id;
                         $module_name = Project::where('id', $memberData->module_id)->first()->title;
-                        $organization = Challange::where('id', $challenge_id)->first()->organisation;
+                        $organization = Challenge::where('id', $challenge_id)->first()->organisation;
+                    }
+                    switch ($memberData->invite_type) {
+                        case '0':
+                            $inviteType='email';
+                            break;
+                        case '1':
+                            $inviteType='network';
+                            break;
+                        case '2':
+                            $inviteType='job_request';
+                            break;
+                        case '3':
+                            $inviteType='csv';
+                            break;
+                    }
+                    $getUserId=User::where("email",$memberData->email)->pluck("id");
+                    if(isset($getUserId->id) && !empty($getUserId->id)){
+                        $inviteId=$getUserId->id;
+                    }else{
+                        $inviteId=$memberData->invitee_id;
                     }
                     $data_array = array(
-                        'invite_type' => $memberData->invite_type,
-                        'invitee_id' => $memberData->invitee_id,
+                        'invite_type'   => $inviteType,
+                        'invitee_id'    => $inviteId,
                         'invitee_email' => $memberData->email,
-                        'module_type' => $memberData->module_type,
-                        'module_name' => $module_name
+                        'module_type'   => $type,
+                        'module_name'   => $module_name
                     );
                     break;
                 case config('mixpanel.send_org_member_invite'):
@@ -408,7 +431,6 @@ class MixpanelHelper
             }
             return true;
         } catch (Exception $e) {
-            dd($e);
             return false;
         }
     }
