@@ -151,6 +151,7 @@
     "responses.organization_stored_failed": "Oops! The Creation organization has failed.",
     "responses.organization_not_found": "Organization not found",
     "responses.selected_organization_not_found": "Preferred Organization not found",
+    "responses.selected_organization_found": "Preferred Organization found",
     "responses.organization_update_access_denied": "Sorry! You are not allowed to update this organization.",
     "responses.organization_update_successfully": "The organization has been updated successfully",
     "responses.organization_not_update": "There are some issues being encountered while updating the organization!",
