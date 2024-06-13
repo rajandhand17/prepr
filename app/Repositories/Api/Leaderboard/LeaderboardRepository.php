@@ -39,6 +39,7 @@ class LeaderboardRepository implements LeaderboardInterface
             }
             $uniqueEmails = $membersEmails->unique();
             $user = $this->userService->getLeaderBoardList($request, $uniqueEmails);
+
             return $user;
         } catch (\Exception $e) {
             return false;
