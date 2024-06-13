@@ -175,7 +175,7 @@ class LabService
             $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($usersSkills);
             /*gets Tags based on user tags*/
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
-            $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique()->take(10);
+            $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
             if (!empty($labIds)) {
                 $lab = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {

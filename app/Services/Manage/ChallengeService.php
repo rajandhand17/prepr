@@ -689,7 +689,7 @@ class ChallengeService
             $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
             /*get challenge id based on tags*/
             $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
-            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique()->take('11');
+            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
             if (!empty($challengeIds)) {
                 $challenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
