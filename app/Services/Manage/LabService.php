@@ -283,11 +283,10 @@ class LabService
         return $lab;
     }
 
-    public static function updateLab($slug, $request, $upload_cover_image)
+    public static function updateLab($slug, $request, $upload_cover_image, $organizationData)
     {
         try {
             $lab = Lab::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
@@ -325,7 +324,7 @@ class LabService
 
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
-                $lab->organization_id = $organization->id;
+                $lab->organization_id = $organizationData->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
                 $lab->duration_id = ($request->has('duration_id')) ? $request->duration_id : $lab->duration_id;
                 $lab->level_id = ($request->has('level_id')) ? $request->level_id : $lab->level_id;
