@@ -35,14 +35,16 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
-        if ($this->resource_modules) {
+        if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
-                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
-                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
-                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
+                $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
+                if ($resourceModuleData !== null) {
+                    $resourceModules[$resource_module->resource_module_id]['uuid'] = $resourceModuleData->uuid;
+                    $resourceModules[$resource_module->resource_module_id]['title'] = $resourceModuleData->title;
+                    $resourceModules[$resource_module->resource_module_id]['image'] = $resourceModuleData->media;
+                    $resourceModules[$resource_module->resource_module_id]['description'] = $resourceModuleData->description;
+                    $resourceModules[$resource_module->resource_module_id]['slug'] = $resourceModuleData->slug;
+                }
             }
         }
         if ($this->challenges) {

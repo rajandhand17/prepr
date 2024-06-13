@@ -372,6 +372,15 @@ class ResourceModuleService
         }
     }
 
+    public static function getResourceModulesBasedOnId($id)
+    {
+        try {
+            return ResourceModule::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function getResourceModuleGetBasedId($id)
     {
         try {
@@ -433,6 +442,25 @@ class ResourceModuleService
 
             return true;
         } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationResourceModule($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceModules = ResourceModule::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceModules)) {
+                foreach ($fetchOrganizationResourceModules as $organizationResourceModule) {
+                    $deleteOrganizationResourceModule = self::deleteResourceModule($organizationResourceModule);
+                    if (!$deleteOrganizationResourceModule) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

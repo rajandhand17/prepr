@@ -210,7 +210,7 @@ class ProfileResource extends JsonResource
             'user_skills'            => $skills,
             'user_pinned_skills'     => $pinnedSkills,
             'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
-            'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friendRequest == '0' ? 'yes' : 'no') : 'yes',
+            'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
 
         ];
     }

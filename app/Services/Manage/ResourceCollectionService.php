@@ -334,6 +334,15 @@ class ResourceCollectionService
         }
     }
 
+    public static function getResourceCollectionsBasedOnId($id)
+    {
+        try {
+            return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function getResourceCollectionGetBasedId($id)
     {
         try {
@@ -374,6 +383,25 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select()->whereIn('id', $ids)->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationResourceCollection($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceCollections = ResourceCollection::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceCollections)) {
+                foreach ($fetchOrganizationResourceCollections as $organizationResourceCollection) {
+                    $deleteOrganizationResourceCollection = self::deleteResourceCollection($organizationResourceCollection);
+                    if (!$deleteOrganizationResourceCollection) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }
