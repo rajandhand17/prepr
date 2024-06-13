@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Helpers\MixpanelHelper;
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\AIService;
@@ -169,10 +170,10 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
-                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'],auth()->user(),$request->ip());
                 DB::commit();
-
                 return $createProject['createProject'];
             }
 
@@ -261,6 +262,7 @@ class ProjectRepository implements ProjectInterface
             if ($updateProject['updateProject']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
                 self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.update_project'),$updateProject['updateProject'],auth()->user(),$request->ip());
                 DB::commit();
 
                 return $updateProject['updateProject'];
@@ -373,6 +375,7 @@ class ProjectRepository implements ProjectInterface
             $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
                 $submitProject = $this->projectService->submitProject($projectData);
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'),$projectData,auth()->user(),request()->ip());
 
                 return [
                     'submitProject'  => $submitProject,
