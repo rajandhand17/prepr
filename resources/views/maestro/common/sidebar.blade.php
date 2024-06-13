@@ -174,7 +174,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/UI/navbar.html" class="nav-link">
+              <a href="{{ route('skillgroup.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Groups</p>
               </a>
