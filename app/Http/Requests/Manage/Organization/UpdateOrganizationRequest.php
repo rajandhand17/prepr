@@ -66,7 +66,7 @@ class UpdateOrganizationRequest extends FormRequest
         }
 
         if ($this->request->has('enable_custom_login_and_registration') && $this->input('enable_custom_login_and_registration') == 'yes') {
-            $base_rules['enable_custom_login_and_registration']  = 'in:yes,no';
+            $base_rules['enable_custom_login_and_registration'] = 'in:yes,no';
             $base_rules['use_main_org_logo'] = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
             $base_rules['custom_login_url'] = 'required_if:enable_custom_login_and_registration,yes';
             $base_rules['custom_logo_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
