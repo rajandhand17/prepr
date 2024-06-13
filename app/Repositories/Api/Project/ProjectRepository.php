@@ -262,7 +262,6 @@ class ProjectRepository implements ProjectInterface
             if ($updateProject['updateProject']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_updated_activty').' '.$updateProject['updateProject']->title;
                 self::storeHistory($updateProject['updateProject']->id, auth()->user()->id, $activity);
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.update_project'),$updateProject['updateProject'],auth()->user(),$request->ip());
                 DB::commit();
 
                 return $updateProject['updateProject'];

@@ -2,11 +2,8 @@
 
 namespace App\Repositories\Api\Profile;
 
-<<<<<<< HEAD
 use App\Helpers\MixpanelHelper;
-=======
 use App\Helpers\ResumeParserHelper;
->>>>>>> BetaDevelopment
 use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;

@@ -295,7 +295,6 @@ class MixpanelHelper
                     break;
                 case config('mixpanel.create_project'): // Mixpanel data: create project
                 case config('mixpanel.submit_project'): // Mixpanel data: submit project
-                case config('mixpanel.update_project'): // Mixpanel data: update project
                     $project_associated_lab = [];
                     $project_associated_challenge = null;
                     $project_associated_type = null;
