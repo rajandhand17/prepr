@@ -163,11 +163,9 @@ class ChallengeService
         }
     }
 
-    public static function createChallenge($request, $upload_cover_image)
+    public static function createChallenge($request, $upload_cover_image, $organizationId)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-
             $status = config('constants.challenge_status.draft');
             if ($request->is_ai_created) {
                 $status = config('constants.challenge_status.publish');
@@ -285,7 +283,7 @@ class ChallengeService
             $challenge->language = $request->language;
             $challenge->slug = $slug;
             $challenge->user_id = auth()->user()->id;
-            $challenge->organization_id = $organization->id;
+            $challenge->organization_id = $organizationId;
             $challenge->category_id = $request->category_id;
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
@@ -313,11 +311,10 @@ class ChallengeService
         }
     }
 
-    public static function updateChallenge($slug, $request, $update_cover_image)
+    public static function updateChallenge($slug, $request, $update_cover_image, $organizationId)
     {
         try {
             $challenge = Challenge::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($challenge !== null) {
                 $privacy = $challenge->privacy;
                 if ($request->has('privacy')) {
@@ -417,7 +414,7 @@ class ChallengeService
                 }
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
-                $challenge->organization_id = $organization->id;
+                $challenge->organization_id = $organizationId;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
@@ -796,6 +793,25 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallenge($organizationId)
+    {
+        try {
+            $fetchOrganizationChallenges = Challenge::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationChallenges)) {
+                foreach ($fetchOrganizationChallenges as $organizationChallenge) {
+                    $deleteOrganizationChallenge = self::deleteChallenge($organizationChallenge);
+                    if (!$deleteOrganizationChallenge) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
     }

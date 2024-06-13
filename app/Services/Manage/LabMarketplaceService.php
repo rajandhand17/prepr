@@ -46,9 +46,7 @@ class LabMarketplaceService
 
             if ($request->has('organization_ids') && !empty($request->organization_ids) && is_array($request->organization_ids)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_ids)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
-                }
+                $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -160,7 +158,7 @@ class LabMarketplaceService
         }
     }
 
-    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    public static function deleteLabMarketplace($slug, $labMarketplaceId)
     {
         try {
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
@@ -233,6 +231,25 @@ class LabMarketplaceService
 
             return $newLab;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationLabMarketPlace($organizationId)
+    {
+        try {
+            $fetchOrganizationLabMarketPlaces = LabMarketplace::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationLabMarketPlaces)) {
+                foreach ($fetchOrganizationLabMarketPlaces as $organizationLabMarketPlace) {
+                    $deleteOrganizationLabMarketPlace = self::deleteLabMarketplace($organizationLabMarketPlace->slug, $organizationLabMarketPlace->id);
+                    if (!$deleteOrganizationLabMarketPlace) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
     }

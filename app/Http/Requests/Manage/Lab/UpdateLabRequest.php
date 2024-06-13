@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Lab;
 
+use App\Rules\AirmeetEventUrlRule;
 use App\Services\Manage\LabService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,7 +40,6 @@ class UpdateLabRequest extends FormRequest
             'request_type'             => 'required|in:draft,publish,archive',
             'type'                     => 'required|in:assess,onboard,engage,grow,na',
             'description'              => 'required_if:request_type,publish|nullable',
-            'organization_id'          => 'required|exists:organizations,uuid',
             'category_id'              => 'required|exists:categories,id',
             'duration_id'              => 'required|exists:durations,id',
             'level_id'                 => 'required|exists:levels,id',
@@ -168,7 +168,7 @@ class UpdateLabRequest extends FormRequest
         if ($isLiveEventEnabled === 'yes') {
             $base_rules = [
                 ...$base_rules,
-                'live_event.url'         => ['required'],
+                'live_event.url'         => ['required', new AirmeetEventUrlRule()],
                 'live_event.is_verified' => ['required', 'in:yes'], // FIRST CHECK FROM AN API TO VERIFY AIRMEET EVENT
             ];
         }
@@ -195,8 +195,6 @@ class UpdateLabRequest extends FormRequest
             'privacy.required_if'                              => __('responses.privacy_required'),
             'latitude.required_if'                             => __('responses.latitude_required'),
             'longitude.required_if'                            => __('responses.longitude_required'),
-            'organization_id.required'                         => __('responses.organization_id_required'),
-            'organization_id.exists'                           => __('responses.organization_not_found'),
             'title.required_if'                                => __('responses.title_required'),
             'title.unique'                                     => __('responses.lab_title_unique'),
             'description.required_if'                          => __('responses.description_required'),
