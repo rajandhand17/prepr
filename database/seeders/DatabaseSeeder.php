@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
             ProjectAccessLevelSeeder::class,
             DurationsTableSeeder::class,
             BusinessChallengeTacklingSeeder::class,
+            ChannelApiSeeder::class,
+            ChannelVendorSeeder::class,
+            ChannelApiAccessSeeder::class,
         ];
 
         if (app()->environment('testing')) {

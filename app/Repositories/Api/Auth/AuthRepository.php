@@ -121,10 +121,10 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function magnetSsoLogin($magnetUserDetails)
+    public function magnetSsoLogin($magnetUserDetails, $token)
     {
         try {
-            return $this->user->magnetSsoLogin($magnetUserDetails);
+            return $this->user->magnetSsoLogin($magnetUserDetails, $token);
         } catch (\Exception $e) {
             return false;
         }

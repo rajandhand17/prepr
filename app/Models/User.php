@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use App\Helpers\MagnetHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\OrganizationService;
+use App\Services\UserEducationService;
+use App\Services\UserExperienceService;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,6 +62,8 @@ class User extends Authenticatable
         'is_onboarding_completed',
         'go1_id',
         'go1_user_metadata',
+        'magnet_user_id',
+        'magnet_user_role',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -655,39 +662,146 @@ class User extends Authenticatable
         }
     }
 
-    public function magnetSsoLogin($magnetUserDetails)
+    public function generateUniqueUsername($baseUsername)
+    {
+        $username = $baseUsername;
+        $number = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername.$number;
+            $number++;
+        }
+
+        return $username;
+    }
+
+    public function magnetSsoLogin($magnetUserDetails, $accessToken)
     {
         try {
+            DB::beginTransaction();
             /**checking user exists or not */
-            $user = User::where('email', $magnetUserDetails['data']->email)->first();
+            $user = User::where('email', data_get($magnetUserDetails, 'email'))->first();
             if ($user) {
-                $ssoKey = '5';
-
-                if ($ssoKey === null) {
-                    $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
-
-                    return $response;
+                if (!$user->magnet_user_id) {
+                    $user->magnet_user_id = data_get($magnetUserDetails, 'user_id');
+                    $user->save();
                 }
+                UserSSOLogin::query()->firstOrCreate([
+                    'user_id'  => $user->id,
+                    'sso_type' => config('constants.sso_type.magnet'),
+                ]);
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
-//                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $ssoKey])->first();
-//                if ($checkSSODetails == null) {
-//                    $usersso = UserSSOLogin::create($user, $request);
-//                } else {
-//                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
-//                }
-                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
 
-                return $response;
-            } else {
-                $userData = [
-                    'user'         => $magnetUserDetails['data'],
-                    'access_token' => $magnetUserDetails['access_token'],
+                return [
+                    'success' => true,
+                    'user'    => $user,
+                    'code'    => 3,
+                    'token'   => $token,
+                    'message' => __('responses.user_login_success'),
                 ];
-                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData, 'code' => 5];
-
-                return $response;
             }
+            // register users
+            $baseUsername = explode('@', data_get($magnetUserDetails, 'email'))[0];
+            $uniqueUserName = $this->generateUniqueUsername($baseUsername);
+            $newUser = User::query()->create([
+                'first_name'       => data_get($magnetUserDetails, 'first_name'),
+                'last_name'        => data_get($magnetUserDetails, 'last_name'),
+                'username'         => $uniqueUserName,
+                'email'            => data_get($magnetUserDetails, 'email'),
+                'phone_number'     => data_get($magnetUserDetails, 'phone_number'),
+                'full_name'        => data_get($magnetUserDetails, 'first_name').' '.data_get($magnetUserDetails, 'last_name'),
+                'magnet_user_id'   => data_get($magnetUserDetails, 'user_id'),
+                'magnet_user_role' => data_get($magnetUserDetails, 'role'),
+                'verified_user'    => '1',
+            ]);
+
+            UserSSOLogin::create($newUser, (object) [
+                'user_id'      => $newUser->id,
+                'sso_type'     => config('constants.sso_type.magnet'),
+                'access_token' => $accessToken,
+            ]);
+
+            $roles = ['user'];
+            if (data_get($magnetUserDetails, 'user_types')) {
+                foreach (data_get($magnetUserDetails, 'user_types') as $userType) {
+                    $roles[] = match ($userType['api_tag']) {
+                        'ORG_ADMIN', 'ORG_FULL_ADMIN', 'ORG_OWNER' => 'organization_owner',
+                        default => 'user',
+                    };
+                }
+            }
+
+            if (data_get($magnetUserDetails, 'education')) {
+                $addEducationDetails = UserEducationService::addMagnetEducationDetails($newUser, data_get($magnetUserDetails, 'education'));
+                if (!$addEducationDetails) {
+                    DB::rollBack();
+
+                    return [
+                        'success' => false,
+                        'message' => __('response.unauthorized'),
+                    ];
+                }
+            }
+
+            if (data_get($magnetUserDetails, 'employment')) {
+                $addEmploymentDetails = UserExperienceService::addMagnetUserExperience($newUser, data_get($magnetUserDetails, 'employment'));
+                if (!$addEmploymentDetails) {
+                    DB::rollBack();
+
+                    return [
+                        'success' => false,
+                        'message' => __('response.unauthorized'),
+                    ];
+                }
+            }
+
+            // AUTO INVITE TO ORGANIZATION BASED ON MAGNET COMMUNITY ID
+            $lmsUserInfo = MagnetHelper::getLMSUserInfo($accessToken);
+            if (count($lmsUserInfo) > 0) {
+                $communitiesIds = array_map(function ($item) {
+                    return data_get($item, 'affiliate_id');
+                }, $lmsUserInfo);
+
+                $newUser->preferred_organization = $communitiesIds[1];
+
+                $formattedUsers = collect([[
+                    'type'          => config('constants.member_management_type.invite'),
+                    'invite_status' => '1',
+                    'invite_type'   => config('constants.member_management_invite_type.email'),
+                    'invitee_name'  => data_get($newUser, 'full_name'),
+                    'invitee_email' => data_get($newUser, 'email'),
+                    'role'          => 'User',
+                ]]);
+                $organizations = OrganizationService::getOrganizationBasedOnCommunityIds($communitiesIds);
+                $organizations->map(function ($organization) use ($formattedUsers) {
+                    MemberManagementService::addMembers(
+                        $organization,
+                        'organization',
+                        (object) [
+                            'auto_invite'  => 'yes',
+                            'email_status' => 'sent',
+                            'subject_line' => 'Invitation to Learn Lab '.$organization->display_name,
+                            'email_body'   => 'Welcome to the '.$organization->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
+                        ],
+                        $formattedUsers
+                    );
+                });
+            }
+
+            $newUser->attachRoles(array_unique($roles));
+            $token = $newUser->createToken(env('APP_NAME'))->accessToken;
+            DB::commit();
+
+            return [
+                'success' => true,
+                'user'    => $newUser,
+                'code'    => 3,
+                'token'   => $token,
+                'message' => __('responses.user_login_success'),
+            ];
         } catch (\Exception $e) {
+            DB::rollBack();
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

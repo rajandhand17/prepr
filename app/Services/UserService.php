@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserPersonal;
 use Exception;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -266,7 +268,8 @@ class UserService
     {
         try {
             $user = auth()->user();
-            $user->update(['preferred_organization' => $organizationId]);
+            $user->preferred_organization = $organizationId;
+            $user->save();
 
             return $user;
         } catch (\Exception $e) {
@@ -293,6 +296,100 @@ class UserService
 
             return $user;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserByEmails($emails)
+    {
+        try {
+            return User::whereIn('email', $emails)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserBasedOnMagnetUserId($magnetUserId)
+    {
+        try {
+            return User::where('magnet_user_id', $magnetUserId)->first();
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return false;
+        }
+    }
+
+    public static function updateUserMagnetId($userId, $magnetId)
+    {
+        try {
+            $user = User::find($userId);
+            $user->magnet_user_id = $magnetId;
+            $user->save();
+
+            return $user;
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return false;
+        }
+    }
+
+    public static function registerMagnetUser($data)
+    {
+        try {
+            $user = User::query()->create([
+                'first_name'     => $data->first_name,
+                'last_name'      => $data->last_name,
+                'username'       => $data->user_name,
+                'email'          => $data->email,
+                'phone_number'   => $data->telephone,
+                'full_name'      => $data->first_name.' '.$data->last_name,
+                'magnet_user_id' => $data->id,
+            ]);
+            UserPersonal::query()->create([
+                'user_id'   => $user->id,
+                'user_type' => $data->type,
+                'status'    => $data->status,
+            ]);
+
+            return $user;
+        } catch (Exception $exception) {
+            Log::error($exception);
+
+            return false;
+        }
+    }
+
+    public static function registerOrUpdateMagnetUsers($users)
+    {
+        try {
+            $registeredOrUpdatedUsers = [];
+            foreach ($users as $item) {
+                $userByMagnetId = self::getUserBasedOnMagnetUserId($item['id']);
+                if ($userByMagnetId) {
+                    $registeredOrUpdatedUsers[] = $userByMagnetId;
+                    continue;
+                }
+
+                $userByEmail = self::getUserByEmail($item['email']);
+                if (!$userByEmail) {
+                    $newUser = UserService::registerMagnetUser((object) $item);
+                    if (!$newUser) {
+                        return false;
+                    }
+                    $registeredOrUpdatedUsers[] = $newUser;
+                } else {
+                    $updatedUser = UserService::updateUserMagnetId($userByEmail->id, $item['id']);
+                    if (!$updatedUser) {
+                        return false;
+                    }
+                    $registeredOrUpdatedUsers[] = $userByEmail;
+                }
+            }
+
+            return $registeredOrUpdatedUsers;
+        } catch (Exception $exception) {
             return false;
         }
     }

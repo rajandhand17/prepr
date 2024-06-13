@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
+use Illuminate\Support\Facades\DB;
 
 class UserEducationService
 {
@@ -15,15 +16,15 @@ class UserEducationService
             $allEducation = [];
             foreach ($input['university'] as $key => $value) {
                 $createEducation = UserEducation::create([
-                    'user_id'    => auth()->user()->id,
-                    'university' => $value,
-                    'degree'     => $input['degree'][$key],
-                    'start_date' => $input['start_date'][$key],
-                    'end_date'   => $input['end_date'][$key],
-                    'address'    => $input['address'][$key],
-                    'state'      => $input['state'][$key],
-                    'country'    => $input['country'][$key],
-                    'description'=> $input['description'][$key],
+                    'user_id'     => auth()->user()->id,
+                    'university'  => $value,
+                    'degree'      => $input['degree'][$key],
+                    'start_date'  => $input['start_date'][$key],
+                    'end_date'    => $input['end_date'][$key],
+                    'address'     => $input['address'][$key],
+                    'state'       => $input['state'][$key],
+                    'country'     => $input['country'][$key],
+                    'description' => $input['description'][$key],
                 ]);
                 $allEducation[] = $createEducation;
             }
@@ -32,7 +33,7 @@ class UserEducationService
             }
 
             return $allEducation;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -55,7 +56,7 @@ class UserEducationService
             );
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -64,7 +65,7 @@ class UserEducationService
     {
         try {
             return UserEducation::where('id', '=', $id)->delete();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -74,6 +75,32 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->first();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addMagnetEducationDetails($user, $data)
+    {
+        try {
+            DB::beginTransaction();
+            UserEducation::query()->where('user_id', $user->id)->forceDelete();
+            foreach ($data as $item) {
+                if (!$item->is_current) {
+                    UserEducation::query()->create([
+                        'user_id'    => $user->id,
+                        'university' => data_get($item, 'institution'),
+                        'degree'     => data_get($item, 'type.level'),
+                        'start_date' => data_get($item, 'started_at'),
+                        'end_date'   => data_get($item, 'ended_at'),
+                    ]);
+                }
+            }
+            DB::commit();
+
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
             return false;
         }
     }
