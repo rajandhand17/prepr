@@ -354,6 +354,12 @@ class OrganizationController extends AppBaseController
                 if ($request->has('organization_members') && !empty($request->organization_members)) {
                     $this->organizationRepository->createOrganizationMembers($request, $organization->id);
                 }
+                if ($request->has('external_links') && !empty($request->external_links)) {
+                    $this->organizationRepository->createOrganizationExternalLinks($request, $organization->id);
+                }
+                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
+                    $this->organizationRepository->createOrganizationCustomLoginRegistration($request, $organization);
+                }
                 $selectPlan = $this->organizationRepository->selectPlan($organization, $request);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
@@ -557,6 +563,12 @@ class OrganizationController extends AppBaseController
                 }
                 if ($request->has('organization_members') && !empty($request->organization_members)) {
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
+                }
+                if ($request->has('external_links') && !empty($request->external_links)) {
+                    $this->organizationRepository->updateOrganizationExternalLinks($request, $organization->id);
+                }
+                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
+                    $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $organization);
                 }
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfully'), 200);

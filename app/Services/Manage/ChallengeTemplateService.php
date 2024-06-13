@@ -197,7 +197,7 @@ class ChallengeTemplateService
         }
     }
 
-    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    public static function deleteChallengeTemplate($slug, $challengeTemplateId)
     {
         try {
             $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();
@@ -298,6 +298,25 @@ class ChallengeTemplateService
                         $newChallengeAssociation->resource_collection_id = $challengeTemplateComponentAssociation->resource_collection_id;
                     }
                     $newChallengeAssociation->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallengeTemplate($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengeTemplates = ChallengeTemplate::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationChallengeTemplates)) {
+                foreach ($fetchOrganizationChallengeTemplates as $organizationChallengeTemplate) {
+                    $deleteOrganizationChallengeTemplate = self::deleteChallengeTemplate($organizationChallengeTemplate->slug, $organizationChallengeTemplate->id);
+                    if (!$deleteOrganizationChallengeTemplate) {
+                        return false;
+                    }
                 }
             }
 

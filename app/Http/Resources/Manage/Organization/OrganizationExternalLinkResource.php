@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Project;
+namespace App\Http\Resources\Manage\Organization;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectExternalLinkResource extends JsonResource
+class OrganizationExternalLinkResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -386,4 +386,23 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function deleteOrganizationResourceCollection($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceCollections = ResourceCollection::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceCollections)) {
+                foreach ($fetchOrganizationResourceCollections as $organizationResourceCollection) {
+                    $deleteOrganizationResourceCollection = self::deleteResourceCollection($organizationResourceCollection);
+                    if (!$deleteOrganizationResourceCollection) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
