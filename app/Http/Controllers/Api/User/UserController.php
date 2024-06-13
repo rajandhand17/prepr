@@ -88,6 +88,7 @@ class UserController extends AppBaseController
                 $organization_details['id'] = $organization->uuid;
                 $organization_details['title'] = $organization->title;
                 $organization_details['slug'] = $organization->slug;
+
                 return $this->sendResponse($organization_details, __('responses.selected_organization_found'));
             }
 
