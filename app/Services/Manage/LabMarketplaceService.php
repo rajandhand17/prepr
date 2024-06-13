@@ -158,7 +158,7 @@ class LabMarketplaceService
         }
     }
 
-    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    public static function deleteLabMarketplace($slug, $labMarketplaceId)
     {
         try {
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
@@ -231,6 +231,25 @@ class LabMarketplaceService
 
             return $newLab;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationLabMarketPlace($organizationId)
+    {
+        try {
+            $fetchOrganizationLabMarketPlaces = LabMarketplace::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationLabMarketPlaces)) {
+                foreach ($fetchOrganizationLabMarketPlaces as $organizationLabMarketPlace) {
+                    $deleteOrganizationLabMarketPlace = self::deleteLabMarketplace($organizationLabMarketPlace->slug, $organizationLabMarketPlace->id);
+                    if (!$deleteOrganizationLabMarketPlace) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
             return false;
         }
     }

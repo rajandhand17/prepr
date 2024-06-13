@@ -78,4 +78,23 @@ class UserController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getPreferredOrganization()
+    {
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if ($organization) {
+                $organization_details['id'] = $organization->uuid;
+                $organization_details['title'] = $organization->title;
+                $organization_details['slug'] = $organization->slug;
+
+                return $this->sendResponse($organization_details, __('responses.selected_organization_found'));
+            }
+
+            return $this->sendError(__('responses.selected_organization_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
