@@ -31,7 +31,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $listLabProgram = $this->labProgramRepository->getLabProgramList($request, $organization);
 
@@ -62,7 +62,7 @@ class LabProgramController extends AppBaseController
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
                 }
                 if ($labProgram->organization_id != $organization->id) {
                     return $this->sendError(__('responses.lab_program_switcher_error'), 403);
@@ -86,7 +86,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             // checks creation limits of the Lab Program
             $checkLabProgramLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'labProgram');
@@ -134,7 +134,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_program_switcher_error'), 403);
@@ -207,7 +207,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkLabProgramSlugExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_program_switcher_error'), 403);
@@ -232,7 +232,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $getLabProgramListName = $this->labProgramRepository->getLabProgramListName($request, $organization);
             if ($getLabProgramListName) {

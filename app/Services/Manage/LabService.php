@@ -505,4 +505,23 @@ class LabService
             return false;
         }
     }
+
+    public static function deleteOrganizationLab($organizationId)
+    {
+        try {
+            $fetchOrganizationLabs = Lab::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationLabs)) {
+                foreach ($fetchOrganizationLabs as $organizationLab) {
+                    $deleteOrganizationLab = self::deleteLab($organizationLab);
+                    if (!$deleteOrganizationLab) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

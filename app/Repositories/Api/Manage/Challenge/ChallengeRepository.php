@@ -238,7 +238,9 @@ class ChallengeRepository implements ChallengeInterface
             $request->json()->replace($updatedData);
 
             $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organization->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
                 $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
