@@ -14,7 +14,7 @@ interface LabInterface
 
     public function createLab($request, $upload_profile_image, $upload_achievements_image, $organizationData);
 
-    public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image);
+    public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationData);
 
     public function deleteLab($lab_id, $request);
 
