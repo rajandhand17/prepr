@@ -239,7 +239,7 @@ class UserService
     public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
     {
         try {
-            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
+            if (isset($membersEmails) && count($membersEmails) > 0 && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
             switch ($request->sort_by) {
