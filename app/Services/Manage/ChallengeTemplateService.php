@@ -197,7 +197,7 @@ class ChallengeTemplateService
         }
     }
 
-    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    public static function deleteChallengeTemplate($slug, $challengeTemplateId)
     {
         try {
             $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();

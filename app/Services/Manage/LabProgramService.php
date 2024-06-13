@@ -196,7 +196,7 @@ class LabProgramService
         }
     }
 
-    public function delete($slug)
+    public static function delete($slug)
     {
         try {
             return LabProgram::where('slug', $slug)->delete();

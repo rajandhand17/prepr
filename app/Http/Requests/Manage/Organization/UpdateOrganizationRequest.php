@@ -40,11 +40,10 @@ class UpdateOrganizationRequest extends FormRequest
             'website'                               => 'required|url',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
-            'external_links'                        => 'array|required',
-            'external_link_ids'                     => 'array|exists:social_links,id|required',
+            'external_links'                        => 'array',
+            'external_link_ids'                     => 'array|exists:social_links,id',
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
-            'enable_custom_login_and_registration'  => 'required|in:yes,no,none',
         ];
 
         if ($this->request->has('organization_address')) {
@@ -66,7 +65,8 @@ class UpdateOrganizationRequest extends FormRequest
             $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
-        if ($this->input('enable_custom_login_and_registration') == 'yes') {
+        if ($this->request->has('enable_custom_login_and_registration') && $this->input('enable_custom_login_and_registration') == 'yes') {
+            $base_rules['enable_custom_login_and_registration']  = 'in:yes,no';
             $base_rules['use_main_org_logo'] = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
             $base_rules['custom_login_url'] = 'required_if:enable_custom_login_and_registration,yes';
             $base_rules['custom_logo_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';

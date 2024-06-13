@@ -96,7 +96,7 @@ class ResourceGroupService
         }
     }
 
-    public function deleteGroupModule($resource_group_id)
+    public static function deleteGroupModule($resource_group_id)
     {
         try {
             $resourceModule = ResourceGroup::find($resource_group_id)->delete();

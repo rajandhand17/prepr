@@ -336,7 +336,7 @@ class ChallengePathService
         }
     }
 
-    public function delete($challengePathId)
+    public static function delete($challengePathId)
     {
         try {
             $challengePath = ChallengePath::find($challengePathId)->delete();

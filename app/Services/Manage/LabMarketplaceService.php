@@ -158,7 +158,7 @@ class LabMarketplaceService
         }
     }
 
-    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    public static function deleteLabMarketplace($slug, $labMarketplaceId)
     {
         try {
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
