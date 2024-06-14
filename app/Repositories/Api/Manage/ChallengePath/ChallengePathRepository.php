@@ -93,7 +93,6 @@ class ChallengePathRepository implements ChallengePathInterface
                 $createChallengePath['createdComponentAssociation']
             ) {
                 DB::commit();
-
                 return $createChallengePath['createdChallengePath'];
             }
             DB::rollback();
