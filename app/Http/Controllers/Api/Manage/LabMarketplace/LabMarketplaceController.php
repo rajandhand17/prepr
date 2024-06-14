@@ -27,6 +27,7 @@ class LabMarketplaceController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+            $request->merge(['organization_id' => $organization->id]);
 
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketPlaceList($request);
             if ($labMarketplace) {

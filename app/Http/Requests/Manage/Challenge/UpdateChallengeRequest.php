@@ -156,7 +156,7 @@ class UpdateChallengeRequest extends FormRequest
         }
 
         if ($this->request->has('assessment_type')) {
-            $base_rules['assessment_type'] = 'in:open,closed,ai';
+            $base_rules['assessment_type'] = 'in:open,closed,ai,none';
             $base_rules['guidelines'] = 'required_if:assessment_type,open,closed,ai';
             $base_rules['attachments'] = 'max:5120';
 
