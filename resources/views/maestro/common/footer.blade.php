@@ -52,7 +52,7 @@
 <!-- AdminLTE App -->
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/adminlte.js'}}"></script>
 <!-- AdminLTE for demo purposes -->
-<script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/demo.js'}}"></script>
+{{-- <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/demo.js'}}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/pages/dashboard.js'}}"></script>
 <!-- DataTables  & Plugins -->
@@ -68,7 +68,6 @@
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/datatables-buttons/js/buttons.html5.min.js'}}"></script>
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/datatables-buttons/js/buttons.print.min.js'}}"></script>
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/datatables-buttons/js/buttons.colVis.min.js'}}"></script>
-<script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
 <!-- Select2 -->
 <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/select2/js/select2.full.min.js'}}"></script>
 <!-- Bootstrap4 Duallistbox -->

@@ -21,35 +21,35 @@ class SocialLinkController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $sponsors = $this->getSponsorList();
+            $socialLinks = $this->getSocialLinkList();
             if (request()->ajax()) {
-                return DataTables::eloquent($sponsors)
+                return DataTables::eloquent($socialLinks)
                     ->addIndexColumn()
-                    ->editColumn('title', static function (SocialLink $sponsors) {
-                        return $sponsors->title;
+                    ->editColumn('title', static function (SocialLink $socialLinks) {
+                        return $socialLinks->title;
                     })
-                    ->editColumn('icon', static function (SocialLink $sponsors) {
+                    ->editColumn('icon', static function (SocialLink $socialLinks) {
                         $onerror = 'onerror=this.onerror=null;this.src="' . asset('no-img.jpg') . '";';
-                        return "<img src='" . asset($sponsors->icon) . "' width='30px' " . $onerror . ">";
+                        return "<img src='" . asset($socialLinks->icon) . "' width='30px' " . $onerror . ">";
                     })
 
-                    ->addColumn('action', static function (SocialLink $sponsors) {
-                        return '<a class="mr-10" href="' . route('sponsors.edit', ['sponsor' => $sponsors->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSponsor(\'' . route('sponsors.destroy', ['sponsor' => $sponsors->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                    ->addColumn('action', static function (SocialLink $socialLinks) {
+                        return '<a class="mr-10" href="' . route('social-links.edit', ['social_link' => $socialLinks->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSocialLink(\'' . route('social-links.destroy', ['social_link' => $socialLinks->id]) . '\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['icon', 'action','DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false,'width' => '5%'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Sponsor Name','width' => '85%'],
-                ['data' => 'icon', 'name' => 'icon', 'title' => 'Image','width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Social Media Name','width' => '85%'],
+                ['data' => 'icon', 'name' => 'icon', 'title' => 'Icon','width' => '5%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false,'width' => '5%'],
             ])->parameters([
                 'order' => [[ 1, 'asc' ]]
             ]);
             return view('maestro.sociallink.index', compact('html'));
         } catch (Exception $e) {
-            return response()->back()->with(['error' => $e->getMessage()]);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -59,10 +59,9 @@ class SocialLinkController extends Controller
     public function create()
     {
         try {
-            $sponsor_status = $this->getSponsorStatus();
-            return view('maestro.sociallink.create', compact('sponsor_status'));
+            return view('maestro.sociallink.create');
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -73,15 +72,15 @@ class SocialLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->createSponsor($request)) {
+            if ($this->createSocialLink($request)) {
                 DB::commit();
-                return redirect()->route('sponsors.index')->with('success', 'Sponsor created successfully');
+                return redirect()->route('social-links.index')->with('success', 'SocialLink created successfully');
             }
             DB::rollback();
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -91,14 +90,13 @@ class SocialLinkController extends Controller
     public function edit(string $id)
     {
         try {
-            $sponsor = $this->getSponsorById($id);
-            if(!$sponsor->exists){
-                return redirect()->route('sponsors.index')->with(['error' => 'Sponsor not found.']);
+            $socialLink = $this->getSocialLinkById($id);
+            if(!$socialLink->exists){
+                return redirect()->route('social-links.index')->with(['error' => 'SocialLink not found.']);
             }
-            $sponsor_status = $this->getSponsorStatus();
-            return view('maestro.sociallink.edit', compact('sponsor','sponsor_status'));
+            return view('maestro.sociallink.edit', compact('socialLink'));
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -109,15 +107,15 @@ class SocialLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateSponsorById($id,$request)) {
+            if ($this->updateSocialLinkById($id,$request)) {
                 DB::commit();
-                return redirect()->route('sponsors.index')->with('success', 'Sponsor Updated successfully');
+                return redirect()->route('social-links.index')->with('success', 'SocialLink Updated successfully');
             }
             DB::rollback();
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong.']);
         }
     }
 
@@ -128,9 +126,9 @@ class SocialLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->deleteSponsorById($id)) {
+            if ($this->deleteSocialLinkById($id)) {
                 DB::commit();
-                return response()->json(['status' => 'success', 'message' => 'Sponsor deleted successfully']);
+                return response()->json(['status' => 'success', 'message' => 'SocialLink deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {

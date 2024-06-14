@@ -33,7 +33,7 @@ class SponsorsController extends Controller
                     })
                     ->editColumn('image', static function (Host $sponsors) {
                         $onerror = 'onerror=this.onerror=null;this.src="' . asset('no-img.jpg') . '";';
-                        return "<img src='" . asset($sponsors->image) . "' width='100px' " . $onerror . ">";
+                        return "<img src='" . asset($sponsors->image) . "' width='50px' " . $onerror . ">";
                     })
                     ->editColumn('status', static function (Host $sponsors) {
                         if ($sponsors->status == '1') {

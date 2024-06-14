@@ -28,12 +28,12 @@
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        {!!Form::model($sponsor,array('method'=>'PUT','files'=>true,'route'=>array('social-links.update',$sponsor->id)))!!}
+        {!!Form::model($socialLink,array('method'=>'PUT','files'=>true,'route'=>array('social-links.update',$socialLink->id)))!!}
         <div class="row">
           <div class="col-md-6">
             <div class="form-group {{($errors->has('title')) ? 'has-error' : ''}}">
               {!! Form::label('title', 'Social Media Name', ['class' => 'control-label']) !!}
-              {!! Form::text('title',$sponsor->title, ['class' => 'form-control']) !!}
+              {!! Form::text('title',$socialLink->title, ['class' => 'form-control','required' => 'required']) !!}
               <span class="help-block">{{ $errors->first('title')}}</span>
             </div>
           </div>

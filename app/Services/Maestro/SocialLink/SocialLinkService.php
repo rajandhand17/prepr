@@ -7,7 +7,7 @@ use Exception;
 
 class SocialLinkService
 {
-    public static function getSponsorList()
+    public static function getSocialLinkList()
     {
         try {
             return SocialLink::latest();
@@ -15,31 +15,31 @@ class SocialLinkService
             return false;
         }
     }
-    public static function createSponsor($request)
+    public static function createSocialLink($request)
     {
         try {
-            $sponsorImage = null;
-            if ($request->file('image')) {
-                $sponsorImage = $request->file('image')->store('uploads/hosts', 's3');
+            $socialLinkImage = null;
+            if ($request->file('icon')) {
+                $socialLinkImage = $request->file('icon')->store('uploads/social_link', 's3');
             }
-            return SocialLink::create(['title' => $request->title, 'link' => $request->link, 'image' => $sponsorImage, 'status' => $request->status]);
+            return SocialLink::create(['title' => $request->title, 'link' => $request->link, 'icon' => $socialLinkImage]);
         } catch (Exception $e) {
             return false;
         }
     }
-    public static function deleteSponsor($id)
+    public static function deleteSocialLink($id)
     {
         try {
-            $sponsor = SocialLink::find($id);
-            if (!empty($sponsor)) {
-                return $sponsor->delete();
+            $socialLink = SocialLink::find($id);
+            if (!empty($socialLink)) {
+                return $socialLink->delete();
             }
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
-    public static function getSponsorStatus()
+    public static function getSocialLinkStatus()
     {
         try {
             return ['1' => 'Active', '0' => 'Not Active'];
@@ -47,12 +47,12 @@ class SocialLinkService
             return false;
         }
     }
-    public static function getSponsorById($id)
+    public static function getSocialLinkById($id)
     {
         try {
-            $sponsor = SocialLink::findOrFail($id);
-            if ($sponsor != null) {
-                return $sponsor;
+            $socialLink = SocialLink::findOrFail($id);
+            if ($socialLink != null) {
+                return $socialLink;
             }
 
             return false;
@@ -60,18 +60,16 @@ class SocialLinkService
             return false;
         }
     }
-    public static function updateSponsorById($id, $request)
+    public static function updateSocialLinkById($id, $request)
     {
         try {
-            $sponsor = SocialLink::findOrFail($id);
-            if (!empty($sponsor)) {
-                    if ($request->file('image')) {
-                        $sponsor->image = $request->file('image')->store('uploads/hosts', 's3');
+            $socialLink = SocialLink::findOrFail($id);
+            if (!empty($socialLink)) {
+                    if ($request->file('icon')) {
+                        $socialLink->icon = $request->file('icon')->store('uploads/social_link', 's3');
                     }
-                    $sponsor->title  = $request->title;
-                    $sponsor->link   = $request->link;
-                    $sponsor->status   = $request->status;
-                if ($sponsor->save()) {
+                    $socialLink->title  = $request->title;
+                if ($socialLink->save()) {
                     return true;
                 }
                 return false;

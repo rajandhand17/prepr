@@ -8,7 +8,7 @@ use App\Http\Controllers\Maestro\Projects\ProjectIndustryController;
 use App\Http\Controllers\Maestro\Projects\ProjectStatusController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web','auth']], function () {
     Route::resource('projects', ProjectsController::class);
     Route::resource('projects-stage', ProjectStageController::class);
     Route::resource('projects-vertical', ProjectVerticalController::class);

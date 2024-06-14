@@ -38,10 +38,10 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
-              {!! Form::label('image', 'Social Link Image', ['class' => 'control-label']) !!}</br>
-              {!! Form::file('image', ['class' => 'form-control']) !!}
-              <span class="help-block">{{ $errors->first('image')}}</span>
+            <div class="form-group {{($errors->has('icon')) ? 'has-error' : ''}}">
+              {!! Form::label('icon', 'Social Icon', ['class' => 'control-label']) !!}</br>
+              {!! Form::file('icon', ['class' => 'form-control']) !!}
+              <span class="help-block">{{ $errors->first('icon')}}</span>
             </div>
           </div>
         </div>

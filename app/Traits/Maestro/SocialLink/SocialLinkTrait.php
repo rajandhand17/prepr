@@ -7,10 +7,10 @@ use Exception;
 
 trait SocialLinkTrait
 {
-    private function getSponsorList()
+    private function getSocialLinkList()
     {
         try {
-            $sponsorList = SocialLinkService::getSponsorList();
+            $sponsorList = SocialLinkService::getSocialLinkList();
             if($sponsorList){
                 return $sponsorList;
             }
@@ -19,10 +19,10 @@ trait SocialLinkTrait
             return false;
         }
     }
-    private function createSponsor($request)
+    private function createSocialLink($request)
     {
         try {
-            if(SocialLinkService::createSponsor($request)){
+            if(SocialLinkService::createSocialLink($request)){
                 return true;
             }
             return false;
@@ -30,10 +30,10 @@ trait SocialLinkTrait
             return false;
         }
     }
-    private function deleteSponsorById($id)
+    private function deleteSocialLinkById($id)
     {
         try {
-            if(SocialLinkService::deleteSponsor($id)){
+            if(SocialLinkService::deleteSocialLink($id)){
                 return true;
             }
             return false;
@@ -41,31 +41,19 @@ trait SocialLinkTrait
             return false;
         }
     }
-    private function getSponsorById($id)
+    private function getSocialLinkById($id)
     {
         try {
-            return SocialLinkService::getSponsorById($id);
+            return SocialLinkService::getSocialLinkById($id);
         } catch (Exception $e) {
             return false;
         }
     }
-    private function updateSponsorById($id,$request)
+    private function updateSocialLinkById($id,$request)
     {
         try {
-            if(SocialLinkService::updateSponsorById($id,$request)){
+            if(SocialLinkService::updateSocialLinkById($id,$request)){
                 return true;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-    private function getSponsorStatus()
-    {
-        try {
-            $status = SocialLinkService::getSponsorStatus();
-            if($status){
-                return $status;
             }
             return false;
         } catch (Exception $e) {

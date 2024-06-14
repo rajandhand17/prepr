@@ -67,7 +67,7 @@
     </script>
 
     <script>
-        function deleteSponsor(url) {
+        function deleteSocialLink(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
