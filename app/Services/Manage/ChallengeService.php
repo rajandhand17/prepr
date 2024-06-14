@@ -835,8 +835,6 @@ class ChallengeService
         try {
             return Challenge::query()->where('organization_id', $organizationId)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }
@@ -855,8 +853,6 @@ class ChallengeService
         try {
             return Challenge::query()->where('user_id', $userId)->get();
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }

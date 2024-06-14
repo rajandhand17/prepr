@@ -885,8 +885,6 @@ class MemberManagementService
         try {
             return MemberManagement::query()->where('module_type', $moduleType)->where('email', $email)->get();
         } catch (\Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }

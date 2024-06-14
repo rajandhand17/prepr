@@ -50,7 +50,7 @@ class ChannelApiController extends AppBaseController
                 'list'         => LabResource::collection($labs->items()),
             ];
 
-            return $this->sendResponse($responseData, 'labs success');
+            return $this->sendResponse($responseData, 'responses.found_labs_list');
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -88,7 +88,7 @@ class ChannelApiController extends AppBaseController
                 'list'         => ChallengeResource::collection($challenges->items()),
             ];
 
-            return $this->sendResponse($responseData, 'Challenge list success');
+            return $this->sendResponse($responseData, 'responses.found_challenges_list');
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.send_error'), 500);
         }
@@ -105,7 +105,7 @@ class ChannelApiController extends AppBaseController
 
             $assignToLab = $this->channelApiRepository->assignUserToLab($request->user, $lab);
             if (!$assignToLab) {
-                return $this->sendError(__('responses.assign_to_user_failed'), 400);
+                return $this->sendError(__('responses.assign_user_to_lab_failed'), 400);
             }
 
             return $this->sendResponse($assignToLab, $assignToLab['add_member_response']);

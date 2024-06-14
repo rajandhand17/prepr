@@ -226,8 +226,6 @@ class LabService
 
             return $lab;
         } catch (\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -532,8 +530,6 @@ class LabService
         try {
             return Lab::query()->where('organization_id', $organizationId)->orderBy('id', 'desc')->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }
@@ -543,8 +539,6 @@ class LabService
         try {
             return Lab::query()->where('user_id', $userId)->get();
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }
@@ -554,8 +548,6 @@ class LabService
         try {
             return Lab::query()->whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }

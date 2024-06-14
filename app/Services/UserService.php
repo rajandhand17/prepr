@@ -314,8 +314,6 @@ class UserService
         try {
             return User::where('magnet_user_id', $magnetUserId)->first();
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }
@@ -329,8 +327,6 @@ class UserService
 
             return $user;
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }
@@ -355,8 +351,6 @@ class UserService
 
             return $user;
         } catch (Exception $exception) {
-            Log::error($exception);
-
             return false;
         }
     }

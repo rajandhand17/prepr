@@ -35,11 +35,11 @@ class MagnetWebhook implements ShouldQueue
                 $params = [
                     'id'              => $this->lab->id,
                     'community_id'    => $organization->magnet_community_id,
-                    'name'            => $organization->title,
+                    'name'            => $this->lab->title,
                     'learning_status' => $this->updateType,
                     'slug'            => $this->lab->slug,
                     'description'     => $this->lab->description,
-                    'provided_by'     => $this->lab->image,
+                    'provided_by'     => $organization->title,
                     'image'           => $this->lab->media,
                 ];
 

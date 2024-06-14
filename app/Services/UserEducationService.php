@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UserEducationService
 {
@@ -85,7 +86,7 @@ class UserEducationService
             DB::beginTransaction();
             UserEducation::query()->where('user_id', $user->id)->forceDelete();
             foreach ($data as $item) {
-                if (!$item->is_current) {
+                if (!data_get($item, 'is_current')) {
                     UserEducation::query()->create([
                         'user_id'    => $user->id,
                         'university' => data_get($item, 'institution'),

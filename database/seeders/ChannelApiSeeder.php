@@ -14,16 +14,8 @@ class ChannelApiSeeder extends Seeder
     {
         $data = [
             [
-                'api_name' => 'Get Organisations',
-                'api_slug' => 'get-organizations',
-            ],
-            [
                 'api_name' => 'Get Labs',
                 'api_slug' => 'get-labs',
-            ],
-            [
-                'api_name' => 'Get Lab Status',
-                'api_slug' => 'get-lab-status',
             ],
             [
                 'api_name' => 'Assign User to Lab',

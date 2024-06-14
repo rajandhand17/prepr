@@ -129,15 +129,14 @@ class UserExperienceService
             foreach ($data as $item) {
                 UserExperience::create([
                     'user_id'  => $user->id,
-                    'company'  => data_get($item, 'company'),
-                    'position' => data_get($item, 'job_title'),
+                    'company'  => data_get($item, 'company', '-'),
+                    'position' => data_get($item, 'job_title', '-'),
                 ]);
             }
             DB::commit();
 
             return true;
         } catch (\Exception $exception) {
-            Log::error($exception);
             DB::rollBack();
 
             return false;

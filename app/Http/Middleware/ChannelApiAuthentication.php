@@ -39,7 +39,7 @@ class ChannelApiAuthentication
 
         $hasApiAccess = ChannelVendorApiAccess::where(['channel_vendor_id' => $vendor->id, 'channel_api_id' => $channelApi->id])->first();
         if (!$hasApiAccess) {
-            return Response::json(ResponseUtil::makeError(__('responses.route_not_found')), 401);
+            return Response::json(ResponseUtil::makeError(__('responses.no_access_to_api')), 401);
         }
 
         return $next($request);

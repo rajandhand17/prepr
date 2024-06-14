@@ -79,12 +79,12 @@ class User extends Authenticatable
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return 'users.'.$this->id;
+        return 'users.' . $this->id;
     }
 
     public function getProfileImageAttribute($value)
     {
-        return config('site-settings.aws_url').$value;
+        return config('site-settings.aws_url') . $value;
     }
 
     public function userPersonal()
@@ -306,10 +306,10 @@ class User extends Authenticatable
     {
         try {
             DB::beginTransaction();
-            $name = $request->first_name.' '.$request->last_name;
+            $name = $request->first_name . ' ' . $request->last_name;
             $otp = random_int(1000, 9999);
             $string = Str::random(30);
-            $referencecode = $request->username.Carbon::now()->format('Y');
+            $referencecode = $request->username . Carbon::now()->format('Y');
             $user = new User();
             $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
@@ -668,71 +668,77 @@ class User extends Authenticatable
         $number = 1;
 
         while (User::where('username', $username)->exists()) {
-            $username = $baseUsername.$number;
+            $username = $baseUsername . $number;
             $number++;
         }
 
         return $username;
     }
 
+    public function createOrFindMagnetUser($magnetUserDetails)
+    {
+        try {
+            $user = User::where('email', data_get($magnetUserDetails, 'email'))->first();
+            if (!$user) {
+                // register users
+                $baseUsername = explode('@', data_get($magnetUserDetails, 'email'))[0];
+                $uniqueUserName = $this->generateUniqueUsername($baseUsername);
+                return User::query()->create([
+                    'first_name' => data_get($magnetUserDetails, 'first_name'),
+                    'last_name' => data_get($magnetUserDetails, 'last_name'),
+                    'username' => $uniqueUserName,
+                    'email' => data_get($magnetUserDetails, 'email'),
+                    'phone_number' => data_get($magnetUserDetails, 'phone_number'),
+                    'full_name' => data_get($magnetUserDetails, 'first_name') . ' ' . data_get($magnetUserDetails, 'last_name'),
+                    'magnet_user_id' => data_get($magnetUserDetails, 'user_id'),
+                    'verified_user' => '1',
+                ]);
+            }
+            return $user;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
     public function magnetSsoLogin($magnetUserDetails, $accessToken)
     {
         try {
             DB::beginTransaction();
-            /**checking user exists or not */
-            $user = User::where('email', data_get($magnetUserDetails, 'email'))->first();
-            if ($user) {
-                if (!$user->magnet_user_id) {
-                    $user->magnet_user_id = data_get($magnetUserDetails, 'user_id');
-                    $user->save();
-                }
-                UserSSOLogin::query()->firstOrCreate([
-                    'user_id'  => $user->id,
-                    'sso_type' => config('constants.sso_type.magnet'),
-                ]);
-                $token = $user->createToken(env('APP_NAME'))->accessToken;
+            $user = $this->createOrFindMagnetUser($magnetUserDetails);
 
+            if (!$user) {
                 return [
-                    'success' => true,
-                    'user'    => $user,
-                    'code'    => 3,
-                    'token'   => $token,
-                    'message' => __('responses.user_login_success'),
+                    'success' => false,
+                    'message' => __('responses.unauthorized'),
                 ];
             }
-            // register users
-            $baseUsername = explode('@', data_get($magnetUserDetails, 'email'))[0];
-            $uniqueUserName = $this->generateUniqueUsername($baseUsername);
-            $newUser = User::query()->create([
-                'first_name'       => data_get($magnetUserDetails, 'first_name'),
-                'last_name'        => data_get($magnetUserDetails, 'last_name'),
-                'username'         => $uniqueUserName,
-                'email'            => data_get($magnetUserDetails, 'email'),
-                'phone_number'     => data_get($magnetUserDetails, 'phone_number'),
-                'full_name'        => data_get($magnetUserDetails, 'first_name').' '.data_get($magnetUserDetails, 'last_name'),
-                'magnet_user_id'   => data_get($magnetUserDetails, 'user_id'),
-                'magnet_user_role' => data_get($magnetUserDetails, 'role'),
-                'verified_user'    => '1',
-            ]);
 
-            UserSSOLogin::create($newUser, (object) [
-                'user_id'      => $newUser->id,
-                'sso_type'     => config('constants.sso_type.magnet'),
+            UserSSOLogin::query()->updateOrCreate([
+                'user_id' => $user->id,
+                'sso_type' => config('constants.sso_type.magnet'),
                 'access_token' => $accessToken,
             ]);
 
+            if (!$user->magnet_user_id) {
+                $user->magnet_user_id = data_get($magnetUserDetails, 'user_id');
+                $user->save();
+            }
+
             $roles = ['user'];
+            $magnetUserRoles = [data_get($magnetUserDetails, 'role')];
             if (data_get($magnetUserDetails, 'user_types')) {
                 foreach (data_get($magnetUserDetails, 'user_types') as $userType) {
-                    $roles[] = match ($userType['api_tag']) {
+                    $magnetUserRoles[] = data_get($userType, 'api_tag');
+                    $roles[] = match (data_get($userType, 'api_tag')) {
                         'ORG_ADMIN', 'ORG_FULL_ADMIN', 'ORG_OWNER' => 'organization_owner',
                         default => 'user',
                     };
                 }
             }
+            $user->magnet_user_role = implode(",", array_filter($magnetUserRoles));
 
             if (data_get($magnetUserDetails, 'education')) {
-                $addEducationDetails = UserEducationService::addMagnetEducationDetails($newUser, data_get($magnetUserDetails, 'education'));
+                $addEducationDetails = UserEducationService::addMagnetEducationDetails($user, data_get($magnetUserDetails, 'education'));
                 if (!$addEducationDetails) {
                     DB::rollBack();
 
@@ -744,7 +750,7 @@ class User extends Authenticatable
             }
 
             if (data_get($magnetUserDetails, 'employment')) {
-                $addEmploymentDetails = UserExperienceService::addMagnetUserExperience($newUser, data_get($magnetUserDetails, 'employment'));
+                $addEmploymentDetails = UserExperienceService::addMagnetUserExperience($user, data_get($magnetUserDetails, 'employment'));
                 if (!$addEmploymentDetails) {
                     DB::rollBack();
 
@@ -754,54 +760,57 @@ class User extends Authenticatable
                     ];
                 }
             }
-
             // AUTO INVITE TO ORGANIZATION BASED ON MAGNET COMMUNITY ID
             $lmsUserInfo = MagnetHelper::getLMSUserInfo($accessToken);
             if (count($lmsUserInfo) > 0) {
-                $communitiesIds = array_map(function ($item) {
+                $communitiesIds = array_filter(array_map(function ($item) {
                     return data_get($item, 'affiliate_id');
-                }, $lmsUserInfo);
+                }, $lmsUserInfo));
 
-                $newUser->preferred_organization = $communitiesIds[1];
+                if (isset($communitiesIds[0])) {
+                    $user->preferred_organization = $communitiesIds[0];
+                }
 
                 $formattedUsers = collect([[
-                    'type'          => config('constants.member_management_type.invite'),
+                    'type' => config('constants.member_management_type.invite'),
                     'invite_status' => '1',
-                    'invite_type'   => config('constants.member_management_invite_type.email'),
-                    'invitee_name'  => data_get($newUser, 'full_name'),
-                    'invitee_email' => data_get($newUser, 'email'),
-                    'role'          => 'User',
+                    'invite_type' => config('constants.member_management_invite_type.email'),
+                    'invitee_name' => data_get($user, 'full_name'),
+                    'invitee_email' => data_get($user, 'email'),
+                    'role' => 'User',
                 ]]);
                 $organizations = OrganizationService::getOrganizationBasedOnCommunityIds($communitiesIds);
-                $organizations->map(function ($organization) use ($formattedUsers) {
-                    MemberManagementService::addMembers(
-                        $organization,
-                        'organization',
-                        (object) [
-                            'auto_invite'  => 'yes',
-                            'email_status' => 'sent',
-                            'subject_line' => 'Invitation to Learn Lab '.$organization->display_name,
-                            'email_body'   => 'Welcome to the '.$organization->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
-                        ],
-                        $formattedUsers
-                    );
-                });
+                if ($organizations) {
+                    $organizations->map(function ($organization) use ($formattedUsers) {
+                        MemberManagementService::addMembers(
+                            $organization,
+                            'organization',
+                            (object)[
+                                'auto_invite' => 'yes',
+                                'email_status' => 'sent',
+                                'subject_line' => 'Invitation to Learn Lab ' . $organization->display_name,
+                                'email_body' => 'Welcome to the ' . $organization->title . '! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
+                            ],
+                            $formattedUsers
+                        );
+                    });
+                }
             }
 
-            $newUser->attachRoles(array_unique($roles));
-            $token = $newUser->createToken(env('APP_NAME'))->accessToken;
+            $user->attachRoles(array_unique($roles));
+            $user->save();
+            $token = $user->createToken(env('APP_NAME'))->accessToken;
             DB::commit();
 
             return [
                 'success' => true,
-                'user'    => $newUser,
-                'code'    => 3,
-                'token'   => $token,
+                'user' => $user,
+                'code' => 3,
+                'token' => $token,
                 'message' => __('responses.user_login_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
