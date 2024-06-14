@@ -34,6 +34,7 @@ class ChallengeAssessmentCriteriaService
         try {
             if ($request->assessment_type != 'none') {
                 ChallengeAssessmentCriteria::where('challenge_id', $challenge_id)->delete();
+
                 return true;
             }
             if ($request->has('assessment_title') && $request->has('assessment_score') && $request->has('assessment_weight')) {
