@@ -1,17 +1,17 @@
 @extends('maestro.layouts.default')
-@section('title', 'Sponsors')
+@section('title', 'Social Links')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Sponsors</h1>
+                <h1 class="m-0">Social Links</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('sponsors.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Sponsors</li>
+                    <li class="breadcrumb-item"><a href="{{ route('social-links.index') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Social Links</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,7 +30,7 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('sponsors.create')}}" role="menuitem">Create Sponsor</a>
+                            href="{{route('social-links.create')}}" role="menuitem">Create Social Link</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -67,7 +67,7 @@
     </script>
 
     <script>
-        function deleteSponsor(url) {
+        function deleteSocialLink(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -107,7 +107,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while deleting the Sponsor.',
+                                'An error occurred while deleting the Social Link.',
                                 'error'
                             );
                         }
