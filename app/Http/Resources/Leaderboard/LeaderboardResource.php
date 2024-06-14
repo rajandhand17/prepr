@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class LeaderboardResource extends JsonResource
 {
+    private static $rankCounter = 1;
+
     /**
      * Transform the resource into an array.
      *
@@ -16,18 +18,18 @@ class LeaderboardResource extends JsonResource
     {
         return [
             'id'                          => $this->id,
-            'preferred_language'          => $this->preferred_language,
-            'preferred_timezone'          => $this->preferred_timezone ? $this->preferred_timezone : 'EST',
-            'first_name'                  => $this->first_name,
-            'last_name'                   => $this->last_name,
             'full_name'                   => $this->full_name,
             'username'                    => $this->username,
-            'email'                       => $this->email,
-            'phone_number'                => $this->phone_number,
+            'rank'                        => self::$rankCounter++,
             'profile_image'               => $this->profile_image,
-            'leaning_points'              => $this->user_points,
-            'rank'                        => $this->user_rank,
-            'achievement_points'          => $this->achievement_count,
+            'learning_points'             => $this->user_points !== null ? $this->user_points : 90, //temporarily added
+            'learning_rank'               => $this->user_rank !== null ? $this->user_rank : 0,
+            'achievement_points'          => $this->achievement_count ? $this->achievement_count : 90,  //temporarily added
         ];
+    }
+
+    public static function resetRankCounter()
+    {
+        self::$rankCounter = 1;
     }
 }

@@ -201,7 +201,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select();
+            $users = User::select()->orderBy('user_rank');
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
