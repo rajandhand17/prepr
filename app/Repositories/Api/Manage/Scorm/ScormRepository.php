@@ -31,4 +31,18 @@ class ScormRepository implements ScormInterface
             return false;
         }
     }
+
+    /**
+     * @param Scorm $scorm
+     *
+     * @return bool
+     */
+    public function delete(Scorm $scorm): bool
+    {
+        try {
+            return $this->scormService->delete($scorm);
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
 }

@@ -19,9 +19,10 @@ class ScormResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'uuid'    => $this->uuid,
-            'title'   => $this->title,
-            'version' => $this->version,
+            'uuid'        => $this->uuid,
+            'title'       => $this->title,
+            'version'     => $this->version,
+            'origin_file' => $this->origin_file,
         ];
     }
 }

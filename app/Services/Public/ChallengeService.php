@@ -75,8 +75,6 @@ class ChallengeService
                     case 'private':
                         $challenge_list = $challenge_list->where('challenges.privacy', '1');
                         break;
-                    default:
-                        $challenge_list = $challenge_list;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

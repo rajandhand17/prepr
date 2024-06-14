@@ -30,8 +30,11 @@ class LabMarketplaceComponentAssociationService
             foreach ($componentAssociations as $componentAssociation) {
                 if ($componentAssociation->challenge_id !== null) {
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
-                    $challengesTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($getChallenges->id);
-                    self::createLabMarkeplaceChallenge($labMarketplaceId, $challengesTemplate->id, $componentAssociation->sequence);
+                    $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($getChallenges->uuid);
+                    if (!$checkChallengeTemplate) {
+                        $challengesTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($getChallenges->id);
+                        self::createLabMarkeplaceChallenge($labMarketplaceId, $challengesTemplate->id, $componentAssociation->sequence);
+                    }
                 }
 
                 if ($componentAssociation->challenge_path_id !== null) {
