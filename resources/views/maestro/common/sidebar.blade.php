@@ -114,12 +114,12 @@
                 <p>Organization</p>
               </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{ route('lab.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lab</p>
               </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
               <a href="pages/UI/buttons.html" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
