@@ -57,18 +57,16 @@ class ChallengeTemplateService
 
             if ($request->has('status') && !empty($request->status)) {
                 $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
-                if (!empty($getChallengeRedeemedIds)) {
-                    switch ($request->status) {
-                        case 'redeemed':
-                            $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
-                            break;
-                        case 'not_redeemed':
-                            $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
-                            break;
-                        default:
-                            $challenge_template_list = $challenge_template_list;
-                            break;
-                    }
+                switch ($request->status) {
+                    case 'redeemed':
+                        $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
+                        break;
+                    case 'not_redeemed':
+                        $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
+                        break;
+                    default:
+                        $challenge_template_list = $challenge_template_list;
+                        break;
                 }
             }
 
