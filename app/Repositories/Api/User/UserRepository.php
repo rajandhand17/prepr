@@ -45,8 +45,10 @@ class UserRepository implements UserInterface
 
             $organizationData = $this->organizationService->fetchOrganizations($request, $fetchOrganizationIds);
             // Marking the organization as default if the count of retrived organization is only 1.
-            if ($organizationData->count() === (int) '1') {
-                $this->setOrganizationPreference($organizationData[0]->id);
+            if ($organizationData->count() > (int) '0') {
+                if ($user->preferred_organization == null) {
+                    $this->setOrganizationPreference($organizationData[0]->id);
+                }
             }
 
             return $organizationData;

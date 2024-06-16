@@ -48,6 +48,7 @@ class OrganizationDetailResource extends JsonResource
             'total_employees'               => $this->total_employees,
             'category_id'                   => $category_id,
             'category'                      => $category,
+            'is_verified'                   => ($this->is_verified == '1' ? 'yes' : 'no'),
             'lab_count'                     => $this->labs_count()->count(),
             'challenge_count'               => $this->challenges_count()->count(),
             'resource_count'                => $this->resource_modules_count()->count(),
@@ -56,9 +57,12 @@ class OrganizationDetailResource extends JsonResource
             'organization_address'          => OrganizationAddressResource::collection($this->address),
             'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'           => MemberManagementResource::collection($this->members),
-            'labs'                          => LabResource::collection($this->labs->take(config('site-settings.jobs_details_par_module_limit'))),
-            'challenges'                    => ChallengeResource::collection($this->challenges_count->take(config('site-settings.jobs_details_par_module_limit'))),
-            'resource_modules'              => ResourceModuleResource::collection($this->resource_modules_count->take(config('site-settings.jobs_details_par_module_limit'))),
+            'external_links'                => OrganizationExternalLinkResource::collection($this->external_links),
+            'organization_details'          => OrganizationChargebeeLimitResource::make($this),
+            'custom_login_register'         => OrganizationCustomizationResource::make($this->customization_login_register),
+            'labs'                          => LabResource::collection($this->labs->take(config('site-settings.skills_par_module_limit'))),
+            'challenges'                    => ChallengeResource::collection($this->challenges_count->take(config('site-settings.skills_par_module_limit'))),
+            'resource_modules'              => ResourceModuleResource::collection($this->resource_modules_count->take(config('site-settings.skills_par_module_limit'))),
         ];
     }
 }

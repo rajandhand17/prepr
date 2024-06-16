@@ -51,12 +51,14 @@ class OrganizationDetailResource extends JsonResource
             'liked'                        => $this->liked(),
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
+            'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'labs'                         => LabResource::collection($this->labs),
             'challenges'                   => ChallengeResource::collection($this->challenges_count),
             'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_details'         => OrganizationChargebeeLimitResource::make($this),
         ];
     }
 }

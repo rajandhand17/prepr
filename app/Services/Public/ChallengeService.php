@@ -6,6 +6,7 @@ use App\Models\Challenge;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\MemberManagement;
+use App\Models\PitchTemplate;
 use App\Models\Project;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
@@ -43,9 +44,7 @@ class ChallengeService
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $challenge_list = $challenge_list->whereIn('organization_id', $getOrganizationIds);
-                }
+                $challenge_list = $challenge_list->whereIn('organization_id', $getOrganizationIds);
             }
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
                 $activityType = ($request->social_type == 'liked') ? 'like' : 'favourite';
@@ -76,8 +75,6 @@ class ChallengeService
                     case 'private':
                         $challenge_list = $challenge_list->where('challenges.privacy', '1');
                         break;
-                    default:
-                        $challenge_list = $challenge_list;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -247,6 +244,31 @@ class ChallengeService
 
             return $fetchChallengeOrganizations;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTemplate($templateId)
+    {
+        try {
+            $templateData = [];
+            if ($templateId == '0') {
+                $templateData = [
+                    'template_id'       => $templateId,
+                    'template_title'    => __('responses.any_pitch_template'),
+                ];
+            } else {
+                $template = PitchTemplate::where('id', $templateId)->first();
+                if ($template) {
+                    $templateData = [
+                        'template_id'       => $template->id,
+                        'template_title'    => $template->title,
+                    ];
+                }
+            }
+
+            return $templateData;
+        } catch (Exception $e) {
             return false;
         }
     }

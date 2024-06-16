@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Api\Manage\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -25,10 +25,12 @@ class ChallengeTemplateController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+            $request->merge(['organization_id' => $organization->id]);
 
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateList($request);
             if ($challengeTemplate) {
@@ -58,6 +60,20 @@ class ChallengeTemplateController extends AppBaseController
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
 
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
             $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($checkComponentBasedOnSlug->uuid);
             if ($checkChallengeTemplate) {
                 return $this->sendError(__('responses.challenge_already_cloned'), 422);
@@ -74,14 +90,9 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function show($slug, Request $request)
+    public function show($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
-            }
-
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
             if ($challengeTemplate) {
                 return $this->sendResponse(ChallengeTemplateResource::make($challengeTemplate), __('responses.found_challenge_detail'), 200);
@@ -93,12 +104,13 @@ class ChallengeTemplateController extends AppBaseController
         }
     }
 
-    public function redeemChallenge($slug, Request $request)
+    public function redeemChallenge($slug)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);

@@ -11,6 +11,7 @@ use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
+use App\Services\Public\ChallengeService;
 use App\Services\Public\LabProgramService;
 use App\Services\Public\LabService;
 use App\Services\Public\ResourceCollectionService;
@@ -58,6 +59,7 @@ class ChallengeResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
+        $challenge_template = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -197,7 +199,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
         }
 
         if ($this->challenge_assessment_criteria) {
@@ -315,6 +317,10 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        if ($this->challenge_project_template) {
+            $challenge_template = ChallengeService::getTemplate($this->challenge_project_template->template_id);
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -355,7 +361,7 @@ class ChallengeResource extends JsonResource
             'challenge_assessment'          => $challenge_assessment,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
-            'challenge_template'            => $this->challenge_project_template,
+            'challenge_template'            => $challenge_template,
             'joined'                        => $join_status,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),

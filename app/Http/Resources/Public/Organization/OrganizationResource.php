@@ -49,9 +49,12 @@ class OrganizationResource extends JsonResource
             'liked'                        => $this->liked(),
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
+            'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_details'         => OrganizationChargebeeLimitResource::make($this),
+            'external_links'               => OrganizationExternalLinkResource::collection($this->external_links),
         ];
     }
 }

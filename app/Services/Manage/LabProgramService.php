@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
-use App\Models\Organization;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -115,7 +114,7 @@ class LabProgramService
         }
     }
 
-    public function createLabProgram($request, $upload_media)
+    public function createLabProgram($request, $upload_media, $organizationId)
     {
         try {
             $privacy = config('constants.lab_privacy.no');
@@ -148,14 +147,13 @@ class LabProgramService
             }
             $model = new LabProgram();
             $slug = UtilityHelper::generateSlug($request->title, $model);
-            $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
             $labProgram = new LabProgram();
             $labProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $labProgram->language = $request->language;
             $labProgram->title = $request->title;
             $labProgram->slug = $slug;
             $labProgram->description = $request->description;
-            $labProgram->organization_id = $organization_id;
+            $labProgram->organization_id = $organizationId;
             $labProgram->category_id = $request->category_id;
             $labProgram->duration_id = $request->duration_id;
             $labProgram->level_id = $request->level_id;
@@ -198,7 +196,7 @@ class LabProgramService
         }
     }
 
-    public function delete($slug)
+    public static function delete($slug)
     {
         try {
             return LabProgram::where('slug', $slug)->delete();
@@ -221,7 +219,7 @@ class LabProgramService
         }
     }
 
-    public function updateLabProgram($slug, $request, $upload_media)
+    public function updateLabProgram($slug, $request, $upload_media, $organizationId)
     {
         try {
             $labProgram = LabProgram::where('slug', $slug)->first();
@@ -253,15 +251,10 @@ class LabProgramService
                     $status = config('constants.lab_status.draft');
                     break;
             }
-            if ($request->has('organization_id')) {
-                $organization_id = Organization::where('uuid', $request->organization_id)->first()->id;
-            } else {
-                $organization_id = $labProgram->organization_id;
-            }
             $labProgram->language = ($request->has('language')) ? $request->language : $labProgram->language;
             $labProgram->title = ($request->has('title')) ? $request->title : $labProgram->title;
             $labProgram->description = ($request->has('description')) ? $request->description : $labProgram->description;
-            $labProgram->organization_id = $organization_id;
+            $labProgram->organization_id = $organizationId;
             $labProgram->category_id = ($request->has('category_id')) ? $request->category_id : $labProgram->category_id;
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
             $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
@@ -324,6 +317,25 @@ class LabProgramService
         }
     }
 
+    public static function deleteOrganizationLabProgram($organizationId)
+    {
+        try {
+            $fetchOrganizationLabPrograms = LabProgram::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationLabPrograms)) {
+                foreach ($fetchOrganizationLabPrograms as $organizationLabProgram) {
+                    $deleteOrganizationLabProgram = self::delete($organizationLabProgram->slug);
+                    if (!$deleteOrganizationLabProgram) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function getLabProgramTitleBasedOnUUIDArray($uuid)
     {
         try {
@@ -333,7 +345,7 @@ class LabProgramService
             }
 
             return false;
-        } catch (\Exception $e) {
+        }catch(\Exception $e){
             return false;
         }
     }

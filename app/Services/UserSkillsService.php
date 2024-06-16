@@ -156,21 +156,24 @@ class UserSkillsService
     public static function addUserSkillsByUsingResumeData($data)
     {
         try {
-            foreach ($data['data']['skills']['overall_skills'] as $skillName) {
-                $skillResponse = WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($skillName));
-                if (is_array($skillResponse)) {
-                    foreach ($skillResponse as $relatedSkillName=>$relatedSkillScore) {
-                        if ($relatedSkillScore >= 0.95) {
-                            $dbSkill = Skill::where('title', $relatedSkillName)->first();
-                            if ($dbSkill) {
-                                $skills = new stdClass();
-                                $skills->skill_id = $dbSkill->id;
-                                $checkSkillExistsOrNot = self::checkUserSkillExists($skills);
-                                if ($checkSkillExistsOrNot->count() == 0) {
-                                    $response = self::addSingleSkill($skills);
+            if (isset($data['data']['skills']['overall_skills']) && $data['data']['skills']['overall_skills'] !== null) {
+                foreach ($data['data']['skills']['overall_skills'] as $skillName) {
+                    $skillResponse = WikipediaHelper::fetchRelatedSkills(config('wikipedia.SKILLS_RECOMMENDATION_ENGINE_URL').strtolower($skillName));
+                    if (is_array($skillResponse)) {
+                        foreach ($skillResponse as $relatedSkillName=>$relatedSkillScore) {
+                            if ($relatedSkillScore >= 0.95) {
+                                $dbSkill = Skill::where('title', $relatedSkillName)->first();
+                                if ($dbSkill) {
+                                    $skills = new stdClass();
+                                    $skills->skill_id = $dbSkill->id;
+                                    $checkSkillExistsOrNot = self::checkUserSkillExists($dbSkill->id);
+                                    if ($checkSkillExistsOrNot == null) {
+                                        // if ($checkSkillExistsOrNot->count() == 0) {
+                                        self::addSingleSkill($skills);
+                                    }
                                 }
+                                break;
                             }
-                            break;
                         }
                     }
                 }

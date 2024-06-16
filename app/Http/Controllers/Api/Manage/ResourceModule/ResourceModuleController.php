@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\CreateResourceModuleRequest;
@@ -15,7 +16,6 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
-use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -35,9 +35,10 @@ class ResourceModuleController extends AppBaseController
             if (!auth()->user()->isAbleTo('view_resource_module')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $responseModuleList = $this->resourceModuleRepository->getResourceModuleList($request, $organization);
             if ($responseModuleList) {
@@ -67,8 +68,19 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             if ($checkResourceModuleExistsOrNot) {
-               MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), $request->ip());
-               return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                }
+                if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+                }
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), $request->ip());
+                return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
@@ -80,8 +92,13 @@ class ResourceModuleController extends AppBaseController
     public function create(CreateResourceModuleRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
             // checks creation limits of the Resource Module
-            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
             if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
                 if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
@@ -97,7 +114,7 @@ class ResourceModuleController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image);
+            $createResourceModule = $this->resourceModuleRepository->createResourceModule($request, $upload_cover_image, $organization->id);
 
             if ($createResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($createResourceModule), __('responses.resource_module_stored_success'), 200);
@@ -116,7 +133,15 @@ class ResourceModuleController extends AppBaseController
             if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
@@ -127,7 +152,7 @@ class ResourceModuleController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image);
+            $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image, $organization->id);
             if ($updateResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($updateResourceModule), __('responses.resource_module_update_success'), 200);
             }
@@ -179,7 +204,15 @@ class ResourceModuleController extends AppBaseController
             if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             if ($request->has('links') && !empty($request->links)) {
@@ -209,7 +242,15 @@ class ResourceModuleController extends AppBaseController
             if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $insertData = $this->resourceModuleRepository->fileUpload($request, $checkResourceModuleExistsOrNot->id);
@@ -230,7 +271,15 @@ class ResourceModuleController extends AppBaseController
             if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id,$request);
@@ -251,7 +300,15 @@ class ResourceModuleController extends AppBaseController
             if (!$checkResourceModuleExistsOrNot) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModuleMedia($request, $checkResourceModuleExistsOrNot->id);
@@ -268,9 +325,10 @@ class ResourceModuleController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $responseModuleList = $this->resourceModuleRepository->getListName($request, $organization);
             if ($responseModuleList) {

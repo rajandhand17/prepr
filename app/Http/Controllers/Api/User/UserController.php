@@ -47,7 +47,16 @@ class UserController extends AppBaseController
         try {
             $organizationListing = $this->userRepository->organizationListing($request);
             if ($organizationListing != false) {
-                return $this->sendResponse(UserOrganizationListResource::collection($organizationListing), __('responses.found_organization_list'));
+                $response = [
+                    'total_count'  => $organizationListing->total(),
+                    'per_page'     => $organizationListing->perPage(),
+                    'count'        => $organizationListing->count(),
+                    'current_page' => $organizationListing->currentPage(),
+                    'total_pages'  => $organizationListing->lastPage(),
+                    'list'         => UserOrganizationListResource::collection($organizationListing),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.found_organization_list'), 404);
@@ -56,15 +65,29 @@ class UserController extends AppBaseController
         }
     }
 
-    public function setOrganizationPreference($slug)
+    public function organizationPreference(Request $request, $slug = null)
     {
         try {
-            $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
-            if ($checkComponentSlugExistOrNot) {
-                $setOrganizationPreference = $this->userRepository->setOrganizationPreference($checkComponentSlugExistOrNot->id);
+            if ($request->isMethod('post') && $slug != null) {
+                $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
+                if ($checkComponentSlugExistOrNot) {
+                    $setOrganizationPreference = $this->userRepository->setOrganizationPreference($checkComponentSlugExistOrNot->id);
 
-                return $this->sendResponse(UserResource::make(auth()->user()), __('responses.preferred_organization_updated'));
+                    return $this->sendResponse(UserResource::make(auth()->user()), __('responses.preferred_organization_updated'));
+                }
+            } elseif ($request->isMethod('get') && $slug == null) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if ($organization) {
+                    $organization_details['id'] = $organization->uuid;
+                    $organization_details['title'] = $organization->title;
+                    $organization_details['slug'] = $organization->slug;
+
+                    return $this->sendResponse($organization_details, __('responses.selected_organization_found'));
+                }
             }
+
+            return $this->sendError(__('responses.selected_organization_not_found'), 404);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

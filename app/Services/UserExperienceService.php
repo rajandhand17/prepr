@@ -90,28 +90,30 @@ class UserExperienceService
     public static function addUserExperienceByUsingResumeData($response, $user)
     {
         try {
-            foreach ($response['data']['employer'] as $key => $value) {
-                if ($value && isset($value['company_name']) && isset($value['role'])) {
-                    $startDate = isset($value['from_year'], $value['from_month'])
-                        ? date('Y-m-d', strtotime($value['from_year'].'-'.$value['from_month'].'-01'))
-                        : now()->toDateString();
+            if (isset($response['data']['employer']) && $response['data']['employer'] !== null) {
+                foreach ($response['data']['employer'] as $key => $value) {
+                    if ($value && isset($value['company_name']) && isset($value['role'])) {
+                        $startDate = isset($value['from_year'], $value['from_month'])
+                            ? date('Y-m-d', strtotime($value['from_year'].'-'.$value['from_month'].'-01'))
+                            : now()->toDateString();
 
-                    $endDate = isset($value['to_year'], $value['to_month'])
-                        ? date('Y-m-d', strtotime($value['to_year'].'-'.$value['to_month'].'-01'))
-                        : now()->toDateString();
-                    $companyName = trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
-                    $checkUserExperience = self::checkUserExperienceBasedOnTitle($companyName);
-                    if ($checkUserExperience->count == 0) {
-                        UserExperience::create([
-                            'user_id'     => $user->id,
-                            'company'     => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
-                            'position'    => trim(str_replace('&nbsp;', ' ', strip_tags($value['role']))),
-                            'start_date'  => $startDate,
-                            'end_date'    => $endDate,
-                            'country'     => '',
-                            'state'       => '',
-                            'description' => trim(str_replace('&nbsp;', ' ', strip_tags($value['description']))),
-                        ]);
+                        $endDate = isset($value['to_year'], $value['to_month'])
+                            ? date('Y-m-d', strtotime($value['to_year'].'-'.$value['to_month'].'-01'))
+                            : now()->toDateString();
+                        $companyName = trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
+                        $checkUserExperience = self::checkUserExperienceBasedOnTitle($companyName);
+                        if ($checkUserExperience == null) {
+                            UserExperience::create([
+                                'user_id'     => $user->id,
+                                'company'     => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
+                                'position'    => trim(str_replace('&nbsp;', ' ', strip_tags($value['role']))),
+                                'start_date'  => $startDate,
+                                'end_date'    => $endDate,
+                                'country'     => '',
+                                'state'       => '',
+                                'description' => trim(str_replace('&nbsp;', ' ', strip_tags($value['description']))),
+                            ]);
+                        }
                     }
                 }
             }

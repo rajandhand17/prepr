@@ -112,12 +112,11 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organizationData)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organizationData) {
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organizationData->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
@@ -139,7 +138,7 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($createChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -151,9 +150,8 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($createChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
-
-                );
+                        $organizationData,
+                    );
                 }
 
                 return [
@@ -240,7 +238,9 @@ class ChallengeRepository implements ChallengeInterface
             $request->json()->replace($updatedData);
 
             $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organization->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
                 $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
@@ -329,12 +329,11 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment)
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData)
     {
         try {
-            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
+            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData) {
+                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image, $organizationData->id);
                 $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
                 $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
@@ -356,7 +355,7 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($updateChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -368,7 +367,7 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($updateChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                     );
                 }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
@@ -11,7 +12,6 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -26,8 +26,13 @@ class ResourceGroupController extends AppBaseController
     public function create(CreateResourceGroupRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
             // checks creation limits of the Resource Group
-            $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceGroup');
+            $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceGroup');
             if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceGroupCount = $this->resourceGroupRepository->getResourceGroupCountBasedOnOrganization($checkResourceGroupLimit['organizationId']);
                 if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] <= $checkResourceGroupCount) {
@@ -51,7 +56,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image, $upload_achievement_image);
+            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($createResourceGroup) {
                 return $this->sendResponse(ResourceGroupResource::make($createResourceGroup), __('responses.resource_group_stored_success'), 200);
             }
@@ -71,6 +76,18 @@ class ResourceGroupController extends AppBaseController
             }
             if ($checkResourceGroupExistsOrNot) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, auth()->user(), $request->ip());
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                }
+                if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.resource_group_switcher_error'), 403);
+                }
+                if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
+                    return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
@@ -101,7 +118,15 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_group_switcher_error'), 403);
+            }
+            if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             $deleteResourceGroup = $this->resourceGroupRepository->deleteGroupModule($checkResourceGroupExistsOrNot->id);
@@ -136,7 +161,15 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_group_switcher_error'), 403);
+            }
+            if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->media);
@@ -155,7 +188,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image);
+            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
                 return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
@@ -169,9 +202,10 @@ class ResourceGroupController extends AppBaseController
     public function index(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
             if ($resourceGroup) {
@@ -196,9 +230,10 @@ class ResourceGroupController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $getResourceGroupListName = $this->resourceGroupRepository->getResourceGroupListName($request, $organization);
             if ($getResourceGroupListName) {

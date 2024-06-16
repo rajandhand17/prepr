@@ -347,7 +347,11 @@ return [
         '1' => 'private',
         '2' => 'signed-in',
     ],
-
+    'user_privacy_options' => [
+        'public'    => '0',
+        'private'   => '1',
+        'signed-in' => '2',
+    ],
     'friend_request_options' => [
         '0' => 'public',
         '1' => 'private',
@@ -485,5 +489,13 @@ return [
         '1' => 'story',
         '2' => 'both',
         '3' => 'no',
+    ],
+    'notification_permission' => [
+        'yes' => '0',
+        'no'  => '1',
+    ],
+    'use_main_org_logo' => [
+        'no'    => '0',
+        'yes'   => '1',
     ],
 ];
