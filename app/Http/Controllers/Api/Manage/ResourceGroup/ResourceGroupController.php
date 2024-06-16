@@ -28,7 +28,7 @@ class ResourceGroupController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             // checks creation limits of the Resource Group
             $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceGroup');
@@ -74,7 +74,7 @@ class ResourceGroupController extends AppBaseController
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
                 }
                 if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                     return $this->sendError(__('responses.resource_group_switcher_error'), 403);
@@ -116,7 +116,7 @@ class ResourceGroupController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
@@ -159,7 +159,7 @@ class ResourceGroupController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
@@ -200,7 +200,7 @@ class ResourceGroupController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
             if ($resourceGroup) {
@@ -228,7 +228,7 @@ class ResourceGroupController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $getResourceGroupListName = $this->resourceGroupRepository->getResourceGroupListName($request, $organization);
             if ($getResourceGroupListName) {
