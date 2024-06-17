@@ -37,7 +37,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $responseModuleList = $this->resourceModuleRepository->getResourceModuleList($request, $organization);
             if ($responseModuleList) {
@@ -67,7 +67,7 @@ class ResourceModuleController extends AppBaseController
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
                 }
                 if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                     return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -91,7 +91,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             // checks creation limits of the Resource Module
             $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
@@ -132,7 +132,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -203,7 +203,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -241,7 +241,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -270,7 +270,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -299,7 +299,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkResourceModuleExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
@@ -324,7 +324,7 @@ class ResourceModuleController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $responseModuleList = $this->resourceModuleRepository->getListName($request, $organization);
             if ($responseModuleList) {

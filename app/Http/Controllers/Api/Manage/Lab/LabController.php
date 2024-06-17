@@ -34,7 +34,7 @@ class LabController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $lab = $this->labRepository->getLabList($request, $organization);
             if ($lab) {
@@ -64,7 +64,7 @@ class LabController extends AppBaseController
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
-                    return $this->sendError(__('responses.organization_not_found'), 404);
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
                 }
                 if ($lab->organization_id != $organization->id) {
                     return $this->sendError(__('responses.lab_switcher_error'), 403);
@@ -88,7 +88,7 @@ class LabController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
             // checks creation limits of the Lab
@@ -141,7 +141,7 @@ class LabController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
@@ -166,7 +166,7 @@ class LabController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image);
+            $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organization);
             if ($updateLab != false) {
                 return $this->sendResponse(LabResource::make($updateLab), __('responses.lab_update_successfully'), 200);
             }
@@ -187,7 +187,7 @@ class LabController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
@@ -240,7 +240,7 @@ class LabController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $getLabListName = $this->labRepository->getLabListName($request, $organization);
             if ($getLabListName) {

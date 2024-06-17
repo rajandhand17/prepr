@@ -57,18 +57,16 @@ class ChallengeTemplateService
 
             if ($request->has('status') && !empty($request->status)) {
                 $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
-                if (!empty($getChallengeRedeemedIds)) {
-                    switch ($request->status) {
-                        case 'redeemed':
-                            $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
-                            break;
-                        case 'not_redeemed':
-                            $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
-                            break;
-                        default:
-                            $challenge_template_list = $challenge_template_list;
-                            break;
-                    }
+                switch ($request->status) {
+                    case 'redeemed':
+                        $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
+                        break;
+                    case 'not_redeemed':
+                        $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
+                        break;
+                    default:
+                        $challenge_template_list = $challenge_template_list;
+                        break;
                 }
             }
 
@@ -197,7 +195,7 @@ class ChallengeTemplateService
         }
     }
 
-    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    public static function deleteChallengeTemplate($slug, $challengeTemplateId)
     {
         try {
             $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();
@@ -298,6 +296,25 @@ class ChallengeTemplateService
                         $newChallengeAssociation->resource_collection_id = $challengeTemplateComponentAssociation->resource_collection_id;
                     }
                     $newChallengeAssociation->save();
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallengeTemplate($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengeTemplates = ChallengeTemplate::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationChallengeTemplates)) {
+                foreach ($fetchOrganizationChallengeTemplates as $organizationChallengeTemplate) {
+                    $deleteOrganizationChallengeTemplate = self::deleteChallengeTemplate($organizationChallengeTemplate->slug, $organizationChallengeTemplate->id);
+                    if (!$deleteOrganizationChallengeTemplate) {
+                        return false;
+                    }
                 }
             }
 

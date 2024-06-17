@@ -96,7 +96,7 @@ class ResourceGroupService
         }
     }
 
-    public function deleteGroupModule($resource_group_id)
+    public static function deleteGroupModule($resource_group_id)
     {
         try {
             $resourceModule = ResourceGroup::find($resource_group_id)->delete();
@@ -306,6 +306,25 @@ class ResourceGroupService
 
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationResourceGroup($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceGroups = ResourceGroup::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceGroups)) {
+                foreach ($fetchOrganizationResourceGroups as $organizationResourceGroup) {
+                    $deleteOrganizationResourceGroup = self::deleteGroupModule($organizationResourceGroup);
+                    if (!$deleteOrganizationResourceGroup) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

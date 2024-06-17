@@ -801,4 +801,23 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function deleteOrganizationChallenge($organizationId)
+    {
+        try {
+            $fetchOrganizationChallenges = Challenge::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationChallenges)) {
+                foreach ($fetchOrganizationChallenges as $organizationChallenge) {
+                    $deleteOrganizationChallenge = self::deleteChallenge($organizationChallenge);
+                    if (!$deleteOrganizationChallenge) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
