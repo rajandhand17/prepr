@@ -41,8 +41,8 @@ class SkillResource extends JsonResource
             'related_challenges'     => $this->getChallenges != null ? $this->getChallenges->count() : '0',
             'related_labs_count'     => $this->getLabs != null ? $this->getLabs->count() : '0',
             'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : '0',
-//            'related_jobs'           => CareerResource::collection($getJobIdsBasedOnSkills),
-//            'related_labs'           => LabResource::collection($getLabIdsBasedOnSKills),
+            'related_jobs'           => CareerResource::collection($getJobIdsBasedOnSkills),
+            'related_labs'           => LabResource::collection($getLabIdsBasedOnSKills),
         ];
         if (auth('api')->check()) {
             $data['saved_on'] = isset($this->saved_skill->created_at) ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null;

@@ -672,6 +672,7 @@
     "responses.skill_id_required": "The Skill field is required",
     "responses.tag_id_required": "The Tag field is required",
     "responses.add_skills_create": "You've updated your skills successfully",
+    "responses.save_skills": "You’ve saved the skill successfully!",
     "responses.add_skills_failed": "Oops! You have failed to add your Skills",
     "responses.add_tags_create": "Congratulations! You have successfully added tags into your tag list",
     "responses.add_tags_failed": "Oops! You have failed to add your tags",
