@@ -59,6 +59,7 @@ class SkillController extends AppBaseController
             if ($addSkills) {
                 return $this->sendResponse(AddSkillResource::make($addSkills), __('responses.save_skills'));
             }
+
             return $this->sendError(__('responses.add_skills_failed'), 400);
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
