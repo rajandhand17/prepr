@@ -11,5 +11,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/pinned', [SkillController::class, 'addSKillPinned']);
 });
 Route::middleware($middleware)->group(function () {
-    Route::get('/{id?}', [SkillController::class, 'index']);
+    Route::get('/', [SkillController::class, 'index']);
+    Route::get('/{id}', [SkillController::class, 'index']);
 });

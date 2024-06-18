@@ -177,12 +177,17 @@ class LabService
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
             if (!empty($labIds)) {
-                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_max'));
+                $lab = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+                $lab = Lab::where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_min'));
+            }
+            if (count($lab) < config('site-settings.explore_page_limit_max')) {
+                $limit = config('site-settings.explore_page_limit_max') - count($lab);
+                $labNewIds = Lab::where('user_id', '!=', auth()->user()->id)->whereNotIn('id', $lab)->pluck('id')->take($limit);
+                $lab = $lab->merge($labNewIds)->unique();
             }
 
-            return $labList->get();
+            return Lab::whereIn('id', $lab)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (\Exception $e) {
             return false;
         }
