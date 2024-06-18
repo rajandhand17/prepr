@@ -27,7 +27,7 @@ class SkillController extends AppBaseController
             if ($skillList) {
                 if ($skillId !== null) {
                     $resource = SkillResource::class;
-                }else{
+                } else {
                     $resource = SkillListResource::class;
                 }
                 if ($skillId == null) {
