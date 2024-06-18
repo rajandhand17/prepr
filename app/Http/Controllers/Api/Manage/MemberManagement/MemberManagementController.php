@@ -81,7 +81,7 @@ class MemberManagementController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
-            if ($component != 'organization' && $request->role != 'User') {
+            if ($component != 'organization' && $request->role != 'User'){
                 return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);

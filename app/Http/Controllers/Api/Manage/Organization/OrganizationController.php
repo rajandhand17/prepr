@@ -138,11 +138,6 @@ class OrganizationController extends AppBaseController
     public function show($slug)
     {
         try {
-            if (!auth()->user()->hasRole([
-                'organization_owner', 'organization_manager', 'lab_manager', 'challenge_manager', 'resource_manager',
-            ])) {
-                return $this->sendError(__('responses.organization_delete_access_denied'), 403);
-            }
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!auth()->user()->isAbleTo('view_organization', $organization)) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
