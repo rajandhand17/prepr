@@ -197,7 +197,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_collection_id) {
                         $getResourceCollection = ResourceCollectionService::getResourceCollectionsBasedOnId($lab_association->resource_collection_id);
                         if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);  //ResourceCollectionListNameResource::make($getResourceCollection);
+                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);
                         }
                     }
                 }
@@ -205,7 +205,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_group_id) {
                         $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
                         if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup); // ResourceGroupListNameResource::make($getResourceGroup);
+                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup);
                         }
                     }
                 }
@@ -232,6 +232,7 @@ class LabResource extends JsonResource
             'slug'                             => $this->slug,
             'title'                            => $this->title,
             'description'                      => $this->description,
+            'resource_collection'              => $resource_collections,
             'privacy'                          => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                       => $this->media_type,
             'media'                            => $media,
@@ -267,7 +268,6 @@ class LabResource extends JsonResource
             'challenge'                        => $challenges,
             'challenge_path'                   => $challenge_paths,
             'resource_module'                  => $resource_modules,
-            'resource_collection'              => $resource_collections,
             'resource_group'                   => $resource_groups,
             'last_updated'                     => UtilityHelper::formatDateTime($this->updated_at),
             'campus_connect_opportunity'       => $campusConnectOpportunity,
