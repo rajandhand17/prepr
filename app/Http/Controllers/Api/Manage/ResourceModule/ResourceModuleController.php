@@ -60,7 +60,7 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function show($slug,Request $request)
+    public function show($slug, Request $request)
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
@@ -80,6 +80,7 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), $request->ip());
+
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
@@ -264,7 +265,7 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    public function delete($slug,Request $request)
+    public function delete($slug, Request $request)
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
@@ -282,7 +283,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id,$request);
+            $deleteResourceModule = $this->resourceModuleRepository->deleteResourceModule($slug, $checkResourceModuleExistsOrNot->id, $request);
             if ($deleteResourceModule) {
                 return $this->sendResponse(null, __('responses.resource_module_delete'));
             }

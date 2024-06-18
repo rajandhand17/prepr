@@ -29,7 +29,7 @@ class UserSkillsService
             }
             $profile_data = [
                 'type' => 'skills',
-                'info' => $inputAllSkills
+                'info' => $inputAllSkills,
             ];
             MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 

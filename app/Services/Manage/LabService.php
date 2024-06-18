@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
@@ -106,7 +105,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description','organization_id','category_id')->where('id', $Id)->first();
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id', 'category_id')->where('id', $Id)->first();
         } catch (Exception $e) {
             return false;
         }
@@ -119,6 +118,7 @@ class LabService
             if ($upload_lab_cover_image == false) {
                 return false;
             }
+
             return $upload_lab_cover_image;
         } catch (Exception $e) {
             return false;
@@ -443,6 +443,7 @@ class LabService
             $lab = Lab::find($id);
             $lab->is_pre_built = $is_pre_built;
             $lab->save();
+
             return true;
         } catch (Exception $e) {
             return false;

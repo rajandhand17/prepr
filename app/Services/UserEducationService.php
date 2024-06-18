@@ -33,7 +33,7 @@ class UserEducationService
             }
             $profile_data = [
                 'type' => 'education',
-                'info' => $input
+                'info' => $input,
             ];
             MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 

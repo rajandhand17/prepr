@@ -62,7 +62,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(),request()->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -124,6 +124,7 @@ class LabController extends AppBaseController
             if ($createdLab != false) {
                 return $this->sendResponse(LabResource::make($createdLab), __('responses.lab_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
@@ -203,6 +204,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.lab_not_delete'), 400);
         } catch (\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

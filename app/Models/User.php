@@ -225,7 +225,8 @@ class User extends Authenticatable
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
-                 $response = ['success' => false, 'message' => __('responses.verify_email')];
+                $response = ['success' => false, 'message' => __('responses.verify_email')];
+
                 return $response;
             }
             if ($user->is_deactivated == 1) {
@@ -248,9 +249,9 @@ class User extends Authenticatable
                         $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
-
                             return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
                         }
+
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
@@ -261,9 +262,11 @@ class User extends Authenticatable
                         $data,
                         $request->ip()
                     );
+
                     return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
                     MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
+
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
@@ -349,7 +352,6 @@ class User extends Authenticatable
                     CreateCustomerJob::withChain([
                         new SubscribePlanJob($user, $organization, $planDetail),
                     ])->dispatch($user);
-
                 }
                 $userpersonal = UserPersonal::create($user, $request);
                 $usersetting = UserSetting::create($user, $request);
@@ -362,18 +364,21 @@ class User extends Authenticatable
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
                         if ($request->register_type == 'organization') {
-                            MixpanelHelper::mixpanel_tracking(config('mixpanel.org_sign_up'),
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.org_sign_up'),
                                 $request,
                                 $user,
                                 $request->ip()
                             );
-                        }else{
-                            MixpanelHelper::mixpanel_tracking(config('mixpanel.sign_up'),
+                        } else {
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.sign_up'),
                                 $request,
                                 $user,
                                 $request->ip()
                             );
                         }
+
                         return $success;
                     }
                     DB::rollback();

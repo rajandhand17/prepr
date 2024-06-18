@@ -30,9 +30,10 @@ class UserExperienceService
             }
             $profile_data = [
                 'type' => 'experience',
-                'info' => $input
+                'info' => $input,
             ];
-           MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+
             return $insertRecords;
         } catch(\Exception $e) {
             return false;
