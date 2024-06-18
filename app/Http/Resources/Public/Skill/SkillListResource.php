@@ -27,11 +27,13 @@ class SkillListResource extends JsonResource
             'id'                     => $this->id,
             'title'                  => $this->title,
             'description'            => WikipediaHelper::fetchSkillDescription($this->title, $request->language) ?: '',
+            'is_saved'               => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? 'yes' : 'no',
         ];
 
         if (auth('api')->check()) {
-            $data['saved_on'] = $this->saved_skill->created_at ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null;
-            $data['pinned'] = $this->user_pinned->pinned == '1' ? 'yes' : 'no';
+            if (isset($this->user_pinned->pinned)) {
+                $data['pinned'] = $this->user_pinned->pinned == '1' ? 'yes' : 'no';
+            }
         }
 
         return $data;
