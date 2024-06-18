@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class UserEducationService
 {

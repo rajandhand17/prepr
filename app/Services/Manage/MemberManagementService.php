@@ -9,7 +9,6 @@ use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
 

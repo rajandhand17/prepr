@@ -10,7 +10,7 @@ class MagnetHelper
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . config('magnet.magnet_auth_token'),
+                'Authorization' => 'Bearer '.config('magnet.magnet_auth_token'),
             ])->post(config('magnet.update_learning_content'), $data);
 
             if (!$response->ok()) {
@@ -44,11 +44,11 @@ class MagnetHelper
         try {
             $frontendUrl = UtilityHelper::sanitizeUrl(config('site-settings.frontend_site_url'));
             $params = [
-                'grant_type' => 'authorization_code',
-                'client_id' => config('magnet.client_id'),
-                'redirect_uri' => $frontendUrl . '/magnet/callback',
+                'grant_type'    => 'authorization_code',
+                'client_id'     => config('magnet.client_id'),
+                'redirect_uri'  => $frontendUrl.'/magnet/callback',
                 'client_secret' => config('magnet.client_secret'),
-                'code' => $authorizationCode,
+                'code'          => $authorizationCode,
             ];
 
             $response = Http::withHeaders(
@@ -75,7 +75,7 @@ class MagnetHelper
     public static function getMagnetUserInfo($accessToken)
     {
         try {
-            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $accessToken])->get(config('magnet.magnet_oauth_get_user'));
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.$accessToken])->get(config('magnet.magnet_oauth_get_user'));
             if (!$response->ok()) {
                 return false;
             }
@@ -89,7 +89,7 @@ class MagnetHelper
     public static function getLMSUserInfo($accessToken)
     {
         try {
-            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $accessToken])->get(config('magnet.magnet_lms_user_info'));
+            $response = Http::withHeaders(['Authorization' => 'Bearer '.$accessToken])->get(config('magnet.magnet_lms_user_info'));
             if (!$response->ok()) {
                 return false;
             }

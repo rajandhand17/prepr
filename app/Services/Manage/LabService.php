@@ -9,7 +9,6 @@ use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Log;
 
 class LabService
 {

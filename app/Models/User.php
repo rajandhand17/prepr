@@ -79,12 +79,12 @@ class User extends Authenticatable
 
     public function receivesBroadcastNotificationsOn(): string
     {
-        return 'users.' . $this->id;
+        return 'users.'.$this->id;
     }
 
     public function getProfileImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     public function userPersonal()
@@ -306,10 +306,10 @@ class User extends Authenticatable
     {
         try {
             DB::beginTransaction();
-            $name = $request->first_name . ' ' . $request->last_name;
+            $name = $request->first_name.' '.$request->last_name;
             $otp = random_int(1000, 9999);
             $string = Str::random(30);
-            $referencecode = $request->username . Carbon::now()->format('Y');
+            $referencecode = $request->username.Carbon::now()->format('Y');
             $user = new User();
             $user->preferred_language = $request->language;
             $user->first_name = $request->first_name;
@@ -668,7 +668,7 @@ class User extends Authenticatable
         $number = 1;
 
         while (User::where('username', $username)->exists()) {
-            $username = $baseUsername . $number;
+            $username = $baseUsername.$number;
             $number++;
         }
 
@@ -683,17 +683,19 @@ class User extends Authenticatable
                 // register users
                 $baseUsername = explode('@', data_get($magnetUserDetails, 'email'))[0];
                 $uniqueUserName = $this->generateUniqueUsername($baseUsername);
+
                 return User::query()->create([
-                    'first_name' => data_get($magnetUserDetails, 'first_name'),
-                    'last_name' => data_get($magnetUserDetails, 'last_name'),
-                    'username' => $uniqueUserName,
-                    'email' => data_get($magnetUserDetails, 'email'),
-                    'phone_number' => data_get($magnetUserDetails, 'phone_number'),
-                    'full_name' => data_get($magnetUserDetails, 'first_name') . ' ' . data_get($magnetUserDetails, 'last_name'),
+                    'first_name'     => data_get($magnetUserDetails, 'first_name'),
+                    'last_name'      => data_get($magnetUserDetails, 'last_name'),
+                    'username'       => $uniqueUserName,
+                    'email'          => data_get($magnetUserDetails, 'email'),
+                    'phone_number'   => data_get($magnetUserDetails, 'phone_number'),
+                    'full_name'      => data_get($magnetUserDetails, 'first_name').' '.data_get($magnetUserDetails, 'last_name'),
                     'magnet_user_id' => data_get($magnetUserDetails, 'user_id'),
-                    'verified_user' => '1',
+                    'verified_user'  => '1',
                 ]);
             }
+
             return $user;
         } catch (\Exception $exception) {
             return false;
@@ -714,8 +716,8 @@ class User extends Authenticatable
             }
 
             UserSSOLogin::query()->updateOrCreate([
-                'user_id' => $user->id,
-                'sso_type' => config('constants.sso_type.magnet'),
+                'user_id'      => $user->id,
+                'sso_type'     => config('constants.sso_type.magnet'),
                 'access_token' => $accessToken,
             ]);
 
@@ -735,7 +737,7 @@ class User extends Authenticatable
                     };
                 }
             }
-            $user->magnet_user_role = implode(",", array_filter($magnetUserRoles));
+            $user->magnet_user_role = implode(',', array_filter($magnetUserRoles));
 
             if (data_get($magnetUserDetails, 'education')) {
                 $addEducationDetails = UserEducationService::addMagnetEducationDetails($user, data_get($magnetUserDetails, 'education'));
@@ -772,12 +774,12 @@ class User extends Authenticatable
                 }
 
                 $formattedUsers = collect([[
-                    'type' => config('constants.member_management_type.invite'),
+                    'type'          => config('constants.member_management_type.invite'),
                     'invite_status' => '1',
-                    'invite_type' => config('constants.member_management_invite_type.email'),
-                    'invitee_name' => data_get($user, 'full_name'),
+                    'invite_type'   => config('constants.member_management_invite_type.email'),
+                    'invitee_name'  => data_get($user, 'full_name'),
                     'invitee_email' => data_get($user, 'email'),
-                    'role' => 'User',
+                    'role'          => 'User',
                 ]]);
                 $organizations = OrganizationService::getOrganizationBasedOnCommunityIds($communitiesIds);
                 if ($organizations) {
@@ -785,11 +787,11 @@ class User extends Authenticatable
                         MemberManagementService::addMembers(
                             $organization,
                             'organization',
-                            (object)[
-                                'auto_invite' => 'yes',
+                            (object) [
+                                'auto_invite'  => 'yes',
                                 'email_status' => 'sent',
-                                'subject_line' => 'Invitation to Learn Lab ' . $organization->display_name,
-                                'email_body' => 'Welcome to the ' . $organization->title . '! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
+                                'subject_line' => 'Invitation to Learn Lab '.$organization->display_name,
+                                'email_body'   => 'Welcome to the '.$organization->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
                             ],
                             $formattedUsers
                         );
@@ -804,13 +806,14 @@ class User extends Authenticatable
 
             return [
                 'success' => true,
-                'user' => $user,
-                'code' => 3,
-                'token' => $token,
+                'user'    => $user,
+                'code'    => 3,
+                'token'   => $token,
                 'message' => __('responses.user_login_success'),
             ];
         } catch (\Exception $e) {
             DB::rollBack();
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

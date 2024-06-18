@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\UserPersonal;
 use Exception;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 class UserService
 {
