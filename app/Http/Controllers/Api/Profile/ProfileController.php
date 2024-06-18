@@ -40,15 +40,16 @@ class ProfileController extends AppBaseController
         try {
             $userDetails = $this->profileRepository->getUserByUsername($user_name);
             if (!$userDetails) {
-            return $this->sendError(__('responses.not_found_user_profile_detail'), 400);
+                return $this->sendError(__('responses.not_found_user_profile_detail'), 400);
             }
             if ($userDetails->userSetting) {
-              $profilePrivacy = $userDetails->userSetting->profile_privacy;
-              $projectPrivacy = $userDetails->userSetting->project_privacy;
-              if (($profilePrivacy == '1' || $projectPrivacy == '1') && $userDetails->id !== auth()->user()->id) {
-              return $this->sendError(__('responses.not_visible_for_others'));
-              }
+                $profilePrivacy = $userDetails->userSetting->profile_privacy;
+                $projectPrivacy = $userDetails->userSetting->project_privacy;
+                if (($profilePrivacy == '1' || $projectPrivacy == '1') && $userDetails->id !== auth()->user()->id) {
+                    return $this->sendError(__('responses.not_visible_for_others'));
+                }
             }
+
             return $this->sendResponse(ProfileResource::make($userDetails), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
