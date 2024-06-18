@@ -165,7 +165,7 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
-            $request->name=$request->title;
+            $request->name = $request->title;
             MixpanelHelper::mixpanel_tracking(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
 
             DB::commit();

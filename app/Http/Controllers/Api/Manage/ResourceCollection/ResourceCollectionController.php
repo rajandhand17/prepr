@@ -86,11 +86,11 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function show($slug,Request $request)
+    public function show($slug, Request $request)
     {
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-           
+
             if (isset($checkResourceCollectionExistsOrNot->is_accessible) && $checkResourceCollectionExistsOrNot->is_accessible === '0') {
                 return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
@@ -110,9 +110,11 @@ class ResourceCollectionController extends AppBaseController
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
             dd($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

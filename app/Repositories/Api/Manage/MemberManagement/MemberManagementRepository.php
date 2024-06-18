@@ -106,7 +106,6 @@ class MemberManagementRepository implements MemberManagementInterface
     {
         try {
             return $this->memberManagementService->deleteMembers($checkComponentBasedOnSlug, $component, $request);
-
         } catch (\Exception $e) {
             return false;
         }

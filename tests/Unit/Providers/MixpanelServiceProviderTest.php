@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Providers;
 
-use App\Providers\MixpanelServiceProvider;
 use Tests\TestCase;
 
 /**

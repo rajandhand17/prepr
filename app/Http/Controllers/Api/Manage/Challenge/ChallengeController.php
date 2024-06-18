@@ -107,6 +107,7 @@ class ChallengeController extends AppBaseController
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
             }
+
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);

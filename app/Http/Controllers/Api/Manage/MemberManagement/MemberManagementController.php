@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Api\Manage\MemberManagement;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\MemberManagement\ChangeRoleRequest;
@@ -129,6 +128,7 @@ class MemberManagementController extends AppBaseController
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
+
                 return $this->sendError(__('responses.join_request_'.$action.'_failed'), 400);
             }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Helpers\MixpanelHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -92,10 +91,12 @@ class AuthController extends AppBaseController
             if ($login['success'] == true) {
                 if ($login['code'] === 2) {
                     $response = ['message'=>$login['message'], 'code'=>$login['code']];
+
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
                     $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
+
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }

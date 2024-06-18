@@ -20,7 +20,7 @@ interface ResourceModuleInterface
 
     public function getResourceModuleBasedOnSlug($slug);
 
-    public function deleteResourceModule($slug, $resource_module_id,$request);
+    public function deleteResourceModule($slug, $resource_module_id, $request);
 
     public function checkName($title);
 

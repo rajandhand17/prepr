@@ -153,8 +153,9 @@ class ResourceModuleSkillsGroupsStackService
                 ->where('resource_module_id', $resourceModuleId)
                 ->pluck('foreign_id')
                 ->unique();
+
             return $data;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

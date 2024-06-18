@@ -191,6 +191,7 @@ class ChallengeRepository implements ChallengeInterface
             ) {
                 DB::commit();
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
+
                 return $createChallenge['createChallenge'];
             }
             DB::rollback();
@@ -409,6 +410,7 @@ class ChallengeRepository implements ChallengeInterface
             ) {
                 DB::commit();
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
+
                 return $updateChallenge['updateChallenge'];
             }
             DB::rollback();
@@ -434,17 +436,20 @@ class ChallengeRepository implements ChallengeInterface
             DB::beginTransaction();
             $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
-            $challenge_data->skills=$challenge_data->skills->pluck('foreign_id');
-            $challenge_data->tags=$challenge_data->tags->pluck('foreign_id');
+            $challenge_data->skills = $challenge_data->skills->pluck('foreign_id');
+            $challenge_data->tags = $challenge_data->tags->pluck('foreign_id');
             if ($deleteChallenge == false) {
                 DB::rollBack();
+
                 return false;
             }
             MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
             DB::commit();
+
             return true;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }

@@ -25,7 +25,7 @@ class UserPatentService
             }
             $profile_data = [
                 'type' => 'patent',
-                'info' => $input
+                'info' => $input,
             ];
             MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 

@@ -74,10 +74,10 @@ class DiscussionService
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
             $addComment->save();
             $comment_data = [
-                'comment' => $request->comment,
-                'user_commented_on' => $component
+                'comment'           => $request->comment,
+                'user_commented_on' => $component,
             ];
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.user_comment'), $comment_data, auth()->user(),request()->ip());
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.user_comment'), $comment_data, auth()->user(), request()->ip());
             DB::commit();
 
             return $addComment;

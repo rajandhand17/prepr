@@ -67,10 +67,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                 ];
             });
-            $request->organization_id=$createLabProgram['createResourceModule']['organization_id'];
+            $request->organization_id = $createLabProgram['createResourceModule']['organization_id'];
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
+
                 return $createLabProgram['createResourceModule'];
             }
             DB::rollback();
@@ -144,19 +145,21 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function deleteResourceModule($slug, $resource_module_id,$request)
+    public function deleteResourceModule($slug, $resource_module_id, $request)
     {
         try {
             DB::beginTransaction();
-            $getResouceModule=$this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
-            $getResouceModule->skills=$getResouceModule->skills->pluck('foreign_id')->unique();
+            $getResouceModule = $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
+            $getResouceModule->skills = $getResouceModule->skills->pluck('foreign_id')->unique();
             $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($resource_module_id);
             if ($deleteResourceModule == false) {
                 DB::rollBack();
+
                 return false;
             }
             MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(), $request->ip());
             DB::commit();
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -186,10 +189,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
                 ];
             });
-            $request->organization_id=$updateResourceModule['updateResourceModule']['organization_id'];
+            $request->organization_id = $updateResourceModule['updateResourceModule']['organization_id'];
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
+
                 return $updateResourceModule['updateResourceModule'];
             }
             DB::rollback();

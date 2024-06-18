@@ -250,6 +250,7 @@ class MemberManagementService
                 if (!empty($memberList)) {
                     return $memberList;
                 }
+
                 return false;
             }
 
@@ -392,7 +393,7 @@ class MemberManagementService
                                     }
                                 }
                             }
-                            $invitedMember=MemberManagement::create([
+                            $invitedMember = MemberManagement::create([
                                 'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
@@ -525,16 +526,15 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $member=MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            $member = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
-            if($module_type=='1'){
-                $lab=LabService::getLabBasedOnId($member->module_id);
-                $request->organization_id=$lab->organization_id;
-                $request->privacy=$lab->privacy;
-                $request->title=$lab->title;
-                $request->category=$lab->category_id;
+            if ($module_type == '1') {
+                $lab = LabService::getLabBasedOnId($member->module_id);
+                $request->organization_id = $lab->organization_id;
+                $request->privacy = $lab->privacy;
+                $request->title = $lab->title;
+                $request->category = $lab->category_id;
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
-
             }
             if ($member_manger) {
                 return true;
@@ -604,14 +604,13 @@ class MemberManagementService
                 $member->invite_status = $invite_status;
                 $member->inviter_id = auth()->user()->id;
                 $member->save();
-                if($invite_status=='1' && $component=='lab'){
-                    $lab=LabService::getLabBasedOnId($member->module_id);
-                    $request->organization_id=$lab->organization_id;
-                    $request->privacy=$lab->privacy;
-                    $request->title=$lab->title;
-                    $request->category=$lab->category_id;
+                if ($invite_status == '1' && $component == 'lab') {
+                    $lab = LabService::getLabBasedOnId($member->module_id);
+                    $request->organization_id = $lab->organization_id;
+                    $request->privacy = $lab->privacy;
+                    $request->title = $lab->title;
+                    $request->category = $lab->category_id;
                     MixpanelHelper::mixpanel_tracking(config('mixpanel.join_lab'), $request, auth()->user(), $request->ip());
-
                 }
             }
 

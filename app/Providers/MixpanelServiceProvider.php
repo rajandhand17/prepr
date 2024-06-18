@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Mixpanel;
+
 class MixpanelServiceProvider extends ServiceProvider
 {
     /**

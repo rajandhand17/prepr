@@ -67,7 +67,7 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function show($slug,Request $request)
+    public function show($slug, Request $request)
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);

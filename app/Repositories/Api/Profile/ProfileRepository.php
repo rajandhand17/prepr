@@ -79,9 +79,10 @@ class ProfileRepository implements ProfileInterface
                 DB::commit();
                 $profile_data = [
                     'type' => 'certificate',
-                    'info' => $request->all()
+                    'info' => $request->all(),
                 ];
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+
                 return $personalDetail['updateUser'];
             }
             DB::rollBack();
