@@ -5,13 +5,10 @@ namespace App\Http\Resources\Manage\Lab;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
-use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
@@ -167,7 +164,7 @@ class LabResource extends JsonResource
                     if ($lab_association->lab_program_id) {
                         $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
                         if ($getLabProgram !== null) {
-                            $lab_programs[$lab_association->lab_program_id] =LabProgramResource::make($getLabProgram); //LabProgramListNameResource::make($getLabProgram);
+                            $lab_programs[$lab_association->lab_program_id] = LabProgramResource::make($getLabProgram); //LabProgramListNameResource::make($getLabProgram);
                         }
                     }
                 }
