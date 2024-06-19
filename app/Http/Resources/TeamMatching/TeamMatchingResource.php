@@ -36,10 +36,11 @@ class TeamMatchingResource extends JsonResource
             'title'                 => $this->title,
             'slug'                  => $this->slug,
             'description'           => $this->description,
-            'challenge_title'       => $this->challenge->title,
+            'challenge_title'       => $this->challenge!==null ? $this->challenge->title : null,
             'member_count'          => $this->getMembersCount(),
             'challenge_details'     => $challenge_details,
             'skills'                => $skills,
+            'request_send'          => 'no',  //temporarily added for frontend design implementations
         ];
     }
 }

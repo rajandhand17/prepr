@@ -49,6 +49,7 @@ class OrganizationDetailResource extends JsonResource
             'category_id'                   => $category_id,
             'category'                      => $category,
             'is_verified'                   => ($this->is_verified == '1' ? 'yes' : 'no'),
+            'is_onboarding_completed'       => ($this->is_onboarding_completed == 0) ? 'no' : 'yes',
             'lab_count'                     => $this->labs_count()->count(),
             'challenge_count'               => $this->challenges_count()->count(),
             'resource_count'                => $this->resource_modules_count()->count(),
