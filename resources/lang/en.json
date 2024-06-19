@@ -156,6 +156,7 @@
     "responses.organization_update_successfully": "The organization has been updated successfully",
     "responses.organization_not_update": "There are some issues being encountered while updating the organization!",
     "responses.organization_delete_access_denied": "Sorry! You are not allowed to delete this organization.",
+    "responses.organization_view_access_denied": "Sorry! You are not allowed to view this organization listing.",
     "responses.organization_delete": "The organization has been deleted successfully!",
     "responses.organization_not_delete": "The organization has been not deleted!",
     "responses.lab_slug_available": "Success is yours! This lab slug is available",
