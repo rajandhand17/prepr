@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Master\CreateSponsorRequest;
 use App\Http\Resources\Master\AcheivementConditionListResource;
+use App\Http\Resources\Master\BusinessChallengeTacklingResource;
 use App\Http\Resources\Master\CategoryResource;
 use App\Http\Resources\Master\ChallengeAnnouncementRecipientResource;
 use App\Http\Resources\Master\ChallengePitchTasksResource;
@@ -1383,6 +1384,20 @@ class MasterController extends AppBaseController
             Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function businessChallengeTackling(Request $request)
+    {
+        try {
+            $businessChallengeTackling = $this->masterRepository->getBusinessChallengeTackling($request);
+            if ($businessChallengeTackling) {
+                return $this->sendResponse(BusinessChallengeTacklingResource::collection($businessChallengeTackling), __('responses.found_bct_list'));
+            }
+
+            return $this->sendResponse(null, __('responses.not_found_bct_list'));
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

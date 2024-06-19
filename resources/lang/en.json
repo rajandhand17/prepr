@@ -1204,5 +1204,12 @@
     "responses.resource_collection_switcher_error": "The Resource Collection you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Resource Collection.",
     "responses.resource_group_switcher_error": "The Resource Group you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Resource Group.",
     "responses.enable_custom_login_and_registration_required": "This Enable custom login and registration field is required",
-    "responses.enable_custom_login_and_registration_in": "This status can be between '<b>yes</b> ,<b>no</b> or <b>none</b>' only"
+    "responses.enable_custom_login_and_registration_in": "This status can be between '<b>yes</b> ,<b>no</b> or <b>none</b>' only",
+    "responses.already_user_onboarding_completed": "User onboarding already completed",
+    "responses.user_onboarding_completed": "User onboarding completed",
+    "responses.already_organization_onboarding_completed": "Organization onboarding already completed",
+    "responses.organization_onboarding_completed": "Organization onboarding completed",
+    "responses.organization_onboarding_not_completed": "Something went wrong while completing Organization onboarding, try again later.",
+    "responses.found_bct_list": "The list of business challenge tacklings has been successfully retrieved!",
+    "responses.not_found_bct_list": "Failed to retrieve the list of business challenge tacklings!"
 }
