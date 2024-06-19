@@ -5,10 +5,11 @@ namespace App\Http\Resources\Manage\Lab;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\ChallengePath\ChallengePathResource;
+use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
-use App\Http\Resources\Manage\LabProgram\LabProgramResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
@@ -164,7 +165,7 @@ class LabResource extends JsonResource
                     if ($lab_association->lab_program_id) {
                         $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
                         if ($getLabProgram !== null) {
-                            $lab_programs[$lab_association->lab_program_id] = LabProgramResource::make($getLabProgram); //LabProgramListNameResource::make($getLabProgram);
+                            $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
                         }
                     }
                 }
@@ -180,7 +181,7 @@ class LabResource extends JsonResource
                     if ($lab_association->challenge_path_id) {
                         $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
                         if ($getChallengePath !== null) {
-                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathResource::make($getChallengePath);
+                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
                         }
                     }
                 }
@@ -232,7 +233,6 @@ class LabResource extends JsonResource
             'title'                            => $this->title,
             'description'                      => $this->description,
             'resource_collection'              => $resource_collections,
-            'lab_program'                      => $lab_programs,
             'privacy'                          => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                       => $this->media_type,
             'media'                            => $media,
@@ -264,6 +264,7 @@ class LabResource extends JsonResource
             'resource_module_count'            => count($resource_modules),
             'resource_collection_count'        => count($resource_collections),
             'resource_group_count'             => count($resource_groups),
+            'lab_program'                      => $lab_programs,
             'challenge'                        => $challenges,
             'challenge_path'                   => $challenge_paths,
             'resource_module'                  => $resource_modules,
