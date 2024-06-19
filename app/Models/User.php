@@ -55,6 +55,7 @@ class User extends Authenticatable
         'is_profile_completed',
         'remember_token',
         'is_deactivated',
+        'is_onboarding_completed',
         'go1_id',
         'go1_user_metadata',
     ];

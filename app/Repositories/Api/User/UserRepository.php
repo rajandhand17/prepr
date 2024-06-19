@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\User;
 
+use App\Services\Manage\OrganizationService as ManageOrganizationService;
 use App\Services\Public\MemberManagementService;
 use App\Services\Public\OrganizationService;
 use App\Services\UserService;
@@ -11,12 +12,14 @@ class UserRepository implements UserInterface
     protected $userService;
     protected $organizationService;
     protected $memberManagementService;
+    protected $manageOrganizationService;
 
-    public function __construct(UserService $userService, OrganizationService $organizationService, MemberManagementService $memberManagementService)
+    public function __construct(UserService $userService, OrganizationService $organizationService, MemberManagementService $memberManagementService, ManageOrganizationService $manageOrganizationService)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;
         $this->memberManagementService = $memberManagementService;
+        $this->manageOrganizationService = $manageOrganizationService;
     }
 
     public function getUsers($request)
@@ -61,6 +64,24 @@ class UserRepository implements UserInterface
     {
         try {
             return $this->userService->setOrganizationPreference($organizationId);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function userOnboarding()
+    {
+        try {
+            return $this->userService->userOnboarding();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationOnboarding($organizationId, $request)
+    {
+        try {
+            return $this->manageOrganizationService->organizationOnboarding($organizationId, $request);
         } catch (\Exception $e) {
             return false;
         }
