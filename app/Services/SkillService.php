@@ -23,7 +23,7 @@ class SkillService
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
                         $skill_list = $skill_list->whereIn('id', $skill_id->toArray());
-                        if($sortBy==null){
+                        if ($sortBy == null) {
                             $skill_list = $skill_list->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
                         }
                     }
