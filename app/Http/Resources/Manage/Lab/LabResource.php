@@ -197,7 +197,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_collection_id) {
                         $getResourceCollection = ResourceCollectionService::getResourceCollectionsBasedOnId($lab_association->resource_collection_id);
                         if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);
+                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
                         }
                     }
                 }
@@ -205,7 +205,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_group_id) {
                         $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
                         if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup);
+                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
                         }
                     }
                 }
