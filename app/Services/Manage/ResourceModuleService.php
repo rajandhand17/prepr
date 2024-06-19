@@ -445,4 +445,23 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function deleteOrganizationResourceModule($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceModules = ResourceModule::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceModules)) {
+                foreach ($fetchOrganizationResourceModules as $organizationResourceModule) {
+                    $deleteOrganizationResourceModule = self::deleteResourceModule($organizationResourceModule);
+                    if (!$deleteOrganizationResourceModule) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

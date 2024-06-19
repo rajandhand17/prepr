@@ -336,7 +336,7 @@ class ChallengePathService
         }
     }
 
-    public function delete($challengePathId)
+    public static function delete($challengePathId)
     {
         try {
             $challengePath = ChallengePath::find($challengePathId)->delete();
@@ -392,6 +392,25 @@ class ChallengePathService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallengePath($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengePaths = ChallengePath::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationChallengePaths)) {
+                foreach ($fetchOrganizationChallengePaths as $organizationChallengePath) {
+                    $deleteOrganizationChallengePath = self::delete($organizationChallengePath);
+                    if (!$deleteOrganizationChallengePath) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
