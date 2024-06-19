@@ -32,10 +32,10 @@ class SkillRepository implements SkillInterface
         }
     }
 
-    public function getMySkills($language, $search, $pinned,$sortBy)
+    public function getMySkills($language, $search, $pinned, $sortBy)
     {
         try {
-            return $this->userSkillsService->getMySkills($language, $search, $pinned,$sortBy);
+            return $this->userSkillsService->getMySkills($language, $search, $pinned, $sortBy);
         } catch (\Exception $e) {
             return false;
         }
