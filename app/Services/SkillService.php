@@ -22,7 +22,10 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray());
+                        if ($sortBy == null) {
+                            $skill_list = $skill_list->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                        }
                     }
                 }
             } else {
