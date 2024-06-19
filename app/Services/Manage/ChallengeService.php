@@ -691,12 +691,17 @@ class ChallengeService
             $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
             $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
             if (!empty($challengeIds)) {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->take(config('site-settings.explore_page_limit_max'));
+                $challenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_min'));
+            }
+            if (count($challenges) < config('site-settings.explore_page_limit_max')) {
+                $limit = config('site-settings.explore_page_limit_max') - count($challenges);
+                $getNewChallengeIds = Challenge::where('user_id', '!=', auth()->user()->id)->whereNotIn('id', $challenges)->pluck('id')->take($limit);
+                $challenges = $challenges->merge($getNewChallengeIds)->unique();
             }
 
-            return $challenges->get();
+            return Challenge::whereIn('id', $challenges)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (Exception $e) {
             return false;
         }
