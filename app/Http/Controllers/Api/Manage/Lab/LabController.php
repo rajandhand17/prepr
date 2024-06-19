@@ -203,8 +203,6 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_not_delete'), 400);
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

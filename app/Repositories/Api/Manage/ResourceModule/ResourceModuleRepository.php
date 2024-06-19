@@ -67,7 +67,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                 ];
             });
-            $request->organization_id = $createLabProgram['createResourceModule']['organization_id'];
+            $request->organization_id =$organizationId;
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
@@ -145,7 +145,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function deleteResourceModule($slug, $resource_module_id, $request)
+    public function deleteResourceModule($slug, $resource_module_id)
     {
         try {
             DB::beginTransaction();
@@ -157,7 +157,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
                 return false;
             }
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(), $request->ip());
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(),request()->ip());
             DB::commit();
 
             return true;
@@ -189,7 +189,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
                 ];
             });
-            $request->organization_id = $updateResourceModule['updateResourceModule']['organization_id'];
+            $request->organization_id = $organizationId;
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();

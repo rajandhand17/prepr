@@ -67,15 +67,12 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
-    public function show($slug, Request $request)
+    public function show($slug)
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if (isset($checkResourceGroupExistsOrNot->is_accessible) && $checkResourceGroupExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
-            }
             if ($checkResourceGroupExistsOrNot) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, auth()->user(), $request->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, auth()->user(),request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {

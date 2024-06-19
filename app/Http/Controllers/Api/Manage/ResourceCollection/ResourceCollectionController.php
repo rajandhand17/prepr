@@ -86,16 +86,12 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
-    public function show($slug, Request $request)
+    public function show($slug)
     {
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
-
-            if (isset($checkResourceCollectionExistsOrNot->is_accessible) && $checkResourceCollectionExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
-            }
             if ($checkResourceCollectionExistsOrNot) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), $request->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(),request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -113,8 +109,6 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
-            dd($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

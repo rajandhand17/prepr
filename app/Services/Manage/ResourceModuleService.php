@@ -283,7 +283,6 @@ class ResourceModuleService
     {
         try {
             $upload_resource_module_cover_image = FileUploadHelper::uploadImageToS3($cover_image, 'resource_module');
-            //  $upload_resource_module_cover_image = FileUploadHelper::fileUpload($cover_image, 'resource_module');
             if ($upload_resource_module_cover_image == false) {
                 return false;
             }

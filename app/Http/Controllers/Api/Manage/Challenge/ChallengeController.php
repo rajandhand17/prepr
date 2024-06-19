@@ -93,7 +93,7 @@ class ChallengeController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
+            $upload_assessment_attachment = null;
             if ($request->attachments !== null) {
                 $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
                 if (!$uploaded_assessment_attachment) {
@@ -109,7 +109,7 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
