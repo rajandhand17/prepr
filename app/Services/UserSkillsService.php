@@ -56,7 +56,7 @@ class UserSkillsService
         }
     }
 
-    public static function getMySkills($language = 'en', $search = null, $pinned = null,$sortBy =null)
+    public static function getMySkills($language = 'en', $search = null, $pinned = null, $sortBy = null)
     {
         try {
             $userSkills = UserSkills::where('user_id', auth()->user()->id)->orderBy('user_skills.pinned', 'desc');
