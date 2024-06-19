@@ -34,10 +34,12 @@ class UserResource extends JsonResource
         }
         if ($fetchOrganization) {
             $upgrade_plan_enable = ($this->id == $fetchOrganization->user_id) ? 'yes' : 'no';
+            $is_onboarding_completed = ($upgrade_plan_enable == 'yes') ? (($fetchOrganization->is_onboarding_completed == '0') ? 'no' : 'yes') : 'N/A';
             $organization_details['id'] = $fetchOrganization->uuid;
             $organization_details['title'] = $fetchOrganization->title;
             $organization_details['slug'] = $fetchOrganization->slug;
             $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
+            $organization_details['is_onboarding_completed'] = $is_onboarding_completed;
         }
         $memberManagement = new MemberManagementService();
 
@@ -53,11 +55,12 @@ class UserResource extends JsonResource
             'phone_number'                => $this->phone_number,
             'profile_image'               => $this->profile_image,
             'two_factor_verification'     => ($this->two_factor_verification == 0) ? 'no' : 'yes',
+            'is_onboarding_completed'     => ($this->is_onboarding_completed == 0) ? 'no' : 'yes',
             'user_points'                 => $this->user_points,
             'user_rank'                   => $this->verified_user,
             'verified_user'               => $this->verified_user,
             'referral_code'               => $this->referal_code,
-            'is_profile_completed'        => $this->is_profile_completed,
+            'is_profile_completed'        => ($this->is_profile_completed == 0) ? 'no' : 'yes',
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
             'go1'                         => [

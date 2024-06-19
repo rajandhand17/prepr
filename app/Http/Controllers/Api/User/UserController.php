@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Manage\Organization\OnboardingOrganizationRequest;
+use App\Http\Resources\Public\Organization\OrganizationDetailResource;
 use App\Http\Resources\User\UserOrganizationListResource;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserSearchResource;
@@ -88,6 +90,37 @@ class UserController extends AppBaseController
             }
 
             return $this->sendError(__('responses.selected_organization_not_found'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function completeBoarding(OnboardingOrganizationRequest $request, $slug = null)
+    {
+        try {
+            if ($slug != null) {
+                $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
+                if ($checkComponentSlugExistOrNot->is_onboarding_completed == '1') {
+                    return $this->sendError(__('responses.already_organization_onboarding_completed'), 400);
+                }
+                $organizationOnboarding = $this->userRepository->organizationOnboarding($checkComponentSlugExistOrNot->id, $request);
+                if ($organizationOnboarding) {
+                    return $this->sendResponse(OrganizationDetailResource::make($checkComponentSlugExistOrNot), __('responses.organization_onboarding_completed'));
+                }
+
+                return $this->sendError(__('responses.organization_onboarding_not_completed'), 404);
+            } else {
+                $userData = auth()->user();
+                if ($userData->is_onboarding_completed == '1') {
+                    return $this->sendError(__('responses.already_user_onboarding_completed'), 400);
+                }
+
+                $userOnboarding = $this->userRepository->userOnboarding();
+                if ($userOnboarding) {
+                    return $this->sendResponse(UserResource::make($userData), __('responses.user_onboarding_completed'));
+                }
+            }
+
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

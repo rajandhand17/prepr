@@ -72,6 +72,39 @@ class Organization extends Command
                         }
                     }
 
+                    switch ($organization->bussiness_challenge_option) {
+                        case 'sales_marketing':
+                            $bussiness_challenge_option = '1';
+                            break;
+
+                        case 'human_resources':
+                            $bussiness_challenge_option = '2';
+                            break;
+
+                        case 'it_management':
+                            $bussiness_challenge_option = '3';
+                            break;
+
+                        case 'customer_service':
+                            $bussiness_challenge_option = '4';
+                            break;
+
+                        case 'research_development':
+                            $bussiness_challenge_option = '5';
+                            break;
+
+                        case 'business_evelopment':
+                            $bussiness_challenge_option = '6';
+                            break;
+
+                        case 'sustainability_and_environmental_management':
+                            $bussiness_challenge_option = '7';
+                            break;
+                        
+                        default:
+                            $bussiness_challenge_option = null;
+                            break;
+                    }
                     $newOrganization->id = $organization->id;
                     $newOrganization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newOrganization->language = $organization->language;
@@ -88,6 +121,7 @@ class Organization extends Command
                     $newOrganization->status = ($organization->status == '0') ? '0' : (($organization->status == '1') ? '1' : '3');
                     $newOrganization->total_employees = isset($organizationDetails->number_employees) ? $organizationDetails->number_employees : 0;
                     $newOrganization->is_verified = $organization->is_verified;
+                    $newOrganization->business_challenge_tacklings = $bussiness_challenge_option;
                     $newOrganization->save();
                     $checkUser->attachRole('organization_owner', $newOrganization->id);
 
