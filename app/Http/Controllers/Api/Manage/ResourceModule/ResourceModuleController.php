@@ -76,7 +76,7 @@ class ResourceModuleController extends AppBaseController
                 if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(),request()->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
