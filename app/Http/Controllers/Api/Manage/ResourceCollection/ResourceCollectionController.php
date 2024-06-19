@@ -91,7 +91,7 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(),request()->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {

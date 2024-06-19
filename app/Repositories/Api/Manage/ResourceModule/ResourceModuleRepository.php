@@ -67,7 +67,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                 ];
             });
-            $request->organization_id =$organizationId;
+            $request->organization_id = $organizationId;
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
@@ -157,7 +157,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
                 return false;
             }
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(),request()->ip());
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(), request()->ip());
             DB::commit();
 
             return true;
