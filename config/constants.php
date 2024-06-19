@@ -494,4 +494,8 @@ return [
         'yes' => '0',
         'no'  => '1',
     ],
+    'use_main_org_logo' => [
+        'no'    => '0',
+        'yes'   => '1',
+    ],
 ];

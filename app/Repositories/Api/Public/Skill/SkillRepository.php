@@ -27,7 +27,6 @@ class SkillRepository implements SkillInterface
 
                 return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId, $pagination);
             }
-            // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {
             return false;
         }

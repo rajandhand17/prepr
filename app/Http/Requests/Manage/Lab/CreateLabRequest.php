@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Lab;
 
+use App\Rules\AirmeetEventUrlRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -160,7 +161,7 @@ class CreateLabRequest extends FormRequest
         if ($isLiveEventEnabled === 'yes') {
             $base_rules = [
                 ...$base_rules,
-                'live_event.url'         => ['required'],
+                'live_event.url'         => ['required', new AirmeetEventUrlRule()],
                 'live_event.is_verified' => ['required', 'in:yes'], // FIRST CHECK FROM AN API TO VERIFY AIRMEET EVENT
             ];
         }
