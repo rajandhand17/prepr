@@ -100,7 +100,7 @@ class Organization extends Command
                         case 'sustainability_and_environmental_management':
                             $bussiness_challenge_option = '7';
                             break;
-                        
+
                         default:
                             $bussiness_challenge_option = null;
                             break;

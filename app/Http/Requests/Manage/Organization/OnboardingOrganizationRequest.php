@@ -42,6 +42,7 @@ class OnboardingOrganizationRequest extends FormRequest
                 'category'                      => 'required|numeric|exists:categories,id',
             ];
         }
+
         return $base_rules;
     }
 

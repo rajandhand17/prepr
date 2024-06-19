@@ -120,7 +120,6 @@ class UserController extends AppBaseController
                     return $this->sendResponse(UserResource::make($userData), __('responses.user_onboarding_completed'));
                 }
             }
-
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
