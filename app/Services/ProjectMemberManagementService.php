@@ -482,7 +482,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function fetchAcceptedMemberIds($projectId)
+    public static function fetchAcceptedMemberIds($projectId)
     {
         try {
             $getUserIdsBasedOnEmail = [];

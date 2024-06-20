@@ -626,4 +626,28 @@ class ProjectService
             return false;
         }
     }
+
+    public static function getProjectBasedOnUuid($projectUuid)
+    {
+        try {
+            return Project::where('uuid', $projectUuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchSubmittedProjectsChallengeId($userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck('challenge_id');
+
+            return $fetchSubmittedProjectIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

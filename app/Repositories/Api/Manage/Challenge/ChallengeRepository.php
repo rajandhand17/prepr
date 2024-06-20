@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Models\Challenge;
+use App\Services\AchievementService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
 use App\Services\Manage\CampusConnectStoryService;
@@ -49,8 +50,9 @@ class ChallengeRepository implements ChallengeInterface
     private $campusConnectOpportunityService;
     private $campusConnectStoryService;
     private $organizationService;
+    private $achievementService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService)
+    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AchievementService $achievementService)
     {
         $this->challengeService = $challengeService;
         $this->challengeAchievementService = $challengeAchievementService;
@@ -73,6 +75,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->campusConnectOpportunityService = $campusConnectOpportunityService;
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->organizationService = $organizationService;
+        $this->achievementService = $achievementService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -635,6 +638,38 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getChallengeListName($request, $organization);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function selectChallengeWinner($challengeData, $request)
+    {
+        try {
+            $submitProject = DB::transaction(function () use ($challengeData, $request) {
+                $updateWinnerSelectionTimeLine = true;
+                $addWinnerAchievement = $this->achievementService->addWinnerAchievement($challengeData, $request);
+                if ($challengeData->winner_select_date === null) {
+                    $updateWinnerSelectionTimeLine = $this->challengeService->updateWinnerSelectionTimeLine($challengeData);
+                }
+
+                return [
+                    'addWinnerAchievement'          => $addWinnerAchievement,
+                    'updateWinnerSelectionTimeLine' => $updateWinnerSelectionTimeLine,
+                ];
+            });
+
+            if (
+                $submitProject['addWinnerAchievement'] &&
+                $submitProject['updateWinnerSelectionTimeLine']
+            ) {
+                DB::commit();
+
+                return true;
+            }
+            DB::rollback();
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

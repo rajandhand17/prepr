@@ -296,4 +296,28 @@ class UserService
             return false;
         }
     }
+
+    public function updateUserPoint($userIdsArray, $userPoint)
+    {
+        try {
+            if (empty($userIdsArray)) {
+                return false;
+            }
+
+            foreach ($userIdsArray as $userId) {
+                $fetchUserById = $this->getUserById($userId);
+
+                if (!$fetchUserById) {
+                    continue;
+                }
+
+                $fetchUserById->user_points += $userPoint;
+                $fetchUserById->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

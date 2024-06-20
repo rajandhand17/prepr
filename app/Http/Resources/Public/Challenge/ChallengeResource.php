@@ -114,13 +114,14 @@ class ChallengeResource extends JsonResource
             ];
         }
 
-        if ($this->incentive_achievement) {
+        if (!empty($this->incentive_achievement)) {
             $incentive_achievement = $this->incentive_achievement->map(function ($item) {
                 return [
-                    'achievement_name'   => $item->achievement_name,
-                    'achievement_points' => $item->achievement_points,
-                    'achievement_image'  => $item->achievement_image,
-                    'achievement_prize'  => $item->achievement_prize,
+                    'achievement_id'        => $item->id,
+                    'achievement_name'      => $item->achievement_name,
+                    'achievement_points'    => $item->achievement_points,
+                    'achievement_image'     => $item->achievement_image,
+                    'achievement_prize'     => $item->achievement_prize,
                 ];
             });
         }
