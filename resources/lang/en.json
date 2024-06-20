@@ -1227,5 +1227,7 @@
     "responses.resource_module_asset_visited": "Resource Module Asset visited successfully.",
     "responses.resource_module_asset_visit_gone_wrong": "Something went wrong marking the Resource Module Asset as visited",
     "responses.resource_module_asset_already_visited": "Resource Module Asset already visited.",
-    "responses.resource_module_asset_not_available": "Resource Module Asset not available, please try again later."
+    "responses.resource_module_asset_not_available": "Resource Module Asset not available, please try again later.",
+    "responses.fcm_token_required": "Please provide the FCM token.",
+    "responses.fcm_token_string": "FCM token should be string."
 }

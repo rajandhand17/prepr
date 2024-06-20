@@ -16,6 +16,7 @@ use App\Http\Requests\Auth\SSOLoginFormRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
+use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
@@ -992,4 +993,18 @@ class AuthController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function updateFcmToken(UpdateFcmTokenFormRequest $request)
+    {
+        try {
+            $updateFCMToken = $this->authRepository->updateFcmToken($request);
+            if($updateFCMToken){
+                return $this->sendResponse($updateFCMToken, 'success');
+            }
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
 }

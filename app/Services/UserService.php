@@ -320,4 +320,17 @@ class UserService
             return false;
         }
     }
+
+    public function updateFcmToken($request)
+    {
+        try {
+            auth()->user()->update([
+                'fcm_token' => $request->fcm_token,
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }
