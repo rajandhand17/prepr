@@ -620,12 +620,4 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function getMembersBasedOnProjectId($requestStatus)
-    {
-        try {
-            // $getProjectIds=ProjectMemberManagement::where(['project_id'=>$requestStatus]);
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }
