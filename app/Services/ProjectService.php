@@ -90,6 +90,11 @@ class ProjectService
                 $project_list = $project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
             }
 
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
+                $project_list = $project_list->whereIn('projects.id', $requestStatus);
+            }
+
             if ($request->has('status') && !empty($request->status)) {
                 $status_array = ['pending', 'completed', 'submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
