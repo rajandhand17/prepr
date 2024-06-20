@@ -825,7 +825,7 @@ class ChallengeService
     {
         try {
             return Challenge::whereIn('level_id', $levelId)->pluck('id');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -834,7 +834,7 @@ class ChallengeService
     {
         try {
             return Challenge::whereIn('duration_id', $durationId)->pluck('id');
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
