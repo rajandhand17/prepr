@@ -1212,5 +1212,20 @@
     "responses.organization_onboarding_completed": "Organization onboarding completed",
     "responses.organization_onboarding_not_completed": "Something went wrong while completing Organization onboarding, try again later.",
     "responses.found_bct_list": "The list of business challenge tacklings has been successfully retrieved!",
-    "responses.not_found_bct_list": "Failed to retrieve the list of business challenge tacklings!"
+    "responses.not_found_bct_list": "Failed to retrieve the list of business challenge tacklings!",
+    "responses.winner_changing_not_allowed": "Winner changing is not allowed for this Challenge.",
+    "responses.project_ids_not_exists": "Sorry, this project id has not been registered with us!",
+    "responses.project_ids_array": "The project ids should be an array!",
+    "responses.challenge_winner_id_unique": "The winner achievement IDs must be unique.",
+    "responses.project_id_unique": "The project IDs must be unique.",
+    "responses.challenge_winner_id_match_number": "The number of winner achievement IDs must match the number of project IDs.",
+    "responses.project_id_match_number": "The number of project IDs must match the number of winner achievement IDs.",
+    "responses.challenge_incentive_not_found": "No Incentives found in this challenge.",
+    "responses.challenge_winner_selected_successfully": "Challenge Winner selected successfully.",
+    "responses.challenge_winner_selected_not_successfully": "Something went wrong while selecting the Challenge winner.",
+    "responses.challenge_winner_timeline_fail": "The Challenge(s) which you are looking has passed the updating winner date.",
+    "responses.resource_module_asset_visited": "Resource Module Asset visited successfully.",
+    "responses.resource_module_asset_visit_gone_wrong": "Something went wrong marking the Resource Module Asset as visited",
+    "responses.resource_module_asset_already_visited": "Resource Module Asset already visited.",
+    "responses.resource_module_asset_not_available": "Resource Module Asset not available, please try again later."
 }

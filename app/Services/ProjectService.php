@@ -75,6 +75,26 @@ class ProjectService
                 }
             }
 
+            if ($request->has('skills') && !empty($request->skills)) {
+                $projectIds = ProjectSkillsService::getProjectIdsBasedOnSkills($request->skills);
+                $project_list = $project_list->whereIn('projects.id', $projectIds);
+            }
+
+            if ($request->has('level') && !empty($request->level)) {
+                $getChallenges = ChallengeService::getChallengesBasedOnLevelId($request->level);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallenges);
+            }
+
+            if ($request->has('duration') && !empty($request->duration)) {
+                $getChallengesBasedOnDuration = ChallengeService::getChallengesBasedOnDuration($request->duration);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
+            }
+
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
+                $project_list = $project_list->whereIn('projects.id', $requestStatus);
+            }
+
             if ($request->has('status') && !empty($request->status)) {
                 $status_array = ['pending', 'completed', 'submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
@@ -623,6 +643,30 @@ class ProjectService
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectBasedOnUuid($projectUuid)
+    {
+        try {
+            return Project::where('uuid', $projectUuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchSubmittedProjectsChallengeId($userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck('challenge_id');
+
+            return $fetchSubmittedProjectIds;
+        } catch (Exception $e) {
             return false;
         }
     }

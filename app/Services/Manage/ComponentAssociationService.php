@@ -1089,4 +1089,26 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function fetchChallengePathIdsBasedOnChallengeId($challengeId)
+    {
+        try {
+            $fetchChallengePathIdsBasedOnChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('challenge_path_id')->pluck('challenge_path_id');
+
+            return $fetchChallengePathIdsBasedOnChallengeId;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchChallengeIdsBasedOnChallengePathId($challengePathId)
+    {
+        try {
+            $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengeIdsBasedOnChallengePathId;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

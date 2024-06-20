@@ -491,7 +491,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function fetchAcceptedMemberIds($projectId)
+    public static function fetchAcceptedMemberIds($projectId)
     {
         try {
             $getUserIdsBasedOnEmail = [];
@@ -629,9 +629,17 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function getMembersBasedOnProjectId()
+    public static function getAllRequestsData($requestStatus)
     {
         try {
+            $memberManagement = ProjectMemberManagement::select();
+            if ($requestStatus == 'request_sent') {
+                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'0']);
+            } else {
+                $memberManagement = $memberManagement->where('email', '!=', auth()->user()->email);
+            }
+
+            return $memberManagement->pluck('project_id');
         } catch (\Exception $e) {
             return false;
         }
