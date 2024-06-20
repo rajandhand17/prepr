@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\TeamMatching;
 
-use App\Http\Resources\User\UserResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillService;
 use App\Services\UserService;
