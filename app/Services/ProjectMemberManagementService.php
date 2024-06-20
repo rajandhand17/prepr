@@ -619,12 +619,4 @@ class ProjectMemberManagementService
             return false;
         }
     }
-
-    public static function getMembersBasedOnProjectId()
-    {
-        try {
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }
