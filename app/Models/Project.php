@@ -157,4 +157,9 @@ class Project extends Model
     {
         return $this->hasOne(Challenge::class, 'id', 'challenge_id');
     }
+
+    public function friendRequest()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where(['invite_status'=>'0', 'email'=>auth()->user()->email]);
+    }
 }
