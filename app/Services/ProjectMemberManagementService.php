@@ -619,7 +619,6 @@ class ProjectMemberManagementService
             return false;
         }
     }
-<<<<<<< HEAD
 
     public static function getAllRequestsData($requestStatus)
     {
@@ -636,6 +635,4 @@ class ProjectMemberManagementService
         }
     }
 
-=======
->>>>>>> BetaDevelopment
 }
