@@ -820,4 +820,22 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengesBasedOnLevelId($levelId)
+    {
+        try {
+            return Challenge::whereIn('level_id', $levelId)->pluck('id');
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengesBasedOnDuration($durationId)
+    {
+        try {
+            return Challenge::whereIn('duration_id', $durationId)->pluck('id');
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

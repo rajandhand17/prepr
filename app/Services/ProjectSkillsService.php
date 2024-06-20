@@ -38,4 +38,14 @@ class ProjectSkillsService
             return false;
         }
     }
+
+    public static function getProjectIdsBasedOnSkills($skillIds)
+    {
+        try {
+            $projectIds = ProjectSkill::whereIn('skill_id',$skillIds)->pluck('project_id');
+            return $projectIds;
+        }catch (Exception $e) {
+            return false;
+        }
+    }
 }
