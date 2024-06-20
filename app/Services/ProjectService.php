@@ -76,18 +76,18 @@ class ProjectService
             }
 
             if ($request->has('skills') && !empty($request->skills)) {
-                $projectIds=ProjectSkillsService::getProjectIdsBasedOnSkills($request->skills);
+                $projectIds = ProjectSkillsService::getProjectIdsBasedOnSkills($request->skills);
                 $project_list = $project_list->whereIn('projects.id', $projectIds);
             }
 
-            if($request->has('level') && !empty($request->level)){
-                $getChallenges=ChallengeService::getChallengesBasedOnLevelId($request->level);
-                $project_list=$project_list->whereIn('projects.challenge_id', $getChallenges);
+            if ($request->has('level') && !empty($request->level)) {
+                $getChallenges = ChallengeService::getChallengesBasedOnLevelId($request->level);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallenges);
             }
 
-            if($request->has('duration') && !empty($request->duration)){
-                $getChallengesBasedOnDuration=ChallengeService::getChallengesBasedOnDuration($request->duration);
-                $project_list=$project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
+            if ($request->has('duration') && !empty($request->duration)) {
+                $getChallengesBasedOnDuration = ChallengeService::getChallengesBasedOnDuration($request->duration);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
             }
 
             if ($request->has('status') && !empty($request->status)) {

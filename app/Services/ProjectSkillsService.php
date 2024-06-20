@@ -42,9 +42,10 @@ class ProjectSkillsService
     public static function getProjectIdsBasedOnSkills($skillIds)
     {
         try {
-            $projectIds = ProjectSkill::whereIn('skill_id',$skillIds)->pluck('project_id');
+            $projectIds = ProjectSkill::whereIn('skill_id', $skillIds)->pluck('project_id');
+
             return $projectIds;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
