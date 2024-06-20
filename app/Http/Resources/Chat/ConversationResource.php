@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Chat;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\User\UserSearchResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
