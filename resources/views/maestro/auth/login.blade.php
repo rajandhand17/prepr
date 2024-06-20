@@ -31,14 +31,14 @@
 
         <form method="POST" action="{{ route('login') }}">
           @csrf
-          <div class="input-group mb-3">
-            <input id="email" type="email" placeholder="Email Address" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-            @error('email')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
+          @if (session('error'))
+              <span class="errorblock" style="padding: 10px 1px 10px 1px;color: red;">
+                  {{ session('error') }}
               </span>
-            @enderror
+          @endif
+
+          <div class="input-group mb-3" style="padding-top: 10px;">
+            <input id="email" type="email" placeholder="Email Address" class="form-control"  name="email" value="{{ old('email') }}" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -47,13 +47,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input id="password" type="password" placeholder="Email Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-            @error('password')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-            @enderror
+            <input id="password" type="password" placeholder="Email Password" class="form-control" name="password" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -94,5 +88,15 @@
   <!-- AdminLTE App -->
   <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+  @if(Session::has('success'))
+      toastr.success("{{ Session::get('success') }}");
+  @endif
 
+  @if(Session::has('error'))
+      toastr.error("{{ Session::get('error') }}");
+  @endif
+</script>
 </html>
