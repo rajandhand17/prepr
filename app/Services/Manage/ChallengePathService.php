@@ -124,7 +124,7 @@ class ChallengePathService
         }
     }
 
-    public function createChallengePath($cover_image, $request)
+    public function createChallengePath($cover_image, $request, $organizationId)
     {
         try {
             $privacy = config('constants.challenge_privacy.no');
@@ -197,7 +197,6 @@ class ChallengePathService
 
             $model = new ChallengePath();
             $slug = UtilityHelper::generateSlug($request->title, $model);
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
 
             $challengePath = new ChallengePath();
             $challengePath->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -206,7 +205,7 @@ class ChallengePathService
             $challengePath->title = $request->title;
             $challengePath->description = $request->description;
             $challengePath->user_id = auth()->user()->id;
-            $challengePath->organization_id = $organization->id;
+            $challengePath->organization_id = $organizationId;
             $challengePath->category_id = $request->category_id;
             $challengePath->duration_id = $request->duration_id;
             $challengePath->level_id = $request->level_id;
@@ -225,7 +224,7 @@ class ChallengePathService
         }
     }
 
-    public function updateChallengePath($slug, $request, $upload_cover_image)
+    public function updateChallengePath($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
             $challengePath = ChallengePath::where('slug', $slug)->first();
@@ -296,16 +295,11 @@ class ChallengePathService
                     $is_sequential = config('constants.challenge_sequential.yes');
                     break;
             }
-            if ($request->has('organization_id')) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id)->id;
-            } else {
-                $organization = $challengePath->organization_id;
-            }
 
             $challengePath->language = ($request->has('language')) ? $request->language : $challengePath->language;
             $challengePath->title = ($request->has('title')) ? $request->title : $challengePath->title;
             $challengePath->description = ($request->has('description')) ? $request->description : $challengePath->description;
-            $challengePath->organization_id = $organization;
+            $challengePath->organization_id = $organizationId;
             $challengePath->category_id = ($request->has('category_id')) ? $request->category_id : $challengePath->category_id;
             $challengePath->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challengePath->duration_id;
             $challengePath->level_id = ($request->has('level_id')) ? $request->level_id : $challengePath->level_id;
@@ -346,7 +340,7 @@ class ChallengePathService
         }
     }
 
-    public function delete($challengePathId)
+    public static function delete($challengePathId)
     {
         try {
             $challengePath = ChallengePath::find($challengePathId)->delete();
@@ -402,6 +396,25 @@ class ChallengePathService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallengePath($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengePaths = ChallengePath::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationChallengePaths)) {
+                foreach ($fetchOrganizationChallengePaths as $organizationChallengePath) {
+                    $deleteOrganizationChallengePath = self::delete($organizationChallengePath);
+                    if (!$deleteOrganizationChallengePath) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         } catch (Exception $e) {
             return false;
         }

@@ -32,6 +32,10 @@ class LabProgramService
                 $labIds = LabProgramSocialActivitiesService::getLabProgramsBasedOnActivity($activityType)->pluck('lab_program_id');
                 $labProgramList->whereIn('lab_programs.id', $labIds);
             }
+            if ($request->has('organization_id') && !empty($request->organization_id)) {
+                $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
+                $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':

@@ -299,7 +299,7 @@ class CampusConnectHelper
                 'schools' => data_get($data, 'campus_connect_schools', []),
                 'company' => [
                     'id'      => data_get($organization, 'id'),
-                    'name'    => data_get($organization, 'display_name', '-'),
+                    'name'    => data_get($organization, 'display_name') ?? data_get($organization, 'title', '-'),
                     'address' => data_get($organization, 'address.0.full_address', '-'),
                 ],
                 'contact' => [
@@ -379,7 +379,7 @@ class CampusConnectHelper
                 'id'           => $eid,
                 'title'        => data_get($data, 'campus_connect_story_title'),
                 'body'         => data_get($data, 'campus_connect_story_body'),
-                'company_name' => data_get($organization, 'display_name'),
+                'company_name' => data_get($organization, 'display_name') ?? data_get($organization, 'title', '-'),
                 'website'      => self::generateUrl($model, $slug),
                 'media_type'   => data_get($data, 'campus_connect_story_media_type'),
                 'image'        => [

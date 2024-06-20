@@ -28,16 +28,12 @@ class ResourceCollectionService
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('organization_id', $getOrganizationIds);
-                }
+                $resourceCollectionList = $resourceCollectionList->whereIn('organization_id', $getOrganizationIds);
             }
 
             if ($request->has('status') && !empty($request->status)) {
                 $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'archive') ? '2' : '3'));
                 $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', $status);
-            } else {
-                $resourceCollectionList = $resourceCollectionList->where('resource_collections.status', '1');
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {

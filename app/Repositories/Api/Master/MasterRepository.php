@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Master;
 
 use App\Services\AchievementConditionListService;
+use App\Services\BusinessChallengeTacklingService;
 use App\Services\CategoryService;
 use App\Services\ChallengeAnnouncementRecipientService;
 use App\Services\CountryService;
@@ -58,8 +59,9 @@ class MasterRepository implements MasterInterface
     private $tagGroupService;
     private $challengeAnnouncementRecipientService;
     private $jobTitleService;
+    private $businessChallengeTacklingService;
 
-    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService, JobTitleService $jobTitleService)
+    public function __construct(CountryService $countryService, CategoryService $categoryService, SkillService $skillService, TagService $tagService, ProjectIndustryService $projectIndustryService, ProjectTypeService $projectTypeService, ProjectStageService $projectStageService, ProjectVerticalService $projectVerticalService, ProjectStatusService $projectStatusService, SocialLinkService $socialLinkService, SkillGroupService $skillGroupService, SkillStackService $skillStackService, RankService $rankService, ProjectSubmissionRequirementService $projectSubmissionRequirements, AchievementConditionListService $achievementConditionListService, HostService $hostService, FlexibleExpireDateDurationService $flexibleExpireDateDurationService, PitchTemplateService $pitchTemplateService, LabConditionService $labConditionService, SocialConnectService $socialConnectService, DurationService $durationService, LevelService $levelService, ChallengeAnnouncementRecipientService $challengeAnnouncementRecipientService, TagGroupService $tagGroupService, JobTitleService $jobTitleService, BusinessChallengeTacklingService $businessChallengeTacklingService)
     {
         $this->categoryService = $categoryService;
         $this->skillService = $skillService;
@@ -86,6 +88,7 @@ class MasterRepository implements MasterInterface
         $this->challengeAnnouncementRecipientService = $challengeAnnouncementRecipientService;
         $this->countryService = $countryService;
         $this->jobTitleService = $jobTitleService;
+        $this->businessChallengeTacklingService = $businessChallengeTacklingService;
     }
 
     public function getCategories($request)
@@ -347,6 +350,15 @@ class MasterRepository implements MasterInterface
         } catch (Exception $e) {
             Log::error('Error in getJobTitles in MasterRepository.php: '.$e->getMessage());
 
+            return false;
+        }
+    }
+
+    public function getBusinessChallengeTackling($request)
+    {
+        try {
+            return $this->businessChallengeTacklingService->getBusinessChallengeTackling($request);
+        } catch (\Exception $e) {
             return false;
         }
     }

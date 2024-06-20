@@ -78,7 +78,7 @@ class AchievementService
                         $achievement_list->orderBy('user_achievements.title', 'DESC');
                         break;
                     case 'creation_date':
-                        $achievement_list->orderBy('user_achievements.created_at', 'ASC');
+                        $achievement_list->orderBy('user_achievements.issue_date', 'ASC');
                         break;
                     default:
                         $achievement_list->orderBy('user_achievements.id', 'ASC');

@@ -44,10 +44,11 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
-            }
             if ($checkResourceModuleExistsOrNot) {
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
@@ -64,7 +65,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleExistsOrNot->id, $request);
@@ -83,7 +84,7 @@ class ResourceModuleController extends AppBaseController
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleExistsOrNot !== null) {
-                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->resourceModuleRepository->getColumnNameValue($action);

@@ -46,7 +46,7 @@ class LabMarketplaceResource extends JsonResource
         $duration_id = null;
         $level = null;
         $level_id = null;
-        $chalenges = [];
+        $challenges = [];
         $challenge_paths = [];
         $resource_modules = [];
         $resource_collections = [];
@@ -153,11 +153,13 @@ class LabMarketplaceResource extends JsonResource
         }
 
         $is_redeemed = 'yes';
-        $organizationCheck = $this->organization->uuid;
-        if ($request->has('organization_id')) {
-            $organizationCheck = $request->organization_id;
+        $organizationCheck = auth()->user()->preferred_organization;
+        $organization = OrganizationService::getOrganizationExistBasedOnId($organizationCheck);
+        $fetchOrganizationLimit = OrganizationService::OrganizationChargebeeLimit($organization);
+        $labCredit = 'UnLimited';
+        if ($fetchOrganizationLimit['lab_limit'] != 'UnLimited') {
+            $labCredit = $fetchOrganizationLimit['lab_limit'] - $fetchOrganizationLimit['lab_count'];
         }
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationCheck);
         $checkLabRedeem = LabMarketplaceService::checkLabRedeemedOrNot($this->id, $organization->id);
         if ($checkLabRedeem) {
             $is_redeemed = 'no';
@@ -167,7 +169,7 @@ class LabMarketplaceResource extends JsonResource
             foreach ($this->component_association as $lab_association) {
                 if ($lab_association->challenge_id) {
                     $getChallengeTemplate = ChallengeTemplateService::getChallengeTemplateBasedOnId($lab_association->challenge_template_id);
-                    $chalenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallengeTemplate);
+                    $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallengeTemplate);
                 }
 
                 if ($lab_association->challenge_path_id) {
@@ -226,14 +228,19 @@ class LabMarketplaceResource extends JsonResource
             'skill_stacks'                  => $skill_stacks,
             'tags'                          => $tags,
             'tag_groups'                    => $tag_groups,
-            'challenge'                     => $chalenges,
+            'challenge_count'               => count($challenges),
+            'challenge_path_count'          => count($challenge_paths),
+            'resource_module_count'         => count($resource_modules),
+            'resource_collection_count'     => count($resource_collections),
+            'resource_group_count'          => count($resource_groups),
+            'challenge'                     => $challenges,
             'challenge_path'                => $challenge_paths,
             'resource_module'               => $resource_modules,
             'resource_collection'           => $resource_collections,
             'resource_group'                => $resource_groups,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
             'is_redeemed'                   => $is_redeemed,
-            'credit_score'                  => '1',
+            'credit_score'                  => $labCredit,
         ];
     }
 }
