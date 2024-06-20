@@ -3,6 +3,7 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Models\OrganizationAddress;
+use App\Models\OrganizationCustomization;
 use App\Models\OrganizationMember;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -53,6 +54,7 @@ class Organization extends Command
                         continue;
                     }
                     $organizationDetails = DB::connection('mysql2')->table('organisations_details')->where('organisations_id', $organization->id)->first();
+                    $organizationCustomizations = DB::connection('mysql2')->table('organization_customizations')->where('organization_id', $organization->id)->first();
                     $organizationPeoples = DB::connection('mysql2')->table('peoples')->where('organisation', $organization->id)->get();
 
                     $checkOrganization = \App\Models\Organization::find($organization->id);
@@ -70,6 +72,39 @@ class Organization extends Command
                         }
                     }
 
+                    switch ($organization->bussiness_challenge_option) {
+                        case 'sales_marketing':
+                            $bussiness_challenge_option = '1';
+                            break;
+
+                        case 'human_resources':
+                            $bussiness_challenge_option = '2';
+                            break;
+
+                        case 'it_management':
+                            $bussiness_challenge_option = '3';
+                            break;
+
+                        case 'customer_service':
+                            $bussiness_challenge_option = '4';
+                            break;
+
+                        case 'research_development':
+                            $bussiness_challenge_option = '5';
+                            break;
+
+                        case 'business_evelopment':
+                            $bussiness_challenge_option = '6';
+                            break;
+
+                        case 'sustainability_and_environmental_management':
+                            $bussiness_challenge_option = '7';
+                            break;
+
+                        default:
+                            $bussiness_challenge_option = null;
+                            break;
+                    }
                     $newOrganization->id = $organization->id;
                     $newOrganization->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newOrganization->language = $organization->language;
@@ -86,6 +121,7 @@ class Organization extends Command
                     $newOrganization->status = ($organization->status == '0') ? '0' : (($organization->status == '1') ? '1' : '3');
                     $newOrganization->total_employees = isset($organizationDetails->number_employees) ? $organizationDetails->number_employees : 0;
                     $newOrganization->is_verified = $organization->is_verified;
+                    $newOrganization->business_challenge_tacklings = $bussiness_challenge_option;
                     $newOrganization->save();
                     $checkUser->attachRole('organization_owner', $newOrganization->id);
 
@@ -107,6 +143,26 @@ class Organization extends Command
                     $organization_address->country = isset($organizationDetails->country) ? $organizationDetails->country : null;
                     $organization_address->zip_code = isset($organizationDetails->postal_code) ? $organizationDetails->postal_code : null;
                     $organization_address->save();
+
+                    if ($organizationCustomizations) {
+                        $enable_custom_login_and_registration = '0';
+                        if ($organizationCustomizations->enable_custom_login_and_registration == '1') {
+                            $enable_custom_login_and_registration = '1';
+                        }
+                        $use_main_org_logo = '0';
+                        if ($organizationCustomizations->use_main_org_logo == '1') {
+                            $use_main_org_logo = '1';
+                        }
+                        $oldOrganizationCustomizations = new OrganizationCustomization();
+                        $oldOrganizationCustomizations->organization_id = $newOrganization->id;
+                        $oldOrganizationCustomizations->enable_custom_login_and_registration = $enable_custom_login_and_registration;
+                        $oldOrganizationCustomizations->use_main_org_logo = $use_main_org_logo;
+                        $oldOrganizationCustomizations->custom_login_url = isset($organization->website) ? $organization->website : null;
+                        $oldOrganizationCustomizations->custom_logo_image = $organizationCustomizations->custom_logo_image;
+                        $oldOrganizationCustomizations->custom_hero_image = $organizationCustomizations->custom_hero_image;
+                        $oldOrganizationCustomizations->custom_background_color = $organizationCustomizations->custom_background_color;
+                        $oldOrganizationCustomizations->save();
+                    }
 
                     if ($organizationPeoples) {
                         OrganizationMember::where('organization_id', $organization->id)->delete();

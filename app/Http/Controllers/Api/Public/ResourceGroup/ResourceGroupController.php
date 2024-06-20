@@ -44,10 +44,11 @@ class ResourceGroupController extends AppBaseController
     {
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
-                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
-            }
             if ($checkResourceGroupExistsOrNot) {
+                if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
+                    return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
+
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
@@ -62,7 +63,7 @@ class ResourceGroupController extends AppBaseController
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($checkResourceGroupExistsOrNot !== null) {
-                if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+                if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->resourceGroupRepository->getColumnNameValue($action);
@@ -93,7 +94,7 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
             }
-            if ($checkResourceGroupExistsOrNot->is_accessible === '0') {
+            if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             $addRating = $this->resourceGroupRepository->addRating($checkResourceGroupExistsOrNot->id, $request);

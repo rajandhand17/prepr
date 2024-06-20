@@ -273,7 +273,8 @@ class ChallengeTemplateResource extends JsonResource
             $organizationCheck = $request->organization_id;
         }
 
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationCheck);
+        $organizationCheck = auth()->user()->preferred_organization;
+        $organization = OrganizationService::getOrganizationExistBasedOnId($organizationCheck);
         $checkChallengeRedeem = ChallengeTemplateService::checkChallengeRedeemedOrNot($this->id, $organization->id);
         if ($checkChallengeRedeem) {
             $is_redeemed = 'no';

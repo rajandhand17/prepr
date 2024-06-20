@@ -10,6 +10,7 @@ use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
@@ -56,6 +57,7 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $challenge_template = [];
         $labs = [];
         $lab_programs = [];
         $resource_modules = [];
@@ -206,7 +208,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
         }
 
         if ($this->challenge_assessment_criteria) {
@@ -324,6 +326,10 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        if ($this->challenge_project_template) {
+            $challenge_template = ChallengeService::getTemplate($this->challenge_project_template->template_id);
+        }
+
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 
@@ -369,7 +375,7 @@ class ChallengeResource extends JsonResource
             'challenge_assessment'          => $challenge_assessment,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
-            'challenge_template'            => $this->challenge_project_template,
+            'challenge_template'            => $challenge_template,
             'joined'                        => $join_status,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),

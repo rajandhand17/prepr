@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
+use App\Models\PitchTemplate;
 use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
@@ -18,7 +19,7 @@ class ChallengeService
     public function getChallengeCountBasedOnOrganization($organizationId)
     {
         try {
-            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_build' => '0', 'is_auto_created' => '0'])->count();
+            $challenge_count = Challenge::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->count();
 
             return $challenge_count;
         } catch (Exception $e) {
@@ -79,20 +80,14 @@ class ChallengeService
                 }
             }
 
-            if ($request->has('privacy')) {
-                $privacy = null;
+            if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
-                    case 'yes':
-                        $privacy = config('constants.challenge_privacy.yes');
+                    case 'public':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '0');
                         break;
-                    case 'no':
-                        $privacy = config('constants.challenge_privacy.no');
+                    case 'private':
+                        $challenge_list = $challenge_list->where('challenges.privacy', '1');
                         break;
-                    default:
-                        $privacy = null;
-                }
-                if ($privacy != null) {
-                    $challenge_list = $challenge_list->where('privacy', $privacy);
                 }
             }
 
@@ -168,11 +163,9 @@ class ChallengeService
         }
     }
 
-    public static function createChallenge($request, $upload_cover_image)
+    public static function createChallenge($request, $upload_cover_image, $organizationId)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-
             $status = config('constants.challenge_status.draft');
             if ($request->is_ai_created) {
                 $status = config('constants.challenge_status.publish');
@@ -290,7 +283,7 @@ class ChallengeService
             $challenge->language = $request->language;
             $challenge->slug = $slug;
             $challenge->user_id = auth()->user()->id;
-            $challenge->organization_id = $organization->id;
+            $challenge->organization_id = $organizationId;
             $challenge->category_id = $request->category_id;
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
@@ -318,11 +311,10 @@ class ChallengeService
         }
     }
 
-    public static function updateChallenge($slug, $request, $update_cover_image)
+    public static function updateChallenge($slug, $request, $update_cover_image, $organizationId)
     {
         try {
             $challenge = Challenge::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($challenge !== null) {
                 $privacy = $challenge->privacy;
                 if ($request->has('privacy')) {
@@ -422,7 +414,7 @@ class ChallengeService
                 }
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
-                $challenge->organization_id = $organization->id;
+                $challenge->organization_id = $organizationId;
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
@@ -699,12 +691,17 @@ class ChallengeService
             $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
             $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
             if (!empty($challengeIds)) {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->whereIn('id', $challengeIds)->take(config('site-settings.explore_page_limit_max'));
+                $challenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+                $challenges = Challenge::where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_min'));
+            }
+            if (count($challenges) < config('site-settings.explore_page_limit_max')) {
+                $limit = config('site-settings.explore_page_limit_max') - count($challenges);
+                $getNewChallengeIds = Challenge::where('user_id', '!=', auth()->user()->id)->whereNotIn('id', $challenges)->pluck('id')->take($limit);
+                $challenges = $challenges->merge($getNewChallengeIds)->unique();
             }
 
-            return $challenges->get();
+            return Challenge::whereIn('id', $challenges)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (Exception $e) {
             return false;
         }
@@ -717,7 +714,7 @@ class ChallengeService
             $challenges = Challenge::select()->where('challenges.status', '1')->whereIn('id', $getLatestChallengeIds);
 
             return $challenges->get();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -741,7 +738,8 @@ class ChallengeService
         try {
             $fetchChallenge = self::getChallengeBasedOnId($challengeId);
             if ($fetchChallenge) {
-                $getTemplate = ($getProjectIdBasedTemplate !== null) ? $getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
+                $getTemplateId = ($getProjectIdBasedTemplate !== null) ? $getProjectIdBasedTemplate->template_id : ($fetchChallenge->challenge_project_template->template_id ?? 0);
+                $getTemplate = self::getTemplate($getTemplateId);
                 $projectDate = UtilityHelper::formatDateTime($created_at);
                 $fetchChallengeDueDate = self::fetchChallengeDueDate($fetchChallenge, $projectDate);
                 $challenge_details = [
@@ -751,7 +749,8 @@ class ChallengeService
                     'slug'              => $fetchChallenge->slug,
                     'agreement'         => $fetchChallenge->agreement,
                     'is_accessible'     => ($fetchChallenge->is_accessible == '1') ? 'yes' : 'no',
-                    'template_id'       => $getTemplate,
+                    'template_id'       => $getTemplate['template_id'],
+                    'template_title'    => $getTemplate['template_title'],
                     'challenge_type'    => $fetchChallengeDueDate['timeline_type'],
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                     'submission_status' => $fetchChallengeDueDate['submission_status'],
@@ -760,7 +759,7 @@ class ChallengeService
 
                 return $challenge_details;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -773,6 +772,50 @@ class ChallengeService
             $getChallengeAcceptedMembersBasedOnIds = ManageMemberManagementService::getComponentAcceptedMembersBasedOnIds($getChallengeBasedOnOrganization, 'challenge');
 
             return $getChallengeAcceptedMembersBasedOnIds;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTemplate($templateId)
+    {
+        try {
+            $templateData = [];
+            if ($templateId == '0') {
+                $templateData = [
+                    'template_id'       => $templateId,
+                    'template_title'    => __('responses.any_pitch_template'),
+                ];
+            } else {
+                $template = PitchTemplate::where('id', $templateId)->first();
+                if ($template) {
+                    $templateData = [
+                        'template_id'       => $template->id,
+                        'template_title'    => $template->title,
+                    ];
+                }
+            }
+
+            return $templateData;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallenge($organizationId)
+    {
+        try {
+            $fetchOrganizationChallenges = Challenge::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationChallenges)) {
+                foreach ($fetchOrganizationChallenges as $organizationChallenge) {
+                    $deleteOrganizationChallenge = self::deleteChallenge($organizationChallenge);
+                    if (!$deleteOrganizationChallenge) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         } catch (\Exception $e) {
             return false;
         }

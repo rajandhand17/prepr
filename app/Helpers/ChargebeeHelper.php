@@ -311,11 +311,10 @@ class ChargebeeHelper
         }
     }
 
-    public static function checkComponentLimitBasedOnOrganization($organizationUUID, $component)
+    public static function checkComponentLimitBasedOnOrganization($organizationID, $component)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($organizationUUID);
-            $fetchOrganizationPlan = ChargebeeSubscription::where('organization_id', $organization->id)->first();
+            $fetchOrganizationPlan = ChargebeeSubscription::where('organization_id', $organizationID)->first();
             if ($fetchOrganizationPlan) {
                 switch ($component) {
                     case 'lab':
@@ -344,10 +343,10 @@ class ChargebeeHelper
                         break;
                 }
             } else {
-                $fetchOrganizationPlanDetails = self::getTotalLimits($organization->id, $component);
+                $fetchOrganizationPlanDetails = self::getTotalLimits($organizationID, $component);
             }
 
-            $data = ['organizationId' => $organization->id, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
+            $data = ['organizationId' => $organizationID, 'fetchOrganizationPlanDetails' => $fetchOrganizationPlanDetails];
 
             return $data;
         } catch (Exception $e) {
@@ -377,6 +376,27 @@ class ChargebeeHelper
             $managerInviteCount = UserService::getUserByEmailArray($organizationManagerInviteCount);
 
             return $managerInviteCount;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationSubscription($organizationID)
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $fetchAllSubscriptions = Subscription::all([
+                'cf_org_id[is]' => $organizationID,
+            ]);
+            if ($fetchAllSubscriptions->count() > 0) {
+                $subscriptionData = $fetchAllSubscriptions[0]->subscription();
+                $result = Subscription::delete($subscriptionData->id);
+                $subscription = $result->subscription();
+                $customer = $result->customer();
+                $card = $result->card();
+            }
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
