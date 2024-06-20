@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
+use App\Notifications\ProjectInvitationNotification;
 use App\Services\Manage\EmailTemplateService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -275,6 +276,14 @@ class ProjectMemberManagementService
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
+
+                        $user = UserService::getUserById(auth()->user()->id);
+                        $user->notify(new ProjectInvitationNotification('New User Invited', 'A new user invited to join the project.'));
+
+                        $invited_user = UserService::getUserByEmail($pariticipateData['invitee_email']);
+                        if($invited_user){
+                            $invited_user->notify(new ProjectInvitationNotification('You have been Invited', 'You have been invited to join the project.'));
+                        }
                         $invited_emails[] = $pariticipateData['invitee_email'];
                     } else {
                         $already_members[] = $pariticipateData['invitee_email'];

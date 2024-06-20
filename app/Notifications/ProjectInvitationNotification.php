@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\ProjectMemberManagement;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -10,17 +9,20 @@ use Illuminate\Notifications\Notification;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 
-class InviteMemberNotification extends Notification implements ShouldQueue
+class ProjectInvitationNotification extends Notification
 {
     use Queueable;
-    protected $emailData;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($emailData)
+    private $title;
+    private $body;
+
+    public function __construct($title, $body)
     {
-        $this->emailData = $emailData;
+        $this->title = $title;
+        $this->body = $body;
     }
 
     /**
@@ -28,21 +30,20 @@ class InviteMemberNotification extends Notification implements ShouldQueue
      *
      * @return array<int, string>
      */
-    public function via($notifiable): array
+    public function via(object $notifiable): array
     {
-        return ['mail',FcmChannel::class];
+        return [FcmChannel::class];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail($notifiable): MailMessage
+    public function toMail(object $notifiable): MailMessage
     {
-        $fetchDetail = ProjectMemberManagement::where('email', $this->emailData['invitee_email'])->update(['email_status' => '1']);
-
-        return (new MailMessage())
-            ->subject($this->emailData['subject'])
-            ->view('email.member_manager_invite_users', ['emailData' => $this->emailData]);
+        return (new MailMessage)
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -61,12 +62,12 @@ class InviteMemberNotification extends Notification implements ShouldQueue
     {
         return FcmMessage::create()
             ->setData([
-                'title' => $this->emailData['subject'],
-                'body' => $this->emailData['body'],
+                'title' => $this->title,
+                'body' => $this->body,
             ])
             ->setNotification([
-                'title' => $this->emailData['subject'],
-                'body' => $this->emailData['body'],
+                'title' => $this->title,
+                'body' => $this->body,
                 'sound' => true,
             ]);
     }

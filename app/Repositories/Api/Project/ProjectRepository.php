@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Notifications\ProjectCreatedNotification;
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\AIService;
@@ -18,6 +19,7 @@ use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -171,6 +173,8 @@ class ProjectRepository implements ProjectInterface
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
+                $user = UserService::getUserById(auth()->user()->id);
+                $user->notify(new ProjectCreatedNotification('Project Created', 'You have succsessfuly created project for the challengs.'));
                 DB::commit();
 
                 return $createProject['createProject'];

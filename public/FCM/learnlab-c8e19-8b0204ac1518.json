@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "learnlab-c8e19",
+  "private_key_id": "8b0204ac1518883a48fe3f122680786ed97ed832",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQD35WyBj/5SEuh7\n3NThInrU93p5sIcFl9cCmfksBJy/kZUnt+0j9wX3efymqos0A/4OAsNiwLIdPzBO\ngLPT94L2D40BDgzsZFR7PAI/813whwCssHm3gJ+a244nfmKpC1N3LLS03tZWeFuC\nOv9L6ZqIapasRlrUt89wLtp1YS1R/x2hjYf53fSpn50fgShngJsMObwAb2NPWt6H\n8/9qgV5xLnQxEFF0zCH6yvZ7sYTRCaVz8xFdjhOrhSVX/3hwsgQtICjCQPsRyS8F\nOwVA4j+rTLFnvixyX6q06OllPGsWTulUWpJrnwfHY4c8ssG17UTExtN0A+AWexV5\ni1XAliupAgMBAAECgf99ZhD9eVmtKuNvxMXrHQYFtSq/ZAzpR2X8aucg3TRts7c/\n4EqVZuAd0Bd+N8czCNH7RGqSCegP42cMTw6oqwwUbMlnPzRKYHZb4H9C2lkq0yAE\nO0FXEjmqnGXMlKJT4ObX4kWHOTIzi66+shlyzTjeyQxvGSfZcyH8HbdkqUPDtcrp\nQITsr4TDoWwv21u9IlpYxrpj7MBf9j2romPJa2uNrNc8qjjurPpSFFJj4iXGL5a2\nb+eDzrmTX2lTOHKqumSew8fn7kQ+0aC0Od9KEvIKlfUvIopVtb9CF5IzRU+jGe5d\naj2L2/flQp9WbIYfyoYCQDbeIX5IU/aA1BKrtacCgYEA/ELx4LDO0gsSRI1MJCRY\ncLsuiRLET+XiY9uACFRv8lcUAt639gtt6ZGql7dfZsQk7jtAkPmkTsHTIMT7gvFj\nEZbEkEr5EFkE7FwEHXZtxebcKPm5D0Iww9gJxIu4Xb+AmRsWfeLCzgPxFO2yon3t\nR/j6rGLUA8OTmFnbCVgqQ4MCgYEA+5Hq3UybmlEpJYjCRU8IWslgDgcQmjuU6hpp\n9kDyX05ND6RfWzgmDueH31I/Q0x7OeShd5bkWmUN91V5CnoEsqPiN0N3BQ+UFCkC\nXl7S5kPiM+F7R7//S76MdFVhb1/f+FJH02AjXNfAfvbwlL7KUjIM8nJboDOg03Mg\n09KcsGMCgYBAHnwAkrBfLzU7e3bJEPvx24IekUiYzmPW4eoPM/cob/3EJPw5a/pK\nDh6AZbm4E08XxrPIpcufwSB7CdasF9MIm3vm+UeJYjcgJNte6cVJMj7vo1noiPiA\nLx98d88q9Qwo3nu/D65YUyQqH6jyKHPxgVWmD5C4TDPt25kTLPfBJQKBgA6zqlwg\ne/96usLcyS2vvrc/iYOIWioJTVyZCpQ/m2qCcvJ1ErWMBH1efoxIjDXspE7v05ff\nk5zMxxIrRpWcJ+YgubmtEamUDX1YIDFPrVeTpAaQKNo6mDre+epaiwUtPzON63Co\n76gfW7qPx+OJet1u217X3A7ytXVmBwcaCdotAoGAGrw3Wwyx95smrzB3PIUWLkkz\njmgw57WDh4PaDMO5iJelHDZHA3ITM2uU/IXCzxjsBku0CNt/DKKd9CZjDB39GYcj\n0/qO/48ZWJ/8HLIqakFXf8xFEtwAcXWQ87AQCnubnzjW7u91Ntc44SYK/chT4Xum\nIpvUld9Getmxx+A0ctw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "learn-lab-push-notifications@learnlab-c8e19.iam.gserviceaccount.com",
+  "client_id": "109967313407191726378",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/learn-lab-push-notifications%40learnlab-c8e19.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
