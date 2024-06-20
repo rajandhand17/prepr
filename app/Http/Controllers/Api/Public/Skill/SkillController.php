@@ -6,6 +6,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\Skill\AddSkillPinnedRequest;
 use App\Http\Requests\Public\Skill\AddSkillRequest;
 use App\Http\Resources\Public\Skill\AddSkillResource;
+use App\Http\Resources\Public\Skill\SkillListResource;
 use App\Http\Resources\Public\Skill\SkillResource;
 use App\Repositories\Api\Public\Skill\SkillRepository;
 use Illuminate\Http\Request;
@@ -24,7 +25,11 @@ class SkillController extends AppBaseController
         try {
             $skillList = $this->skillRepository->index($request->language, $request->search, $request->sort_by, $skillId);
             if ($skillList) {
-                $resource = SkillResource::class;
+                if ($skillId !== null) {
+                    $resource = SkillResource::class;
+                } else {
+                    $resource = SkillListResource::class;
+                }
                 if ($skillId == null) {
                     $response = [
                         'total_count'  => $skillList->total(),
@@ -57,7 +62,7 @@ class SkillController extends AppBaseController
                 return $this->sendError(__('responses.already_added_skills'), 422);
             }
             if ($addSkills) {
-                return $this->sendResponse(AddSkillResource::make($addSkills), __('responses.add_skills_create'));
+                return $this->sendResponse(AddSkillResource::make($addSkills), __('responses.save_skills'));
             }
 
             return $this->sendError(__('responses.add_skills_failed'), 400);
@@ -88,7 +93,7 @@ class SkillController extends AppBaseController
             if ($skillId !== null) {
                 $skillList = $this->skillRepository->getSkillBasedOnId($skillId);
             } else {
-                $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned);
+                $skillList = $this->skillRepository->getMySkills($request->language, $request->search, $request->pinned, $request->sort_by);
             }
             if ($skillList) {
                 $resourceClass = SkillResource::class;
