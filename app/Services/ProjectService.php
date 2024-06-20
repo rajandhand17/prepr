@@ -90,8 +90,8 @@ class ProjectService
                 $project_list = $project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
             }
 
-            if($request->has('request_status') && !empty($request->request_status)) {
-                $requestStatus=ProjectMemberManagementService::getAllRequestsData($request->request_status);
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
                 $project_list = $project_list->whereIn('projects.id', $requestStatus);
             }
 
