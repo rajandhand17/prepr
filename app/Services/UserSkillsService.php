@@ -56,7 +56,7 @@ class UserSkillsService
         }
     }
 
-    public static function getMySkills($language = 'en', $search = null, $pinned = null)
+    public static function getMySkills($language = 'en', $search = null, $pinned = null, $sortBy = null)
     {
         try {
             $userSkills = UserSkills::where('user_id', auth()->user()->id)->orderBy('user_skills.pinned', 'desc');
@@ -65,7 +65,7 @@ class UserSkillsService
                 $userSkills = $userSkills->where('pinned', $checkPinned);
             }
             $userSkills = $userSkills->pluck('skill');
-            $userSkills = SkillService::getSkills($language, $search, $sortBy = null, $userSkills);
+            $userSkills = SkillService::getSkills($language, $search, $sortBy, $userSkills);
 
             return $userSkills;
         } catch(\Exception $e) {
