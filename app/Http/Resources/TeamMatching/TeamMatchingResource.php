@@ -65,7 +65,7 @@ class TeamMatchingResource extends JsonResource
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
-            'user_details'          => $userDetails, //UserResource::make($getUsersDetails),
+            'user_details'          => $userDetails,
             'media'                 => $this->media,
             'title'                 => $this->title,
             'slug'                  => $this->slug,
@@ -75,7 +75,7 @@ class TeamMatchingResource extends JsonResource
             'challenge_details'     => $challenges,
             'skills'                => $skills,
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
-            //'access_level'          => $this->access
+
         ];
     }
 }
