@@ -131,6 +131,6 @@
 
       $('#components').select2();
 
-  });;
+  });
 </script>
 @endsection
