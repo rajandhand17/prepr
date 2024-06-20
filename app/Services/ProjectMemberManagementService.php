@@ -619,5 +619,4 @@ class ProjectMemberManagementService
             return false;
         }
     }
-
 }
