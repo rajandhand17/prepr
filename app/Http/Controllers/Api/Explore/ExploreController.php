@@ -26,7 +26,7 @@ class ExploreController extends AppBaseController
     public function index($action)
     {
         try {
-            if (!in_array($action, ['recommended', 'featured', 'teams'])) {
+            if (!in_array($action, ['recommended', 'featured'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $response = [];

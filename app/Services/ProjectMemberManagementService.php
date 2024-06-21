@@ -671,7 +671,7 @@ class ProjectMemberManagementService
                 'project_id'=> $projectId,
             ])->first();
             if ($checkExistsOrNot) {
-                return true;
+                return $checkExistsOrNot;
             }
 
             return false;
