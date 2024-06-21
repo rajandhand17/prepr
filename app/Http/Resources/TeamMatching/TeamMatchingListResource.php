@@ -16,29 +16,30 @@ class TeamMatchingListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $skills=null;
+        $skills = null;
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('skill_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeBasedOnId($this->challenge_id);
-            if($challenge_details){
+            if ($challenge_details) {
                 $challenges = [];
-                $challenges['title']=$challenge_details->title;
-                $challenges['slug']=$challenge_details->slug;
-                $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($challenge_details,$challenge_details->created_at);
-               $challenges['due_date']=$fetchChallengeDueDate['submission_deadline_date'];
+                $challenges['title'] = $challenge_details->title;
+                $challenges['slug'] = $challenge_details->slug;
+                $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($challenge_details, $challenge_details->created_at);
+                $challenges['due_date'] = $fetchChallengeDueDate['submission_deadline_date'];
             }
         }
+
         return [
-            'title'               =>$this->title,
-            'media'               =>$this->media,
-            'privacy'             =>($this->privacy == 0) ? 'Public' : 'Private',
+            'title'               => $this->title,
+            'media'               => $this->media,
+            'privacy'             => ($this->privacy == 0) ? 'Public' : 'Private',
             'challenge_title'     => $challenges['title'],
-            'challenge_slug'      =>$challenges['slug'],
-            'due_date'            =>$challenges['due_date'],
-            'skills'              =>$skills,
+            'challenge_slug'      => $challenges['slug'],
+            'due_date'            => $challenges['due_date'],
+            'skills'              => $skills,
         ];
     }
 }

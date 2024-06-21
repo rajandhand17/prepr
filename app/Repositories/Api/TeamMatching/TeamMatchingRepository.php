@@ -75,7 +75,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             return $this->projectService->getProjectBasedOnSlug($slug);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -84,7 +84,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             return $this->projectMemberManagementService->sendRequest($projectId);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -93,7 +93,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             return $this->projectMemberManagementService->checkRequestExistsOrNotExists($projectId);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

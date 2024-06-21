@@ -638,7 +638,7 @@ class ProjectMemberManagementService
     public static function sendRequest($projectId)
     {
         try {
-            $getUser =auth()->user();
+            $getUser = auth()->user();
             $joinProject = ProjectMemberManagement::create([
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectId,
@@ -657,22 +657,24 @@ class ProjectMemberManagementService
             }
 
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function checkRequestExistsOrNotExists($projectId){
+    public static function checkRequestExistsOrNotExists($projectId)
+    {
         try {
-            $checkExistsOrNot=ProjectMemberManagement::where([
-                'email'=>auth()->user()->email,
-                'project_id'=>$projectId,
+            $checkExistsOrNot = ProjectMemberManagement::where([
+                'email'     => auth()->user()->email,
+                'project_id'=> $projectId,
             ])->first();
-            if ($checkExistsOrNot){
+            if ($checkExistsOrNot) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
