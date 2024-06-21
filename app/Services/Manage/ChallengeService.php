@@ -748,6 +748,8 @@ class ChallengeService
                     'title'             => $fetchChallenge->title,
                     'slug'              => $fetchChallenge->slug,
                     'agreement'         => $fetchChallenge->agreement,
+                    'duration_id'       => $fetchChallenge->duration_id,
+                    'level_id'          => $fetchChallenge->level_id,
                     'is_accessible'     => ($fetchChallenge->is_accessible == '1') ? 'yes' : 'no',
                     'template_id'       => $getTemplate['template_id'],
                     'template_title'    => $getTemplate['template_title'],
@@ -755,6 +757,7 @@ class ChallengeService
                     'due_date'          => $fetchChallengeDueDate['submission_deadline_date'],
                     'submission_status' => $fetchChallengeDueDate['submission_status'],
                     'challenge_status'  => $fetchChallengeDueDate['challenge_status'],
+
                 ];
 
                 return $challenge_details;

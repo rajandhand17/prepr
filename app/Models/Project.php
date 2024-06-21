@@ -148,6 +148,11 @@ class Project extends Model
         return $this->hasMany(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1');
     }
 
+    public function member()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
+    }
+
     public function history()
     {
         return $this->hasMany(ProjectHistory::class, 'project_id', 'id');
