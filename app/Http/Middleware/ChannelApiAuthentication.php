@@ -2,9 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\ChannelApis;
-use App\Models\ChannelVendor;
-use App\Models\ChannelVendorApiAccess;
 use App\Services\Manage\ChannelApiService;
 use App\Services\Manage\ChannelVendorApiAccessService;
 use App\Services\Manage\ChannelVendorService;
@@ -35,7 +32,7 @@ class ChannelApiAuthentication
             return Response::json(ResponseUtil::makeError(__('responses.vendor_not_found')), 404);
         }
 
-        $channelApi = ChannelApiService::getChannelApiByName( $request->route()->getName());
+        $channelApi = ChannelApiService::getChannelApiByName($request->route()->getName());
         if (!$channelApi) {
             return Response::json(ResponseUtil::makeError(__('responses.route_not_found')), 404);
         }
