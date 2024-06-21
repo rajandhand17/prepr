@@ -6,16 +6,21 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Explore\SkillResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\TeamMatching\TeamMatchingListResource;
 use App\Repositories\Api\Explore\ExploreRepository;
+use App\Repositories\Api\TeamMatching\TeamMatchingRepository;
 use App\Services\UserSkillsService;
+use Illuminate\Http\Request;
 
 class ExploreController extends AppBaseController
 {
     private $exploreRepository;
+    private $teamMatchingRepository;
 
-    public function __construct(ExploreRepository $exploreRepository)
+    public function __construct(ExploreRepository $exploreRepository, TeamMatchingRepository $teamMatchingRepository)
     {
         $this->exploreRepository = $exploreRepository;
+        $this->teamMatchingRepository = $teamMatchingRepository;
     }
 
     public function index($action)
@@ -94,6 +99,26 @@ class ExploreController extends AppBaseController
 
                 return $this->sendResponse([], __('responses.trending_labs_challenges_successfully'));
             }
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function list(Request $request)
+    {
+        try {
+            $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
+            if (count($getProjectIds) < 6) {
+                $projectIds = $this->teamMatchingRepository->getBrowsersList(auth()->user());
+                $getProjectIds->merge($projectIds);
+            }
+            if ($getProjectIds) {
+                $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request)->take(6);
+
+                return $this->sendResponse(TeamMatchingListResource::collection($project), __('responses.teams_list'));
+            }
+
+            // return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
