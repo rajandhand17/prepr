@@ -847,7 +847,7 @@ class ChallengeService
             return false;
         }
     }
-    
+
     public static function getChallengeBasedOnUserId($userId)
     {
         try {
