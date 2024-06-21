@@ -70,4 +70,31 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return false;
         }
     }
+
+    public function checkSlug($slug)
+    {
+        try {
+            return $this->projectService->getProjectBasedOnSlug($slug);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function sendRequest($projectId)
+    {
+        try {
+            return $this->projectMemberManagementService->sendRequest($projectId);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkRequestExistsOrNotExists($projectId)
+    {
+        try {
+            return $this->projectMemberManagementService->checkRequestExistsOrNotExists($projectId);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

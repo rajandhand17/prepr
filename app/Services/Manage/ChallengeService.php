@@ -457,7 +457,6 @@ class ChallengeService
             return false;
         }
     }
-
     public function checkNameExistsOrNot($title)
     {
         try {

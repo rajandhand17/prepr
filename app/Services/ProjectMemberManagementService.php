@@ -635,4 +635,45 @@ class ProjectMemberManagementService
         }
     }
 
+    public static function sendRequest($projectId)
+    {
+        try {
+            $getUser =auth()->user();
+            $joinProject = ProjectMemberManagement::create([
+                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'project_id'                => $projectId,
+                'inviter_id'                => $getUser->id,
+                'email'                     => $getUser->email,
+                'invitee_name'              => $getUser->full_name,
+                'invite_type'               => '3',
+                'invite_status'             => '2',
+                'email_status'              => '1',
+                'inviter_access_level'      => '0',
+                'subject_line'              => null,
+                'email_body'                => null,
+            ]);
+            if ($joinProject) {
+                return true;
+            }
+
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function checkRequestExistsOrNotExists($projectId){
+        try {
+            $checkExistsOrNot=ProjectMemberManagement::where([
+                'email'=>auth()->user()->email,
+                'project_id'=>$projectId,
+            ])->first();
+            if ($checkExistsOrNot){
+                return true;
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }
