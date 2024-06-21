@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Models\Duration;
 use App\Models\Levels;
 use Illuminate\Support\Facades\Schema;
 
@@ -33,6 +34,15 @@ class LevelService
 
             return false;
         } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLevelsBasedOnId($levelId)
+    {
+        try {
+            return Levels::find($levelId)->first();
+        }catch(\Exception $e) {
             return false;
         }
     }

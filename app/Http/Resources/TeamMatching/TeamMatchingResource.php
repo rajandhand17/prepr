@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\TeamMatching;
 
+use App\Services\DurationService;
+use App\Services\LevelService;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillService;
 use App\Services\UserService;
@@ -19,7 +21,7 @@ class TeamMatchingResource extends JsonResource
     {
         $action = request()->route('action');
         $challenge_details = null;
-        $skills = null;
+        $skills = [];
         $userDetails = [];
         if ($this->challenge_id) {
             $challenges = [];
@@ -31,6 +33,8 @@ class TeamMatchingResource extends JsonResource
                 $challenges['template_title'] = $challenge_details['template_title'];
                 $challenges['due_date'] = $challenge_details['due_date'];
                 $challenges['challenge_status'] = $challenge_details['challenge_status'];
+                $challenges['duration'] = DurationService::getDurationsBasedOnId($challenge_details['duration_id']);
+                $challenges['level'] = LevelService::getLevelsBasedOnId($challenge_details['level_id']);
             }
         }
         if ($this->skills) {
@@ -53,13 +57,20 @@ class TeamMatchingResource extends JsonResource
                 'microsoft'     => 'inactive',
                 'apple'         => 'inactive',
             ];
+            $accessLevel=['viewer','editor','team-lead'];
             if ($action == 'pending') {
                 $userDetails['project_count'] = count($getUsersDetails->userProjects);
                 $userDetails['lab_count'] = count($getUsersDetails->userlabs);
                 $userDetails['achievement_count'] = count($getUsersDetails->userAchievements);
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
+                $userDetails['user_positions'] = $accessLevel[$this->member->inviter_access_level];
+            }
+            $isJoined='no';
+            if($action=='matched'){
+                $isJoined=$this->member ? 'yes' : 'no';
             }
         }
+
 
         return [
             'id'                    => $this->uuid,
@@ -75,7 +86,7 @@ class TeamMatchingResource extends JsonResource
             'skills'                => $skills,
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
             'request_send'          => $this->friendRequest == null ? 'available' : 'request_sent',
-
+            'is_joined'             =>$isJoined,
         ];
     }
 }

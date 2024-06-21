@@ -475,7 +475,6 @@ class ProjectMemberManagementService
         try {
             $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
             $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' => $userData->email, 'invite_status' => '0'])->where('invite_type', '<>', '3')->whereNotIn('project_id', $getMyProjectIds)->pluck('project_id');
-
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
             return false;
