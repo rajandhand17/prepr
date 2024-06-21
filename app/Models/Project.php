@@ -165,6 +165,6 @@ class Project extends Model
 
     public function friendRequest()
     {
-        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where(['invite_status'=>'0', 'email'=>auth()->user()->email]);
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email',auth()->user()->email);
     }
 }
