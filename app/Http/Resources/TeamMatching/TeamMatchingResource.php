@@ -74,7 +74,7 @@ class TeamMatchingResource extends JsonResource
             'challenge_details'     => $challenges,
             'skills'                => $skills,
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
-            'request_send'          => $this->friendRequest==null ? 'available' : 'request_sent',
+            'request_send'          => $this->friendRequest == null ? 'available' : 'request_sent',
 
         ];
     }
