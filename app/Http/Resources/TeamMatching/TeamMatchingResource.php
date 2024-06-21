@@ -23,7 +23,7 @@ class TeamMatchingResource extends JsonResource
         $action = request()->route('action');
         $challenge_details = null;
         $skills = [];
-        $userDetails =null;
+        $userDetails = null;
         if ($this->challenge_id) {
             $challenges = [];
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $this->getProjectIdBasedTemplate);
@@ -71,13 +71,14 @@ class TeamMatchingResource extends JsonResource
                 $isJoined = $this->member ? 'yes' : 'no';
             }
         }
-        $friendRequest='request_sent';
-        $getRequest=ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
-        if($getRequest){
-            if($getRequest->invite_status==3){
-                $friendRequest='available';
+        $friendRequest = 'request_sent';
+        $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
+        if ($getRequest) {
+            if ($getRequest->invite_status == 3) {
+                $friendRequest = 'available';
             }
         }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
