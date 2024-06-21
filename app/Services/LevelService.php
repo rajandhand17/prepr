@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
-use App\Models\Duration;
 use App\Models\Levels;
 use Illuminate\Support\Facades\Schema;
 
@@ -42,7 +41,7 @@ class LevelService
     {
         try {
             return Levels::find($levelId)->first();
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }

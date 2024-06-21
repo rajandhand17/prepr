@@ -150,8 +150,9 @@ class Project extends Model
 
     public function member()
     {
-        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email',auth()->user()->email);
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
     }
+
     public function history()
     {
         return $this->hasMany(ProjectHistory::class, 'project_id', 'id');
@@ -166,5 +167,4 @@ class Project extends Model
     {
         return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where(['invite_status'=>'0', 'email'=>auth()->user()->email]);
     }
-
 }

@@ -57,7 +57,7 @@ class TeamMatchingResource extends JsonResource
                 'microsoft'     => 'inactive',
                 'apple'         => 'inactive',
             ];
-            $accessLevel=['viewer','editor','team-lead'];
+            $accessLevel = ['viewer', 'editor', 'team-lead'];
             if ($action == 'pending') {
                 $userDetails['project_count'] = count($getUsersDetails->userProjects);
                 $userDetails['lab_count'] = count($getUsersDetails->userlabs);
@@ -65,12 +65,11 @@ class TeamMatchingResource extends JsonResource
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
                 $userDetails['user_positions'] = $accessLevel[$this->member->inviter_access_level];
             }
-            $isJoined='no';
-            if($action=='matched'){
-                $isJoined=$this->member ? 'yes' : 'no';
+            $isJoined = 'no';
+            if ($action == 'matched') {
+                $isJoined = $this->member ? 'yes' : 'no';
             }
         }
-
 
         return [
             'id'                    => $this->uuid,
@@ -86,7 +85,7 @@ class TeamMatchingResource extends JsonResource
             'skills'                => $skills,
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
             'request_send'          => $this->friendRequest == null ? 'available' : 'request_sent',
-            'is_joined'             =>$isJoined,
+            'is_joined'             => $isJoined,
         ];
     }
 }

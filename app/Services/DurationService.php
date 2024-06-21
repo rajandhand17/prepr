@@ -42,7 +42,7 @@ class DurationService
     {
         try {
             return Duration::find($durationId)->first();
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
