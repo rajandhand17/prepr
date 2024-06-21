@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use App\Models\ChannelApis;
 use App\Models\ChannelVendor;
 use App\Models\ChannelVendorApiAccess;
+use App\Services\Manage\ChannelApiService;
+use App\Services\Manage\ChannelVendorApiAccessService;
+use App\Services\Manage\ChannelVendorService;
 use Closure;
 use Illuminate\Http\Request;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -27,17 +30,18 @@ class ChannelApiAuthentication
             return Response::json(ResponseUtil::makeError(__('responses.api_key_required')), 401);
         }
 
-        $vendor = ChannelVendor::where(['api_key' => $request->header('api-key'), 'secret_key' => $request->header('secret')])->first();
+        $vendor = ChannelVendorService::findVendorByApiKeyAndSecret($request->header('api-key'), $request->header('secret'));
         if (!$vendor) {
             return Response::json(ResponseUtil::makeError(__('responses.vendor_not_found')), 404);
         }
 
-        $channelApi = ChannelApis::where(['api_slug' => $request->route()->getName(), 'is_active' => 1])->first();
+        $channelApi = ChannelApiService::getChannelApiByName( $request->route()->getName());
         if (!$channelApi) {
             return Response::json(ResponseUtil::makeError(__('responses.route_not_found')), 404);
         }
 
-        $hasApiAccess = ChannelVendorApiAccess::where(['channel_vendor_id' => $vendor->id, 'channel_api_id' => $channelApi->id])->first();
+        $hasApiAccess = ChannelVendorApiAccessService::hasApiAccess($vendor->id, $channelApi->id);
+
         if (!$hasApiAccess) {
             return Response::json(ResponseUtil::makeError(__('responses.no_access_to_api')), 401);
         }
