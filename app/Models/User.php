@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\MagnetHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
