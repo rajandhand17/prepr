@@ -386,4 +386,15 @@ class UserService
             return false;
         }
     }
+
+    public static function organizationPreferenceUpdate($organizationId)
+    {
+        try {
+            $updateListPreference = User::where('preferred_organization', $organizationId)->update(['preferred_organization' => null]);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

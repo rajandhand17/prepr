@@ -174,6 +174,6 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapChannelApiRoutes()
     {
-        Route::prefix('api/v1/channel')->middleware('channel-api-auth')->group('routes/v1/manage/channel.php');
+        Route::prefix('api/v1/channel')->middleware('channel-api-auth')->group(base_path('routes/v1/manage/channel.php'));
     }
 }
