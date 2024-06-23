@@ -201,7 +201,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select();
+            $users = User::select()->orderBy('user_rank');
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
@@ -266,8 +266,7 @@ class UserService
     {
         try {
             $user = auth()->user();
-            $user->preferred_organization = $organizationId;
-            $user->save();
+            $user->update(['preferred_organization' => $organizationId]);
 
             return $user;
         } catch (\Exception $e) {
@@ -281,6 +280,18 @@ class UserService
             $getUserByEmailArray = User::whereIn('email', $emailArrayIds)->get()->pluck('email');
 
             return $getUserByEmailArray;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function userOnboarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['is_onboarding_completed' => '1']);
+
+            return $user;
         } catch (\Exception $e) {
             return false;
         }

@@ -1,5 +1,5 @@
 @extends('maestro.layouts.default')
-@section('title', 'Sponsor')
+@section('title', 'Sponsors')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">

@@ -70,5 +70,6 @@ class Kernel extends HttpKernel
         'check.component'         => \App\Http\Middleware\CheckComponentMiddleware::class,
         'verify-go1-access'       => VerifyGO1Access::class,
         'scorm.userIdentifier'    => ScormUserIdentifier::class,
+        'maestroLogin'            => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
     ];
 }

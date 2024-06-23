@@ -27,6 +27,8 @@ class Organization extends LaratrustTeam
         'category',
         'status',
         'is_verified',
+        'is_onboarding_completed',
+        'business_challenge_tacklings',
         'magnet_community_id',
         'total_employees',
 

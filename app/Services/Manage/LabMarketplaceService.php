@@ -50,20 +50,17 @@ class LabMarketplaceService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-                $getLabRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('lab_id')->pluck('lab_marketplace_id');
-                if (!empty($getLabRedeemedIds)) {
-                    switch ($request->status) {
-                        case 'redeemed':
-                            $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
-                            break;
-                        case 'not_redeemed':
-                            $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
-                            break;
-                        default:
-                            $lab_marketplace_list = $lab_marketplace_list;
-                            break;
-                    }
+                $getLabRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('lab_id')->pluck('lab_marketplace_id');
+                switch ($request->status) {
+                    case 'redeemed':
+                        $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
+                        break;
+                    case 'not_redeemed':
+                        $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
+                        break;
+                    default:
+                        $lab_marketplace_list = $lab_marketplace_list;
+                        break;
                 }
             }
 

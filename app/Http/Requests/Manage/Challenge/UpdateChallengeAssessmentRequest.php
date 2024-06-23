@@ -24,7 +24,7 @@ class UpdateChallengeAssessmentRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'assessment_type'       => 'in:open,closed,ai',
+            'assessment_type'       => 'in:open,closed,ai,none',
             'guidelines'            => 'required_if:assessment_type,open,closed,ai',
             'attachments'           => 'max:5120',
         ];
