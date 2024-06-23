@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\MixpanelHelper;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserExperienceService
@@ -15,7 +16,7 @@ class UserExperienceService
             $deleteExistingExperience = UserExperience::where('user_id', auth()->user()->id)->delete();
             $input = $request->all();
             $insertRecords = [];
-            foreach ($input['company'] as $key=> $value) {
+            foreach ($input['company'] as $key => $value) {
                 $userExperience = UserExperience::create(['user_id' => auth()->user()->id,
                     'company'                                       => $value,
                     'position'                                      => $input['position'][$key],
@@ -35,7 +36,7 @@ class UserExperienceService
             MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $insertRecords;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -43,8 +44,8 @@ class UserExperienceService
     public function deleteExperience($id)
     {
         try {
-            return  UserExperience::where('id', $id)->delete();
-        } catch(\Exception $e) {
+            return UserExperience::where('id', $id)->delete();
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -53,7 +54,7 @@ class UserExperienceService
     {
         try {
             return UserExperience::where('id', $id)->first();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -61,8 +62,8 @@ class UserExperienceService
     public static function checkUserExperienceBasedOnTitle($companyName)
     {
         try {
-            return UserExperience::where(['user_id'=>auth()->user()->id, 'company'=>$companyName])->first();
-        } catch(\Exception $e) {
+            return UserExperience::where(['user_id' => auth()->user()->id, 'company' => $companyName])->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -83,7 +84,7 @@ class UserExperienceService
             );
 
             return $storeData;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -120,7 +121,29 @@ class UserExperienceService
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function addMagnetUserExperience($user, $data)
+    {
+        try {
+            DB::beginTransaction();
+            UserExperience::query()->where('user_id', $user->id)->forceDelete();
+            foreach ($data as $item) {
+                UserExperience::create([
+                    'user_id'  => $user->id,
+                    'company'  => data_get($item, 'company', '-'),
+                    'position' => data_get($item, 'job_title', '-'),
+                ]);
+            }
+            DB::commit();
+
+            return true;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
             return false;
         }
     }

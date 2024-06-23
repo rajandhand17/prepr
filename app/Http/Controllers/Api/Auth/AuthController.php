@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Helpers\MagnetHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -19,11 +20,9 @@ use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
-use App\Traits\MagnetTrait;
 
 class AuthController extends AppBaseController
 {
-    use MagnetTrait;
     private AuthRepository $authRepository;
 
     public function __construct(AuthRepository $authRepository)
@@ -90,12 +89,12 @@ class AuthController extends AppBaseController
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
                 if ($login['code'] === 2) {
-                    $response = ['message'=>$login['message'], 'code'=>$login['code']];
+                    $response = ['message' => $login['message'], 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
-                    $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
+                    $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
@@ -105,7 +104,7 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -455,7 +454,7 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -777,7 +776,7 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -942,23 +941,26 @@ class AuthController extends AppBaseController
     public function magnetSsoLogin(MagnetSSOLoginFormRequest $request)
     {
         try {
-            $checkMagnetSSOUser = $this->handleMagnetResponse($request);
-            if ($checkMagnetSSOUser['status'] == 'error') {
-                return $this->sendError($checkMagnetSSOUser['message'], 402);
-            }
-            dd($checkMagnetSSOUser);
-            $ssorequest = $this->authRepository->magnetSsoLogin($checkMagnetSSOUser);
-
-            if ($ssorequest['success'] == true) {
-                $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
-
-                return $this->sendResponse($response, $ssorequest['message'], 200);
-            }
-            if ($ssorequest['success'] == false) {
-                return $this->sendError($ssorequest['message'], 401);
+            $authorizationCode = $request->code;
+            $token = MagnetHelper::getTokenFromMagnet($authorizationCode);
+            if (!$token) {
+                return $this->sendError(__('response.unauthorized'), 400);
             }
 
-            return $this->sendError(__('responses.send_error'), 500);
+            $magnetUser = MagnetHelper::getMagnetUser($token);
+
+            if (!$magnetUser) {
+                return $this->sendError(__('responses.magnet_unauthenticated'), 402);
+            }
+
+            $tokenResponse = $this->authRepository->magnetSsoLogin($magnetUser, $token);
+            if ($tokenResponse['success']) {
+                $response = ['token' => $tokenResponse['token'], 'user' => UserResource::make($tokenResponse['user']), 'code' => $tokenResponse['code']];
+
+                return $this->sendResponse($response, $tokenResponse['message'], 200);
+            }
+
+            return $this->sendError($tokenResponse['message'], 401);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

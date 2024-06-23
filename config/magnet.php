@@ -10,4 +10,5 @@ return [
     'magnet_lms_user_info'       => env('MAGNET_LMS_USER_INFO'),
     'update_learner_information' => env('MAGNET_UPDATE_LEARNER_INFO'),
     'update_learning_content'    => env('MAGNET_UPDATE_LEARNING_CONTENT'),
+    'magnet_auth_token'          => env('MAGNET_AUTH_TOKEN'),
 ];
