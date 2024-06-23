@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
-use App\Notifications\AddAchievementNotification;
 use App\Notifications\AddWinnerAchievementNotification;
 use App\Services\Public\ChallengePathService;
 use Carbon\Carbon;
@@ -23,8 +22,6 @@ class AchievementService
                 $certificate_id = $olddata.'00'.$key;
                 $certificate_number = $certificate_date.$certificate_id;
                 foreach ($projectMembers as $projectMember) {
-
-
                     $userAchievement = new UserAchievement();
                     $userAchievement->user_id = $projectMember;
                     $userAchievement->certificate_number = $certificate_number;
@@ -45,7 +42,7 @@ class AchievementService
                     $userAchievement->save();
                     $certificate_number++;
                     $user = UserService::getUserById($projectMember);
-                    if($user){
+                    if ($user) {
                         $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
                     }
                 }
@@ -76,8 +73,6 @@ class AchievementService
                     $certificate_id = $olddata.'00'.$key;
                     $certificate_number = $certificate_date.$certificate_id;
                     foreach ($fetchAcceptedMemberIds as $projectMember) {
-
-
                         $userAchievement = new UserAchievement();
                         $userAchievement->user_id = $projectMember;
                         $userAchievement->certificate_number = $certificate_number;
@@ -98,10 +93,9 @@ class AchievementService
                         $userAchievement->save();
                         $certificate_number++;
                         $user = UserService::getUserById($projectMember);
-                        if($user){
+                        if ($user) {
                             $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
                         }
-
                     }
                 }
             }
@@ -123,7 +117,6 @@ class AchievementService
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
 
-
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -144,9 +137,10 @@ class AchievementService
             $userAchievement->save();
 
             $user = UserService::getUserById($userId);
-            if($user){
+            if ($user) {
                 $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
             }
+
             return true;
         } catch (Exception $e) {
             return false;

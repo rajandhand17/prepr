@@ -25,6 +25,7 @@ class UpdateFcmTokenFormRequest extends FormRequest
             'fcm_token' => 'required|string',
         ];
     }
+
     public function messages()
     {
         return [

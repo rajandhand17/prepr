@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Api\Project;
 
-use App\Notifications\ProjectCreatedNotification;
 use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
+use App\Notifications\ProjectCreatedNotification;
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
 use App\Services\Manage\ChallengeAchievementService;

@@ -1000,13 +1000,13 @@ class AuthController extends AppBaseController
     {
         try {
             $updateFCMToken = $this->authRepository->updateFcmToken($request);
-            if($updateFCMToken){
+            if ($updateFCMToken) {
                 return $this->sendResponse($updateFCMToken, 'success');
             }
+
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }

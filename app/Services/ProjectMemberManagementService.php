@@ -281,7 +281,7 @@ class ProjectMemberManagementService
                         $user->notify(new ProjectInvitationNotification('New User Invited', 'A new user invited to join the project.'));
 
                         $invited_user = UserService::getUserByEmail($pariticipateData['invitee_email']);
-                        if($invited_user){
+                        if ($invited_user) {
                             $invited_user->notify(new ProjectInvitationNotification('You have been Invited', 'You have been invited to join the project.'));
                         }
                         $invited_emails[] = $pariticipateData['invitee_email'];

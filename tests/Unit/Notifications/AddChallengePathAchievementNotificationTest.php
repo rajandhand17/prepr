@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\AddChallengePathAchievementNotification;
 use Tests\TestCase;
 
 /**
