@@ -558,4 +558,22 @@ class OrganizationService
             return false;
         }
     }
+
+    public static function getOrganizationBasedOnCommunityId($communityId)
+    {
+        try {
+            return Organization::where('magnet_community_id', $communityId)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityIds($communityIds)
+    {
+        try {
+            return Organization::whereIn('magnet_community_id', $communityIds)->get();
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
 }

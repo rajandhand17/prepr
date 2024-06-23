@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 class DurationService
 {
-    public function getDurations($language = 'en', $search = null)
+    public static function getDurations($language = 'en', $search = null)
     {
         try {
             if ($language == 'en') {
@@ -33,6 +33,15 @@ class DurationService
             }
 
             return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getDurationsBasedOnId($durationId)
+    {
+        try {
+            return Duration::find($durationId)->first();
         } catch(\Exception $e) {
             return false;
         }

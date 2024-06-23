@@ -65,7 +65,7 @@ class MemberManagementService
             if ($request->has('search') && !empty($request->search)) {
                 $componentCollectionObject = $componentCollectionObject->where(function ($query) use ($request) {
                     $query->where('invitee_name', 'like', '%'.$request->search.'%')
-                    ->orWhere('email', 'like', '%'.$request->search.'%');
+                        ->orWhere('email', 'like', '%'.$request->search.'%');
                 });
             }
             if ($request->has('role') && !empty($request->role)) {
@@ -372,7 +372,7 @@ class MemberManagementService
 
                             $subject = $request->subject_line;
                             $emailBody = $request->email_body;
-                            $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
+                            $user_name = UserService::joinName(auth()->user()->first_name ?? '', auth()->user()->last_name ?? '');
 
                             if ($emailBody) {
                                 $emailBody = str_replace('user_name', $user_name, str_replace('component_title', $componentCollectionObject->title, $emailBody));
@@ -399,7 +399,7 @@ class MemberManagementService
                                 'invite_type'   => $member['invite_type'],
                                 'module_id'     => $componentCollectionObject->id,
                                 'module_type'   => $module_type,
-                                'inviter_id'    => ($member['type'] == 0) ? auth()->user()->id : $componentCollectionObject->user_id,
+                                'inviter_id'    => ($member['type'] == 0 && auth()->user()) ? auth()->user()->id : $componentCollectionObject->user_id,
                                 'role'          => $member['role'] ?? $request->role,
                                 'email'         => $member['invitee_email'],
                                 'auto_invite'   => $auto_invite,
@@ -479,10 +479,10 @@ class MemberManagementService
                     $addedMemberResponse = $addedMemberResponse;
                 }
                 $data = [
-                    'invalid_emails'        => $invalid_emails,
-                    'invited_emails'        => $invited_emails,
-                    'already_members'       => $already_members,
-                    'add_member_response'   => $addedMemberResponse,
+                    'invalid_emails'      => $invalid_emails,
+                    'invited_emails'      => $invited_emails,
+                    'already_members'     => $already_members,
+                    'add_member_response' => $addedMemberResponse,
                 ];
 
                 return $data;
@@ -501,7 +501,7 @@ class MemberManagementService
     {
         try {
             $module_type = config('constants.member_management_component_type.lab');
-            $records = MemberManagement::where('email', auth()->user()->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            $records = MemberManagement::where('email', auth()->user()->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->first();
             if ($records) {
                 return true;
             }
@@ -529,13 +529,13 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
             if ($member_manger) {
                 return true;
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -557,13 +557,13 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'invite_status' => '2'])->get();
             if ($member_manger->isNotEmpty()) {
                 return true;
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -585,7 +585,7 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            switch($action) {
+            switch ($action) {
                 case 'accept':
                     $invite_status = config('constants.member_management_invite_status.accepted');
                     break;
@@ -593,7 +593,7 @@ class MemberManagementService
                     $invite_status = config('constants.member_management_invite_status.declined');
                     break;
             }
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->get();
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'invite_status' => '2'])->get();
             foreach ($member_manger as $member) {
                 $member->invite_status = $invite_status;
                 $member->inviter_id = auth()->user()->id;
@@ -747,7 +747,7 @@ class MemberManagementService
 
             $mergedEmails = $membersEmails->merge($organization_id)->merge($lab_id)->merge($challenge_id);
 
-            return  $mergedEmails;
+            return $mergedEmails;
         } catch (\Exception $e) {
             return false;
         }
@@ -760,9 +760,9 @@ class MemberManagementService
                 case 'lab':
                     $memberManagement = self::getFilteredMemberManagementList(
                         [
-                            'module_id'    => $componentId,
-                            'module_type'  => config('constants.module_component_type.lab'),
-                            'invite_status'=> config('constants.member_management_invite_status.accepted'),
+                            'module_id'     => $componentId,
+                            'module_type'   => config('constants.module_component_type.lab'),
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
                         ]
                     )->pluck('email');
                     break;
@@ -814,11 +814,11 @@ class MemberManagementService
             switch ($component) {
                 case 'lab':
                     $memberManagement = MemberManagement::join('labs', 'member_management.module_id', '=', 'labs.id')
-                    ->where([
-                        'inviter_id'    => $inviterId,
-                        'module_type'   => config('constants.module_component_type.lab'),
-                        'invite_status' => config('constants.member_management_invite_status.accepted'),
-                    ])->pluck('organization_id')->unique();
+                        ->where([
+                            'inviter_id'    => $inviterId,
+                            'module_type'   => config('constants.module_component_type.lab'),
+                            'invite_status' => config('constants.member_management_invite_status.accepted'),
+                        ])->pluck('organization_id')->unique();
                     break;
                 case 'challenge':
 
@@ -831,7 +831,7 @@ class MemberManagementService
                     break;
             }
 
-            return  $memberManagement;
+            return $memberManagement;
         } catch (\Exception $e) {
             dd($e);
 
@@ -880,6 +880,15 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getMemberManagementByModuleAndEmail($moduleType, $email)
+    {
+        try {
+            return MemberManagement::query()->where('module_type', $moduleType)->where('email', $email)->get();
+        } catch (\Exception $exception) {
             return false;
         }
     }

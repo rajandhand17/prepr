@@ -51,6 +51,11 @@ class UserRepository implements UserInterface
             if ($organizationData->count() > (int) '0') {
                 if ($user->preferred_organization == null) {
                     $this->setOrganizationPreference($organizationData[0]->id);
+                } else {
+                    $fetchOrganization = ManageOrganizationService::getOrganizationExistBasedOnId($user->preferred_organization);
+                    if (empty($fetchOrganization)) {
+                        $this->setOrganizationPreference($organizationData[0]->id);
+                    }
                 }
             }
 
