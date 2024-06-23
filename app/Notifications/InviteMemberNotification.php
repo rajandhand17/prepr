@@ -30,7 +30,7 @@ class InviteMemberNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable): array
     {
-        return ['mail',FcmChannel::class];
+        return ['mail', FcmChannel::class];
     }
 
     /**
@@ -62,11 +62,11 @@ class InviteMemberNotification extends Notification implements ShouldQueue
         return FcmMessage::create()
             ->setData([
                 'title' => $this->emailData['subject'],
-                'body' => $this->emailData['body'],
+                'body'  => $this->emailData['body'],
             ])
             ->setNotification([
                 'title' => $this->emailData['subject'],
-                'body' => $this->emailData['body'],
+                'body'  => $this->emailData['body'],
                 'sound' => true,
             ]);
     }

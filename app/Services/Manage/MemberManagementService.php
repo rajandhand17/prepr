@@ -4,8 +4,8 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
-use App\Notifications\InviteMemberNotification;
 use App\Notifications\ComponentJoinedNotification;
+use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -411,7 +411,7 @@ class MemberManagementService
                             ]);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
-                            if($member['invite_type'] === 'join_request'){
+                            if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
                                 $user->notify(new ComponentJoinedNotification('New User Request', 'A new user requested to join the '.$component.'.'));
                             }

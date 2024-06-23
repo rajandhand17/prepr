@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\ComponentJoinedNotification;
 use Tests\TestCase;
 
 /**

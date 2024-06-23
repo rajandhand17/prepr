@@ -10,7 +10,7 @@ class AuthRepository implements AuthInterface
     private $user;
     private $userService;
 
-    public function __construct(User $user,UserService $userService)
+    public function __construct(User $user, UserService $userService)
     {
         $this->user = $user;
         $this->userService = $userService;

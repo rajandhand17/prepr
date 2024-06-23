@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\PushNotification;
 use Tests\TestCase;
 
 /**

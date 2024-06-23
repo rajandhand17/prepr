@@ -299,7 +299,6 @@ class UserService
         }
     }
 
-
     public static function getUserByEmails($emails)
     {
         try {
@@ -340,7 +339,7 @@ class UserService
                 'username'       => $data->user_name,
                 'email'          => $data->email,
                 'phone_number'   => $data->telephone,
-                'full_name'      => $data->first_name . ' ' . $data->last_name,
+                'full_name'      => $data->first_name.' '.$data->last_name,
                 'magnet_user_id' => $data->id,
             ]);
             UserPersonal::query()->create([
@@ -429,6 +428,7 @@ class UserService
             auth()->user()->update([
                 'fcm_token' => $request->fcm_token,
             ]);
+
             return true;
         } catch (\Exception $e) {
             return false;

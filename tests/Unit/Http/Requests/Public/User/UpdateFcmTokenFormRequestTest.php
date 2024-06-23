@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Http\Requests\Public\User;
 
-use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use Tests\TestCase;
 
 /**

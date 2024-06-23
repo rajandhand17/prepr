@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\ProjectCreatedNotification;
 use Tests\TestCase;
 
 /**
