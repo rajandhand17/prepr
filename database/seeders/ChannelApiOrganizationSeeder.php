@@ -25,7 +25,7 @@ class ChannelApiOrganizationSeeder extends Seeder
             'full_name'      => 'Magnet SSO Test',
             'magnet_user_id' => 1200,
             'password'       => Hash::make('Test@1234'),
-            'verified_user' => '1'
+            'verified_user'  => '1',
         ]);
         Organization::query()->firstOrCreate([
             'slug' => 'magnet_test_organization',
