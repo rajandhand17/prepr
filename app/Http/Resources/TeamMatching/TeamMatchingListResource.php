@@ -26,8 +26,19 @@ class TeamMatchingListResource extends JsonResource
             if ($challenge_details) {
                 $challenges = [];
                 $challenges['title'] = $challenge_details->title;
+                $challenges['status']="";
+                switch ($challenge_details->status){
+                    case '0':
+                    $challenges['status'] ="draft";
+                    break;
+                    case '1':
+                        $challenges['status'] ="published";
+                        break;
+                    case '2':
+                        $challenges['status'] ="archive";
+                        break;
+                }
                 $challenges['slug'] = $challenge_details->slug;
-                $challenges['status'] = $challenge_details->status;
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($challenge_details, $challenge_details->created_at);
                 $challenges['due_date'] = $fetchChallengeDueDate['submission_deadline_date'];
             }

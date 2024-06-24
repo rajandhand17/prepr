@@ -59,25 +59,40 @@ class ProjectService
                 }
             }
 //relevance,name,due_date,popularity
-            if ($request->has('sort_by') && !empty($request->sort_by)) {
-                switch ($request->sort_by) {
+            if ($request->has('sort_by_team') && !empty($request->sort_by_team)) {
+                switch ($request->sort_by_team) {
                     case 'name':
                         $project_list = $project_list->orderBy('projects.title', 'ASC');
                         break;
                     case 'due_date':
-                        $project_list = $project_list;
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
                         break;
                     case 'popularity':
-                        $project_list=$project_list->withCount('members')->OrderBy('members_count','desc');
+                        $project_list = $project_list->withCount('members')->OrderBy('members_count', 'desc');
                         break;
                     default:
-                        $project_list=$project_list->whereIn('id', function($query) {
+                        $project_list = $project_list->whereIn('id', function ($query) {
                             $query->select('project_id')
                                 ->from('project_member_management')
                                 ->where('invite_status', '1')
                                 ->where('inviter_id', auth()->id());
                         });
                         break;
+                }
+            }
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                switch ($request->sort_by) {
+                    case 'name-a-to-z':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'name-z-to-a':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'creation_date':
+                        $project_list = $project_list->orderBy('projects.created_at', 'ASC');
+                        break;
+                    default:
+                        $project_list = $project_list->orderBy('projects.id', 'ASC');
                 }
             }
 

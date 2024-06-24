@@ -66,17 +66,21 @@ class TeamMatchingResource extends JsonResource
                 $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
             }
         }
-        $friendRequest = 'available';
+        $friendRequest="";
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
         if ($getRequest) {
-            if($getRequest->invite_status ==1){
-                $friendRequest = 'joined';
-            }
-            if($getRequest->invite_status == 2){
-                $friendRequest = 'pending';
-            }
-            if ($getRequest->invite_status == 3) {
-                $friendRequest = 'available';
+            switch ($getRequest){
+                case '1':
+                    $friendRequest = 'joined';
+                    break;
+                case '2':
+                    $friendRequest = 'pending';
+                    break;
+                case '3':
+                    $friendRequest = 'available';
+                    break;
+                default:
+                    $friendRequest = 'available';
             }
         }
 
