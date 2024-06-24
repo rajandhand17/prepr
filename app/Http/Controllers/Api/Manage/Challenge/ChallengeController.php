@@ -256,7 +256,7 @@ class ChallengeController extends AppBaseController
         }
     }
 
-    public function fetchAssessment($slug)
+    public function fetchAssessment($slug, $type = null)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
@@ -290,9 +290,10 @@ class ChallengeController extends AppBaseController
                     ];
                 });
             }
+            $message = ($type != null) ? __('responses.update_challenge_assessment_detail') : __('responses.found_challenge_assessment_detail');
 
             if (!empty($getChallengeAssessment) || !empty($challenge_assessment_criteria)) {
-                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), __('responses.found_challenge_assessment_detail'), 200);
+                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), $message, 200);
             }
 
             $emptyResponse = new stdClass();
@@ -336,7 +337,7 @@ class ChallengeController extends AppBaseController
 
             $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkComponentBasedOnSlug->id, $update_assessment_attachment, $request);
             if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
-                return self::fetchAssessment($slug);
+                return self::fetchAssessment($slug, 'update');
             }
 
             return $this->sendError(__('responses.challenge_assessment_not_update'));
