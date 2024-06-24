@@ -7,6 +7,7 @@ use App\Models\User;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class ChannelApiOrganizationSeeder extends Seeder
 {
@@ -24,6 +25,7 @@ class ChannelApiOrganizationSeeder extends Seeder
             'phone_number' => '9876543214',
             'full_name' => 'Magnet SSO Test',
             'magnet_user_id' => 1200,
+            'password' => Hash::make('Test@1234'),
             'verified_user' => '1'
         ]);
         Organization::query()->firstOrCreate([
