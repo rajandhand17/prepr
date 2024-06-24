@@ -538,7 +538,7 @@ class OrganizationService
         try {
             DB::beginTransaction();
             $organization = Organization::find($organizationId);
-            if ($organization !== null) {
+            if ($organization != null) {
                 $organization->title = ($request->has('title')) ? $request->title : $organization->title;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
