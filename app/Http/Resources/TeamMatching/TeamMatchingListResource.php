@@ -27,6 +27,7 @@ class TeamMatchingListResource extends JsonResource
                 $challenges = [];
                 $challenges['title'] = $challenge_details->title;
                 $challenges['slug'] = $challenge_details->slug;
+                $challenges['status'] = $challenge_details->status;
                 $fetchChallengeDueDate = ChallengeService::fetchChallengeDueDate($challenge_details, $challenge_details->created_at);
                 $challenges['due_date'] = $fetchChallengeDueDate['submission_deadline_date'];
             }
@@ -35,9 +36,11 @@ class TeamMatchingListResource extends JsonResource
         return [
             'title'               => $this->title,
             'media'               => $this->media,
-            'privacy'             => ($this->privacy == 0) ? 'Public' : 'Private',
+            'project_slug'        => $this->slug,
+            'privacy'             => ($this->privacy == 0) ? 'no' : 'yes',
             'challenge_title'     => $challenges['title'],
             'challenge_slug'      => $challenges['slug'],
+            'challenge_status'    => $challenges['status'],
             'due_date'            => $challenges['due_date'],
             'skills'              => $skills,
         ];

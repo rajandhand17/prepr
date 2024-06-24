@@ -58,20 +58,26 @@ class ProjectService
                         $project_list = $project_list;
                 }
             }
-
+//relevance,name,due_date,popularity
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
-                    case 'name-a-to-z':
+                    case 'name':
                         $project_list = $project_list->orderBy('projects.title', 'ASC');
                         break;
-                    case 'name-z-to-a':
-                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                    case 'due_date':
+                        $project_list = $project_list;
                         break;
-                    case 'creation_date':
-                        $project_list = $project_list->orderBy('projects.created_at', 'ASC');
+                    case 'popularity':
+                        $project_list=$project_list->withCount('members')->OrderBy('members_count','desc');
                         break;
                     default:
-                        $project_list = $project_list->orderBy('projects.id', 'ASC');
+                        $project_list=$project_list->whereIn('id', function($query) {
+                            $query->select('project_id')
+                                ->from('project_member_management')
+                                ->where('invite_status', '1')
+                                ->where('inviter_id', auth()->id());
+                        });
+                        break;
                 }
             }
 
@@ -92,7 +98,7 @@ class ProjectService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
-                $project_list = $project_list->whereIn('projects.id', $requestStatus);
+                $project_list = $project_list->whereIn('projects.id',$requestStatus);
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -144,6 +150,7 @@ class ProjectService
 
             return $project_list;
         } catch (Exception $e) {
+            dd($e);
             return false;
         }
     }
@@ -557,11 +564,11 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $myProjectIds = self::getMyProjectIds($userData->id);
-            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            $projectIds = $mergedIds->unique();
+            $projectIds=  $myProjectIds = self::getMyProjectIds($userData->id);
+//            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+//            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+//            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
+          //  $projectIds = $mergedIds->unique();
 
             return $projectIds;
         } catch (Exception $e) {
@@ -642,6 +649,16 @@ class ProjectService
             $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectIds($projectId)
+    {
+        try {
+            return Project::whereNotIn('id', $projectId)->get();
+
         } catch (\Exception $e) {
             return false;
         }

@@ -82,7 +82,7 @@ class User extends Authenticatable
 
     public function userPersonal()
     {
-        return $this->hasOne(UserPersonal::class);
+        return $this->hasOne(UserPersonal::class, 'user_id', 'id');
     }
 
     public function userSetting()
