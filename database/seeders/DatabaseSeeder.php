@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             $classes[] = LanguageSeeder::class;
             $classes[] = SkillSeeder::class;
             $classes[] = TagSeeder::class;
+            $classes[] = ChannelApiOrganizationSeeder::class;
         }
 
         $this->call($classes);
