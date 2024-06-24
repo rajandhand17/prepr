@@ -150,7 +150,6 @@ class ProjectService
 
             return $project_list;
         } catch (Exception $e) {
-            dd($e);
             return false;
         }
     }
