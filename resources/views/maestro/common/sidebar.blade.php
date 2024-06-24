@@ -157,7 +157,7 @@
             </li>
            
             <li class="nav-item">
-              <a href="{{ route('projects-vertical.index') }}" class="nav-link">
+              <a href="{{ route('taggroup.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tag Groups</p>
               </a>
