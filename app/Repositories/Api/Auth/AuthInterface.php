@@ -28,5 +28,5 @@ interface AuthInterface
 
     public function ssoLogin($request);
 
-    public function magnetSsoLogin($magnetUserDetails);
+    public function magnetSsoLogin($magnetUserDetails, $token);
 }

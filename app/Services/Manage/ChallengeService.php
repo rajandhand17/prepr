@@ -645,10 +645,10 @@ class ChallengeService
                     }
 
                     $challenge_timelines = [
-                        'timeline_type'                 => 'flexible',
-                        'submission_deadline_date'      => $formatDate,
-                        'submission_status'             => $submission_status,
-                        'challenge_status'              => $challenge_status,
+                        'timeline_type'            => 'flexible',
+                        'submission_deadline_date' => $formatDate,
+                        'submission_status'        => $submission_status,
+                        'challenge_status'         => $challenge_status,
                     ];
                 } elseif ($challengeData->challenge_timelines->timeline_type == '1') {
                     switch ($challengeData->is_open) {
@@ -668,10 +668,10 @@ class ChallengeService
                     }
 
                     $challenge_timelines = [
-                        'timeline_type'                         => 'restricted',
-                        'submission_deadline_date'              => $challengeData->challenge_timelines->submission_deadline_date,
-                        'submission_status'                     => $submission_status,
-                        'challenge_status'                      => $challenge_status,
+                        'timeline_type'            => 'restricted',
+                        'submission_deadline_date' => $challengeData->challenge_timelines->submission_deadline_date,
+                        'submission_status'        => $submission_status,
+                        'challenge_status'         => $challenge_status,
                     ];
                 }
             }
@@ -786,15 +786,15 @@ class ChallengeService
             $templateData = [];
             if ($templateId == '0') {
                 $templateData = [
-                    'template_id'       => $templateId,
-                    'template_title'    => __('responses.any_pitch_template'),
+                    'template_id'    => $templateId,
+                    'template_title' => __('responses.any_pitch_template'),
                 ];
             } else {
                 $template = PitchTemplate::where('id', $templateId)->first();
                 if ($template) {
                     $templateData = [
-                        'template_id'       => $template->id,
-                        'template_title'    => $template->title,
+                        'template_id'    => $template->id,
+                        'template_title' => $template->title,
                     ];
                 }
             }
@@ -833,11 +833,38 @@ class ChallengeService
         }
     }
 
+    public static function getChallengeBasedOnOrganizationId($organizationId)
+    {
+        try {
+            return Challenge::query()->where('organization_id', $organizationId)->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
     public static function getChallengesBasedOnDuration($durationId)
     {
         try {
             return Challenge::whereIn('duration_id', $durationId)->pluck('id');
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnUserId($userId)
+    {
+        try {
+            return Challenge::query()->where('user_id', $userId)->get();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function getPaginatedChallengeBasedOnIds($ids)
+    {
+        try {
+            return Challenge::whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
             return false;
         }
     }
