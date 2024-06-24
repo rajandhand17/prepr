@@ -626,10 +626,11 @@ class ProjectMemberManagementService
             $memberManagement = ProjectMemberManagement::select();
             if ($requestStatus == 'request_sent') {
                 $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'0'])->pluck('project_id');
-             }else{
-                $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status','3')->pluck('project_id');
-                $memberManagement=ProjectService::getProjectIds($projectIds)->pluck('id');
+            } else {
+                $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status', '3')->pluck('project_id');
+                $memberManagement = ProjectService::getProjectIds($projectIds)->pluck('id');
             }
+
             return $memberManagement;
         } catch (\Exception $e) {
             return false;
