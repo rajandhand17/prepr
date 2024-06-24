@@ -58,7 +58,27 @@ class ProjectService
                         $project_list = $project_list;
                 }
             }
-
+            if ($request->has('sort_by_team') && !empty($request->sort_by_team)) {
+                switch ($request->sort_by_team) {
+                    case 'name':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'due_date':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'popularity':
+                        $project_list = $project_list->withCount('members')->OrderBy('members_count', 'desc');
+                        break;
+                    default:
+                        $project_list = $project_list->whereIn('id', function ($query) {
+                            $query->select('project_id')
+                                ->from('project_member_management')
+                                ->where('invite_status', '1')
+                                ->where('inviter_id', auth()->id());
+                        });
+                        break;
+                }
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -557,11 +577,11 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $myProjectIds = self::getMyProjectIds($userData->id);
-            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            $projectIds = $mergedIds->unique();
+            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
+//            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+//            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+//            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
+            //  $projectIds = $mergedIds->unique();
 
             return $projectIds;
         } catch (Exception $e) {
@@ -642,6 +662,15 @@ class ProjectService
             $project_list = self::filterTeamMatesProjectList($getMyProjects, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectIds($projectIds)
+    {
+        try {
+            return Project::whereNotIn('id', $projectIds)->get();
         } catch (\Exception $e) {
             return false;
         }
