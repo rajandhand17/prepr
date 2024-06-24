@@ -40,6 +40,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroCategoryRoutes();
             $this->mapMaestroProjectRoutes();
             $this->mapMaestroSponsorsRoutes();
+            $this->mapMaestroTagRoutes();
             $this->mapMaestroSocialLinkRoutes();
             $this->mapMaestroResourceRoutes();
 
@@ -213,6 +214,10 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroSkillRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/skill/skill.php'));
+    }
+    public function mapMaestroTagRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/tag/tag.php'));
     }
     public function mapMaestroCategoryRoutes()
     {

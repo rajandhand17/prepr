@@ -138,8 +138,34 @@
                 <p>Skill Groups</p>
               </a>
             </li>
-</ul>
-<li class="nav-item">
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Tag Management
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('tags.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tag</p>
+              </a>
+            </li>
+           
+            <li class="nav-item">
+              <a href="{{ route('taggroup.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tag Groups</p>
+              </a>
+            </li>
+    
+          </ul>
+        </li>
+        <li class="nav-item">
           <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-status'  ? 'active' : '' }}">
             <i class="nav-icon fas fa-edit"></i>
             <p>
