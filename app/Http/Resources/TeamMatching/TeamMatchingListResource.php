@@ -26,16 +26,16 @@ class TeamMatchingListResource extends JsonResource
             if ($challenge_details) {
                 $challenges = [];
                 $challenges['title'] = $challenge_details->title;
-                $challenges['status']="";
-                switch ($challenge_details->status){
+                $challenges['status'] = '';
+                switch ($challenge_details->status) {
                     case '0':
-                    $challenges['status'] ="draft";
-                    break;
+                        $challenges['status'] = 'draft';
+                        break;
                     case '1':
-                        $challenges['status'] ="published";
+                        $challenges['status'] = 'published';
                         break;
                     case '2':
-                        $challenges['status'] ="archive";
+                        $challenges['status'] = 'archive';
                         break;
                 }
                 $challenges['slug'] = $challenge_details->slug;
