@@ -58,7 +58,7 @@ class ProjectService
                         $project_list = $project_list;
                 }
             }
-//relevance,name,due_date,popularity
+            //relevance,name,due_date,popularity
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name':
@@ -68,10 +68,10 @@ class ProjectService
                         $project_list = $project_list;
                         break;
                     case 'popularity':
-                        $project_list=$project_list->withCount('members')->OrderBy('members_count','desc');
+                        $project_list = $project_list->withCount('members')->OrderBy('members_count', 'desc');
                         break;
                     default:
-                        $project_list=$project_list->whereIn('id', function($query) {
+                        $project_list = $project_list->whereIn('id', function ($query) {
                             $query->select('project_id')
                                 ->from('project_member_management')
                                 ->where('invite_status', '1')
@@ -98,7 +98,7 @@ class ProjectService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
-                $project_list = $project_list->whereIn('projects.id',$requestStatus);
+                $project_list = $project_list->whereIn('projects.id', $requestStatus);
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -563,11 +563,11 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds=  $myProjectIds = self::getMyProjectIds($userData->id);
+            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
 //            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
 //            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
 //            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-          //  $projectIds = $mergedIds->unique();
+            //  $projectIds = $mergedIds->unique();
 
             return $projectIds;
         } catch (Exception $e) {
@@ -657,7 +657,6 @@ class ProjectService
     {
         try {
             return Project::whereNotIn('id', $projectId)->get();
-
         } catch (\Exception $e) {
             return false;
         }

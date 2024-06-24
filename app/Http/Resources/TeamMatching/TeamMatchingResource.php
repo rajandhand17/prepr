@@ -58,7 +58,7 @@ class TeamMatchingResource extends JsonResource
                 $userDetails['achievement_count'] = count($getUsersDetails->userAchievements);
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
                 $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
-                $userDetails['bio']=$getUsersDetails->userPersonal!==null ? $getUsersDetails->userPersonal->about : null;
+                $userDetails['bio'] = $getUsersDetails->userPersonal !== null ? $getUsersDetails->userPersonal->about : null;
             }
             $isJoined = 'no';
             if ($action == 'matched') {
@@ -69,10 +69,10 @@ class TeamMatchingResource extends JsonResource
         $friendRequest = 'available';
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
         if ($getRequest) {
-            if($getRequest->invite_status ==1){
+            if ($getRequest->invite_status == 1) {
                 $friendRequest = 'joined';
             }
-            if($getRequest->invite_status == 2){
+            if ($getRequest->invite_status == 2) {
                 $friendRequest = 'pending';
             }
             if ($getRequest->invite_status == 3) {
