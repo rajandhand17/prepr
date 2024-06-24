@@ -49,6 +49,7 @@ class ChallengeAssessmentCriteriaService
                     $challengeAssessmentCriteria->save();
                 }
             }
+
             return true;
         } catch (Exception $e) {
             return false;

@@ -51,7 +51,7 @@ class UpdateChallengeAssessmentRequest extends FormRequest
                     if (array_sum($value) != 100) {
                         $fail(__('responses.challenge_weight_should_be_100'));
                     }
-                }
+                },
             ];
         }
 
@@ -68,7 +68,7 @@ class UpdateChallengeAssessmentRequest extends FormRequest
             $count_score = count($assessment_score);
 
             if (($count_title > 0 || $count_score > 0) &&
-                ($count_title !==  $count_score)
+                ($count_title !== $count_score)
             ) {
                 $validator->errors()->add('assessment_data', __('responses.title_score_should_match_count'));
             }
