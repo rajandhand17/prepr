@@ -667,10 +667,10 @@ class ProjectService
         }
     }
 
-    public static function getProjectIds($projectId)
+    public static function getProjectIds($projectIds)
     {
         try {
-            return Project::whereNotIn('id', $projectId)->get();
+            return Project::whereNotIn('id', $projectIds)->get();
         } catch (\Exception $e) {
             return false;
         }
