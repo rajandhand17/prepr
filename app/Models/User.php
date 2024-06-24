@@ -607,7 +607,6 @@ class User extends Authenticatable
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
     /** SSO Login*/
     public function ssoLogin($request)
     {
