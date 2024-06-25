@@ -657,19 +657,6 @@ class ProjectMemberManagementService
               'subject_line'              => null,
               'email_body'                => null,
             ]);
-//            $joinProject = ProjectMemberManagement::create([
-//                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-//                'project_id'                => $projectId,
-//                'inviter_id'                => $getUser->id,
-//                'email'                     => $getUser->email,
-//                'invitee_name'              => $getUser->full_name,
-//                'invite_type'               => '3',
-//                'invite_status'             => '2',
-//                'email_status'              => '1',
-//                'inviter_access_level'      => '0',
-//                'subject_line'              => null,
-//                'email_body'                => null,
-//            ]);
             if ($joinProject) {
                 return true;
             }
