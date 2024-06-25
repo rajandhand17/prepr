@@ -67,7 +67,8 @@ class TeamMatchingResource extends JsonResource
             }
         }
         $access_level = 'viewer';
-        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status == '1') {
+        if($this->getJoinedStatus()!=null){
+        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
             switch ($this->getJoinedStatus()->inviter_access_level) {
                 case '0':
                     $access_level = 'viewer';
@@ -83,7 +84,10 @@ class TeamMatchingResource extends JsonResource
                     break;
             }
         }
+        }
+        $friendRequest = 'available';
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
+        if($getRequest!=null){
         switch ($getRequest->invite_status) {
             case '0':
                 $friendRequest = 'invited';
@@ -100,6 +104,7 @@ class TeamMatchingResource extends JsonResource
             default:
                 $friendRequest = 'available';
                 break;
+        }
         }
 
         return [
