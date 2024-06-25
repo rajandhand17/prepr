@@ -85,23 +85,22 @@ class TeamMatchingResource extends JsonResource
         }
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
         switch ($getRequest->invite_status) {
-                    case '0':
-                    $friendRequest = 'invited';
-                    break;
-                case '1':
-                    $friendRequest = 'joined';
-                    break;
-                case '2':
-                    $friendRequest = 'pending';
-                    break;
-                case '3':
-                    $friendRequest = 'available';
-                    break;
+            case '0':
+                $friendRequest = 'invited';
+                break;
+            case '1':
+                $friendRequest = 'joined';
+                break;
+            case '2':
+                $friendRequest = 'pending';
+                break;
+            case '3':
+                $friendRequest = 'available';
+                break;
             default:
-                $friendRequest="available";
-                    break;
-            }
-
+                $friendRequest = 'available';
+                break;
+        }
 
         return [
             'id'                    => $this->uuid,

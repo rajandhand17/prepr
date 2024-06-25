@@ -641,21 +641,21 @@ class ProjectMemberManagementService
     {
         try {
             $getUser = auth()->user();
-            $joinProject=ProjectMemberManagement::updateOrCreate([
+            $joinProject = ProjectMemberManagement::updateOrCreate([
                 'project_id'                => $projectId,
                 'email'                     => $getUser->email,
-               ], [
-              'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-              'project_id'                => $projectId,
-              'inviter_id'                => $getUser->id,
-              'email'                     => $getUser->email,
-              'invitee_name'              => $getUser->full_name,
-              'invite_type'               => '3',
-              'invite_status'             => '2',
-              'email_status'              => '1',
-              'inviter_access_level'      => '0',
-              'subject_line'              => null,
-              'email_body'                => null,
+            ], [
+                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'project_id'                => $projectId,
+                'inviter_id'                => $getUser->id,
+                'email'                     => $getUser->email,
+                'invitee_name'              => $getUser->full_name,
+                'invite_type'               => '3',
+                'invite_status'             => '2',
+                'email_status'              => '1',
+                'inviter_access_level'      => '0',
+                'subject_line'              => null,
+                'email_body'                => null,
             ]);
             if ($joinProject) {
                 return true;
