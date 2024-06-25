@@ -573,6 +573,7 @@
     "responses.create_member_manger_error_lab": "The members(s) you're trying to invite already exist in the Lab Or entering invalid emails",
     "responses.create_member_manger_error_cha": "The members(s) you're trying to invite already exist in the Challenge",
     "responses.found_challenge_assessment_detail": "The Challenge Assessment has been successfully retrieved",
+    "responses.update_challenge_assessment_detail": "The Challenge Assessment has been updated successfully",
     "responses.challenge_assessment_not_update": "There were some issues being encountered while updating the Challenge Assessment!",
     "responses.found_not_challenge_assessment_detail": "The Challenge Assessment has been set to none",
     "responses.resource_group_stored_success": "Congratulations! You have successfully created a resource group.",
@@ -1239,5 +1240,7 @@
     "responses.channel_api_status_required": "The user.*.status field is required",
     "responses.channel_api_status_string": "The user.*.status field should be string",
     "responses.channel_api_lab_id_required": "The user.*.lab_id field should be required",
-    "responses.already_request_exists": "You have already send request to join this project"
+    "responses.already_request_exists": "You have already send request to join this project",
+    "responses.challenge_weight_should_be_100": "The sum of the assessment weights must be 100.",
+    "responses.title_score_should_match_count": "All assessment fields (title, score) must have the same number of items."
 }
