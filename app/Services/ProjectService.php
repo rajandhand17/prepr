@@ -31,7 +31,6 @@ class ProjectService
     {
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
-
             $project_list = self::filterProjectList($project_list, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
@@ -577,11 +576,7 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
-//            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-//            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-//            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            //  $projectIds = $mergedIds->unique();
+            $projectIds = Project::pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {

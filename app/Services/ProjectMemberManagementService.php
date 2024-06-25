@@ -634,7 +634,7 @@ class ProjectMemberManagementService
         try {
             $memberManagement = ProjectMemberManagement::select();
             if ($requestStatus == 'request_sent') {
-                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'0'])->pluck('project_id');
+                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'2'])->pluck('project_id');
             } else {
                 $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status', '3')->pluck('project_id');
                 $memberManagement = ProjectService::getProjectIds($projectIds)->pluck('id');
@@ -650,7 +650,10 @@ class ProjectMemberManagementService
     {
         try {
             $getUser = auth()->user();
-            $joinProject = ProjectMemberManagement::create([
+            $joinProject = ProjectMemberManagement::updateOrCreate([
+                'project_id'                => $projectId,
+                'email'                     => $getUser->email,
+            ], [
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectId,
                 'inviter_id'                => $getUser->id,
