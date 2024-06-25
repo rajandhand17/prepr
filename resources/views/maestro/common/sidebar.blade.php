@@ -36,7 +36,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' ? 'active' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'challenge' ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-pie"></i>
             <p>
               Master
@@ -98,9 +98,9 @@
               </a>
             </li> --}}
             <li class="nav-item">
-              <a href="pages/UI/buttons.html" class="nav-link">
+              <a href="{{ route('challenge.index') }}" class="nav-link {{ Route::currentRouteName() == 'challenge.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Challenge</p>
+                <p>Challenge Management</p>
               </a>
             </li>
             <li class="nav-item">
