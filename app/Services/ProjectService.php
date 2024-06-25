@@ -30,10 +30,10 @@ class ProjectService
     public static function getProjectList($getProjectIds, $request)
     {
         try {
-            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+            $project_list = Project::with('getProjectAssessment');
 
+            $project_list=$project_list->whereIn('projects.id', $getProjectIds);
             $project_list = self::filterProjectList($project_list, $request);
-
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             return false;
@@ -112,7 +112,7 @@ class ProjectService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
-                $project_list = $project_list->whereIn('projects.id', $requestStatus);
+                $project_list =$project_list->whereIn('projects.id', $requestStatus);
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -577,11 +577,12 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
+            $projectIds=Project::pluck('id');
+//            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
 //            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
 //            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
 //            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            //  $projectIds = $mergedIds->unique();
+//              $projectIds = $mergedIds->unique();
 
             return $projectIds;
         } catch (Exception $e) {

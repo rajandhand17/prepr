@@ -625,7 +625,7 @@ class ProjectMemberManagementService
         try {
             $memberManagement = ProjectMemberManagement::select();
             if ($requestStatus == 'request_sent') {
-                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'0'])->pluck('project_id');
+                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'2'])->pluck('project_id');
             } else {
                 $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status', '3')->pluck('project_id');
                 $memberManagement = ProjectService::getProjectIds($projectIds)->pluck('id');
@@ -641,19 +641,35 @@ class ProjectMemberManagementService
     {
         try {
             $getUser = auth()->user();
-            $joinProject = ProjectMemberManagement::create([
-                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+            $joinProject=ProjectMemberManagement::updateOrCreate([
                 'project_id'                => $projectId,
-                'inviter_id'                => $getUser->id,
                 'email'                     => $getUser->email,
-                'invitee_name'              => $getUser->full_name,
-                'invite_type'               => '3',
-                'invite_status'             => '2',
-                'email_status'              => '1',
-                'inviter_access_level'      => '0',
-                'subject_line'              => null,
-                'email_body'                => null,
+               ], [
+              'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+              'project_id'                => $projectId,
+              'inviter_id'                => $getUser->id,
+              'email'                     => $getUser->email,
+              'invitee_name'              => $getUser->full_name,
+              'invite_type'               => '3',
+              'invite_status'             => '2',
+              'email_status'              => '1',
+              'inviter_access_level'      => '0',
+              'subject_line'              => null,
+              'email_body'                => null,
             ]);
+//            $joinProject = ProjectMemberManagement::create([
+//                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+//                'project_id'                => $projectId,
+//                'inviter_id'                => $getUser->id,
+//                'email'                     => $getUser->email,
+//                'invitee_name'              => $getUser->full_name,
+//                'invite_type'               => '3',
+//                'invite_status'             => '2',
+//                'email_status'              => '1',
+//                'inviter_access_level'      => '0',
+//                'subject_line'              => null,
+//                'email_body'                => null,
+//            ]);
             if ($joinProject) {
                 return true;
             }

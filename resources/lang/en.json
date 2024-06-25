@@ -1238,5 +1238,6 @@
     "responses.channel_api_user_email_email": "The user.*.email field should be valid email address",
     "responses.channel_api_status_required": "The user.*.status field is required",
     "responses.channel_api_status_string": "The user.*.status field should be string",
-    "responses.channel_api_lab_id_required": "The user.*.lab_id field should be required"
+    "responses.channel_api_lab_id_required": "The user.*.lab_id field should be required",
+    "responses.already_request_exists": "You have already send request to join this project"
 }
