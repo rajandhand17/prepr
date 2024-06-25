@@ -113,8 +113,8 @@ class LabTagsGroupsService
             } else {
                 $getTags = LabTagsGroups::where('type', '0')
                     ->pluck('lab_id');
-                if(count($getTags)>0){
-                    $getTags=$getTags->random();
+                if (count($getTags) > 0) {
+                    $getTags = $getTags->random();
                 }
             }
 
