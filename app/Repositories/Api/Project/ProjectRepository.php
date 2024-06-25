@@ -174,7 +174,7 @@ class ProjectRepository implements ProjectInterface
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 $user = UserService::getUserById(auth()->user()->id);
-                $user->notify(new ProjectCreatedNotification('Project Created', 'You have succsessfuly created project for the challengs.'));
+                $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
                 DB::commit();
 
                 return $createProject['createProject'];

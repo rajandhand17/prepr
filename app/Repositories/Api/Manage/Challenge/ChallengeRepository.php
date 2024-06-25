@@ -649,7 +649,7 @@ class ChallengeRepository implements ChallengeInterface
             $submitProject = DB::transaction(function () use ($challengeData, $request) {
                 $updateWinnerSelectionTimeLine = true;
                 $addWinnerAchievement = $this->achievementService->addWinnerAchievement($challengeData, $request);
-                if ($challengeData->winner_select_date === null) {
+                if ($challengeData->winner_select_date == null) {
                     $updateWinnerSelectionTimeLine = $this->challengeService->updateWinnerSelectionTimeLine($challengeData);
                 }
 

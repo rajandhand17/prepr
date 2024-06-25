@@ -43,7 +43,7 @@ class AchievementService
                     $certificate_number++;
                     $user = UserService::getUserById($projectMember);
                     if ($user) {
-                        $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
+                        $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_participation_achievement')));
                     }
                 }
             }
@@ -94,7 +94,7 @@ class AchievementService
                         $certificate_number++;
                         $user = UserService::getUserById($projectMember);
                         if ($user) {
-                            $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
+                            $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_winner_achievement')));
                         }
                     }
                 }
@@ -138,7 +138,7 @@ class AchievementService
 
             $user = UserService::getUserById($userId);
             if ($user) {
-                $user->notify(new AddWinnerAchievementNotification('Congratulations', 'You have received an Winner Achievement.'));
+                $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_challenge_path_achievement'));
             }
 
             return true;

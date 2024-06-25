@@ -1258,5 +1258,17 @@
     "responses.resource_module_asset_already_visited": "Resource Module Asset already visited.",
     "responses.resource_module_asset_not_available": "Resource Module Asset not available, please try again later.",
     "responses.fcm_token_required": "Please provide the FCM token.",
-    "responses.fcm_token_string": "FCM token should be string."
+    "responses.fcm_token_string": "FCM token should be string.",
+    "responses.noti_project_created": "Project Created",
+    "responses.noti_project_created_message": "You have succsessfuly created project for the challenge.",
+    "responses.noti_congratulations": "Congratulations",
+    "responses.noti_winner_achievement": "You have received an Winner Achievement.",
+    "responses.noti_participation_achievement": "You have received an Participation Achievement.",
+    "responses.noti_challenge_path_achievement": "You have received an Challenge Path Achievement.",
+    "responses.noti_new_user_invited": "New User Invited",
+    "responses.noti_new_user_invited_message": "A new user invited to join the project.",
+    "responses.noti_you_have_invited": "You have been Invited",
+    "responses.noti_you_have_invited_message": "You have been invited to join the project.",
+    "responses.noti_new_user_request": "New User Request",
+    "responses.noti_new_user_request_message": "A new user requested to join the"
 }

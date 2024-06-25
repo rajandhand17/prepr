@@ -413,7 +413,7 @@ class MemberManagementService
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
-                                $user->notify(new ComponentJoinedNotification('New User Request', 'A new user requested to join the '.$component.'.'));
+                                $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));
                             }
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
