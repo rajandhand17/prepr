@@ -51,31 +51,34 @@ class TeamMatchingResource extends JsonResource
             $userDetails['user_points'] = $getUsersDetails['user_points'];
             $userDetails['user_rank'] = $getUsersDetails['user_rank'];
             $userDetails['verified_user'] = $getUsersDetails['verified_user'];
-            $userDetails['sso_integrations'] = [
-                'linked-in'     => 'inactive',
-                'google'        => 'inactive',
-                'magnet'        => 'inactive',
-                'microsoft'     => 'inactive',
-                'apple'         => 'inactive',
-            ];
             $accessLevel = ['viewer', 'editor', 'team-lead'];
             if ($action == 'pending') {
                 $userDetails['project_count'] = count($getUsersDetails->userProjects);
                 $userDetails['lab_count'] = count($getUsersDetails->userlabs);
                 $userDetails['achievement_count'] = count($getUsersDetails->userAchievements);
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
-                $userDetails['user_positions'] = $accessLevel[$this->member->inviter_access_level];
+                $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
+                $userDetails['bio'] = $getUsersDetails->userPersonal !== null ? $getUsersDetails->userPersonal->about : null;
             }
             $isJoined = 'no';
             if ($action == 'matched') {
                 $isJoined = $this->member ? 'yes' : 'no';
+                $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
             }
         }
-        $friendRequest = 'request_sent';
+        $friendRequest = 'available';
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
         if ($getRequest) {
-            if ($getRequest->invite_status == 3) {
-                $friendRequest = 'available';
+            switch ($getRequest) {
+                case '1':
+                    $friendRequest = 'joined';
+                    break;
+                case '2':
+                    $friendRequest = 'pending';
+                    break;
+                case '3':
+                    $friendRequest = 'available';
+                    break;
             }
         }
 
