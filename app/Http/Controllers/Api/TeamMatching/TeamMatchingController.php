@@ -63,7 +63,7 @@ class TeamMatchingController extends AppBaseController
                 return $this->sendError(__('responses.slug_not_found'), 404);
             }
             $checkRequestExistsOrNot = $this->teamMatchingRepository->checkRequestExistsOrNotExists($checkSlugExistsOrNot->id);
-            if (isset($checkRequestExistsOrNot->invite_status) && $checkSlugExistsOrNot->invite_status !== '3') {
+            if (isset($checkRequestExistsOrNot->invite_status) && $checkRequestExistsOrNot->invite_status != '3') {
                 return $this->sendError(__('responses.already_request_exists'), 402);
             }
             $sendRequest = $this->teamMatchingRepository->sendRequest($checkSlugExistsOrNot->id);
