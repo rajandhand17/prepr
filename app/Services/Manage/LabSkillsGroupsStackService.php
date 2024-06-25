@@ -151,9 +151,9 @@ class LabSkillsGroupsStackService
                     ->whereIn('foreign_id', $usersSkills)
                     ->pluck('foreign_id');
             } else {
-                $getSkills=LabSkillsGroupsStack::where('type',0)->pluck('foreign_id');
-                if(count($getSkills)>0){
-                    $getSkills=$getSkills->random();
+                $getSkills = LabSkillsGroupsStack::where('type', 0)->pluck('foreign_id');
+                if (count($getSkills) > 0) {
+                    $getSkills = $getSkills->random();
                 }
             }
 
