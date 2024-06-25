@@ -84,10 +84,11 @@ class ExploreController extends AppBaseController
                 if (!empty($recommendedSkills)) {
                     return $this->sendResponse(SkillResource::collection($recommendedSkills), __('responses.recommended_skills_successfully'));
                 }
+
                 return $this->sendResponse([], __('responses.recommended_skills_successfully'));
             }
-            return $this->sendResponse([], __('responses.recommended_skills_successfully'));
 
+            return $this->sendResponse([], __('responses.recommended_skills_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
