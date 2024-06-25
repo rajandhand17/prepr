@@ -30,9 +30,7 @@ class ProjectService
     public static function getProjectList($getProjectIds, $request)
     {
         try {
-            $project_list = Project::with('getProjectAssessment');
-
-            $project_list = $project_list->whereIn('projects.id', $getProjectIds);
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
             $project_list = self::filterProjectList($project_list, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
@@ -579,12 +577,6 @@ class ProjectService
     {
         try {
             $projectIds = Project::pluck('id');
-//            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
-//            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-//            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-//            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-//              $projectIds = $mergedIds->unique();
-
             return $projectIds;
         } catch (Exception $e) {
             return false;

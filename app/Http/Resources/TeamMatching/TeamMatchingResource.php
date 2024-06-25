@@ -67,7 +67,7 @@ class TeamMatchingResource extends JsonResource
             }
         }
         $access_level = 'viewer';
-        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
+        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status == '1') {
             switch ($this->getJoinedStatus()->inviter_access_level) {
                 case '0':
                     $access_level = 'viewer';
