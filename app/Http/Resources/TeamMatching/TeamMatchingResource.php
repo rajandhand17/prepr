@@ -86,7 +86,7 @@ class TeamMatchingResource extends JsonResource
         $friendRequest="available";
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
         if ($getRequest) {
-            switch ($getRequest){
+            switch ($getRequest) {
                 case '1':
                     $friendRequest = 'joined';
                     break;
