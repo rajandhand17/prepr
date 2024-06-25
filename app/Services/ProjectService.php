@@ -577,6 +577,7 @@ class ProjectService
     {
         try {
             $projectIds = Project::pluck('id');
+
             return $projectIds;
         } catch (Exception $e) {
             return false;
