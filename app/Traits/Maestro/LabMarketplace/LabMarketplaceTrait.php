@@ -3,20 +3,29 @@
 
 namespace App\Traits\Maestro\LabMarketplace;
 
-use App\Services\Maestro\LabMarketplace\LabMarketplaceService;
-use App\Services\Maestro\Setting\SettingService;
-use App\Services\Maestro\User\UserService;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
-use Exception;
+use App\Services\Manage\LabMarketplaceService;
 
 trait LabMarketplaceTrait
 {
     private function getLabMarketplace()
     {
         try {
-            $settings = LabMarketplaceService::getLabMarketplace();
-            if($settings){
-                return $settings;
+            $labMarketplace =  LabMarketplaceService::getLabMarketplace();
+            if($labMarketplace){
+                return $labMarketplace;
+            }
+            return false;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function deleteLabMarketplaceById($id){
+        try {
+            $slug=LabMarketplaceService::getLabMarketplaceBasedOnId($id)->slug;
+            $deleteLabMarketplace = LabMarketplaceService::deleteLabMarketplace($slug,$id);
+            if($deleteLabMarketplace){
+                return $deleteLabMarketplace;
             }
             return false;
         }catch (\Exception $e) {

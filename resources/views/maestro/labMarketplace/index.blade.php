@@ -6,12 +6,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Setting</h1>
+                <h1 class="m-0">Lab Marketplace</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Setting</li>
+                    <li class="breadcrumb-item active">Lab Marketplace</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -27,11 +27,6 @@
                 <!-- /.card -->
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"></h3>
-                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                           href="{{route('users.create')}}" role="menuitem">Create User</a>
-                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">
@@ -67,7 +62,7 @@
 </script>
 
 <script>
-    function deleteUser(url) {
+    function deleteLabMarketplace(url) {
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         Swal.fire({
             title: 'Are you sure?',

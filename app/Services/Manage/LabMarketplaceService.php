@@ -250,4 +250,22 @@ class LabMarketplaceService
             return false;
         }
     }
+
+    public static function getLabMarketplace()
+    {
+        try {
+            return LabMarketplace::orderBy('id', 'desc');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getLabMarketplaceBasedOnId($id)
+    {
+        try {
+            return LabMarketplace::where('id',$id)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

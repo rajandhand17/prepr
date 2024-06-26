@@ -1,21 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Maestro\LabMarketplace;
+namespace App\Http\Controllers\Maestro\Challenge;
 
 use App\Http\Controllers\Controller;
 use App\Models\LabMarketplace;
 use App\Services\Maestro\Category\CategoryService;
 use App\Services\Maestro\User\UserService;
-use App\Traits\Maestro\LabMarketplace\LabMarketplaceTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
-class LabMarketplaceController extends Controller
+class ChallengeController extends Controller
 {
-    use LabMarketplaceTrait;
-
     public function __construct()
     {
         $this->middleware('web');
@@ -24,7 +20,7 @@ class LabMarketplaceController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $labMarketplaceInfo = $this->getLabMarketplace();
+            $labMarketplaceInfo = $this->getChallenge();
             if (!empty($labMarketplaceInfo)) {
                 if ($request->ajax()) {
                     return DataTables::eloquent($labMarketplaceInfo)
@@ -66,23 +62,6 @@ class LabMarketplaceController extends Controller
             return view('maestro.labMarketplace.index', compact('html'));
         }catch (\Exception $e) {
             return false;
-        }
-    }
-
-    public function destroy(string $id)
-    {
-        try {
-            DB::beginTransaction();
-            //$this->construct();
-            if ($this->deleteLabMarketplaceById($id)) {
-                DB::commit();
-                return response()->json(['status' => 'success', 'message' => 'Organization deleted successfully']);
-            }
-            DB::rollback();
-        } catch (\Exception $e) {
-            dd($e);
-            DB::rollback();
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

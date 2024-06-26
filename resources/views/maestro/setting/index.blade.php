@@ -27,11 +27,11 @@
                 <!-- /.card -->
 
                 <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title"></h3>
-                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                           href="{{route('users.create')}}" role="menuitem">Create User</a>
-                    </div>
+<!--                    <div class="card-header">-->
+<!--                        <h3 class="card-title"></h3>-->
+<!--                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"-->
+<!--                           href="{{route('users.create')}}" role="menuitem">Create User</a>-->
+<!--                    </div>-->
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">

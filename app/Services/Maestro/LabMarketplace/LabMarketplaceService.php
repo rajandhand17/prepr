@@ -18,4 +18,13 @@ class LabMarketplaceService
             return false;
         }
     }
+
+    public static function deleteLabMarketplace($id)
+    {
+        try {
+
+        }catch (Exception $e) {
+            return false;
+        }
+    }
 }
