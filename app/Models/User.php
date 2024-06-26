@@ -30,6 +30,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -842,5 +843,10 @@ class User extends Authenticatable
     public function presence()
     {
         return $this->hasOne(ConversationUserPresenceStatus::class, 'user_id', 'id');
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }

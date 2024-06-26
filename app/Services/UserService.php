@@ -387,10 +387,47 @@ class UserService
         }
     }
 
+    public function updateUserPoint($userIdsArray, $userPoint)
+    {
+        try {
+            if (empty($userIdsArray)) {
+                return false;
+            }
+
+            foreach ($userIdsArray as $userId) {
+                $fetchUserById = $this->getUserById($userId);
+
+                if (!$fetchUserById) {
+                    continue;
+                }
+
+                $fetchUserById->user_points += $userPoint;
+                $fetchUserById->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public static function organizationPreferenceUpdate($organizationId)
     {
         try {
             $updateListPreference = User::where('preferred_organization', $organizationId)->update(['preferred_organization' => null]);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateFcmToken($request)
+    {
+        try {
+            auth()->user()->update([
+                'fcm_token' => $request->fcm_token,
+            ]);
 
             return true;
         } catch (\Exception $e) {

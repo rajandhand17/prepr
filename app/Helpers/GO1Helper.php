@@ -6,6 +6,7 @@ use App\Services\Manage\GO1AccessTokenService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\UserResourceProgressTrackingService;
 use App\Services\Manage\WebhookMetadataService;
+use App\Services\Public\ResourceModuleDetailService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -336,6 +337,18 @@ class GO1Helper
             $parentData = $data->first();
             if (!$parentData) {
                 return false;
+            }
+
+            // Tracking completion status in resource module visit
+            if ($data->completion_status === 'completed') {
+                $userId = $data->user_id;
+                $resourceModuleId = $data->resource_module_id;
+                $assetId = $data->id;
+                $assetType = '8';
+                $checkResourceModuleAssetVisit = ResourceModuleDetailService::checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                if ($checkResourceModuleAssetVisit === false) {
+                    $addResourceModuleAssetVisit = ResourceModuleDetailService::addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                }
             }
 
             WebhookMetadataService::create($type, $payload, $parentData['id']);
