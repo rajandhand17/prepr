@@ -29,6 +29,8 @@
       <!-- /.card-header -->
       <div class="card-body">
         {!!Form::open(array('method'=>'POST','route' => ['challenge.store'],'files'=>true))!!}
+        <h3><b> Challenge Details </b></h3>
+        <hr>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group {{($errors->has('title')) ? 'has-error' : ''}}">
@@ -56,8 +58,8 @@
 
         <div class="col-md-6">
           <div class="form-group {{($errors->has('media')) ? 'has-error' : ''}}">
-            {!! Form::label('media', 'Cover Image', ['class' => 'control-label']) !!}</br>
-            {!! Form::file('media', ['class' => 'form-control']) !!}
+            {!! Form::label('cover_image', 'Cover Image', ['class' => 'control-label']) !!}</br>
+            {!! Form::file('cover_image', ['class' => 'form-control']) !!}
             <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('media')}}</span>
           </div>
         </div>
@@ -74,7 +76,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('skills')) ? 'has-error' : ''}}">
             {!! Form::label('skills', 'Challenge Skills', ['class' => 'control-label']) !!}
-            {{ Form::select('skills', [], old('skills'), ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required']) }}
+            {{ Form::select('skills[]', [], old('skills'), ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required' ,'multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block skill_error">{{ $errors->first('skills')}}</span>
           </div>
         </div>
@@ -156,35 +158,6 @@
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('associativeLab')) ? 'has-error' : ''}}">
-              {!! Form::label('associativeLab', 'Associat Lab', ['class' => 'control-label']) !!}
-              {{ Form::select('associativeLab', [], old('associativeLab'), ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required']) }}
-              <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('associativeLab')}}</span>
-            </div>
-          </div>
-  
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('associativeResourceModule')) ? 'has-error' : ''}}">
-              {!! Form::label('associativeResourceModule', 'Resource Module', ['class' => 'control-label']) !!}
-              {{ Form::select('associativeResourceModule', [], old('associativeResourceModule'), ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required']) }}
-              <span style="color: #ea6c41 !important;" class="help-block resource_module_error">{{ $errors->first('associativeResourceModule')}}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-12">
-            <div class="form-group {{($errors->has('agreement')) ? 'has-error' : ''}}">
-              {!! Form::label('agreement', 'Agreement', ['class' => 'control-label']) !!}
-              {!! Form::textarea('agreement',null, ['class' => 'form-control', 'rows'=>'10',"id"=>"agreement"]) !!}
-              <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('agreement')}}</span>
-            </div>
-          </div>
-        </div>
-
         <div class="row">
           <div class="col-md-12">
             <div class="form-group {{($errors->has('description')) ? 'has-error' : ''}}">
@@ -195,95 +168,253 @@
           </div>
         </div>
 
+        <hr>
+          <h3><b> Challenge Timeline </b></h3>
+        <hr>
+        {{-- Timeline section start --}}
         <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Open call date</label>
-                <div class="input-group date" id="open_call_date" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#open_call_date" name="open_call_date" id="open_call_date" />
-                    <div class="input-group-append" data-target="#open_call_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          <div class="col-sm-12">
+              <div class="form-group">
+                  <label>Challenge Timeline Dates : &nbsp;&nbsp;</label>
+                  <div class="radio radio-success d-inline-block p-l-5">
+                      <input type="radio" id="restricted_dates" value="1" class="scheduleDates" name="timeline_type" checked="">
+                      <label for="restricted_dates">Restricted dates</label>
+                  </div>
+                  <div class="radio radio-success d-inline-block">
+                      <input type="radio" id="flexidates" value="0" class="scheduleDates" name="timeline_type">
+                      <label for="flexidates">Flexible dates</label>
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="restrictedDatesSection" style="">
+          {{-- started restricted Dates Section  --}}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Open call date</label>
+                  <div class="input-group date" id="open_call_date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#open_call_date" name="open_call_date" id="open_call_date" />
+                      <div class="input-group-append" data-target="#open_call_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group {{($errors->has('open_call_date_description')) ? 'has-error' : ''}}">
+                {!! Form::label('open_call_date_description', 'Open Call Date Description', ['class' => 'control-label']) !!}
+                {!! Form::text('open_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                <span style="color: #ea6c41 !important;" class="help-block open_call_error">{{ $errors->first('open_call_date_description')}}</span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Last Registration Date</label>
+                  <div class="input-group date" id="last_call_date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#last_call_date" name="last_call_date" id="last_call_date" />
+                      <div class="input-group-append" data-target="#last_call_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group {{($errors->has('last_call_date_description')) ? 'has-error' : ''}}">
+                {!! Form::label('last_call_date_description', 'Last Registration Date Description', ['class' => 'control-label']) !!}
+                {!! Form::text('last_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                <span style="color: #ea6c41 !important;" class="help-block last_call_date_description_error">{{ $errors->first('last_call_date_description')}}</span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Application Deadline</label>
+                  <div class="input-group date" id="application_deadline_date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#application_deadline_date" name="application_deadline_date" id="application_deadline_date" />
+                      <div class="input-group-append" data-target="#application_deadline_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group {{($errors->has('application_deadline_date_description')) ? 'has-error' : ''}}">
+                {!! Form::label('application_deadline_date_description', 'Application Deadline Description', ['class' => 'control-label']) !!}
+                {!! Form::text('application_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                <span style="color: #ea6c41 !important;" class="help-block application_deadline_date_description_error">{{ $errors->first('application_deadline_date_description')}}</span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Submission Deadline</label>
+                  <div class="input-group date" id="submission_deadline_date" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" data-target="#submission_deadline_date" name="submission_deadline_date" id="submission_deadline_date" />
+                      <div class="input-group-append" data-target="#submission_deadline_date" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group {{($errors->has('submission_deadline_date_description')) ? 'has-error' : ''}}">
+                {!! Form::label('submission_deadline_date_description', 'Submission Deadline Description', ['class' => 'control-label']) !!}
+                {!! Form::text('submission_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                <span style="color: #ea6c41 !important;" class="help-block submission_deadline_date_description_error">{{ $errors->first('submission_deadline_date_description')}}</span>
+              </div>
+            </div>
+          </div>
+
+          {{-- end restricted Dates Section --}}
+          <div class="col-lg-12">
+              <div class="form-group">
+                  <label>Challenge duration</label>
+
+                  <div class="input-group mb-3">
+                      <input type="text" class="form-control challenge_length" name="length" placeholder="Length" value="" disabled="" id="challenge_length">
+                      <input type="hidden" class="form-control challenge_length_hidden" name="length" placeholder="Length" value="" id="challenge_length_hidden">
+                  </div>
+              </div>
+          </div>
+        </div>
+        <div class="addCustomDateSection">
+          <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group validation-group">
+                    <label>Flexible date number <span class="text-danger">*</span></label>
+                    <div class="input-group input_with_tootltip">
+                        <input class="form-control" id="flexible_date_number" placeholder="Enter flexible date number" autocomplete="off" min="1" name="flexible_date_number" type="number" data-validation-required="text" data-validation-error="Flexible date is required!">
                     </div>
+                    <span class="help-block flexible_date_numberError" style="display: none;"></span>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label>Flexible expire date duration</label>
+                    <div class="input-group mb-3">
+                        <select class="form-control" id="flexible_date_duration" name="flexible_date_duration"><option value="days">Days</option><option value="weeks">Weeks</option><option value="months">Months</option></select>
+                    </div>
+                    <span class="help-block flexible_date_durationError" style="display: none;"></span>
                 </div>
             </div>
           </div>
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('open_call_date_description')) ? 'has-error' : ''}}">
-              {!! Form::label('open_call_date_description', 'Open Call Date Description', ['class' => 'control-label']) !!}
-              {!! Form::text('open_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
-              <span style="color: #ea6c41 !important;" class="help-block open_call_error">{{ $errors->first('open_call_date_description')}}</span>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group {{($errors->has('automatic_alert')) ? 'has-error' : ''}}">
+                {!! Form::label('automatic_alert', 'Automatic alert', ['class' => 'control-label']) !!}
+                {{ Form::select('automatic_alert', ['1' => 'A week before submission deadline reminder', '0' => 'A day before submission deadline reminder'], old('automatic_alert'), ['class' => 'form-control select2bs4','id' => 'automaticAlert']) }}
+                <span style="color: #ea6c41 !important;" class="help-block automatic_alert_error">{{ $errors->first('automatic_alert')}}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Challenge deadline (optional)</label>
+                  <div class="input-group date" id="flexible_expire_deadline" data-target-input="nearest">
+                      <input type="text" name="flexible_expire_deadline" class="form-control datetimepicker-input" data-target="#flexible_expire_deadline" placeholder="Enter expiry date" id="flexible_expire_deadline" value="" autocomplete="off" />
+                      <div class="input-group-append" data-target="#flexible_expire_deadline" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                  </div>
+              </div>
             </div>
           </div>
         </div>
+        {{-- End custom date  --}}
+        {{-- Timeline end --}}
 
+        {{-- Challenge Incentives section start --}}
+        <hr>
+          <h3><b> Challenge Incentives </b></h3>
+        <hr>
+        <div class="row form-group" id="row_no_1">
+          <div class="col-md-3">
+              <div class="form-group {{($errors->has('incentive_name')) ? 'has-error' : ''}}">
+                  {!! Form::label('incentive_name', 'Incentive Name', ['class' => 'control-label']) !!}
+                  {!! Form::text('incentive_name[]',null, ['class' => 'form-control incentive_name']) !!}
+                  <span class="help-block">{{ $errors->first('incentive_name')}}</span>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <div class="form-group {{($errors->has('incentive_prize')) ? 'has-error' : ''}}">
+                  {!! Form::label('incentive_prize', 'Incentive Prize', ['class' => 'control-label']) !!}
+                  {!! Form::text('incentive_prize[]',null, ['class' => 'form-control incentive_prize','min'=>'0']) !!}
+                  <span class="help-block">{{ $errors->first('incentive_prize')}}</span>
+              </div>
+          </div>
+          <div class="col-md-3">
+              <div class="form-group {{($errors->has('incentive_point')) ? 'has-error' : ''}}">
+                  {!! Form::label('incentive_point', 'Incentive Point', ['class' => 'control-label']) !!}
+                  {!! Form::number('incentive_point[]',null, ['class' => 'form-control incentive_point','min'=>'0']) !!}
+                  <span class="help-block">{{ $errors->first('incentive_point')}}</span>
+              </div>
+          </div>
+          <div class="col-md-2">
+              <div class="form-group {{($errors->has('incentive_trophy')) ? 'has-error' : ''}}">
+                  {!! Form::label('incentive_trophy', 'Incentive Trophy', ['class' => 'control-label']) !!}
+                  {!! Form::file('incentive_trophy[]', ['class' => 'incentive_trophy']) !!}
+                  <span class="help-block">{{ $errors->first('incentive_trophy')}}</span>
+                  <span class="help-block" style="color: #ea6c41;">{{ $errors->first('incentive_trophy.0')}}</span>
+              </div>
+          </div>
+          <div class="col-sm-1 col-xs-1 button_add_remove">
+              <button class="btn btn-success add_new_incentive" type="button" row-no="1" style="margin-top: 20px;">+</button>
+          </div>
+      </div>
+      <div class="incentive_area_appends" id="incentive_area_appends"></div>
+      {{-- Challenge Incentives section end --}}
+
+        {{-- Challenge agreement section start --}}
+        <hr>
+          <h3><b> Challenge Agreement </b></h3>
+        <hr>
         <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Last Registration Date</label>
-                <div class="input-group date" id="last_call_date" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#last_call_date" name="last_call_date" id="last_call_date" />
-                    <div class="input-group-append" data-target="#last_call_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('last_call_date_description')) ? 'has-error' : ''}}">
-              {!! Form::label('last_call_date_description', 'Last Registration Date Description', ['class' => 'control-label']) !!}
-              {!! Form::text('last_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
-              <span style="color: #ea6c41 !important;" class="help-block last_call_date_description_error">{{ $errors->first('last_call_date_description')}}</span>
+          <div class="col-md-12">
+            <div class="form-group {{($errors->has('agreement')) ? 'has-error' : ''}}">
+              {!! Form::label('agreement', 'Agreement', ['class' => 'control-label']) !!}
+              {!! Form::textarea('agreement',null, ['class' => 'form-control', 'rows'=>'10',"id"=>"agreement"]) !!}
+              <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('agreement')}}</span>
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Application Deadline</label>
-                <div class="input-group date" id="application_deadline_date" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#application_deadline_date" name="application_deadline_date" id="application_deadline_date" />
-                    <div class="input-group-append" data-target="#application_deadline_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('application_deadline_date_description')) ? 'has-error' : ''}}">
-              {!! Form::label('application_deadline_date_description', 'Application Deadline Description', ['class' => 'control-label']) !!}
-              {!! Form::text('application_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
-              <span style="color: #ea6c41 !important;" class="help-block application_deadline_date_description_error">{{ $errors->first('application_deadline_date_description')}}</span>
-            </div>
+      {{-- Challenge agreement section end --}}
+      
+      {{-- lab and resource section start--}}
+      <hr>
+          <h3><b> Labs & Resources </b></h3>
+      <hr>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group {{($errors->has('associativeLab')) ? 'has-error' : ''}}">
+            {!! Form::label('associativeLab', 'Associat Lab', ['class' => 'control-label']) !!}
+            {{ Form::select('associativeLab[]', [], old('associativeLab'), ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required','multiple' => 'multiple']) }}
+            <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('associativeLab')}}</span>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label>Submission Deadline</label>
-                <div class="input-group date" id="submission_deadline_date" data-target-input="nearest">
-                    <input type="text" class="form-control datetimepicker-input" data-target="#submission_deadline_date" name="submission_deadline_date" id="submission_deadline_date" />
-                    <div class="input-group-append" data-target="#submission_deadline_date" data-toggle="datetimepicker">
-                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                    </div>
-                </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('submission_deadline_date_description')) ? 'has-error' : ''}}">
-              {!! Form::label('submission_deadline_date_description', 'Submission Deadline Description', ['class' => 'control-label']) !!}
-              {!! Form::text('submission_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
-              <span style="color: #ea6c41 !important;" class="help-block submission_deadline_date_description_error">{{ $errors->first('submission_deadline_date_description')}}</span>
-            </div>
+        <div class="col-md-6">
+          <div class="form-group {{($errors->has('associativeResourceModule')) ? 'has-error' : ''}}">
+            {!! Form::label('associativeResourceModule', 'Resource Module', ['class' => 'control-label']) !!}
+            {{ Form::select('associativeResourceModule[]', [], old('associativeResourceModule'), ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required','multiple' => 'multiple']) }}
+            <span style="color: #ea6c41 !important;" class="help-block resource_module_error">{{ $errors->first('associativeResourceModule')}}</span>
           </div>
         </div>
-
+      </div>
+      {{-- Lab and resource section end --}}
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
               <button type="submit" class="btn btn-primary">Submit</button>
-              <a class="btn btn-danger mr-1" href="{{ route('resource-module.index') }}"><i class="icon-cross2"></i> Cancel</a>
+              <a class="btn btn-danger mr-1" href="{{ route('challenge.index') }}"><i class="icon-cross2"></i> Cancel</a>
             </div>
           </div>
         </div>
@@ -654,11 +785,27 @@
             }
         });
     }
+// Timeline start
+      $('.addCustomDateSection').hide();
 
-      $('#last_call_date').datetimepicker({
+      $(document).on('change', '.scheduleDates', function() {
+        if (this.value === 'flexible') {
+            // show schedule Announcement Section
+            $('.addCustomDateSection').show();
+            $('#addCustomDate').show();
+            $('.restrictedDatesSection').hide();
+        } else {
+            // hide schedule Announcement Section
+            $('.addCustomDateSection').hide();
+            $('#addCustomDate').hide();
+            $('.restrictedDatesSection').show();
+        }
+      });
+
+      $('#open_call_date').datetimepicker({
           format: 'L'
       });
-      $('#open_call_date').datetimepicker({
+      $('#last_call_date').datetimepicker({
           format: 'L'
       });
       $('#application_deadline_date').datetimepicker({
@@ -667,53 +814,62 @@
       $('#submission_deadline_date').datetimepicker({
           format: 'L'
       });
-        $('.deadline, .last_registration_date, .call_date, .application_deadline').blur(function(){
-            var callDate = new Date($('#call_date').val());
-            var deadline = new Date($(this).val());
-            var lastDateToRegister = new Date($('.last_registration_date').val());
-            var appDeadline = new Date($('.application_deadline').val());
-            var calltoreg = datePop(callDate,lastDateToRegister);
-            var calltoappdead = datePop(callDate,appDeadline);
-            var regtosub = datePop(lastDateToRegister,deadline);
-            var regtoappdead = datePop(lastDateToRegister,appDeadline);
-            var appdeadtosub = datePop(appDeadline,deadline);
-            var diffDays = datePop(callDate,deadline);
+      $('#flexible_expire_deadline').datetimepicker({
+          format: 'L'
+      });
+        $('#open_call_date, #last_call_date, #call_date, #application_deadline_date,#submission_deadline_date').blur(function(){
+          var callDate = new Date($('#open_call_date').val());
+          var deadline = new Date($(this).val());
+          var lastDateToRegister = new Date($('#last_call_date').val());
+          var appDeadline = new Date($('#application_deadline_date').val());
+          var calltoreg = datePop(callDate,lastDateToRegister);
+          var calltoappdead = datePop(callDate,appDeadline);
+          var regtosub = datePop(lastDateToRegister,deadline);
+          var regtoappdead = datePop(lastDateToRegister,appDeadline);
+          var appdeadtosub = datePop(appDeadline,deadline);
+          var diffDays = datePop(callDate,deadline);
 
-            if($.isNumeric(diffDays)){
-                $('.challenge_length').val(diffDays);
-                alert(diffDays);
-            }
+          if($.isNumeric(diffDays)){
+              $('#challenge_length').val(diffDays);
+              $('#submission_deadline_date').val(diffDays);
+          }
 
-            if(diffDays < 0){
-                alert('Invalid Date Selection, Submission deadline must be greater than Open call Date.');
-                $('.deadline').val('');
-                $('.challenge_length').val('');
-            }
-            if(calltoreg < 0){
-                alert('Invalid Date Selection, Register team deadline must be greater than Open call Date.');
-                $('.last_registration_date').val('');
-                $('.challenge_length').val('');
-            }
-            if(calltoappdead < 0){
-                alert('Invalid Date Selection, Application deadline must be greater than Open call Date.');
-                $('application_deadline').val('');
-                $('.challenge_length').val('');
-            }
-            if(regtosub < 0){
-                alert('Invalid Date Selection, Submission deadline must be greater than Register team deadline.');
-                $('.deadline').val('');
-                $('.challenge_length').val('');
-            }
-            if(regtoappdead < 0){
-                alert('Invalid Date Selection, Application deadline must be greater than Register team deadline.');
-                $('.application_deadline').val('');
-                $('.challenge_length').val('');
-            }
-            if(appdeadtosub < 0){
-                alert('Invalid Date Selection, Submission deadline must be greater than Application deadline.');
-                $('.application_deadline').val('');
-                $('.challenge_length').val('');
-            }
+          if(diffDays < 0){
+              alert('Invalid Date Selection, Submission deadline must be greater than Open call Date.');
+              $('#application_deadline_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
+          if(calltoreg < 0){
+              alert('Invalid Date Selection, Register team deadline must be greater than Open call Date.');
+              $('#last_call_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
+          if(calltoappdead < 0){
+              alert('Invalid Date Selection, Application deadline must be greater than Open call Date.');
+              $('#application_deadline_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
+          if(regtosub < 0){
+              alert('Invalid Date Selection, Submission deadline must be greater than Register team deadline.');
+              $('#application_deadline_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
+          if(regtoappdead < 0){
+              alert('Invalid Date Selection, Application deadline must be greater than Register team deadline.');
+              $('#application_deadline_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
+          if(appdeadtosub < 0){
+              alert('Invalid Date Selection, Submission deadline must be greater than Application deadline.');
+              $('#application_deadline_date').val('');
+              $('#challenge_length').val('');
+              $('#submission_deadline_date').val('');
+          }
         });
         function datePop(date1,date2) {
             var one_day=1000*60*60*24;
@@ -729,5 +885,27 @@
             var days = Math.floor(difference_ms/24);
             return days;
         }
+
+        // Incentive section start
+        $('.add_new_incentive').click(function(){
+        var row_no = $(this).attr('row-no');
+        var html_data = $('#row_no_1').html();
+        var row_no = parseInt(row_no) + 1;
+        $(this).attr('row-no', row_no);
+        var new_html = '<div class="row form-group" id="row_no_' + row_no + '">'
+                new_html += html_data;
+        new_html += '</div>';
+        $('#incentive_area_appends').append(new_html);
+        $('#row_no_' + row_no).find(".button_add_remove").html('<button class="btn btn-danger" onclick="removeIncentive(' + row_no + ')" type="button" style="margin-top: 20px;">-</button>');
+        $('#row_no_' + row_no).find(".incentive_name").val('');
+        $('#row_no_' + row_no).find(".incentive_prize").val('');
+        $('#row_no_' + row_no).find(".incentive_point").val('');
+        $('#row_no_' + row_no).find(".incentive_trophy").val('');
+        $('#row_no_' + row_no).find(".trtrytr").remove();
+        });
+        function removeIncentive(row_no){
+        $('#incentive_area_appends').find('#row_no_' + row_no).remove();
+        }
+        // INcentive section end
 </script>
 @endsection

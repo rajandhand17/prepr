@@ -9,7 +9,6 @@ use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Traits\Maestro\Challenge\ChallengeTrait;
 use App\Models\Challenge;
-use App\Models\Organization;
 use Exception;
 
 class ChallengeController extends Controller

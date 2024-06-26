@@ -8,9 +8,14 @@ use App\Models\User;
 use App\Models\Language;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeTimelines;
+use App\Models\ChallengeSkillsGroupsStack;
+use App\Models\ComponentAssociation;
+use App\Models\ChallengeAchievement;
 use App\Helpers\UtilityHelper;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Exception;
 use App\Models\Category;
 
@@ -40,15 +45,12 @@ class ChallengeService
     public static function createChallenge($request)
     {
         try {
-
+            $coverImage = null;
             if ($request->file('cover_image')) {
-                $pathsArray = config('s3-upload-path');
-                $file = $request->file('cover_image');
-                $image_contents_cover = fopen($file->getRealPath(), 'rb');
-                $coverImage = $pathsArray['resource_module'].time().'.webp';
-                Storage::disk('s3')->put($coverImage, $image_contents_cover);
-            } else {
-                $coverImage = null;
+                $filename = Str::random(25) . '.' . $request->file('cover_image')->getClientOriginalExtension();
+                $image = Image::make($request->file('cover_image'))->resize(735, 415)->stream();
+                $img = Storage::disk('s3')->put('uploads/challenge/' . $filename, $image);
+                $coverImage = 'uploads/challenge/' . $filename;
             }
 
             $model = new Challenge();
@@ -56,13 +58,13 @@ class ChallengeService
             $challenge = new Challenge();
             $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $challenge->language = $request->language;
+            $challenge->title = $request->title;
             $challenge->slug = $slug;
             $challenge->user_id = $request->user_id;
             $challenge->organization_id = $request->organization_id;
             $challenge->category_id = $request->category;
             $challenge->duration_id = $request->duration;
             $challenge->level_id = $request->level;
-            $challenge->title = $request->title;
             $challenge->description = $request->description;
             $challenge->is_open = $request->is_open;
             $challenge->status = $request->status;
@@ -75,6 +77,9 @@ class ChallengeService
             if($challenge->save()){
                 self::challengeRequirementsSave($request,$challenge);
                 self::challengeTimelinesSave($request,$challenge);
+                self::challengeSkillsGroupsStacks($request,$challenge);
+                self::challengeAssociations($request,$challenge);
+                self::challengeIncentives($request,$challenge);
                 return true;
             }
             return false;
@@ -102,22 +107,92 @@ class ChallengeService
     public static function challengeTimelinesSave($request,$challenge)
     {
         try {
-            $challengeTimeLines = new ChallengeTimelines();
-            $challengeTimeLines->challenge_id  = $challenge->id;
-            $challengeTimeLines->timeline_type = '1';
-            $challengeTimeLines->open_call_date = $request->open_call_date;
-            $challengeTimeLines->open_call_date_description = $request->open_call_date_description;
-            $challengeTimeLines->last_call_date = $request->last_call_date;
-            $challengeTimeLines->last_call_date_description = $request->last_call_date_description;
-            $challengeTimeLines->application_deadline_date = $request->application_deadline_date;
-            $challengeTimeLines->application_deadline_date_description = $request->application_deadline_date_description;
-            $challengeTimeLines->submission_deadline_date = $request->submission_deadline_date;
-            $challengeTimeLines->submission_deadline_date_description = $request->submission_deadline_date_description;
-            // $challengeTimeLines->challenge_duration = $request->length;
-            if($challengeTimeLines->save()){
-                return true;
+            if($request->timeline_type == '1'){
+                return ChallengeTimelines::create(['challenge_id' => $challenge->id,'timeline_type' => $request->timeline_type,'open_call_date' => $request->open_call_date,'open_call_date_description' => $request->open_call_date_description,'last_call_date' => $request->last_call_date,'last_call_date_description' => $request->last_call_date_description,'application_deadline_date' => $request->application_deadline_date,'application_deadline_date_description' => $request->application_deadline_date_description,'submission_deadline_date' => $request->submission_deadline_date,'submission_deadline_date_description' => $request->submission_deadline_date_description]);
+            } else if($request->timeline_type == '0'){
+                return ChallengeTimelines::create(['challenge_id' => $challenge->id,'timeline_type' => $request->timeline_type,'flexible_date_number' => $request->flexible_date_number,'flexible_date_duration' => $request->flexible_date_duration,'flexible_expire_deadline' => $request->flexible_expire_deadline,'automatic_alert' => $request->automatic_alert]);
             }
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function challengeSkillsGroupsStacks($request,$challenge)
+    {
+        try {
+            if(!empty($request->skills)){
+                $skillNewArray = [];
+                    foreach($request->skills as $skill){
+                        $skillData['challenge_id']  = $challenge->id;
+                        $skillData['foreign_id']    = $skill;
+                        $skillData['type']          = '0';
+                        $skillNewArray[]            = $skillData;
+    
+                    }
+                ChallengeSkillsGroupsStack::insert($skillNewArray);
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function challengeAssociations($request,$challenge)
+    {
+        try {
+            if(!empty($request->associativeLab)){
+                $labNewArray = [];
+                    foreach($request->associativeLab as $key => $lab){
+                        $labData['challenge_id']  = $challenge->id;
+                        $labData['lab_id']        = $lab;
+                        $labData['sequence']      = $key + 1;
+                        $labNewArray[]              = $labData;
+    
+                    }
+                ComponentAssociation::insert($labNewArray);
+            }
+
+            if(!empty($request->associativeResourceModule)){
+                $resourceModuleNewArray = [];
+                    foreach($request->associativeResourceModule as $key => $resourceModule){
+                        $resourceModuleData['challenge_id']             = $challenge->id;
+                        $resourceModuleData['resource_module_id']       = $resourceModule;
+                        $resourceModuleData['sequence']                 = $key + 1;
+                        $resourceModuleNewArray[]                       = $resourceModuleData;
+                    }
+                ComponentAssociation::insert($resourceModuleNewArray);
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function challengeIncentives($request,$challenge)
+    {
+        try {
+            if ($request->file('incentive_trophy') && count($request->file('incentive_trophy')) > 0) {
+                foreach ($request->incentive_trophy as $key => $image) {
+                    $filename = Str::random(10) . '.' . $image->getClientOriginalExtension();
+                    $images = Image::make($image)->resize(256, 256)->stream();
+                    $img = Storage::disk('s3')->put('uploads/trophy/' . $filename, $images);
+                    $incentive_trophy[] = 'uploads/trophy/' . $filename;
+                }
+            }
+
+            for ($i = 0, $iMax = count($request->incentive_name); $i < $iMax; $i++) {
+                $incentive['challenge_id'] = $challenge->id;
+                $incentive['achievement_type'] = '1';
+                $incentive['achievement_name'] = @$request->incentive_name[$i];
+                $incentive['achievement_prize'] = @$request->incentive_prize[$i];
+                $incentive['achievement_points'] = @$request->incentive_point[$i];
+                if (isset($incentive_trophy[$i])) {
+                    $incentive['achievement_image'] = $incentive_trophy[$i];
+                } else {
+                    $incentive['achievement_image'] = '';
+                }
+                ChallengeAchievement::create($incentive);
+            }
+
+            return true;
         } catch (Exception $e) {
             return false;
         }
@@ -152,25 +227,30 @@ class ChallengeService
         try {
             $challenge = Challenge::find($id);
             if (!empty($challenge)) {
-                    // if ($request->file('cover_image')) {
-                    //     $pathsArray = config('s3-upload-path');
-                    //     $file = $request->file('cover_image');
-                    //     $image_contents_cover = fopen($file->getRealPath(), 'rb');
-                    //     $webp_path_cover = $pathsArray['resource_module'].time().'.webp';
-                    //     Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-                    // } else {
-                    //     $webp_path_cover    = $challenge->media;
-                    // }
+                if ($request->file('cover_image')) {
+                    $filename = Str::random(25) . '.' . $request->file('cover_image')->getClientOriginalExtension();
+                    $image = Image::make($request->file('cover_image'))->resize(735, 415)->stream();
+                    $img = Storage::disk('s3')->put('uploads/challenge/' . $filename, $image);
+                    $coverImage = 'uploads/challenge/' . $filename;
+                } else {
+                    $coverImage = $challenge->media;
+                }
                     $challenge->title = $request->title;
                     $challenge->user_id = $request->user_id;
                     $challenge->organization_id = $request->organization_id;
-                    $challenge->category_id = 11;//$request->category_id;
-                    $challenge->duration_id = 11;//$request->duration_id;
-                    $challenge->level_id = 11;//$request->level_id;
+                    $challenge->category_id = $request->category;
+                    $challenge->duration_id = $request->duration;
+                    $challenge->level_id = $request->level;
                     $challenge->description = $request->description;
                     $challenge->is_open = $request->is_open;
                     $challenge->status = $request->status;
-                if ($challenge->save()) {
+                    // $challenge->privacy = $challenge_privacy;
+                    $challenge->media_type = 'image';
+                    $challenge->media = $coverImage;
+                    $challenge->status = $request->status;
+                    $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
+                    $challenge->project_privacy = $request->project_privacy;
+                if($challenge->save()){
                     return true;
                 }
                 return false;
