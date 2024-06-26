@@ -212,7 +212,7 @@ class UnifiedConnectionService
                 return false;
             }
 
-            $roles = Role::query()->get()->keyBy('display_name')->map(function($data) {
+            $roles = Role::query()->get()->keyBy('display_name')->map(function ($data) {
                 return $data->name;
             })->toArray();
             /**
