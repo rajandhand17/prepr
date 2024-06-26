@@ -34,6 +34,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroDashboardRoutes();
             $this->mapMaestroUsersRoutes();
             $this->mapMaestroSettingRoutes();
+            $this->mapMaestroLabMarketplaceRoutes();
             $this->mapMaestroOrganizationRoutes();
             $this->mapMaestroRoleAndPermissionRoutes();
             // $this->mapMaestroLabRoutes();
@@ -205,6 +206,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('maestro')->group(base_path('routes/maestro/setting/setting.php'));
     }
 
+    public function mapMaestroLabMarketplaceRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/labMarketplace/lab-marketplace.php'));
+    }
     public function mapMaestroOrganizationRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/organization/organization.php'));
