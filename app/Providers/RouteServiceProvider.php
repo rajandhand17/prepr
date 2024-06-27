@@ -43,6 +43,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroTagRoutes();
             $this->mapMaestroSocialLinkRoutes();
             $this->mapMaestroResourceRoutes();
+            $this->mapMaestroTrophyAwardsRoutes();
+            $this->mapMaestroActivityAwardsRoutes();
             $this->mapMaestroChallengeRoutes();
             $this->mapMaestroMasterRoutes();
             $this->mapMaestroRankRoutes();
@@ -243,6 +245,16 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroResourceRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/resource/resource.php'));
+    }
+
+    public function mapMaestroTrophyAwardsRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards/trophyawards.php'));
+    }
+
+    public function mapMaestroActivityAwardsRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards/activityawards.php'));
     }
     public function mapMaestroChallengeRoutes()
     {
