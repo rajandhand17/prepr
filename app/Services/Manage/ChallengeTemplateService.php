@@ -323,4 +323,14 @@ class ChallengeTemplateService
             return false;
         }
     }
+
+    public static function getChallengesTemplate()
+    {
+        try {
+            return ChallengeTemplate::orderBy('id', 'desc');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

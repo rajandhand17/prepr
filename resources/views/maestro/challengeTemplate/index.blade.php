@@ -1,17 +1,17 @@
 @extends('maestro.layouts.default')
-@section('title', 'Challenge')
+@section('title', 'Challenge Template')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Challenge</h1>
+                <h1 class="m-0">Challenge Template</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Challenge</li>
+                    <li class="breadcrumb-item active">Challenge Template</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -24,14 +24,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <!-- /.card -->
-                <div class="card-header">
-                     <h3 class="card-title"></h3>
-                     <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                                               href="{{route('users.create')}}" role="menuitem">Create User</a>
-                </div>
                 <div class="card">
-                                        <!-- /.card-header -->
+                    <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">
                             {!! $html->table([],true) !!}
@@ -66,7 +60,7 @@
 </script>
 
 <script>
-    function deleteChallenge(url) {
+    function deleteChallengeTemplate(url) {
         var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         Swal.fire({
             title: 'Are you sure?',

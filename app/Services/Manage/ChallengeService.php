@@ -821,13 +821,4 @@ class ChallengeService
             return false;
         }
     }
-
-    public static function getChallenges()
-    {
-        try {
-            return Challenge::orderBy('id', 'desc');
-        } catch (Exception $e) {
-            return false;
-        }
-    }
 }
