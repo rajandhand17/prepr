@@ -45,7 +45,7 @@ class ResourceModuleController extends AppBaseController
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleExistsOrNot) {
-                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
 
@@ -65,7 +65,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
             }
-            if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             $addRating = $this->resourceModuleRepository->addRating($checkResourceModuleExistsOrNot->id, $request);
@@ -84,7 +84,7 @@ class ResourceModuleController extends AppBaseController
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
             if ($checkResourceModuleExistsOrNot !== null) {
-                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->resourceModuleRepository->getColumnNameValue($action);
@@ -100,6 +100,37 @@ class ResourceModuleController extends AppBaseController
                 if ($resourceModule) {
                     return $this->sendResponse([], __('responses.'.$action.'_resource_module_successfully'));
                 }
+            }
+
+            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function resourceModuleVisitActivity($slug, $asset_id)
+    {
+        try {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if ($checkResourceModuleExistsOrNot !== null) {
+                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
+                $checkResourceModuleAsset = $this->resourceModuleRepository->checkResourceModuleAsset($checkResourceModuleExistsOrNot->id, $asset_id);
+                if ($checkResourceModuleAsset === false) {
+                    return $this->sendError(__('responses.resource_module_asset_not_available'), 403);
+                }
+                $userId = auth()->user()->id;
+                $checkResourceModuleAssetVisit = $this->resourceModuleRepository->checkResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
+                if ($checkResourceModuleAssetVisit !== false) {
+                    return $this->sendError(__('responses.resource_module_asset_already_visited'), 403);
+                }
+                $addResourceModuleAssetVisit = $this->resourceModuleRepository->addResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
+                if ($addResourceModuleAssetVisit === false) {
+                    return $this->sendError(__('responses.resource_module_asset_visit_gone_wrong'), 403);
+                }
+
+                return $this->sendResponse([], __('responses.resource_module_asset_visited'));
             }
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);

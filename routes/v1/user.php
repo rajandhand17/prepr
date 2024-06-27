@@ -7,5 +7,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::get('/logged-in/details', [UserController::class, 'getLoggedinUser']);
     Route::get('/get-organization-list', [UserController::class, 'getOrganizationList']);
-    Route::post('/{slug}/organization-preference', [UserController::class, 'setOrganizationPreference']);
+    Route::any('/organization-preference/{slug?}', [UserController::class, 'organizationPreference']);
+    Route::post('/complete-onboarding/{slug?}', [UserController::class, 'completeBoarding']);
 });

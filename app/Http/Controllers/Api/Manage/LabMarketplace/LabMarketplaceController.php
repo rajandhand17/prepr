@@ -25,8 +25,9 @@ class LabMarketplaceController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+            $request->merge(['organization_id' => $organization->id]);
 
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketPlaceList($request);
             if ($labMarketplace) {
@@ -56,6 +57,20 @@ class LabMarketplaceController extends AppBaseController
                 return $this->sendError(__('responses.lab_not_found'), 404);
             }
 
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            if ($checkLabExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
+            }
+
+            if ($checkLabExistsOrNot->is_accessible == '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
+
             $checkLabMarketplace = $this->labMarketplaceRepository->getCheckLabUuid($checkLabExistsOrNot->uuid);
             if ($checkLabMarketplace) {
                 return $this->sendError(__('responses.lab_already_cloned'), 422);
@@ -75,12 +90,6 @@ class LabMarketplaceController extends AppBaseController
     public function show($slug)
     {
         try {
-            $userData = auth()->user();
-            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-            if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
-            }
-
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);
             if ($labMarketplace) {
                 return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_found'));
@@ -116,7 +125,7 @@ class LabMarketplaceController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);

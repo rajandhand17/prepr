@@ -50,9 +50,17 @@ interface MasterInterface
 
     public function checkSponsor($request);
 
+    public function uploadSponsorMedia($image);
+
     public function createSponsor($request, $upload_sponsor_image);
+
+    public function getChallengeAnnouncementRecipient($request);
 
     public function getTagGroups($request);
 
     public function getCountries($request);
+
+    public function getJobTitles($request);
+
+    public function getBusinessChallengeTackling($request);
 }

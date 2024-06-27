@@ -96,12 +96,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function createLab($request, $upload_profile_image, $upload_achievements_image)
+    public function createLab($request, $upload_profile_image, $upload_achievements_image, $organizationData)
     {
         try {
-            $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $createLab = $this->labService->createLab($request, $upload_profile_image);
+            $createdLab = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image, $organizationData) {
+                $createLab = $this->labService->createLab($request, $upload_profile_image, $organizationData->id);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
                 $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createLab);
@@ -129,7 +128,7 @@ class LabRepository implements LabInterface
                         data_get($createLab, 'slug', '-'),
                         Lab::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -141,7 +140,7 @@ class LabRepository implements LabInterface
                         data_get($createLab, 'slug', '-'),
                         Lab::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                     );
                 }
 
@@ -184,12 +183,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image)
+    public function updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationData)
     {
         try {
-            $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image);
+            $updatedLab = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationData) {
+                $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image, $organizationData);
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updateLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updateLab->id);
                 $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updateLab->id);
@@ -218,7 +216,7 @@ class LabRepository implements LabInterface
                         data_get($updateLab, 'slug', '-'),
                         Lab::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -230,7 +228,7 @@ class LabRepository implements LabInterface
                         data_get($updateLab, 'slug', '-'),
                         Lab::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                     );
                 }
 

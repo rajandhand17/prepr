@@ -26,11 +26,17 @@ interface OrganizationInterface
 
     public function updatesOrganizationAddress($request, $organization_id);
 
-    public function updatesOrganizationMembers($organization_address, $organization_id);
+    public function updatesOrganizationMembers($request, $organization_id);
 
     public function deleteOrganization($organizationId, $language);
 
     public function checkSlug($slug);
 
     public function getOrganizationListOnlyNameAndUuid($request);
+
+    public function selectPlan($organization, $request);
+
+    public function planData($organizationData);
+
+    public function createOrganizationCustomLoginRegistration($request, $organizationId);
 }

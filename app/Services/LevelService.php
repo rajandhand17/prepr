@@ -36,4 +36,13 @@ class LevelService
             return false;
         }
     }
+
+    public static function getLevelsBasedOnId($levelId)
+    {
+        try {
+            return Levels::find($levelId)->first();
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

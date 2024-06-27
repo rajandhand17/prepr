@@ -44,7 +44,7 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram) {
-                if ($labProgram->is_accessible === '0') {
+                if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
 
@@ -62,7 +62,7 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram !== null) {
-                if ($labProgram->is_accessible === '0') {
+                if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->labProgramRepository->getColumnNameValue($action);

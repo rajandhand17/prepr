@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserPersonal;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
@@ -201,7 +202,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select();
+            $users = User::select()->orderBy('user_rank');
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
@@ -239,7 +240,7 @@ class UserService
     public static function filterLeaderboardUsers($users, $request, $membersEmails = null)
     {
         try {
-            if (isset($membersEmails) && !empty($membersEmails) && $membersEmails !== null) {
+            if (isset($membersEmails) && count($membersEmails) > 0 && $membersEmails !== null) {
                 $users = $users->whereIn('email', $membersEmails);
             }
             switch ($request->sort_by) {
@@ -281,6 +282,154 @@ class UserService
             $getUserByEmailArray = User::whereIn('email', $emailArrayIds)->get()->pluck('email');
 
             return $getUserByEmailArray;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function userOnboarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['is_onboarding_completed' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserByEmails($emails)
+    {
+        try {
+            return User::whereIn('email', $emails)->get();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserBasedOnMagnetUserId($magnetUserId)
+    {
+        try {
+            return User::where('magnet_user_id', $magnetUserId)->first();
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function updateUserMagnetId($userId, $magnetId)
+    {
+        try {
+            $user = User::find($userId);
+            $user->magnet_user_id = $magnetId;
+            $user->save();
+
+            return $user;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function registerMagnetUser($data)
+    {
+        try {
+            $user = User::query()->create([
+                'first_name'     => $data->first_name,
+                'last_name'      => $data->last_name,
+                'username'       => $data->user_name,
+                'email'          => $data->email,
+                'phone_number'   => $data->telephone,
+                'full_name'      => $data->first_name.' '.$data->last_name,
+                'magnet_user_id' => $data->id,
+            ]);
+            UserPersonal::query()->create([
+                'user_id'   => $user->id,
+                'user_type' => $data->type,
+                'status'    => $data->status,
+            ]);
+
+            return $user;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function registerOrUpdateMagnetUsers($users)
+    {
+        try {
+            $registeredOrUpdatedUsers = [];
+            foreach ($users as $item) {
+                $userByMagnetId = self::getUserBasedOnMagnetUserId($item['id']);
+                if ($userByMagnetId) {
+                    $registeredOrUpdatedUsers[] = $userByMagnetId;
+                    continue;
+                }
+
+                $userByEmail = self::getUserByEmail($item['email']);
+                if (!$userByEmail) {
+                    $newUser = UserService::registerMagnetUser((object) $item);
+                    if (!$newUser) {
+                        return false;
+                    }
+                    $registeredOrUpdatedUsers[] = $newUser;
+                } else {
+                    $updatedUser = UserService::updateUserMagnetId($userByEmail->id, $item['id']);
+                    if (!$updatedUser) {
+                        return false;
+                    }
+                    $registeredOrUpdatedUsers[] = $userByEmail;
+                }
+            }
+
+            return $registeredOrUpdatedUsers;
+        } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public function updateUserPoint($userIdsArray, $userPoint)
+    {
+        try {
+            if (empty($userIdsArray)) {
+                return false;
+            }
+
+            foreach ($userIdsArray as $userId) {
+                $fetchUserById = $this->getUserById($userId);
+
+                if (!$fetchUserById) {
+                    continue;
+                }
+
+                $fetchUserById->user_points += $userPoint;
+                $fetchUserById->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function organizationPreferenceUpdate($organizationId)
+    {
+        try {
+            $updateListPreference = User::where('preferred_organization', $organizationId)->update(['preferred_organization' => null]);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateFcmToken($request)
+    {
+        try {
+            auth()->user()->update([
+                'fcm_token' => $request->fcm_token,
+            ]);
+
+            return true;
         } catch (\Exception $e) {
             return false;
         }

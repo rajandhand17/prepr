@@ -27,6 +27,8 @@ class Organization extends LaratrustTeam
         'category',
         'status',
         'is_verified',
+        'is_onboarding_completed',
+        'business_challenge_tacklings',
         'magnet_community_id',
         'total_employees',
 
@@ -152,5 +154,15 @@ class Organization extends LaratrustTeam
     public function chargebee_details()
     {
         return $this->hasOne(ChargebeeSubscription::class, 'organization_id', 'id');
+    }
+
+    public function external_links()
+    {
+        return $this->hasMany(OrganizationExternalLink::class, 'organization_id', 'id');
+    }
+
+    public function customization_login_register()
+    {
+        return $this->hasOne(OrganizationCustomization::class, 'organization_id', 'id');
     }
 }

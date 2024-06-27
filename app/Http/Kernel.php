@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ChannelApiAuthentication;
 use App\Http\Middleware\ScormUserIdentifier;
 use App\Http\Middleware\VerifyGO1Access;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -70,5 +71,7 @@ class Kernel extends HttpKernel
         'check.component'         => \App\Http\Middleware\CheckComponentMiddleware::class,
         'verify-go1-access'       => VerifyGO1Access::class,
         'scorm.userIdentifier'    => ScormUserIdentifier::class,
+        'maestroLogin'            => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
+        'channel-api-auth'        => ChannelApiAuthentication::class,
     ];
 }

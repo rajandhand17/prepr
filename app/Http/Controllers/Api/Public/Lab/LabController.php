@@ -54,7 +54,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                if ($lab->is_accessible === '0') {
+                if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
 
@@ -72,7 +72,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
-                if ($lab->is_accessible === '0') {
+                if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 $getColumnNameValue = $this->labRepository->getColumnNameValue($action);
@@ -101,7 +101,7 @@ class LabController extends AppBaseController
         try {
             $checkChallenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
             if ($checkChallenge) {
-                if ($checkChallenge->is_accessible === '0') {
+                if ($checkChallenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
                 $getProjectLabList = $this->labRepository->getProjectLabs($request, $checkChallenge->id);
@@ -121,7 +121,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
-                if ($lab->is_accessible === '0') {
+                if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 $component = config('constants.lab_component.lab');
@@ -156,7 +156,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab !== null) {
-                if ($lab->is_accessible === '0') {
+                if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 $component = config('constants.lab_component.lab');

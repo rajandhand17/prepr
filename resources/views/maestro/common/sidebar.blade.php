@@ -4,24 +4,13 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
+    @if (auth()->check())
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
         <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
-      </div>
-    </div>
-
-    <!-- SidebarSearch Form -->
-    <div class="form-inline">
-      <div class="input-group" data-widget="sidebar-search">
-        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-        <div class="input-group-append">
-          <button class="btn btn-sidebar">
-            <i class="fas fa-search fa-fw"></i>
-          </button>
-        </div>
+          <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
       </div>
     </div>
 
@@ -29,7 +18,7 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item menu-open">
-          <a href="#" class="nav-link active">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'dashboard' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               Dashboard
@@ -38,7 +27,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ route('dashboard.index') }}" class="nav-link active">
+              <a href="{{ route('dashboard.index') }}" class="nav-link {{ Route::currentRouteName() == 'dashboard.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Dashboard</p>
               </a>
@@ -47,7 +36,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'challenge' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-pie"></i>
             <p>
               Master
@@ -56,45 +45,39 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ route('role.index') }}" class="nav-link">
+              <a href="{{ route('role.index') }}" class="nav-link {{ Route::currentRouteName() == 'role.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                   <p>Role And Permission</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('category.index') }}" class="nav-link">
+              <a href="{{ route('category.index') }}" class="nav-link {{ Route::currentRouteName() == 'category.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                   <p>Category</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/charts/chartjs.html" class="nav-link">
+              <a href="{{ route('sponsors.index') }}" class="nav-link {{ Route::currentRouteName() == 'sponsors.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Skill</p>
+                <p>Sponsor Management</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/charts/flot.html" class="nav-link">
+              <a href="{{ route('social-links.index') }}" class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Tag</p>
+                <p>Social Link</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/charts/inline.html" class="nav-link">
+              <a href="{{ route('ranks.index') }}" class="nav-link {{ Route::currentRouteName() == 'ranks.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Category</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/charts/uplot.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Type</p>
+                <p>Rank </p>
               </a>
             </li>
           </ul>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tree"></i>
             <p>
               Component
@@ -103,7 +86,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{ route('users.index') }}" class="nav-link">
+              <a href="{{ route('users.index') }}" class="nav-link {{ Route::currentRouteName() == 'users.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Users</p>
               </a>
@@ -114,34 +97,51 @@
                 <p>Organization</p>
               </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
               <a href="{{ route('lab.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lab</p>
               </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
-              <a href="pages/UI/buttons.html" class="nav-link">
+              <a href="{{ route('challenge.index') }}" class="nav-link {{ Route::currentRouteName() == 'challenge.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Challenge</p>
+                <p>Challenge Management</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/UI/sliders.html" class="nav-link">
+              <a href="{{ route('resource-module.index') }}" class="nav-link {{ Route::currentRouteName() == 'resource-module.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Resource Module</p>
               </a>
             </li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-tree"></i>
+            <p>
+              Skills Management
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="pages/UI/modals.html" class="nav-link">
+              <a href="{{ route('skills.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Resource Collection</p>
+                <p>Skills</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/UI/navbar.html" class="nav-link">
+              <a href="{{ route('skillstack.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Resource Group</p>
+                <p>Skill Stacks</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('skillgroup.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Skill Groups</p>
               </a>
             </li>
           </ul>
@@ -150,49 +150,74 @@
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
             <p>
+              Tag Management
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('tags.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tag</p>
+              </a>
+            </li>
+           
+            <li class="nav-item">
+              <a href="{{ route('taggroup.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tag Groups</p>
+              </a>
+            </li>
+    
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-status'  ? 'active' : '' }}">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
               Project Management
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
           <ul class="nav nav-treeview" style="display: none;">
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link">
+              <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Project</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-stage.index') }}" class="nav-link">
+              <a href="{{ route('projects-stage.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-stage.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Stage</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-vertical.index') }}" class="nav-link">
+              <a href="{{ route('projects-vertical.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-vertical.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Vertical</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-type.index') }}" class="nav-link">
+              <a href="{{ route('projects-type.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-type.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Type</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-industry.index') }}" class="nav-link">
+              <a href="{{ route('projects-industry.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-industry.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Industry</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-status.index') }}" class="nav-link">
+              <a href="{{ route('projects-status.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-status.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Projects Status</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects-pitch-template.index') }}" class="nav-link">
+              <a href="{{ route('projects-pitch-template.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-pitch-template.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pitch Templates</p>
               </a>
@@ -207,5 +232,6 @@
         </li>
       </ul>
     </nav>
+    @endif
     <!-- /.sidebar-menu -->
   </div>

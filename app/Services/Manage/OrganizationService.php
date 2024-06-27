@@ -518,4 +518,62 @@ class OrganizationService
             return false;
         }
     }
+
+    public function planData($organizationData)
+    {
+        try {
+            $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organizationData->id);
+            if ($checkLocalEntry) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    public function organizationOnboarding($organizationId, $request)
+    {
+        try {
+            DB::beginTransaction();
+            $organization = Organization::find($organizationId);
+            if ($organization != null) {
+                $organization->title = ($request->has('title')) ? $request->title : $organization->title;
+                $organization->website = ($request->has('website')) ? $request->website : $organization->website;
+                $organization->category = ($request->has('category')) ? $request->category : $organization->category;
+                $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
+                $organization->business_challenge_tacklings = ($request->has('business_challenge_tacklings')) ? $request->business_challenge_tacklings : $organization->business_challenge_tacklings;
+                $organization->is_onboarding_completed = '1';
+                $organization->save();
+                DB::commit();
+
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityId($communityId)
+    {
+        try {
+            return Organization::where('magnet_community_id', $communityId)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityIds($communityIds)
+    {
+        try {
+            return Organization::whereIn('magnet_community_id', $communityIds)->get();
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
 }

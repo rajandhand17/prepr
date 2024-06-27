@@ -31,7 +31,6 @@ class UpdateResourceModuleRequest extends FormRequest
         }
         $base_rules = [
             'title'                  => 'required|max:255|unique:resource_modules,title,'.$resourceModuleService->id,
-            'organization_id'        => 'required|exists:organizations,uuid',
             'description'            => 'required',
             'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                => 'required|in:yes,no',
@@ -68,8 +67,6 @@ class UpdateResourceModuleRequest extends FormRequest
             'title.required'                    => __('responses.title_required'),
             'title.unique'                      => __('responses.title_unique'),
             'description.required'              => __('responses.description_required'),
-            'organization_id.required'          => __('responses.organization_id_required'),
-            'organization_id.exists'            => __('responses.organization_not_exists'),
             'privacy.required'                  => __('responses.privacy_required'),
             'privacy.in'                        => __('responses.choose_yes_no'),
             'status.required'                   => __('responses.status_required'),

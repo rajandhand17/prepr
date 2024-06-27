@@ -26,7 +26,6 @@ class CreateChallengeRequest extends FormRequest
     {
         $base_rules = [
             'request_type'                       => 'required|in:draft,publish,archive',
-            'organization_id'                    => 'required|exists:organizations,uuid',
             'category_id'                        => 'required|exists:categories,id',
             'duration_id'                        => 'required|exists:durations,id',
             'level_id'                           => 'required|exists:levels,id',
@@ -139,18 +138,8 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['schedule_custom_notify.*'] = 'in:0,1';
         }
 
-        if ($this->has('assessment_title') !== null && $this->has('assessment_score') !== null && $this->has('assessment_weight') !== null) {
-            $base_rules['assessment_title'] = 'array';
-            $base_rules['assessment_title.*'] = 'required';
-            $base_rules['assessment_description'] = 'array';
-            $base_rules['assessment_score'] = 'array';
-            $base_rules['assessment_score.*'] = 'required|numeric';
-            $base_rules['assessment_weight'] = 'array';
-            $base_rules['assessment_weight.*'] = 'required|numeric';
-        }
-
         if ($this->request->has('assessment_type')) {
-            $base_rules['assessment_type'] = 'in:open,closed,ai';
+            $base_rules['assessment_type'] = 'in:open,closed,ai,none';
             $base_rules['guidelines'] = 'required_if:assessment_type,open,closed,ai';
             $base_rules['attachments'] = 'max:5120';
 
@@ -159,6 +148,26 @@ class CreateChallengeRequest extends FormRequest
                 $base_rules['members_email'] = 'array|required';
                 $base_rules['members_email.*'] = 'email';
             }
+        }
+
+        if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
+            $base_rules['assessment_title'] = 'array';
+            $base_rules['assessment_title.*'] = 'required';
+            $base_rules['assessment_description'] = 'array';
+            $base_rules['assessment_score'] = 'array';
+            $base_rules['assessment_score.*'] = 'required|numeric';
+            $base_rules['assessment_weight'] = 'array';
+            $base_rules['assessment_weight.*'] = 'required|numeric';
+
+            // Custom validation for sum of assessment_weight
+            $base_rules['assessment_weight'] = [
+                'array',
+                function ($attribute, $value, $fail) {
+                    if (array_sum($value) != 100) {
+                        $fail(__('responses.challenge_weight_should_be_100'));
+                    }
+                },
+            ];
         }
 
         if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
@@ -216,11 +225,26 @@ class CreateChallengeRequest extends FormRequest
         ], 422));
     }
 
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $assessment_title = $this->input('assessment_title', []);
+            $assessment_score = $this->input('assessment_score', []);
+
+            $count_title = count($assessment_title);
+            $count_score = count($assessment_score);
+
+            if (($count_title > 0 || $count_score > 0) &&
+                ($count_title !== $count_score)
+            ) {
+                $validator->errors()->add('assessment_data', __('responses.title_score_should_match_count'));
+            }
+        });
+    }
+
     public function messages()
     {
         return [
-            'organization_id.required'                         => __('responses.organization_id_required'),
-            'organization_id.exists'                           => __('responses.organization_not_found'),
             'category_id.required'                             => __('responses.category_id_required'),
             'category_id.exists'                               => __('responses.category_not_found'),
             'duration_id.required'                             => __('responses.duration_id_required'),

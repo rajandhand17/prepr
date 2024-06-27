@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -43,33 +44,38 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
+        if (auth()->check()) {
+            return redirect()->route('dashboard.index');
+        }
+        
         return view('maestro.auth.login');
     }
 
     public function login(Request $request)
     {
-        $this->validateLogin($request);
+        $input = $request->all();
+        $validation_array = [
+            'email' => 'required|max:255',
+            'password' => 'required',
+        ];
         
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
-            return $this->sendLockoutResponse($request);
+        $validation = Validator::make($request->all(), $validation_array);
+        if ($validation->fails()) {
+            return redirect()->route('login')->withErrors($validation)->withInput()->with('error', 'Sorry. ' . $validation->messages()->first());
         }
-
-        if ($this->attemptLogin($request)) {
-            if ($request->hasSession()) {
-                $request->session()->put('auth.password_confirmed_at', time());
+        
+        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+            $user = Auth::guard('maestro')->user();
+            if ($user && $user->hasRole('super_admin')) {
+                return redirect()->route('dashboard.index');
+            } else {
+                return redirect()->route('login')->with('error', "You don't have login access.");
             }
-
-            return $this->sendLoginResponse($request);
-        }
-
-        $this->incrementLoginAttempts($request);
-
-        return $this->sendFailedLoginResponse($request);
+        } else {
+            return redirect()->route('login')->with('error','Sorry , Entered email and password is wrong.');
+        } 
     }
-
     public function logout(Request $request)
     {
         $this->guard()->logout();

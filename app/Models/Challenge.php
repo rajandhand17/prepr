@@ -37,6 +37,8 @@ class Challenge extends Model
         'is_auto_created',
         'is_ai_created',
         'is_accessible',
+        'allow_winner_change',
+        'winner_select_date',
     ];
 
     public function getMediaAttribute($value)
@@ -219,5 +221,9 @@ class Challenge extends Model
     public function getCampusConnectStatusAttribute($value)
     {
         return config('constants.campus_connect_status_id.'.$value);
+    }
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

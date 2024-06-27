@@ -174,14 +174,11 @@ class ResourceModuleService
         }
     }
 
-    public function createResourceModule($request, $upload_cover_image, $is_go1 = false)
+    public function createResourceModule($request, $upload_cover_image, $organizationId, $is_go1 = false)
     {
         try {
             if ($is_go1) {
                 $organizationId = config('go1.go1_prepr_id');
-            } else {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-                $organizationId = $organization->id;
             }
 
             $status = config('constants.resource_module_status.draft');
@@ -297,10 +294,9 @@ class ResourceModuleService
         }
     }
 
-    public function updateResourceModule($slug, $request, $cover_image)
+    public function updateResourceModule($slug, $request, $cover_image, $organizationId)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.resource_module_status.draft');
             switch ($request->status) {
                 case 'publish':
@@ -340,6 +336,7 @@ class ResourceModuleService
             $resourceModule->level_id = ($request->has('level_id')) ? $request->level_id : $resourceModule->level_id;
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
+            $resourceModule->organization_id = $organizationId;
             $resourceModule->media = $cover_image;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
@@ -370,6 +367,15 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getResourceModulesBasedOnId($id)
+    {
+        try {
+            return ResourceModule::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -436,6 +442,25 @@ class ResourceModuleService
 
             return true;
         } catch (Exception $exception) {
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationResourceModule($organizationId)
+    {
+        try {
+            $fetchOrganizationResourceModules = ResourceModule::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationResourceModules)) {
+                foreach ($fetchOrganizationResourceModules as $organizationResourceModule) {
+                    $deleteOrganizationResourceModule = self::deleteResourceModule($organizationResourceModule);
+                    if (!$deleteOrganizationResourceModule) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
             return false;
         }
     }

@@ -37,13 +37,17 @@ class ChallengeAchievementService
 
             if ($request->winner_achievement_participation !== null) {
                 foreach ($request->winner_achievement_participation as $key => $value) {
-                    $upload_incentive_achievement_image = self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]);
+                    $upload_incentive_achievement_image = isset($request->winner_achievement_image[$key]) ? self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]) : config('site-settings.default_challenge_achievement_image');
+                    $incentive_achievement_name = isset($request->winner_achievement_name[$key]) ? $request->winner_achievement_name[$key] : 'Incentive';
+                    $incentive_achievement_prize = isset($request->achievement_prize[$key]) ? $request->achievement_prize[$key] : 'Points';
+                    $incentive_achievement_points = isset($request->achievement_points[$key]) ? $request->achievement_points[$key] : 100;
+
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;
                     $challengeIncentiveAchievement->achievement_type = '1';
-                    $challengeIncentiveAchievement->achievement_name = $request->winner_achievement_name[$key];
-                    $challengeIncentiveAchievement->achievement_prize = $request->winner_achievement_prize[$key];
-                    $challengeIncentiveAchievement->achievement_points = $request->winner_achievement_points[$key];
+                    $challengeIncentiveAchievement->achievement_name = $incentive_achievement_name;
+                    $challengeIncentiveAchievement->achievement_prize = $incentive_achievement_prize;
+                    $challengeIncentiveAchievement->achievement_points = $incentive_achievement_points;
                     $challengeIncentiveAchievement->achievement_image = $upload_incentive_achievement_image;
                     $challengeIncentiveAchievement->save();
                 }

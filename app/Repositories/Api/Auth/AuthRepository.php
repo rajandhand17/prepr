@@ -3,14 +3,17 @@
 namespace App\Repositories\Api\Auth;
 
 use App\Models\User;
+use App\Services\UserService;
 
 class AuthRepository implements AuthInterface
 {
     private $user;
+    private $userService;
 
-    public function __construct(User $user)
+    public function __construct(User $user, UserService $userService)
     {
         $this->user = $user;
+        $this->userService = $userService;
     }
 
     public function login($request)
@@ -121,10 +124,10 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function magnetSsoLogin($magnetUserDetails)
+    public function magnetSsoLogin($magnetUserDetails, $token)
     {
         try {
-            return $this->user->magnetSsoLogin($magnetUserDetails);
+            return $this->user->magnetSsoLogin($magnetUserDetails, $token);
         } catch (\Exception $e) {
             return false;
         }
@@ -134,6 +137,15 @@ class AuthRepository implements AuthInterface
     {
         try {
             return $this->user->getOtp($email);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function updateFcmToken($request)
+    {
+        try {
+            return $this->userService->updateFcmToken($request);
         } catch (\Exception $e) {
             return false;
         }
