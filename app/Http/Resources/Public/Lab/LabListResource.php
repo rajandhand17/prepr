@@ -25,9 +25,10 @@ class LabListResource extends JsonResource
                 $media = $this->media;
                 break;
         }
+
         return [
             'slug'                          => $this->slug,
             'media'                         => $media,
-            ];
+        ];
     }
 }

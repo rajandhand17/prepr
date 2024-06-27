@@ -140,6 +140,7 @@ class LabService
             return false;
         }
     }
+
     public function getLabBasedOnSlug($slug)
     {
         try {

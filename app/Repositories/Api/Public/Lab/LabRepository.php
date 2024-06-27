@@ -38,6 +38,7 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function getLabBasedOnSlug($slug)
     {
         try {
