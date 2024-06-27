@@ -209,7 +209,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroChallengeRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/challenge/challenge.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/challengeTemplate/challengeTemplate.php'));
     }
 
     public function mapMaestroLabMarketplaceRoutes()
