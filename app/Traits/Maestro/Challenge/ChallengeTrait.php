@@ -32,6 +32,18 @@ trait ChallengeTrait
             return false;
         }
     }
+    private function getChallengeAssociatedItemsById($challenge)
+    {
+        try {
+            $associateItems = ChallengeService::getChallengeAssociatedItemsById($challenge);
+            if($associateItems){
+                return $associateItems;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     private function createChallenge($request)
     {
         try {
