@@ -73,14 +73,12 @@ class LabMarketplaceController extends Controller
     {
         try {
             DB::beginTransaction();
-            //$this->construct();
             if ($this->deleteLabMarketplaceById($id)) {
                 DB::commit();
-                return response()->json(['status' => 'success', 'message' => 'Organization deleted successfully']);
+                return response()->json(['status' => 'success', 'message' => 'Lab Marketplace deleted successfully']);
             }
             DB::rollback();
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }

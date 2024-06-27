@@ -3,15 +3,18 @@
 namespace App\Http\Controllers\Maestro\Challenge;
 
 use App\Http\Controllers\Controller;
-use App\Models\LabMarketplace;
+use App\Models\Challenge;
 use App\Services\Maestro\Category\CategoryService;
 use App\Services\Maestro\User\UserService;
+use App\Traits\Maestro\Challenge\ChallengeTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
 class ChallengeController extends Controller
 {
+    use ChallengeTrait;
     public function __construct()
     {
         $this->middleware('web');
@@ -20,32 +23,45 @@ class ChallengeController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $labMarketplaceInfo = $this->getChallenge();
-            if (!empty($labMarketplaceInfo)) {
+            $challengeInfo = $this->getChallenge();
+            if (!empty($challengeInfo)) {
                 if ($request->ajax()) {
-                    return DataTables::eloquent($labMarketplaceInfo)
-                        ->editColumn('privacy', static function (LabMarketplace $labMarketplaceInfo) {
-                            switch ($labMarketplaceInfo->privacy){
+                    return DataTables::eloquent($challengeInfo)
+                        ->editColumn('status', static function (Challenge $challengeInfo) {
+                            switch ($challengeInfo->status){
                                 case '0';
-                                    $html = "<span class='badge badge-success'>public</span>";
+                                    $html = "<span class='badge badge-success'>Draft</span>";
                                     break;
                                 case '1';
-                                    $html = "<span class='badge badge-success'>private</span>";
+                                    $html = "<span class='badge badge-success'>Published</span>";
+                                    break;
+                                case '2';
+                                    $html = "<span class='badge badge-success'>Archive</span>";
                                     break;
                             }
                             return $html;
-                        })->editColumn('category', static function (LabMarketplace $labMarketplaceInfo) {
-                            $categoryId=CategoryService::getCategoryById($labMarketplaceInfo->category_id);
+                        })->editColumn('privacy', static function (Challenge $challengeInfo) {
+                            switch ($challengeInfo->privacy){
+                                case '0';
+                                    $html = "Public";
+                                    break;
+                                case '1';
+                                    $html = "Private";
+                                    break;
+                            }
+                            return $html;
+                        })->editColumn('category', static function (Challenge $challengeInfo) {
+                            $categoryId=CategoryService::getCategoryById($challengeInfo->category_id);
                             return $categoryId->title;
-                        })->editColumn('username', static function (LabMarketplace $labMarketplaceInfo) {
-                            $user=UserService::getUserById($labMarketplaceInfo->user_id);
+                        })->editColumn('username', static function (Challenge $challengeInfo) {
+                            $user=UserService::getUserById($challengeInfo->user_id);
                             return $user->username;
                         })
-                        ->addColumn('action', static function (LabMarketplace $labMarketplaceInfo) {
-                            return '<a href="javascript:void(0)" onclick="deleteLabMarketplace(\'' . route('lab-marketplace.destroy', ['lab_marketplace' => $labMarketplaceInfo->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                        ->addColumn('action', static function (Challenge $challengeInfo) {
+                            return '<a href="javascript:void(0)" onclick="deleteChallenge(\'' . route('challenge.destroy', ['challenge' => $challengeInfo->id]) . '\')"> <i class="fas fa-trash"></i></a>';
                         })
                         ->addIndexColumn()
-                        ->rawColumns(['privacy','category','username','action'])
+                        ->rawColumns(['status','category','username','action'])
                         ->make(true);
                 }
             }
@@ -59,9 +75,44 @@ class ChallengeController extends Controller
                 ['data' => 'action', 'name' => 'action', 'title' => 'Action', "width" => "10%"],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.labMarketplace.index', compact('html'));
+            return view('maestro.challenge.index', compact('html'));
         }catch (\Exception $e) {
             return false;
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            DB::beginTransaction();
+            if ($this->deleteChallengeById($id)) {
+                DB::commit();
+                return response()->json(['status' => 'success', 'message' => 'Challenge deleted successfully']);
+            }
+            DB::rollback();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        try {
+            $challenge = $this->getChallengeById($id);
+            if(!$challenge->exists){
+                return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
+            }
+            $roles = $this->getAllRoles();
+            $permissions = $this->getAllPermissions();
+            $selected_role = $user->getRoles();
+            $assigned_all_permission = $user->allPermissions()->pluck('id')->toArray();
+            return view('maestro.users.edit', compact('user','permissions','assigned_all_permission','roles','selected_role'));
+        } catch (\Exception $e) {
+            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
         }
     }
 }
