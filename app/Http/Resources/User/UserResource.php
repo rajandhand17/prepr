@@ -66,7 +66,7 @@ class UserResource extends JsonResource
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
 
-            'user_experiences'       => UserExperienceResource::collection($this->userExperience),
+            'user_experiences'            => UserExperienceResource::collection($this->userExperience),
             'go1'                         => [
                 'can_create_resource'     => $memberManagement->canCreateGO1Resource($this),
                 'can_play_resource'       => $memberManagement->canPlayGO1Resoruces($this),

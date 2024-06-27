@@ -53,9 +53,9 @@ class UserJobTitlesService
             $error = [];
             $success = [];
             foreach ($jobIds as $jobId) {
-                $checkJobExistsOrNot=self::checkJobsExistsInUsers($jobId);
-                if($checkJobExistsOrNot){
-                    $already[]['id']=$jobId;
+                $checkJobExistsOrNot = self::checkJobsExistsInUsers($jobId);
+                if ($checkJobExistsOrNot) {
+                    $already[]['id'] = $jobId;
                     continue;
                 }
                 $getAllSkillsOfJobs = JobTitleSkillServices::getJobSkillsBasedOnJobId($jobId);
@@ -68,18 +68,19 @@ class UserJobTitlesService
 
                     if (!$addedJobs->save()) {
                         $error[] = "Failed to save job with ID: $jobId";
-                    }else{
-                        $success[]['id']=$jobId;
+                    } else {
+                        $success[]['id'] = $jobId;
                     }
                 } else {
                     $error[] = "Failed to add skills for job with ID: $jobId";
                 }
             }
-            $responses=[
-                'succeeded' => $success,
-                'already_added_ids'=>$already,
-                'error'=>$error,
+            $responses = [
+                'succeeded'        => $success,
+                'already_added_ids'=> $already,
+                'error'            => $error,
             ];
+
             return $responses;
         } catch(\Exception $e) {
             return false;
