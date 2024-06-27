@@ -51,16 +51,7 @@ class ResourceCollectionService
                 default:
                     $privacy = null;
             }
-            switch ($request->is_accessible) {
-                case 'no':
-                    $is_accessible = config('constants.resource_collection_is_accessible.no');
-                    break;
-                case 'yes':
-                    $is_accessible = config('constants.resource_collection_is_accessible.yes');
-                    break;
-                default:
-                    $is_accessible = config('constants.resource_collection_is_accessible.no');
-            }
+
             $resourceCollection = new ResourceCollection();
             $slug = UtilityHelper::generateSlug($request->title, $resourceCollection);
             $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -75,7 +66,6 @@ class ResourceCollectionService
             $resourceCollection->duration = $request->duration;
             $resourceCollection->privacy = $privacy;
             $resourceCollection->status = $status;
-            $resourceCollection->is_accessible = $is_accessible;
             $resourceCollection->save();
 
             return $resourceCollection;
@@ -146,16 +136,7 @@ class ResourceCollectionService
                     default:
                         $privacy = null;
                 }
-                switch ($request->is_accessible) {
-                    case 'no':
-                        $is_accessible = config('constants.resource_collection_is_accessible.no');
-                        break;
-                    case 'yes':
-                        $is_accessible = config('constants.resource_collection_is_accessible.yes');
-                        break;
-                    default:
-                        $is_accessible = config('constants.resource_collection_is_accessible.no');
-                }
+
                 $resourceCollection->language = ($request->has('language')) ? $request->language : $resourceCollection->language;
                 $resourceCollection->organization_id = $organizationId;
                 $resourceCollection->title = ($request->has('title')) ? $request->title : $resourceCollection->title;
@@ -165,7 +146,6 @@ class ResourceCollectionService
                 $resourceCollection->duration = ($request->has('duration')) ? $request->duration : $resourceCollection->duration;
                 $resourceCollection->privacy = $privacy;
                 $resourceCollection->status = $status;
-                $resourceCollection->is_accessible = $is_accessible;
                 $resourceCollection->save();
 
                 return $resourceCollection;

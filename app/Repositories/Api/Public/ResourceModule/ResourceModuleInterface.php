@@ -15,4 +15,10 @@ interface ResourceModuleInterface
     public function checkSocialActivity($resource_module_id, $column, $action);
 
     public function captureSocialActivity($resource_module_id, $column, $action);
+
+    public function checkResourceModuleAsset($resourceModuleId, $assetId);
+
+    public function checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+
+    public function addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
 }

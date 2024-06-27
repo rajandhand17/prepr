@@ -71,8 +71,10 @@ class ChallengeAssessmentUserService
             $project_assessment = null;
             $assessment_status = 'pending';
             $assessment_over_all_comment = null;
+            $assessment_attachment = null;
 
             if ($projectData->getProjectAssessment) {
+                $assessment_attachment = $projectData->getProjectAssessment->attachments;
                 $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData, $userId) {
                     $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id, $userId);
 
@@ -114,6 +116,7 @@ class ChallengeAssessmentUserService
             }
 
             return [
+                'assessment_attachments'        => $assessment_attachment,
                 'assessment_status'             => $assessment_status,
                 'assessment_over_all_comment'   => $assessment_over_all_comment,
                 'assessment_scoring_data'       => $project_assessment,

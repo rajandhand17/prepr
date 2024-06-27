@@ -16,6 +16,7 @@ use App\Services\Manage\OrganizationMemberService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
+use App\Services\UserService;
 
 class HandleDeleteOrganizationAssociatedData
 {
@@ -48,6 +49,10 @@ class HandleDeleteOrganizationAssociatedData
             }
             $organizationCustomization = OrganizationCustomizationService::organizationCustomization($organizationId);
             if (!$organizationCustomization) {
+                return false;
+            }
+            $organizationPreference = UserService::organizationPreferenceUpdate($organizationId);
+            if (!$organizationPreference) {
                 return false;
             }
             $organizationLab = LabService::deleteOrganizationLab($organizationId);

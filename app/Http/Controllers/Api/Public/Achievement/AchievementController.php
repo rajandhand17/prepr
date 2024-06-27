@@ -126,7 +126,7 @@ class AchievementController extends AppBaseController
 
                 $achievementAction = $this->achievementRepository->achievementActivity($certificate_id, $getColumnValue['action']);
                 if ($achievementAction) {
-                    return $this->sendResponse(AchievementResource::make($achievement), __('responses.'.$action.'_achievement'));
+                    return $this->sendResponse(AchievementResource::make($achievementAction), __('responses.'.$action.'_achievement'));
                 }
             }
 
