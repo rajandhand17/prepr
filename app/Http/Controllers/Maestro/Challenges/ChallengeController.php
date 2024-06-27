@@ -9,6 +9,7 @@ use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Traits\Maestro\Challenge\ChallengeTrait;
 use App\Models\Challenge;
+use App\Models\Organization;
 use Exception;
 
 class ChallengeController extends Controller
@@ -131,7 +132,8 @@ class ChallengeController extends Controller
                 return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
             }
             $languages = $this->getLanguage();
-            return view('maestro.challenge.edit',compact('languages','challenge'));
+            $challengeAssociatedItems = $this->getChallengeAssociatedItemsById($challenge);
+            return view('maestro.challenge.edit',compact('languages','challenge','challengeAssociatedItems'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }

@@ -2,22 +2,27 @@
 
 namespace App\Services\Maestro\Challenge;
 
-use App\Models\Organization;
 use App\Models\Challenge;
-use App\Models\User;
 use App\Models\Language;
+use App\Models\Category;
+use App\Models\Skill;
+use App\Models\Levels;
+use App\Models\Duration;
+use App\Models\User;
+use App\Models\Lab;
+use App\Models\ResourceModule;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeTimelines;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ComponentAssociation;
 use App\Models\ChallengeAchievement;
+use App\Models\Organization;
 use App\Helpers\UtilityHelper;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 use Exception;
-use App\Models\Category;
 
 class ChallengeService
 {
@@ -38,6 +43,25 @@ class ChallengeService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getChallengeAssociatedItemsById($challenge)
+    {
+        try {
+            $skillIds       = ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id,'type' => '0'])->pluck('foreign_id');
+            $labIds         = ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('lab_id');
+            $moduleIds      = ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('resource_module_id');
+            $organization   = !empty($challenge->organization_id) ? Organization::where(['id' => $challenge->organization_id])->pluck('title', 'id') : null;
+            $category       = !empty($challenge->category_id) ? Category::where(['id' => $challenge->category_id])->pluck('title', 'id') : null;
+            $level          = !empty($challenge->level_id) ? Levels::where(['id' => $challenge->level_id])->pluck('title', 'id') : null;
+            $duration       = !empty($challenge->duration_id) ? Duration::where(['id' => $challenge->duration_id])->pluck('title', 'id') : null;
+            $user           = !empty($challenge->user_id) ? User::where(['id' => $challenge->user_id])->pluck('username', 'id') : null;
+            $skills         = !empty($challenge->id) ? Skill::whereIn('id',$skillIds)->pluck('title', 'id') : null;
+            $labs           = !empty($challenge->user_id) ? Lab::whereIn('id',$labIds)->pluck('title', 'id') : null;
+            $resourceModules= !empty($challenge->user_id) ? ResourceModule::whereIn('id',$moduleIds)->pluck('title', 'id') : null;
+            return ['category' => $category ?? [], 'organization' => $organization,'skills' => $skills,'skillIds' => $skillIds,'user' => $user,'level' => $level ,'duration' => $duration,'labIds' => $labIds,'labs' => $labs,'moduleIds' => $moduleIds,'resourceModules' => $resourceModules];
         } catch (Exception $e) {
             return false;
         }
