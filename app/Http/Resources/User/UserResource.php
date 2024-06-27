@@ -3,6 +3,7 @@
 namespace App\Http\Resources\User;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Profile\UserExperienceResource;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
 use App\Services\Manage\MemberManagementService;
@@ -41,6 +42,7 @@ class UserResource extends JsonResource
             $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
             $organization_details['is_onboarding_completed'] = $is_onboarding_completed;
         }
+
         $memberManagement = new MemberManagementService();
 
         return [
@@ -63,6 +65,8 @@ class UserResource extends JsonResource
             'is_profile_completed'        => ($this->is_profile_completed == '0') ? 'no' : 'yes',
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
+
+            'user_experiences'       => UserExperienceResource::collection($this->userExperience),
             'go1'                         => [
                 'can_create_resource'     => $memberManagement->canCreateGO1Resource($this),
                 'can_play_resource'       => $memberManagement->canPlayGO1Resoruces($this),
