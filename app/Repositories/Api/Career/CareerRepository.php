@@ -88,4 +88,22 @@ class CareerRepository implements CareerInterface
             return false;
         }
     }
+
+    public function getJobsDetails($ids)
+    {
+        try {
+            return $this->jobTitleService->getJobBasedOnIds($ids);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function addMultipleJobs($request)
+    {
+        try {
+            return $this->userJobTitleService->addMultipleJobs($request);
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

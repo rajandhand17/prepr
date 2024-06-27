@@ -20,6 +20,8 @@ use App\Listeners\Project\HandleDeleteProjectAssociatedData;
 use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
 use App\Listeners\ResourceGroup\HandleDeleteResourceGroupAssociatedData;
 use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
+use App\Models\Lab;
+use App\Observers\LabObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -59,7 +61,7 @@ class EventServiceProvider extends ServiceProvider
         DeleteProjectAssociatedData::class => [
             HandleDeleteProjectAssociatedData::class,
         ],
-        DeleteOrganizationAssociatedData::class=> [
+        DeleteOrganizationAssociatedData::class => [
             HandleDeleteOrganizationAssociatedData::class,
         ],
     ];
@@ -78,5 +80,10 @@ class EventServiceProvider extends ServiceProvider
     public function shouldDiscoverEvents()
     {
         return false;
+    }
+
+    public function boot(): void
+    {
+        Lab::observe(LabObserver::class);
     }
 }

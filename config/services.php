@@ -34,4 +34,7 @@ return [
     'sendgrid' => [
         'api_key' => env('SENDGRID_API_KEY'),
     ],
+    'fcm' => [
+        'key' => env('FIREBASE_CREDENTIALS'),
+    ],
 ];

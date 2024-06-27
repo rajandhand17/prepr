@@ -538,7 +538,7 @@ class OrganizationService
         try {
             DB::beginTransaction();
             $organization = Organization::find($organizationId);
-            if ($organization !== null) {
+            if ($organization != null) {
                 $organization->title = ($request->has('title')) ? $request->title : $organization->title;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
@@ -555,6 +555,24 @@ class OrganizationService
         } catch (\Exception $e) {
             DB::rollBack();
 
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityId($communityId)
+    {
+        try {
+            return Organization::where('magnet_community_id', $communityId)->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityIds($communityIds)
+    {
+        try {
+            return Organization::whereIn('magnet_community_id', $communityIds)->get();
+        } catch (\Exception $exception) {
             return false;
         }
     }
