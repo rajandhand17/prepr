@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Public\Lab;
 
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Lab\LabListResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Models\AirmeetEvent;
@@ -44,6 +45,17 @@ class LabController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
+        } catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function startPage()
+    {
+        try {
+            $lab = $this->labRepository->getStartList()->take(6);
+
+            return $this->sendResponse(LabListResource::collection($lab), __('responses.found_labs_list'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
