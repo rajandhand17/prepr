@@ -54,8 +54,9 @@ class LabController extends AppBaseController
     {
         try {
             $lab = $this->labRepository->getStartList()->take(6);
-            return $this->sendResponse(LabListResource::collection($lab),__('responses.found_labs_list'));
-        }catch (\Exception $e) {
+
+            return $this->sendResponse(LabListResource::collection($lab), __('responses.found_labs_list'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
