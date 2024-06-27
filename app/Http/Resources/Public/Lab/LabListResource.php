@@ -26,11 +26,7 @@ class LabListResource extends JsonResource
                 break;
         }
         return [
-            'id'                            => $this->uuid,
-            'language'                      => $this->language,
-            'title'                         => $this->title,
             'slug'                          => $this->slug,
-            'media_type'                    => $this->media_type,
             'media'                         => $media,
             ];
     }
