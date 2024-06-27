@@ -32,23 +32,21 @@ class ChallengeAssessmentCriteriaService
     public function updateChallengeAssessmentCriteria($request, $challenge_id, $updateChallengeAssessment)
     {
         try {
-            if ($request->assessment_type != 'none') {
-                ChallengeAssessmentCriteria::where('challenge_id', $challenge_id)->delete();
-
+            ChallengeAssessmentCriteria::where('challenge_id', $challenge_id)->delete();
+            if ($request->assessment_type == 'none') {
                 return true;
             }
-            if ($request->has('assessment_title') && $request->has('assessment_score') && $request->has('assessment_weight')) {
-                if ($request->assessment_type !== null && $request->assessment_type !== 'null') {
-                    foreach ($request->assessment_title as $key => $value) {
-                        $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
-                        $challengeAssessmentCriteria->challenge_id = $challenge_id;
-                        $challengeAssessmentCriteria->assessment_id = $updateChallengeAssessment->id;
-                        $challengeAssessmentCriteria->title = $request->assessment_title[$key];
-                        $challengeAssessmentCriteria->description = $request->assessment_description[$key] ?? null;
-                        $challengeAssessmentCriteria->score = $request->assessment_score[$key];
-                        $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];
-                        $challengeAssessmentCriteria->save();
-                    }
+
+            if ($request->assessment_type != 'none') {
+                foreach ($request->assessment_title as $key => $value) {
+                    $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
+                    $challengeAssessmentCriteria->challenge_id = $challenge_id;
+                    $challengeAssessmentCriteria->assessment_id = $updateChallengeAssessment->id;
+                    $challengeAssessmentCriteria->title = $request->assessment_title[$key];
+                    $challengeAssessmentCriteria->description = $request->assessment_description[$key] ?? null;
+                    $challengeAssessmentCriteria->score = $request->assessment_score[$key];
+                    $challengeAssessmentCriteria->weight = $request->assessment_weight[$key];
+                    $challengeAssessmentCriteria->save();
                 }
             }
 

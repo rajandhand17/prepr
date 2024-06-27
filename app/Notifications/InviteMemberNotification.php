@@ -7,6 +7,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
 
 class InviteMemberNotification extends Notification implements ShouldQueue
 {
@@ -28,7 +30,7 @@ class InviteMemberNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return ['mail', FcmChannel::class];
     }
 
     /**
@@ -53,5 +55,19 @@ class InviteMemberNotification extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    public function toFcm($notifiable)
+    {
+        return FcmMessage::create()
+            ->setData([
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
+            ])
+            ->setNotification([
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
+                'sound' => true,
+            ]);
     }
 }
