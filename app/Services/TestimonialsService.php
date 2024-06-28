@@ -13,7 +13,7 @@ class TestimonialsService
     public function getUsers()
     {
         try {
-            return Testimonials::get()->take(32);
+            return Testimonials::get()->take(4);
         }catch (\Exception $e) {
             return false;
         }
