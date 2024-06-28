@@ -73,7 +73,6 @@ class StartPageRepository implements StartPageInterface
 
             return false;
         }catch (\Exception $e) {
-            dd($e);
             return false;
         }
     }
