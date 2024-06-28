@@ -31,7 +31,6 @@ class ProjectService
     {
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
-
             $project_list = self::filterProjectList($project_list, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
@@ -577,11 +576,7 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds = $myProjectIds = self::getMyProjectIds($userData->id);
-//            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-//            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-//            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            //  $projectIds = $mergedIds->unique();
+            $projectIds = Project::pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {
@@ -672,6 +667,30 @@ class ProjectService
         try {
             return Project::whereNotIn('id', $projectIds)->get();
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getProjectBasedOnUuid($projectUuid)
+    {
+        try {
+            return Project::where('uuid', $projectUuid)->first();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchSubmittedProjectsChallengeId($userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck('challenge_id');
+
+            return $fetchSubmittedProjectIds;
+        } catch (Exception $e) {
             return false;
         }
     }

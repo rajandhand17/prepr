@@ -66,10 +66,32 @@ class TeamMatchingResource extends JsonResource
                 $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
             }
         }
+        $access_level = 'viewer';
+        if ($this->getJoinedStatus() != null) {
+            if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
+                switch ($this->getJoinedStatus()->inviter_access_level) {
+                    case '0':
+                        $access_level = 'viewer';
+                        break;
+                    case '1':
+                        $access_level = 'editor';
+                        break;
+                    case '2':
+                        $access_level = 'team_leader';
+                        break;
+                    default:
+                        $access_level = 'viewer';
+                        break;
+                }
+            }
+        }
         $friendRequest = 'available';
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
-        if ($getRequest) {
-            switch ($getRequest) {
+        if ($getRequest != null) {
+            switch ($getRequest->invite_status) {
+                case '0':
+                    $friendRequest = 'invited';
+                    break;
                 case '1':
                     $friendRequest = 'joined';
                     break;
@@ -77,6 +99,9 @@ class TeamMatchingResource extends JsonResource
                     $friendRequest = 'pending';
                     break;
                 case '3':
+                    $friendRequest = 'available';
+                    break;
+                default:
                     $friendRequest = 'available';
                     break;
             }
@@ -97,6 +122,7 @@ class TeamMatchingResource extends JsonResource
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
             'request_send'          => $friendRequest,
             'is_joined'             => $isJoined,
+            'access_level'          => $access_level,
         ];
     }
 }

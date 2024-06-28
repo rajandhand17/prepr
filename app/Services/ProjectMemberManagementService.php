@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
+use App\Notifications\ProjectInvitationNotification;
 use App\Services\Manage\EmailTemplateService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -275,6 +276,14 @@ class ProjectMemberManagementService
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
+
+                        $user = UserService::getUserById(auth()->user()->id);
+                        $user->notify(new ProjectInvitationNotification(__('responses.noti_new_user_invited'), __('responses.noti_new_user_invited_message')));
+
+                        $invited_user = UserService::getUserByEmail($pariticipateData['invitee_email']);
+                        if ($invited_user) {
+                            $invited_user->notify(new ProjectInvitationNotification(__('responses.noti_you_have_invited'), __('responses.noti_you_have_invited_message')));
+                        }
                         $invited_emails[] = $pariticipateData['invitee_email'];
                     } else {
                         $already_members[] = $pariticipateData['invitee_email'];
@@ -482,7 +491,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public function fetchAcceptedMemberIds($projectId)
+    public static function fetchAcceptedMemberIds($projectId)
     {
         try {
             $getUserIdsBasedOnEmail = [];
@@ -625,7 +634,7 @@ class ProjectMemberManagementService
         try {
             $memberManagement = ProjectMemberManagement::select();
             if ($requestStatus == 'request_sent') {
-                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'0'])->pluck('project_id');
+                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'2'])->pluck('project_id');
             } else {
                 $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status', '3')->pluck('project_id');
                 $memberManagement = ProjectService::getProjectIds($projectIds)->pluck('id');
@@ -641,7 +650,10 @@ class ProjectMemberManagementService
     {
         try {
             $getUser = auth()->user();
-            $joinProject = ProjectMemberManagement::create([
+            $joinProject = ProjectMemberManagement::updateOrCreate([
+                'project_id'                => $projectId,
+                'email'                     => $getUser->email,
+            ], [
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectId,
                 'inviter_id'                => $getUser->id,

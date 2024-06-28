@@ -187,6 +187,7 @@ class ChallengeTemplateService
             $newChallenge->project_privacy = $challengeTemplateData->project_privacy;
             $newChallenge->is_open = $challengeTemplateData->is_open;
             $newChallenge->is_auto_created = $challengeTemplateData->is_auto_created;
+            $newChallenge->allow_winner_change = '0';
             $newChallenge->save();
 
             return $newChallenge;

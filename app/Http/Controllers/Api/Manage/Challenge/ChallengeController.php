@@ -10,6 +10,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeFromResourceUsingAIPreview
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\SelectChallengeWinnerRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeAssessmentRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
@@ -17,6 +18,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -628,6 +630,41 @@ class ChallengeController extends AppBaseController
         } catch (Exception $e) {
             Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
 
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function selectWinner($slug, SelectChallengeWinnerRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->allow_winner_change === '1') {
+                return $this->sendError(__('responses.winner_changing_not_allowed'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->winner_select_date != null && $checkComponentBasedOnSlug->winner_select_date > Carbon::now()->toDateTimeString()) {
+                return $this->sendError(__('responses.challenge_winner_timeline_fail'), 403);
+            }
+
+            if (empty($checkComponentBasedOnSlug->incentive_achievement)) {
+                return $this->sendError(__('responses.challenge_incentive_not_found'), 403);
+            }
+
+            $selectChallengeWinner = $this->challengeRepository->selectChallengeWinner($checkComponentBasedOnSlug, $request);
+            if ($selectChallengeWinner == true) {
+                return $this->sendResponse([], __('responses.challenge_winner_selected_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_winner_selected_not_successfully'), 400);
+        } catch (Exception $e) {
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

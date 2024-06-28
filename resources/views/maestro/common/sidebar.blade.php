@@ -36,7 +36,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' ? 'active' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'challenge' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-pie"></i>
             <p>
               Master
@@ -66,6 +66,12 @@
               <a href="{{ route('social-links.index') }}" class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Social Link</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('ranks.index') }}" class="nav-link {{ Route::currentRouteName() == 'ranks.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Rank </p>
               </a>
             </li>
           </ul>
@@ -98,9 +104,9 @@
               </a>
             </li> --}}
             <li class="nav-item">
-              <a href="pages/UI/buttons.html" class="nav-link">
+              <a href="{{ route('challenge.index') }}" class="nav-link {{ Route::currentRouteName() == 'challenge.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Challenge</p>
+                <p>Challenge Management</p>
               </a>
             </li>
             <li class="nav-item">
@@ -218,6 +224,39 @@
             </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Trophy Awards</p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Activity Awards
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('communitytrophy.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Regular Awards</p>
+              </a>
+            </li>
+           
+            <li class="nav-item">
+              <a href="{{ route('skillsaward.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Skill Awards</p>
+              </a>
+            </li>
+    
+          </ul>
+        </li>
+
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
