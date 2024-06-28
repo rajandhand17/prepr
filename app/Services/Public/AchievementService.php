@@ -193,9 +193,15 @@ class AchievementService
     public function achievementActivity($certificate_id, $action)
     {
         try {
-            UserAchievement::where('certificate_number', $certificate_id)->update(['is_featured' => $action]);
+            $userAchievement = UserAchievement::where('certificate_number', $certificate_id)->first();
+            if ($userAchievement) {
+                $userAchievement->is_featured = $action;
+                $userAchievement->save();
 
-            return true;
+                return $userAchievement;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

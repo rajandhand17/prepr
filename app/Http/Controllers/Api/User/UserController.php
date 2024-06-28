@@ -105,7 +105,7 @@ class UserController extends AppBaseController
                 }
                 $organizationOnboarding = $this->userRepository->organizationOnboarding($checkComponentSlugExistOrNot->id, $request);
                 if ($organizationOnboarding) {
-                    return $this->sendResponse(OrganizationDetailResource::make($checkComponentSlugExistOrNot), __('responses.organization_onboarding_completed'));
+                    return $this->sendResponse(OrganizationDetailResource::make($organizationOnboarding), __('responses.organization_onboarding_completed'));
                 }
 
                 return $this->sendError(__('responses.organization_onboarding_not_completed'), 404);

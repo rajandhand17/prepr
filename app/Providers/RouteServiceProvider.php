@@ -65,6 +65,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapTeamMatchingRoutes();
             $this->mapGO1Routes();
             $this->mapLeaderboardRoutes();
+            $this->mapChannelApiRoutes();
         });
     }
 
@@ -185,6 +186,11 @@ class RouteServiceProvider extends ServiceProvider
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
+    }
+
+    public function mapChannelApiRoutes()
+    {
+        Route::prefix('api/v1/channel')->middleware('channel-api-auth')->group(base_path('routes/v1/manage/channel.php'));
     }
 
     public function mapMaestroDashboardRoutes()
