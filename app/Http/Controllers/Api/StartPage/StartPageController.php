@@ -30,11 +30,10 @@ class StartPageController extends AppBaseController
                     'partners'     =>PartnerCompanyResource::collection($startPage['partners']),
                     'testimonials' =>TestimonialsResource::collection($startPage['testimonials']),
                 ];
-                return  $this->sendResponse($startPage,__('responses.'));
+                return  $this->sendResponse($startPage,__('responses.front_page_success'));
             }
-            return $this->sendError(__('responses.send_error'), 500);
+            return $this->sendError(__('responses.front_page_failed'), 404);
         }catch (\Exception $e) {
-            dd($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
