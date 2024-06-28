@@ -3,10 +3,7 @@
 namespace App\Services\Maestro\LabMarketplace;
 
 use App\Models\LabMarketplace;
-use App\Models\Setting;
-use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 
 class LabMarketplaceService
 {
@@ -22,8 +19,7 @@ class LabMarketplaceService
     public static function deleteLabMarketplace($id)
     {
         try {
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

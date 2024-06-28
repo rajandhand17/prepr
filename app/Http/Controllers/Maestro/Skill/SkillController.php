@@ -2,41 +2,42 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
+use App\Traits\Maestro\Skill\SkillTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Skill\SkillTrait;
-use App\Models\User;
-use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class SkillController extends Controller
 {
     use SkillTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder, Request $request)
     {
-        
         try {
             $skills = Skill::orderBy('id', 'DESC');
             if (request()->ajax()) {
                 $i = 1;
+
                 return DataTables::eloquent($skills)
                     ->addIndexColumn()
                     ->addColumn('action', static function (Skill $skills) {
                         $html = '';
-                        $html .= '<a href="' . route('skills.show', ['skill' => $skills->id]) . '" class="mr-25 showUser" data-id="' . $skills->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                        $html .= '<a href="' . route('skills.edit', ['skill' => $skills->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $skills->id . '"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                        $html .= '<a href="javascript:void(0)" onclick="deleteSkill(\'' . route('skills.destroy', ['skill' => $skills->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                        $html .= '<a href="'.route('skills.show', ['skill' => $skills->id]).'" class="mr-25 showUser" data-id="'.$skills->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a href="'.route('skills.edit', ['skill' => $skills->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$skills->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a href="javascript:void(0)" onclick="deleteSkill(\''.route('skills.destroy', ['skill' => $skills->id]).'\')"> <i class="fas fa-trash"></i></a>';
+
                         return $html;
-                         })
+                    })
                     ->editColumn('id', function (Skill $skill) {
                         if ($skill->id === 0 || $skill->id === '') {
                             return 'Admin';
@@ -61,7 +62,7 @@ class SkillController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Skill Title'];
                 array_push($tableColumns, $singleLangCol);
@@ -70,6 +71,7 @@ class SkillController extends Controller
             $html = $builder->columns($tableColumns);
             view()->share('module_name', 'Challenge');
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skills.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
@@ -83,6 +85,7 @@ class SkillController extends Controller
     {
         try {
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skills.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
@@ -98,12 +101,15 @@ class SkillController extends Controller
             DB::beginTransaction();
             if ($this->createSkill($request)) {
                 DB::commit();
+
                 return redirect()->route('skills.index')->with('success', 'Skill created successfully');
             }
             DB::rollback();
+
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -116,9 +122,10 @@ class SkillController extends Controller
         try {
             $skill = $this->getSkillById($id);
             $languages = Language::where('status', 1)->get();
-            if(!$skill->exists){
+            if (!$skill->exists) {
                 return redirect()->route('skills.index')->with(['error' => 'Skill not found.']);
             }
+
             return view('maestro.skills.view', compact('skill', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
@@ -133,6 +140,7 @@ class SkillController extends Controller
         try {
             $data = Skill::find($id);
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skills.edit', compact('data', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
@@ -146,14 +154,17 @@ class SkillController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateSkillById($id,$request)) {
+            if ($this->updateSkillById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('skills.index')->with('success', 'Skill Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -167,11 +178,13 @@ class SkillController extends Controller
             DB::beginTransaction();
             if ($this->deleteSkillById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

@@ -14,11 +14,13 @@ trait ProjectVerticalTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectVertical()
     {
         try {
@@ -26,11 +28,13 @@ trait ProjectVerticalTrait
             if ($projectVertical) {
                 return $projectVertical;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectVerticalStatus()
     {
         try {
@@ -38,22 +42,26 @@ trait ProjectVerticalTrait
             if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateProjectVertical($request, $id, $moduleMode)
     {
         try {
             if (ProjectVerticalService::storeUpdateProjectVertical($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findProjectVertical($id)
     {
         try {
@@ -61,17 +69,20 @@ trait ProjectVerticalTrait
             if ($projectVertical) {
                 return $projectVertical;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteProjectVertical($projectVertical)
     {
         try {
             if (ProjectVerticalService::deleteProjectVertical($projectVertical)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

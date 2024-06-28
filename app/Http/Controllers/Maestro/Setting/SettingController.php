@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
-use App\Models\User;
 use App\Traits\Maestro\Setting\SettingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +13,7 @@ use Yajra\DataTables\Html\Builder;
 class SettingController extends Controller
 {
     use SettingTrait;
+
     public function __construct()
     {
         $this->middleware('web');
@@ -27,29 +27,30 @@ class SettingController extends Controller
                 if ($request->ajax()) {
                     return DataTables::eloquent($settingInfo)
                         ->editColumn('module_type', static function (Setting $settingInfo) {
-                            switch ($settingInfo->module_type){
-                                case '0';
-                                    $html = "<span class='badge badge-success'>BOOLEAN</span>";
-                                    break;
-                                case '1';
-                                    $html = "<span class='badge badge-success'>NUMBER</span>";
-                                    break;
-                                case '2';
-                                    $html = "<span class='badge badge-success'>DATE</span>";
-                                    break;
-                                case '3';
-                                    $html = "<span class='badge badge-success'>TEXT</span>";
-                                    break;
-                                case '4';
-                                    $html = "<span class='badge badge-success'>SELECT</span>";
-                                    break;
-                                case '5';
-                                    $html = "<span class='badge badge-success'>FILE</span>";
-                                    break;
-                                case '6';
-                                    $html = "<span class='badge badge-success'>TEXTAREA</span>";
-                                    break;
+                            switch ($settingInfo->module_type) {
+                                case '0':
+                                $html = "<span class='badge badge-success'>BOOLEAN</span>";
+                                break;
+                                case '1':
+                                $html = "<span class='badge badge-success'>NUMBER</span>";
+                                break;
+                                case '2':
+                                $html = "<span class='badge badge-success'>DATE</span>";
+                                break;
+                                case '3':
+                                $html = "<span class='badge badge-success'>TEXT</span>";
+                                break;
+                                case '4':
+                                $html = "<span class='badge badge-success'>SELECT</span>";
+                                break;
+                                case '5':
+                                $html = "<span class='badge badge-success'>FILE</span>";
+                                break;
+                                case '6':
+                                $html = "<span class='badge badge-success'>TEXTAREA</span>";
+                                break;
                             }
+
                             return $html;
                         })
                         ->addColumn('action', static function (Setting $settingInfo) {
@@ -62,29 +63,30 @@ class SettingController extends Controller
             }
 
             $html = $builder->columns([
-                ['data' => 'id', 'name' => 'DT_Row_Index', "width" => "5%", 'orderable' => false, 'searchable' => false],
-                ['data' => 'code', 'name' => 'code', 'title' => 'Code', "width" => "5%"],
-                ['data' => 'module_type', 'name' => 'type', 'title' => 'Type', "width" => "10%"],
-                ['data' => 'label', 'name' => 'label', 'title' => 'Label', "width" => "10%"],
-                ['data' => 'value', 'name' => 'value', 'title' => 'Value', "width" => "10%"],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', "width" => "15%", 'orderable' => false, 'searchable' => false],
+                ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'code', 'name' => 'code', 'title' => 'Code', 'width' => '5%'],
+                ['data' => 'module_type', 'name' => 'type', 'title' => 'Type', 'width' => '10%'],
+                ['data' => 'label', 'name' => 'label', 'title' => 'Label', 'width' => '10%'],
+                ['data' => 'value', 'name' => 'value', 'title' => 'Value', 'width' => '10%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '15%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
 
             return view('maestro.setting.index', compact('html'));
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('setting.index')->with(['error' => 'Something want wrong.']);
         }
     }
+
     public function edit(string $id)
     {
         try {
             $setting = $this->getSettingById($id);
-            if(!$setting->exists){
+            if (!$setting->exists) {
                 return redirect()->route('setting.index')->with(['error' => 'This setting id is not found.']);
             }
+
             return view('maestro.setting.edit', compact('setting'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('setting.index')->with(['error'=>'Something want wrong.']);
         }
     }
@@ -94,14 +96,17 @@ class SettingController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($this->updateSettingById($id,$request)) {
+            if ($this->updateSettingById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('setting.index')->with('success', 'Setting Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('setting.index')->with(['error' => 'Something want wrong']);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->route('setting.index')->with(['error'=>'Something want wrong.']);
         }
     }

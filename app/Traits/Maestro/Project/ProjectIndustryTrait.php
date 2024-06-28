@@ -14,11 +14,13 @@ trait ProjectIndustryTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectIndustry()
     {
         try {
@@ -26,11 +28,13 @@ trait ProjectIndustryTrait
             if ($ProjectIndustry) {
                 return $ProjectIndustry;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectIndustryStatus()
     {
         try {
@@ -38,22 +42,26 @@ trait ProjectIndustryTrait
             if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateProjectIndustry($request, $id, $moduleMode)
     {
         try {
             if (ProjectIndustryService::storeUpdateProjectIndustry($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findProjectIndustry($id)
     {
         try {
@@ -61,17 +69,20 @@ trait ProjectIndustryTrait
             if ($ProjectIndustry) {
                 return $ProjectIndustry;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteProjectIndustry($ProjectIndustry)
     {
         try {
             if (ProjectIndustryService::deleteProjectIndustry($ProjectIndustry)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

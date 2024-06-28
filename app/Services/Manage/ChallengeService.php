@@ -6,7 +6,6 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\LabChallengeRedeem;
-use App\Models\LabMarketplace;
 use App\Models\PitchTemplate;
 use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
 use App\Services\Public\ChallengeSocialActivitiesService;

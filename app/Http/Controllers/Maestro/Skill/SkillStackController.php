@@ -2,40 +2,39 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillStack;
-use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Skill\SkillTrait;
-use App\Models\User;
 use App\Traits\Maestro\Skill\SkillStackTrait;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class SkillStackController extends Controller
 {
     use SkillStackTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder, Request $request)
     {
         try {
             $stacks = SkillStack::orderBy('id', 'DESC');
-        
+
             if (request()->ajax()) {
                 return DataTables::eloquent($stacks)
                 ->addColumn('action', static function ($stack) {
                     $html = '';
-                    $html .= '<a href="' . route('skillstack.show', ['skillstack' => $stack->id]) . '" class="mr-25 showUser" data-id="' . $stack->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="' . route('skillstack.edit', ['skillstack' =>  $stack->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $stack->id . '"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\'' . route('skillstack.destroy', ['skillstack' => $stack->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skillstack.show', ['skillstack' => $stack->id]).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skillstack.edit', ['skillstack' =>  $stack->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skillstack.destroy', ['skillstack' => $stack->id]).'\')"> <i class="fas fa-trash"></i></a>';
+
                     return $html;
                 })
                 ->editColumn('skills', static function ($stack) {
@@ -48,6 +47,7 @@ class SkillStackController extends Controller
                             return "Skill doesn't exist";
                         }
                     }
+
                     return implode(', ', $stack_skill_names);
                 })
                 ->toJson();
@@ -68,7 +68,7 @@ class SkillStackController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
+                    $columName1 = $columName.'_title';
                     $columName2 = $columName.'_description';
                 }
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Stack Title'];
@@ -79,12 +79,13 @@ class SkillStackController extends Controller
             array_push($tableColumns, ['data' => 'skills', 'name' => 'skills', 'title' => 'Stack Skills']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
 
-
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skillstack.index', compact('html', 'languages'));
         } catch (Exception $e) {
             dd($e);
+
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -99,6 +100,7 @@ class SkillStackController extends Controller
             $skills = Skill::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
             //dd($skills);
             $selectedSkills = [];
+
             return view('maestro.skillstack.create', compact('languages', 'skills', 'selectedSkills'));
         } catch (Exception $e) {
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
@@ -114,12 +116,15 @@ class SkillStackController extends Controller
             DB::beginTransaction();
             if ($this->createSkillStack($request)) {
                 DB::commit();
+
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack created successfully');
             }
             DB::rollback();
+
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -130,17 +135,17 @@ class SkillStackController extends Controller
     public function show(string $id)
     {
         try {
-           
             $skillstack = $this->getSkillSTackById($id);
             $selectedSkills = [];
-            foreach ( $skillstack->skills as $skill) {
+            foreach ($skillstack->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
             $languages = Language::where('status', 1)->get();
-            if(!$skillstack->exists){
+            if (!$skillstack->exists) {
                 return redirect()->route('skillstack.index')->with(['error' => 'Skill not found.']);
             }
-            return view('maestro.skillstack.view', compact('skillstack', 'languages','selectedSkills'));
+
+            return view('maestro.skillstack.view', compact('skillstack', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
@@ -154,14 +159,15 @@ class SkillStackController extends Controller
         try {
             $data = SkillStack::find($id);
             $selectedSkills = [];
-            foreach ( $data->skills as $skill) {
+            foreach ($data->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
             $title = $data->title;
             $description = $data->description;
             $skills = Skill::whereIn('id', $selectedSkills)->pluck('title', 'id');
-         
+
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skillstack.edit', compact('skills', 'selectedSkills', 'title', 'description', 'languages', 'data'));
         } catch (Exception $e) {
             dd($e);
@@ -176,14 +182,17 @@ class SkillStackController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateSkillStackById($id,$request)) {
+            if ($this->updateSkillStackById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -197,11 +206,13 @@ class SkillStackController extends Controller
             DB::beginTransaction();
             if ($this->deleteSkillStackById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

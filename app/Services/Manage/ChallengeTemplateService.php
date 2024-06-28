@@ -333,5 +333,4 @@ class ChallengeTemplateService
             return false;
         }
     }
-
 }

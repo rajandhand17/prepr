@@ -263,7 +263,7 @@ class LabMarketplaceService
     public static function getLabMarketplaceBasedOnId($id)
     {
         try {
-            return LabMarketplace::where('id',$id)->first();
+            return LabMarketplace::where('id', $id)->first();
         } catch (Exception $e) {
             return false;
         }
