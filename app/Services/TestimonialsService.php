@@ -9,7 +9,7 @@ class TestimonialsService
     public function getUsers()
     {
         try {
-            return Testimonials::where('status','1')->get()->take(3);
+            return Testimonials::where('status', '1')->get()->take(3);
         } catch (\Exception $e) {
             return false;
         }

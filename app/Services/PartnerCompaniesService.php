@@ -9,7 +9,7 @@ class PartnerCompaniesService
     public function getPartnerCompanies()
     {
         try {
-            return PartnerCompanies::where('status','publish')->get()->take(10);
+            return PartnerCompanies::where('status', 'publish')->get()->take(10);
         } catch (\Exception $e) {
             return false;
         }

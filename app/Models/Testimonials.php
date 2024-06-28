@@ -14,7 +14,7 @@ class Testimonials extends Model
     protected $fillable = [
         'user_id',
         'description',
-        'status'
+        'status',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
