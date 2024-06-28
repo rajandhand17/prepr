@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\StartPage;
 
 use App\Http\Controllers\AppBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\StartPage\LabResource;
 use App\Http\Resources\StartPage\PartnerCompanyResource;
 use App\Http\Resources\StartPage\SkillResource;
@@ -22,18 +21,20 @@ class StartPageController extends AppBaseController
     public function index()
     {
         try {
-            $startPage=$this->startPageRepository->index();
-            if($startPage){
-                $startPage=[
-                    'labs'         =>LabResource::collection($startPage['labs']),
-                    'skills'       =>SkillResource::collection($startPage['skills']),
-                    'partners'     =>PartnerCompanyResource::collection($startPage['partners']),
-                    'testimonials' =>TestimonialsResource::collection($startPage['testimonials']),
+            $startPage = $this->startPageRepository->index();
+            if ($startPage) {
+                $startPage = [
+                    'labs'         => LabResource::collection($startPage['labs']),
+                    'skills'       => SkillResource::collection($startPage['skills']),
+                    'partners'     => PartnerCompanyResource::collection($startPage['partners']),
+                    'testimonials' => TestimonialsResource::collection($startPage['testimonials']),
                 ];
-                return  $this->sendResponse($startPage,__('responses.front_page_success'));
+
+                return  $this->sendResponse($startPage, __('responses.front_page_success'));
             }
+
             return $this->sendError(__('responses.front_page_failed'), 404);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -26,53 +26,53 @@ class StartPageRepository implements StartPageInterface
 
     private $userService;
 
-    public function __construct(UserService $userService, TestimonialsService $testimonialsService, PartnerCompaniesService $partnerCompaniesService,SkillService $skillService, FeaturedLabService $featuredLabService,LabService $labService,FeaturedSkillService $featuredSkillService)
+    public function __construct(UserService $userService, TestimonialsService $testimonialsService, PartnerCompaniesService $partnerCompaniesService, SkillService $skillService, FeaturedLabService $featuredLabService, LabService $labService, FeaturedSkillService $featuredSkillService)
     {
-        $this->featuredLabService =$featuredLabService;
-        $this->labService =$labService;
-        $this->featuredSkillService =$featuredSkillService;
-        $this->skillService=$skillService;
-        $this->partnerCompaniesService=$partnerCompaniesService;
-        $this->testimonialsService=$testimonialsService;
-        $this->userService=$userService;
+        $this->featuredLabService = $featuredLabService;
+        $this->labService = $labService;
+        $this->featuredSkillService = $featuredSkillService;
+        $this->skillService = $skillService;
+        $this->partnerCompaniesService = $partnerCompaniesService;
+        $this->testimonialsService = $testimonialsService;
+        $this->userService = $userService;
     }
 
     public function index()
     {
         try {
-            $getLabsData=[];
-            $getSkillsData=[];
-            $companies=[];
-            $testimonials=[];
-            $labIds =$this->featuredLabService->getFeaturedLab()->pluck('lab_id');
-            if($labIds){
-                $getLabsData=$this->labService->getLabsBasedOnIds($labIds);
+            $getLabsData = [];
+            $getSkillsData = [];
+            $companies = [];
+            $testimonials = [];
+            $labIds = $this->featuredLabService->getFeaturedLab()->pluck('lab_id');
+            if ($labIds) {
+                $getLabsData = $this->labService->getLabsBasedOnIds($labIds);
             }
-            $skillIds=$this->featuredSkillService->getFeaturedSKill()->pluck('skill_id');
-            if($skillIds){
-                $getSkillsData=$this->skillService->getSkillBasedOnIds($skillIds);
+            $skillIds = $this->featuredSkillService->getFeaturedSKill()->pluck('skill_id');
+            if ($skillIds) {
+                $getSkillsData = $this->skillService->getSkillBasedOnIds($skillIds);
             }
 
-            $partnerCompanies=$this->partnerCompaniesService->getPartnerCompanies();
-            if($partnerCompanies){
-                $companies=$partnerCompanies;
+            $partnerCompanies = $this->partnerCompaniesService->getPartnerCompanies();
+            if ($partnerCompanies) {
+                $companies = $partnerCompanies;
             }
-            $testimonial=$this->testimonialsService->getUsers();
-            if($testimonial){
-                $testimonials=$testimonial;
+            $testimonial = $this->testimonialsService->getUsers();
+            if ($testimonial) {
+                $testimonials = $testimonial;
             }
-            $data=[
-                'labs'=>$getLabsData,
-                'skills'=>$getSkillsData,
-                'partners'=>$companies,
-                'testimonials'=>$testimonials,
+            $data = [
+                'labs'        => $getLabsData,
+                'skills'      => $getSkillsData,
+                'partners'    => $companies,
+                'testimonials'=> $testimonials,
             ];
-            if($data){
+            if ($data) {
                 return $data;
             }
 
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
