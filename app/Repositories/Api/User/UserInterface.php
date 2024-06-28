@@ -13,4 +13,6 @@ interface UserInterface
     public function userOnboarding();
 
     public function organizationOnboarding($organizationId, $request);
+
+    public function storeOrganizationType($organizationId, $request);
 }
