@@ -16,10 +16,8 @@ class TestimonialsResource extends JsonResource
     public function toArray(Request $request): array
     {
         $userData = UserService::getUserById($this->user_id);
-        $firstName = $userData->first_name;
-        $lastName = $userData->last_name;
         $profileImage = $userData->profile_image;
-        $fullName = $firstName.' '.$lastName;
+        $fullName = $userData->full_name;
 
         return [
             'id'            => $this->id,

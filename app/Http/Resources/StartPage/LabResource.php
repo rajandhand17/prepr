@@ -14,10 +14,21 @@ class LabResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        switch ($this->media_type) {
+            case 'image':
+                $media = $this->media;
+                break;
+            case 'embedded':
+                $media = $this->getRawOriginal('media');
+                break;
+            default:
+                $media = $this->media;
+                break;
+        }
         return [
             'id'    => $this->id,
             'slug'  => $this->slug,
-            'media' => $this->media,
+            'media' => $media,
         ];
     }
 }

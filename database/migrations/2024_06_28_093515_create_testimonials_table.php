@@ -14,6 +14,7 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('description')->nullable();
+            $table->enum('status', ['0', '1'])->default('0')->comment('0 ->active, 1 ->de-active');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

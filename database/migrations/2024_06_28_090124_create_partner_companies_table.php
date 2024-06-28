@@ -15,7 +15,7 @@ return new class() extends Migration {
             $table->string('title');
             $table->string('url')->nullable();
             $table->text('media')->nullable();
-            $table->enum('status', ['0', '1'])->default('0')->comment('0 ->active, 1 ->de-active');
+            $table->enum('status', ['0', '1'])->default('1')->comment('0 ->draft, 1 ->publish');
             $table->timestamps();
             $table->softDeletes();
         });
