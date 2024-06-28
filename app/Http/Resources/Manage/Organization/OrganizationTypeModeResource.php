@@ -30,6 +30,7 @@ class OrganizationTypeModeResource extends JsonResource
                 $value = 'grow';
                 break;
         }
+
         return [
             'type'          => $value,
         ];
