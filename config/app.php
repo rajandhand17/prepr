@@ -241,6 +241,7 @@ return [
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\StartPage\StartPageServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
