@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Models\FeaturedLab;
 
 class FeaturedLabService
@@ -11,7 +10,7 @@ class FeaturedLabService
     {
         try {
             return FeaturedLab::get()->take(6);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -2,11 +2,7 @@
 
 namespace App\Services;
 
-use App\Helpers\LanguageColumnHelper;
-use App\Models\Levels;
-use App\Models\PartnerCompanies;
 use App\Models\Testimonials;
-use Illuminate\Support\Facades\Schema;
 
 class TestimonialsService
 {
@@ -14,7 +10,7 @@ class TestimonialsService
     {
         try {
             return Testimonials::get()->take(4);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

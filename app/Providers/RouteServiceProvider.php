@@ -117,6 +117,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('api/v1/start-page/')->middleware('api')->group(base_path('routes/v1/start-page.php'));
     }
+
     protected function mapProjectRoutes()
     {
         Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));

@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Models\FeaturedSkills;
 
 class FeaturedSkillService
@@ -11,7 +10,7 @@ class FeaturedSkillService
     {
         try {
             return FeaturedSkills::get()->take(12);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

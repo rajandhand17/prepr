@@ -9,7 +9,6 @@ class Testimonials extends Model
 {
     use HasFactory;
 
-
     protected $table = 'testimonials';
 
     protected $fillable = [
@@ -18,5 +17,4 @@ class Testimonials extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-
 }
