@@ -9,10 +9,12 @@ use Exception;
 class DashboardController extends Controller
 {
     use DashboardTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     /**
      * Display a listing of the dashboard components.
      */
@@ -21,7 +23,7 @@ class DashboardController extends Controller
         try {
             $componentCount = $this->getComponentCount();
             if ($componentCount) {
-                return view('maestro.dashboard.index',compact('componentCount'));
+                return view('maestro.dashboard.index', compact('componentCount'));
             }
         } catch (Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Something want wrong.']);

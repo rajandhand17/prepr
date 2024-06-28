@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Storage;
 
 class CommunityTrophy extends Model
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes;
+    use HasFactory;
     protected $table = 'community_trophy';
     protected $guarded = [];
 
     protected $hidden = [
-        'deleted_at', 'category', 'no_of_use'
+        'deleted_at', 'category', 'no_of_use',
     ];
 
     /**
@@ -31,22 +32,22 @@ class CommunityTrophy extends Model
      * @var array
      */
     protected $casts = [
-        'fb_point' => 'int',
-        'google_point' => 'int',
-        'linked_point' => 'int',
-        'login_point' => 'int',
-        'create_project_point' => 'int',
-        'join_lab_point' => 'int',
-        'submit_project_point' => 'int',
+        'fb_point'                     => 'int',
+        'google_point'                 => 'int',
+        'linked_point'                 => 'int',
+        'login_point'                  => 'int',
+        'create_project_point'         => 'int',
+        'join_lab_point'               => 'int',
+        'submit_project_point'         => 'int',
         'success_submit_project_point' => 'int',
-        'add_member_point' => 'int',
-        'vote_project_point' => 'int',
-        'reply_chat_point' => 'int',
-        'create_chat_point' => 'int',
-        'description' => 'string',
-        'badge_type' => 'string',
-        'issuer' => 'string',
-        'criteria' => 'string',
+        'add_member_point'             => 'int',
+        'vote_project_point'           => 'int',
+        'reply_chat_point'             => 'int',
+        'create_chat_point'            => 'int',
+        'description'                  => 'string',
+        'badge_type'                   => 'string',
+        'issuer'                       => 'string',
+        'criteria'                     => 'string',
     ];
 
     // public $appends = ['image'];
@@ -60,11 +61,11 @@ class CommunityTrophy extends Model
         switch ($this->getCastType($key)) {
             case 'int':
             case 'integer':
-                return (int)0;
+                return (int) 0;
             case 'real':
             case 'float':
             case 'double':
-                return (float)0;
+                return (float) 0;
             case 'string':
                 return '';
             case 'bool':
@@ -93,6 +94,7 @@ class CommunityTrophy extends Model
     public function wonTrophy()
     {
         $userId = Auth::user()->id;
+
         return $this->belongsTo(UserTrophy::class, 'id', 'trophy_id')->where('user_id', $userId);
     }
 
@@ -104,13 +106,13 @@ class CommunityTrophy extends Model
         return $this->belongsTo(UserTrophy::class, 'id', 'trophy_id');
     }
 
-
     /***
      * @return BelongsTo
      */
     public function userWonTrophy()
     {
         $userId = Auth::user()->id;
+
         return $this->belongsTo(UserTrophy::class, 'id', 'trophy_id')->where('user_id', $userId)->where('status', '1');
     }
 
@@ -119,10 +121,12 @@ class CommunityTrophy extends Model
      */
     public function userTrophyData()
     {
-        return $this->hasMany(UserTrophy::class, 'trophy_id', 'id')->where(['status'=>'1','trophy_type'=>'communityTrophy']);
+        return $this->hasMany(UserTrophy::class, 'trophy_id', 'id')->where(['status'=>'1', 'trophy_type'=>'communityTrophy']);
     }
+
     /**
      * @param $value
+     *
      * @return string
      */
     public function getImageAttribute($value)
@@ -131,11 +135,13 @@ class CommunityTrophy extends Model
         if ($path === env('AWS_URL')) {
             return '';
         }
+
         return $path;
     }
 
     /**
      * @param $value
+     *
      * @return string
      */
     public function getDescriptionAttribute($value)

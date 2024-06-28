@@ -49,11 +49,13 @@ class CategoryService
         }
     }
 
-    public function getCategoryBasedOnId($category_id){
+    public function getCategoryBasedOnId($category_id)
+    {
         try {
             $fetchCategory = Category::where('id', $category_id)->first();
+
             return  $fetchCategory;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

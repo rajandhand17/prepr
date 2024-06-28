@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectIndustry;
 use App\Models\Language;
+use App\Models\ProjectIndustry;
 use Exception;
 
 class ProjectIndustryService
@@ -21,6 +21,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function getProjectIndustry()
     {
         try {
@@ -29,6 +30,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function getProjectIndustryStatus()
     {
         try {
@@ -37,12 +39,13 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function storeUpdateProjectIndustry($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $ProjectIndustry = new ProjectIndustry;
+                $ProjectIndustry = new ProjectIndustry();
             } else {
                 $ProjectIndustry = ProjectIndustry::find($id);
             }
@@ -58,7 +61,7 @@ class ProjectIndustryService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $ProjectIndustry->$columName = $request->$columName;
             }
@@ -67,11 +70,13 @@ class ProjectIndustryService
             if ($ProjectIndustry->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findProjectIndustry($id)
     {
         try {
@@ -80,6 +85,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function deleteProjectIndustry($ProjectIndustry)
     {
         try {

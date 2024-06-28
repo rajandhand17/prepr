@@ -11,36 +11,42 @@ trait SocialLinkTrait
     {
         try {
             $sponsorList = SocialLinkService::getSocialLinkList();
-            if($sponsorList){
+            if ($sponsorList) {
                 return $sponsorList;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function createSocialLink($request)
     {
         try {
-            if(SocialLinkService::createSocialLink($request)){
+            if (SocialLinkService::createSocialLink($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteSocialLinkById($id)
     {
         try {
-            if(SocialLinkService::deleteSocialLink($id)){
+            if (SocialLinkService::deleteSocialLink($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSocialLinkById($id)
     {
         try {
@@ -49,12 +55,14 @@ trait SocialLinkTrait
             return false;
         }
     }
-    private function updateSocialLinkById($id,$request)
+
+    private function updateSocialLinkById($id, $request)
     {
         try {
-            if(SocialLinkService::updateSocialLinkById($id,$request)){
+            if (SocialLinkService::updateSocialLinkById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

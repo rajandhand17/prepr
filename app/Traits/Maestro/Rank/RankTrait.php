@@ -14,11 +14,13 @@ trait RankTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getRank()
     {
         try {
@@ -26,11 +28,13 @@ trait RankTrait
             if ($projectStatus) {
                 return $projectStatus;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getRankStatus()
     {
         try {
@@ -38,22 +42,26 @@ trait RankTrait
             if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateRank($request, $id, $moduleMode)
     {
         try {
             if (RankService::storeUpdateRank($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findRank($id)
     {
         try {
@@ -61,17 +69,20 @@ trait RankTrait
             if ($projectStatus) {
                 return $projectStatus;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteRank($projectStatus)
     {
         try {
             if (RankService::deleteRank($projectStatus)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

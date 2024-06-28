@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,7 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->enum('module_type', ['0','1','2','3','4','5','6'])->comment('0->BOOLEAN,1->NUMBER,2->DATE,3->TEXT,4->SELECT,5->FILE,6->TEXTAREA');
+            $table->enum('module_type', ['0', '1', '2', '3', '4', '5', '6'])->comment('0->BOOLEAN,1->NUMBER,2->DATE,3->TEXT,4->SELECT,5->FILE,6->TEXTAREA');
             $table->string('label');
             $table->string('value');
             $table->timestamps();

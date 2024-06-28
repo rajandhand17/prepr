@@ -1,11 +1,9 @@
 <?php
 
-
 namespace App\Traits\Maestro\ChallengeTemplate;
 
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateService;
-use App\Services\Manage\LabMarketplaceService;
 
 trait ChallengeTemplateTrait
 {
@@ -13,11 +11,12 @@ trait ChallengeTemplateTrait
     {
         try {
             $challengeTemplate = ChallengeTemplateService::getChallengesTemplate();
-            if($challengeTemplate){
+            if ($challengeTemplate) {
                 return $challengeTemplate;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -26,12 +25,13 @@ trait ChallengeTemplateTrait
     {
         try {
             $getChallengeTemplate = ChallengeTemplateService::getChallengeTemplateBasedOnId($id);
-            $challengeService=ChallengeTemplateService::deleteChallengeTemplate($getChallengeTemplate->slug,$id);
-            if($challengeService){
+            $challengeService = ChallengeTemplateService::deleteChallengeTemplate($getChallengeTemplate->slug, $id);
+            if ($challengeService) {
                 return $challengeService;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -39,12 +39,13 @@ trait ChallengeTemplateTrait
     public function getChallengeById($id)
     {
         try {
-            $challenges=ChallengeService::getChallengeBasedOnId($id);
-            if($challenges){
+            $challenges = ChallengeService::getChallengeBasedOnId($id);
+            if ($challenges) {
                 return $challenges;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

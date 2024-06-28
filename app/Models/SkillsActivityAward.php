@@ -25,7 +25,7 @@ class SkillsActivityAward extends Model
         'challenge_win_awards',
         'challenge_path_awards',
         'lab_program_awards',
-        'resource_group_awards'
+        'resource_group_awards',
     ];
 
     public function getImageAttribute($value)
@@ -34,6 +34,7 @@ class SkillsActivityAward extends Model
         if ($path === env('AWS_URL')) {
             return '';
         }
+
         return $path;
     }
 }

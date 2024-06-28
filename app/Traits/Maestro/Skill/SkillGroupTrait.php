@@ -2,8 +2,6 @@
 
 namespace App\Traits\Maestro\Skill;
 
-use App\Services\Maestro\Skill\SkillService;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use App\Services\Maestro\Skill\SkillGroupService;
 use Exception;
 
@@ -12,15 +10,18 @@ trait SkillGroupTrait
     private function createSkillGroup($request)
     {
         try {
-            if(SkillGroupService::createSkillGroup($request)){
+            if (SkillGroupService::createSkillGroup($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
+
     private function getSkillGroupById($id)
     {
         try {
@@ -29,35 +30,41 @@ trait SkillGroupTrait
             return false;
         }
     }
-    private function updateSkillGroupById($id,$request)
+
+    private function updateSkillGroupById($id, $request)
     {
         try {
-            if(SkillGroupService::updateSkillGroupById($id,$request)){
+            if (SkillGroupService::updateSkillGroupById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteSkillGroupById($id)
     {
         try {
-            if(SkillGroupService::deleteSkillGroupById($id)){
+            if (SkillGroupService::deleteSkillGroupById($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSkills()
     {
         try {
             $skills = SkillGroupService::getSkills();
-            if($skills){
+            if ($skills) {
                 return $skills;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
