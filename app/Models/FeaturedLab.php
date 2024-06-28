@@ -15,5 +15,5 @@ class FeaturedLab extends Model
         'lab_id',
     ];
 
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = ['created_at', 'updated_at'];
 }

@@ -15,13 +15,16 @@ class TestimonialsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $firstName=UserService::getUserById($this->user_id)->first_name;
-        $lastName=UserService::getUserById($this->user_id)->last_name;
+        $userData=UserService::getUserById($this->user_id);
+        $firstName=$userData->first_name;
+        $lastName=$userData->last_name;
+        $profileImage=$userData->profile_image;
         $fullName=$firstName.' '.$lastName;
         return [
-            'id'    => $this->id,
-            'description' =>$this->description,
-            'full_name' => $fullName,
+            'id'            => $this->id,
+            'description'   =>$this->description,
+            'full_name'     => $fullName,
+            'profile_image' => $profileImage,
         ];
     }
 }
