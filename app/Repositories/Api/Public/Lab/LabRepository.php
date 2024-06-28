@@ -30,15 +30,6 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function getStartList()
-    {
-        try {
-            return $this->labService->getStartList();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function getLabBasedOnSlug($slug)
     {
         try {

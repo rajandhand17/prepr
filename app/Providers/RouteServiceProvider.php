@@ -50,6 +50,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapGO1Routes();
             $this->mapLeaderboardRoutes();
             $this->mapChannelApiRoutes();
+
+            $this->mapStartPageRoutes();
         });
     }
 
@@ -111,6 +113,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
     }
 
+    protected function mapStartPageRoutes()
+    {
+        Route::prefix('api/v1/start-page/')->middleware('api')->group(base_path('routes/v1/start-page.php'));
+    }
     protected function mapProjectRoutes()
     {
         Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));

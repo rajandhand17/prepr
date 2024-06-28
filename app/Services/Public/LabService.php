@@ -130,17 +130,6 @@ class LabService
         }
     }
 
-    public function getStartList()
-    {
-        try {
-            $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
-
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function getLabBasedOnSlug($slug)
     {
         try {
