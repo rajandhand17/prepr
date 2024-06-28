@@ -165,4 +165,9 @@ class Organization extends LaratrustTeam
     {
         return $this->hasOne(OrganizationCustomization::class, 'organization_id', 'id');
     }
+
+    public function organizationType()
+    {
+        return $this->hasMany(OrganizationTypeMode::class, 'organization_id', 'id')->where(['type_mode' => '0']);
+    }
 }
