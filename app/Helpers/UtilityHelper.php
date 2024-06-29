@@ -9,6 +9,8 @@ use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class UtilityHelper
 {
@@ -54,6 +56,7 @@ class UtilityHelper
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -124,7 +127,29 @@ class UtilityHelper
 
             return $getOrganization;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
+
+    public static function logError($exception)
+    {
+        $userId = (Auth::id()) ? Auth::id() : null;
+        $route = request()->path();
+        $ip = request()->ip();
+        $time = now();
+        $file = $exception->getFile();
+        $line = $exception->getLine();
+
+        Log::channel('database')->error($exception->getMessage(), [
+            'exception' => $exception,
+            'user_id' => $userId,
+            'route' => $route,
+            'ip' => $ip,
+            'time' => $time,
+            'file' => $file,
+            'line' => $line,
+        ]);
+    }
+
 }

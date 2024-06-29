@@ -9,6 +9,7 @@ use League\Container\Exception\NotFoundException;
 use Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
+use App\Helpers\UtilityHelper;
 
 class Handler extends ExceptionHandler
 {
@@ -54,6 +55,9 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if ($this->shouldReport($e)) {
+            UtilityHelper::logError($e);
+        }
         if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
