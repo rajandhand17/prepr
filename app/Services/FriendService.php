@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Friend;
 
 class FriendService
@@ -39,6 +40,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -55,6 +57,7 @@ class FriendService
 
             return $friendRequest;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -81,6 +84,7 @@ class FriendService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -98,6 +102,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -115,6 +120,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -134,6 +140,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -153,6 +160,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -172,6 +180,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -186,6 +195,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -200,6 +210,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -216,6 +227,7 @@ class FriendService
 
             return $existsFriend;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -227,6 +239,7 @@ class FriendService
 
             return $existsFriend;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -239,9 +252,11 @@ class FriendService
 
                 return $existsFriend;
             } catch (\Exception $e) {
+            UtilityHelper::logError($e);
                 return false;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -261,6 +276,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -283,6 +299,7 @@ class FriendService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

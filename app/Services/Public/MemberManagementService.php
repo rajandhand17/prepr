@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 
 class MemberManagementService
@@ -30,6 +31,7 @@ class MemberManagementService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -66,6 +68,7 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -83,6 +86,7 @@ class MemberManagementService
 
             return $moduleIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -113,6 +117,7 @@ class MemberManagementService
 
             return $organizationIds->unique()->values();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

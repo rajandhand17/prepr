@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeTemplateProjectTemplate;
 use Exception;
@@ -21,6 +22,7 @@ class ChallengeTemplateProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +42,7 @@ class ChallengeTemplateProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +60,7 @@ class ChallengeTemplateProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

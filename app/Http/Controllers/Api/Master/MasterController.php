@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Master;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Master\CreateSponsorRequest;
 use App\Http\Resources\Master\AcheivementConditionListResource;
@@ -101,6 +102,7 @@ class MasterController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_category_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -162,6 +164,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_skill_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -224,6 +227,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_tag_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -285,6 +289,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_project_industry_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -346,6 +351,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_project_type_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -407,6 +413,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_project_stages_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -468,6 +475,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_project_verticals_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -529,6 +537,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_project_status_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -590,6 +599,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_social_links_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -667,6 +677,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_skill_groups_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -728,6 +739,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_skill_stacks_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1208,6 +1220,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_social_connect_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1222,6 +1235,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_duration'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1236,6 +1250,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_levels'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1250,6 +1265,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.challenge_pitch_task_not_available'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1278,6 +1294,7 @@ class MasterController extends AppBaseController
 
             return $this->sendError(__('responses.sponsor_host_stored_failed'), 403);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1292,6 +1309,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_challenge_announcement_recipient'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1306,6 +1324,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_tag_groups_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1320,6 +1339,7 @@ class MasterController extends AppBaseController
 
             return $this->sendError(__('responses.countries_fetched_failed'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1381,6 +1401,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_job_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getJobTitles in MasterController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -1397,6 +1418,7 @@ class MasterController extends AppBaseController
 
             return $this->sendResponse(null, __('responses.not_found_bct_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

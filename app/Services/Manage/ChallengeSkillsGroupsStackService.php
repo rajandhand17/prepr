@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSkillsGroupsStack;
 use Exception;
 
@@ -50,6 +51,7 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -123,6 +125,7 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -140,6 +143,7 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -157,6 +161,7 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -174,6 +179,7 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -187,6 +193,7 @@ class ChallengeSkillsGroupsStackService
 
             return $getChallengeIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -206,6 +213,7 @@ class ChallengeSkillsGroupsStackService
 
             return $getChallengeSkillsIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

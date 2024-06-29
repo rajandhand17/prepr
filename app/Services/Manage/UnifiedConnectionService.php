@@ -85,6 +85,7 @@ class UnifiedConnectionService
 
             return $formatted->toArray();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -122,6 +123,7 @@ class UnifiedConnectionService
 
             return $connection ?: false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -174,6 +176,7 @@ class UnifiedConnectionService
                 ['connection_id' => $connectionId]
             );
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -246,6 +249,7 @@ class UnifiedConnectionService
 
             return $inviteMember;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

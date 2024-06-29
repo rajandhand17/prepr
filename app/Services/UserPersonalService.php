@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\User;
 use App\Models\UserPersonal;
 use Carbon\Carbon;
@@ -96,6 +97,7 @@ class UserPersonalService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -112,6 +114,7 @@ class UserPersonalService
 
             return $updateProfile;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

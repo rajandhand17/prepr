@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceGroup;
@@ -17,6 +18,7 @@ class ResourceGroupService
 
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -114,6 +116,7 @@ class ResourceGroupService
 
             return $resourceGroupList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -123,6 +126,7 @@ class ResourceGroupService
         try {
             return ResourceGroup::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -139,6 +143,7 @@ class ResourceGroupService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -148,6 +153,7 @@ class ResourceGroupService
         try {
             return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

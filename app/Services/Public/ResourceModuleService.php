@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 
 class ResourceModuleService
@@ -14,6 +15,7 @@ class ResourceModuleService
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -123,6 +125,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -132,6 +135,7 @@ class ResourceModuleService
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -141,6 +145,7 @@ class ResourceModuleService
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -150,6 +155,7 @@ class ResourceModuleService
         try {
             return ResourceModule::whereIn('id', $ids)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

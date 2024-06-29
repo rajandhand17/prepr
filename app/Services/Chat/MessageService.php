@@ -3,6 +3,7 @@
 namespace App\Services\Chat;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Resources\Chat\MessageResource;
 use App\Models\Conversation;
 use App\Models\ConversationMessage;
@@ -48,6 +49,7 @@ class MessageService
 
             return $chatFiles;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -75,6 +77,7 @@ class MessageService
 
             return $message;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -88,6 +91,7 @@ class MessageService
                 ->where('conversation_id', $conversationId)
                 ->paginate(config('site-settings.message_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -100,6 +104,7 @@ class MessageService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -116,6 +121,7 @@ class MessageService
 
             return $message;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;
@@ -132,6 +138,7 @@ class MessageService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -145,6 +152,7 @@ class MessageService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

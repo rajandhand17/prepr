@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTagsGroups;
 use Exception;
 
@@ -35,6 +36,7 @@ class ChallengeTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -87,6 +89,7 @@ class ChallengeTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -104,6 +107,7 @@ class ChallengeTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -121,6 +125,7 @@ class ChallengeTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -134,6 +139,7 @@ class ChallengeTagsGroupsService
 
             return $getChallengeIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

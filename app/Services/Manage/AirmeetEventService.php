@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\Airmeet\AirmeetEventHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\AirmeetEvent;
 use App\Models\AirmeetEventAttendee;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -22,6 +23,7 @@ class AirmeetEventService
         try {
             return AirmeetEventHelper::getAirmeetEventInfo($eventId);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -97,6 +99,7 @@ class AirmeetEventService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

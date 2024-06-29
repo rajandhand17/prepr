@@ -23,6 +23,7 @@ class ProjectService
 
             return $getMyProjects;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -35,6 +36,7 @@ class ProjectService
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -163,6 +165,7 @@ class ProjectService
 
             return $project_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -177,6 +180,7 @@ class ProjectService
 
             return $upload_project_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -261,6 +265,7 @@ class ProjectService
 
             return $createProject;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -270,6 +275,7 @@ class ProjectService
         try {
             return Project::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -284,6 +290,7 @@ class ProjectService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -371,6 +378,7 @@ class ProjectService
                 return $updateProject;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -417,6 +425,7 @@ class ProjectService
 
             return $challenge_conditions;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -433,6 +442,7 @@ class ProjectService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -452,6 +462,7 @@ class ProjectService
 
             return $submitEnabled;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -464,6 +475,7 @@ class ProjectService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -489,6 +501,7 @@ class ProjectService
 
             return collect($assessedProjectIds);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -514,6 +527,7 @@ class ProjectService
 
             return collect($pendingProjectIds);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -543,6 +557,7 @@ class ProjectService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -569,6 +584,7 @@ class ProjectService
 
             return $project_role;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -580,6 +596,7 @@ class ProjectService
 
             return $projectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -645,6 +662,7 @@ class ProjectService
 
             return $project_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -658,6 +676,7 @@ class ProjectService
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -667,6 +686,7 @@ class ProjectService
         try {
             return Project::whereNotIn('id', $projectIds)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -676,6 +696,7 @@ class ProjectService
         try {
             return Project::where('uuid', $projectUuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -691,6 +712,7 @@ class ProjectService
 
             return $fetchSubmittedProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -118,6 +118,7 @@ class ResourceGroup extends Command
 
             return;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e);
 

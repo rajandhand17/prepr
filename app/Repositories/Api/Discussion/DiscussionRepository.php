@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Discussion;
 
+use App\Helpers\UtilityHelper;
 use App\Services\DiscussionService;
 use App\Services\DiscussionSocialActivitiesService;
 use DB;
@@ -23,6 +24,7 @@ class DiscussionRepository implements DiscussionInterface
         try {
             return $this->discussionService->index($component, $moduleId, $sortBy);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -32,6 +34,7 @@ class DiscussionRepository implements DiscussionInterface
         try {
             return $this->discussionService->addComment($component, $request, $getComponentId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +60,7 @@ class DiscussionRepository implements DiscussionInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -66,6 +70,7 @@ class DiscussionRepository implements DiscussionInterface
         try {
             return $this->discussionSocialActivitiesService->likeOrDislikeComment($action, $comment_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -75,6 +80,7 @@ class DiscussionRepository implements DiscussionInterface
         try {
             return $this->discussionSocialActivitiesService->unLikeOrUnDisLikeComponent($likeOrDislike, $comment_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

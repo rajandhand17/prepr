@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use App\Models\Levels;
 use App\Models\ResourceCollection;
@@ -16,6 +17,7 @@ class ResourceCollectionService
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -116,6 +118,7 @@ class ResourceCollectionService
 
             return $resourceCollectionList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -125,6 +128,7 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -134,6 +138,7 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

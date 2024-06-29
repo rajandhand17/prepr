@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Chargebee;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
 use App\Models\ComponentAssociation;
@@ -168,6 +169,7 @@ class DailyChronicleAccessedNonAccessedData extends Command
 
             return 0;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
         }

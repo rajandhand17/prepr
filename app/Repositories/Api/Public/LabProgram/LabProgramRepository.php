@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\LabProgram;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\LabProgramService;
 use App\Services\Public\LabProgramSocialActivitiesService;
 
@@ -21,6 +22,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -30,6 +32,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getLabProgramBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -39,6 +42,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -48,6 +52,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramSocialActivitiesService->checkSocialActivity($labProgram, $column, $action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +62,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramSocialActivitiesService->captureSocialActivity($labProgram, $column, $value);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

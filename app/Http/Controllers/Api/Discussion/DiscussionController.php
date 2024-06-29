@@ -38,6 +38,7 @@ class DiscussionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.comments_lists_successfully'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -60,6 +61,7 @@ class DiscussionController extends AppBaseController
 
             return $this->sendError(__('responses.add_comment_failed'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -115,6 +117,7 @@ class DiscussionController extends AppBaseController
 
             return $this->sendError(__('responses.handler_bad_request'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -138,6 +141,7 @@ class DiscussionController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

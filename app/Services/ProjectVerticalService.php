@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectVertical;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,6 +41,7 @@ class ProjectVerticalService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

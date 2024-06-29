@@ -275,6 +275,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
             return $response;
@@ -298,6 +299,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -377,6 +379,7 @@ class User extends Authenticatable
 
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return ['success' => false, 'message' => __('responses.send_error')];
@@ -394,6 +397,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -409,6 +413,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -424,6 +429,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -483,6 +489,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -524,6 +531,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -539,6 +547,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -567,6 +576,7 @@ class User extends Authenticatable
                 return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -605,6 +615,7 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -659,6 +670,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -699,6 +711,7 @@ class User extends Authenticatable
 
             return $user;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -813,6 +826,7 @@ class User extends Authenticatable
                 'message' => __('responses.user_login_success'),
             ];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -831,6 +845,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

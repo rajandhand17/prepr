@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\AchievementConditionList;
 use Illuminate\Support\Facades\Schema;
 
@@ -41,6 +42,7 @@ class AchievementConditionListService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -64,6 +66,7 @@ class AchievementConditionListService
 
             return $achievement_condition;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

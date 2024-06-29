@@ -15,6 +15,7 @@ class ScormTrackingRepository implements ScormTrackingInterface
         try {
             return $this->scormTrackingService->store($userId, $scoUUID, $version, $data);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

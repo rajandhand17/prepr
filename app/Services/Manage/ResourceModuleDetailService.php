@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleDetail;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,7 @@ class ResourceModuleDetailService
 
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -56,6 +58,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -67,6 +70,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -111,6 +115,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -128,6 +133,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -156,6 +162,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -187,6 +194,7 @@ class ResourceModuleDetailService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
 
             return false;

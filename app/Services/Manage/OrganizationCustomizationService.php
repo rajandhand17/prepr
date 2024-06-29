@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationCustomization;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -44,6 +45,7 @@ class OrganizationCustomizationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -95,6 +97,7 @@ class OrganizationCustomizationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -116,6 +119,7 @@ class OrganizationCustomizationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

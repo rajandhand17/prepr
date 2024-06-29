@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePathSocialActivity;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class ChallengePathSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +42,7 @@ class ChallengePathSocialActivitiesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -65,6 +68,7 @@ class ChallengePathSocialActivitiesService
 
             return false;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -106,6 +110,7 @@ class ChallengePathSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

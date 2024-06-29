@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\UploadScormRequest;
 use App\Models\ResourceModule;
@@ -49,6 +50,7 @@ class ResourceModuleScormController extends AppBaseController
 
             return $this->sendError(__('responses.failed_to_upload_scorm_file'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return $this->sendError(__('responses.failed_to_upload_scorm_file'), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -77,6 +79,7 @@ class ResourceModuleScormController extends AppBaseController
                 return $this->sendError(__('responses.no_scorm_file_associated_with_the_resource'), Response::HTTP_NOT_FOUND);
             }
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return $this->sendError(__('responses.failed_to_delete_scorm_file'), Response::HTTP_BAD_REQUEST);
         }
     }

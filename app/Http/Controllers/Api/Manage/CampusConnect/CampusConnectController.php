@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\CampusConnect;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\Api\Manage\CampusConnect\CampusConnectRepository;
 use Exception;
@@ -23,6 +24,7 @@ class CampusConnectController extends AppBaseController
 
             return $this->sendResponse($schools, __('responses.school_fetched_success'));
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

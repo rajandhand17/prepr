@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\GO1UserResourceProgress;
 
 class UserResourceProgressTrackingService
@@ -19,6 +20,7 @@ class UserResourceProgressTrackingService
                 'session_time'      => data_get($payload, 'data.completed_time'),
             ]);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

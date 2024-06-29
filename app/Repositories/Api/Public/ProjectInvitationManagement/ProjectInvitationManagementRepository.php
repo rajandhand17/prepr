@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\ProjectInvitationManagement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\ProjectMemberManagementService;
 use Exception;
 
@@ -19,6 +20,7 @@ class ProjectInvitationManagementRepository implements ProjectInvitationManageme
         try {
             return  $this->projectMemberManagementService->checkJoinUnjoinStatus($request, $projectData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -28,6 +30,7 @@ class ProjectInvitationManagementRepository implements ProjectInvitationManageme
         try {
             return $this->projectMemberManagementService->acceptOrRejectJoinRequest($request, $projectData, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

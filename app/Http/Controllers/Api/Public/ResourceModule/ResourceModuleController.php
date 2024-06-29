@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
@@ -36,6 +37,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +56,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -75,6 +78,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -104,6 +108,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -135,6 +140,7 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

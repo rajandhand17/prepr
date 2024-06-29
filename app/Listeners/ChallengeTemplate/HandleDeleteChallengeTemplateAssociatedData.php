@@ -3,6 +3,7 @@
 namespace App\Listeners\ChallengeTemplate;
 
 use App\Events\ChallengeTemplate\DeleteChallengeTemplateAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateAchievementService;
 use App\Services\Manage\ChallengeTemplateAssessmentCriteriaService;
@@ -96,6 +97,7 @@ class HandleDeleteChallengeTemplateAssociatedData
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
@@ -73,6 +74,7 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -87,6 +89,7 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -102,6 +105,7 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -117,6 +121,7 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -143,6 +148,7 @@ class SkillService
 
             return $skills;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -154,6 +160,7 @@ class SkillService
             if ($getCurrentUsersSkills) {
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

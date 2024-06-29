@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserTag;
 
 class UserTagsService
@@ -26,6 +27,7 @@ class UserTagsService
 
             return $allTags;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +42,7 @@ class UserTagsService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -49,6 +52,7 @@ class UserTagsService
         try {
             return UserTag::where(['tag_id'=>$id, 'user_id'=>auth()->user()->id])->first();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -60,6 +64,7 @@ class UserTagsService
 
             return $userTags;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

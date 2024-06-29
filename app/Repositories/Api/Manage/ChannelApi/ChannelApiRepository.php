@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ChannelApi;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\MemberManagementService;
@@ -25,6 +26,7 @@ class ChannelApiRepository implements ChannelApiInterface
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -45,6 +47,7 @@ class ChannelApiRepository implements ChannelApiInterface
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -87,6 +90,7 @@ class ChannelApiRepository implements ChannelApiInterface
 
             return $inviteMember;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

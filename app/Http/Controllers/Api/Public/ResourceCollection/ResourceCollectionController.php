@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceCollection;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceCollection\AddRatingRequest;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
@@ -36,6 +37,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +56,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -83,6 +86,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -104,6 +108,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_rating_failed'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

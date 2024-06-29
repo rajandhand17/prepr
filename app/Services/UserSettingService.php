@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserSetting;
 
 class UserSettingService
@@ -21,6 +22,7 @@ class UserSettingService
 
             return $user;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +44,7 @@ class UserSettingService
 
             return $user;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

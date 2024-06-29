@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\PitchTemplate as PitchTemplates;
 use DB;
 use Illuminate\Console\Command;
@@ -64,6 +65,7 @@ class PitchTemplate extends Command
             DB::rollback();
             $this->error('No pitch template found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

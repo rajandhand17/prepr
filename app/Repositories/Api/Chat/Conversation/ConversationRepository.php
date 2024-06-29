@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Chat\Conversation;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Chat\ConversationService;
 use Exception;
 
@@ -19,6 +20,7 @@ class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->create($data);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -33,6 +35,7 @@ class ConversationRepository implements ConversationInterface
 
             return $conversation;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +45,7 @@ class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->list($type);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -51,6 +55,7 @@ class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -60,6 +65,7 @@ class ConversationRepository implements ConversationInterface
         try {
             return $this->conversationService->onlineOrOffline($id, $action);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

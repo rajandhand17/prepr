@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ChallengePathTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathTemplateAchievementsService;
 use App\Services\Manage\ChallengePathTemplateService;
 use App\Services\Manage\ChallengePathTemplateSkillsGroupsStackService;
@@ -55,6 +56,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -90,6 +92,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

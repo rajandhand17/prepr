@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\FeaturedModule;
 
 class FeaturedModuleService
@@ -14,6 +15,7 @@ class FeaturedModuleService
 
             return $getLabs;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -28,6 +30,7 @@ class FeaturedModuleService
 
             return $deleteFeaturedModule;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

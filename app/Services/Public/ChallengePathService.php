@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
 use Exception;
 
@@ -15,6 +16,7 @@ class ChallengePathService
 
             return $challengePathList->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -94,6 +96,7 @@ class ChallengePathService
 
             return $challengePathList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -103,6 +106,7 @@ class ChallengePathService
         try {
             return ChallengePath::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -112,6 +116,7 @@ class ChallengePathService
         try {
             return ChallengePath::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

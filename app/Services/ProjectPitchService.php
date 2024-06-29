@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\PitchTemplate;
@@ -72,6 +73,7 @@ class ProjectPitchService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -94,6 +96,7 @@ class ProjectPitchService
 
             return $pitchData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -132,6 +135,7 @@ class ProjectPitchService
 
             return $taskData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -165,6 +169,7 @@ class ProjectPitchService
 
             return $challenge_pitch;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -196,6 +201,7 @@ class ProjectPitchService
 
             return $challenge_task;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -212,6 +218,7 @@ class ProjectPitchService
 
             return $projectPitchCount === $challengePitchCount;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -228,6 +235,7 @@ class ProjectPitchService
 
             return $projectTaskCount === $challengeTaskCount;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -242,6 +250,7 @@ class ProjectPitchService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -256,6 +265,7 @@ class ProjectPitchService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -281,6 +291,7 @@ class ProjectPitchService
 
             return $pitchTemplate;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeAIProjectPitch in ProjectPitchService.php: '.$e->getMessage());
 
             return false;

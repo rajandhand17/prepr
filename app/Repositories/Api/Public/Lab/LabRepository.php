@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\User;
 use App\Services\Manage\MemberManagementService;
@@ -26,6 +27,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -35,6 +37,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,6 +47,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -53,6 +57,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labSocialActivitiesService->checkSocialActivity($lab_id, $column, $action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -62,6 +67,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labSocialActivitiesService->captureSocialActivity($lab_id, $column, $value);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -71,6 +77,7 @@ class LabRepository implements LabInterface
         try {
             return $this->memberManagementService->addMembers($lab, $component, $request, $memberList);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -80,6 +87,7 @@ class LabRepository implements LabInterface
         try {
             return $this->memberManagementService->deleteMembers($lab, $component, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -89,6 +97,7 @@ class LabRepository implements LabInterface
         try {
             return $this->memberManagementService->checkJoinedOrNot($lab, $component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -98,6 +107,7 @@ class LabRepository implements LabInterface
         try {
             return $this->memberManagementService->getRecordsFromJoinRequest();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -107,6 +117,7 @@ class LabRepository implements LabInterface
         try {
             return $this->memberManagementService->setJoinRequestParameters($language);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -116,6 +127,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getProjectLabs($request, $challengeId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -125,6 +137,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->canJoinLiveEvent($lab, $user);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -134,6 +147,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->sendLiveEventInvitationLinkToMembers($lab);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -143,6 +157,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->liveEventDetails($lab);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

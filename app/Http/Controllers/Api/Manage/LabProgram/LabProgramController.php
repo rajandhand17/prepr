@@ -50,6 +50,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -76,6 +77,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -120,6 +122,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -165,6 +168,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_not_update'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -179,6 +183,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -193,6 +198,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_name_not_available'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -222,6 +228,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -241,6 +248,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendResponse($getLabProgramListName, __('responses.found_lab_program_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

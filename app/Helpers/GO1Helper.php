@@ -19,6 +19,7 @@ class GO1Helper
         try {
             return config('go1.go1_auth_url');
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -28,6 +29,7 @@ class GO1Helper
         try {
             return config('go1.go1_base_url').'/'.config('go1.go1_api_version');
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -44,6 +46,7 @@ class GO1Helper
 
             return time() > json_decode($decodedPayload)->exp;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -77,6 +80,7 @@ class GO1Helper
 
             return $existingToken;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -98,6 +102,7 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -141,6 +146,7 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -160,6 +166,7 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -179,6 +186,7 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -219,6 +227,7 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -230,6 +239,7 @@ class GO1Helper
 
             return isset($requestQuery['page']) ? (int) $requestQuery['page'] : 1;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -271,6 +281,7 @@ class GO1Helper
 
             return $finalQueryParams;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in prepareGO1Query in GO1Helper.php: '.$e->getMessage());
 
             return false;
@@ -286,6 +297,7 @@ class GO1Helper
 
             return $url;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -297,6 +309,7 @@ class GO1Helper
 
             return $appUrl.'/api/v1/go1/webhook';
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -306,6 +319,7 @@ class GO1Helper
         try {
             return !empty($url) && filter_var($url, FILTER_VALIDATE_URL);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -355,6 +369,7 @@ class GO1Helper
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

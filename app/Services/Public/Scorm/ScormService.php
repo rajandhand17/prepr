@@ -44,6 +44,7 @@ class ScormService
 
             return $scorm;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -81,6 +82,7 @@ class ScormService
                 'content_type' => $contentType,
             ];
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -104,6 +106,7 @@ class ScormService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -131,6 +134,7 @@ class ScormService
                 app()->getLocale()
             );
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

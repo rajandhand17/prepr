@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectSocialActivity;
 use Exception;
 
@@ -14,6 +15,7 @@ class ProjectSocialActivitiesService
 
             return $getInvitedProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -63,6 +65,7 @@ class ProjectSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -83,6 +86,7 @@ class ProjectSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -103,6 +107,7 @@ class ProjectSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

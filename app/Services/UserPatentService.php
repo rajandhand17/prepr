@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserPatent;
 
 class UserPatentService
@@ -25,6 +26,7 @@ class UserPatentService
 
             return $allPatents;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -34,6 +36,7 @@ class UserPatentService
         try {
             return UserPatent::where('id', $id)->delete();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -43,6 +46,7 @@ class UserPatentService
         try {
             return UserPatent::where('id', $id)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

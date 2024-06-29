@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\JobTitleSkill;
 
 class JobTitleSkillServices
@@ -20,6 +21,7 @@ class JobTitleSkillServices
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -34,6 +36,7 @@ class JobTitleSkillServices
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -54,6 +57,7 @@ class JobTitleSkillServices
 
             return $percentage;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

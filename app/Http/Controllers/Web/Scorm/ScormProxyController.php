@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Web\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Repositories\Api\Public\Scorm\ScormRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,6 +35,7 @@ class ScormProxyController extends Controller
 
             return response('Something went wrong !', Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return response('Something went wrong !', Response::HTTP_BAD_REQUEST);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabAcheivement;
 use App\Models\LabMarketplaceAchievement;
 use Exception;
@@ -24,6 +25,7 @@ class LabMarketplaceAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,6 +46,7 @@ class LabMarketplaceAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -61,6 +64,7 @@ class LabMarketplaceAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

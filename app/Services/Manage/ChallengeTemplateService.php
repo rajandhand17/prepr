@@ -24,6 +24,7 @@ class ChallengeTemplateService
 
             return $challenge_template_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -90,6 +91,7 @@ class ChallengeTemplateService
 
             return $challenge_template_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -123,6 +125,7 @@ class ChallengeTemplateService
 
             return $templateChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -132,6 +135,7 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -146,6 +150,7 @@ class ChallengeTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -192,6 +197,7 @@ class ChallengeTemplateService
 
             return $newChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -208,6 +214,7 @@ class ChallengeTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -217,6 +224,7 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -226,6 +234,7 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -264,6 +273,7 @@ class ChallengeTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -302,6 +312,7 @@ class ChallengeTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -321,6 +332,7 @@ class ChallengeTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

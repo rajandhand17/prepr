@@ -3,6 +3,7 @@
 namespace App\Listeners\LabMarketplace;
 
 use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabMarketplaceAchievementsService;
 use App\Services\Manage\LabMarketplaceAddressService;
 use App\Services\Manage\LabMarketplaceComponentAssociationService;
@@ -69,6 +70,7 @@ class HandleDeleteLabMarketplaceAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -52,6 +52,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_labs_list'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -78,6 +79,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -126,6 +128,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -173,6 +176,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_not_update'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -202,6 +206,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -216,6 +221,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -230,6 +236,7 @@ class LabController extends AppBaseController
 
             return $this->sendResponse([], __('responses.lab_name_available'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -249,6 +256,7 @@ class LabController extends AppBaseController
 
             return $this->sendResponse($getLabListName, __('responses.found_labs_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -272,6 +280,7 @@ class LabController extends AppBaseController
                 throw new Exception('createLabUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview in LabController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -300,6 +309,7 @@ class LabController extends AppBaseController
                 throw new Exception('createLabUsingAI has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);

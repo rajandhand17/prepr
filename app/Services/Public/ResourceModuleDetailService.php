@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use Exception;
@@ -15,6 +16,7 @@ class ResourceModuleDetailService
 
             return $checkResourceModuleAsset;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -55,6 +57,7 @@ class ResourceModuleDetailService
 
             return $checkResourceModuleAssetVisit;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -99,6 +102,7 @@ class ResourceModuleDetailService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

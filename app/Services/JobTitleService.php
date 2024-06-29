@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\JobTitle;
 use Carbon\Carbon;
 use Exception;
@@ -58,6 +59,7 @@ class JobTitleService
 
             return $job_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getJobTitles in JobTitleService.php: '.$e->getMessage());
 
             return false;
@@ -71,6 +73,7 @@ class JobTitleService
 
             return $getJobTitlesList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in filterJobList in JobTitleService.php: '.$e->getMessage());
 
             return false;
@@ -85,6 +88,7 @@ class JobTitleService
 
             return $getJobsList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getJobBasedOnIdArray in JobTitleService.php: '.$e->getMessage());
 
             return false;
@@ -99,6 +103,7 @@ class JobTitleService
 
             return $getJobsList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getJobBasedOnId in JobTitleService.php: '.$e->getMessage());
 
             return false;
@@ -116,6 +121,7 @@ class JobTitleService
 
             return $getJobs;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -136,6 +142,7 @@ class JobTitleService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -147,6 +154,7 @@ class JobTitleService
 
             return $getJobDetails;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -161,6 +169,7 @@ class JobTitleService
 
             return $getJobDetails;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -176,6 +185,7 @@ class JobTitleService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -226,6 +236,7 @@ class JobTitleService
 
             return $currArray;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -260,6 +271,7 @@ class JobTitleService
 
             return $jobPostings;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

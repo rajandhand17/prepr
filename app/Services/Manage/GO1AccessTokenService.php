@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\GO1AccessToken;
 use Carbon\Carbon;
 use Exception;
@@ -25,6 +26,7 @@ class GO1AccessTokenService
         try {
             return GO1AccessToken::query()->first();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -38,6 +40,7 @@ class GO1AccessTokenService
                 'updated_at'   => Carbon::now(),
             ]);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -49,6 +52,7 @@ class GO1AccessTokenService
                 'access_token' => $token,
             ]);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

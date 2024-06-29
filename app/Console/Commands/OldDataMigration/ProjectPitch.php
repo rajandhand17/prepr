@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePitch;
 use App\Models\PitchTemplate;
 use Carbon\Carbon;
@@ -61,6 +62,7 @@ class ProjectPitch extends Command
 
             return;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

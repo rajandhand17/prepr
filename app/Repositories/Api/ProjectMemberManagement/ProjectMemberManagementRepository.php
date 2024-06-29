@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\ProjectMemberManagement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\ProjectMemberManagementService;
 use Exception;
 use Response;
@@ -20,6 +21,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->getRoles();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -29,6 +31,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->getProjectBasedParticipants($projectData, $request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -38,6 +41,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->getTemplate($requestLang);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -66,6 +70,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
 
             return Response::stream($callback, 200, $headers);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -103,6 +108,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -112,6 +118,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -121,6 +128,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->acceptOrRejectProjectJoinRequest($request, $projectData, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -130,6 +138,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->checkParticipantsUUID($projectId, $uuid);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -139,6 +148,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->checkCurrentProjectRole($projectId, $uuid, $role);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -148,6 +158,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->updateProjectRole($projectId, $uuid, $role);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -157,6 +168,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->deleteParticipates($projectData, $request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -166,6 +178,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -175,6 +188,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
         try {
             return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

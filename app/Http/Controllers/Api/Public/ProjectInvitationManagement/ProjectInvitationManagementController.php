@@ -37,6 +37,7 @@ class ProjectInvitationManagementController extends AppBaseController
 
             return $this->sendError(__('responses.request_not_exist'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

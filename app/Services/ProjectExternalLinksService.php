@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectExternalLink;
 use Exception;
 
@@ -49,6 +50,7 @@ class ProjectExternalLinksService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -64,6 +66,7 @@ class ProjectExternalLinksService
 
             return $projectExternalLinks;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -82,6 +85,7 @@ class ProjectExternalLinksService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

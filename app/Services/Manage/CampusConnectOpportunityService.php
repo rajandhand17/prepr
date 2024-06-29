@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\CampusConnectHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\CampusConnectOpportunity;
 use Exception;
 
@@ -27,6 +28,7 @@ class CampusConnectOpportunityService
                 'metadata' => $formattedData,
             ]);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -38,6 +40,7 @@ class CampusConnectOpportunityService
                 ['ep_id' => $id]
             )->first();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -47,6 +50,7 @@ class CampusConnectOpportunityService
         try {
             return CampusConnectOpportunity::query()->orderBy('ep_id', 'DESC')->first();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -58,6 +62,7 @@ class CampusConnectOpportunityService
                 ['model_type' => $model, 'model_id' => $id]
             )->first();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

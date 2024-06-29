@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\LabTagsGroups;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabTagsGroupsService;
 
 class LabTagsGroupsRepository implements LabTagsGroupsInterface
@@ -20,6 +21,7 @@ class LabTagsGroupsRepository implements LabTagsGroupsInterface
 
             return $labTagsGroupsService;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $e;
         }
     }

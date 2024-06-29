@@ -19,6 +19,7 @@ class MagnetHelper
 
             return $response->json();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -35,6 +36,7 @@ class MagnetHelper
 
             return $userResponse;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -68,6 +70,7 @@ class MagnetHelper
 
             return $accessToken;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -82,6 +85,7 @@ class MagnetHelper
 
             return $response->json();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -96,6 +100,7 @@ class MagnetHelper
 
             return $response->json();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

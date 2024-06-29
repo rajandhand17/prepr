@@ -4,6 +4,7 @@ namespace App\Listeners\Organization;
 
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateService;
@@ -94,6 +95,7 @@ class HandleDeleteOrganizationAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

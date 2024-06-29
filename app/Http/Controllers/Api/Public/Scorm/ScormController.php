@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Scorm\ScormResource;
 use App\Repositories\Api\Public\Scorm\ScormRepository;
@@ -34,6 +35,7 @@ class ScormController extends AppBaseController
 
             return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_NOT_FOUND);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_BAD_REQUEST);
         }
     }

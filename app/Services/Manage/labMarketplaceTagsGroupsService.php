@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTemplateSkillsGroupsStack;
 
@@ -23,6 +24,7 @@ class labMarketplaceTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

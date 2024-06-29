@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Leaderboard;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\ProjectMemberManagementService;
@@ -42,6 +43,7 @@ class LeaderboardRepository implements LeaderboardInterface
 
             return $user;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -53,6 +55,7 @@ class LeaderboardRepository implements LeaderboardInterface
 
             return $this->userService->getComponentBasedUsers($userEmails, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

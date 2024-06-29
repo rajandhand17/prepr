@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleRating;
 
 class ResourceModuleRatingService
@@ -13,6 +14,7 @@ class ResourceModuleRatingService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

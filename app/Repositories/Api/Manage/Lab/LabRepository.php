@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\Manage\AirmeetEventService;
@@ -65,6 +66,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -74,6 +76,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -83,6 +86,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -92,6 +96,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->uploadLabCoverImage($image);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -177,6 +182,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -264,6 +270,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -283,6 +290,7 @@ class LabRepository implements LabInterface
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -294,6 +302,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -305,6 +314,7 @@ class LabRepository implements LabInterface
 
             return $labSlug;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -314,6 +324,7 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -325,6 +336,7 @@ class LabRepository implements LabInterface
 
             return $createLabUsingAIPreview;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview in LabRepository.php: '.$e->getMessage());
 
             return false;
@@ -350,6 +362,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
 
             return false;

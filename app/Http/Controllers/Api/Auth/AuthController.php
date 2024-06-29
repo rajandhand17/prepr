@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Helpers\MagnetHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -106,6 +107,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -179,6 +181,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -334,6 +337,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -395,6 +399,7 @@ class AuthController extends AppBaseController
                 return $this->sendResponse([], __('responses.send_otp_success'), 200);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -456,6 +461,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -515,6 +521,7 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.unique_email'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -574,6 +581,7 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.already_registered_phone_number'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -644,6 +652,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -716,6 +725,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -778,6 +788,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -863,6 +874,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -935,6 +947,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -963,6 +976,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError($tokenResponse['message'], 401);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -992,6 +1006,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.email_field_required'), 402);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1006,6 +1021,7 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

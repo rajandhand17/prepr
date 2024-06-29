@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTemplateTimeLine;
 use App\Models\ChallengeTimelines;
 use Exception;
@@ -36,6 +37,7 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -68,6 +70,7 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -85,6 +88,7 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

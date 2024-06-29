@@ -18,6 +18,7 @@ class CampusConnectHelper
         try {
             return self::sanitizeUrl(config('campus-connect.campus_connect_api_url', '')).$url;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -39,6 +40,7 @@ class CampusConnectHelper
                 'x-signature' => $signature,
             ];
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -52,6 +54,7 @@ class CampusConnectHelper
 
             return Http::withHeaders($mergedHeader)->get($url, $params);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -65,6 +68,7 @@ class CampusConnectHelper
 
             return Http::withHeaders($mergedHeader)->post($url, $data);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -78,6 +82,7 @@ class CampusConnectHelper
 
             return Http::withHeaders($mergedHeader)->put($url, $data);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -92,6 +97,7 @@ class CampusConnectHelper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -116,6 +122,7 @@ class CampusConnectHelper
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -139,6 +146,7 @@ class CampusConnectHelper
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -152,6 +160,7 @@ class CampusConnectHelper
 
             return $url;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -169,6 +178,7 @@ class CampusConnectHelper
                     return '';
             }
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -266,6 +276,7 @@ class CampusConnectHelper
 
             return $formatted;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -331,6 +342,7 @@ class CampusConnectHelper
                 'ats_link'                 => CampusConnectHelper::generateUrl($model, $slug),
             ];
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -397,6 +409,7 @@ class CampusConnectHelper
                 ],
             ];
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -406,6 +419,7 @@ class CampusConnectHelper
         try {
             return request()->language === 'en';
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

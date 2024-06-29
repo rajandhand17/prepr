@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePathAchievement;
 use App\Models\ChallengePathTemplateAchievement;
 use Exception;
@@ -23,6 +24,7 @@ class ChallengePathTemplateAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +44,7 @@ class ChallengePathTemplateAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

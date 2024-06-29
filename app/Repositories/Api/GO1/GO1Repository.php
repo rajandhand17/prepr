@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\GO1;
 
 use App\Helpers\GO1Helper;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\UserService;
@@ -31,6 +32,7 @@ class GO1Repository implements GO1Interface
                 'list'         => data_get($data, 'hits'),
             ];
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -54,6 +56,7 @@ class GO1Repository implements GO1Interface
                 return false;
             });
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -87,6 +90,7 @@ class GO1Repository implements GO1Interface
                 'providers' => $providers,
             ];
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -96,6 +100,7 @@ class GO1Repository implements GO1Interface
         try {
             return ResourceModuleService::getResourceModuleBasedOnSlug($slug);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -105,6 +110,7 @@ class GO1Repository implements GO1Interface
         try {
             return $this->memberManagementService->canPlayGO1Resoruces();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -128,6 +134,7 @@ class GO1Repository implements GO1Interface
 
             return GO1Helper::playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -142,6 +149,7 @@ class GO1Repository implements GO1Interface
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

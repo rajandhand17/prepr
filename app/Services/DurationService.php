@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Duration;
 use Illuminate\Support\Facades\Schema;
 
@@ -34,6 +35,7 @@ class DurationService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -43,6 +45,7 @@ class DurationService
         try {
             return Duration::find($durationId)->first();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserCertificate;
 
 class UserCertificateService
@@ -26,6 +27,7 @@ class UserCertificateService
 
             return $allCertificates;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -35,6 +37,7 @@ class UserCertificateService
         try {
             return UserCertificate::where('id', $id)->delete();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,6 +47,7 @@ class UserCertificateService
         try {
             return UserCertificate::where('id', $id)->first();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

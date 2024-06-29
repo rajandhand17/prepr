@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectIndustry;
 use Illuminate\Support\Facades\Schema;
 
@@ -41,6 +42,7 @@ class ProjectIndustryService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

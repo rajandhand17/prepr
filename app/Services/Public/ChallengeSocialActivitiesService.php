@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSocialActivity;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +28,7 @@ class ChallengeSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -47,6 +49,7 @@ class ChallengeSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -72,6 +75,7 @@ class ChallengeSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -113,6 +117,7 @@ class ChallengeSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

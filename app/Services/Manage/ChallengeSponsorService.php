@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSponsor;
 use App\Models\Host;
 use Exception;
@@ -23,6 +24,7 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -49,6 +51,7 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -64,6 +67,7 @@ class ChallengeSponsorService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -81,6 +85,7 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

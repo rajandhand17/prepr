@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Career;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Career\AddJobPinnedRequest;
 use App\Http\Resources\Career\AddJobResource;
@@ -32,6 +33,7 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('response.job_listing_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +56,7 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.added_jobs_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -72,6 +75,7 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.added_jobs_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -88,6 +92,7 @@ class CareerController extends AppBaseController
 
             return $this->sendError(__('responses.pinned_job_failed'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -104,6 +109,7 @@ class CareerController extends AppBaseController
                 return  $this->sendResponse([], __('responses.delete_job_successfully'));
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -127,6 +133,7 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.related_career_successfully'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -141,6 +148,7 @@ class CareerController extends AppBaseController
 
             return $this->sendError(__('responses.job_not_exists'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

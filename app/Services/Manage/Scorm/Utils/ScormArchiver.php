@@ -3,6 +3,7 @@
 namespace App\Services\Manage\Scorm\Utils;
 
 use App\Exceptions\Scrom\InvalidScormArchiveException;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\Scorm\Enum\ScormConstant;
 use App\Services\Manage\Scorm\Enum\ScormManifestVersions;
 use App\Services\Manage\Scorm\Enum\ScormVersions;
@@ -125,6 +126,7 @@ class ScormArchiver
 //            $this->storage->putFileAs($filepath, $file, 'scorm.zip');
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -166,6 +168,7 @@ class ScormArchiver
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ResourceCollection;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
@@ -32,6 +33,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -61,6 +63,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -72,6 +75,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->uploadResourceCollectionCoverImage($cover_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -81,6 +85,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionBasedOnSlug($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -90,6 +95,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->checkName($title);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -119,6 +125,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -128,6 +135,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -146,6 +154,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return  false;
         }
     }
@@ -155,6 +164,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

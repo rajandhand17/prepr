@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ModuleAchievementCompletionStatus;
 use Exception;
 
@@ -18,6 +19,7 @@ class ModuleAchievementCompletionStatusService
 
             return $checkChallengePathAchievementAssignedOrNot;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -33,6 +35,7 @@ class ModuleAchievementCompletionStatusService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

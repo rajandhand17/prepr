@@ -3,6 +3,7 @@
 namespace App\Listeners\ResourceCollection;
 
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionTagsGroupsService;
@@ -39,6 +40,7 @@ class HandleDeleteResourceCollectionAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

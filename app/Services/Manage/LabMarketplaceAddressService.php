@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabAddress;
 use App\Models\LabMarketplaceAddress;
 use Exception;
@@ -27,6 +28,7 @@ class LabMarketplaceAddressService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -48,6 +50,7 @@ class LabMarketplaceAddressService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -65,6 +68,7 @@ class LabMarketplaceAddressService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

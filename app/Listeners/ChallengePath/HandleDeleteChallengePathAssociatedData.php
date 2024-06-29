@@ -3,6 +3,7 @@
 namespace App\Listeners\ChallengePath;
 
 use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathAchievementsService;
 use App\Services\Manage\ChallengePathSkillsGroupsStackService;
 use App\Services\Manage\ChallengePathTagsGroupsService;
@@ -48,6 +49,7 @@ class HandleDeleteChallengePathAssociatedData
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

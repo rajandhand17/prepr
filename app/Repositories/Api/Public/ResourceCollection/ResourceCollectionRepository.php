@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\ResourceCollection;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
 
@@ -22,6 +23,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -31,6 +33,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionBasedOnSlug($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +43,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionSocialActivity->getColumnNameValue($action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -49,6 +53,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionSocialActivity->checkSocialActivity($resource_collection_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -58,6 +63,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionSocialActivity->captureSocialActivity($resource_collection_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -67,6 +73,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionSocialActivity->addRating($resource_collection_id, $request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

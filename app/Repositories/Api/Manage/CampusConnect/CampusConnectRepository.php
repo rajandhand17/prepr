@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\CampusConnect;
 
 use App\Helpers\CampusConnectHelper;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 class CampusConnectRepository implements CampusConnectInterface
@@ -19,6 +20,7 @@ class CampusConnectRepository implements CampusConnectInterface
                 ];
             }, $schools);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

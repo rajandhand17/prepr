@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Dashboard\Organization;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
@@ -30,6 +31,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         try {
             return $this->organizationService->getOrganizationList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -39,6 +41,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         try {
             return $this->labService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -48,6 +51,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         try {
             return $this->challengeService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +61,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         try {
             return $this->projectService->getMyProjectIds($userId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -72,6 +77,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
 
             return $projectIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -81,6 +87,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         try {
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Explore;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Public\FeaturedModuleService;
 use App\Services\Public\LabService;
@@ -47,6 +48,7 @@ class ExploreRepository implements ExploreInterface
 
             return $response;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
         }
     }
@@ -61,6 +63,7 @@ class ExploreRepository implements ExploreInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -70,6 +73,7 @@ class ExploreRepository implements ExploreInterface
         try {
             return $this->skillsService->recommendSkills($getUserSkills);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -82,6 +86,7 @@ class ExploreRepository implements ExploreInterface
 
             return $response;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -22,6 +22,7 @@ class OrganizationService
 
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -73,6 +74,7 @@ class OrganizationService
 
             return $organization_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -82,6 +84,7 @@ class OrganizationService
         try {
             return Organization::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -96,6 +99,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -110,6 +114,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -124,6 +129,7 @@ class OrganizationService
 
             return $profile_image_path;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -138,6 +144,7 @@ class OrganizationService
 
             return $cover_image_path;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -169,6 +176,7 @@ class OrganizationService
 
             return $organization;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -200,6 +208,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -218,6 +227,7 @@ class OrganizationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -232,6 +242,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -246,6 +257,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -260,6 +272,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -274,6 +287,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -287,6 +301,7 @@ class OrganizationService
 
             return $organization_list->take(config('site-settings.dropdown_listing_limit'))->pluck('title', 'uuid');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -377,6 +392,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -386,6 +402,7 @@ class OrganizationService
         try {
             return Organization::where('user_id', $userId)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -399,6 +416,7 @@ class OrganizationService
 
             return $getOrganizationAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -411,6 +429,7 @@ class OrganizationService
 
             return $getOrganizationAcceptedManagerMembersBasedOnIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -515,6 +534,7 @@ class OrganizationService
                 'manager_count'                 => $getManagerCount->count(),
             ];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -529,6 +549,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return true;
         }
     }
@@ -552,6 +573,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -563,6 +585,7 @@ class OrganizationService
         try {
             return Organization::where('magnet_community_id', $communityId)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -572,6 +595,7 @@ class OrganizationService
         try {
             return Organization::whereIn('magnet_community_id', $communityIds)->get();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

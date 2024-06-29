@@ -2,6 +2,7 @@
 
 namespace App\Services\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ScormUserToken;
 use App\Models\User;
 use Carbon\Carbon;
@@ -38,6 +39,7 @@ class ScormUserTokenService
             /** REUSE THE OLD TOKEN */
             return $existing;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -66,6 +68,7 @@ class ScormUserTokenService
 
             return $token;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -82,6 +85,7 @@ class ScormUserTokenService
 
             return hash('sha256', $salt);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -103,6 +107,7 @@ class ScormUserTokenService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAnnouncement;
 use App\Models\ChallengeAnnouncementRecipient;
 use Carbon\Carbon;
@@ -61,6 +62,7 @@ class ChallengeAnnouncementService
 
             return $challengeAnnouncement;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -84,6 +86,7 @@ class ChallengeAnnouncementService
 
             return $challenge_announcement;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -95,6 +98,7 @@ class ChallengeAnnouncementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

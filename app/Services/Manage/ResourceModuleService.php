@@ -21,6 +21,7 @@ class ResourceModuleService
 
             return $resourceModule_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -33,6 +34,7 @@ class ResourceModuleService
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -136,6 +138,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -145,6 +148,7 @@ class ResourceModuleService
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -161,6 +165,7 @@ class ResourceModuleService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -170,6 +175,7 @@ class ResourceModuleService
         try {
             return ResourceModule::where('title', $title)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -273,6 +279,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createResourceModule in ResourceModuleService.php: '.$e->getMessage());
 
             return false;
@@ -290,6 +297,7 @@ class ResourceModuleService
 
             return $upload_resource_module_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -345,6 +353,7 @@ class ResourceModuleService
 
             return $resourceModule;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -359,6 +368,7 @@ class ResourceModuleService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -368,6 +378,7 @@ class ResourceModuleService
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -377,6 +388,7 @@ class ResourceModuleService
         try {
             return ResourceModule::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -391,6 +403,7 @@ class ResourceModuleService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -403,6 +416,7 @@ class ResourceModuleService
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -412,6 +426,7 @@ class ResourceModuleService
         try {
             return ResourceModule::where('go1_course_id', $go1CourseId)->first();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -421,6 +436,7 @@ class ResourceModuleService
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -442,6 +458,7 @@ class ResourceModuleService
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             return false;
         }
     }
@@ -461,6 +478,7 @@ class ResourceModuleService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

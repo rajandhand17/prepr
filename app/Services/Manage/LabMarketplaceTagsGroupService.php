@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabMarketplaceTagsGroups;
 use App\Models\LabTagsGroups;
 use Exception;
@@ -25,6 +26,7 @@ class LabMarketplaceTagsGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -45,6 +47,7 @@ class LabMarketplaceTagsGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -62,6 +65,7 @@ class LabMarketplaceTagsGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
