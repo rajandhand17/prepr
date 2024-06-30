@@ -309,7 +309,7 @@ class ChallengeService
             $challenge->media_type = $media_type;
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
-            $challenge->source_link = $request->source_link ?? null;;
+            $challenge->source_link = $request->source_link ?? null;
             $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;

@@ -27,7 +27,7 @@ class CreateChallengeRequest extends FormRequest
         $base_rules = [
             'request_type'                          => 'required|in:draft,publish',
             'is_auto_created'                       => 'required_if:request_type,publish|in:yes,no',
-            'is_ai_created'                       => 'required_if:request_type,publish|in:yes,no',
+            'is_ai_created'                         => 'required_if:request_type,publish|in:yes,no',
             'title'                                 => 'required|unique:challenges,title',
             'description_type'                      => 'required_if:request_type,publish|in:text,scorm',
             'description'                           => 'required_if:description_type,text',
@@ -104,7 +104,7 @@ class CreateChallengeRequest extends FormRequest
                     if ($value && $value->isValid()) {
                         $image = getimagesize($value);
                         if ($image[0] < 625 || $image[1] < 325) {
-                            $fail('' . $attribute . ' must be at least 625x325 pixels.');
+                            $fail(''.$attribute.' must be at least 625x325 pixels.');
                         }
                     }
                 },
@@ -136,9 +136,9 @@ class CreateChallengeRequest extends FormRequest
                 'required',
                 function ($attribute, $value, $fail) use ($isValid) {
                     if ($isValid === 0) {
-                        $fail($attribute . ' must contain exactly one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
                     } elseif ($isValid > 1) {
-                        $fail($attribute . ' must not contain more than one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
                     }
                 },
             ];
@@ -181,12 +181,12 @@ class CreateChallengeRequest extends FormRequest
 
         // Challenge assessment only if its not set to none
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
-            $base_rules['assessment_title']         = 'required|array';
-            $base_rules['assessment_title.*']       = 'required_if:assessment_type,open,closed';
-            $base_rules['assessment_description']   = 'required|array';
+            $base_rules['assessment_title'] = 'required|array';
+            $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed';
+            $base_rules['assessment_description'] = 'required|array';
             $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
-            $base_rules['assessment_score']         = 'required|array';
-            $base_rules['assessment_score.*']       = 'required_if:assessment_type,open,closed|numeric';
+            $base_rules['assessment_score'] = 'required|array';
+            $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed|numeric';
             $base_rules['assessment_weight'] = [
                 'required',
                 'array',
@@ -200,10 +200,9 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['assessment_weight.*'] = 'required_if:assessment_type,open,closed|numeric';
         }
 
-
         // For challenge restricted timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
-            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['start_date_description'] = 'required_if:request_type,publish';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
             $base_rules['registration_deadline_date_description'] = 'nullable';
@@ -215,36 +214,36 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
-            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
 
         // For challenge custom notify only if flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
-            $base_rules['schedule_custom_notify']           = 'nullable|array';
-            $base_rules['schedule_custom_notify.*']         = 'in:yes,no';
-            $base_rules['custom_timelines_title']           = 'nullable|array';
-            $base_rules['custom_timelines_title.*']         = 'string';
-            $base_rules['custom_timelines_number']          = 'nullable|array';
-            $base_rules['custom_timelines_number.*']        = 'integer';
-            $base_rules['custom_timelines_duration']        = 'nullable|array';
-            $base_rules['custom_timelines_duration.*']      = 'in:days,week,month';
-            $base_rules['custom_timelines_description']     = 'nullable|array';
-            $base_rules['custom_timelines_description.*']   = 'string';
+            $base_rules['schedule_custom_notify'] = 'nullable|array';
+            $base_rules['schedule_custom_notify.*'] = 'in:yes,no';
+            $base_rules['custom_timelines_title'] = 'nullable|array';
+            $base_rules['custom_timelines_title.*'] = 'string';
+            $base_rules['custom_timelines_number'] = 'nullable|array';
+            $base_rules['custom_timelines_number.*'] = 'integer';
+            $base_rules['custom_timelines_duration'] = 'nullable|array';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,week,month';
+            $base_rules['custom_timelines_description'] = 'nullable|array';
+            $base_rules['custom_timelines_description.*'] = 'string';
         }
 
         // For challenge custom announcement only if flexible timeline and schedule custom notify is yes
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
-            $base_rules['custom_flexible_announcement']         = 'nullable|array';
-            $base_rules['custom_flexible_announcement.*']       = 'required_if:schedule_custom_notify.*,yes|in:yes,no';
-            $base_rules['custom_announcement_type']             = 'nullable|array';
-            $base_rules['custom_announcement_type.*']           = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
-            $base_rules['custom_announcement_number']           = 'nullable|array';
-            $base_rules['custom_announcement_number.*']         = 'integer';
-            $base_rules['custom_announcement_duration']         = 'nullable|array';
-            $base_rules['custom_announcement_duration.*']       = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
-            $base_rules['custom_announcement_description']      = 'nullable|array';
-            $base_rules['custom_announcement_description.*']    = 'string';
+            $base_rules['custom_flexible_announcement'] = 'nullable|array';
+            $base_rules['custom_flexible_announcement.*'] = 'required_if:schedule_custom_notify.*,yes|in:yes,no';
+            $base_rules['custom_announcement_type'] = 'nullable|array';
+            $base_rules['custom_announcement_type.*'] = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
+            $base_rules['custom_announcement_number'] = 'nullable|array';
+            $base_rules['custom_announcement_number.*'] = 'integer';
+            $base_rules['custom_announcement_duration'] = 'nullable|array';
+            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
+            $base_rules['custom_announcement_description'] = 'nullable|array';
+            $base_rules['custom_announcement_description.*'] = 'string';
         }
 
         /*** CAMPUS CONNECT JOB RULE */
