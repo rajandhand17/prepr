@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Models\ChallengeTypeMode;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class ChallengeTypeModeService
 {
@@ -12,15 +11,15 @@ class ChallengeTypeModeService
     {
         try {
             $typeMappings = [
-                'assess' => ['type' => '0', 'value' => '0'],
+                'assess'  => ['type' => '0', 'value' => '0'],
                 'onboard' => ['type' => '0', 'value' => '1'],
-                'engage' => ['type' => '0', 'value' => '2'],
-                'grow' => ['type' => '0', 'value' => '3']
+                'engage'  => ['type' => '0', 'value' => '2'],
+                'grow'    => ['type' => '0', 'value' => '3'],
             ];
 
             $modeMappings = [
-                'team' => ['type' => '1', 'value' => '4'],
-                'individual' => ['type' => '1', 'value' => '5']
+                'team'       => ['type' => '1', 'value' => '4'],
+                'individual' => ['type' => '1', 'value' => '5'],
             ];
 
             $deleteChallengeTypeMode = ChallengeTypeMode::where('challenge_id', $challengeId)->delete();
@@ -30,8 +29,8 @@ class ChallengeTypeModeService
                     if (isset($typeMappings[$challengeType])) {
                         ChallengeTypeMode::create([
                             'challenge_id' => $challengeId,
-                            'type_mode' => $typeMappings[$challengeType]['type'],
-                            'value' => $typeMappings[$challengeType]['value']
+                            'type_mode'    => $typeMappings[$challengeType]['type'],
+                            'value'        => $typeMappings[$challengeType]['value'],
                         ]);
                     }
                 }
@@ -43,8 +42,8 @@ class ChallengeTypeModeService
                     if (isset($modeMappings[$challengeMode])) {
                         ChallengeTypeMode::create([
                             'challenge_id' => $challengeId,
-                            'type_mode' => $modeMappings[$challengeMode]['type'],
-                            'value' => $modeMappings[$challengeMode]['value']
+                            'type_mode'    => $modeMappings[$challengeMode]['type'],
+                            'value'        => $modeMappings[$challengeMode]['value'],
                         ]);
                     }
                 }

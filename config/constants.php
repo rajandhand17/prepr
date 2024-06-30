@@ -255,7 +255,7 @@ return [
     ],
 
     'challenge_flexible_announcement_by' => [
-        'email' => '0',
+        'email'        => '0',
         'notification' => '1',
     ],
 

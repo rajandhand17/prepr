@@ -189,7 +189,7 @@ class ChallengeRepository implements ChallengeInterface
 
             if (
                 $createChallenge['createChallenge'] &&
-                $createChallenge['updateChallengeDescription']&&
+                $createChallenge['updateChallengeDescription'] &&
                 $createChallenge['createChallengeAchievement'] &&
                 $createChallenge['createChallengeTypeMode'] &&
                 $createChallenge['createChallengeSponsor'] &&
