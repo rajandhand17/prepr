@@ -752,6 +752,7 @@
     "responses.required_field": "This field is required",
     "responses.successfully_upload_file": "Congratulations, You have successfully uploaded file",
     "responses.upload_file_failed": "Oops, You have failed to uploaded file",
+    "responses.upload_file_failed_fetch": "Sorry,we are not able to fetch data from this resume, Please try another resume",
     "responses.successfully_profile": "The profile image has been updated successfully.",
     "responses.failed_profile_image": "Oops, You have failed to uploaded profile image",
     "responses.skill_id_exists": "This skill id is not exists",
@@ -1271,5 +1272,7 @@
     "responses.noti_you_have_invited": "You have been Invited",
     "responses.noti_you_have_invited_message": "You have been invited to join the project.",
     "responses.noti_new_user_request": "New User Request",
-    "responses.noti_new_user_request_message": "A new user requested to join the"
+    "responses.noti_new_user_request_message": "A new user requested to join the",
+    "responses.front_page_success": "Successfully retrieved start page data",
+    "responses.front_page_failed": "failed to retrieve start page data"
 }

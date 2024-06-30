@@ -34,8 +34,8 @@ class OnboardingOrganizationRequest extends FormRequest
                 throw new NotFoundException();
             }
             $base_rules = [
-                'title'                         => 'required|max:255|unique:organizations,title,'.$organization->id,
-                'type'                          => 'required|in:assess,onboard,engage,grow',
+                'type'                          => 'required|array',
+                'type.*'                        => 'in:assess,onboard,engage,grow',
                 'business_challenge_tacklings'  => 'required|numeric|exists:business_challenge_tacklings,id',
                 'total_employees'               => 'required|integer',
                 'website'                       => 'required|url',

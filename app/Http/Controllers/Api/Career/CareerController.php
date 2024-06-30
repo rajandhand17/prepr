@@ -58,6 +58,24 @@ class CareerController extends AppBaseController
         }
     }
 
+    public function addMultipleJobs(Request $request)
+    {
+        try {
+            $checkJobsExistsOrNot = $this->careerRepository->getJobsDetails($request->job_ids);
+            if ($checkJobsExistsOrNot == null) {
+                return $this->sendError(__('responses.job_not_exists'));
+            }
+            $addedJobs = $this->careerRepository->addMultipleJobs($request);
+            if ($addedJobs) {
+                return $this->sendResponse($addedJobs, __('responses.added_jobs_successfully'));
+            }
+
+            return $this->sendResponse([], __('responses.added_jobs_successfully'));
+        } catch(\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function jobPinned(AddJobPinnedRequest $request)
     {
         try {
