@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Services\Manage;
+
+use App\Models\ChallengeFlexibleAnnouncement;
+use Exception;
+
+class ChallengeFlexibleAnnouncementService
+{
+    public function createChallengeFlexibleAnnouncement($request, $challengeId, $challengeTimeLine)
+    {
+        try {
+            if ($request->has('schedule_custom_notify')) {
+                if ($challengeTimeLine->timeline_type == '0') {
+                    foreach ($request->schedule_custom_notify as $key => $value) {
+                        $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.email');
+                        switch ($request->custom_announcement_type[$key]) {
+                            case 'email':
+                                $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.email');
+                                break;
+                            case 'notification':
+                                $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.notification');
+                                break;
+                        }
+
+                        $challengeFlexibleAnnouncement = new ChallengeFlexibleAnnouncement();
+                        $challengeFlexibleAnnouncement->challenge_id = $challengeId;
+                        $challengeFlexibleAnnouncement->challenge_flexible_id = $challengeTimeLine->id;
+                        $challengeFlexibleAnnouncement->custom_announcement_type = $sendAnnouncementChannelMedium;
+                        $challengeFlexibleAnnouncement->custom_announcement_number = $request->custom_announcement_number[$key] ?? 2;
+                        $challengeFlexibleAnnouncement->custom_announcement_duration = $request->custom_announcement_duration[$key] ?? 'weeks';
+                        $challengeFlexibleAnnouncement->custom_announcement_description = $request->custom_announcement_description[$key] ?? null;
+                        $challengeFlexibleAnnouncement->save();
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+}

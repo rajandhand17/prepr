@@ -178,9 +178,6 @@ class ChallengeService
                     case 'publish':
                         $status = config('constants.challenge_status.publish');
                         break;
-                    case 'archive':
-                        $status = config('constants.challenge_status.archive');
-                        break;
                     default:
                         $status = config('constants.challenge_status.draft');
                         break;
@@ -269,10 +266,27 @@ class ChallengeService
                     break;
             }
 
-            $source_link = $request->source_link ?? null;
+            $media_type = 'image';
+            switch ($request->cover_banner_type) {
+                case 'image':
+                    $media_type = 'image';
+                    break;
+                case 'embedded':
+                    $media_type = 'embedded';
+                    break;
+                case 'none':
+                    $media_type = 'none';
+                    break;
+            }
+
             if ($request->challengeTitle && $request->challengeDescription) {
                 $request->title = $request->challengeTitle;
                 $request->description = $request->challengeDescription;
+            }
+
+            $description_type = config('constants.description_type.text');
+            if ($request->description_type == 'scorm') {
+                $description_type = config('constants.description_type.scorm');
             }
 
             $model = new Challenge();
@@ -289,12 +303,13 @@ class ChallengeService
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
             $challenge->title = $request->title;
-            $challenge->description = $request->description;
+            $challenge->description_type = $description_type;
+            $challenge->description = ($request->has('description')) ? $request->description : null;
             $challenge->privacy = $challenge_privacy;
-            $challenge->media_type = 'image';
+            $challenge->media_type = $media_type;
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
-            $challenge->source_link = $source_link;
+            $challenge->source_link = $request->source_link ?? null;;
             $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;

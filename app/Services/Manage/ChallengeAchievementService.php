@@ -35,12 +35,12 @@ class ChallengeAchievementService
             $challengeAchievement->achievement_image = $upload_achievement_image;
             $challengeAchievement->save();
 
-            if ($request->winner_achievement_participation !== null) {
+            if ($request->has('winner_achievement_participation') && $request->winner_achievement_participation != 'no') {
                 foreach ($request->winner_achievement_participation as $key => $value) {
                     $upload_incentive_achievement_image = isset($request->winner_achievement_image[$key]) ? self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]) : config('site-settings.default_challenge_achievement_image');
                     $incentive_achievement_name = isset($request->winner_achievement_name[$key]) ? $request->winner_achievement_name[$key] : 'Incentive';
-                    $incentive_achievement_prize = isset($request->achievement_prize[$key]) ? $request->achievement_prize[$key] : 'Points';
-                    $incentive_achievement_points = isset($request->achievement_points[$key]) ? $request->achievement_points[$key] : 100;
+                    $incentive_achievement_prize = isset($request->winner_achievement_prize[$key]) ? $request->winner_achievement_prize[$key] : 'Points';
+                    $incentive_achievement_points = isset($request->winner_achievement_point[$key]) ? $request->winner_achievement_point[$key] : 100;
 
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;

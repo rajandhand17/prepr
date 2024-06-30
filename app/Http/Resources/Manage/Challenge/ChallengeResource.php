@@ -21,8 +21,6 @@ use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -47,8 +45,6 @@ class ChallengeResource extends JsonResource
         $jobs = null;
         $skill_groups = null;
         $skill_stacks = null;
-        $tags = null;
-        $tag_groups = null;
         $achievement = null;
         $incentive_achievement = null;
         $challenge_requirements = null;
@@ -57,6 +53,7 @@ class ChallengeResource extends JsonResource
         $challenge_assessment = null;
         $challenge_timelines = null;
         $challenge_custom_timelines = null;
+        $challenge_flexible_announcement = null;
         $challenge_template = [];
         $labs = [];
         $lab_programs = [];
@@ -101,16 +98,6 @@ class ChallengeResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->participation_achievement) {
@@ -233,18 +220,16 @@ class ChallengeResource extends JsonResource
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
                     'flexible_date_duration'        => $this->challenge_timelines->flexible_date_duration,
-                    'automatic_alert'               => $this->challenge_timelines->automatic_alert,
+                    'automatic_alert'               => $this->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                     'flexible_expire_deadline'      => $this->challenge_timelines->flexible_expire_deadline,
                 ];
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 $challenge_timelines = [
                     'timeline_type'                         => 'restricted',
-                    'open_call_date'                        => $this->challenge_timelines->open_call_date,
-                    'open_call_date_description'            => $this->challenge_timelines->open_call_date_description,
-                    'last_call_date'                        => $this->challenge_timelines->last_call_date,
-                    'last_call_date_description'            => $this->challenge_timelines->last_call_date_description,
-                    'application_deadline_date'             => $this->challenge_timelines->application_deadline_date,
-                    'application_deadline_date_description' => $this->challenge_timelines->application_deadline_date_description,
+                    'start_date'                        => $this->challenge_timelines->start_date,
+                    'start_date_description'            => $this->challenge_timelines->start_date_description,
+                    'registration_deadline_date'             => $this->challenge_timelines->registration_deadline_date,
+                    'registration_deadline_date_description' => $this->challenge_timelines->registration_deadline_date_description,
                     'submission_deadline_date'              => $this->challenge_timelines->submission_deadline_date,
                     'submission_deadline_date_description'  => $this->challenge_timelines->submission_deadline_date_description,
                     'challenge_duration'                    => $this->challenge_timelines->challenge_duration,
@@ -256,10 +241,21 @@ class ChallengeResource extends JsonResource
             $challenge_custom_timelines = $this->challenge_custom_timelines->map(function ($item) {
                 return [
                     'custom_timelines_title'       => $item->custom_timelines_title,
-                    'custom_timelines_date'        => $item->custom_timelines_date,
+                    'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify,
+                ];
+            });
+        }
+
+        if ($this->challenge_flexible_announcement) {
+            $challenge_flexible_announcement = $this->challenge_flexible_announcement->map(function ($item) {
+                return [
+                    'custom_announcement_type'       => $item->custom_announcement_type == '0' ? 'email' : 'notification',
+                    'custom_announcement_number'      => $item->custom_announcement_number,
+                    'custom_announcement_duration' => $item->custom_announcement_duration,
+                    'custom_announcement_description'    => $item->custom_announcement_description,
                 ];
             });
         }
@@ -353,7 +349,7 @@ class ChallengeResource extends JsonResource
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
-            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+            'status'                        => ($this->status == '0') ? 'draft' : 'published',
             'source_link'                   => $this->source_link,
             'agreement'                     => $this->agreement,
             'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
@@ -366,8 +362,6 @@ class ChallengeResource extends JsonResource
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'jobs'                          => $jobs,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'participation_achievement'     => $achievement,
             'incentive_achievement'         => $incentive_achievement,
             'challenge_requirements'        => $challenge_requirements,
@@ -376,6 +370,7 @@ class ChallengeResource extends JsonResource
             'challenge_assessment'          => $challenge_assessment,
             'challenge_timelines'           => $challenge_timelines,
             'challenge_custom_timelines'    => $challenge_custom_timelines,
+            'challenge_flexible_announcement'   => $challenge_flexible_announcement,
             'challenge_template'            => $challenge_template,
             'joined'                        => $join_status,
             'likes'                         => $this->likes()->count(),

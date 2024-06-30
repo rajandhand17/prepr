@@ -10,7 +10,7 @@ class ChallengeAssessmentCriteriaService
     public function createChallengeAssessmentCriteria($request, $challenge, $challengeAssessment = null)
     {
         try {
-            if (!empty($request->assessment_type) && $request->assessment_title !== null && $request->assessment_score !== null && $request->assessment_weight !== null) {
+            if (!empty($request->assessment_type) && $request->assessment_type != 'none' && $request->assessment_title != null && $request->assessment_score != null && $request->assessment_weight != null) {
                 foreach ($request->assessment_title as $key => $value) {
                     $challengeAssessmentCriteria = new ChallengeAssessmentCriteria();
                     $challengeAssessmentCriteria->challenge_id = $challenge;

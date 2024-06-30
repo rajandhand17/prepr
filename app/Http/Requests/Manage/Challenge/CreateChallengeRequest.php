@@ -25,50 +25,227 @@ class CreateChallengeRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'request_type'                       => 'required|in:draft,publish,archive',
-            'category_id'                        => 'required|exists:categories,id',
-            'duration_id'                        => 'required|exists:durations,id',
-            'level_id'                           => 'required|exists:levels,id',
-            'title'                              => 'required_if:request_type,publish|unique:challenges,title',
-            'description'                        => 'required_if:request_type,publish',
-            'privacy'                            => 'required_if:request_type,publish|in:yes,no',
-            'cover_image'                        => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
-            'source_link'                        => 'nullable|url',
-            'agreement'                          => 'required',
-            'is_notification_enabled'            => 'in:yes,no',
-            'project_privacy'                    => 'in:yes,no',
-            'is_open'                            => 'in:yes,no',
-            'is_auto_created'                    => 'in:yes,no',
-            'achievement_image'                  => 'required|mimes:jpeg,jpg,png,webp|max:1024',
-            'achievement_participation'          => 'required',
-            'achievement_name'                   => 'required',
-            'achievement_prize'                  => 'required|numeric',
-            'achievement_points'                 => 'required|numeric',
-            'skills'                             => 'required|array',
-            'skills.*'                           => 'numeric|exists:skills,id',
-            'skill_groups'                       => 'nullable|array',
-            'skill_groups.*'                     => 'numeric|exists:skill_groups,id',
-            'skill_stacks'                       => 'nullable|array',
-            'skill_stacks.*'                     => 'numeric|exists:skill_stacks,id',
-            'tags'                               => 'required|array',
-            'tags.*'                             => 'numeric|exists:tags,id',
-            'tag_groups'                         => 'nullable|array',
-            'tag_groups.*'                       => 'numeric|exists:tag_groups,id',
-            'min_rank'                           => 'required|numeric',
-            'min_points'                         => 'required|numeric',
-            'project_submission_requirement_ids' => 'required|array',
-            'max_project_submission'             => 'required|numeric',
-            'min_experience'                     => 'required|numeric',
-            'min_imported_badges'                => 'required|numeric',
-            'min_achievement_counts'             => 'required|numeric',
-            'template_id'                        => 'required|numeric',
-            'allow_submit_project'               => 'in:yes,no',
-            'requirement_program'                => 'in:yes,no',
-            'complete_education_program'         => 'in:yes,no',
-            'complete_experience'                => 'in:yes,no',
-            'timeline_type'                      => 'required|in:restricted,flexible',
-            'integrate_campus_connect'           => 'in:both,job,story,no',
+            'request_type'                          => 'required|in:draft,publish',
+            'is_auto_created'                       => 'required_if:request_type,publish|in:yes,no',
+            'is_ai_created'                       => 'required_if:request_type,publish|in:yes,no',
+            'title'                                 => 'required|unique:challenges,title',
+            'description_type'                      => 'required_if:request_type,publish|in:text,scorm',
+            'description'                           => 'required_if:description_type,text',
+            'scorm_file'                            => 'required_if:description_type,scorm|file|mimes:zip|max:500000',
+            'duration_id'                           => 'required|exists:durations,id',
+            'level_id'                              => 'required|exists:levels,id',
+            'skills'                                => 'required_if:request_type,publish|array',
+            'skills.*'                              => 'numeric|exists:skills,id',
+            'is_open'                               => 'required|in:yes,no',
+            'privacy'                               => 'required|in:yes,no',
+            'project_privacy'                       => 'required|in:yes,no',
+            'is_notification_enabled'               => 'required|in:yes,no',
+            'cover_banner_type'                     => 'required_if:request_type,publish|in:image,embedded,none',
+            'skill_groups'                          => 'nullable|array',
+            'skill_groups.*'                        => 'numeric|exists:skill_groups,id',
+            'skill_stacks'                          => 'nullable|array',
+            'skill_stacks.*'                        => 'numeric|exists:skill_stacks,id',
+            'host_id'                               => 'nullable|array',
+            'host_id.*'                             => 'numeric|exists:hosts,id',
+            'type'                                  => 'nullable|array',
+            'type.*'                                => 'in:assess,onboard,engage,grow',
+            'mode'                                  => 'nullable|array',
+            'mode.*'                                => 'in:team,individual',
+            'source_link'                           => 'nullable|url',
+            'category_id'                           => 'required|exists:categories,id',
+            'job_ids'                               => 'nullable|array',
+            'job_ids.*'                             => 'numeric|exists:job_titles,id',
+            'external_links'                        => 'array|required_if:request_type,publish',
+            'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
+            'external_links.*'                      => 'url',
+            'external_link_ids.*'                   => 'numeric',
+            'template_id'                           => 'required_if:request_type,publish|numeric|exists:pitch_templates,id',
+            'project_submission_requirement_ids'    => 'required_if:request_type,publish|array',
+            'allow_submit_project'                  => 'in:yes,no',
+            'complete_education_program'            => 'in:yes,no',
+            'complete_experience'                   => 'in:yes,no',
+            'min_experience'                        => 'required_if:complete_experience,yes|numeric',
+            'agreement'                             => 'required_if:request_type,publish',
+            'achievement_image'                     => 'required_if:request_type,publish|mimes:jpeg,jpg,png,webp|max:5120',
+            'achievement_name'                      => 'required_if:request_type,publish|',
+            'achievement_prize'                     => 'required_if:request_type,publish|numeric',
+            'achievement_points'                    => 'required_if:request_type,publish|numeric',
+            'winner_achievement_participation'      => 'required_if:request_type,publish|array',
+            'winner_achievement_participation.*'    => 'in:yes,no',
+            'winner_achievement_image'              => 'nullable|array',
+            'winner_achievement_image.*'            => 'mimes:jpeg,jpg,png,webp|max:5120',
+            'winner_achievement_name'               => 'nullable|array',
+            'winner_achievement_name.*'             => 'string',
+            'winner_achievement_prize'              => 'nullable|array',
+            'winner_achievement_prize.*'            => 'numeric',
+            'winner_achievement_point'              => 'nullable|array',
+            'winner_achievement_point.*'            => 'numeric',
+            'max_project_submission'                => 'nullable|numeric',
+            'max_project_associated'                => 'nullable|numeric',
+            'min_imported_badges'                   => 'nullable|numeric',
+            'min_achievement_counts'                => 'nullable|numeric',
+            'min_rank'                              => 'nullable|numeric',
+            'min_points'                            => 'nullable|numeric',
+            'additional_requirements'               => 'nullable|string',
+            'assessment_type'                       => 'required_if:request_type,publish|in:open,closed,ai,none',
+            'guidelines'                            => 'required_if:assessment_type,open,closed,ai',
+            'visibility'                            => 'required_if:assessment_type,closed,ai|in:users,hidden',
+            'attachments'                           => 'max:5120',
+            'timeline_type'                         => 'required_if:request_type,publish|in:restricted,flexible',
         ];
+
+        // Challenge cover image validation
+        if ($this->has('cover_banner_type') && $this->input('cover_banner_type') == 'image') {
+            $base_rules['cover_image'] = [
+                'required',
+                'mimes:jpeg,jpg,png,webp',
+                'max:5120',
+                function ($attribute, $value, $fail) {
+                    if ($value && $value->isValid()) {
+                        $image = getimagesize($value);
+                        if ($image[0] < 625 || $image[1] < 325) {
+                            $fail('' . $attribute . ' must be at least 625x325 pixels.');
+                        }
+                    }
+                },
+            ];
+        }
+
+        // Challenge cover video iframe validation
+        if ($this->has('cover_banner_type') && $this->input('cover_banner_type') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+
+            $cover_embedded = $this->input('cover_embedded');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['cover_embedded'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute . ' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute . ' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
+        }
+
+        // Challenge Association code with labs
+        if ($this->request->has('labs')) {
+            $base_rules['labs'] = 'array';
+            $base_rules['labs.*'] = 'exists:labs,uuid';
+        }
+
+        // Challenge Association code with lab programs
+        if ($this->request->has('lab_programs')) {
+            $base_rules['lab_programs'] = 'array';
+            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+        }
+
+        // Challenge Association code with resource module
+        if ($this->request->has('resource_modules')) {
+            $base_rules['resource_modules'] = 'array';
+            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+        }
+
+        // Challenge Association code with resource collection
+        if ($this->request->has('resource_collections')) {
+            $base_rules['resource_collections'] = 'array';
+            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+        }
+
+        // Challenge Association code with resource group
+        if ($this->request->has('resource_groups')) {
+            $base_rules['resource_groups'] = 'array';
+            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
+        }
+
+        if ($this->request->get('assessment_type') == 'closed') {
+            $base_rules['members_email'] = 'array|required';
+            $base_rules['members_email.*'] = 'email';
+        }
+
+        // Challenge assessment only if its not set to none
+        if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
+            $base_rules['assessment_title']         = 'required|array';
+            $base_rules['assessment_title.*']       = 'required_if:assessment_type,open,closed';
+            $base_rules['assessment_description']   = 'required|array';
+            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
+            $base_rules['assessment_score']         = 'required|array';
+            $base_rules['assessment_score.*']       = 'required_if:assessment_type,open,closed|numeric';
+            $base_rules['assessment_weight'] = [
+                'required',
+                'array',
+                'required_if:assessment_type,open,closed',
+                function ($attribute, $value, $fail) {
+                    if (array_sum($value) != 100) {
+                        $fail(__('responses.challenge_weight_should_be_100'));
+                    }
+                },
+            ];
+            $base_rules['assessment_weight.*'] = 'required_if:assessment_type,open,closed|numeric';
+        }
+
+
+        // For challenge restricted timeline
+        if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
+            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['start_date_description'] = 'required_if:request_type,publish';
+            $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
+            $base_rules['registration_deadline_date_description'] = 'nullable';
+            $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:registration_deadline_date'];
+            $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
+        }
+
+        // For challenge flexible timeline
+        if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
+            $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
+            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
+        }
+
+        // For challenge custom notify only if flexible timeline
+        if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
+            $base_rules['schedule_custom_notify']           = 'nullable|array';
+            $base_rules['schedule_custom_notify.*']         = 'in:yes,no';
+            $base_rules['custom_timelines_title']           = 'nullable|array';
+            $base_rules['custom_timelines_title.*']         = 'string';
+            $base_rules['custom_timelines_number']          = 'nullable|array';
+            $base_rules['custom_timelines_number.*']        = 'integer';
+            $base_rules['custom_timelines_duration']        = 'nullable|array';
+            $base_rules['custom_timelines_duration.*']      = 'in:days,week,month';
+            $base_rules['custom_timelines_description']     = 'nullable|array';
+            $base_rules['custom_timelines_description.*']   = 'string';
+        }
+
+        // For challenge custom announcement only if flexible timeline and schedule custom notify is yes
+        if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
+            $base_rules['custom_flexible_announcement']         = 'nullable|array';
+            $base_rules['custom_flexible_announcement.*']       = 'required_if:schedule_custom_notify.*,yes|in:yes,no';
+            $base_rules['custom_announcement_type']             = 'nullable|array';
+            $base_rules['custom_announcement_type.*']           = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
+            $base_rules['custom_announcement_number']           = 'nullable|array';
+            $base_rules['custom_announcement_number.*']         = 'integer';
+            $base_rules['custom_announcement_duration']         = 'nullable|array';
+            $base_rules['custom_announcement_duration.*']       = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
+            $base_rules['custom_announcement_description']      = 'nullable|array';
+            $base_rules['custom_announcement_description.*']    = 'string';
+        }
 
         /*** CAMPUS CONNECT JOB RULE */
         if (in_array($this->get('integrate_campus_connect'), ['both', 'job'])) {
@@ -111,118 +288,8 @@ class CreateChallengeRequest extends FormRequest
             }
         }
         /** CAMPUS CONNECT STORY FORM VALIDATION END */
-        if ($this->request->has('winner_achievement_participation')) {
-            $base_rules['winner_achievement_image'] = 'array';
-            $base_rules['winner_achievement_image.*'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
-            $base_rules['winner_achievement_participation'] = 'array';
-            $base_rules['winner_achievement_participation.*'] = 'in:incentive';
-            $base_rules['winner_achievement_name'] = 'array';
-            $base_rules['winner_achievement_name.*'] = 'required';
-            $base_rules['winner_achievement_prize'] = 'array';
-            $base_rules['winner_achievement_prize.*'] = 'required|numeric';
-            $base_rules['winner_achievement_point'] = 'array';
-            $base_rules['winner_achievement_point.*'] = 'required|numeric';
-        }
-
-        if ($this->request->has('host_id') !== null) {
-            $base_rules['host_id'] = 'array';
-            $base_rules['host_id.*'] = 'required|numeric';
-        }
-
-        if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible' && $this->request->has('custom_timelines_title') !== null && $this->request->has('custom_timelines_date') !== null) {
-            $base_rules['custom_timelines_title'] = 'array';
-            $base_rules['custom_timelines_title.*'] = 'required';
-            $base_rules['custom_timelines_date'] = 'array';
-            $base_rules['custom_timelines_date.*'] = ['required', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
-            $base_rules['schedule_custom_notify'] = 'array|required';
-            $base_rules['schedule_custom_notify.*'] = 'in:0,1';
-        }
-
-        if ($this->request->has('assessment_type')) {
-            $base_rules['assessment_type'] = 'in:open,closed,ai,none';
-            $base_rules['guidelines'] = 'required_if:assessment_type,open,closed,ai';
-            $base_rules['attachments'] = 'max:5120';
-
-            if ($this->request->get('assessment_type') == 'closed') {
-                $base_rules['visibility'] = 'in:users,hidden';
-                $base_rules['members_email'] = 'array|required';
-                $base_rules['members_email.*'] = 'email';
-            }
-        }
-
-        if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
-            $base_rules['assessment_title'] = 'array';
-            $base_rules['assessment_title.*'] = 'required';
-            $base_rules['assessment_description'] = 'array';
-            $base_rules['assessment_score'] = 'array';
-            $base_rules['assessment_score.*'] = 'required|numeric';
-            $base_rules['assessment_weight'] = 'array';
-            $base_rules['assessment_weight.*'] = 'required|numeric';
-
-            // Custom validation for sum of assessment_weight
-            $base_rules['assessment_weight'] = [
-                'array',
-                function ($attribute, $value, $fail) {
-                    if (array_sum($value) != 100) {
-                        $fail(__('responses.challenge_weight_should_be_100'));
-                    }
-                },
-            ];
-        }
-
-        if ($this->has('timeline_type') && $this->input('timeline_type') === 'restricted') {
-            $base_rules['open_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
-            $base_rules['open_call_date_description'] = 'required_if:request_type,publish';
-            $base_rules['last_call_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
-            $base_rules['last_call_date_description'] = 'required_if:request_type,publish';
-            $base_rules['application_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:open_call_date'];
-            $base_rules['application_deadline_date_description'] = 'required_if:request_type,publish';
-            $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:application_deadline_date'];
-            $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
-        }
-
-        if ($this->has('timeline_type') && $this->input('timeline_type') === 'flexible') {
-            $base_rules['automatic_alert'] = 'required|in:0,1';
-            $base_rules['flexible_date_number'] = 'required_if:request_type,publish';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish';
-            $base_rules['flexible_expire_deadline'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
-        }
-
-        if ($this->request->has('labs')) {
-            $base_rules['labs'] = 'array';
-            $base_rules['labs.*'] = 'exists:labs,uuid';
-        }
-
-        if ($this->request->has('lab_programs')) {
-            $base_rules['lab_programs'] = 'array';
-            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
-        }
-
-        if ($this->request->has('resource_modules')) {
-            $base_rules['resource_modules'] = 'array';
-            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
-        }
-
-        if ($this->request->has('resource_collections')) {
-            $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
-        }
-
-        if ($this->request->has('resource_groups')) {
-            $base_rules['resource_groups'] = 'array';
-            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
-        }
 
         return $base_rules;
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'data'    => $validator->errors(),
-        ], 422));
     }
 
     public function withValidator(Validator $validator)
@@ -242,61 +309,18 @@ class CreateChallengeRequest extends FormRequest
         });
     }
 
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Validation errors',
+            'data'    => $validator->errors(),
+        ], 422));
+    }
+
     public function messages()
     {
         return [
-            'category_id.required'                             => __('responses.category_id_required'),
-            'category_id.exists'                               => __('responses.category_not_found'),
-            'duration_id.required'                             => __('responses.duration_id_required'),
-            'duration_id.exists'                               => __('responses.duration_id_exists'),
-            'level_id.required'                                => __('responses.level_id_required'),
-            'level_id.exists'                                  => __('responses.level_id_exists'),
-            'title.required_if'                                => __('responses.title_required'),
-            'title.unique'                                     => __('responses.challenge_title_unique'),
-            'description.required_if'                          => __('responses.description_required'),
-            'request_type.required'                            => __('responses.request_type_required'),
-            'privacy.in'                                       => __('responses.choose_yes_no'),
-            'privacy.required_if'                              => __('responses.privacy_required'),
-            'source_link'                                      => __('responses.challenge_source_link'),
-            'is_notification_enabled.in'                       => __('responses.choose_yes_no'),
-            'project_privacy.in'                               => __('responses.choose_yes_no'),
-            'is_open'                                          => __('responses.choose_yes_no'),
-            'is_auto_created'                                  => __('responses.choose_yes_no'),
-            'achievement_name.required'                        => __('responses.achievement_name_required'),
-            'achievement_points.required'                      => __('responses.achievement_points_required'),
-            'achievement_prize.required'                       => __('responses.achievement_prize_required'),
-            'achievement_image.required'                       => __('responses.achievement_image_required'),
-            'skills.required'                                  => __('responses.skills_required'),
-            'skills.required_if'                               => __('responses.skill_not_found'),
-            'skill_groups.*.exists'                            => __('responses.skill_groups_not_exists'),
-            'skill_groups.*.array'                             => __('responses.skill_groups_array'),
-            'skill_stacks.*.array'                             => __('responses.skill_stacks_array'),
-            'skill_stacks.*.exists'                            => __('responses.skill_stack_not_found'),
-            'tags.required'                                    => __('responses.tags_required'),
-            'tags.numeric'                                     => __('responses.tags_numeric'),
-            'tag_groups.*.exists'                              => __('responses.tag_groups_not_found'),
-            'tag_groups.*.array'                               => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'                             => __('responses.tag_groups_numeric'),
-            'winner_achievement_image.required'                => __('responses.winner_achievement_image_required'),
-            'winner_achievement_image.array'                   => __('responses.winner_achievement_image_array'),
-            'winner_achievement_participation.required'        => __('responses.winner_achievement_participation_required'),
-            'winner_achievement_participation.array'           => __('responses.winner_achievement_participation_array'),
-            'winner_achievement_name.required'                 => __('responses.winner_achievement_name_required'),
-            'winner_achievement_name.array'                    => __('responses.winner_achievement_name_array'),
-            'winner_achievement_prize.required'                => __('responses.winner_achievement_prize_required'),
-            'winner_achievement_prize.array'                   => __('responses.winner_achievement_prize_array'),
-            'winner_achievement_points.required'               => __('responses.winner_achievement_points_required'),
-            'winner_achievement_points.array'                  => __('responses.winner_achievement_points_array'),
-            'achievement_conditions.required'                  => __('responses.achievement_conditions_required'),
-            'achievement_conditions.array'                     => __('responses.achievement_conditions_array'),
-            'host_id.required'                                 => __('responses.host_id_required'),
-            'host_id.array'                                    => __('responses.host_id_array'),
-            'project_submission_requirement_ids.required'      => __('responses.project_submission_requirement_ids_required'),
-            'project_submission_requirement_ids.array'         => __('responses.project_submission_requirement_ids_array'),
-            'custom_timelines_title.required'                  => __('responses.custom_timelines_title_required'),
-            'custom_timelines_title.array'                     => __('responses.custom_timelines_title_array'),
-            'custom_timelines_date.required'                   => __('responses.custom_timelines_date_required'),
-            'custom_timelines_date.array'                      => __('responses.custom_timelines_date_array'),
             'integrate_campus_connect.in'                      => __('responses.integrate_campus_connect_in'),
             'campus_connect_job_title.required'                => __('responses.campus_connect_job_title_required'),
             'campus_connect_job_title.max'                     => __('responses.campus_connect_job_title_max'),

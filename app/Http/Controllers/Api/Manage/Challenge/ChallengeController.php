@@ -80,35 +80,40 @@ class ChallengeController extends AppBaseController
                 }
             }
 
-            $upload_cover_image = config('site-settings.default_challenge_cover_image');
-            if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+            $uploaded_challenge_cover = config('site-settings.default_challenge_cover_image');
+            if ($request->has('cover_banner_type')) {
+                switch ($request->cover_banner_type) {
+                    case 'image':
+                        $uploaded_challenge_cover = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
+                        if (!$uploaded_challenge_cover) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                        break;
+                    case 'embedded':
+                        $uploaded_challenge_cover = $request->input('cover_embedded');
+                        break;
                 }
-                $upload_cover_image = $uploaded_cover_image;
             }
 
-            $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
-            if ($request->achievement_image !== null) {
-                $uploaded_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
+            $uploaded_achievement_image = config('site-settings.default_challenge_achievement_image');
+            if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
+                if (!$upload_achievement_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
+                $uploaded_achievement_image = $upload_achievement_image;
             }
 
-            $upload_assessment_attachment = null;
-            if ($request->attachments !== null) {
-                $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
-                if (!$uploaded_assessment_attachment) {
+            $uploaded_assessment_attachment = null;
+            if ($request->hasFile('attachments') && $request->file('attachments')->isValid()) {
+                $upload_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if (!$upload_assessment_attachment) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_assessment_attachment = $uploaded_assessment_attachment;
+                $uploaded_assessment_attachment = $upload_assessment_attachment;
             }
 
-            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
-
+            $createChallenge = $this->challengeRepository->createChallenge($request, $uploaded_challenge_cover, $uploaded_achievement_image, $uploaded_assessment_attachment, $organization);
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
             }

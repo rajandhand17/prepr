@@ -23,6 +23,7 @@ class Challenge extends Model
         'level_id',
         'slug',
         'title',
+        'description_type',
         'description',
         'privacy',
         'media_type',
@@ -141,6 +142,11 @@ class Challenge extends Model
         return $this->hasMany(ChallengeCustomTimelines::class, 'challenge_id', 'id');
     }
 
+    public function challenge_flexible_announcement()
+    {
+        return $this->hasMany(ChallengeFlexibleAnnouncement::class, 'challenge_id', 'id');
+    }
+
     public function challenge_project_template()
     {
         return $this->hasOne(ChallengeProjectTemplate::class, 'challenge_id', 'id');
@@ -221,5 +227,13 @@ class Challenge extends Model
     public function getCampusConnectStatusAttribute($value)
     {
         return config('constants.campus_connect_status_id.'.$value);
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
     }
 }
