@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChargebeeSubscription;
 use Carbon\Carbon;
 use Exception;
@@ -55,6 +56,8 @@ class ChargebeeSubscriptionService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

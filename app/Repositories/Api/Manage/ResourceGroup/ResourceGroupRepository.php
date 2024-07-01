@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ResourceGroup;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupService;
@@ -35,6 +36,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             $this->resourceGroupService->getResourceGroupCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +69,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -77,6 +81,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->uploadResourceGroupCoverImage($cover_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +92,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupAchievementsService->uploadAchievementImage($achievement_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +103,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +123,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +134,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->checkName($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -153,6 +167,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -164,6 +179,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupList($request, $organization);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +190,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupService->getResourceGroupListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

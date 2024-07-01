@@ -15,6 +15,8 @@ class FileDeleteHelper
 
             return $response;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $e;
         }
     }

@@ -31,6 +31,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.found_user_list'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -40,6 +42,8 @@ class UserController extends AppBaseController
         try {
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -63,6 +67,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.found_organization_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -91,6 +97,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.selected_organization_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -105,6 +113,8 @@ class UserController extends AppBaseController
                 }
                 $organizationOnboarding = $this->userRepository->organizationOnboarding($checkComponentSlugExistOrNot->id, $request);
                 if ($organizationOnboarding) {
+                    $organizationType = $this->userRepository->storeOrganizationType($checkComponentSlugExistOrNot->id, $request);
+
                     return $this->sendResponse(OrganizationDetailResource::make($organizationOnboarding), __('responses.organization_onboarding_completed'));
                 }
 
@@ -121,6 +131,8 @@ class UserController extends AppBaseController
                 }
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

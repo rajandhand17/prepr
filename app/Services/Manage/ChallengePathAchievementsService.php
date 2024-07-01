@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePathAchievement;
 use Exception;
 
@@ -18,6 +19,8 @@ class ChallengePathAchievementsService
 
             return $upload_Achievement_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +37,8 @@ class ChallengePathAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -59,6 +64,8 @@ class ChallengePathAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +85,8 @@ class ChallengePathAchievementsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

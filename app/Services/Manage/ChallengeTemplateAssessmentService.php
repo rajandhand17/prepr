@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessment;
 use App\Models\ChallengeTemplateAssessment;
 use Exception;
@@ -26,6 +27,8 @@ class ChallengeTemplateAssessmentService
 
             return $challengeTemplateAssessment;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +51,8 @@ class ChallengeTemplateAssessmentService
 
             return $newChallengeAssessments;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +70,8 @@ class ChallengeTemplateAssessmentService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

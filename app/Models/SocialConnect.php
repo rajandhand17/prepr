@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,6 +35,8 @@ class SocialConnect extends Model
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

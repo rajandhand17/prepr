@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\UnifiedConnection;
 
 use App\Helpers\Unified\UnifiedHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\User;
 use App\Services\Manage\UnifiedConnectionService;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +28,8 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
         try {
             return $this->unifiedConnectionService->getIntegrations($data, $user);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -55,6 +58,7 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;
@@ -71,6 +75,8 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
         try {
             return $this->unifiedConnectionService->inviteMembers($data);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

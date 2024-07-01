@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
@@ -45,6 +46,8 @@ class CategoryService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

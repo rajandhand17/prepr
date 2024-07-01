@@ -58,6 +58,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -115,6 +117,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -141,6 +145,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -197,6 +203,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -226,6 +234,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -240,6 +250,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -254,6 +266,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -302,6 +316,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -344,6 +360,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_assessment_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -382,6 +400,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -445,6 +465,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -503,6 +525,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse($response, __('responses.found_challenges_announcement'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -532,6 +556,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -551,6 +577,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -574,6 +602,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -598,6 +627,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeFromResourceUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -628,6 +658,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAI has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -665,6 +696,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_winner_selected_not_successfully'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

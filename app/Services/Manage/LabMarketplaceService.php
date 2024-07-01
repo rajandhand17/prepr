@@ -22,6 +22,8 @@ class LabMarketplaceService
 
             return $lab_marketplace_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +95,8 @@ class LabMarketplaceService
 
             return $lab_marketplace_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -133,6 +137,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -142,6 +148,8 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -151,6 +159,8 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -167,6 +177,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -181,6 +193,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -228,6 +242,8 @@ class LabMarketplaceService
 
             return $newLab;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -247,6 +263,8 @@ class LabMarketplaceService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

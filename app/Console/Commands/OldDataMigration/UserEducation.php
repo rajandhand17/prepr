@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -65,6 +66,7 @@ class UserEducation extends Command
             DB::commit();
             $this->info('Migrating of old data for users educations table completed.');
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

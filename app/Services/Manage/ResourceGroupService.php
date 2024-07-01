@@ -20,6 +20,8 @@ class ResourceGroupService
 
             return $resourceGroup_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +36,8 @@ class ResourceGroupService
 
             return $upload_resource_group_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +87,8 @@ class ResourceGroupService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +98,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -108,6 +116,8 @@ class ResourceGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +127,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::select('id')->where('title', $title)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +175,8 @@ class ResourceGroupService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +189,8 @@ class ResourceGroupService
 
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -261,6 +277,8 @@ class ResourceGroupService
 
             return $resourceGroupList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -270,6 +288,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -283,6 +303,8 @@ class ResourceGroupService
 
             return $resourceGroupList->limit($limit)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -292,6 +314,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -306,6 +330,8 @@ class ResourceGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +351,8 @@ class ResourceGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Rank;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,6 +41,8 @@ class RankService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

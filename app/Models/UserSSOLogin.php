@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,6 +39,7 @@ class UserSSOLogin extends Model
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
         }
     }

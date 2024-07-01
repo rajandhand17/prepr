@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\User;
 use App\Models\UserSetting as ModelsUserSetting;
 use DB;
@@ -137,6 +138,7 @@ class UserSetting extends Command
             DB::commit();
             $this->info('Migrating of old data for user setting table completed.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 
