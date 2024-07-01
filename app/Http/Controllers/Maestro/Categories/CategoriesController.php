@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers\Maestro\Categories;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Category\CategoryTrait;
 use App\Models\Category;
 use App\Models\Language;
+use App\Traits\Maestro\Category\CategoryTrait;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class CategoriesController extends Controller
 {
     use CategoryTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder)
     {
         try {
@@ -26,10 +28,10 @@ class CategoriesController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($categories)
                     ->addColumn('action', static function (Category $category) {
-                        return '<a style="padding-left:50px" class="mr-10" href="' . route('category.edit', ['category' => $category->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteCategory(\'' . route('category.destroy', ['category' => $category->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a style="padding-left:50px" class="mr-10" href="'.route('category.edit', ['category' => $category->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteCategory(\''.route('category.destroy', ['category' => $category->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->addColumn('child', static function (Category $category) {
-                        return '<a style="padding-left:50px" class="mr-10" href="' . route('category.subcategory', ['id' => $category->id]) . '">View Sub Category</a>';
+                        return '<a style="padding-left:50px" class="mr-10" href="'.route('category.subcategory', ['id' => $category->id]).'">View Sub Category</a>';
                     })->rawColumns(['child', 'action'])
                     ->toJson();
             }
@@ -49,20 +51,22 @@ class CategoriesController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
-                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->lang_name . ' Category Name'];
+                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->lang_name.' Category Name'];
                 array_push($tableColumns, $singleLangCol);
             }
-            array_push($tableColumns, ['data' => 'components', 'name' => 'components', 'title' => 'Components', "width" => "10%"]);
+            array_push($tableColumns, ['data' => 'components', 'name' => 'components', 'title' => 'Components', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'child', 'name' => 'child', 'title' => 'Sub Category Name', 'orderable' => false, 'searchable' => false]);
-            array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, "width" => "15%"]);
+            array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '15%']);
             $html = $builder->columns($tableColumns);
             $module_name = 'Category';
+
             return view('maestro.categories.index', compact('html', 'module_name'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
+
         return view('maestro.categories.index', compact('categories'));
     }
 
@@ -74,6 +78,7 @@ class CategoriesController extends Controller
         try {
             $languages = $this->getLanguage();
             $category_list = $this->getCategories();
+
             return view('maestro.categories.create', compact('languages', 'category_list'));
         } catch (Exception $e) {
             return redirect()->route('category.index')->withErrors(['error' => $e->getMessage()]);
@@ -95,9 +100,11 @@ class CategoriesController extends Controller
                     return redirect()->route('category.index')->with(['success' => 'Category Added successfully']);
                 }
             }
+
             return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('category.index')->with(['error' => $e->getMessage()]);
         }
     }
@@ -114,6 +121,7 @@ class CategoriesController extends Controller
             $root = $this->getCategoryById($id);
             $components = $this->getComponentsById($root);
             $category = $this->getFirstCategoryById($id);
+
             return view('maestro.categories.edit', compact('root', 'category', 'components', 'category_list', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('category.index')->withErrors(['error' => $e->getMessage()]);
@@ -135,9 +143,11 @@ class CategoriesController extends Controller
                     return redirect()->route('category.index')->with(['success' => 'Category updated successfully.']);
                 }
             }
+
             return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('category.index')->with(['error' => $e->getMessage()]);
         }
     }
@@ -154,22 +164,27 @@ class CategoriesController extends Controller
                 $checkPCate = Category::where('parent_id', $id)->count();
                 if (!empty($checkPCate)) {
                     DB::rollback();
+
                     return response()->json(['status' => 'fail', 'message' => 'Please delete subcategory first.']);
                 } else {
                     $this->deleteCategory($category);
                     DB::commit();
+
                     return response()->json(['status' => 'success', 'message' => 'Category deleted successfully.']);
                 }
             } else {
                 $this->deleteCategory($category);
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Subcategory deleted successfully.']);
             }
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Record deleted successfully.']);
         }
     }
+
     /**
      * List sub-category the specified resource from storage.
      */
@@ -180,30 +195,32 @@ class CategoriesController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($categories)
                     ->addColumn('action', static function (Category $category) {
-                        return '<a style="padding-left:50px" class="mr-10" href="' . route('category.edit', ['category' => $category->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteSubCategory(\'' . route('category.destroy', ['category' => $category->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a style="padding-left:50px" class="mr-10" href="'.route('category.edit', ['category' => $category->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteSubCategory(\''.route('category.destroy', ['category' => $category->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->addColumn('PCategory', static function (Category $category) {
                         $parent_category = Category::where('id', $category->parent_id)->first();
                         if ($parent_category !== null) {
                             return $parent_category->title;
                         }
+
                         return '-';
                     })
                     ->toJson();
             }
             $html = $builder->columns([
-                ['data' => 'id', 'name' => 'id', 'title' => 'Id', "width" => "10%"],
+                ['data' => 'id', 'name' => 'id', 'title' => 'Id', 'width' => '10%'],
                 ['data' => 'title', 'name' => 'title', 'title' => 'SubCategory Name'],
                 ['data' => 'PCategory', 'name' => 'PCategory', 'title' => 'Parent Category', 'orderable' => false],
                 ['data' => 'components', 'name' => 'components', 'title' => 'Components'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, "width" => "15%"],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '15%'],
             ]);
             $module_name = 'Sub Category';
+
             return view('maestro.categories.sub-category-index', compact('html', 'module_name'));
         } catch (Exception $e) {
             return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
+                'status'  => 'error',
+                'message' => $e->getMessage(),
             ]);
         }
     }

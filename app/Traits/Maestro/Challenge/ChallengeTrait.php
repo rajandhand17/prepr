@@ -11,9 +11,10 @@ trait ChallengeTrait
     {
         try {
             $challengeList = ChallengeService::getChallengeList();
-            if($challengeList){
+            if ($challengeList) {
                 return $challengeList;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -24,48 +25,56 @@ trait ChallengeTrait
     {
         try {
             $language = ChallengeService::getLanguage();
-            if($language){
+            if ($language) {
                 return $language;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getChallengeAssociatedItemsById($challenge)
     {
         try {
             $associateItems = ChallengeService::getChallengeAssociatedItemsById($challenge);
-            if($associateItems){
+            if ($associateItems) {
                 return $associateItems;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function createChallenge($request)
     {
         try {
-            if(ChallengeService::createChallenge($request)){
+            if (ChallengeService::createChallenge($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteChallengeById($id)
     {
         try {
-            if(ChallengeService::deleteChallenge($id)){
+            if (ChallengeService::deleteChallenge($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getChallengeById($id)
     {
         try {
@@ -74,12 +83,14 @@ trait ChallengeTrait
             return false;
         }
     }
-    private function updateChallengeById($id,$request)
+
+    private function updateChallengeById($id, $request)
     {
         try {
-            if(ChallengeService::updateChallengeById($id,$request)){
+            if (ChallengeService::updateChallengeById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

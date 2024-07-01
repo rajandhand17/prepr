@@ -3,29 +3,25 @@
 namespace App\Services\Maestro\CommunityTrophy;
 
 use App\Models\CommunityTrophy;
-use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Validator;
 
 class CommunityTrophyService
 {
     public static function updateCommunityTrophyById($id, $request)
-    {  
+    {
         try {
             $trophy = communityTrophy::find($id);
             $input = $request->all();
             $roles = $request->roles;
             $validation_array = [
-                'name' => 'required|max:25',
-                'image' => 'mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
+                'name'       => 'required|max:25',
+                'image'      => 'mimes:jpg,png,jpeg',
+                'points'     => 'required|integer|min:0',
                 'badge_type' => 'required',
-                'criteria' => 'required|max:100',
-            ];  
+                'criteria'   => 'required|max:100',
+            ];
             $image = '';
             if ($request->image) {
                 $image = $request->image->store('uploads/trophy', 's3');
@@ -49,21 +45,21 @@ class CommunityTrophyService
                 //BadgeDetail::where('award_id', $id)->where('award_type', 'community')->delete();
 
                 $badgeData = [
-                    'issuer' => \Auth::user()->id,
-                    'criteria' => $request->criteria,
-                    'award_id' => $id,
-                    'badge' => $request->badge_type,
-                    'award_type' => 'community'
+                    'issuer'     => \Auth::user()->id,
+                    'criteria'   => $request->criteria,
+                    'award_id'   => $id,
+                    'badge'      => $request->badge_type,
+                    'award_type' => 'community',
                 ];
 
-            // BadgeDetail::create($badgeData);
-            return redirect()->route('communitytrophy.index')->with('success', 'Community Medal updated successfully');
+                // BadgeDetail::create($badgeData);
+                return redirect()->route('communitytrophy.index')->with('success', 'Community Medal updated successfully');
             }
         } catch (Exception $e) {
             return false;
-            
         }
     }
+
     public static function deleteCommunityTrophy($id)
     {
         try {
@@ -72,21 +68,23 @@ class CommunityTrophyService
             if ($CommunityTrophy) {
                 return $CommunityTrophy->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createCommunityTrophy($request)
     {
         try {
             $input = $request->all();
             $validation_array = [
-                'name' => 'required|max:25',
-                'image' => 'required|mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
+                'name'       => 'required|max:25',
+                'image'      => 'required|mimes:jpg,png,jpeg',
+                'points'     => 'required|integer|min:0',
                 'badge_type' => 'required',
-                'criteria' => 'required|max:100',
+                'criteria'   => 'required|max:100',
             ];
 
             $image = '';
@@ -109,21 +107,21 @@ class CommunityTrophyService
                 $trophy = CommunityTrophy::create($insertArray);
 
                 $badgeData = [
-                    'issuer' => \Auth::user()->id,
-                    'criteria' => $request->criteria,
-                    'award_id' => $trophy->id,
-                    'badge' => $request->badge_type,
-                    'award_type' => 'community'
+                    'issuer'     => \Auth::user()->id,
+                    'criteria'   => $request->criteria,
+                    'award_id'   => $trophy->id,
+                    'badge'      => $request->badge_type,
+                    'award_type' => 'community',
                 ];
 
                 //BadgeDetail::create($badgeData);
                 return redirect()->route('communitytrophy.index')->with('success', 'Community Medal has created successfully');
-               }
+            }
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public static function getCommunityTrophy()
     {
         try {
@@ -132,5 +130,4 @@ class CommunityTrophyService
             return false;
         }
     }
-
 }

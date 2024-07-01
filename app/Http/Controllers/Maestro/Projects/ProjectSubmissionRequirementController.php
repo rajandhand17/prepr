@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ProjectSubmissionRequirement;
+use App\Traits\Maestro\Project\ProjectSubmissionRequirementTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Project\ProjectSubmissionRequirementTrait;
-use App\Models\ProjectSubmissionRequirement;
-use Exception;
 
 class ProjectSubmissionRequirementController extends Controller
 {
     use ProjectSubmissionRequirementTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder)
     {
         try {
@@ -25,7 +27,7 @@ class ProjectSubmissionRequirementController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($submissionRequirement)
                     ->addColumn('action', static function (ProjectSubmissionRequirement $projectSubmissionRequirement) {
-                        return '<a style="padding-left:20px" class="mr-10" href="' . route('projects-submission-requirement.edit', ['projects_submission_requirement' => $projectSubmissionRequirement->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSubmissionRequirement(\'' . route('projects-submission-requirement.destroy', ['projects_submission_requirement' => $projectSubmissionRequirement->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a style="padding-left:20px" class="mr-10" href="'.route('projects-submission-requirement.edit', ['projects_submission_requirement' => $projectSubmissionRequirement->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSubmissionRequirement(\''.route('projects-submission-requirement.destroy', ['projects_submission_requirement' => $projectSubmissionRequirement->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->editColumn('status', static function (ProjectSubmissionRequirement $projectSubmissionRequirement) {
                         if ($projectSubmissionRequirement->status == 1) {
@@ -53,14 +55,15 @@ class ProjectSubmissionRequirementController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
-                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name . ' Project Submission Requirement Title'];
+                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Project Submission Requirement Title'];
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
+
             return view('maestro.projects.submissionrequirement.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
@@ -75,6 +78,7 @@ class ProjectSubmissionRequirementController extends Controller
         try {
             $languages = $this->getLanguage();
             $status = $this->getSubmissionRequirementStatus();
+
             return view('maestro.projects.submissionrequirement.create', compact('languages', 'status'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
@@ -90,11 +94,14 @@ class ProjectSubmissionRequirementController extends Controller
             DB::beginTransaction();
             if ($this->storeUpdateSubmissionRequirement($request, '', 'create')) {
                 DB::commit();
+
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement Added successfully.']);
             }
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -108,6 +115,7 @@ class ProjectSubmissionRequirementController extends Controller
             $languages = $this->getLanguage();
             $submissionRequirement = $this->findSubmissionRequirement($id);
             $status = $this->getSubmissionRequirementStatus();
+
             return view('maestro.projects.submissionrequirement.edit', compact('submissionRequirement', 'languages', 'status'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
@@ -123,11 +131,14 @@ class ProjectSubmissionRequirementController extends Controller
             DB::beginTransaction();
             if ($this->storeUpdateSubmissionRequirement($request, $id, 'update')) {
                 DB::commit();
+
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement updated successfully.']);
             }
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -143,10 +154,12 @@ class ProjectSubmissionRequirementController extends Controller
             if (!empty($submissionRequirement)) {
                 $this->deleteSubmissionRequirement($submissionRequirement);
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Project Submission Requirement deleted successfully.']);
             }
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }

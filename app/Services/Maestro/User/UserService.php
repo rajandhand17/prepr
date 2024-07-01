@@ -21,6 +21,7 @@ class UserService
             return false;
         }
     }
+
     public static function updateUserById($id, $request)
     {
         try {
@@ -29,23 +30,27 @@ class UserService
             if (!empty($user)) {
                 $user->first_name = $request->first_name;
                 $user->last_name = $request->last_name;
-                $user->full_name = $request->first_name . ' ' . $request->last_name;
+                $user->full_name = $request->first_name.' '.$request->last_name;
                 $user->username = $request->username;
                 $user->email = $request->email;
                 if ($request->filled('password')) {
                     $user->password = Hash::make($request->input('password'));
                 }
                 if ($user->save()) {
-                    self::userAttachRole($user,$request->roles);
+                    self::userAttachRole($user, $request->roles);
+
                     return true;
                 }
+
                 return false;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteUser($id)
     {
         try {
@@ -53,24 +58,29 @@ class UserService
             if (!empty($user)) {
                 return $user->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createUser($request)
     {
         try {
-            $createUser = User::create(['first_name' => $request->first_name, 'last_name' => $request->last_name, 'full_name' => $request->first_name . ' ' . $request->last_name, 'username' => $request->username, 'email' => $request->email, 'password' => Hash::make($request->password)]);
+            $createUser = User::create(['first_name' => $request->first_name, 'last_name' => $request->last_name, 'full_name' => $request->first_name.' '.$request->last_name, 'username' => $request->username, 'email' => $request->email, 'password' => Hash::make($request->password)]);
             if (!empty($createUser)) {
-                self::userAttachRole($createUser,$request->roles);
+                self::userAttachRole($createUser, $request->roles);
+
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getUsers()
     {
         try {
@@ -79,13 +89,16 @@ class UserService
             return false;
         }
     }
-    public static function userAttachRole($user,$roles)
+
+    public static function userAttachRole($user, $roles)
     {
         try {
-            if(!empty($roles)){
+            if (!empty($roles)) {
                 $user->syncRoles($roles);
+
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

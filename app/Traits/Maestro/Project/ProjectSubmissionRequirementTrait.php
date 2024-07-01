@@ -14,11 +14,13 @@ trait ProjectSubmissionRequirementTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSubmissionRequirement()
     {
         try {
@@ -26,11 +28,13 @@ trait ProjectSubmissionRequirementTrait
             if ($submissionRequirement) {
                 return $submissionRequirement;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSubmissionRequirementStatus()
     {
         try {
@@ -38,22 +42,26 @@ trait ProjectSubmissionRequirementTrait
             if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateSubmissionRequirement($request, $id, $moduleMode)
     {
         try {
             if (ProjectSubmissionRequirementService::storeUpdateSubmissionRequirement($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findSubmissionRequirement($id)
     {
         try {
@@ -61,17 +69,20 @@ trait ProjectSubmissionRequirementTrait
             if ($submissionRequirement) {
                 return $submissionRequirement;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteSubmissionRequirement($submissionRequirement)
     {
         try {
             if (ProjectSubmissionRequirementService::deleteSubmissionRequirement($submissionRequirement)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

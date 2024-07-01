@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectVertical;
 use App\Models\Language;
+use App\Models\ProjectVertical;
 use Exception;
 
 class ProjectVerticalService
@@ -15,11 +15,13 @@ class ProjectVerticalService
             if ($language != null) {
                 return $language;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getProjectVertical()
     {
         try {
@@ -28,6 +30,7 @@ class ProjectVerticalService
             return false;
         }
     }
+
     public static function getProjectVerticalStatus()
     {
         try {
@@ -36,12 +39,13 @@ class ProjectVerticalService
             return false;
         }
     }
+
     public static function storeUpdateProjectVertical($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $projectVertical = new ProjectVertical;
+                $projectVertical = new ProjectVertical();
             } else {
                 $projectVertical = ProjectVertical::find($id);
             }
@@ -57,7 +61,7 @@ class ProjectVerticalService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $projectVertical->$columName = $request->$columName;
             }
@@ -66,11 +70,13 @@ class ProjectVerticalService
             if ($projectVertical->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findProjectVertical($id)
     {
         try {
@@ -79,6 +85,7 @@ class ProjectVerticalService
             return false;
         }
     }
+
     public static function deleteProjectVertical($projectVertical)
     {
         try {

@@ -14,6 +14,7 @@ trait DashboardTrait
             if ($componentCount) {
                 return $componentCount;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

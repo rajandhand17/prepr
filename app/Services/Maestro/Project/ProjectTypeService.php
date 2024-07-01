@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectType;
 use App\Models\Language;
+use App\Models\ProjectType;
 use Exception;
 
 class ProjectTypeService
@@ -21,6 +21,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function getProjectType()
     {
         try {
@@ -29,6 +30,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function getProjectTypeStatus()
     {
         try {
@@ -37,12 +39,13 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function storeUpdateProjectType($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $projectType = new ProjectType;
+                $projectType = new ProjectType();
             } else {
                 $projectType = ProjectType::find($id);
             }
@@ -58,7 +61,7 @@ class ProjectTypeService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $projectType->$columName = $request->$columName;
             }
@@ -67,11 +70,13 @@ class ProjectTypeService
             if ($projectType->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findProjectType($id)
     {
         try {
@@ -80,6 +85,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function deleteProjectType($projectType)
     {
         try {

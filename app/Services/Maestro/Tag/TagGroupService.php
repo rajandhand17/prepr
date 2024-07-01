@@ -22,6 +22,7 @@ class TagGroupService
             return false;
         }
     }
+
     public static function updateTagGroupById($id, $request)
     {
         try {
@@ -44,21 +45,23 @@ class TagGroupService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
-                    $columName2 = $columName . '_description';
+                    $columName1 = $columName.'_title';
+                    $columName2 = $columName.'_description';
                 }
                 $tagGroup->$columName1 = $request->$columName1;
                 $tagGroup->$columName2 = $request->$columName2;
             }
             $tagGroup->tags = $request->tags;
             $tagGroup->save();
-           
+
             return true;
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
+
     public static function deleteTagGroupById($id)
     {
         try {
@@ -66,22 +69,23 @@ class TagGroupService
             if (!empty($tagGroup)) {
                 return $tagGroup->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createTagGroup($request)
     {
         try {
             if (!empty($request->title)) {
                 $input = $request->all();
-                
-               
+
                 if (TagGroup::where('title', $request->title)->count() > 0) {
                     return redirect()->route('taggroup.index')->with(['error' => 'Tag Group title already exists']);
                 }
-                $tagGroup = new TagGroup;
+                $tagGroup = new TagGroup();
 
                 $languages = Language::where('status', 1)->get();
 
@@ -97,15 +101,15 @@ class TagGroupService
                         if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                             $columName = str_replace('-', '_', $columName);
                         }
-                        $columName1 = $columName . '_title';
-                        $columName2 = $columName . '_description';
+                        $columName1 = $columName.'_title';
+                        $columName2 = $columName.'_description';
                     }
                     $tagGroup->$columName1 = $request->$columName1;
                     $tagGroup->$columName2 = $request->$columName2;
                 }
                 $tagGroup->tags = $request->tags;
                 $tagGroup->save();
-               
+
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group added successfully');
             }
 
@@ -114,6 +118,7 @@ class TagGroupService
             return redirect()->route('taggroup.index')->with(['error' => $e->getMessage()]);
         }
     }
+
     public static function getTags()
     {
         try {
