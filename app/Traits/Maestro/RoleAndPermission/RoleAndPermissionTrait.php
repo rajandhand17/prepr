@@ -10,57 +10,66 @@ trait RoleAndPermissionTrait
     private function createRole($request)
     {
         try {
-            if(RoleAndPermissionService::createRole($request)){
+            if (RoleAndPermissionService::createRole($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getPermissionBYRoleId($id)
     {
         try {
             $permissions = RoleAndPermissionService::getPermissionBYRoleId($id);
-            if(!empty($permissions)){
+            if (!empty($permissions)) {
                 return $permissions;
             }
+
             return [];
         } catch (Exception $e) {
             return [];
         }
     }
+
     private function getRoleById($id)
     {
         try {
             $roles = RoleAndPermissionService::getRole($id);
-            if(!empty($roles)){
+            if (!empty($roles)) {
                 return $roles;
             }
+
             return [];
         } catch (Exception $e) {
             return [];
         }
     }
+
     private function getPermissions()
     {
         try {
             $permissions = RoleAndPermissionService::permissions();
-            if(!empty($permissions)){
+            if (!empty($permissions)) {
                 return $permissions;
             }
+
             return [];
         } catch (Exception $e) {
             return [];
         }
     }
-    private function updateRole($id,$request)
+
+    private function updateRole($id, $request)
     {
         try {
-            $roleUpdated = RoleAndPermissionService::updateRole($id,$request);
-            if(!empty($roleUpdated)){
+            $roleUpdated = RoleAndPermissionService::updateRole($id, $request);
+            if (!empty($roleUpdated)) {
                 return true;
             }
+
             return [];
         } catch (Exception $e) {
             return [];
@@ -71,7 +80,7 @@ trait RoleAndPermissionTrait
     {
         try {
             $roles = RoleAndPermissionService::getRoles();
-            if(!empty($roles)){
+            if (!empty($roles)) {
                 return $roles;
             }
         } catch (Exception $e) {

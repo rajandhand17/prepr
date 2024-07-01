@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectStatus;
 use App\Models\Language;
+use App\Models\ProjectStatus;
 use Exception;
 
 class ProjectStatusService
@@ -21,6 +21,7 @@ class ProjectStatusService
             return false;
         }
     }
+
     public static function getProjectStatus()
     {
         try {
@@ -29,6 +30,7 @@ class ProjectStatusService
             return false;
         }
     }
+
     public static function getProjectStatusStatus()
     {
         try {
@@ -37,12 +39,13 @@ class ProjectStatusService
             return false;
         }
     }
+
     public static function storeUpdateProjectStatus($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $projectStatus = new ProjectStatus;
+                $projectStatus = new ProjectStatus();
             } else {
                 $projectStatus = ProjectStatus::find($id);
             }
@@ -58,7 +61,7 @@ class ProjectStatusService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $projectStatus->$columName = $request->$columName;
             }
@@ -67,11 +70,13 @@ class ProjectStatusService
             if ($projectStatus->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findProjectStatus($id)
     {
         try {
@@ -80,6 +85,7 @@ class ProjectStatusService
             return false;
         }
     }
+
     public static function deleteProjectStatus($projectStatus)
     {
         try {

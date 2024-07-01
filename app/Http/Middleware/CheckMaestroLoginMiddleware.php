@@ -11,8 +11,9 @@ class CheckMaestroLoginMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param \Closure $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
@@ -22,6 +23,7 @@ class CheckMaestroLoginMiddleware
                 return $next($request);
             } else {
                 auth()->logout();
+
                 return redirect()->route('login')->with('error', "You don't have admin access.");
             }
         } else {

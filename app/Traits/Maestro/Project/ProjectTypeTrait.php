@@ -14,11 +14,13 @@ trait ProjectTypeTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectType()
     {
         try {
@@ -26,11 +28,13 @@ trait ProjectTypeTrait
             if ($projectType) {
                 return $projectType;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getProjectTypeStatus()
     {
         try {
@@ -38,22 +42,26 @@ trait ProjectTypeTrait
             if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateProjectType($request, $id, $moduleMode)
     {
         try {
             if (ProjectTypeService::storeUpdateProjectType($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findProjectType($id)
     {
         try {
@@ -61,17 +69,20 @@ trait ProjectTypeTrait
             if ($projectType) {
                 return $projectType;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteProjectType($projectType)
     {
         try {
             if (ProjectTypeService::deleteProjectType($projectType)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

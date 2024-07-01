@@ -2,10 +2,9 @@
 
 namespace App\Services\Maestro\Category;
 
-use App\Models\Language;
 use App\Models\Category;
+use App\Models\Language;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 
 class CategoryService
 {
@@ -22,6 +21,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategories()
     {
         try {
@@ -35,6 +35,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategoryById($id)
     {
         try {
@@ -48,6 +49,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getComponentsById($category)
     {
         try {
@@ -61,11 +63,13 @@ class CategoryService
                     $components[$key] = '';
                 }
             }
+
             return $components;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getFirstCategoryById($id)
     {
         try {
@@ -74,6 +78,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function storeUpdateCategory($request, $id, $moduleMode)
     {
         try {
@@ -86,7 +91,7 @@ class CategoryService
             if (!empty($id)) {
                 $category = Category::find($id);
             } else {
-                $category = new Category;
+                $category = new Category();
             }
 
             if (!empty($languages)) {
@@ -101,7 +106,7 @@ class CategoryService
                         if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                             $columName = str_replace('-', '_', $columName);
                         }
-                        $columName = $columName . '_title';
+                        $columName = $columName.'_title';
                     }
                     $category->$columName = $request->$columName;
                 }
@@ -116,11 +121,13 @@ class CategoryService
             if ($category->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findCategory($id)
     {
         try {
@@ -129,6 +136,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function deleteCategory($category)
     {
         try {
@@ -137,6 +145,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getSubCategoryById($id)
     {
         try {
@@ -145,6 +154,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategory()
     {
         try {

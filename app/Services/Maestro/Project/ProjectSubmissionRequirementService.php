@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectSubmissionRequirement;
 use App\Models\Language;
+use App\Models\ProjectSubmissionRequirement;
 use Exception;
 
 class ProjectSubmissionRequirementService
@@ -21,6 +21,7 @@ class ProjectSubmissionRequirementService
             return false;
         }
     }
+
     public static function getSubmissionRequirement()
     {
         try {
@@ -29,6 +30,7 @@ class ProjectSubmissionRequirementService
             return false;
         }
     }
+
     public static function getSubmissionRequirementStatus()
     {
         try {
@@ -37,16 +39,17 @@ class ProjectSubmissionRequirementService
             return false;
         }
     }
+
     public static function storeUpdateSubmissionRequirement($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $submissionRequirement = new ProjectSubmissionRequirement;
+                $submissionRequirement = new ProjectSubmissionRequirement();
             } else {
                 $submissionRequirement = ProjectSubmissionRequirement::find($id);
             }
-            if(!empty($languages)){
+            if (!empty($languages)) {
                 foreach ($languages as $single) {
                     if ($single->iso == 'en') {
                         $columName = 'title';
@@ -58,7 +61,7 @@ class ProjectSubmissionRequirementService
                         if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                             $columName = str_replace('-', '_', $columName);
                         }
-                        $columName = $columName . '_title';
+                        $columName = $columName.'_title';
                     }
                     $submissionRequirement->$columName = $request->$columName;
                 }
@@ -67,11 +70,13 @@ class ProjectSubmissionRequirementService
             if ($submissionRequirement->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findSubmissionRequirement($id)
     {
         try {
@@ -80,6 +85,7 @@ class ProjectSubmissionRequirementService
             return false;
         }
     }
+
     public static function deleteSubmissionRequirement($submissionRequirement)
     {
         try {

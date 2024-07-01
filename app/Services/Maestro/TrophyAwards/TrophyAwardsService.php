@@ -6,10 +6,9 @@ use App\Models\TrophyAwards;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 
 class TrophyAwardsService
 {
@@ -29,7 +28,7 @@ class TrophyAwardsService
                 'description'           => 'required|max:500',
                 'user_id'               => 'required',
                 'points_gained'         => 'required|integer|min:0',
-                'badge_type'            => 'required'
+                'badge_type'            => 'required',
             ];
             $image = '';
             if ($request->hasFile('image')) {
@@ -53,16 +52,16 @@ class TrophyAwardsService
             }
             if (!empty($insertArray)) {
                 $trophyData = TrophyAwards::where('id', $id)->update($insertArray);
-               // BadgeDetail::where('award_id', $id)->where('award_type', 'trophy')->delete();
+                // BadgeDetail::where('award_id', $id)->where('award_type', 'trophy')->delete();
 
                 $badgeData = [
-                    'issuer' => \Auth::user()->id,
+                    'issuer'   => \Auth::user()->id,
                     'criteria' => $request->criteria,
                     'award_id' => $id,
-                    'badge' => $request->badge_type,
+                    'badge'    => $request->badge_type,
                 ];
 
-               // BadgeDetail::create($badgeData);
+                // BadgeDetail::create($badgeData);
 
                 // get old user ids
                 $oldUserIds = explode(',', $trophyAward->user_id);
@@ -71,7 +70,7 @@ class TrophyAwardsService
 
                 // send trophy code id to new update awarded user
                 if ($input['trophy_code_id'] !== null) {
-                    $trophy_data = array();
+                    $trophy_data = [];
                     foreach ($newAddedUserIds as $userId) {
                         // get user data
                         $user = User::find($userId);
@@ -80,7 +79,7 @@ class TrophyAwardsService
 
                         if ($user !== null) {
                             // mail data
-                            $data = ['mail_template' => 'send_awarded_trophy_code_to_user', 'name' => $user->name, 'trophyName' => $trophyData->name, 'trophyCodeID' => $trophyData->trophy_code_id, 'tropyPic' => $trophyData->image, 'email' => $user->email, 'to_email' => $user->email, 'to_name' => $user->username, 'fullname' => $user->name, 'title' => 'You won the Awarded Trophy ' . $trophyData->name];
+                            $data = ['mail_template' => 'send_awarded_trophy_code_to_user', 'name' => $user->name, 'trophyName' => $trophyData->name, 'trophyCodeID' => $trophyData->trophy_code_id, 'tropyPic' => $trophyData->image, 'email' => $user->email, 'to_email' => $user->email, 'to_name' => $user->username, 'fullname' => $user->name, 'title' => 'You won the Awarded Trophy '.$trophyData->name];
                             $trophy_data[] = $data;
                             if (!empty($user->email)) {
                                 // send mail if user have set privacy subscribe
@@ -100,9 +99,11 @@ class TrophyAwardsService
             }
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
+
     public static function deleteTrophyAwards($id)
     {
         try {
@@ -111,11 +112,13 @@ class TrophyAwardsService
             if ($TrophyAwards) {
                 return $TrophyAwards->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createTrophyAwards($request)
     {
         try {
@@ -132,7 +135,7 @@ class TrophyAwardsService
                 'image'                 => 'required|mimes:jpg,png,jpeg',
                 'user_id'               => 'required',
                 'points_gained'         => 'required|integer|min:0',
-                'badge_type'            => 'required'
+                'badge_type'            => 'required',
 
             ];
 
@@ -157,24 +160,24 @@ class TrophyAwardsService
                 $trophyData = TrophyAwards::create($insertArray);
 
                 $badgeData = [
-                    'issuer' => Auth::user()->id,
+                    'issuer'   => Auth::user()->id,
                     'criteria' => $request->criteria,
                     'award_id' => $trophyData->id,
-                    'badge' => $request->badge_type,
+                    'badge'    => $request->badge_type,
                 ];
 
-               // BadgeDetail::create($badgeData);
+                // BadgeDetail::create($badgeData);
 
                 // send trophy code id to awarded user
                 if ($input['trophy_code_id'] !== null) {
-                    $trophy_data = array();
+                    $trophy_data = [];
                     foreach ($input['user_id'] as $userId) {
                         // get user data
                         $user = User::find($userId);
 
                         if ($user !== null) {
                             // mail data
-                            $data = ['mail_template' => 'send_awarded_trophy_code_to_user', 'name' => $user->name, 'trophyName' => $trophyData->name, 'trophyCodeID' => $trophyData->trophy_code_id, 'tropyPic' => $trophyData->image, 'email' => $user->email, 'to_email' => $user->email, 'to_name' => $user->username, 'fullname' => $user->name, 'title' => 'You won the Awarded Trophy ' . $trophyData->name];
+                            $data = ['mail_template' => 'send_awarded_trophy_code_to_user', 'name' => $user->name, 'trophyName' => $trophyData->name, 'trophyCodeID' => $trophyData->trophy_code_id, 'tropyPic' => $trophyData->image, 'email' => $user->email, 'to_email' => $user->email, 'to_name' => $user->username, 'fullname' => $user->name, 'title' => 'You won the Awarded Trophy '.$trophyData->name];
                             $trophy_data[] = $data;
                             if (!empty($user->email)) {
                                 // send mail if user have set privacy subscribe
@@ -189,14 +192,16 @@ class TrophyAwardsService
                     //     MixpanelHelper::mixpanel_tracking(config('mixpanel.send_trophy'), $trophy_data, Auth::user(), $request->ip());
                     // }
                 }
+
                 return true;
             }
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
-    
+
     public static function getTrophyAwards()
     {
         try {
@@ -205,5 +210,4 @@ class TrophyAwardsService
             return false;
         }
     }
-
 }

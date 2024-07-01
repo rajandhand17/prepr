@@ -11,96 +11,112 @@ trait ResourceModuleTrait
     {
         try {
             $users = ResourceModuleService::getResourceModuleUser();
-            if($users){
+            if ($users) {
                 return $users;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModuleOrganization()
     {
         try {
             $organizations = ResourceModuleService::getResourceModuleOrganization();
-            if($organizations){
+            if ($organizations) {
                 return $organizations;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModulePrivacy()
     {
         try {
             $privacy = ResourceModuleService::getResourceModulePrivacy();
-            if($privacy){
+            if ($privacy) {
                 return $privacy;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getLanguage()
     {
         try {
             $language = ResourceModuleService::getLanguage();
-            if($language){
+            if ($language) {
                 return $language;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModuleList()
     {
         try {
             $sponsorList = ResourceModuleService::getResourceModuleList();
-            if($sponsorList){
+            if ($sponsorList) {
                 return $sponsorList;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModuleStatus()
     {
         try {
             $status = ResourceModuleService::getResourceModuleStatus();
-            if($status){
+            if ($status) {
                 return $status;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function createResourceModule($request)
     {
         try {
-            if(ResourceModuleService::createResourceModule($request)){
+            if (ResourceModuleService::createResourceModule($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteResourceModuleById($id)
     {
         try {
-            if(ResourceModuleService::deleteResourceModule($id)){
+            if (ResourceModuleService::deleteResourceModule($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModuleById($id)
     {
         try {
@@ -109,12 +125,14 @@ trait ResourceModuleTrait
             return false;
         }
     }
-    private function updateResourceModuleById($id,$request)
+
+    private function updateResourceModuleById($id, $request)
     {
         try {
-            if(ResourceModuleService::updateResourceModuleById($id,$request)){
+            if (ResourceModuleService::updateResourceModuleById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

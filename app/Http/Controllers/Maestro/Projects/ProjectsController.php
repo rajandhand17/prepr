@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Project;
+use App\Traits\Maestro\Project\ProjectTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Project\ProjectTrait;
-use App\Models\Project;
-use Exception;
 
 class ProjectsController extends Controller
 {
     use ProjectTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder)
     {
         try {
@@ -25,7 +27,7 @@ class ProjectsController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($projects)
                     ->addColumn('action', static function (Project $projects) {
-                        return '<a style="padding-left:5px" class="mr-10" href="' . route('projects.show', ['project' => $projects->id]) . '"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="' . route('projects.edit', ['project' => $projects->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteProject(\'' . route('projects.destroy', ['project' => $projects->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a style="padding-left:5px" class="mr-10" href="'.route('projects.show', ['project' => $projects->id]).'"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="'.route('projects.edit', ['project' => $projects->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteProject(\''.route('projects.destroy', ['project' => $projects->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->editColumn('user_id', static function (Project $project) {
                         if ($project->user_id === 0 || $project->user_id === '') {
@@ -37,7 +39,7 @@ class ProjectsController extends Controller
                     ->editColumn('privacy', static function (Project $project) {
                         if ($project->privacy == '0' || $project->privacy == '') {
                             return 'Public';
-                        } elseif ($project->privacy == '1' ){
+                        } elseif ($project->privacy == '1') {
                             return 'Private';
                         }
                     })
@@ -45,18 +47,21 @@ class ProjectsController extends Controller
                         if ($project->stage_id === 0 || $project->stage_id === '') {
                             return '-';
                         }
+
                         return $project->getStage->title ?? ' - ';
                     })
                     ->editColumn('status_id', static function (Project $project) {
-                        if ($project->status_id === 0 || $project->status_id === "") {
+                        if ($project->status_id === 0 || $project->status_id === '') {
                             return '-';
                         }
+
                         return $project->getStatus->title ?? ' - ';
                     })
                     ->editColumn('category_id', function (Project $project) {
                         if ($project->category_id === 0 || $project->category_id === '') {
                             return '-';
                         }
+
                         return $project->getCategory->title ?? ' - ';
                     })
                     ->toJson();
@@ -72,7 +77,8 @@ class ProjectsController extends Controller
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '15%'],
             ]);
             $module_name = 'Project';
-            return view('maestro.projects.project.index', compact('html','module_name'));
+
+            return view('maestro.projects.project.index', compact('html', 'module_name'));
         } catch (Exception $e) {
             return response()->route('projects.index')->with(['error' => $e->getMessage()]);
         }
@@ -84,18 +90,19 @@ class ProjectsController extends Controller
     public function create()
     {
         try {
-            $project_user   = $this->getProjectAssociateItems('user');
-            $project_stage  = $this->getProjectAssociateItems('stage');
-            $project_type   = $this->getProjectAssociateItems('type');
+            $project_user = $this->getProjectAssociateItems('user');
+            $project_stage = $this->getProjectAssociateItems('stage');
+            $project_type = $this->getProjectAssociateItems('type');
             $project_status = $this->getProjectAssociateItems('status');
-            $project_industry   = $this->getProjectAssociateItems('industry');
-            $project_verticals  = $this->getProjectAssociateItems('vertical');
-            $project_category   = $this->getProjectAssociateItems('category');
-            $project_privacy    = $this->getProjectAssociateItems('privacy');
-            $project_team   = $this->getProjectAssociateItems('team');
-            $project_lab    = $this->getProjectAssociateItems('lab');
-            $project_challenge  = $this->getProjectAssociateItems('challenge');
-            return view('maestro.projects.project.create', compact('project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
+            $project_industry = $this->getProjectAssociateItems('industry');
+            $project_verticals = $this->getProjectAssociateItems('vertical');
+            $project_category = $this->getProjectAssociateItems('category');
+            $project_privacy = $this->getProjectAssociateItems('privacy');
+            $project_team = $this->getProjectAssociateItems('team');
+            $project_lab = $this->getProjectAssociateItems('lab');
+            $project_challenge = $this->getProjectAssociateItems('challenge');
+
+            return view('maestro.projects.project.create', compact('project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
@@ -110,12 +117,15 @@ class ProjectsController extends Controller
             DB::beginTransaction();
             if ($this->createProject($request)) {
                 DB::commit();
+
                 return redirect()->route('projects.index')->with('success', 'Project created successfully');
             }
             DB::rollback();
+
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -127,9 +137,10 @@ class ProjectsController extends Controller
     {
         try {
             $project = $this->getProjectById($id);
-            if(!$project->exists){
+            if (!$project->exists) {
                 return redirect()->route('projects.index')->with(['error' => 'Project not found.']);
             }
+
             return view('maestro.projects.project.view', compact('project'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
@@ -143,22 +154,23 @@ class ProjectsController extends Controller
     {
         try {
             $project = $this->getProjectById($id);
-            if(!$project->exists){
+            if (!$project->exists) {
                 return redirect()->route('projects.index')->with(['error' => 'Project not found.']);
             }
             $selected_member = [];
-            $project_user   = $this->getProjectAssociateItems('user');
-            $project_stage  = $this->getProjectAssociateItems('stage');
-            $project_type   = $this->getProjectAssociateItems('type');
+            $project_user = $this->getProjectAssociateItems('user');
+            $project_stage = $this->getProjectAssociateItems('stage');
+            $project_type = $this->getProjectAssociateItems('type');
             $project_status = $this->getProjectAssociateItems('status');
-            $project_industry   = $this->getProjectAssociateItems('industry');
-            $project_verticals  = $this->getProjectAssociateItems('vertical');
-            $project_category   = $this->getProjectAssociateItems('category');
-            $project_privacy    = $this->getProjectAssociateItems('privacy');
-            $project_team   = $this->getProjectAssociateItems('team');
-            $project_lab    = $this->getProjectAssociateItems('lab');
-            $project_challenge  = $this->getProjectAssociateItems('challenge');
-            return view('maestro.projects.project.edit', compact('project','selected_member','project_user','project_stage','project_type','project_status','project_industry','project_verticals','project_category','project_privacy','project_team','project_lab','project_challenge'));
+            $project_industry = $this->getProjectAssociateItems('industry');
+            $project_verticals = $this->getProjectAssociateItems('vertical');
+            $project_category = $this->getProjectAssociateItems('category');
+            $project_privacy = $this->getProjectAssociateItems('privacy');
+            $project_team = $this->getProjectAssociateItems('team');
+            $project_lab = $this->getProjectAssociateItems('lab');
+            $project_challenge = $this->getProjectAssociateItems('challenge');
+
+            return view('maestro.projects.project.edit', compact('project', 'selected_member', 'project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
@@ -171,14 +183,17 @@ class ProjectsController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateProjectById($id,$request)) {
+            if ($this->updateProjectById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('projects.index')->with('success', 'Project Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -192,11 +207,13 @@ class ProjectsController extends Controller
             DB::beginTransaction();
             if ($this->deleteProjectById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Project deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }

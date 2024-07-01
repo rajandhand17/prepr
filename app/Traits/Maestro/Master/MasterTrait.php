@@ -14,11 +14,13 @@ trait MasterTrait
             if ($organizations) {
                 return $organizations;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getCategoriesById($request)
     {
         try {
@@ -26,11 +28,13 @@ trait MasterTrait
             if ($categories) {
                 return $categories;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getMinRanksById($request)
     {
         try {
@@ -38,11 +42,13 @@ trait MasterTrait
             if ($ranks) {
                 return $ranks;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSkillsById($request)
     {
         try {
@@ -50,11 +56,13 @@ trait MasterTrait
             if ($skills) {
                 return $skills;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getUsersById($request)
     {
         try {
@@ -62,11 +70,13 @@ trait MasterTrait
             if ($users) {
                 return $users;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getLabsById($request)
     {
         try {
@@ -74,11 +84,13 @@ trait MasterTrait
             if ($labs) {
                 return $labs;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getResourceModulesById($request)
     {
         try {
@@ -86,11 +98,13 @@ trait MasterTrait
             if ($resourceModules) {
                 return $resourceModules;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getLevelsById($request)
     {
         try {
@@ -98,11 +112,13 @@ trait MasterTrait
             if ($labs) {
                 return $labs;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getDurationsById($request)
     {
         try {
@@ -110,6 +126,7 @@ trait MasterTrait
             if ($labs) {
                 return $labs;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
