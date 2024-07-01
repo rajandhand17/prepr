@@ -1,5 +1,5 @@
 <!-- Brand Logo -->
-  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
+  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.aws_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -7,7 +7,7 @@
     @if (auth()->check())
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{config('site-settings.aws_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
           <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>

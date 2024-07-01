@@ -12,11 +12,11 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/fontawesome-free/css/all.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/plugins/fontawesome-free/css/all.min.css'}}">
   <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/icheck-bootstrap/icheck-bootstrap.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/plugins/icheck-bootstrap/icheck-bootstrap.min.css'}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/css/adminlte.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/dist/css/adminlte.min.css'}}">
 </head>
 
 <body class="hold-transition login-page">
@@ -24,7 +24,7 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="{{ route('login') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}"> </img> </a>
+        <a href="{{ route('login') }}" class="h1"><img src="{{config('site-settings.aws_url').'public/front/img/logoNew.png'}}"> </img> </a>
       </div>
       <div class="card-body">
         <p class="login-box-msg">Sign in to Prepr Network</p>
@@ -80,13 +80,13 @@
   <!-- /.login-box -->
 
   <!-- jQuery -->
-  <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/jquery/jquery.min.js'}}"></script>
+  <script src="{{config('site-settings.aws_url').'public/maestro/plugins/jquery/jquery.min.js'}}"></script>
   <!-- Bootstrap 4 -->
   <script
-    src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/bootstrap/js/bootstrap.bundle.min.js'}}">
+    src="{{config('site-settings.aws_url').'public/maestro/plugins/bootstrap/js/bootstrap.bundle.min.js'}}">
   </script>
   <!-- AdminLTE App -->
-  <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
+  <script src="{{config('site-settings.aws_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

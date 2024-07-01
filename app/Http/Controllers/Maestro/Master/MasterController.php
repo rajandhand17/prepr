@@ -158,9 +158,9 @@ class MasterController extends Controller
         try {
             $language = $request->language ? $request->language : 'en';
             \Session::put('globalLocale', $language);
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.','result' => [],'more' => false, 'total_count' => 0 ]);
+            return response()->json(['status' => 'success', 'message' => 'Language switched successfully.']);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.','result' => [],'more' => false, 'total_count' => 0 ]);
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
 }
