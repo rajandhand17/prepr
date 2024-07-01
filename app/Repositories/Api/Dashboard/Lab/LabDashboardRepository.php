@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Dashboard\Lab;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengeService;
@@ -27,6 +28,8 @@ class LabDashboardRepository implements LabDashboardInterface
         try {
             return $this->labService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +39,8 @@ class LabDashboardRepository implements LabDashboardInterface
         try {
             return $this->challengeService->getList($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +50,8 @@ class LabDashboardRepository implements LabDashboardInterface
         try {
             return $this->projectService->getMyProjectIds($userId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +67,8 @@ class LabDashboardRepository implements LabDashboardInterface
 
             return $projectIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -69,6 +78,8 @@ class LabDashboardRepository implements LabDashboardInterface
         try {
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

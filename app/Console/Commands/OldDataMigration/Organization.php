@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationAddress;
 use App\Models\OrganizationCustomization;
 use App\Models\OrganizationMember;
@@ -184,6 +185,7 @@ class Organization extends Command
             DB::rollback();
             $this->error('No organizations found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

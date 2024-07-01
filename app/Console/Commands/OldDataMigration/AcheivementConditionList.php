@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\AchievementConditionList as AchievementConditionLists;
 use DB;
 use Illuminate\Console\Command;
@@ -66,6 +67,7 @@ class AcheivementConditionList extends Command
             DB::rollback();
             $this->error('No achievement condition list found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTagsGroups;
 use App\Models\ChallengeTemplateTagsGroups;
 use Exception;
@@ -22,6 +23,8 @@ class ChallengeTemplateTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +45,8 @@ class ChallengeTemplateTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -59,6 +64,8 @@ class ChallengeTemplateTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

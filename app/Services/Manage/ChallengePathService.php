@@ -23,6 +23,8 @@ class ChallengePathService
 
             return $challengePath_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +108,8 @@ class ChallengePathService
 
             return $getChallengePathList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -120,6 +124,8 @@ class ChallengePathService
 
             return $upload_challenge_path_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -220,6 +226,8 @@ class ChallengePathService
 
             return $challengePath;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -313,6 +321,8 @@ class ChallengePathService
 
             return $challengePath;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -322,6 +332,8 @@ class ChallengePathService
         try {
             return ChallengePath::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -336,6 +348,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -352,6 +366,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -361,6 +377,8 @@ class ChallengePathService
         try {
             return ChallengePath::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -374,6 +392,8 @@ class ChallengePathService
 
             return $challengePathList->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -383,6 +403,8 @@ class ChallengePathService
         try {
             return ChallengePath::where('UUID', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -397,6 +419,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -416,6 +440,8 @@ class ChallengePathService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -450,6 +476,8 @@ class ChallengePathService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

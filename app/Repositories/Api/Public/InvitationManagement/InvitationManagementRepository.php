@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\InvitationManagement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\MemberManagementService;
 use App\Services\Public\RolesService;
 
@@ -21,6 +22,8 @@ class InvitationManagementRepository implements InvitationManagementInterface
         try {
             return  $this->memberManagementService->checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +33,8 @@ class InvitationManagementRepository implements InvitationManagementInterface
         try {
             return $this->memberManagementService->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

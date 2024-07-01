@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAnnouncementRecipient;
 use Exception;
 use Illuminate\Support\Facades\Schema;
@@ -34,6 +35,8 @@ class ChallengeAnnouncementRecipientService
 
             return false;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

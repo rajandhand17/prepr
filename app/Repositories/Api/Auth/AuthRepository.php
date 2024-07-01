@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Auth;
 
+use App\Helpers\UtilityHelper;
 use App\Models\User;
 use App\Services\UserService;
 
@@ -21,6 +22,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->login($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +33,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->twoFactorVerification($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,6 +44,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->register($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +55,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->checkUsername($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +66,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->checkEmail($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +77,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->checkPhone($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +88,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->sendOtp($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +99,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->verifyAccount($request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +110,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->referralCode($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +121,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->forgetPassword($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -111,6 +132,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->resetPassword($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -120,6 +143,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->ssoLogin($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +154,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->magnetSsoLogin($magnetUserDetails, $token);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +165,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->getOtp($email);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -147,6 +176,8 @@ class AuthRepository implements AuthInterface
         try {
             return $this->userService->updateFcmToken($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

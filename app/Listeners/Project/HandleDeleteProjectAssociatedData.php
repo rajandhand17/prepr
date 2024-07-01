@@ -3,6 +3,7 @@
 namespace App\Listeners\Project;
 
 use App\Events\Project\DeleteProjectAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectFileService;
 use App\Services\ProjectPitchService;
@@ -48,6 +49,8 @@ class HandleDeleteProjectAssociatedData
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

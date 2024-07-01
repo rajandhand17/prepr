@@ -1272,5 +1272,7 @@
     "responses.noti_you_have_invited": "You have been Invited",
     "responses.noti_you_have_invited_message": "You have been invited to join the project.",
     "responses.noti_new_user_request": "New User Request",
-    "responses.noti_new_user_request_message": "A new user requested to join the"
+    "responses.noti_new_user_request_message": "A new user requested to join the",
+    "responses.front_page_success": "Successfully retrieved start page data",
+    "responses.front_page_failed": "failed to retrieve start page data"
 }

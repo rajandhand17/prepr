@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Repositories\Api\Public\ResourceModule\ResourceModuleRepository;
 use App\Repositories\Api\Public\Scorm\ScormRepository;
@@ -48,6 +49,8 @@ class ResourceModuleScormController extends AppBaseController
                 'url' => $scormPlayerUrl,
             ], __('responses.scorm_player_link'));
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_get_scorm_url'), Response::HTTP_BAD_REQUEST);
         }
     }

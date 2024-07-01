@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Dashboard\Organization;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
@@ -39,6 +40,8 @@ class OrganizationDashboardController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -68,6 +71,8 @@ class OrganizationDashboardController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -97,6 +102,8 @@ class OrganizationDashboardController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -138,6 +145,8 @@ class OrganizationDashboardController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

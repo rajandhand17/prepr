@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,8 @@ class UserExperienceService
 
             return $insertRecords;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ class UserExperienceService
         try {
             return UserExperience::where('id', $id)->delete();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +54,8 @@ class UserExperienceService
         try {
             return UserExperience::where('id', $id)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +65,8 @@ class UserExperienceService
         try {
             return UserExperience::where(['user_id' => auth()->user()->id, 'company' => $companyName])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -79,6 +88,8 @@ class UserExperienceService
 
             return $storeData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +127,8 @@ class UserExperienceService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -136,6 +149,7 @@ class UserExperienceService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;

@@ -26,6 +26,8 @@ class UnifiedHelper extends UnifiedBaseHelper
                 ]
             );
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -37,6 +39,8 @@ class UnifiedHelper extends UnifiedBaseHelper
 
             return isset($requestQuery['page']) ? (int) $requestQuery['page'] : 1;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -61,6 +65,8 @@ class UnifiedHelper extends UnifiedBaseHelper
 
             return $query;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -101,6 +107,8 @@ class UnifiedHelper extends UnifiedBaseHelper
                 ];
             });
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

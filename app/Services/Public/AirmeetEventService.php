@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\Airmeet\AirmeetEventHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\AirmeetEvent;
 use App\Models\AirmeetEventAttendee;
 use Illuminate\Support\Facades\DB;
@@ -45,6 +46,7 @@ class AirmeetEventService
 
             return $attendee;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;
@@ -77,6 +79,8 @@ class AirmeetEventService
 
             return data_get($newAssignment, 'event_url');
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
