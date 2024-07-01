@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\ResourceGroup;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\ResourceGroupService;
 use App\Services\Public\ResourceGroupSocialActivitiesService;
 
@@ -22,6 +23,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupList($request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +34,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupBasedOnSlug($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +45,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +56,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupSocialActivitiesService->checkSocialActivity($resource_group_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +67,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupSocialActivitiesService->captureSocialActivity($resource_group_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +78,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupService->addRating($resource_group_id, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

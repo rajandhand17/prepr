@@ -43,6 +43,8 @@ class WikipediaHelper
 
             return $job_description;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +65,8 @@ class WikipediaHelper
 
             return $responseStatus;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Master;
 
+use App\Helpers\UtilityHelper;
 use App\Services\AchievementConditionListService;
 use App\Services\BusinessChallengeTacklingService;
 use App\Services\CategoryService;
@@ -96,6 +97,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->categoryService->getCategories($request->language, $request->search, $request->component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,6 +108,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->skillService->getSkills($request->language, $request->search, $sortBy = null, $skill_id = null, $pagination = null);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -114,6 +119,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->tagService->getTags($request->language, $request->search);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +130,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->projectIndustryService->getProjectIndustries($request->language, $request->search);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -132,6 +141,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->projectTypeService->getProjectTypes($request->language, $request->search);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -141,6 +152,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->projectStageService->getProjectStages($request->language, $request->search);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +163,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->projectVerticalService->getProjectVerticals($request->language, $request->search);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +174,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->projectStatusService->getProjectStatus($request->language, $request->search);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -168,6 +185,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->socialLinkService->getSocialLinks($request->language, $request->search);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -177,6 +196,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->skillGroupService->getSkillGroups($request->language, $request->search, $request->skill_stacks, $request->skills);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -267,6 +288,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->durationService->getDurations($request->language, $request->search);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -276,6 +299,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->levelService->getLevels($request->language, $request->search);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -285,6 +310,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->pitchTemplateService->getPitchTemplatesBasedOnId($request->template_id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -294,6 +321,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->hostService->checkSponsor($request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -303,6 +332,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->hostService->uploadSponsorMedia($image);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -312,6 +343,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->hostService->createSponsor($request, $upload_sponsor_image);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -321,6 +354,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->challengeAnnouncementRecipientService->getChallengeAnnouncementRecipient($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -330,6 +365,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->tagGroupService->getTagGroups($request->language, $request->search, $request->skills);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -339,6 +376,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->countryService->getCountries($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -348,6 +387,7 @@ class MasterRepository implements MasterInterface
         try {
             return $this->jobTitleService->getJobTitles($request->language, $request->search);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getJobTitles in MasterRepository.php: '.$e->getMessage());
 
             return false;
@@ -359,6 +399,8 @@ class MasterRepository implements MasterInterface
         try {
             return $this->businessChallengeTacklingService->getBusinessChallengeTackling($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

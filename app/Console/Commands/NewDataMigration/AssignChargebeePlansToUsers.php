@@ -3,6 +3,7 @@
 namespace App\Console\Commands\NewDataMigration;
 
 use App\Helpers\PlanSubscriptionHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\User;
 use DB;
@@ -60,6 +61,7 @@ class AssignChargebeePlansToUsers extends Command
 
             return;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationExternalLink;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,7 @@ class OrganizationExternalLinkService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -57,6 +59,7 @@ class OrganizationExternalLinkService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;

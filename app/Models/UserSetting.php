@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,6 +38,7 @@ class UserSetting extends Model
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;

@@ -3,6 +3,7 @@
 namespace App\Console\Commands\MemberManager;
 
 use App\Helpers\SendMailHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use DB;
 use Illuminate\Console\Command;
@@ -56,6 +57,7 @@ class MemberMangerSendEmail extends Command
                 }
             }
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error('Member manger emails not send');
         }

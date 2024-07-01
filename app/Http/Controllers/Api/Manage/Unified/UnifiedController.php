@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Unified;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Unified\ListEmployeeRequest;
 use App\Http\Requests\Manage\Unified\UnifiedIntegrationRequest;
@@ -29,6 +30,8 @@ class UnifiedController extends AppBaseController
 
             return $this->sendError(__('responses.unified_integrations_list_failed'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -44,6 +47,8 @@ class UnifiedController extends AppBaseController
 
             return $this->sendResponse($employeeList, __('responses.unified_fetch_employee_list_success'));
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -58,6 +63,8 @@ class UnifiedController extends AppBaseController
 
             return $this->sendResponse($invitation, __('responses.unified_invite_member_success'));
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

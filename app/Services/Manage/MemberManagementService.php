@@ -55,6 +55,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +152,8 @@ class MemberManagementService
 
             return $componentCollectionObject;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +182,8 @@ class MemberManagementService
 
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -225,6 +231,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -256,6 +264,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -281,6 +291,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -491,6 +503,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -508,6 +521,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -536,6 +551,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -564,6 +581,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -602,6 +621,8 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -634,6 +655,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -658,6 +680,8 @@ class MemberManagementService
                 'email_status'
             )->where($filterData)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -677,6 +701,8 @@ class MemberManagementService
 
             return $requestedData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -697,6 +723,8 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -708,6 +736,8 @@ class MemberManagementService
 
             return $this->isUserBelongToPrepr($user);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -724,6 +754,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -749,6 +781,8 @@ class MemberManagementService
 
             return $mergedEmails;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -788,6 +822,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -803,6 +839,8 @@ class MemberManagementService
                     ->orWhere('role', '=', 'super_admin');
             })->pluck('email');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -833,6 +871,7 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             dd($e);
 
             return false;
@@ -865,6 +904,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -880,6 +921,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -889,6 +932,8 @@ class MemberManagementService
         try {
             return MemberManagement::query()->where('module_type', $moduleType)->where('email', $email)->get();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

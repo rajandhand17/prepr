@@ -47,6 +47,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenge_path_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -93,6 +95,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_stored_failed'), 403);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -141,6 +145,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_not_update'), 403);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -155,6 +161,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_already_exists'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -169,6 +177,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_name_not_available'), 403);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -198,6 +208,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -224,6 +236,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenge_path_view'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -243,6 +257,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendResponse($getChallengePathListName, __('responses.found_challenge_path_list'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\UtilityHelper;
 use Closure;
 use Illuminate\Http\Request;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -32,6 +33,8 @@ class CheckComponentMiddleware
 
             return Response::json(ResponseUtil::makeError(__('responses.valid_component_error')), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return Response::json(ResponseUtil::makeError(__('responses.getting_component_error')), 500);
         }
     }

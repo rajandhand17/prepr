@@ -2,6 +2,7 @@
 
 namespace App\Services\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Scorm;
 use App\Models\ScormSco;
 use App\Models\ScormScoTracking;
@@ -51,6 +52,8 @@ class ScormScoTrackingService
 
             return $scoTracking;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -70,6 +73,8 @@ class ScormScoTrackingService
                 default                          => [],
             };
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -81,6 +86,8 @@ class ScormScoTrackingService
 
             return $sco->id;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
