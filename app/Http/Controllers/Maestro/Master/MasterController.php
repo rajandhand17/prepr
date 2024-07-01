@@ -153,4 +153,14 @@ class MasterController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.','result' => [],'more' => false, 'total_count' => 0 ]);
         }
     }
+    public function switchLanguage(Request $request)
+    {
+        try {
+            $language = $request->language ? $request->language : 'en';
+            \Session::put('globalLocale', $language);
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.','result' => [],'more' => false, 'total_count' => 0 ]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.','result' => [],'more' => false, 'total_count' => 0 ]);
+        }
+    }
 }

@@ -172,7 +172,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-status'  ? 'active' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-submission-requirement'  ? 'active' : '' }}">
             <i class="nav-icon fas fa-edit"></i>
             <p>
               Project Management
@@ -220,6 +220,12 @@
               <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pitch Templates</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-submission-requirement.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-submission-requirement.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Submission Requirement</p>
               </a>
             </li>
           </ul>
