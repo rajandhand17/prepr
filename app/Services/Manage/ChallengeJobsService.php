@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeJobTitles;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +29,7 @@ class ChallengeJobsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeJobs in ChallengeJobsService.php: '.$e->getMessage());
 
             return false;

@@ -53,6 +53,7 @@ class OrganizationDetailResource extends JsonResource
             'favourite'                    => $this->favourite(),
             'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'is_onboarding_completed'      => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
+            'organization_type'            => OrganizationTypeModeResource::collection($this->organizationType),
             'labs'                         => LabResource::collection($this->labs),
             'challenges'                   => ChallengeResource::collection($this->challenges_count),
             'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),

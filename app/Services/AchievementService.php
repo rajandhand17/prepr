@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
 use App\Notifications\AddWinnerAchievementNotification;
@@ -50,6 +51,8 @@ class AchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +105,8 @@ class AchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +148,8 @@ class AchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

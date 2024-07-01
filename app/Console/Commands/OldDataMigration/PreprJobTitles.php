@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\JobTitle;
 use App\Models\JobTitleSkill;
 use App\Models\RelatedJobTitle;
@@ -76,6 +77,7 @@ class PreprJobTitles extends Command
             DB::commit();
             $this->info('Migration of old data for table (titles) completed.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error('Migration failed: '.$e->getMessage());
 
@@ -114,6 +116,7 @@ class PreprJobTitles extends Command
             DB::commit();
             $this->info('Migration of old data for table (user_job_titles) completed.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             $this->error($e->getMessage());
             DB::rollback();
 
@@ -144,6 +147,7 @@ class PreprJobTitles extends Command
             DB::commit();
             $this->info('Migrating of old data for table (related_titles) completed.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             $this->error($e->getMessage());
             DB::rollback();
 
@@ -174,6 +178,7 @@ class PreprJobTitles extends Command
             DB::commit();
             $this->info('Migrating of old data for table (title_skills) completed.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             $this->error($e->getMessage());
             DB::rollback();
 

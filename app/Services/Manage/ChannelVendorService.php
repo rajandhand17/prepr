@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChannelVendor;
 
 class ChannelVendorService
@@ -11,6 +12,8 @@ class ChannelVendorService
         try {
             return ChannelVendor::where(['api_key' => $apiKey, 'secret_key' => $secret])->first();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

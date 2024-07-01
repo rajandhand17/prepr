@@ -52,6 +52,7 @@ class OrganizationResource extends JsonResource
             'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'is_onboarding_completed'      => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
+            'organization_type'            => OrganizationTypeModeResource::collection($this->organizationType),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_details'         => OrganizationChargebeeLimitResource::make($this),

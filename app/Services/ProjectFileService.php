@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectFile;
 use Exception;
 
@@ -44,6 +45,8 @@ class ProjectFileService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +63,8 @@ class ProjectFileService
 
             return $projectData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +80,8 @@ class ProjectFileService
 
             return $projectGallery;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +97,8 @@ class ProjectFileService
 
             return $projectFile;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +113,8 @@ class ProjectFileService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +133,8 @@ class ProjectFileService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

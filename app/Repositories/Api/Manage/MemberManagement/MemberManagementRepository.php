@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\MemberManagement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\RolesService;
 use Response;
@@ -22,6 +23,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->getComponentBasedUsers($componentCollectionObject, $component, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +34,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->getTemplate($request, $component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +59,8 @@ class MemberManagementRepository implements MemberManagementInterface
 
             return Response::stream($callback, 200, $headers);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +70,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->roleService->getRoles($role_type);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,6 +107,8 @@ class MemberManagementRepository implements MemberManagementInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +118,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->deleteMembers($checkComponentBasedOnSlug, $component, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +129,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +140,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +151,8 @@ class MemberManagementRepository implements MemberManagementInterface
         try {
             return $this->memberManagementService->changeRoleByUuid($request, $component);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

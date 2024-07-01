@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ChannelApi;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChannelApi\AssignUserToLabRequest;
 use App\Http\Resources\Manage\ChannelApi\ChallengeResource;
@@ -52,6 +53,8 @@ class ChannelApiController extends AppBaseController
 
             return $this->sendResponse($responseData, 'responses.found_labs_list');
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -90,6 +93,8 @@ class ChannelApiController extends AppBaseController
 
             return $this->sendResponse($responseData, 'responses.found_challenges_list');
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -110,6 +115,8 @@ class ChannelApiController extends AppBaseController
 
             return $this->sendResponse($assignToLab, $assignToLab['add_member_response']);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

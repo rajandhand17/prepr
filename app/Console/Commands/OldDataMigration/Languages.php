@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Language;
 use DB;
 use Illuminate\Console\Command;
@@ -68,6 +69,7 @@ class Languages extends Command
             DB::rollback();
             $this->error('No languages found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

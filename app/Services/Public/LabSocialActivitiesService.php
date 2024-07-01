@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabSocialActivity;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +28,8 @@ class LabSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +50,8 @@ class LabSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +77,8 @@ class LabSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +120,8 @@ class LabSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +137,8 @@ class LabSocialActivitiesService
 
             return $lab_ids;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

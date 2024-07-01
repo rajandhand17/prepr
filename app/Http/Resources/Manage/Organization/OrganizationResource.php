@@ -52,6 +52,7 @@ class OrganizationResource extends JsonResource
             'challenge_count'               => $this->challenges_count()->count(),
             'resource_count'                => $this->resource_modules_count()->count(),
             'organization_users_count'      => $this->members->count(),
+            'organization_type'             => OrganizationTypeModeResource::collection($this->organizationType),
             'member_since'                  => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'          => OrganizationAddressResource::collection($this->address),
             'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),

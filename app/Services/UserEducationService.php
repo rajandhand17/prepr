@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
 use Illuminate\Support\Facades\DB;
@@ -34,6 +35,8 @@ class UserEducationService
 
             return $allEducation;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +60,8 @@ class UserEducationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +71,8 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->delete();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +82,8 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +108,7 @@ class UserEducationService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;

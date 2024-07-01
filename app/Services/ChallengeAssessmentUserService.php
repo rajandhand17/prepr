@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeAssessmentUser;
 use Exception;
@@ -36,6 +37,8 @@ class ChallengeAssessmentUserService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +64,8 @@ class ChallengeAssessmentUserService
 
             return $challenge_assessment_criteria;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +127,8 @@ class ChallengeAssessmentUserService
                 'assessment_scoring_data'       => $project_assessment,
             ];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -136,6 +143,8 @@ class ChallengeAssessmentUserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -152,6 +161,8 @@ class ChallengeAssessmentUserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
