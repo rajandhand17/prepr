@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\User;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\OrganizationService as ManageOrganizationService;
 use App\Services\Manage\OrganizationTypeModeService;
 use App\Services\Public\MemberManagementService;
@@ -30,6 +31,8 @@ class UserRepository implements UserInterface
         try {
             return  $this->userService->getUsers($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +67,8 @@ class UserRepository implements UserInterface
 
             return $organizationData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -73,6 +78,8 @@ class UserRepository implements UserInterface
         try {
             return $this->userService->setOrganizationPreference($organizationId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -82,6 +89,8 @@ class UserRepository implements UserInterface
         try {
             return $this->userService->userOnboarding();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -91,6 +100,8 @@ class UserRepository implements UserInterface
         try {
             return $this->manageOrganizationService->organizationOnboarding($organizationId, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -100,6 +111,8 @@ class UserRepository implements UserInterface
         try {
             return $this->organizationTypeModeService->storeOrganizationType($organizationId, $request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

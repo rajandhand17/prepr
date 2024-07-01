@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectSkill;
 use App\Models\Skill;
 use Exception;
@@ -35,6 +36,8 @@ class ProjectSkillsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +49,8 @@ class ProjectSkillsService
 
             return $projectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\StartPage;
 
+use App\Helpers\UtilityHelper;
 use App\Services\FeaturedLabService;
 use App\Services\FeaturedSkillService;
 use App\Services\PartnerCompaniesService;
@@ -73,6 +74,8 @@ class StartPageRepository implements StartPageInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

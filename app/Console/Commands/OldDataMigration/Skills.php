@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 use Carbon\Carbon;
 use DB;
@@ -66,6 +67,7 @@ class Skills extends Command
 
             return;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

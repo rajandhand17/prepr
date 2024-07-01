@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabChallengeRedeem;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateAchievementService;
@@ -69,6 +70,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getChallengeTemplateList($request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +81,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getCheckChallengeUuid($uuid);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +150,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -154,6 +161,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +182,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -182,6 +193,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -246,6 +259,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -267,6 +281,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -276,6 +292,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->deleteChallengeTemplate($slug, $challengeTemplateId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

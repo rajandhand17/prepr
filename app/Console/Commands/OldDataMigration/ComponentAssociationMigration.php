@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
 use App\Models\ComponentAssociation;
@@ -325,6 +326,7 @@ class ComponentAssociationMigration extends Command
 
             return;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

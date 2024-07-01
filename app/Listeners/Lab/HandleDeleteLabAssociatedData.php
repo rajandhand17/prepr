@@ -3,6 +3,7 @@
 namespace App\Listeners\Lab;
 
 use App\Events\Labs\DeleteLabAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
@@ -65,6 +66,8 @@ class HandleDeleteLabAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

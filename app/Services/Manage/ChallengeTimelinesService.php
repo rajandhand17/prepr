@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTimelines;
 use Carbon\Carbon;
 use Exception;
@@ -80,6 +81,7 @@ class ChallengeTimelinesService
 
             return $challengeTimeLine;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeTimelines in ChallengeTimelinesService.php: '.$e->getMessage());
 
             return false;
@@ -142,6 +144,8 @@ class ChallengeTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,6 +161,8 @@ class ChallengeTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

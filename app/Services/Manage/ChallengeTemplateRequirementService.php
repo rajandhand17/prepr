@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeTemplateRequirement;
 use Exception;
@@ -34,6 +35,8 @@ class ChallengeTemplateRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +68,8 @@ class ChallengeTemplateRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -82,6 +87,8 @@ class ChallengeTemplateRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

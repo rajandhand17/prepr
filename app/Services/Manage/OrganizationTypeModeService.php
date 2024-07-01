@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationTypeMode;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,7 @@ class OrganizationTypeModeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;

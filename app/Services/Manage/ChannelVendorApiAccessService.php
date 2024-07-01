@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChannelVendorApiAccess;
 
 class ChannelVendorApiAccessService
@@ -11,6 +12,8 @@ class ChannelVendorApiAccessService
         try {
             return ChannelVendorApiAccess::where(['channel_vendor_id' => $vendorId, 'channel_api_id' => $apiId])->first();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleSocialActivities;
 
 class ResourceModuleSocialActivitiesService
@@ -22,6 +23,8 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -38,6 +41,8 @@ class ResourceModuleSocialActivitiesService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -79,6 +84,8 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +111,8 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

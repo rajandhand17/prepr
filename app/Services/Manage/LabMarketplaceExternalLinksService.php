@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabExternalLinks;
 use App\Models\LabMarketplaceExternalLink;
 use Exception;
@@ -24,6 +25,8 @@ class LabMarketplaceExternalLinksService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +47,8 @@ class LabMarketplaceExternalLinksService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +66,8 @@ class LabMarketplaceExternalLinksService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

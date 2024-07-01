@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Chat\Message;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Chat\MessageService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,8 @@ class MessageRepository implements MessageInterface
         try {
             return $this->messageService->list($conversationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +34,8 @@ class MessageRepository implements MessageInterface
 
             return $this->messageService->send($payload);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +45,8 @@ class MessageRepository implements MessageInterface
         try {
             return $this->messageService->getByMessageUUID($uuid);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +65,7 @@ class MessageRepository implements MessageInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;

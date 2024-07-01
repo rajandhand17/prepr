@@ -24,6 +24,8 @@ class ChallengeService
 
             return $challenge_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -37,6 +39,8 @@ class ChallengeService
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -146,6 +150,8 @@ class ChallengeService
 
             return $challenge_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -160,6 +166,8 @@ class ChallengeService
 
             return $upload_challenge_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -322,6 +330,7 @@ class ChallengeService
 
             return $challenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallenge in ChallengeService.php: '.$e->getMessage());
 
             return false;
@@ -454,6 +463,8 @@ class ChallengeService
                 return $challenge;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -463,6 +474,8 @@ class ChallengeService
         try {
             return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -472,6 +485,8 @@ class ChallengeService
         try {
             return Challenge::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -486,6 +501,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -497,6 +514,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -511,6 +530,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -525,6 +546,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -536,6 +559,7 @@ class ChallengeService
 
             return $challengeId ?: false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getChallengeIdBasedOnUUID in ChallengeService.php: '.$e->getMessage());
 
             return false;
@@ -559,6 +583,8 @@ class ChallengeService
 
             return $clonedChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -572,6 +598,8 @@ class ChallengeService
 
             return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -585,6 +613,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -594,6 +624,8 @@ class ChallengeService
         try {
             return Challenge::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -615,6 +647,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -697,6 +731,8 @@ class ChallengeService
 
             return $challenge_timelines;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -722,6 +758,8 @@ class ChallengeService
 
             return Challenge::whereIn('id', $challenges)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -734,6 +772,8 @@ class ChallengeService
 
             return $challenges->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -748,6 +788,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -782,6 +824,8 @@ class ChallengeService
                 return $challenge_details;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -795,6 +839,8 @@ class ChallengeService
 
             return $getChallengeAcceptedMembersBasedOnIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -820,6 +866,8 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -839,6 +887,8 @@ class ChallengeService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -848,6 +898,8 @@ class ChallengeService
         try {
             return Challenge::whereIn('level_id', $levelId)->pluck('id');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -857,6 +909,8 @@ class ChallengeService
         try {
             return Challenge::query()->where('organization_id', $organizationId)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -866,6 +920,8 @@ class ChallengeService
         try {
             return Challenge::whereIn('duration_id', $durationId)->pluck('id');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -875,6 +931,8 @@ class ChallengeService
         try {
             return Challenge::query()->where('user_id', $userId)->get();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -884,6 +942,8 @@ class ChallengeService
         try {
             return Challenge::whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -896,6 +956,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

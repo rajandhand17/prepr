@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\FlexibleExpireDateDuration;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,7 +41,9 @@ class FlexibleExpireDateDurationService
             }
 
             return false;
-        } catch (\Exception) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Organization;
 use App\Models\User;
@@ -21,6 +22,8 @@ class AchievementService
 
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +36,8 @@ class AchievementService
 
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +92,8 @@ class AchievementService
 
             return $achievement_list;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -96,6 +103,8 @@ class AchievementService
         try {
             return UserAchievement::where(['certificate_number' => $certificate_id])->first();
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -142,6 +151,8 @@ class AchievementService
 
             return false;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -167,6 +178,8 @@ class AchievementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -186,6 +199,8 @@ class AchievementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -203,6 +218,8 @@ class AchievementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

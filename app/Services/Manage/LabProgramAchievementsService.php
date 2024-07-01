@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\LabProgramsAchievement;
 
 class LabProgramAchievementsService
@@ -17,6 +18,8 @@ class LabProgramAchievementsService
 
             return $upload_Achievement_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +34,8 @@ class LabProgramAchievementsService
 
             return $upload_Achievement_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -69,6 +74,8 @@ class LabProgramAchievementsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -88,6 +95,8 @@ class LabProgramAchievementsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

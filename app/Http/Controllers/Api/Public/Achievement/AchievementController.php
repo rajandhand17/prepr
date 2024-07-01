@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Achievement;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Profile\UserScoreDataResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
@@ -39,6 +40,8 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_achievement_list'), 404);
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -66,6 +69,8 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_achievement_list'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -80,6 +85,8 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_achievement'), 404);
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -94,6 +101,8 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.failed_download_certificate'), 500);
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -132,6 +141,8 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_achievement'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
