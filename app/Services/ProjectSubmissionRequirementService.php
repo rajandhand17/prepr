@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectSubmissionRequirement;
 use Exception;
 use Illuminate\Support\Facades\Schema;
@@ -39,6 +40,8 @@ class ProjectSubmissionRequirementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +65,8 @@ class ProjectSubmissionRequirementService
 
             return $project_condition;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

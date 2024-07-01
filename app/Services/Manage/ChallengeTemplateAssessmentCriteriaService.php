@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeTemplateAssessmentCriterias;
 use Exception;
@@ -27,6 +28,8 @@ class ChallengeTemplateAssessmentCriteriaService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +51,8 @@ class ChallengeTemplateAssessmentCriteriaService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +70,8 @@ class ChallengeTemplateAssessmentCriteriaService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

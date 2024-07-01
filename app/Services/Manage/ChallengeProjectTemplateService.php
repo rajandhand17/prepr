@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeProjectTemplate;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -22,6 +23,7 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeProjectTemplate in ChallengeProjectTemplateService.php: '.$e->getMessage());
 
             return false;
@@ -37,6 +39,8 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +56,8 @@ class ChallengeProjectTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

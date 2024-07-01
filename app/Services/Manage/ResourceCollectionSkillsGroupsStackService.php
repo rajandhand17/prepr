@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollectionSkillsGroupsStack;
 
 class ResourceCollectionSkillsGroupsStackService
@@ -45,6 +46,8 @@ class ResourceCollectionSkillsGroupsStackService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +121,8 @@ class ResourceCollectionSkillsGroupsStackService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +140,8 @@ class ResourceCollectionSkillsGroupsStackService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -152,6 +159,8 @@ class ResourceCollectionSkillsGroupsStackService
 
             return $resourceSkillIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

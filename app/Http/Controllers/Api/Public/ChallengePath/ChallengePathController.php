@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ChallengePath;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Public\ChallengePath\ChallengePathRepository;
@@ -36,6 +37,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenge_path_list'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +57,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_not_found'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -83,6 +88,8 @@ class ChallengePathController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_path_not_found'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

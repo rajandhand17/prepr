@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectStage;
 use DB;
 use Illuminate\Console\Command;
@@ -65,6 +66,7 @@ class ProjectStages extends Command
             DB::rollback();
             $this->error('No project stage found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

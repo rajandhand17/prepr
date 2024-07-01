@@ -55,6 +55,7 @@ class OrganizationDetailResource extends JsonResource
             'resource_count'                => $this->resource_modules_count()->count(),
             'organization_users_count'      => $this->members->count(),
             'member_since'                  => UtilityHelper::formatDateTime($this->created_at),
+            'organization_type'             => OrganizationTypeModeResource::collection($this->organizationType),
             'organization_address'          => OrganizationAddressResource::collection($this->address),
             'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_people'           => MemberManagementResource::collection($this->members),

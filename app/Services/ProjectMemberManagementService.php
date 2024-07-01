@@ -22,6 +22,8 @@ class ProjectMemberManagementService
 
             return $getRoles;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +36,8 @@ class ProjectMemberManagementService
 
             return $projectParticipantCollectionObject->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +133,8 @@ class ProjectMemberManagementService
 
             return $projectParticipantCollectionObject;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -140,6 +146,8 @@ class ProjectMemberManagementService
 
             return $module_type;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +197,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -219,6 +229,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -311,6 +323,7 @@ class ProjectMemberManagementService
 
             return $data;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -336,6 +349,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -350,6 +365,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -380,6 +397,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -394,6 +413,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -423,6 +444,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -449,6 +472,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -463,6 +488,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -475,6 +502,8 @@ class ProjectMemberManagementService
 
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -487,6 +516,8 @@ class ProjectMemberManagementService
 
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -503,6 +534,8 @@ class ProjectMemberManagementService
 
             return $getUserIdsBasedOnEmail;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -517,6 +550,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -542,6 +577,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -556,6 +593,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -583,6 +622,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -597,6 +638,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -611,6 +654,8 @@ class ProjectMemberManagementService
 
             return $getMatchedTeams;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -625,6 +670,8 @@ class ProjectMemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -642,6 +689,8 @@ class ProjectMemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -672,6 +721,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -689,6 +740,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

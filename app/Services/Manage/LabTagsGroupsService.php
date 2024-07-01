@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
@@ -82,6 +83,8 @@ class LabTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +102,8 @@ class LabTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -120,6 +125,8 @@ class LabTagsGroupsService
 
             return $getTags;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

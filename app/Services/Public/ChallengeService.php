@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
@@ -21,6 +22,8 @@ class ChallengeService
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +137,8 @@ class ChallengeService
 
             return $challenge_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +148,8 @@ class ChallengeService
         try {
             return Challenge::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +170,8 @@ class ChallengeService
 
             return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -172,6 +181,8 @@ class ChallengeService
         try {
             return Challenge::where('UUID', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -224,6 +235,8 @@ class ChallengeService
 
             return $challenge_conditions;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -233,6 +246,8 @@ class ChallengeService
         try {
             return Challenge::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -244,6 +259,8 @@ class ChallengeService
 
             return $fetchChallengeOrganizations;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -269,6 +286,8 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

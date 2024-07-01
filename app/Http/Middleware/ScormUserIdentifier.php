@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\Scorm\ScormUserTokenService;
 use Closure;
 use Illuminate\Http\Request;
@@ -44,6 +45,8 @@ class ScormUserIdentifier
 
             return $scormService;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

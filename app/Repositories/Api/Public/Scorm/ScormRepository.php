@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Scorm;
 use App\Models\User;
 use App\Services\Public\Scorm\ScormService;
@@ -26,6 +27,8 @@ class ScormRepository implements ScormInterface
         try {
             return $this->scormService->getScorm($uuid, $scormUser);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ class ScormRepository implements ScormInterface
         try {
             return $this->scormService->generateScormProxy($url);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -54,6 +59,8 @@ class ScormRepository implements ScormInterface
         try {
             return $this->scormService->generateScormPlayerUrl($scorm);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

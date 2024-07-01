@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use Exception;
 use Illuminate\Console\Command;
@@ -54,6 +55,7 @@ class UpdateChallengePassedDate extends Command
 
             DB::commit();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error('Challenge Status not updated');
         }

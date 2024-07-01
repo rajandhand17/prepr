@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Airmeet;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Airmeet\VerifyAirmeetEventRequest;
 use App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventRepository;
@@ -43,6 +44,8 @@ class AirmeetEventController extends AppBaseController
                 'end_time'   => data_get($airmeetEventDetails, 'end_time'),
             ];
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.invalid_event'));
         }
 

@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroupAchievement;
 
 class ResourceGroupAchievementService
@@ -17,6 +18,8 @@ class ResourceGroupAchievementService
 
             return $upload_Achievement_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +36,8 @@ class ResourceGroupAchievementService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +52,8 @@ class ResourceGroupAchievementService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +79,8 @@ class ResourceGroupAchievementService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

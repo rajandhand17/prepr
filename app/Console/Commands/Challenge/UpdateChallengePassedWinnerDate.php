@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use Carbon\Carbon;
 use Exception;
@@ -47,6 +48,7 @@ class UpdateChallengePassedWinnerDate extends Command
 
             DB::commit();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error('Allow Challenge Winner selection status not updated');
         }

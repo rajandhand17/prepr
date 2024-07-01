@@ -35,6 +35,8 @@ class PlanSubscriptionHelper
 
             return $customer;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +58,8 @@ class PlanSubscriptionHelper
             ]);
             $subscription = $result->subscription();
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +82,8 @@ class PlanSubscriptionHelper
 
             return $customer;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -100,6 +106,8 @@ class PlanSubscriptionHelper
                 return $data = [];
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +153,8 @@ class PlanSubscriptionHelper
 
             return $Limits;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +185,8 @@ class PlanSubscriptionHelper
 
             return $addon;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -191,6 +203,8 @@ class PlanSubscriptionHelper
 
             return $totalLimit;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -239,6 +253,8 @@ class PlanSubscriptionHelper
 
             return $componentUsage;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -268,6 +284,8 @@ class PlanSubscriptionHelper
 
             return $componentIds;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

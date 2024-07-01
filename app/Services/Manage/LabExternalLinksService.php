@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabExternalLinks;
 
 class LabExternalLinksService
@@ -59,6 +60,8 @@ class LabExternalLinksService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
