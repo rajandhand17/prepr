@@ -8,6 +8,18 @@ use Exception;
 
 trait ProjectTrait
 {
+    private function getProjectsList()
+    {
+        try {
+            $projects = ProjectService::getProjectsList();
+            if($projects){
+                return $projects;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     private function createProject($request)
     {
         try {

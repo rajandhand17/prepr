@@ -19,14 +19,29 @@ use App\Models\ProjectFile;
 
 class ProjectService
 {
+    public static function getProjectsList()
+    {
+        try {
+            return Project::where('language',\Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->latest();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function createProject($request)
     {
         try {
+            $projectLanguage = 'en';
+            if(!empty($request->challenge_id)){
+                $challenge = Challenge::select('id','language')->where('id',$request->challenge_id)->first();
+                if (!empty($challenge)) {
+                    $projectLanguage = $challenge->language;
+                }
+            }
             $model = new Project();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $createProject = new Project();
             $createProject->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $createProject->language = 'en';
+            $createProject->language    = $projectLanguage;
             $createProject->user_id     = (int) $request->user_id;
             $createProject->title       = $request->title;
             $createProject->slug        = $slug;
@@ -78,10 +93,18 @@ class ProjectService
         try {
             $updateProject = Project::findOrFail($id);
             if (!empty($updateProject)) {
+                $projectLanguage = $updateProject->language;
+                if(!empty($request->challenge_id)){
+                    $challenge = Challenge::select('id','language')->where('id',$request->challenge_id)->first();
+                    if (!empty($challenge)) {
+                        $projectLanguage = $challenge->language;
+                    }
+                }
                     $updateProject->user_id     = (int) $request->user_id;
                     $updateProject->title       = $request->title;
                     $updateProject->description = $request->description;
-                    $updateProject->challenge_id = (int) $request->challenge_id;
+                    $updateProject->challenge_id= (int) $request->challenge_id;
+                    $updateProject->language    = $projectLanguage;
                     $updateProject->lab_id      = (int) $request->lab_id;
                     $updateProject->category_id = $request->category;
                     $updateProject->type_id     = $request->type;

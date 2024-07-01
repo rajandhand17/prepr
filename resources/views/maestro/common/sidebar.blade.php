@@ -1,5 +1,5 @@
 <!-- Brand Logo -->
-  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
+  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.aws_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -7,7 +7,7 @@
     @if (auth()->check())
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{config('site-settings.aws_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
           <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
@@ -172,7 +172,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-status'  ? 'active' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-submission-requirement'  ? 'active' : '' }}">
             <i class="nav-icon fas fa-edit"></i>
             <p>
               Project Management
@@ -220,6 +220,12 @@
               <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pitch Templates</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-submission-requirement.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-submission-requirement.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Submission Requirement</p>
               </a>
             </li>
           </ul>

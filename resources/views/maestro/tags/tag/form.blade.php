@@ -50,7 +50,7 @@
                         </div>
                         @if(isset($data[$inputFName]) && $data[$inputFName]!="")
                             <div class="pull-right trtrytr">
-                                <img src="{{asset($data->$inputFName)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}' " width="auto" height="50px">
+                                <img src="{{asset($data->$inputFName)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}' " width="auto" height="50px">
                             </div>
                         @endif
                     </div>

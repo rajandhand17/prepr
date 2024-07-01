@@ -29,7 +29,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::latest();
+            return Challenge::where('language',\Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->latest();
         } catch (Exception $e) {
             return false;
         }

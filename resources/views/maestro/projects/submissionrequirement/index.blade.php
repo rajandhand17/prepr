@@ -1,17 +1,17 @@
 @extends('maestro.layouts.default')
-@section('title', 'Resource Module')
+@section('title', 'Project Submission Requirement')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Resource Module</h1>
+                <h1 class="m-0">Project Submission Requirement</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Resource Module</li>
+                    <li class="breadcrumb-item active">Project Submission Requirement</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -29,14 +29,8 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"></h3>
-                        <div class="row">
-                            <div class="col-md-11">
-                                <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;" href="{{route('resource-module.create')}}" role="menuitem">Create Resource Module</a>
-                            </div>
-                            <div class="col-md-1">
-                                @include('maestro/common/language-switcher')
-                            </div>
-                        </div>
+                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
+                            href="{{route('projects-submission-requirement.create')}}" role="menuitem">Create Project Submission Requirement</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -73,7 +67,7 @@
     </script>
 
     <script>
-        function deleteResourceModule(url) {
+        function deleteSubmissionRequirement(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -113,7 +107,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while deleting the Resource Module.',
+                                'An error occurred while deleting the Project Submission Requirement.',
                                 'error'
                             );
                         }
