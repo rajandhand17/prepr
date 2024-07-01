@@ -28,6 +28,7 @@ class UserCertificateService
             return $allCertificates;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -38,6 +39,7 @@ class UserCertificateService
             return UserCertificate::where('id', $id)->delete();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +50,7 @@ class UserCertificateService
             return UserCertificate::where('id', $id)->first();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

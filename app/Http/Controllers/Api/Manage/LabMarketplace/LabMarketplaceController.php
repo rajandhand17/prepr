@@ -46,6 +46,7 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.not_found_lab_marketplace_list'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -85,6 +86,7 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.lab_marketplace_stored_failed'), 400);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -100,6 +102,7 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.lab_marketplace_not_exists'), 404);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -119,6 +122,7 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.lab_marketplace_deleted_failed'), 402);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -150,6 +154,7 @@ class LabMarketplaceController extends AppBaseController
             return $this->sendError(__('responses.lab_marketplace_not_redeemed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

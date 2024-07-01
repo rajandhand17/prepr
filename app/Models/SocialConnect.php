@@ -36,6 +36,7 @@ class SocialConnect extends Model
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

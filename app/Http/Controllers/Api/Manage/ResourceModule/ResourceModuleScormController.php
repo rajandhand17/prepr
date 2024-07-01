@@ -51,6 +51,7 @@ class ResourceModuleScormController extends AppBaseController
             return $this->sendError(__('responses.failed_to_upload_scorm_file'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_upload_scorm_file'), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -80,6 +81,7 @@ class ResourceModuleScormController extends AppBaseController
             }
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_delete_scorm_file'), Response::HTTP_BAD_REQUEST);
         }
     }

@@ -13,6 +13,7 @@ class FeaturedLabService
             return FeaturedLab::get()->take(6);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

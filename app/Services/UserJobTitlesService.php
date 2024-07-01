@@ -23,6 +23,7 @@ class UserJobTitlesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +45,7 @@ class UserJobTitlesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +89,7 @@ class UserJobTitlesService
             return $responses;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,6 +108,7 @@ class UserJobTitlesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +132,7 @@ class UserJobTitlesService
             return $userJobTitle;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +150,7 @@ class UserJobTitlesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -160,6 +166,7 @@ class UserJobTitlesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -24,6 +24,7 @@ class ResourceModuleDetailService
             return $resourceModuleDetailed;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -59,6 +60,7 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +73,7 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +119,7 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +138,7 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +168,7 @@ class ResourceModuleDetailService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

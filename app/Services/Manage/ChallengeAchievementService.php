@@ -21,6 +21,7 @@ class ChallengeAchievementService
             return $upload_achievement_image;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +76,7 @@ class ChallengeAchievementService
             return $upload_incentive_image;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +125,7 @@ class ChallengeAchievementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +142,7 @@ class ChallengeAchievementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,6 +161,7 @@ class ChallengeAchievementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -169,6 +174,7 @@ class ChallengeAchievementService
             return $challengeAchievement;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

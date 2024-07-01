@@ -29,6 +29,7 @@ class LabMarketplaceAddressService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +52,7 @@ class LabMarketplaceAddressService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -69,6 +71,7 @@ class LabMarketplaceAddressService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

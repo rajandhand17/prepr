@@ -32,6 +32,7 @@ class UserRepository implements UserInterface
             return  $this->userService->getUsers($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +68,7 @@ class UserRepository implements UserInterface
             return $organizationData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -77,6 +79,7 @@ class UserRepository implements UserInterface
             return $this->userService->setOrganizationPreference($organizationId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +90,7 @@ class UserRepository implements UserInterface
             return $this->userService->userOnboarding();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,6 +101,7 @@ class UserRepository implements UserInterface
             return $this->manageOrganizationService->organizationOnboarding($organizationId, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +112,7 @@ class UserRepository implements UserInterface
             return $this->organizationTypeModeService->storeOrganizationType($organizationId, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

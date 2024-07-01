@@ -32,6 +32,7 @@ class UserController extends AppBaseController
             return $this->sendError(__('responses.found_user_list'), 404);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -42,6 +43,7 @@ class UserController extends AppBaseController
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -66,6 +68,7 @@ class UserController extends AppBaseController
             return $this->sendError(__('responses.found_organization_list'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -95,6 +98,7 @@ class UserController extends AppBaseController
             return $this->sendError(__('responses.selected_organization_not_found'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -128,6 +132,7 @@ class UserController extends AppBaseController
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

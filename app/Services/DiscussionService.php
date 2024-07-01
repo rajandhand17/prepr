@@ -25,6 +25,7 @@ class DiscussionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +48,7 @@ class DiscussionService
             return $getComments;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,6 +100,7 @@ class DiscussionService
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +116,7 @@ class DiscussionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

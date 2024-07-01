@@ -43,6 +43,7 @@ class ConversationService
             return $data;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +65,7 @@ class ConversationService
             return data_get($conversationIds, 'conversation_id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +80,7 @@ class ConversationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -94,6 +97,7 @@ class ConversationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +108,7 @@ class ConversationService
             return Conversation::find($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +121,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +169,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +182,7 @@ class ConversationService
             return $conversation->users()->pluck('id')->toArray();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -222,6 +230,7 @@ class ConversationService
             return ConversationSeenMessage::with('user')->updateOrCreate(['conversation_id' => $conversationId, 'user_id' => $userId], ['message_id' => $messageId]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -235,6 +244,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -248,6 +258,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -262,6 +273,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -278,6 +290,7 @@ class ConversationService
             return $this->store($preparedData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -319,6 +332,7 @@ class ConversationService
             return $conversation->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -335,6 +349,7 @@ class ConversationService
             return $conversation;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -366,6 +381,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -379,6 +395,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -392,6 +409,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -413,6 +431,7 @@ class ConversationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

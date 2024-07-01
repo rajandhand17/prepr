@@ -13,6 +13,7 @@ class FeaturedSkillService
             return FeaturedSkills::get()->take(12);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

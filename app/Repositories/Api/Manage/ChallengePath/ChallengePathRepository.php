@@ -34,6 +34,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->getChallengePathCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +45,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->getChallengePathList($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +56,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->uploadChallengePathMedia($image);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +67,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathAchievementsService->uploadAchievementImage($achievementImage);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +110,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +153,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -160,6 +166,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $checkChallengePathSlug;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -170,6 +177,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->checkNameExistsOrNot($title);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -180,6 +188,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->delete($challengePathId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -190,6 +199,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->getChallengePathListName($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

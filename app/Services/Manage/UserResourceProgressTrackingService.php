@@ -21,6 +21,7 @@ class UserResourceProgressTrackingService
             ]);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

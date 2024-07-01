@@ -25,6 +25,7 @@ class DiscussionRepository implements DiscussionInterface
             return $this->discussionService->index($component, $moduleId, $sortBy);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -35,6 +36,7 @@ class DiscussionRepository implements DiscussionInterface
             return $this->discussionService->addComment($component, $request, $getComponentId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +63,7 @@ class DiscussionRepository implements DiscussionInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +74,7 @@ class DiscussionRepository implements DiscussionInterface
             return $this->discussionSocialActivitiesService->likeOrDislikeComment($action, $comment_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +85,7 @@ class DiscussionRepository implements DiscussionInterface
             return $this->discussionSocialActivitiesService->unLikeOrUnDisLikeComponent($likeOrDislike, $comment_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

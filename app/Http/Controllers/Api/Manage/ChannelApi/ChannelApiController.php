@@ -54,6 +54,7 @@ class ChannelApiController extends AppBaseController
             return $this->sendResponse($responseData, 'responses.found_labs_list');
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -93,6 +94,7 @@ class ChannelApiController extends AppBaseController
             return $this->sendResponse($responseData, 'responses.found_challenges_list');
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -114,6 +116,7 @@ class ChannelApiController extends AppBaseController
             return $this->sendResponse($assignToLab, $assignToLab['add_member_response']);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

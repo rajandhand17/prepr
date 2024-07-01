@@ -27,6 +27,7 @@ class ResumeParserHelper
             }
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

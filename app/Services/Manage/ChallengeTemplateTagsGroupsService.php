@@ -24,6 +24,7 @@ class ChallengeTemplateTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +46,7 @@ class ChallengeTemplateTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +65,7 @@ class ChallengeTemplateTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

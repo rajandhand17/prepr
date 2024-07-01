@@ -36,6 +36,7 @@ class DurationService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +47,7 @@ class DurationService
             return Duration::find($durationId)->first();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

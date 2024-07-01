@@ -21,6 +21,7 @@ class TagGroupService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +65,7 @@ class TagGroupService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

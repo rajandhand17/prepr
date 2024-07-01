@@ -25,6 +25,7 @@ class CampusConnectController extends AppBaseController
             return $this->sendResponse($schools, __('responses.school_fetched_success'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

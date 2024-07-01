@@ -67,6 +67,7 @@ class LabRepository implements LabInterface
             return $this->labService->getLabCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -77,6 +78,7 @@ class LabRepository implements LabInterface
             return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +89,7 @@ class LabRepository implements LabInterface
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,6 +100,7 @@ class LabRepository implements LabInterface
             return $this->labService->uploadLabCoverImage($image);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -271,6 +275,7 @@ class LabRepository implements LabInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -303,6 +308,7 @@ class LabRepository implements LabInterface
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -315,6 +321,7 @@ class LabRepository implements LabInterface
             return $labSlug;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +332,7 @@ class LabRepository implements LabInterface
             return $this->labService->getLabListName($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

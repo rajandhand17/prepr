@@ -35,6 +35,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->getOrganizationList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +46,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->getOrganizationBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -55,6 +57,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->checkOrganizationExistBasedOnTitle($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +68,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->checkOrganizationExistInTrashBasedOnTitle($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +79,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->uploadOrganizationProfileImage($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +90,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->uploadOrganizationCoverImage($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +101,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->createOrganization($request, $profile_image_path, $cover_image_path);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,6 +112,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationAddressService->createOrganizationAddress($request, $organization_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -115,6 +123,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationMemberService->createOrganizationMembers($request, $organization_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +134,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationExternalLinkService->createOrganizationExternalLinks($request, $organizationId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +145,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +156,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationAddressService->updatesOrganizationAddress($request, $organization_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -155,6 +167,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationMemberService->updatesOrganizationMembers($request, $organization_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -165,6 +178,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationExternalLinkService->updateOrganizationExternalLinks($request, $organizationId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +189,7 @@ class OrganizationRepository implements OrganizationInterface
             return  $this->organizationService->deleteOrganization($organizationId, $language);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -190,6 +205,7 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -200,6 +216,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->getOrganizationListOnlyNameAndUuid($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -210,6 +227,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->selectPlan($organization, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -220,6 +238,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->planData($organizationData);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -230,6 +249,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationCustomizationService->createOrganizationCustomLoginRegistration($request, $organizationData);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -240,6 +260,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationCustomizationService->updateOrganizationCustomLoginRegistration($request, $organizationData);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

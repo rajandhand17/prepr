@@ -116,6 +116,7 @@ class ResourceModuleSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +129,7 @@ class ResourceModuleSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -146,6 +148,7 @@ class ResourceModuleSkillsGroupsStackService
             return $resourceSkillIds;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

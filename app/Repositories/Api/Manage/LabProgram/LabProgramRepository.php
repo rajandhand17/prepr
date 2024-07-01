@@ -38,6 +38,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getLabProgramCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +49,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getLabProgramList($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +60,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getLabProgramBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -68,6 +71,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->uploadLabProgramMedia($slug);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -136,6 +140,7 @@ class LabProgramRepository implements LabProgramInterface
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +153,7 @@ class LabProgramRepository implements LabProgramInterface
             return $checkLabProgramSlug;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,6 +164,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->delete($slug);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -168,6 +175,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->checkNameExistsOrNot($title);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +186,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getLabProgramListName($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

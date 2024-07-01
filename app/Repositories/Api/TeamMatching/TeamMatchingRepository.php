@@ -38,6 +38,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $getBrowsersIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +51,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $getProjectsIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +64,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $getProjectsPendingList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +75,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -82,6 +86,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $this->projectService->getProjectBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +97,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $this->projectMemberManagementService->sendRequest($projectId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +108,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return $this->projectMemberManagementService->checkRequestExistsOrNotExists($projectId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

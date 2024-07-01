@@ -13,6 +13,7 @@ class PartnerCompaniesService
             return PartnerCompanies::where('status', 'publish')->get()->take(10);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

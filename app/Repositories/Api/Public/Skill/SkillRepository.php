@@ -30,6 +30,7 @@ class SkillRepository implements SkillInterface
             }
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +41,7 @@ class SkillRepository implements SkillInterface
             return $this->userSkillsService->getMySkills($language, $search, $pinned, $sortBy);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +52,7 @@ class SkillRepository implements SkillInterface
             return $this->skillsService->getSkillBasedOnId($skillId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +63,7 @@ class SkillRepository implements SkillInterface
             return $this->userSkillsService->addSingleSkill($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -70,6 +74,7 @@ class SkillRepository implements SkillInterface
             return $this->userSkillsService->addSkillPinned($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

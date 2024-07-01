@@ -80,6 +80,7 @@ class AirmeetEventService
             return data_get($newAssignment, 'event_url');
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

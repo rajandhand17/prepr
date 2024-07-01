@@ -29,6 +29,7 @@ class ChallengeSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +51,7 @@ class ChallengeSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -76,6 +78,7 @@ class ChallengeSocialActivitiesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +121,7 @@ class ChallengeSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -16,6 +16,7 @@ class LabProgramService
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -96,6 +97,7 @@ class LabProgramService
             return $labProgramList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +108,7 @@ class LabProgramService
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +119,7 @@ class LabProgramService
             return LabProgram::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

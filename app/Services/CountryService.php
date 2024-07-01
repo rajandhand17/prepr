@@ -27,6 +27,7 @@ class CountryService
             return $country_list->get();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

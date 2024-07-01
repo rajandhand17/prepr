@@ -43,6 +43,7 @@ class ProjectTypeService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

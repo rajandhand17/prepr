@@ -41,6 +41,7 @@ class ChargebeeHelper
             return $customer;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +62,7 @@ class ChargebeeHelper
             $subscription = $subscribePlan->subscription();
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +86,7 @@ class ChargebeeHelper
             return $getCustomer;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +110,7 @@ class ChargebeeHelper
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -156,6 +160,7 @@ class ChargebeeHelper
             return $Limits;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -201,6 +206,7 @@ class ChargebeeHelper
             return $addon;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -224,6 +230,7 @@ class ChargebeeHelper
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -243,6 +250,7 @@ class ChargebeeHelper
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -265,6 +273,7 @@ class ChargebeeHelper
             return $totalLimit;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -317,6 +326,7 @@ class ChargebeeHelper
             return $componentUsage;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -361,6 +371,7 @@ class ChargebeeHelper
             return $data;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -377,6 +388,7 @@ class ChargebeeHelper
             return $userInviteCount;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -390,6 +402,7 @@ class ChargebeeHelper
             return $managerInviteCount;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -412,6 +425,7 @@ class ChargebeeHelper
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

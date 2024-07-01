@@ -21,6 +21,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->getList($request);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +32,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->getAchievementBasedOnCertificateNumber($certificate_id);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +43,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->downloadCertificate($certificate_id, $format);
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +54,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->getAchievementList($userId, $request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +65,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->getColumnValue($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +76,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->checkachievementActivity($certificate_id, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +87,7 @@ class AchievementRepository implements AchievementInterface
             return $this->achievementService->achievementActivity($certificate_id, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -52,6 +52,7 @@ class ChallengeSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -126,6 +127,7 @@ class ChallengeSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -144,6 +146,7 @@ class ChallengeSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -162,6 +165,7 @@ class ChallengeSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -180,6 +184,7 @@ class ChallengeSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -194,6 +199,7 @@ class ChallengeSkillsGroupsStackService
             return $getChallengeIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -214,6 +220,7 @@ class ChallengeSkillsGroupsStackService
             return $getChallengeSkillsIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

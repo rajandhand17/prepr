@@ -60,6 +60,7 @@ class LabMarketplaceComponentAssociationService
             return true;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +104,7 @@ class LabMarketplaceComponentAssociationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +119,7 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -131,6 +134,7 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +149,7 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +164,7 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +179,7 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -187,6 +194,7 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceChallenge->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -201,6 +209,7 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceModule->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -215,6 +224,7 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceCollection->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -229,6 +239,7 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceGroup->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -243,6 +254,7 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceChallengePath->save();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -261,6 +273,7 @@ class LabMarketplaceComponentAssociationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

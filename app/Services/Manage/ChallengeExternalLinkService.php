@@ -28,6 +28,7 @@ class ChallengeExternalLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +68,7 @@ class ChallengeExternalLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +87,7 @@ class ChallengeExternalLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +106,7 @@ class ChallengeExternalLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

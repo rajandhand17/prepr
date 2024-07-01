@@ -44,6 +44,7 @@ class LeaderboardRepository implements LeaderboardInterface
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +57,7 @@ class LeaderboardRepository implements LeaderboardInterface
             return $this->userService->getComponentBasedUsers($userEmails, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

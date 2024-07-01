@@ -37,6 +37,7 @@ class LeaderboardController extends AppBaseController
             return $this->sendResponse([], __('responses.leaderboard_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError('responses.send_error', 500);
         }
     }
@@ -65,6 +66,7 @@ class LeaderboardController extends AppBaseController
             return $this->sendResponse([], __('responses.get_users_listing_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError('responses.send_error', 500);
         }
     }

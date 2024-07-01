@@ -71,6 +71,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return $this->challengeTemplateService->getChallengeTemplateList($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +82,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return $this->challengeTemplateService->getCheckChallengeUuid($uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +151,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +162,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -179,6 +183,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +194,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return $this->challengeTemplateService->checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -276,6 +282,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -286,6 +293,7 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
             return $this->challengeTemplateService->deleteChallengeTemplate($slug, $challengeTemplateId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

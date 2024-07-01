@@ -23,6 +23,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->getList($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationService->getOrganizationBasedOnSlug($slug);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +45,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +56,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationSocialActivitiesService->checkSocialActivity($organization_id, $column, $action);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +67,7 @@ class OrganizationRepository implements OrganizationInterface
             return $this->organizationSocialActivitiesService->captureSocialActivity($organization_id, $column, $action);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

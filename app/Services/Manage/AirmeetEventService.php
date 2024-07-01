@@ -24,6 +24,7 @@ class AirmeetEventService
             return AirmeetEventHelper::getAirmeetEventInfo($eventId);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -100,6 +101,7 @@ class AirmeetEventService
             return false;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

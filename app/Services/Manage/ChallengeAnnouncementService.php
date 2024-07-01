@@ -63,6 +63,7 @@ class ChallengeAnnouncementService
             return $challengeAnnouncement;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +88,7 @@ class ChallengeAnnouncementService
             return $challenge_announcement;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +101,7 @@ class ChallengeAnnouncementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

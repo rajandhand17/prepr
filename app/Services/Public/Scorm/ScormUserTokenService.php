@@ -40,6 +40,7 @@ class ScormUserTokenService
             return $existing;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -69,6 +70,7 @@ class ScormUserTokenService
             return $token;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -86,6 +88,7 @@ class ScormUserTokenService
             return hash('sha256', $salt);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -108,6 +111,7 @@ class ScormUserTokenService
             return false;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

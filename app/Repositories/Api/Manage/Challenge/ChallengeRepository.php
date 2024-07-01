@@ -85,6 +85,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +96,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeList($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,6 +107,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->uploadChallengeCoverImage($image);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -115,6 +118,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeAssessmentService->uploadChallengeAssessment($attachment);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -293,6 +297,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeAchievementService->uploadChallengeParticipationAchievementImage($image);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -303,6 +308,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeSponsorService->createChallengeSponsor($request, $challenge);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -313,6 +319,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $challenge);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -323,6 +330,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $challenge);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -333,6 +341,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeRequirementService->createChallengeRequirement($request, $challenge);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -343,6 +352,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $challenge);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -434,6 +444,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -444,6 +455,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -476,6 +488,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -488,6 +501,7 @@ class ChallengeRepository implements ChallengeInterface
             return $labSlug;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -498,6 +512,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeAssessmentService->getChallengeAssessmentData($challengeAssessment);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -528,6 +543,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -605,6 +621,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -633,6 +650,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -665,6 +683,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeListName($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -698,6 +717,7 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

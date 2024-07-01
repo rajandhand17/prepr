@@ -300,6 +300,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -398,6 +399,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -414,6 +416,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -430,6 +433,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -490,6 +494,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -532,6 +537,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -548,6 +554,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -577,6 +584,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -616,6 +624,7 @@ class User extends Authenticatable
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -671,6 +680,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -712,6 +722,7 @@ class User extends Authenticatable
             return $user;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -846,6 +857,7 @@ class User extends Authenticatable
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

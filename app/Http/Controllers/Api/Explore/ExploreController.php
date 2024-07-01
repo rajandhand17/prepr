@@ -73,6 +73,7 @@ class ExploreController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -93,6 +94,7 @@ class ExploreController extends AppBaseController
             return $this->sendResponse([], __('responses.recommended_skills_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -114,6 +116,7 @@ class ExploreController extends AppBaseController
             // return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

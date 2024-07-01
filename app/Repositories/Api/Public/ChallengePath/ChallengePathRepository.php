@@ -24,6 +24,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->getList($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathService->getChallengePathBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathSocialActivitiesService->getColumnNameValue($action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +57,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathSocialActivitiesService->checkSocialActivity($challengePath, $column, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +68,7 @@ class ChallengePathRepository implements ChallengePathInterface
             return $this->challengePathSocialActivitiesService->captureSocialActivity($challengePath, $column, $value);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

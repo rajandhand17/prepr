@@ -29,6 +29,7 @@ class PitchTemplateService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +45,7 @@ class PitchTemplateService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

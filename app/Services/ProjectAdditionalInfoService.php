@@ -34,6 +34,7 @@ class ProjectAdditionalInfoService
             return $newprojectAdditionalInfo;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +50,7 @@ class ProjectAdditionalInfoService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

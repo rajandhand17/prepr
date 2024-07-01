@@ -52,6 +52,7 @@ class SkillController extends AppBaseController
             return $this->sendError(__('responses.not_found_skill_list'), 404);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -70,6 +71,7 @@ class SkillController extends AppBaseController
             return $this->sendError(__('responses.add_skills_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -87,6 +89,7 @@ class SkillController extends AppBaseController
             return $this->sendError(__('responses.pinned_skills_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -122,6 +125,7 @@ class SkillController extends AppBaseController
             return $this->sendResponse([], __('responses.skills_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

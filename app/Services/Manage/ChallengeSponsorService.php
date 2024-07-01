@@ -25,6 +25,7 @@ class ChallengeSponsorService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +53,7 @@ class ChallengeSponsorService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -68,6 +70,7 @@ class ChallengeSponsorService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +89,7 @@ class ChallengeSponsorService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

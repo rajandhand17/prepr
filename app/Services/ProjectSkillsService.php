@@ -37,6 +37,7 @@ class ProjectSkillsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +50,7 @@ class ProjectSkillsService
             return $projectIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

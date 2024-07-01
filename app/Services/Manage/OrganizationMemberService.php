@@ -82,6 +82,7 @@ class OrganizationMemberService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

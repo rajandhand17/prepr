@@ -46,6 +46,7 @@ class ScormUserIdentifier
             return $scormService;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

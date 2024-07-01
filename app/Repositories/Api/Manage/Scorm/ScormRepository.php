@@ -30,6 +30,7 @@ class ScormRepository implements ScormInterface
             return $this->scormService->upload($modelType, $modelId, $file, $existing);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -45,6 +46,7 @@ class ScormRepository implements ScormInterface
             return $this->scormService->delete($scorm);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

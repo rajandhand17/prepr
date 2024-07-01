@@ -29,6 +29,7 @@ class LabSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +51,7 @@ class LabSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -76,6 +78,7 @@ class LabSocialActivitiesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +121,7 @@ class LabSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +138,7 @@ class LabSocialActivitiesService
             return $lab_ids;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

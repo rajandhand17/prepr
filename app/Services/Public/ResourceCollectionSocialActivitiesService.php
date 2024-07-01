@@ -25,6 +25,7 @@ class ResourceCollectionSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +43,7 @@ class ResourceCollectionSocialActivitiesService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +86,7 @@ class ResourceCollectionSocialActivitiesService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +113,7 @@ class ResourceCollectionSocialActivitiesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +131,7 @@ class ResourceCollectionSocialActivitiesService
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -53,6 +53,7 @@ class ScormScoTrackingService
             return $scoTracking;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -73,6 +74,7 @@ class ScormScoTrackingService
             };
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -85,6 +87,7 @@ class ScormScoTrackingService
             return $sco->id;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

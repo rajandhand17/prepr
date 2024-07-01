@@ -27,6 +27,7 @@ class AirmeetEventRepository implements AirmeetEventInterface
             return $this->airmeetEventService->getMeetUrl($event, $data);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

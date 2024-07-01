@@ -136,6 +136,7 @@ class ChallengeTimelinesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -152,6 +153,7 @@ class ChallengeTimelinesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

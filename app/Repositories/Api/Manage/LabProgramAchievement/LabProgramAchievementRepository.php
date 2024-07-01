@@ -20,6 +20,7 @@ class LabProgramAchievementRepository implements LabProgramAchievementInterface
             return $this->labProgramAchievementService->uploadAchievementImage($image);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +31,7 @@ class LabProgramAchievementRepository implements LabProgramAchievementInterface
             return $this->labProgramAchievementService->updateAchievementImage($image);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

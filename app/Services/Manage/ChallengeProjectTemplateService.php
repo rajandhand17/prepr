@@ -40,6 +40,7 @@ class ChallengeProjectTemplateService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +57,7 @@ class ChallengeProjectTemplateService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

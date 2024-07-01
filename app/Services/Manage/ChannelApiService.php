@@ -13,6 +13,7 @@ class ChannelApiService
             return ChannelApis::query()->where(['api_slug' => $name, 'is_active' => 1])->first();
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

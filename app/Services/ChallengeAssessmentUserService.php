@@ -38,6 +38,7 @@ class ChallengeAssessmentUserService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +65,7 @@ class ChallengeAssessmentUserService
             return $challenge_assessment_criteria;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -126,6 +128,7 @@ class ChallengeAssessmentUserService
             ];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -141,6 +144,7 @@ class ChallengeAssessmentUserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,6 +162,7 @@ class ChallengeAssessmentUserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

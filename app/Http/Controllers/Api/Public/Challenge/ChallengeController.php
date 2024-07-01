@@ -40,6 +40,7 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -59,6 +60,7 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -89,6 +91,7 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -102,6 +105,7 @@ class ChallengeController extends AppBaseController
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -125,6 +129,7 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

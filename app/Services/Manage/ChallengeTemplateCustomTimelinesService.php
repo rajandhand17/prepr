@@ -29,6 +29,7 @@ class ChallengeTemplateCustomTimelinesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +54,7 @@ class ChallengeTemplateCustomTimelinesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +73,7 @@ class ChallengeTemplateCustomTimelinesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

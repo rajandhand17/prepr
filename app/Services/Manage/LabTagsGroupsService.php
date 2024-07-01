@@ -84,6 +84,7 @@ class LabTagsGroupsService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +103,7 @@ class LabTagsGroupsService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -124,6 +126,7 @@ class LabTagsGroupsService
             return $getTags;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

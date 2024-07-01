@@ -24,6 +24,7 @@ class SettingRepository implements SettingInterface
             return $this->userService->removeProfileImage();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class SettingRepository implements SettingInterface
             return $this->userService->updateUserAccount($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,7 @@ class SettingRepository implements SettingInterface
             return $this->userService->changePassword($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +57,7 @@ class SettingRepository implements SettingInterface
             return $this->userService->deactivateUserAccount();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +68,7 @@ class SettingRepository implements SettingInterface
             return $this->userSettingService->updatePrivacy($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +79,7 @@ class SettingRepository implements SettingInterface
             return $this->userSettingService->updateNotification($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

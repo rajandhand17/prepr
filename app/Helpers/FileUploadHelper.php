@@ -20,6 +20,7 @@ class FileUploadHelper
             return $webp_path_cover;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ class FileUploadHelper
             return $videoData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +48,7 @@ class FileUploadHelper
             return $fileData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +70,7 @@ class FileUploadHelper
             return $path_cover;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +87,7 @@ class FileUploadHelper
             return $webp_path_cover;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,6 +106,7 @@ class FileUploadHelper
             return $webp_path_cover;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +123,7 @@ class FileUploadHelper
             return $webp_path_cover;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -130,6 +137,7 @@ class FileUploadHelper
             return $videoData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

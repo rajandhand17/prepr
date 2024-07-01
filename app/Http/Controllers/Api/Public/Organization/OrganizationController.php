@@ -38,6 +38,7 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.not_found_organization_list'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -53,6 +54,7 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -80,6 +82,7 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -36,6 +36,7 @@ class ChallengeTemplateRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -68,6 +69,7 @@ class ChallengeTemplateRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +88,7 @@ class ChallengeTemplateRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -55,6 +55,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labMarketplaceService->getLabMarketPlaceList($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +66,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +77,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labMarketplaceService->getCheckLabUuid($uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +88,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->organizationService->getOrganizationExistBasedOnUuid($uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +99,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labMarketplaceService->getLabMarketplaceBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -153,6 +158,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labMarketplaceService->deleteLabMarketplace($slug, $labMarketplaceId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +179,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -183,6 +190,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return $this->labMarketplaceService->checkLabRedeemedOrNot($labMarketplaceId, $organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -251,6 +259,7 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -43,6 +43,7 @@ class AchievementConditionListService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +68,7 @@ class AchievementConditionListService
             return $achievement_condition;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

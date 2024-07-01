@@ -29,6 +29,7 @@ class UserDashboardRepository implements UserDashboardInterface
             return $this->labService->getList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,6 +40,7 @@ class UserDashboardRepository implements UserDashboardInterface
             return $this->challengeService->getList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +51,7 @@ class UserDashboardRepository implements UserDashboardInterface
             return $this->projectService->getMyProjectIds($userId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +68,7 @@ class UserDashboardRepository implements UserDashboardInterface
             return $projectIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +79,7 @@ class UserDashboardRepository implements UserDashboardInterface
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

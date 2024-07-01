@@ -41,6 +41,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->getResourceModuleCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +52,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return  $this->resourceModuleService->getResourceModuleList($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -79,6 +81,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +130,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $createResourceModuleUsingAIPreview;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -137,6 +141,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->uploadResourceModuleCoverImage($cover_image);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -147,6 +152,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -166,6 +172,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -176,6 +183,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->checkName($title);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -204,6 +212,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -214,6 +223,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -224,6 +234,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -234,6 +245,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -244,6 +256,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleDetailsService->addEmbeddedMedia($request, $resource_module_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -254,6 +267,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return  $this->resourceModuleService->getListName($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

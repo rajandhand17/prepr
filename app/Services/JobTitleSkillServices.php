@@ -22,6 +22,7 @@ class JobTitleSkillServices
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -37,6 +38,7 @@ class JobTitleSkillServices
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +60,7 @@ class JobTitleSkillServices
             return $percentage;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
