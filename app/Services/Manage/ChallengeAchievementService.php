@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAchievement;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -19,6 +20,8 @@ class ChallengeAchievementService
 
             return $upload_achievement_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -55,6 +58,7 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeAchievement in ChallengeAchievementService.php: '.$e->getMessage());
 
             return false;
@@ -71,6 +75,8 @@ class ChallengeAchievementService
 
             return $upload_incentive_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +124,8 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -133,6 +141,8 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +160,8 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -161,6 +173,8 @@ class ChallengeAchievementService
 
             return $challengeAchievement;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

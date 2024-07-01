@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
 use App\Models\Skill;
 use App\Models\UserSkills;
@@ -35,6 +36,8 @@ class UserSkillsService
 
             return $allSkills;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +52,8 @@ class UserSkillsService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +63,8 @@ class UserSkillsService
         try {
             return UserSkills::where(['skill'=>$id, 'user_id'=>auth('api')->user()->id])->first();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +82,8 @@ class UserSkillsService
 
             return $userSkills;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +95,8 @@ class UserSkillsService
 
             return $userSkills;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +118,8 @@ class UserSkillsService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +142,8 @@ class UserSkillsService
 
             return $userSkill;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +164,8 @@ class UserSkillsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -181,6 +198,8 @@ class UserSkillsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

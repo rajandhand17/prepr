@@ -10,6 +10,7 @@ use App\Http\Requests\Manage\Challenge\CreateChallengeFromResourceUsingAIPreview
 use App\Http\Requests\Manage\Challenge\CreateChallengeRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIPreviewRequest;
 use App\Http\Requests\Manage\Challenge\CreateChallengeUsingAIRequest;
+use App\Http\Requests\Manage\Challenge\SelectChallengeWinnerRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeAssessmentRequest;
 use App\Http\Requests\Manage\Challenge\UpdateChallengeRequest;
 use App\Http\Resources\Manage\Challenge\ChallengeAnnouncementResource;
@@ -17,6 +18,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +58,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -110,6 +114,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -136,6 +142,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -192,6 +200,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -221,6 +231,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -235,6 +247,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -249,11 +263,13 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function fetchAssessment($slug)
+    public function fetchAssessment($slug, $type = null)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
@@ -287,15 +303,18 @@ class ChallengeController extends AppBaseController
                     ];
                 });
             }
+            $message = ($type != null) ? __('responses.update_challenge_assessment_detail') : __('responses.found_challenge_assessment_detail');
 
             if (!empty($getChallengeAssessment) || !empty($challenge_assessment_criteria)) {
-                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), __('responses.found_challenge_assessment_detail'), 200);
+                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), $message, 200);
             }
 
             $emptyResponse = new stdClass();
 
             return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -333,11 +352,13 @@ class ChallengeController extends AppBaseController
 
             $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkComponentBasedOnSlug->id, $update_assessment_attachment, $request);
             if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
-                return self::fetchAssessment($slug);
+                return self::fetchAssessment($slug, 'update');
             }
 
             return $this->sendError(__('responses.challenge_assessment_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -376,6 +397,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -439,6 +462,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -497,6 +522,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse($response, __('responses.found_challenges_announcement'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -526,6 +553,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -545,6 +574,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -568,6 +599,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -592,6 +624,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeFromResourceUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -622,7 +655,45 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAI has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function selectWinner($slug, SelectChallengeWinnerRequest $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->allow_winner_change === '1') {
+                return $this->sendError(__('responses.winner_changing_not_allowed'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->winner_select_date != null && $checkComponentBasedOnSlug->winner_select_date > Carbon::now()->toDateTimeString()) {
+                return $this->sendError(__('responses.challenge_winner_timeline_fail'), 403);
+            }
+
+            if (empty($checkComponentBasedOnSlug->incentive_achievement)) {
+                return $this->sendError(__('responses.challenge_incentive_not_found'), 403);
+            }
+
+            $selectChallengeWinner = $this->challengeRepository->selectChallengeWinner($checkComponentBasedOnSlug, $request);
+            if ($selectChallengeWinner == true) {
+                return $this->sendResponse([], __('responses.challenge_winner_selected_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_winner_selected_not_successfully'), 400);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.server_failed'), 500);
         }

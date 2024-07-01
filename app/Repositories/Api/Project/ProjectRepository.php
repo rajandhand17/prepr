@@ -3,9 +3,11 @@
 namespace App\Repositories\Api\Project;
 
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
+use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
+use App\Notifications\ProjectCreatedNotification;
 use App\Services\AchievementService;
 use App\Services\ChallengeAssessmentUserService;
-use App\Services\Manage\AIService;
 use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
@@ -19,6 +21,7 @@ use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
+use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,9 +42,9 @@ class ProjectRepository implements ProjectInterface
     private $challengeAssessmentUserService;
     private $projectSkillsService;
     private $projectHistoryService;
-    private $aiService;
+    private $userService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, AIService $aiService)
+    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, UserService $userService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -57,7 +60,7 @@ class ProjectRepository implements ProjectInterface
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->projectSkillsService = $projectSkillsService;
         $this->projectHistoryService = $projectHistoryService;
-        $this->aiService = $aiService;
+        $this->userService = $userService;
     }
 
     public function getMyProjectIds($userId)
@@ -65,6 +68,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->getMyProjectIds($userId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +79,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectSocialActivitiesService->getFavouriteProjectIds($userId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +90,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectMemberManagementService->getAcceptedInvitesProjectIds($userData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +101,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectMemberManagementService->getPendingInvitesProjectIds($userData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +118,8 @@ class ProjectRepository implements ProjectInterface
 
             return $projectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +135,8 @@ class ProjectRepository implements ProjectInterface
 
             return $projectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -131,6 +146,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -140,6 +157,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->uploadCoverImage($coverImage);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +192,8 @@ class ProjectRepository implements ProjectInterface
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
+                $user = UserService::getUserById(auth()->user()->id);
+                $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
                 DB::commit();
 
                 return $createProject['createProject'];
@@ -180,6 +201,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -191,6 +213,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->getProjectBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -200,6 +224,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->checkNameExistsOrNot($title);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -221,6 +247,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -244,6 +271,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -270,6 +298,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -294,6 +323,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -318,6 +348,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -331,6 +362,8 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -350,6 +383,7 @@ class ProjectRepository implements ProjectInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -361,6 +395,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectService->checkProjectRequirementCompleted($projectData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -376,19 +412,23 @@ class ProjectRepository implements ProjectInterface
                 $submitProject = $this->projectService->submitProject($projectData);
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
+                $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
 
                 return [
                     'submitProject'  => $submitProject,
                     'addAchievement' => $addAchievement,
+                    'updateUserPoint'=> $updateUserPoint,
                 ];
             });
 
             if (
                 $submitProject['submitProject'] &&
-                $submitProject['addAchievement']
+                $submitProject['addAchievement'] &&
+                $submitProject['updateUserPoint']
             ) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
+                dispatch(new ProcessChallengePathAchievementJob($fetchAcceptedMemberIds, $fetchChallenge->id));
                 DB::commit();
 
                 return $submitProject['submitProject'];
@@ -396,6 +436,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -407,6 +448,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectSocialActivitiesService->getColumnNameValue($action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -416,6 +459,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectSocialActivitiesService->checkSocialActivity($projectId, $column, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -425,6 +470,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectSocialActivitiesService->captureSocialActivity($projectId, $column, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -434,6 +481,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->challengeAssessmentService->getAllChallengeIds($userData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -459,6 +508,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -480,6 +530,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in captureProjectAIAssessment in ProjectRepository.php: '.$e->getMessage());
 
             return false;
@@ -503,6 +554,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in assessProjectAI in ProjectRepository.php: '.$e->getMessage());
             DB::rollBack();
 
@@ -534,6 +586,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -545,6 +598,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->challengeAssessmentUserService->checkChallengeProjectAssessment($projectDataId, $userData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -566,6 +621,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -593,6 +649,7 @@ class ProjectRepository implements ProjectInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -604,6 +661,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectHistoryService->storeHistory($projectId, $userId, $activity);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -613,6 +672,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectHistoryService->fetchProjectHistory($projectId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -622,6 +683,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectMemberManagementService->checkProjectJoinedStatus($projectId, $userEmail);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -631,6 +694,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectMemberManagementService->joinProject($projectId, $userEmail);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -640,6 +705,8 @@ class ProjectRepository implements ProjectInterface
         try {
             return $this->projectMemberManagementService->unJoinProject($projectId, $userEmail);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

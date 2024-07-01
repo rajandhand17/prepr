@@ -6,7 +6,11 @@ use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
+use App\Services\AchievementService;
+use App\Services\ModuleAchievementCompletionStatusService;
+use App\Services\ProjectService;
 use App\Services\Public\ChallengePathSocialActivitiesService;
+use App\Services\UserService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -19,6 +23,8 @@ class ChallengePathService
 
             return $challengePath_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +108,8 @@ class ChallengePathService
 
             return $getChallengePathList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +124,8 @@ class ChallengePathService
 
             return $upload_challenge_path_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -216,6 +226,8 @@ class ChallengePathService
 
             return $challengePath;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -309,6 +321,8 @@ class ChallengePathService
 
             return $challengePath;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -318,6 +332,8 @@ class ChallengePathService
         try {
             return ChallengePath::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -332,6 +348,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -348,6 +366,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -357,6 +377,8 @@ class ChallengePathService
         try {
             return ChallengePath::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -370,6 +392,8 @@ class ChallengePathService
 
             return $challengePathList->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -379,6 +403,8 @@ class ChallengePathService
         try {
             return ChallengePath::where('UUID', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -393,6 +419,8 @@ class ChallengePathService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -412,6 +440,44 @@ class ChallengePathService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function challengePathAchievementStatus($memberIds, $challengeId)
+    {
+        try {
+            if (!empty($memberIds)) {
+                foreach ($memberIds as $memberId) {
+                    $getUserById = UserService::getUserById($memberId);
+                    $fetchChallengePathIdsBasedOnChallengeId = ComponentAssociationService::fetchChallengePathIdsBasedOnChallengeId($challengeId);
+                    if (!empty($fetchChallengePathIdsBasedOnChallengeId)) {
+                        foreach ($fetchChallengePathIdsBasedOnChallengeId as $challengePathId) {
+                            $checkChallengePathAchievementAssignedOrNot = ModuleAchievementCompletionStatusService::checkChallengePathAchievementAssignedOrNot($challengePathId, $getUserById->id);
+                            if ($checkChallengePathAchievementAssignedOrNot === false) {
+                                $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociationService::fetchChallengeIdsBasedOnChallengePathId($challengePathId);
+                                if (!empty($fetchChallengeIdsBasedOnChallengePathId)) {
+                                    $fetchSubmittedProjectsChallengeId = ProjectService::fetchSubmittedProjectsChallengeId($getUserById);
+                                    $checkChallengeDiff = $fetchChallengeIdsBasedOnChallengePathId->diff($fetchSubmittedProjectsChallengeId);
+                                    if ($checkChallengeDiff->isEmpty()) {
+                                        $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
+                                        if ($addChallengePathAchievement) {
+                                            $markChallengePathCompleted = ModuleAchievementCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

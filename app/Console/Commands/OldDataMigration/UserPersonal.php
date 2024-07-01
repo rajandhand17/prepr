@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use DB;
 use Illuminate\Console\Command;
 
@@ -90,6 +91,7 @@ class UserPersonal extends Command
             DB::commit();
             $this->info('Migrating of old data for users personal table completed.');
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

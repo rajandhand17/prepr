@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\BusinessChallengeTackling;
 use Illuminate\Support\Facades\Schema;
 
@@ -25,6 +26,8 @@ class BusinessChallengeTacklingService
 
             return $business_challenge_tackling_list->get();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

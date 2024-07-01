@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
+use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\UserService;
 use DB;
@@ -55,6 +56,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +153,8 @@ class MemberManagementService
 
             return $componentCollectionObject;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +183,8 @@ class MemberManagementService
 
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -225,6 +232,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -256,6 +265,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -281,6 +292,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -412,6 +425,10 @@ class MemberManagementService
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                            if ($member['invite_type'] === 'join_request') {
+                                $user = UserService::getUserById($componentCollectionObject->user_id);
+                                $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));
+                            }
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
                         } else {
@@ -488,6 +505,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -505,6 +523,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -542,6 +562,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -570,6 +592,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -616,6 +640,8 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -648,6 +674,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -672,6 +699,8 @@ class MemberManagementService
                 'email_status'
             )->where($filterData)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -691,6 +720,8 @@ class MemberManagementService
 
             return $requestedData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -711,6 +742,8 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -722,6 +755,8 @@ class MemberManagementService
 
             return $this->isUserBelongToPrepr($user);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -738,6 +773,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -763,6 +800,8 @@ class MemberManagementService
 
             return $mergedEmails;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -802,6 +841,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -817,6 +858,8 @@ class MemberManagementService
                     ->orWhere('role', '=', 'super_admin');
             })->pluck('email');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -847,6 +890,7 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             dd($e);
 
             return false;
@@ -879,6 +923,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -894,6 +940,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -903,6 +951,8 @@ class MemberManagementService
         try {
             return MemberManagement::query()->where('module_type', $moduleType)->where('email', $email)->get();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

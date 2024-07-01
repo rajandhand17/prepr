@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Discussion;
 use DB;
 
@@ -24,6 +25,8 @@ class DiscussionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +48,8 @@ class DiscussionService
 
             return $getComments;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -82,6 +87,7 @@ class DiscussionService
 
             return $addComment;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -99,6 +105,8 @@ class DiscussionService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +121,8 @@ class DiscussionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

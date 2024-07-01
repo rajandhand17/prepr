@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
@@ -36,6 +37,8 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -54,6 +57,8 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -75,6 +80,8 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_module_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -104,6 +111,41 @@ class ResourceModuleController extends AppBaseController
 
             return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function resourceModuleVisitActivity($slug, $asset_id)
+    {
+        try {
+            $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if ($checkResourceModuleExistsOrNot !== null) {
+                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+                    return $this->sendError(__('responses.resource_module_not_accessible'), 403);
+                }
+                $checkResourceModuleAsset = $this->resourceModuleRepository->checkResourceModuleAsset($checkResourceModuleExistsOrNot->id, $asset_id);
+                if ($checkResourceModuleAsset === false) {
+                    return $this->sendError(__('responses.resource_module_asset_not_available'), 403);
+                }
+                $userId = auth()->user()->id;
+                $checkResourceModuleAssetVisit = $this->resourceModuleRepository->checkResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
+                if ($checkResourceModuleAssetVisit !== false) {
+                    return $this->sendError(__('responses.resource_module_asset_already_visited'), 403);
+                }
+                $addResourceModuleAssetVisit = $this->resourceModuleRepository->addResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
+                if ($addResourceModuleAssetVisit === false) {
+                    return $this->sendError(__('responses.resource_module_asset_visit_gone_wrong'), 403);
+                }
+
+                return $this->sendResponse([], __('responses.resource_module_asset_visited'));
+            }
+
+            return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

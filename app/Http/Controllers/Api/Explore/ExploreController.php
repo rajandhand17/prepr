@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Explore;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Explore\SkillResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
@@ -71,6 +72,8 @@ class ExploreController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -86,20 +89,12 @@ class ExploreController extends AppBaseController
                 }
 
                 return $this->sendResponse([], __('responses.recommended_skills_successfully'));
-            } else {
-                $getTendingJobs = $this->exploreRepository->trendingJobs();
-                if ($getTendingJobs) {
-                    $response = [
-                        'labs'        => LabResource::collection($getTendingJobs['labs']),
-                        'challenges'  => ChallengeResource::collection($getTendingJobs['challenge']),
-                    ];
-
-                    return $this->sendResponse($response, __('responses.trending_labs_challenges_successfully'));
-                }
-
-                return $this->sendResponse([], __('responses.trending_labs_challenges_successfully'));
             }
+
+            return $this->sendResponse([], __('responses.recommended_skills_successfully'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -120,6 +115,8 @@ class ExploreController extends AppBaseController
 
             // return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

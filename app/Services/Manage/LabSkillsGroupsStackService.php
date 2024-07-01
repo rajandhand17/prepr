@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabSkillsGroupsStack;
 
 class LabSkillsGroupsStackService
@@ -49,6 +50,8 @@ class LabSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +125,8 @@ class LabSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +144,8 @@ class LabSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -151,12 +158,16 @@ class LabSkillsGroupsStackService
                     ->whereIn('foreign_id', $usersSkills)
                     ->pluck('foreign_id');
             } else {
-                $getSkills = LabSkillsGroupsStack::where('type', 0)
-                    ->pluck('foreign_id')->random();
+                $getSkills = LabSkillsGroupsStack::where('type', 0)->pluck('foreign_id');
+                if (count($getSkills) > 0) {
+                    $getSkills = $getSkills->random();
+                }
             }
 
             return $getSkills;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -170,6 +181,8 @@ class LabSkillsGroupsStackService
 
             return $getLabId;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

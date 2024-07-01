@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationSocialActivities;
 
 class OrganizationSocialActivitiesService
@@ -51,6 +52,8 @@ class OrganizationSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +74,8 @@ class OrganizationSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +92,8 @@ class OrganizationSocialActivitiesService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +119,8 @@ class OrganizationSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

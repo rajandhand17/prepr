@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Organization;
 
 use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
@@ -86,6 +87,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -151,6 +154,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -370,6 +375,8 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.organization_stored_failed'), 409);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -579,6 +586,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.organization_not_update'), 409);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -644,6 +653,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -658,6 +669,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -677,6 +690,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -696,6 +711,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.plan_not_retrived'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

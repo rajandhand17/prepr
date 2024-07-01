@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
 use App\Models\ChallengePathTemplate;
@@ -58,6 +59,8 @@ class LabMarketplaceComponentAssociationService
 
             return true;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -100,6 +103,8 @@ class LabMarketplaceComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +118,8 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -126,6 +133,8 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +148,8 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -152,6 +163,8 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -165,6 +178,8 @@ class LabMarketplaceComponentAssociationService
             $challengeRedeem->sequence = $sequenceNumber;
             $challengeRedeem->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +193,8 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceChallenge->sequence = $sequenceNumber;
             $labMarketPlaceChallenge->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -191,6 +208,8 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceModule->sequence = $sequenceNumber;
             $labMarketPlaceModule->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -204,6 +223,8 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceCollection->sequence = $sequenceNumber;
             $labMarketPlaceCollection->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -217,6 +238,8 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceGroup->sequence = $sequenceNumber;
             $labMarketPlaceGroup->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -230,6 +253,8 @@ class LabMarketplaceComponentAssociationService
             $labMarketPlaceChallengePath->sequence = $sequenceNumber;
             $labMarketPlaceChallengePath->save();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -247,6 +272,8 @@ class LabMarketplaceComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

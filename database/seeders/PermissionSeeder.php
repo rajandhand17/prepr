@@ -195,6 +195,11 @@ class PermissionSeeder extends Seeder
                 'description'  => 'Allow user to view project sumission',
             ],
             [
+                'name'         => 'select_challenge_winner',
+                'display_name' => 'Select Challenge Winner',
+                'description'  => 'Allow manager to select winner of the challenge',
+            ],
+            [
                 'name'         => 'remove_project_submission',
                 'display_name' => 'Remove Project Submission',
                 'description'  => 'Allow user to remove project submission',

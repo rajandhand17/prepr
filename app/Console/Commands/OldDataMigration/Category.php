@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Category as Categories;
 use DB;
 use Illuminate\Console\Command;
@@ -70,6 +71,7 @@ class Category extends Command
             DB::rollback();
             $this->error('No categories found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

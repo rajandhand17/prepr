@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\EmailTemplate;
 
 class EmailTemplateService
@@ -22,6 +23,8 @@ class EmailTemplateService
 
             return $getTemplate->where('module_type', $module_type)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

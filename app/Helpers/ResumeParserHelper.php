@@ -26,6 +26,8 @@ class ResumeParserHelper
                 return  $apiResponse->json();
             }
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Host as Hosts;
 use DB;
 use Illuminate\Console\Command;
@@ -66,6 +67,7 @@ class Host extends Command
             DB::rollback();
             $this->error('No hosts found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

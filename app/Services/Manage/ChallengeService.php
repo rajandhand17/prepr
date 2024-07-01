@@ -10,6 +10,7 @@ use App\Models\PitchTemplate;
 use App\Services\Manage\MemberManagementService as ManageMemberManagementService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Log;
@@ -23,6 +24,8 @@ class ChallengeService
 
             return $challenge_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +39,8 @@ class ChallengeService
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +150,8 @@ class ChallengeService
 
             return $challenge_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +166,8 @@ class ChallengeService
 
             return $upload_challenge_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -301,10 +310,12 @@ class ChallengeService
             $challenge->is_auto_created = $is_auto_created;
             $challenge->is_ai_created = $is_ai_created;
             $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+            $challenge->allow_winner_change = '0';
             $challenge->save();
 
             return $challenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallenge in ChallengeService.php: '.$e->getMessage());
 
             return false;
@@ -431,11 +442,14 @@ class ChallengeService
                 $challenge->is_open = $is_open;
                 $challenge->is_auto_created = $is_auto_created;
                 $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+                $challenge->allow_winner_change = '0';
                 $challenge->save();
 
                 return $challenge;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -445,6 +459,8 @@ class ChallengeService
         try {
             return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -454,6 +470,8 @@ class ChallengeService
         try {
             return Challenge::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -468,6 +486,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -479,6 +499,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -493,6 +515,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -507,6 +531,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -518,6 +544,7 @@ class ChallengeService
 
             return $challengeId ?: false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in getChallengeIdBasedOnUUID in ChallengeService.php: '.$e->getMessage());
 
             return false;
@@ -536,10 +563,13 @@ class ChallengeService
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
+            $clonedChallenge->allow_winner_change = '0';
             $clonedChallenge->save();
 
             return $clonedChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -553,6 +583,8 @@ class ChallengeService
 
             return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -566,6 +598,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -575,6 +609,8 @@ class ChallengeService
         try {
             return Challenge::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -596,6 +632,8 @@ class ChallengeService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -678,6 +716,8 @@ class ChallengeService
 
             return $challenge_timelines;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -703,6 +743,8 @@ class ChallengeService
 
             return Challenge::whereIn('id', $challenges)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -715,6 +757,8 @@ class ChallengeService
 
             return $challenges->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -729,6 +773,8 @@ class ChallengeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -763,6 +809,8 @@ class ChallengeService
                 return $challenge_details;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -776,6 +824,8 @@ class ChallengeService
 
             return $getChallengeAcceptedMembersBasedOnIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -801,6 +851,8 @@ class ChallengeService
 
             return $templateData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -820,6 +872,8 @@ class ChallengeService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -829,6 +883,8 @@ class ChallengeService
         try {
             return Challenge::whereIn('level_id', $levelId)->pluck('id');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -838,6 +894,8 @@ class ChallengeService
         try {
             return Challenge::query()->where('organization_id', $organizationId)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -847,6 +905,8 @@ class ChallengeService
         try {
             return Challenge::whereIn('duration_id', $durationId)->pluck('id');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -856,6 +916,8 @@ class ChallengeService
         try {
             return Challenge::query()->where('user_id', $userId)->get();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -865,6 +927,22 @@ class ChallengeService
         try {
             return Challenge::whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function updateWinnerSelectionTimeLine($challengeData)
+    {
+        try {
+            $challengeData->winner_select_date = date('Y-m-d H:i:s', strtotime(Carbon::now()->toDateTimeString()));
+            $challengeData->save();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\UserJobTitle;
 
 class UserJobTitlesService
@@ -21,6 +22,8 @@ class UserJobTitlesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +44,52 @@ class UserJobTitlesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function addMultipleJobs($request)
+    {
+        try {
+            $jobIds = $request->job_ids; // Assuming job_ids is an array of job IDs
+            $already = [];
+            $error = [];
+            $success = [];
+            foreach ($jobIds as $jobId) {
+                $checkJobExistsOrNot = self::checkJobsExistsInUsers($jobId);
+                if ($checkJobExistsOrNot) {
+                    $already[]['id'] = $jobId;
+                    continue;
+                }
+                $getAllSkillsOfJobs = JobTitleSkillServices::getJobSkillsBasedOnJobId($jobId);
+                $addedUsersInSkills = UserSkillsService::addMultipleSkills($getAllSkillsOfJobs);
+
+                if ($addedUsersInSkills) {
+                    $addedJobs = new UserJobTitle();
+                    $addedJobs->user_id = auth()->user()->id;
+                    $addedJobs->job_title_id = $jobId;
+
+                    if (!$addedJobs->save()) {
+                        $error[] = "Failed to save job with ID: $jobId";
+                    } else {
+                        $success[]['id'] = $jobId;
+                    }
+                } else {
+                    $error[] = "Failed to add skills for job with ID: $jobId";
+                }
+            }
+            $responses = [
+                'succeeded'        => $success,
+                'already_added_ids'=> $already,
+                'error'            => $error,
+            ];
+
+            return $responses;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +107,8 @@ class UserJobTitlesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -80,6 +131,8 @@ class UserJobTitlesService
 
             return $userJobTitle;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -96,6 +149,8 @@ class UserJobTitlesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +165,8 @@ class UserJobTitlesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

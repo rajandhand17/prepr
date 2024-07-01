@@ -51,31 +51,59 @@ class TeamMatchingResource extends JsonResource
             $userDetails['user_points'] = $getUsersDetails['user_points'];
             $userDetails['user_rank'] = $getUsersDetails['user_rank'];
             $userDetails['verified_user'] = $getUsersDetails['verified_user'];
-            $userDetails['sso_integrations'] = [
-                'linked-in'     => 'inactive',
-                'google'        => 'inactive',
-                'magnet'        => 'inactive',
-                'microsoft'     => 'inactive',
-                'apple'         => 'inactive',
-            ];
             $accessLevel = ['viewer', 'editor', 'team-lead'];
             if ($action == 'pending') {
                 $userDetails['project_count'] = count($getUsersDetails->userProjects);
                 $userDetails['lab_count'] = count($getUsersDetails->userlabs);
                 $userDetails['achievement_count'] = count($getUsersDetails->userAchievements);
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
-                $userDetails['user_positions'] = $accessLevel[$this->member->inviter_access_level];
+                $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
+                $userDetails['bio'] = $getUsersDetails->userPersonal !== null ? $getUsersDetails->userPersonal->about : null;
             }
             $isJoined = 'no';
             if ($action == 'matched') {
                 $isJoined = $this->member ? 'yes' : 'no';
+                $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
             }
         }
-        $friendRequest = 'request_sent';
+        $access_level = 'viewer';
+        if ($this->getJoinedStatus() != null) {
+            if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
+                switch ($this->getJoinedStatus()->inviter_access_level) {
+                    case '0':
+                        $access_level = 'viewer';
+                        break;
+                    case '1':
+                        $access_level = 'editor';
+                        break;
+                    case '2':
+                        $access_level = 'team_leader';
+                        break;
+                    default:
+                        $access_level = 'viewer';
+                        break;
+                }
+            }
+        }
+        $friendRequest = 'available';
         $getRequest = ProjectMemberManagementService::checkRequestExistsOrNotExists($this->id);
-        if ($getRequest) {
-            if ($getRequest->invite_status == 3) {
-                $friendRequest = 'available';
+        if ($getRequest != null) {
+            switch ($getRequest->invite_status) {
+                case '0':
+                    $friendRequest = 'invited';
+                    break;
+                case '1':
+                    $friendRequest = 'joined';
+                    break;
+                case '2':
+                    $friendRequest = 'pending';
+                    break;
+                case '3':
+                    $friendRequest = 'available';
+                    break;
+                default:
+                    $friendRequest = 'available';
+                    break;
             }
         }
 
@@ -94,6 +122,7 @@ class TeamMatchingResource extends JsonResource
             'privacy'               => ($this->privacy == 0) ? 'Public' : 'Private',
             'request_send'          => $friendRequest,
             'is_joined'             => $isJoined,
+            'access_level'          => $access_level,
         ];
     }
 }
