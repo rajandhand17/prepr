@@ -7,6 +7,7 @@ use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
+use App\Http\Resources\Manage\Scorm\ScormResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
@@ -345,7 +346,9 @@ class ChallengeResource extends JsonResource
             'is_pre_build'                      => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'slug'                              => $this->slug,
             'title'                             => $this->title,
+            'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $this->description,
+            'scorm'                             => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
             'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                        => $this->media_type,
             'media'                             => $media,
