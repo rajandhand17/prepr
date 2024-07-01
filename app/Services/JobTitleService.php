@@ -122,6 +122,7 @@ class JobTitleService
             return $getJobs;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +144,7 @@ class JobTitleService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -155,6 +157,7 @@ class JobTitleService
             return $getJobDetails;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -170,6 +173,7 @@ class JobTitleService
             return $getJobDetails;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -186,6 +190,7 @@ class JobTitleService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -237,6 +242,7 @@ class JobTitleService
             return $currArray;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -272,6 +278,7 @@ class JobTitleService
             return $jobPostings;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

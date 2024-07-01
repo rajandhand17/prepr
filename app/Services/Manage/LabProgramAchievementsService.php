@@ -19,6 +19,7 @@ class LabProgramAchievementsService
             return $upload_Achievement_image;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class LabProgramAchievementsService
             return $upload_Achievement_image;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -73,6 +75,7 @@ class LabProgramAchievementsService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +96,7 @@ class LabProgramAchievementsService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

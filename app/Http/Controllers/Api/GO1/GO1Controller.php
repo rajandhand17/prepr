@@ -26,6 +26,7 @@ class GO1Controller extends AppBaseController
             return $this->sendResponse($data, __('responses.go1_courses_fetched_successfully'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -41,6 +42,7 @@ class GO1Controller extends AppBaseController
             return $this->sendResponse(ResourceModuleResource::make($resource), __('responses.go1_resource_creation_successful'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -59,6 +61,7 @@ class GO1Controller extends AppBaseController
             return $this->sendResponse($data[$type], __('responses.'.$type.'_list_successfully'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -87,6 +90,7 @@ class GO1Controller extends AppBaseController
             return $this->sendResponse($authenticatedLink, __('responses.authenticated_link_fetched_successfully'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -102,6 +106,7 @@ class GO1Controller extends AppBaseController
             return $this->sendResponse(null, __('responses.webhook_success'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

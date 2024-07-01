@@ -27,6 +27,7 @@ class BusinessChallengeTacklingService
             return $business_challenge_tackling_list->get();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

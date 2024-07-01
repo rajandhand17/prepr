@@ -23,6 +23,7 @@ class LabConditionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

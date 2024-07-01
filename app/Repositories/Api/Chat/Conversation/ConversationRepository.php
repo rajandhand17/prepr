@@ -21,6 +21,7 @@ class ConversationRepository implements ConversationInterface
             return $this->conversationService->create($data);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +37,7 @@ class ConversationRepository implements ConversationInterface
             return $conversation;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +48,7 @@ class ConversationRepository implements ConversationInterface
             return $this->conversationService->list($type);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +59,7 @@ class ConversationRepository implements ConversationInterface
             return $this->conversationService->archiveOrUnarchiveOrSeenOrDelete($uuid, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +70,7 @@ class ConversationRepository implements ConversationInterface
             return $this->conversationService->onlineOrOffline($id, $action);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

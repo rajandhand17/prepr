@@ -35,6 +35,7 @@ class LevelService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +46,7 @@ class LevelService
             return Levels::find($levelId)->first();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

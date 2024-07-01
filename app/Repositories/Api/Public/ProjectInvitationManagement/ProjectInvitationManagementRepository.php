@@ -21,6 +21,7 @@ class ProjectInvitationManagementRepository implements ProjectInvitationManageme
             return  $this->projectMemberManagementService->checkJoinUnjoinStatus($request, $projectData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +32,7 @@ class ProjectInvitationManagementRepository implements ProjectInvitationManageme
             return $this->projectMemberManagementService->acceptOrRejectJoinRequest($request, $projectData, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

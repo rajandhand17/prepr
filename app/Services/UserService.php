@@ -29,6 +29,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +45,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +56,7 @@ class UserService
             return User::where('go1_id', $go1UserId)->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -72,6 +75,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -88,6 +92,7 @@ class UserService
             return $user;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +107,7 @@ class UserService
             return $updateUser;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +129,7 @@ class UserService
             return $user;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +146,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,6 +165,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -174,6 +183,7 @@ class UserService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -186,6 +196,7 @@ class UserService
             return $fetchusers;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -198,6 +209,7 @@ class UserService
             return  $fetchUsers;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +220,7 @@ class UserService
             return User::query()->where('id', auth()->user()->id)->update(['go1_id' => $go1UserId, 'go1_user_metadata' => $response]);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -232,6 +245,7 @@ class UserService
             return $userRecords;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -249,6 +263,7 @@ class UserService
             return $userRecords;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -276,6 +291,7 @@ class UserService
             return $users;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -290,6 +306,7 @@ class UserService
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return null;
         }
     }
@@ -302,6 +319,7 @@ class UserService
             return $getUserByEmailArray;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -315,6 +333,7 @@ class UserService
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +344,7 @@ class UserService
             return User::whereIn('email', $emails)->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -335,6 +355,7 @@ class UserService
             return User::where('magnet_user_id', $magnetUserId)->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -349,6 +370,7 @@ class UserService
             return $user;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -374,6 +396,7 @@ class UserService
             return $user;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -408,6 +431,7 @@ class UserService
             return $registeredOrUpdatedUsers;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -433,6 +457,7 @@ class UserService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -445,6 +470,7 @@ class UserService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -459,6 +485,7 @@ class UserService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

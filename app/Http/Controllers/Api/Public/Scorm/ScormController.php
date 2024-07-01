@@ -36,6 +36,7 @@ class ScormController extends AppBaseController
             return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_NOT_FOUND);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_fetch_scorm_details'), Response::HTTP_BAD_REQUEST);
         }
     }

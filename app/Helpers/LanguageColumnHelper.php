@@ -21,6 +21,7 @@ class LanguageColumnHelper
             return $final_column_name;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

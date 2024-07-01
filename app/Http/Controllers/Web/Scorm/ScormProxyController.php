@@ -36,6 +36,7 @@ class ScormProxyController extends Controller
             return response('Something went wrong !', Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return response('Something went wrong !', Response::HTTP_BAD_REQUEST);
         }
     }

@@ -54,6 +54,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -69,6 +70,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendResponse([], __('responses.resource_collection_slug_available'), 200);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -84,6 +86,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 200);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -111,6 +114,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -149,6 +153,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -204,6 +209,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -225,6 +231,7 @@ class ResourceCollectionController extends AppBaseController
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

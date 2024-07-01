@@ -36,6 +36,7 @@ class UserEducationService
             return $allEducation;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +61,7 @@ class UserEducationService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -70,6 +72,7 @@ class UserEducationService
             return UserEducation::where('id', '=', $id)->delete();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -80,6 +83,7 @@ class UserEducationService
             return UserEducation::where('id', '=', $id)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -695,7 +695,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -770,7 +770,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -850,7 +850,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -923,7 +923,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -1094,7 +1094,8 @@ class AIService
 
                             $articlesCollected = count($currentData['articles']) >= 6;
                         } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                            UtilityHelper::logError($e);
+
                             throw new Exception($e->getMessage());
                         }
                     }
@@ -1150,7 +1151,8 @@ class AIService
 
                             $videosCollected = count($currentData['videos']) >= 6;
                         } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                            UtilityHelper::logError($e);
+
                             throw new Exception($e->getMessage());
                         }
                     }
@@ -1170,7 +1172,7 @@ class AIService
                     }
                 }
             } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                UtilityHelper::logError($e);
                 Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
             }
 
@@ -1272,7 +1274,7 @@ class AIService
                                 $response = $this->openAIClient->post('', ['json' => $payload]);
                                 break;
                             } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                                UtilityHelper::logError($e);
                                 if ($retry >= $maxRetries) {
                                     throw new Exception('OpenAI call failed: '.$e->getMessage());
                                 }
@@ -1334,7 +1336,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                    UtilityHelper::logError($e);
                     Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
                 }
             }
@@ -1443,7 +1445,7 @@ class AIService
                         $response = json_decode($apiResponse->getBody()->getContents(), true);
                         break;
                     } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                        UtilityHelper::logError($e);
                         if ($retry >= $maxRetries) {
                             throw new Exception($e->getMessage());
                         }
@@ -1547,14 +1549,14 @@ class AIService
                                 }
                             }
                         } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                            UtilityHelper::logError($e);
                             Log::error("API call failed for type {$type} and keyword {$keyword}: ".$e->getMessage());
                             continue;
                         }
                     }
                 }
             } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                UtilityHelper::logError($e);
                 Log::warning('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
 
                 return false;
@@ -1676,7 +1678,7 @@ class AIService
 
                 Log::info('Request body prepared for projectAssessor');
             } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                UtilityHelper::logError($e);
                 Log::error($e->getMessage());
             }
 
@@ -1684,7 +1686,7 @@ class AIService
                 $response = $this->projectAssessor($requestBody);
                 Log::info('Response from projectAssessor');
             } catch (Exception $e) {
-            UtilityHelper::logError($e);
+                UtilityHelper::logError($e);
                 Log::error($e->getMessage());
             }
 

@@ -13,6 +13,7 @@ class TestimonialsService
             return Testimonials::where('status', '1')->get()->take(3);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

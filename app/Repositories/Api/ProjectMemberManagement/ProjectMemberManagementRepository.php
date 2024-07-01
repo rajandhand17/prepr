@@ -22,6 +22,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->getRoles();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -32,6 +33,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->getProjectBasedParticipants($projectData, $request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +44,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->getTemplate($requestLang);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +74,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return Response::stream($callback, 200, $headers);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -109,6 +113,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -119,6 +124,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->checkProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +135,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->acceptOrRejectProjectJoinRequest($request, $projectData, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +146,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->checkParticipantsUUID($projectId, $uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +157,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->checkCurrentProjectRole($projectId, $uuid, $role);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +168,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->updateProjectRole($projectId, $uuid, $role);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -169,6 +179,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->deleteParticipates($projectData, $request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -179,6 +190,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->checkParticipantProjectJoinUnjoinStatus($userEmail, $projectData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +201,7 @@ class ProjectMemberManagementRepository implements ProjectMemberManagementInterf
             return $this->projectMemberManagementService->participantAcceptOrRejectJoinRequest($userEmail, $projectData, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

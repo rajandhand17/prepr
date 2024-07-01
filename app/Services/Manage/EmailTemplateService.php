@@ -24,6 +24,7 @@ class EmailTemplateService
             return $getTemplate->where('module_type', $module_type)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

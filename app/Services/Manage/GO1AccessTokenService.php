@@ -27,6 +27,7 @@ class GO1AccessTokenService
             return GO1AccessToken::query()->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -41,6 +42,7 @@ class GO1AccessTokenService
             ]);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -53,6 +55,7 @@ class GO1AccessTokenService
             ]);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

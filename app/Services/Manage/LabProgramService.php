@@ -19,6 +19,7 @@ class LabProgramService
             return $labProgram_count;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +104,7 @@ class LabProgramService
             return $labProgramList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +115,7 @@ class LabProgramService
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +176,7 @@ class LabProgramService
             return $labProgram;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -188,6 +192,7 @@ class LabProgramService
             return $upload_lab_cover_image;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -198,6 +203,7 @@ class LabProgramService
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +214,7 @@ class LabProgramService
             return LabProgram::where('slug', $slug)->delete();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -223,6 +230,7 @@ class LabProgramService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -277,6 +285,7 @@ class LabProgramService
             return $labProgram;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -291,6 +300,7 @@ class LabProgramService
             return $labProgramList->limit($limit)->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -301,6 +311,7 @@ class LabProgramService
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -311,6 +322,7 @@ class LabProgramService
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -326,6 +338,7 @@ class LabProgramService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -346,6 +359,7 @@ class LabProgramService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

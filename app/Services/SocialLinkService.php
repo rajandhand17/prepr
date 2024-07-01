@@ -27,6 +27,7 @@ class SocialLinkService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -19,6 +19,7 @@ class MessageRepository implements MessageInterface
             return $this->messageService->list($conversationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class MessageRepository implements MessageInterface
             return $this->messageService->send($payload);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,7 @@ class MessageRepository implements MessageInterface
             return $this->messageService->getByMessageUUID($uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

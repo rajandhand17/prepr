@@ -47,6 +47,7 @@ class MessageController extends AppBaseController
             return $this->sendError(__('responses.not_found_message_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -67,6 +68,7 @@ class MessageController extends AppBaseController
             return $this->sendResponse(new MessageResource($message), __('responses.message_created'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -88,6 +90,7 @@ class MessageController extends AppBaseController
             return $this->sendResponse([], __('responses.message_deleted'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

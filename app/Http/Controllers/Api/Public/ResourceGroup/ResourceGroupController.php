@@ -38,6 +38,7 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -57,6 +58,7 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -87,6 +89,7 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.resource_group_slug_not_found'), 404);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -109,6 +112,7 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.resource_group_rating_failed'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

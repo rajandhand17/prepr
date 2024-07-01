@@ -98,6 +98,7 @@ class MasterRepository implements MasterInterface
             return $this->categoryService->getCategories($request->language, $request->search, $request->component);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -108,6 +109,7 @@ class MasterRepository implements MasterInterface
             return $this->skillService->getSkills($request->language, $request->search, $sortBy = null, $skill_id = null, $pagination = null);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +120,7 @@ class MasterRepository implements MasterInterface
             return $this->tagService->getTags($request->language, $request->search);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +131,7 @@ class MasterRepository implements MasterInterface
             return $this->projectIndustryService->getProjectIndustries($request->language, $request->search);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +142,7 @@ class MasterRepository implements MasterInterface
             return $this->projectTypeService->getProjectTypes($request->language, $request->search);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +153,7 @@ class MasterRepository implements MasterInterface
             return $this->projectStageService->getProjectStages($request->language, $request->search);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,6 +164,7 @@ class MasterRepository implements MasterInterface
             return $this->projectVerticalService->getProjectVerticals($request->language, $request->search);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -168,6 +175,7 @@ class MasterRepository implements MasterInterface
             return $this->projectStatusService->getProjectStatus($request->language, $request->search);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +186,7 @@ class MasterRepository implements MasterInterface
             return $this->socialLinkService->getSocialLinks($request->language, $request->search);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -188,6 +197,7 @@ class MasterRepository implements MasterInterface
             return $this->skillGroupService->getSkillGroups($request->language, $request->search, $request->skill_stacks, $request->skills);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -279,6 +289,7 @@ class MasterRepository implements MasterInterface
             return $this->durationService->getDurations($request->language, $request->search);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -289,6 +300,7 @@ class MasterRepository implements MasterInterface
             return $this->levelService->getLevels($request->language, $request->search);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -299,6 +311,7 @@ class MasterRepository implements MasterInterface
             return $this->pitchTemplateService->getPitchTemplatesBasedOnId($request->template_id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -309,6 +322,7 @@ class MasterRepository implements MasterInterface
             return $this->hostService->checkSponsor($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -319,6 +333,7 @@ class MasterRepository implements MasterInterface
             return $this->hostService->uploadSponsorMedia($image);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -329,6 +344,7 @@ class MasterRepository implements MasterInterface
             return $this->hostService->createSponsor($request, $upload_sponsor_image);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -339,6 +355,7 @@ class MasterRepository implements MasterInterface
             return $this->challengeAnnouncementRecipientService->getChallengeAnnouncementRecipient($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -349,6 +366,7 @@ class MasterRepository implements MasterInterface
             return $this->tagGroupService->getTagGroups($request->language, $request->search, $request->skills);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -359,6 +377,7 @@ class MasterRepository implements MasterInterface
             return $this->countryService->getCountries($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -381,6 +400,7 @@ class MasterRepository implements MasterInterface
             return $this->businessChallengeTacklingService->getBusinessChallengeTackling($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

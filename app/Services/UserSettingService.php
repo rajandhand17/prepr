@@ -23,6 +23,7 @@ class UserSettingService
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +46,7 @@ class UserSettingService
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

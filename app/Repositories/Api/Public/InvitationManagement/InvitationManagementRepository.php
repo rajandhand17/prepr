@@ -23,6 +23,7 @@ class InvitationManagementRepository implements InvitationManagementInterface
             return  $this->memberManagementService->checkComponentJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ class InvitationManagementRepository implements InvitationManagementInterface
             return $this->memberManagementService->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

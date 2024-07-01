@@ -29,6 +29,7 @@ class AirmeetEventRepository implements AirmeetEventInterface
             return $this->airmeetEventService->getVerifiedEventDetails($eventId);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -46,6 +47,7 @@ class AirmeetEventRepository implements AirmeetEventInterface
             return $this->airmeetEventService->createUpdateEvent($model, $model_id, $data);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

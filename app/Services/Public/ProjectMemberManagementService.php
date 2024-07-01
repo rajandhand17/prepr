@@ -19,6 +19,7 @@ class ProjectMemberManagementService
             return false;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +43,7 @@ class ProjectMemberManagementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

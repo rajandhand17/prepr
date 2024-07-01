@@ -93,6 +93,7 @@ class ChallengeRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -192,6 +193,7 @@ class ChallengeRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +210,7 @@ class ChallengeRequirementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

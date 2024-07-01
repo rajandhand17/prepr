@@ -64,6 +64,7 @@ class ExploreRepository implements ExploreInterface
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +75,7 @@ class ExploreRepository implements ExploreInterface
             return $this->skillsService->recommendSkills($getUserSkills);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +89,7 @@ class ExploreRepository implements ExploreInterface
             return $response;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

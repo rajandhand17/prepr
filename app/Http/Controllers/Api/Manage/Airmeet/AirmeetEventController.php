@@ -45,6 +45,7 @@ class AirmeetEventController extends AppBaseController
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.invalid_event'));
         }
 

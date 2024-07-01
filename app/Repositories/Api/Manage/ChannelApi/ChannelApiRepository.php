@@ -27,6 +27,7 @@ class ChannelApiRepository implements ChannelApiInterface
             return false;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -48,6 +49,7 @@ class ChannelApiRepository implements ChannelApiInterface
             return false;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -91,6 +93,7 @@ class ChannelApiRepository implements ChannelApiInterface
             return $inviteMember;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

@@ -17,6 +17,7 @@ class CryptHelper
             return Crypt::encrypt($value);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -36,6 +37,7 @@ class CryptHelper
             return Crypt::decrypt($encoded);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

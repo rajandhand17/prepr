@@ -42,6 +42,7 @@ class ProjectVerticalService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

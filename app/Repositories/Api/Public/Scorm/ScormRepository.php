@@ -28,6 +28,7 @@ class ScormRepository implements ScormInterface
             return $this->scormService->getScorm($uuid, $scormUser);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -43,6 +44,7 @@ class ScormRepository implements ScormInterface
             return $this->scormService->generateScormProxy($url);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -58,6 +60,7 @@ class ScormRepository implements ScormInterface
             return $this->scormService->generateScormPlayerUrl($scorm);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

@@ -24,6 +24,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getList($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getProjectChallenges($request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +57,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeBasedOnUUID($uuid);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +68,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeSocialActivitiesService->getColumnNameValue($action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +79,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeSocialActivitiesService->checkSocialActivity($challenge_id, $column, $action);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +90,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeSocialActivitiesService->captureSocialActivity($challenge_id, $column, $value);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -94,6 +101,7 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getProjectChallengeRequirement($challengeData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

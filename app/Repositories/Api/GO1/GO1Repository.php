@@ -33,6 +33,7 @@ class GO1Repository implements GO1Interface
             ];
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -57,6 +58,7 @@ class GO1Repository implements GO1Interface
             });
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -91,6 +93,7 @@ class GO1Repository implements GO1Interface
             ];
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -101,6 +104,7 @@ class GO1Repository implements GO1Interface
             return ResourceModuleService::getResourceModuleBasedOnSlug($slug);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -111,6 +115,7 @@ class GO1Repository implements GO1Interface
             return $this->memberManagementService->canPlayGO1Resoruces();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -135,6 +140,7 @@ class GO1Repository implements GO1Interface
             return GO1Helper::playResource($user->go1_id, $go1CourseId);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -150,6 +156,7 @@ class GO1Repository implements GO1Interface
             return true;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

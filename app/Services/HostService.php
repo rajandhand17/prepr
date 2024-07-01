@@ -25,6 +25,7 @@ class HostService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -35,6 +36,7 @@ class HostService
             return Host::where(['title' => $request->title, 'link' => $request->link])->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +52,7 @@ class HostService
             return $upload_sponsor_image;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +75,7 @@ class HostService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

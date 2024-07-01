@@ -38,6 +38,7 @@ class ChallengePathTemplateService
             return $challengesPathTemplate;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +82,7 @@ class ChallengePathTemplateService
             return $challengePath;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -91,6 +93,7 @@ class ChallengePathTemplateService
             return ChallengePathTemplate::where('id', $id)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -41,6 +41,7 @@ class ProjectSubmissionRequirementService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +66,7 @@ class ProjectSubmissionRequirementService
             return $project_condition;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -30,6 +30,7 @@ class DiscussionSocialActivitiesService
             return $comment;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +51,7 @@ class DiscussionSocialActivitiesService
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +73,7 @@ class DiscussionSocialActivitiesService
             return $comment;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +90,7 @@ class DiscussionSocialActivitiesService
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +107,7 @@ class DiscussionSocialActivitiesService
             return $response;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

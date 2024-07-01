@@ -28,6 +28,7 @@ class ChallengeTemplateAssessmentService
             return $challengeTemplateAssessment;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +52,7 @@ class ChallengeTemplateAssessmentService
             return $newChallengeAssessments;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -69,6 +71,7 @@ class ChallengeTemplateAssessmentService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -37,6 +37,7 @@ class ChallengePathTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +91,7 @@ class ChallengePathTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +112,7 @@ class ChallengePathTagsGroupsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

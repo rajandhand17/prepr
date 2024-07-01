@@ -17,6 +17,7 @@ class OrganizationService
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +76,7 @@ class OrganizationService
             return $organization_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +87,7 @@ class OrganizationService
             return Organization::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -100,6 +103,7 @@ class OrganizationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +116,7 @@ class OrganizationService
             return $organizations;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -130,6 +135,7 @@ class OrganizationService
             return $fetchOrganizations->paginate(config('site-settings.switcher_listing_limit'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

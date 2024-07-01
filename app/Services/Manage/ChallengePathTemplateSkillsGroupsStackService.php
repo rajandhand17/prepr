@@ -24,6 +24,7 @@ class ChallengePathTemplateSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +44,7 @@ class ChallengePathTemplateSkillsGroupsStackService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

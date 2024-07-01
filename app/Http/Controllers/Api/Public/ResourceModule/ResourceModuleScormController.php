@@ -50,6 +50,7 @@ class ResourceModuleScormController extends AppBaseController
             ], __('responses.scorm_player_link'));
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_get_scorm_url'), Response::HTTP_BAD_REQUEST);
         }
     }

@@ -8,9 +8,9 @@ use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class UtilityHelper
 {
@@ -57,6 +57,7 @@ class UtilityHelper
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +129,7 @@ class UtilityHelper
             return $getOrganization;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,13 +145,12 @@ class UtilityHelper
 
         Log::channel('database')->error($exception->getMessage(), [
             'exception' => $exception,
-            'user_id' => $userId,
-            'route' => $route,
-            'ip' => $ip,
-            'time' => $time,
-            'file' => $file,
-            'line' => $line,
+            'user_id'   => $userId,
+            'route'     => $route,
+            'ip'        => $ip,
+            'time'      => $time,
+            'file'      => $file,
+            'line'      => $line,
         ]);
     }
-
 }

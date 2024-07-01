@@ -13,6 +13,7 @@ class ChannelVendorApiAccessService
             return ChannelVendorApiAccess::where(['channel_vendor_id' => $vendorId, 'channel_api_id' => $apiId])->first();
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

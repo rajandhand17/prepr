@@ -54,6 +54,7 @@ class ProfileController extends AppBaseController
             return $this->sendResponse(ProfileResource::make($userDetails), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -69,6 +70,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_user_personal_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -84,6 +86,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_user_experience_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -103,6 +106,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.failed_delete_experience'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -118,6 +122,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_user_education_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -137,6 +142,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.delete_education_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -152,6 +158,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_user_patent_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -171,6 +178,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.user_patient_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -186,6 +194,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_skills_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -201,6 +210,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_tags_failed'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -216,6 +226,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.add_certificate_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -235,6 +246,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.failed_delete_skills'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -254,6 +266,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.failed_delete_tags'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -273,6 +286,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.user_certificate_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -288,6 +302,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.upload_file_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -303,6 +318,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.upload_file_failed_fetch'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -318,6 +334,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.failed_profile_image'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -407,6 +424,7 @@ class ProfileController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -438,6 +456,7 @@ class ProfileController extends AppBaseController
             return $this->sendResponse([], __('responses.friends_listing'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

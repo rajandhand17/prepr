@@ -20,6 +20,7 @@ class LabService
             return $lab_count;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class LabService
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +94,7 @@ class LabService
             return $lab_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +105,7 @@ class LabService
             return Lab::where('slug', $slug)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +116,7 @@ class LabService
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'user_id')->where('id', $Id)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +132,7 @@ class LabService
             return $upload_lab_cover_image;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -232,6 +238,7 @@ class LabService
             return $lab;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -356,6 +363,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -373,6 +381,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -388,6 +397,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -403,6 +413,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -417,6 +428,7 @@ class LabService
             return $lab_list->limit($limit)->get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -432,6 +444,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -447,6 +460,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -461,6 +475,7 @@ class LabService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -483,6 +498,7 @@ class LabService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -493,6 +509,7 @@ class LabService
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -506,6 +523,7 @@ class LabService
             return $labs;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -520,6 +538,7 @@ class LabService
             return $getLabAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -540,6 +559,7 @@ class LabService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -550,6 +570,7 @@ class LabService
             return Lab::query()->where('organization_id', $organizationId)->orderBy('id', 'desc')->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -560,6 +581,7 @@ class LabService
             return Lab::query()->where('user_id', $userId)->get();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -570,6 +592,7 @@ class LabService
             return Lab::query()->whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

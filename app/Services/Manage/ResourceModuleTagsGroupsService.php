@@ -46,6 +46,7 @@ class ResourceModuleTagsGroupsService
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +100,7 @@ class ResourceModuleTagsGroupsService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -111,6 +113,7 @@ class ResourceModuleTagsGroupsService
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

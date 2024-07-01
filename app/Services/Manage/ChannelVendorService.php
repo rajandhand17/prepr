@@ -13,6 +13,7 @@ class ChannelVendorService
             return ChannelVendor::where(['api_key' => $apiKey, 'secret_key' => $secret])->first();
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

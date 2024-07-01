@@ -20,6 +20,7 @@ class ChallengePathAchievementsService
             return $upload_Achievement_image;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -37,6 +38,7 @@ class ChallengePathAchievementsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +65,7 @@ class ChallengePathAchievementsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +86,7 @@ class ChallengePathAchievementsService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

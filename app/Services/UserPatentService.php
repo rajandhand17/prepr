@@ -27,6 +27,7 @@ class UserPatentService
             return $allPatents;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -37,6 +38,7 @@ class UserPatentService
             return UserPatent::where('id', $id)->delete();
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +49,7 @@ class UserPatentService
             return UserPatent::where('id', $id)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

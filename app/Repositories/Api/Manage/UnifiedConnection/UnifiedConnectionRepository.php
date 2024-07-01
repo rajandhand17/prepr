@@ -29,6 +29,7 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
             return $this->unifiedConnectionService->getIntegrations($data, $user);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -75,6 +76,7 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
             return $this->unifiedConnectionService->inviteMembers($data);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

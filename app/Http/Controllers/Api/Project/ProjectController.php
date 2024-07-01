@@ -91,6 +91,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -106,6 +107,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -121,6 +123,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_name_not_available'), 403);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -165,6 +168,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_stored_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -190,6 +194,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -211,6 +216,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_file_stored_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -226,6 +232,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.found_not_project_detail'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -278,6 +285,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_not_update'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -297,6 +305,7 @@ class ProjectController extends AppBaseController
             return $this->sendResponse(__('responses.add_external_links_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -316,6 +325,7 @@ class ProjectController extends AppBaseController
             return $this->sendResponse(__('responses.add_additional_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -336,6 +346,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -356,6 +367,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_not_delete'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -385,6 +397,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_not_submitted'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -414,6 +427,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.found_not_project_detail'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -433,6 +447,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_assessment_not_retrived'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -468,6 +483,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -549,6 +565,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_assessment_not_delete'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -569,6 +586,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_media_not_delete'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -589,6 +607,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_history_not_retrived'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -629,6 +648,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_joined_failed'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -661,6 +681,7 @@ class ProjectController extends AppBaseController
             return $this->sendError(__('responses.project_unjoined_failed'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

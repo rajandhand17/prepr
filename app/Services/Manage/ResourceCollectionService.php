@@ -22,6 +22,7 @@ class ResourceCollectionService
             return $resourceCollection_count;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +73,7 @@ class ResourceCollectionService
             return $resourceCollection;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +89,7 @@ class ResourceCollectionService
             return $upload_resource_collection_cover_image;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,6 +100,7 @@ class ResourceCollectionService
             return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +111,7 @@ class ResourceCollectionService
             return ResourceCollection::select('id')->where('title', $title)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -159,6 +164,7 @@ class ResourceCollectionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -172,6 +178,7 @@ class ResourceCollectionService
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -279,6 +286,7 @@ class ResourceCollectionService
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -296,6 +304,7 @@ class ResourceCollectionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -311,6 +320,7 @@ class ResourceCollectionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -321,6 +331,7 @@ class ResourceCollectionService
             return ResourceCollection::select('title', 'uuid', 'media', 'description', 'slug')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -331,6 +342,7 @@ class ResourceCollectionService
             return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -346,6 +358,7 @@ class ResourceCollectionService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -359,6 +372,7 @@ class ResourceCollectionService
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -369,6 +383,7 @@ class ResourceCollectionService
             return ResourceCollection::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -379,6 +394,7 @@ class ResourceCollectionService
             return ResourceCollection::select()->whereIn('id', $ids)->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -399,6 +415,7 @@ class ResourceCollectionService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

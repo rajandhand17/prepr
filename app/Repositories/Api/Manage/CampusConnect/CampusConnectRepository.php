@@ -21,6 +21,7 @@ class CampusConnectRepository implements CampusConnectInterface
             }, $schools);
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

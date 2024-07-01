@@ -30,6 +30,7 @@ class CampusConnectStoryService
             return $campusContent;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -42,6 +43,7 @@ class CampusConnectStoryService
             )->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -52,6 +54,7 @@ class CampusConnectStoryService
             return CampusConnectStory::query()->orderBy('ep_id', 'DESC')->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -64,6 +67,7 @@ class CampusConnectStoryService
             )->first();
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

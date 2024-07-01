@@ -57,6 +57,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +94,7 @@ class ChallengePathTemplateRepository implements ChallengePathTemplateInterface
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

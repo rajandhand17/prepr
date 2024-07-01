@@ -23,6 +23,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramService->getLabProgramBasedOnSlug($slug);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +45,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramSocialActivitiesService->getColumnNameValue($action);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +56,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramSocialActivitiesService->checkSocialActivity($labProgram, $column, $action);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +67,7 @@ class LabProgramRepository implements LabProgramInterface
             return $this->labProgramSocialActivitiesService->captureSocialActivity($labProgram, $column, $value);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

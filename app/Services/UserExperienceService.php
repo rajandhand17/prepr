@@ -33,6 +33,7 @@ class UserExperienceService
             return $insertRecords;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +44,7 @@ class UserExperienceService
             return UserExperience::where('id', $id)->delete();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +55,7 @@ class UserExperienceService
             return UserExperience::where('id', $id)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +66,7 @@ class UserExperienceService
             return UserExperience::where(['user_id' => auth()->user()->id, 'company' => $companyName])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +89,7 @@ class UserExperienceService
             return $storeData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +128,7 @@ class UserExperienceService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

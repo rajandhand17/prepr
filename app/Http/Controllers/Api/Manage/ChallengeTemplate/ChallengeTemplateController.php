@@ -49,6 +49,7 @@ class ChallengeTemplateController extends AppBaseController
             return $this->sendError(__('responses.not_found_challenge_templates_list'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -88,6 +89,7 @@ class ChallengeTemplateController extends AppBaseController
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -103,6 +105,7 @@ class ChallengeTemplateController extends AppBaseController
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -134,6 +137,7 @@ class ChallengeTemplateController extends AppBaseController
             return $this->sendError(__('responses.challenge_template_not_redeemed'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -154,6 +158,7 @@ class ChallengeTemplateController extends AppBaseController
             return $this->sendError(__('responses.challenge_template_deleted_failed'), 402);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -32,6 +32,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $this->organizationService->getOrganizationList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +43,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $this->labService->getList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +54,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $this->challengeService->getList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +65,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $this->projectService->getMyProjectIds($userId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +82,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $projectIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -88,6 +93,7 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
             return $this->projectService->getProjectList($getProjectIds, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

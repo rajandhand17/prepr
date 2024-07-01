@@ -43,6 +43,7 @@ class FlexibleExpireDateDurationService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

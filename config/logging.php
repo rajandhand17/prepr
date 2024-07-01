@@ -57,10 +57,10 @@ return [
             'ignore_exceptions' => false,
         ],
         'database' => [
-            'driver' => 'database',
-            'table' => 'log_errors', // Name of the table to store logs
-            'connection' => 'mysql', // Database connection
-            'queue' => true, // Optionally, use queue for logging
+            'driver'           => 'database',
+            'table'            => 'log_errors', // Name of the table to store logs
+            'connection'       => 'mysql', // Database connection
+            'queue'            => true, // Optionally, use queue for logging
             'queue_connection' => 'database', // Queue connection
         ],
         'single' => [

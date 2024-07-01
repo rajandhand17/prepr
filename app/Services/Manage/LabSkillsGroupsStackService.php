@@ -51,6 +51,7 @@ class LabSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +126,7 @@ class LabSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +145,7 @@ class LabSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -164,6 +167,7 @@ class LabSkillsGroupsStackService
             return $getSkills;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +182,7 @@ class LabSkillsGroupsStackService
             return $getLabId;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

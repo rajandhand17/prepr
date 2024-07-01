@@ -24,6 +24,7 @@ class CareerRepository implements CareerInterface
             return $this->jobTitleService->getJobsBasedOnUsers($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->checkJobsExistsInUsers($job_id);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->addJobs($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +57,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->addJobPinned($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +68,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->checkJobExistsOrNot($jobId);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +79,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->deleteJob($jobId);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +90,7 @@ class CareerRepository implements CareerInterface
             return $this->jobTitleService->getRelatedCareer($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -94,6 +101,7 @@ class CareerRepository implements CareerInterface
             return $this->jobTitleService->getJobDetails($id);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +112,7 @@ class CareerRepository implements CareerInterface
             return $this->jobTitleService->getJobBasedOnIds($ids);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -114,6 +123,7 @@ class CareerRepository implements CareerInterface
             return $this->userJobTitleService->addMultipleJobs($request);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -34,6 +34,7 @@ class CheckComponentMiddleware
             return Response::json(ResponseUtil::makeError(__('responses.valid_component_error')), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return Response::json(ResponseUtil::makeError(__('responses.getting_component_error')), 500);
         }
     }

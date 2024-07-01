@@ -23,6 +23,7 @@ class AchievementService
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +37,7 @@ class AchievementService
             return $achievement_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -91,6 +93,7 @@ class AchievementService
             return $achievement_list;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,6 +104,7 @@ class AchievementService
             return UserAchievement::where(['certificate_number' => $certificate_id])->first();
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +152,7 @@ class AchievementService
             return false;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -174,6 +179,7 @@ class AchievementService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -194,6 +200,7 @@ class AchievementService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -212,6 +219,7 @@ class AchievementService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

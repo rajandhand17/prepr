@@ -22,6 +22,7 @@ class LabTagsGroupsRepository implements LabTagsGroupsInterface
             return $labTagsGroupsService;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $e;
         }
     }

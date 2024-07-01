@@ -38,6 +38,7 @@ class ScormTrackingController extends AppBaseController
             return $this->sendError(__('responses.failed_to_track_progress'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_track_progress'), Response::HTTP_BAD_REQUEST);
         }
     }

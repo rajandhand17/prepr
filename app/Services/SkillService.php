@@ -75,6 +75,7 @@ class SkillService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +91,7 @@ class SkillService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +108,7 @@ class SkillService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,6 +125,7 @@ class SkillService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +153,7 @@ class SkillService
             return $skills;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -161,6 +166,7 @@ class SkillService
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

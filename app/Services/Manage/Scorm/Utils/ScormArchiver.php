@@ -127,6 +127,7 @@ class ScormArchiver
             return true;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -169,6 +170,7 @@ class ScormArchiver
             return true;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

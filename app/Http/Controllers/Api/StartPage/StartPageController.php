@@ -37,6 +37,7 @@ class StartPageController extends AppBaseController
             return $this->sendError(__('responses.front_page_failed'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

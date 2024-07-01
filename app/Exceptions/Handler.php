@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -9,7 +10,6 @@ use League\Container\Exception\NotFoundException;
 use Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
-use App\Helpers\UtilityHelper;
 
 class Handler extends ExceptionHandler
 {

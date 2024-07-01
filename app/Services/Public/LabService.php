@@ -23,6 +23,7 @@ class LabService
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +130,7 @@ class LabService
             return $lab_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +141,7 @@ class LabService
             return Lab::where('slug', $slug)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,6 +160,7 @@ class LabService
             return $lab_list->limit($limit)->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -170,6 +174,7 @@ class LabService
             return $lab_list->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -196,6 +201,7 @@ class LabService
             return Lab::whereIn('id', $lab)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +214,7 @@ class LabService
             return $labList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -218,6 +225,7 @@ class LabService
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -230,6 +238,7 @@ class LabService
             return ($joined && $joined !== 'NA') || $user->hasPermission('can_join_live_event_lab');
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -254,6 +263,7 @@ class LabService
             return true;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -302,6 +312,7 @@ class LabService
             return false;
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -314,6 +325,7 @@ class LabService
             return $fetchLabOrganizations;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
