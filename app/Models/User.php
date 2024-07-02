@@ -116,7 +116,7 @@ class User extends Authenticatable
 
     public function userFeaturedAchievements()
     {
-        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured','1');
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured', '1');
     }
 
     public function userFollow()
