@@ -199,7 +199,6 @@ class ChallengeController extends AppBaseController
                 $uploaded_achievement_image = $upload_achievement_image;
             }
 
-
             $uploaded_assessment_attachment = ($checkComponentBasedOnSlug->challenge_assessment !== null && is_array($checkComponentBasedOnSlug->challenge_assessment) && count($checkComponentBasedOnSlug->challenge_assessment) > 0) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments) : null;
             if ($request->hasFile('attachments') && $request->file('attachments')->isValid()) {
                 $upload_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
