@@ -275,8 +275,6 @@ class ResourceGroupService
                 }
             }
 
-
-
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
