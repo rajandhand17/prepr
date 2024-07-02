@@ -444,21 +444,19 @@ class ChallengeController extends AppBaseController
                         'timeline_type'                 => 'flexible',
                         'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
                         'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
-                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                         'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
                         'timeline_type'                         => 'restricted',
-                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
-                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
-                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
-                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
-                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
-                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
-                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
-                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
-                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                        'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
+                        'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
+                        'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
+                        'registration_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date_description,
+                        'submission_deadline_date'               => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'   => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                     => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
                     ];
                 }
             }
@@ -509,21 +507,19 @@ class ChallengeController extends AppBaseController
                         'timeline_type'                 => 'flexible',
                         'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
                         'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
-                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                         'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
                         'timeline_type'                         => 'restricted',
-                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
-                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
-                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
-                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
-                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
-                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
-                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
-                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
-                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                        'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
+                        'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
+                        'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
+                        'registration_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date_description,
+                        'submission_deadline_date'               => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'   => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                     => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
                     ];
                 }
             }
