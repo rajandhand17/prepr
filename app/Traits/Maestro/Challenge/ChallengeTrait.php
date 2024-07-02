@@ -96,4 +96,17 @@ trait ChallengeTrait
             return false;
         }
     }
+    private function getAssessment($challengeId)
+    {
+        try {
+            $assessment = ChallengeService::getAssessment($challengeId);
+            if ($assessment) {
+                return $assessment;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

@@ -18,6 +18,7 @@ use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Models\ChallengeAssessment;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
@@ -296,6 +297,19 @@ class ChallengeService
                 }
 
                 return false;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getAssessment($challengeId)
+    {
+        try {
+            $assessment = ChallengeAssessment::findOrFail($challengeId);
+            if ($assessment) {
+                return $assessment;
             }
 
             return false;

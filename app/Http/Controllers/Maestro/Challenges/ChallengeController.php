@@ -60,7 +60,7 @@ class ChallengeController extends Controller
                         return $html;
                     })
                     ->addColumn('action', static function (Challenge $challenges) {
-                        return '<a class="mr-10" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>';
+                        return '<a class="mr-10" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['icon', 'action', 'DT_Row_Index'])
                     ->make(true);
@@ -188,6 +188,41 @@ class ChallengeController extends Controller
             DB::rollback();
 
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+        }
+    }
+    /**
+     * Open challenge assessment edit page.
+     */
+    public function assessment(string $id)
+    {
+        try {
+            $challenge = $this->getChallengeById($id);
+            if (!$challenge->exists) {
+                return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
+            }
+            $assessment = $this->getAssessment($challenge->id);
+            return view('maestro.challenge.assessment', compact('assessment','challenge'));
+        } catch (Exception $e) {
+            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+        }
+    }
+    public function assessmentUpdate(Request $request)
+    {
+        dd($request->all());
+        try {
+            DB::beginTransaction();
+            if ($this->updateChallengeById($id, $request)) {
+                DB::commit();
+
+                return redirect()->route('challenge.index')->with('success', 'Challenge Updated successfully');
+            }
+            DB::rollback();
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong']);
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }
     }
 }
