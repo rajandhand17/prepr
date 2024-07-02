@@ -14,7 +14,7 @@ class ChallengeFlexibleAnnouncement extends Model
     protected $table = 'challenge_flexible_announcements';
     protected $fillable = [
         'challenge_id',
-        'challenge_flexible_id',
+        'challenge_custom_timeline_id',
         'custom_announcement_type',
         'custom_announcement_number',
         'custom_announcement_duration',

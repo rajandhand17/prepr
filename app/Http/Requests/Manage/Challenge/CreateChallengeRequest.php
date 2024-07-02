@@ -92,6 +92,7 @@ class CreateChallengeRequest extends FormRequest
             'visibility'                            => 'required_if:assessment_type,closed,ai|in:users,hidden',
             'attachments'                           => 'max:5120',
             'timeline_type'                         => 'required_if:request_type,publish|in:restricted,flexible',
+            'integrate_campus_connect'              => 'required_if:request_type,publish|in:both,job,story,no',
         ];
 
         // Challenge cover image validation

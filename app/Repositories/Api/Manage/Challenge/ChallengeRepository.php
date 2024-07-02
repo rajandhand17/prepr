@@ -15,7 +15,6 @@ use App\Services\Manage\ChallengeAssessmentCriteriaService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeCustomTimelinesService;
 use App\Services\Manage\ChallengeExternalLinkService;
-use App\Services\Manage\ChallengeFlexibleAnnouncementService;
 use App\Services\Manage\ChallengeJobsService;
 use App\Services\Manage\ChallengeProjectTemplateService;
 use App\Services\Manage\ChallengeRequirementService;
@@ -53,10 +52,9 @@ class ChallengeRepository implements ChallengeInterface
     private $campusConnectOpportunityService;
     private $campusConnectStoryService;
     private $achievementService;
-    private $challengeFlexibleAnnouncementService;
     private $challengeTypeModeService;
 
-    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeFlexibleAnnouncementService $challengeFlexibleAnnouncementService, ChallengeTypeModeService $challengeTypeModeService)
+    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService)
     {
         $this->challengeService = $challengeService;
         $this->scormRepository = $scormRepository;
@@ -78,7 +76,6 @@ class ChallengeRepository implements ChallengeInterface
         $this->campusConnectOpportunityService = $campusConnectOpportunityService;
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->achievementService = $achievementService;
-        $this->challengeFlexibleAnnouncementService = $challengeFlexibleAnnouncementService;
         $this->challengeTypeModeService = $challengeTypeModeService;
     }
 
@@ -136,7 +133,7 @@ class ChallengeRepository implements ChallengeInterface
                     $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $createChallenge->id, $request->file('scorm_file'), $createChallenge->scorm);
                 }
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $uploaded_achievement_image);
-                $createChallengeTypeMode = $this->challengeTypeModeService->createChallengeTypeMode($request, $createChallenge->id);
+                $createChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $createChallenge->id);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
                 $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
@@ -145,7 +142,6 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
-                $createChallengeFlexibleAnnouncement = $this->challengeFlexibleAnnouncementService->createChallengeFlexibleAnnouncement($request, $createChallenge->id, $createChallengeTimelines);
                 $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
                 $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
                 $createChallengeComponentAssociation = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
@@ -187,7 +183,6 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeAssessment'           => $createChallengeAssessment,
                     'createChallengeProjectTemplate'      => $createChallengeProjectTemplate,
                     'createChallengeTimelines'            => $createChallengeTimelines,
-                    'createChallengeFlexibleAnnouncement' => $createChallengeFlexibleAnnouncement,
                     'createChallengeCustomTimelines'      => $createChallengeCustomTimelines,
                     'createChallengeExternalLink'         => $createChallengeExternalLink,
                     'createChallengeComponentAssociation' => $createChallengeComponentAssociation,
@@ -209,7 +204,6 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeAssessment'] &&
                 $createChallenge['createChallengeProjectTemplate'] &&
                 $createChallenge['createChallengeTimelines'] &&
-                $createChallenge['createChallengeFlexibleAnnouncement'] &&
                 $createChallenge['createChallengeCustomTimelines'] &&
                 $createChallenge['createChallengeExternalLink'] &&
                 $createChallenge['createChallengeComponentAssociation'] &&
@@ -376,11 +370,16 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData) {
+                $updateChallengeDescription = true;
                 $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image, $organizationData->id);
+                if ($request->description_type == 'scorm' && $request->file('scorm_file')) {
+                    $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
+                }
+                $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
                 $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
+                $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
                 $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
-                $updateChallengeTagsGroups = $this->challengeTagsGroupsService->updateChallengeTagsGroups($request, $updateChallenge->id);
                 $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
@@ -416,10 +415,12 @@ class ChallengeRepository implements ChallengeInterface
 
                 return [
                     'updateChallenge'                   => $updateChallenge,
+                    'updateChallengeDescription'        => $updateChallengeDescription,
+                    'updateChallengeTypeMode'           => $updateChallengeTypeMode,
                     'updateChallengeAchievement'        => $updateChallengeAchievement,
                     'updateChallengeSponsor'            => $updateChallengeSponsor,
+                    'updateChallengeJobs'               => $updateChallengeJobs,
                     'updateChallengeSkillsGroupsStack'  => $updateChallengeSkillsGroupsStack,
-                    'updateChallengeTagsGroups'         => $updateChallengeTagsGroups,
                     'updateChallengeRequirement'        => $updateChallengeRequirement,
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
                     'updateChallengeAssessment'         => $updateChallengeAssessment,
@@ -435,10 +436,12 @@ class ChallengeRepository implements ChallengeInterface
 
             if (
                 $updateChallenge['updateChallenge'] &&
+                $updateChallenge['updateChallengeDescription'] &&
+                $updateChallenge['updateChallengeTypeMode'] &&
                 $updateChallenge['updateChallengeAchievement'] &&
                 $updateChallenge['updateChallengeSponsor'] &&
+                $updateChallenge['updateChallengeJobs'] &&
                 $updateChallenge['updateChallengeSkillsGroupsStack'] &&
-                $updateChallenge['updateChallengeTagsGroups'] &&
                 $updateChallenge['updateChallengeRequirement'] &&
                 $updateChallenge['updateChallengeAssessmentCriteria'] &&
                 $updateChallenge['updateChallengeAssessment'] &&

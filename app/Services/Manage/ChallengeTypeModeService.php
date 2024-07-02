@@ -7,7 +7,7 @@ use Exception;
 
 class ChallengeTypeModeService
 {
-    public function createChallengeTypeMode($request, $challengeId)
+    public function storeChallengeTypeMode($request, $challengeId)
     {
         try {
             $typeMappings = [
