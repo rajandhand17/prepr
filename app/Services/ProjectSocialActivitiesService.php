@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Helpers\MixpanelHelper;
-use App\Models\Challenge;
 use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Models\ProjectSocialActivity;
 use Exception;
 
