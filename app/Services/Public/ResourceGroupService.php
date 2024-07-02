@@ -109,7 +109,8 @@ class ResourceGroupService
                 }
             }
             if ($request->has('duration') && $request->duration) {
-                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
+
+                $duration = Duration::where('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
                 if ($duration) {
                     $resourceGroupList = $resourceGroupList->whereIn('resource_groups.duration', $duration);
                 }
