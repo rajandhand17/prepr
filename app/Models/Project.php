@@ -162,30 +162,37 @@ class Project extends Model
     {
         return $this->hasOne(Challenge::class, 'id', 'challenge_id');
     }
+
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
     public function getStage()
     {
         return $this->belongsTo(ProjectStage::class, 'stage_id', 'id');
     }
+
     public function getStatus()
     {
         return $this->belongsTo(ProjectStatus::class, 'status_id', 'id');
     }
+
     public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
     public function getVertical()
     {
         return $this->belongsTo(ProjectVertical::class, 'vertical_id', 'id');
     }
+
     public function getIndustry()
     {
         return $this->belongsTo(ProjectIndustry::class, 'industry_id', 'id');
     }
+
     public function getType()
     {
         return $this->belongsTo(ProjectType::class, 'type_id', 'id');

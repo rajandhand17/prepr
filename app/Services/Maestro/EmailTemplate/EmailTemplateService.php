@@ -4,9 +4,8 @@ namespace App\Services\Maestro\EmailTemplate;
 
 use App\Models\EmailTemplate;
 use Exception;
-use Schema;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
+use Schema;
 
 class EmailTemplateService
 {
@@ -16,10 +15,10 @@ class EmailTemplateService
             $template = EmailTemplate::find($id);
             $input = $request->all();
             $Validate = Validator::make($request->all(), [
-                'subject' => "required|max:255",
-                'body_content' => 'required'
+                'subject'      => 'required|max:255',
+                'body_content' => 'required',
             ]);
-    
+
             if ($Validate->fails()) {
                 return redirect()->back()->withErrors($Validate)->withInput();
             }
@@ -30,13 +29,15 @@ class EmailTemplateService
                 }
             }
             if (!empty($insertArray)) {
-                EmailTemplate::where("id", $id)->update($insertArray);
+                EmailTemplate::where('id', $id)->update($insertArray);
+
                 return true;
             }
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteEmailTemplate($id)
     {
         try {
@@ -45,23 +46,25 @@ class EmailTemplateService
             if ($EmailTemplate) {
                 return $EmailTemplate->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createEmailTemplate($request)
     {
         try {
-        $input = $request->all();
-        $Validate = Validator::make($request->all(), [
-            'subject' => "required|max:255",
-            'body_content' => 'required'
-        ]);
+            $input = $request->all();
+            $Validate = Validator::make($request->all(), [
+                'subject'      => 'required|max:255',
+                'body_content' => 'required',
+            ]);
 
-        if ($Validate->fails()) {
-            return redirect()->back()->withErrors($Validate)->withInput();
-        }
+            if ($Validate->fails()) {
+                return redirect()->back()->withErrors($Validate)->withInput();
+            }
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('email_templates', $key)) {
@@ -70,13 +73,14 @@ class EmailTemplateService
             }
             if (!empty($insertArray)) {
                 EmailTemplate::create($insertArray);
+
                 return true;
             }
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public static function getEmailTemplates()
     {
         try {

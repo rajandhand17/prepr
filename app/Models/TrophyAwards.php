@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,8 +28,9 @@ class TrophyAwards extends Model
     ];
 
     protected $hidden = [
-        'deleted_at'
+        'deleted_at',
     ];
+
     /**
      * @return string
      */
@@ -38,8 +38,10 @@ class TrophyAwards extends Model
     {
         return 'U';
     }
+
     /**
      * @param $value
+     *
      * @return string
      */
     public function getImageAttribute($value): string
@@ -48,6 +50,7 @@ class TrophyAwards extends Model
         if ($path === env('AWS_URL')) {
             return '';
         }
+
         return $path;
     }
 
@@ -57,7 +60,7 @@ class TrophyAwards extends Model
      */
     public function userData()
     {
-        return $this->hasOne(User::class, 'id', 'user_id')->select(['id', 'email','name']);
+        return $this->hasOne(User::class, 'id', 'user_id')->select(['id', 'email', 'name']);
     }
     // get userData name for issue to
 

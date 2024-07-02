@@ -6,7 +6,6 @@ use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 
 class SkillGroupService
 {
@@ -23,6 +22,7 @@ class SkillGroupService
             return false;
         }
     }
+
     public static function updateSkillGroupById($id, $request)
     {
         try {
@@ -55,8 +55,8 @@ class SkillGroupService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
-                    $columName2 = $columName . '_description';
+                    $columName1 = $columName.'_title';
+                    $columName2 = $columName.'_description';
                 }
                 $group->$columName1 = $request->$columName1;
                 $group->$columName2 = $request->$columName2;
@@ -64,12 +64,13 @@ class SkillGroupService
             $group->skills = $request->group_skills;
             $group->skill_stacks = $request->group_stacks;
             $group->save();
-           
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteSkillGroupById($id)
     {
         try {
@@ -77,22 +78,23 @@ class SkillGroupService
             if (!empty($skillGroup)) {
                 return $skillGroup->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createSkillGroup($request)
     {
         try {
             if (!empty($request->title)) {
                 $input = $request->all();
-                
-               
+
                 if (SkillGroup::where('title', $request->title)->count() > 0) {
                     return redirect()->route('skillgroup.index')->with(['error' => 'Group title already exists']);
                 }
-                $group = new SkillGroup;
+                $group = new SkillGroup();
 
                 $languages = Language::where('status', 1)->get();
 
@@ -108,16 +110,16 @@ class SkillGroupService
                         if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                             $columName = str_replace('-', '_', $columName);
                         }
-                        $columName1 = $columName . '_title';
-                        $columName2 = $columName . '_description';
+                        $columName1 = $columName.'_title';
+                        $columName2 = $columName.'_description';
                     }
                     $group->$columName1 = $request->$columName1;
                     $group->$columName2 = $request->$columName2;
                 }
                 $group->skills = $request->group_skills;
-                $group->skill_stacks =  $request->group_stacks;
+                $group->skill_stacks = $request->group_stacks;
                 $group->save();
-               
+
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group added successfully');
             }
 
@@ -126,6 +128,7 @@ class SkillGroupService
             return redirect()->route('skillgroup.index')->with(['error' => $e->getMessage()]);
         }
     }
+
     public static function getSkills()
     {
         try {

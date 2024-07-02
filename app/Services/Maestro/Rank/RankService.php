@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Rank;
 
-use App\Models\Rank;
 use App\Models\Language;
+use App\Models\Rank;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -24,6 +24,7 @@ class RankService
             return false;
         }
     }
+
     public static function getRank()
     {
         try {
@@ -32,6 +33,7 @@ class RankService
             return false;
         }
     }
+
     public static function getRankStatus()
     {
         try {
@@ -40,26 +42,27 @@ class RankService
             return false;
         }
     }
+
     public static function storeUpdateRank($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
 
             if ($request->file('image')) {
-                $filename = Str::random(25) . '.' . $request->file('image')->getClientOriginalExtension();
+                $filename = Str::random(25).'.'.$request->file('image')->getClientOriginalExtension();
                 $image = Image::make($request->file('image'))->resize(735, 415)->stream();
-                $img = Storage::disk('s3')->put('uploads/ranks/' . $filename, $image);
-                $coverImage = 'uploads/ranks/' . $filename;
+                $img = Storage::disk('s3')->put('uploads/ranks/'.$filename, $image);
+                $coverImage = 'uploads/ranks/'.$filename;
             } else {
                 $coverImage = null;
             }
             if ($moduleMode === 'create') {
-                $rank = new Rank;
+                $rank = new Rank();
             } else {
                 $rank = Rank::find($id);
                 $coverImage = !empty($coverImage) ? $coverImage : $rank->image;
             }
-            if(!empty($languages)){
+            if (!empty($languages)) {
                 foreach ($languages as $single) {
                     if ($single->iso == 'en') {
                         $columName = 'title';
@@ -75,8 +78,8 @@ class RankService
                             $columName = str_replace('-', '_', $columName);
                             $columDescriptionName = str_replace('-', '_', $columDescriptionName);
                         }
-                        $columName = $columName . '_title';
-                        $columDescriptionName = $columDescriptionName . '_description';
+                        $columName = $columName.'_title';
+                        $columDescriptionName = $columDescriptionName.'_description';
                     }
                     $rank->$columDescriptionName = $request->$columDescriptionName;
                     $rank->$columName = $request->$columName;
@@ -88,11 +91,13 @@ class RankService
             if ($rank->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findRank($id)
     {
         try {
@@ -101,6 +106,7 @@ class RankService
             return false;
         }
     }
+
     public static function deleteRank($rank)
     {
         try {

@@ -41,7 +41,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td style="width: 25%;"><code>Tag Image</code></td>
-                                                            <td><img src="{{asset($tag->tag_image)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}' " width='100px'
+                                                            <td><img src="{{asset($tag->tag_image)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}' " width='100px'
                                                                      height='100px'></td>
                                                         </tr>
                                                         </tbody>

@@ -61,7 +61,6 @@ class Handler extends ExceptionHandler
         if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
-
         if ($e instanceof AuthenticationException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_access_denied_403')), 403);
         }
@@ -72,6 +71,7 @@ class Handler extends ExceptionHandler
 
         if ($e) {
             dd($e);
+
             return Response::json(ResponseUtil::makeError(__('responses.send_error')), 500);
         }
 

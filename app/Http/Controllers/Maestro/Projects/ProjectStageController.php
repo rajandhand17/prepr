@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ProjectStage;
+use App\Traits\Maestro\Project\ProjectStageTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Project\ProjectStageTrait;
-use App\Models\ProjectStage;
-use Exception;
 
 class ProjectStageController extends Controller
 {
     use ProjectStageTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder)
     {
         try {
@@ -25,7 +27,7 @@ class ProjectStageController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($projectStage)
                     ->addColumn('action', static function (ProjectStage $stage) {
-                        return '<a style="padding-left:20px" class="mr-10" href="' . route('projects-stage.edit', ['projects_stage' => $stage->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteProjectStage(\'' . route('projects-stage.destroy', ['projects_stage' => $stage->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a style="padding-left:20px" class="mr-10" href="'.route('projects-stage.edit', ['projects_stage' => $stage->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteProjectStage(\''.route('projects-stage.destroy', ['projects_stage' => $stage->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->editColumn('status', static function (ProjectStage $stage) {
                         if ($stage->status == 0) {
@@ -53,14 +55,15 @@ class ProjectStageController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
-                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name . ' Stage Name'];
+                $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Stage Name'];
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
+
             return view('maestro.projects.stage.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
@@ -75,6 +78,7 @@ class ProjectStageController extends Controller
         try {
             $languages = $this->getLanguage();
             $status = $this->getProjectStageStatus();
+
             return view('maestro.projects.stage.create', compact('languages', 'status'));
         } catch (Exception $e) {
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
@@ -90,11 +94,14 @@ class ProjectStageController extends Controller
             DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, '', 'create')) {
                 DB::commit();
+
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage Added successfully.']);
             }
+
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -108,6 +115,7 @@ class ProjectStageController extends Controller
             $languages = $this->getLanguage();
             $projectStage = $this->findProjectStage($id);
             $status = $this->getProjectStageStatus();
+
             return view('maestro.projects.stage.edit', compact('projectStage', 'languages', 'status'));
         } catch (Exception $e) {
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
@@ -123,11 +131,14 @@ class ProjectStageController extends Controller
             DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, $id, 'update')) {
                 DB::commit();
+
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage updated successfully.']);
             }
+
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -143,10 +154,12 @@ class ProjectStageController extends Controller
             if (!empty($projectStage)) {
                 $this->deleteProjectStage($projectStage);
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Project Stage deleted successfully.']);
             }
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
