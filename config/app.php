@@ -252,6 +252,9 @@ return [
 
         /* Campus Connect */
         App\Repositories\Api\Manage\CampusConnect\CampusConnectServiceProvider::class,
+
+        /*Mixpanel */
+        App\Providers\MixpanelServiceProvider::class,
     ],
 
     /*

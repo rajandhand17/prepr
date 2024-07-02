@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\UserCertificate;
 
@@ -24,6 +25,11 @@ class UserCertificateService
                 ]);
                 $allCertificates[] = $certificate;
             }
+            $profile_data = [
+                'type' => 'certificate',
+                'info' => $inputs,
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $allCertificates;
         } catch(\Exception $e) {
