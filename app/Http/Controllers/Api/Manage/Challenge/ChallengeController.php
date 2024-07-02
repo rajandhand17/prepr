@@ -449,7 +449,7 @@ class ChallengeController extends AppBaseController
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
-                        'timeline_type'                         => 'restricted',
+                        'timeline_type'                          => 'restricted',
                         'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
                         'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
                         'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
@@ -512,7 +512,7 @@ class ChallengeController extends AppBaseController
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
-                        'timeline_type'                         => 'restricted',
+                        'timeline_type'                          => 'restricted',
                         'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
                         'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
                         'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
