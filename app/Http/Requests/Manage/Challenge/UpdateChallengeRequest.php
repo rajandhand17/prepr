@@ -113,7 +113,7 @@ class UpdateChallengeRequest extends FormRequest
 
         // Challenge cover image validation
         if ($this->has('cover_banner_type') && $this->input('cover_banner_type') == 'image') {
-            if ($challenge->media != null && $challenge->getRawOriginal('media') == 'default_images/challenge.webp' ) {
+            if ($challenge->media != null && $challenge->getRawOriginal('media') == 'default_images/challenge.webp') {
                 $base_rules['cover_image'] = [
                     'required',
                     'mimes:jpeg,jpg,png,webp',
@@ -122,7 +122,7 @@ class UpdateChallengeRequest extends FormRequest
                         if ($value && $value->isValid()) {
                             $image = getimagesize($value);
                             if ($image[0] < 625 || $image[1] < 325) {
-                                $fail('' . $attribute . ' must be at least 625x325 pixels.');
+                                $fail(''.$attribute.' must be at least 625x325 pixels.');
                             }
                         }
                     },
@@ -154,9 +154,9 @@ class UpdateChallengeRequest extends FormRequest
                 'required',
                 function ($attribute, $value, $fail) use ($isValid) {
                     if ($isValid === 0) {
-                        $fail($attribute . ' must contain exactly one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
                     } elseif ($isValid > 1) {
-                        $fail($attribute . ' must not contain more than one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
                     }
                 },
             ];
@@ -220,7 +220,7 @@ class UpdateChallengeRequest extends FormRequest
 
         // For challenge restricted timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
-            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['start_date_description'] = 'required_if:request_type,publish';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
             $base_rules['registration_deadline_date_description'] = 'nullable';
@@ -232,7 +232,7 @@ class UpdateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
-            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:' . Carbon::now()->toDateTimeString()];
+            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
 
@@ -304,6 +304,7 @@ class UpdateChallengeRequest extends FormRequest
                 $base_rules['campus_connect_story_image'] = 'nullable|string';
             }
         }
+
         /** CAMPUS CONNECT STORY FORM VALIDATION END */
         return $base_rules;
     }

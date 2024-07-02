@@ -49,11 +49,10 @@ class ChallengeJobsService
                 }
             }
 
-
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-            Log::error('Error in updateChallengeJobs in ChallengeJobsService.php: ' . $e->getMessage());
+            Log::error('Error in updateChallengeJobs in ChallengeJobsService.php: '.$e->getMessage());
 
             return false;
         }
