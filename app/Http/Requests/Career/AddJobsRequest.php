@@ -33,6 +33,7 @@ class AddJobsRequest extends FormRequest
         return [
             'job_id.required'      => __('responses.job_id_required'),
             'job_id.exists'        => __('responses.job_id_exists'),
+            'job_id.integer'        => __('responses.job_id_integer'),
         ];
     }
 
