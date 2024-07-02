@@ -1015,7 +1015,7 @@
     "responses.project_media_not_delete": "The Project media has been not deleted!",
     "responses.max_content_14": "Maximum character limit for this is 14.",
     "responses.regex_phone_number": "Please enter a valid phone number.",
-    "responses.project_created_activty": "created the Project:-",
+    "responses.project_created_activity": "created the Project:-",
     "responses.project_pitch_activty": "updated the pitch data",
     "responses.project_task_activty": "updated the task data",
     "responses.project_history_retrived": "The Project(s) history has been retrieved.",

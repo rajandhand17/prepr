@@ -363,4 +363,18 @@ class LabProgramService
             return false;
         }
     }
+
+    public static function getLabProgramTitleBasedOnUUIDArray($uuid)
+    {
+        try {
+            $labProgram = LabProgram::whereIn('uuid', $uuid)->pluck('title')->all();
+            if ($labProgram != null) {
+                return $labProgram;
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

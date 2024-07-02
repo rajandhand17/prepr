@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ResourceModule;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\AIService;
 use App\Services\Manage\ResourceModuleDetailService;
@@ -71,7 +72,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                 ];
             });
+            $request->organization_id = $organizationId;
             if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 
                 return $createLabProgram['createResourceModule'];
@@ -161,12 +164,15 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             DB::beginTransaction();
+            $getResouceModule = $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
+            $getResouceModule->skills = $getResouceModule->skills->pluck('foreign_id')->unique();
             $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($resource_module_id);
             if ($deleteResourceModule == false) {
                 DB::rollBack();
 
                 return false;
             }
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(), request()->ip());
             DB::commit();
 
             return true;
@@ -202,7 +208,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
                     'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
                 ];
             });
+            $request->organization_id = $organizationId;
             if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 
                 return $updateResourceModule['updateResourceModule'];
