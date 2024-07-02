@@ -130,4 +130,17 @@ class LabTagsGroupsService
             return false;
         }
     }
+
+    public static function getTagIdBasedOnLabId($labId)
+    {
+        try {
+            $getTags = LabTagsGroups::where('lab_id', $labId)
+                ->where('type', '0')
+                ->pluck('foreign_id');
+
+            return $getTags;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

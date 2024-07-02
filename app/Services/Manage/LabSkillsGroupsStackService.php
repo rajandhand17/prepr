@@ -186,4 +186,17 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getSkillsBasedOnLabId($labId)
+    {
+        try {
+            $getLabId = LabSkillsGroupsStack::where('type', '0')
+                ->where('lab_id', $labId)
+                ->pluck('foreign_id');
+
+            return $getLabId;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
