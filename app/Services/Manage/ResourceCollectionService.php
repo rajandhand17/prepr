@@ -257,7 +257,7 @@ class ResourceCollectionService
                 }
             }
             if ($request->has('duration') && $request->duration) {
-                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
+                $duration = Duration::where('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
                 if ($duration) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
                 }
