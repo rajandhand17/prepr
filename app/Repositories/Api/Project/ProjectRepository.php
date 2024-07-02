@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
 use App\Notifications\ProjectCreatedNotification;
@@ -188,8 +189,9 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
-                $activity = auth()->user()->full_name.' '.__('responses.project_created_activty').' '.$createProject['createProject']->title;
+                $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
                 $user = UserService::getUserById(auth()->user()->id);
                 $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
                 DB::commit();
@@ -409,6 +411,7 @@ class ProjectRepository implements ProjectInterface
             $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
                 $submitProject = $this->projectService->submitProject($projectData);
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
 
                 return [

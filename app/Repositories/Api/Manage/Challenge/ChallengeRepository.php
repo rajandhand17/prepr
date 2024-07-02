@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Repositories\Api\Manage\Scorm\ScormRepository;
@@ -190,7 +191,6 @@ class ChallengeRepository implements ChallengeInterface
                     'campusConnectStory'                  => $campusConnectStory,
                 ];
             });
-
             if (
                 $createChallenge['createChallenge'] &&
                 $createChallenge['updateChallengeDescription'] &&
@@ -211,6 +211,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectStory']
             ) {
                 DB::commit();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
 
                 return $createChallenge['createChallenge'];
             }
@@ -454,6 +455,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectStory']
             ) {
                 DB::commit();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
 
                 return $updateChallenge['updateChallenge'];
             }
@@ -482,13 +484,16 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             DB::beginTransaction();
-
+            $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
+            $challenge_data->skills = $challenge_data->skills->pluck('foreign_id');
+            $challenge_data->tags = $challenge_data->tags->pluck('foreign_id');
             if ($deleteChallenge == false) {
                 DB::rollBack();
 
                 return false;
             }
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
             DB::commit();
 
             return true;

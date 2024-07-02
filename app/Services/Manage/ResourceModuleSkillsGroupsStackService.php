@@ -152,4 +152,18 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getSkillsBasedOnResourceModule($resourceModuleId)
+    {
+        try {
+            $data = ResourceModuleSkillsGroupsStack::where('type', '0')
+                ->where('resource_module_id', $resourceModuleId)
+                ->pluck('foreign_id')
+                ->unique();
+
+            return $data;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
 }

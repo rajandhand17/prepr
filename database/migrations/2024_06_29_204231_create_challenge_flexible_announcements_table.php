@@ -19,7 +19,7 @@ return new class() extends Migration {
             $table->enum('custom_announcement_duration', ['days', 'weeks', 'months'])->comment('Number of days, week or month, from start to end')->default('days')->nullable();
             $table->longText('custom_announcement_description')->nullable();
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
-            $table->foreign('challenge_custom_timeline_id')->references('id')->on('challenge_custom_timelines')->onDelete('cascade');
+            $table->foreign('challenge_custom_timeline_id', 'fk_custom_timeline_id')->references('id')->on('challenge_custom_timelines')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
