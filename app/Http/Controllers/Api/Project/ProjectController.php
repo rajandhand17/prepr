@@ -264,17 +264,16 @@ class ProjectController extends AppBaseController
             }
 
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkProjectExistsOrNot->media);
-            if ($request->cover_media != null) {
+            if ($request->has('media_type') && $request->media_type != 'none') {
                 if ($request->media_type == 'image') {
                     $uploaded_cover_media = $this->projectRepository->uploadCoverImage($request->cover_media);
                     if (!$uploaded_cover_media) {
                         return $this->sendError(__('responses.image_upload_failed'), 400);
                     }
+                    $update_cover_image = $uploaded_cover_media;
                 } elseif ($request->media_type == 'embedded') {
-                    $uploaded_cover_media = $request->cover_media;
+                    $update_cover_image = $request->cover_media;
                 }
-
-                $update_cover_image = $uploaded_cover_media;
             }
 
             $updateProject = $this->projectRepository->updateProject($slug, $request, $update_cover_image);
