@@ -230,6 +230,12 @@
             </li>
           </ul>
         </li>
+          <li class="nav-item">
+              <a href="{{ route('challenge-template.index')}} " class="nav-link {{ Route::currentRouteName() == 'challenge-template.index' ? 'active' : ''  }}">
+                  <i class="far fa fa-book nav-icon"></i>
+                  <p>Challenge Marketplace</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
