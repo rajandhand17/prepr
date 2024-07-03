@@ -65,9 +65,9 @@ class CreateProjectRequest extends FormRequest
                 'required',
                 function ($attribute, $value, $fail) use ($isValid) {
                     if ($isValid === 0) {
-                        $fail($attribute . ' must contain exactly one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
                     } elseif ($isValid > 1) {
-                        $fail($attribute . ' must not contain more than one valid YouTube or Vimeo iframe.');
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
                     }
                 },
             ];
