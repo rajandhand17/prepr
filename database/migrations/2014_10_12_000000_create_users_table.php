@@ -39,6 +39,9 @@ return new class() extends Migration {
             $table->rememberToken();
             $table->enum('is_deactivated', ['0', '1'])->comment('0->activated, 1->deactivated')->default('0');
             $table->enum('is_onboarding_completed', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
+            $table->enum('display_lab_mini_onboarding', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
+            $table->enum('display_challenge_mini_onboarding', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
+            $table->enum('display_organization_mini_onboarding', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
             $table->timestamps();
             $table->softDeletes();
         });

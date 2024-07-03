@@ -108,17 +108,12 @@ class UserController extends AppBaseController
         try {
             if ($slug != null) {
                 $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
-                if ($checkComponentSlugExistOrNot->is_onboarding_completed == '1') {
-                    return $this->sendError(__('responses.already_organization_onboarding_completed'), 400);
-                }
                 $organizationOnboarding = $this->userRepository->organizationOnboarding($checkComponentSlugExistOrNot->id, $request);
                 if ($organizationOnboarding) {
                     $organizationType = $this->userRepository->storeOrganizationType($checkComponentSlugExistOrNot->id, $request);
-
-                    return $this->sendResponse(OrganizationDetailResource::make($organizationOnboarding), __('responses.organization_onboarding_completed'));
                 }
 
-                return $this->sendError(__('responses.organization_onboarding_not_completed'), 404);
+                return $this->sendResponse(OrganizationDetailResource::make($organizationOnboarding), __('responses.organization_onboarding_completed'));
             } else {
                 $userData = auth()->user();
                 if ($userData->is_onboarding_completed == '1') {
@@ -133,6 +128,21 @@ class UserController extends AppBaseController
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function completeMiniOnBoarding($component)
+    {
+        try {
+            $checkComponentMiniBoard = $this->userRepository->checkComponentMiniOnBoard($component);
+            if ($checkComponentMiniBoard) {
+                return $this->sendError(__('responses.already_'.$component.'_mini_onboarding'), 400);
+            }
+            $miniBoard = $this->userRepository->completeMiniOnBoarding($component);
+
+            return $this->sendResponse($miniBoard, __('responses.'.$component.'_mini_onboarding'));
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
