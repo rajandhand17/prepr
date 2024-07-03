@@ -338,6 +338,48 @@ class UserService
         }
     }
 
+    public function completeLabMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_lab_mini_onboarding' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeChallengeMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_challenge_mini_onboarding' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeOrganizationMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_organization_mini_onboarding' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getUserByEmails($emails)
     {
         try {
@@ -486,6 +528,35 @@ class UserService
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function checkComponentMiniOnBoard($component)
+    {
+        try {
+            $userData = auth()->user();
+            $response = false;
+            switch ($component) {
+                case 'lab':
+                    if ($userData->display_lab_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
+                case 'challenge':
+                    if ($userData->display_challenge_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
+                case 'organization':
+                    if ($userData->display_organization_mini_onboarding !== '1') {
+                        $response = true;
+                    }
+                    break;
+            }
+
+            return $response;
+        } catch (\Exception $e) {
             return false;
         }
     }
