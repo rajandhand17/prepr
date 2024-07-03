@@ -338,7 +338,7 @@ class UserService
         }
     }
 
-    public function completeLabMiniBoarding()
+    public function completeLabMiniOnBoarding()
     {
         try {
             $user = auth()->user();
@@ -352,7 +352,7 @@ class UserService
         }
     }
 
-    public function completeChallengeMiniBoarding()
+    public function completeChallengeMiniOnBoarding()
     {
         try {
             $user = auth()->user();
@@ -366,7 +366,7 @@ class UserService
         }
     }
 
-    public function completeOrganizationMiniBoarding()
+    public function completeOrganizationMiniOnBoarding()
     {
         try {
             $user = auth()->user();
@@ -532,7 +532,7 @@ class UserService
         }
     }
 
-    public function checkComponentMiniBoard($component)
+    public function checkComponentMiniOnBoard($component)
     {
         try {
             $userData = auth()->user();

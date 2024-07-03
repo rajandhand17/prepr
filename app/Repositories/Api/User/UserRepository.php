@@ -95,18 +95,18 @@ class UserRepository implements UserInterface
         }
     }
 
-    public function completeMiniBoarding($component)
+    public function completeMiniOnBoarding($component)
     {
         try {
             switch ($component) {
                 case 'lab':
-                $response = $this->userService->completeLabMiniBoarding();
+                $response = $this->userService->completeLabMiniOnBoarding();
                 break;
                 case 'challenge':
-                $response = $this->userService->completeChallengeMiniBoarding();
+                $response = $this->userService->completeChallengeMiniOnBoarding();
                 break;
                 case 'organization':
-                $response = $this->userService->completeOrganizationMiniBoarding();
+                $response = $this->userService->completeOrganizationMiniOnBoarding();
                 break;
             }
 
@@ -116,10 +116,10 @@ class UserRepository implements UserInterface
         }
     }
 
-    public function checkComponentMiniBoard($component)
+    public function checkComponentMiniOnBoard($component)
     {
         try {
-            return $this->userService->checkComponentMiniBoard($component);
+            return $this->userService->checkComponentMiniOnBoard($component);
         } catch (\Exception $e) {
             return false;
         }
