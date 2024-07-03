@@ -131,4 +131,18 @@ class UserController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function completeOnMiniBoarding($component)
+    {
+        try {
+            $checkComponentMiniBoard=$this->userRepository->checkComponentMiniBoard($component);
+            if ($checkComponentMiniBoard){
+                return $this->sendError(__('responses.already_'.$component.'_mini_component'), 400);
+            }
+            $miniBoard=$this->userRepository->completeMiniBoarding($component);
+            return $this->sendResponse($miniBoard,__("responses.".$component."_mini_onboarding"));
+        }catch (\Exception $e) {
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

@@ -9,4 +9,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/get-organization-list', [UserController::class, 'getOrganizationList']);
     Route::any('/organization-preference/{slug?}', [UserController::class, 'organizationPreference']);
     Route::post('/complete-onboarding/{slug?}', [UserController::class, 'completeBoarding']);
+    Route::post('/complete-mini-onboarding/{component}', [UserController::class, 'completeOnMiniBoarding']);
 });
