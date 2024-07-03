@@ -337,11 +337,13 @@ class UserService
             return false;
         }
     }
+
     public function completeLabMiniBoarding()
     {
         try {
             $user = auth()->user();
             $user->update(['display_lab_mini_onboarding' => '1']);
+
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -355,6 +357,7 @@ class UserService
         try {
             $user = auth()->user();
             $user->update(['display_challenge_mini_onboarding' => '1']);
+
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -368,9 +371,11 @@ class UserService
         try {
             $user = auth()->user();
             $user->update(['display_organization_mini_onboarding' => '1']);
+
             return $user;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -531,27 +536,27 @@ class UserService
     {
         try {
             $userData = auth()->user();
-            $response=false;
+            $response = false;
             switch ($component) {
-                case 'lab';
-                    if ($userData->display_lab_mini_onboarding == '1') {
-                        $response=true;
-                    }
-                    break;
-                case 'challenge';
-                    if ($userData->display_challenge_mini_onboarding == '1') {
-                        $response=true;
-                    }
-                    break;
-                case 'organization';
-                    if ($userData->display_organization_mini_onboarding !== '1') {
-                        $response=true;
-                    }
-                    break;
+                case 'lab':
+                if ($userData->display_lab_mini_onboarding == '1') {
+                    $response = true;
+                }
+                break;
+                case 'challenge':
+                if ($userData->display_challenge_mini_onboarding == '1') {
+                    $response = true;
+                }
+                break;
+                case 'organization':
+                if ($userData->display_organization_mini_onboarding !== '1') {
+                    $response = true;
+                }
+                break;
             }
 
-                return $response;
-        }catch (\Exception $e){
+            return $response;
+        } catch (\Exception $e) {
             return false;
         }
     }
