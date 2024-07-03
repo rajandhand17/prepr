@@ -539,20 +539,20 @@ class UserService
             $response = false;
             switch ($component) {
                 case 'lab':
-                if ($userData->display_lab_mini_onboarding == '1') {
-                    $response = true;
-                }
-                break;
+                    if ($userData->display_lab_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
                 case 'challenge':
-                if ($userData->display_challenge_mini_onboarding == '1') {
-                    $response = true;
-                }
-                break;
+                    if ($userData->display_challenge_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
                 case 'organization':
-                if ($userData->display_organization_mini_onboarding !== '1') {
-                    $response = true;
-                }
-                break;
+                    if ($userData->display_organization_mini_onboarding !== '1') {
+                        $response = true;
+                    }
+                    break;
             }
 
             return $response;
