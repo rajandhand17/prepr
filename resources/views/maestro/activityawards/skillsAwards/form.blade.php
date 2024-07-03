@@ -59,7 +59,7 @@
         </div>
         @if (isset($award->image) && $award->image != "")
             <div class="pull-right">
-                <img src="{{asset($award->image)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}';" width="auto" height="50px">
+                <img src="{{asset($award->image)}}" onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}';" width="auto" height="50px">
             </div>
         @endif
         <span class="help-block">{{ $errors->first('image')}}</span>

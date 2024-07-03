@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
@@ -32,6 +33,11 @@ class UserEducationService
             if ($request->enrollment_status == 'yes') {
                 $records = self::addCampusConnectStudentInformation($request);
             }
+            $profile_data = [
+                'type' => 'education',
+                'info' => $input,
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $allEducation;
         } catch (\Exception $e) {

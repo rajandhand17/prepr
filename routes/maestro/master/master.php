@@ -13,4 +13,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('get-levels', [MasterController::class, 'getLevels'])->name('getLevels');
     Route::get('get-durations', [MasterController::class, 'getDurations'])->name('getDurations');
     Route::get('get-min-points', [MasterController::class, 'getMinRanks'])->name('getMinRanks');
+    Route::post('change-language', [MasterController::class, 'switchLanguage'])->name('switchLanguage');
 });

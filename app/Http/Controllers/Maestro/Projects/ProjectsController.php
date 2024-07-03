@@ -23,12 +23,11 @@ class ProjectsController extends Controller
     public function index(Builder $builder)
     {
         try {
-            $language = 'en'; //Helper::getCurrentSelectedLanguageIso();
-            $projectes = Project::query()->where('language', $language)->orderBy('id', 'desc');
+            $projects = $this->getProjectsList();
             if (request()->ajax()) {
-                return DataTables::eloquent($projectes)
-                    ->addColumn('action', static function (Project $projectes) {
-                        return '<a style="padding-left:5px" class="mr-10" href="'.route('projects.show', ['project' => $projectes->id]).'"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="'.route('projects.edit', ['project' => $projectes->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteProject(\''.route('projects.destroy', ['project' => $projectes->id]).'\')"><i class="fas fa-trash"></i></a>';
+                return DataTables::eloquent($projects)
+                    ->addColumn('action', static function (Project $projects) {
+                        return '<a style="padding-left:5px" class="mr-10" href="'.route('projects.show', ['project' => $projects->id]).'"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="'.route('projects.edit', ['project' => $projects->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteProject(\''.route('projects.destroy', ['project' => $projects->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->editColumn('user_id', static function (Project $project) {
                         if ($project->user_id === 0 || $project->user_id === '') {

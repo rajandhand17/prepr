@@ -738,4 +738,15 @@ class ProjectService
             return false;
         }
     }
+
+    public static function getProjectBasedOnId($id)
+    {
+        try {
+            $getMyProjects = Project::where('id', $id)->first();
+
+            return $getMyProjects;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

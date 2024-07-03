@@ -51,6 +51,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroChallengeRoutes();
             $this->mapMaestroMasterRoutes();
             $this->mapMaestroRankRoutes();
+            $this->mapMaestroEmailTemplateRoutes();
 
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
@@ -292,6 +293,11 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroActivityAwardsRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/activityawards/activityawards.php'));
+    }
+
+    public function mapMaestroEmailTemplateRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/emailtemplates/emailtemplates.php'));
     }
 
     public function mapMaestroChallengeRoutes()
