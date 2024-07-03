@@ -29,26 +29,26 @@ class SettingController extends Controller
                         ->editColumn('module_type', static function (Setting $settingInfo) {
                             switch ($settingInfo->module_type) {
                                 case '0':
-                                $html = "<span class='badge badge-success'>BOOLEAN</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>BOOLEAN</span>";
+                                    break;
                                 case '1':
-                                $html = "<span class='badge badge-success'>NUMBER</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>NUMBER</span>";
+                                    break;
                                 case '2':
-                                $html = "<span class='badge badge-success'>DATE</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>DATE</span>";
+                                    break;
                                 case '3':
-                                $html = "<span class='badge badge-success'>TEXT</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>TEXT</span>";
+                                    break;
                                 case '4':
-                                $html = "<span class='badge badge-success'>SELECT</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>SELECT</span>";
+                                    break;
                                 case '5':
-                                $html = "<span class='badge badge-success'>FILE</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>FILE</span>";
+                                    break;
                                 case '6':
-                                $html = "<span class='badge badge-success'>TEXTAREA</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>TEXTAREA</span>";
+                                    break;
                             }
 
                             return $html;
