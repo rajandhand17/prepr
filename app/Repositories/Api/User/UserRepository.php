@@ -100,14 +100,14 @@ class UserRepository implements UserInterface
         try {
             switch ($component) {
                 case 'lab':
-                $response = $this->userService->completeLabMiniOnBoarding();
-                break;
+                    $response = $this->userService->completeLabMiniOnBoarding();
+                    break;
                 case 'challenge':
-                $response = $this->userService->completeChallengeMiniOnBoarding();
-                break;
+                    $response = $this->userService->completeChallengeMiniOnBoarding();
+                    break;
                 case 'organization':
-                $response = $this->userService->completeOrganizationMiniOnBoarding();
-                break;
+                    $response = $this->userService->completeOrganizationMiniOnBoarding();
+                    break;
             }
 
             return  $response;
