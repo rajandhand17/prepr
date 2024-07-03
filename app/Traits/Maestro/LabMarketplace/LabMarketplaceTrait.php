@@ -13,6 +13,7 @@ trait LabMarketplaceTrait
             if ($labMarketplace) {
                 return $labMarketplace;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;

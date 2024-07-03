@@ -15,6 +15,7 @@ class LabMarketplaceService
             return false;
         }
     }
+
     public static function getLabMarketplaceBasedOnId($id)
     {
         try {
@@ -23,6 +24,7 @@ class LabMarketplaceService
             return false;
         }
     }
+
     public static function deleteLabMarketplace($id)
     {
         try {
@@ -30,6 +32,4 @@ class LabMarketplaceService
             return false;
         }
     }
-
-
 }
