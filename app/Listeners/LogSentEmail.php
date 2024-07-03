@@ -28,12 +28,11 @@ class LogSentEmail
         $from = $message->getFrom();
         $subject = $message->getSubject();
         $body = $message->getBody();
-
         EmailLog::create([
-            'to' => array_key_first($to),
-            'from' => array_key_first($from),
+            'to' => $to[0]->getAddress(),
+            'from' => $from[0]->getAddress(),
             'subject' => $subject,
-            'body' => $body,
+            'body' => $body->getBody(),
         ]);
     }
 }
