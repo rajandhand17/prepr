@@ -24,8 +24,8 @@ class AddMultipleJobsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job_ids' =>'required|array',
-            'job_ids.*'=>'integer|exists:jobs,id'
+            'job_ids'  => 'required|array',
+            'job_ids.*'=> 'integer|exists:jobs,id',
         ];
     }
 
