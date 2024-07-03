@@ -66,6 +66,9 @@ class User extends Authenticatable
         'go1_user_metadata',
         'magnet_user_id',
         'magnet_user_role',
+        'display_lab_mini_onboarding',
+        'display_challenge_mini_onboarding',
+        'display_organization_mini_onboarding',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -112,6 +115,11 @@ class User extends Authenticatable
     public function userAchievements()
     {
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userFeaturedAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured', '1');
     }
 
     public function userFollow()
