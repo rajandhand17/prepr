@@ -119,8 +119,8 @@ class ProjectResource extends JsonResource
                 ];
             }
 
-            if ($this->is_submitted === '1') {
-                $is_assess_enabled = ($fetchChallenge->is_open === '2') ? 'no' : 'yes';
+            if ($this->is_submitted == '1') {
+                $is_assess_enabled = ($fetchChallenge && $fetchChallenge->is_open == '2') ? 'no' : 'yes';
             }
         }
 
@@ -146,7 +146,7 @@ class ProjectResource extends JsonResource
         }
 
         $access_level = 'viewer';
-        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status === '1') {
+        if ($this->getJoinedStatus() !== null && $this->getJoinedStatus()->invite_status == '1') {
             switch ($this->getJoinedStatus()->inviter_access_level) {
                 case '0':
                     $access_level = 'viewer';
