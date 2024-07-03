@@ -268,6 +268,12 @@
             <p>Email Templates</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Email Logs</p>
+          </a>
+        </li>
 
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
