@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\LabMarketplace;
 
-use App\Services\Manage\LabMarketplaceService;
+use App\Services\Maestro\LabMarketplace\LabMarketplaceService;
 
 trait LabMarketplaceTrait
 {
@@ -13,7 +13,6 @@ trait LabMarketplaceTrait
             if ($labMarketplace) {
                 return $labMarketplace;
             }
-
             return false;
         } catch (\Exception $e) {
             return false;

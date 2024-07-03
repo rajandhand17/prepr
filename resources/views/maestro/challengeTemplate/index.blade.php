@@ -25,6 +25,14 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    <div class="row">
+                        <div class="col-md-11">
+
+                        </div>
+                        <div class="col-md-1">
+                            @include('maestro/common/language-switcher')
+                        </div>
+                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">

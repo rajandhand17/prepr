@@ -202,9 +202,4 @@ class Project extends Model
     {
         return $this->belongsTo(ProjectType::class, 'type_id', 'id');
     }
-
-    public function friendRequest()
-    {
-        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
-    }
 }

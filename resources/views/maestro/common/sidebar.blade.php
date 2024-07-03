@@ -161,14 +161,14 @@
                 <p>Tag</p>
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a href="{{ route('taggroup.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tag Groups</p>
               </a>
             </li>
-    
+
           </ul>
         </li>
         <li class="nav-item">
@@ -236,7 +236,12 @@
             <p>Trophy Awards</p>
           </a>
         </li>
-
+          <li class="nav-item">
+              <a href="{{ route('lab-marketplace.index')}} " class="nav-link {{ Route::currentRouteName() == 'lab-marketplace.index' ? 'active' : ''  }}">
+                  <i class="far fa fa-book nav-icon"></i>
+                  <p>Lab Marketplace</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
@@ -252,14 +257,14 @@
                 <p>Regular Awards</p>
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a href="{{ route('skillsaward.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Awards</p>
               </a>
             </li>
-    
+
           </ul>
         </li>
         <li class="nav-item">
@@ -274,7 +279,12 @@
             <p>Email Logs</p>
           </a>
         </li>
-
+          <li class="nav-item">
+              <a href="{{ route('setting.index')}} " class="nav-link {{ Route::currentRouteName() == 'setting.index' ? 'active' : ''  }}">
+                  <i class="far fa fa-cog nav-icon"></i>
+                  <p>Setting</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

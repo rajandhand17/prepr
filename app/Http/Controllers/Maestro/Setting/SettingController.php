@@ -54,7 +54,7 @@ class SettingController extends Controller
                             return $html;
                         })
                         ->addColumn('action', static function (Setting $settingInfo) {
-                            return '<a style="padding-left:50px" class="mr-10" href="#"><i class="fas fa-edit"></i></a>';
+                            return '<a style="padding-left:50px" class="mr-10" href="'.route('setting.edit', ['setting' => $settingInfo->id]).'"><i class="fas fa-edit"></i></a>';
                         })
                         ->addIndexColumn()
                         ->rawColumns(['module_type', 'action'])

@@ -1,5 +1,5 @@
 @extends('maestro.layouts.default')
-@section('title', 'Setting')
+@section('title', 'Lab Marketplace')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
@@ -22,12 +22,20 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
+
         <div class="row">
-            <div class="col-12">
+
+            <div class="col-11">
                 <!-- /.card -->
-
                 <div class="card">
+                    <div class="row">
+                        <div class="col-md-11">
 
+                        </div>
+                        <div class="col-md-1">
+                            @include('maestro/common/language-switcher')
+                        </div>
+                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">
@@ -60,54 +68,5 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
-</script>
-
-<script>
-    function deleteLabMarketplace(url) {
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    },
-                    success: function (result) {
-                        Swal.fire(
-                            'Deleted!',
-                            result.message,
-                            'success'
-                        );
-                        setTimeout(
-                            function () {
-                                window.location.reload(true);
-                            }, 1500);
-                    },
-                    error: function (error) {
-                        Swal.fire(
-                            'Error!',
-                            'An error occurred while deleting the user.',
-                            'error'
-                        );
-                    }
-                });
-            }else {
-                Swal.fire(
-                    'Canceled!',
-                    'You are safe , Record is not deleted!',
-                    'error'
-                );
-            }
-        });
-    }
 </script>
 @endsection
