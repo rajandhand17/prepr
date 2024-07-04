@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Lab\CreateLabRequest;
@@ -63,6 +64,7 @@ class LabController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -103,7 +105,6 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.reached_lab_limit'), 400);
                 }
             }
-
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = null;
             if ($request->cover_image !== null) {

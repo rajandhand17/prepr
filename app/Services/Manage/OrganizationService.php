@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\FileUploadHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Models\Organization;
@@ -178,6 +179,8 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
+            $request->name = $request->title;
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
 
             DB::commit();
 
