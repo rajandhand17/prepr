@@ -18,6 +18,8 @@ use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Models\ChallengeAssessment;
+use App\Models\ChallengeAssessmentCriteria;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
@@ -299,6 +301,97 @@ class ChallengeService
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getAssessment($challengeId)
+    {
+        try {
+            $assessment = ChallengeAssessment::where('challenge_id',$challengeId)->first();
+            if ($assessment) {
+                return $assessment;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getCriteria($challengeId)
+    {
+        try {
+            $criteria = ChallengeAssessmentCriteria::select('title','score','weight','assessment_id')->where('challenge_id',$challengeId)->get();
+            if ($criteria) {
+                return $criteria;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function storeUpdateAssessment($request)
+    {
+        try {
+            switch ($request->assessment_type) {
+                case '0':
+                    $attachmentName = 'noEvAttachments';
+                    $guidelines = $request->noEvGuidelines;
+                    $memberEmails = null;
+                    $criteria = [];
+                  break;
+                case '1':
+                    $attachmentName = 'openEvAttachments';
+                    $guidelines = $request->openEvGuidelines;
+                    $memberEmails = null;
+                    $guidelines = $request->openEvGuidelines;
+                    $criteria = array_map(null,$request->creteria_title,$request->score,$request->weight);
+                  break;
+                case '2':
+                    $attachmentName = 'closeEvAttachments';
+                    $guidelines = $request->closeEvGuidelines;
+                    $memberEmails = json_encode($request->members_email);
+                    $criteria = array_map(null,$request->creteria_title,$request->score,$request->weight);
+                  break;
+                default:
+                    $attachmentName = 'noEvAttachments';
+                    $guidelines = $request->noEvGuidelines;
+                    $memberEmails = null;
+                    $criteria = [];
+              }
+            $visibility = (isset($request->visibility) && $request->visibility == 'on') ? '1' :'0' ;
+
+            if ($request->file($attachmentName)) {
+                $filename = Str::random(25).'.'.$request->file($attachmentName)->getClientOriginalExtension();
+                $image = Image::make($request->file($attachmentName))->resize(735, 415)->stream();
+                $img = Storage::disk('s3')->put('uploads/challenge/assessment/'.$filename, $image);
+                $attachment = 'uploads/challenge/assessment/'.$filename;
+            } else {
+                $attachment = null;
+            }
+            
+            if($request->request_type =='create'){
+                ChallengeAssessment::create(['challenge_id' => $request->challenge_id , 'assessment_type' => $request->assessment_type , 'visibility' => $visibility , 'members_email' => $memberEmails , 'guidelines' => $guidelines , 'attachments' => $attachment]);
+            } else if($request->request_type =='update'){
+                ChallengeAssessment::where('id',$request->assessment_id)->update(['challenge_id' => $request->challenge_id , 'assessment_type' => $request->assessment_type , 'visibility' => $visibility , 'members_email' => $memberEmails , 'guidelines' => $guidelines , 'attachments' => $attachment]);
+            }
+            if(ChallengeAssessmentCriteria::where('challenge_id',(int) $request->challenge_id)->exists()){
+                ChallengeAssessmentCriteria::where('challenge_id',(int) $request->challenge_id)->delete();
+            }
+            if (!empty($criteria)) {
+                $criteriaNewArray = [];
+                foreach ($criteria as $key => $criteriaObj) {
+                    $criteriaObjData['challenge_id']  = (int) $request->challenge_id;
+                    $criteriaObjData['assessment_id'] = (int) $request->assessment_id;
+                    $criteriaObjData['title']   = $criteriaObj[0];
+                    $criteriaObjData['score']   = (int) $criteriaObj[1];
+                    $criteriaObjData['weight']  = (int) $criteriaObj[2];
+                    $criteriaNewArray[]         = $criteriaObjData;
+                }
+                ChallengeAssessmentCriteria::insert($criteriaNewArray);
+            }
+            return true;
         } catch (Exception $e) {
             return false;
         }
