@@ -22,6 +22,6 @@ class ExploreServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('App\Repositories\Api\Explore\ExploreInterface', 'App\Repositories\Api\Explore\ExploreRepository');
+        $this->app->bind('App\Repositories\Api\Leaderboard\LeaderboardInterface', 'App\Repositories\Api\Leaderboard\LeaderboardRepository');
     }
 }
