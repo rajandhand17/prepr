@@ -109,4 +109,30 @@ trait ChallengeTrait
             return false;
         }
     }
+    private function getCriteria($challengeId)
+    {
+        try {
+            $criteria = ChallengeService::getCriteria($challengeId);
+            if ($criteria) {
+                return $criteria;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    private function storeUpdateAssessment($request)
+    {
+        try {
+            $assessment = ChallengeService::storeUpdateAssessment($request);
+            if ($assessment) {
+                return $assessment;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

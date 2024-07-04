@@ -201,20 +201,19 @@ class ChallengeController extends Controller
                 return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
             }
             $assessment = $this->getAssessment($challenge->id);
-            return view('maestro.challenge.assessment', compact('assessment','challenge'));
+            $criteria = $this->getCriteria($challenge->id);
+            return view('maestro.challenge.assessment', compact('assessment','challenge','criteria'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }
     }
-    public function assessmentUpdate(Request $request)
+    public function assessmentStore(Request $request)
     {
-        dd($request->all());
         try {
             DB::beginTransaction();
-            if ($this->updateChallengeById($id, $request)) {
+            if ($this->storeUpdateAssessment($request)) {
                 DB::commit();
-
-                return redirect()->route('challenge.index')->with('success', 'Challenge Updated successfully');
+                return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
             }
             DB::rollback();
 
