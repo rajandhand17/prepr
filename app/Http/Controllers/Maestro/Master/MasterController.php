@@ -184,4 +184,17 @@ class MasterController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
+    public function getUserEmail(Request $request)
+    {
+        try {
+            $response = $this->getUsersEmail($request);
+            if ($response) {
+                return $response;
+            }
+
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        }
+    }
 }
