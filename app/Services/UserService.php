@@ -549,7 +549,7 @@ class UserService
                     }
                     break;
                 case 'organization':
-                    if ($userData->display_organization_mini_onboarding !== '1') {
+                    if ($userData->display_organization_mini_onboarding == '1') {
                         $response = true;
                     }
                     break;

@@ -44,7 +44,7 @@ class GO1Repository implements GO1Interface
             return DB::transaction(function () use ($request) {
                 $body = $request->go1_course;
                 $skills = data_get($body, 'skills') ?? [];
-                $resourceModule = $this->resourceModuleService->createResourceModule($request, null, true);
+                $resourceModule = $this->resourceModuleService->createResourceModule($request, null, config('go1.go1_prepr_id'), true);
                 $resourceSkills = $this->resourceModuleService->storeGO1Skills($resourceModule->id, $skills);
 
                 if ($resourceModule && $resourceSkills) {
