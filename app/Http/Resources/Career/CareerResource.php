@@ -19,7 +19,7 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $savedOn = '';
+        $savedOn =null;
         $saved = 'no';
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
         $createdAt = UserJobTitlesService::checkJobsExistsInUsers($this->id);
