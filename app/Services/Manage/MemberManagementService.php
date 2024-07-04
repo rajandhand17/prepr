@@ -891,7 +891,6 @@ class MemberManagementService
             return $memberManagement;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-            dd($e);
 
             return false;
         }

@@ -189,10 +189,6 @@ class ResourceModuleService
     public function createResourceModule($request, $upload_cover_image, $organizationId, $is_go1 = false)
     {
         try {
-            if ($is_go1) {
-                $organizationId = config('go1.go1_prepr_id');
-            }
-
             $status = config('constants.resource_module_status.draft');
             switch ($request->status) {
                 case 'publish':
