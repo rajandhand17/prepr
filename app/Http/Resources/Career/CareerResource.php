@@ -19,13 +19,13 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $savedOn='';
-        $saved='no';
+        $savedOn = '';
+        $saved = 'no';
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
-        $createdAt=UserJobTitlesService::checkJobsExistsInUsers($this->id);
-        if($createdAt!=false){
-            $savedOn=UtilityHelper::formatDateTime($createdAt->created_at);
-            $saved='yes';
+        $createdAt = UserJobTitlesService::checkJobsExistsInUsers($this->id);
+        if ($createdAt != false) {
+            $savedOn = UtilityHelper::formatDateTime($createdAt->created_at);
+            $saved = 'yes';
         }
         $response = [
             'id'                => $this->id,
