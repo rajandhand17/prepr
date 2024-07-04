@@ -1275,5 +1275,12 @@
     "responses.noti_new_user_request": "New User Request",
     "responses.noti_new_user_request_message": "A new user requested to join the",
     "responses.front_page_success": "Successfully retrieved start page data",
-    "responses.front_page_failed": "failed to retrieve start page data"
+    "responses.front_page_failed": "failed to retrieve start page data",
+    "responses.already_lab_mini_onboarding": "Lab mini onboarding already completed",
+    "responses.already_organization_mini_onboarding": "Organization mini onboarding already completed",
+    "responses.already_challenge_mini_onboarding": "Challenge mini onboarding already completed",
+    "responses.lab_mini_onboarding": "Lab mini onboarding completed successfully",
+    "responses.organization_mini_onboarding": "Organization mini onboarding completed successfully",
+    "responses.challenge_mini_onboarding": "Challenge mini onboarding completed successfully"
+
 }

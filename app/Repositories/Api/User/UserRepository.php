@@ -95,6 +95,36 @@ class UserRepository implements UserInterface
         }
     }
 
+    public function completeMiniOnBoarding($component)
+    {
+        try {
+            switch ($component) {
+                case 'lab':
+                    $response = $this->userService->completeLabMiniOnBoarding();
+                    break;
+                case 'challenge':
+                    $response = $this->userService->completeChallengeMiniOnBoarding();
+                    break;
+                case 'organization':
+                    $response = $this->userService->completeOrganizationMiniOnBoarding();
+                    break;
+            }
+
+            return  $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkComponentMiniOnBoard($component)
+    {
+        try {
+            return $this->userService->checkComponentMiniOnBoard($component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function organizationOnboarding($organizationId, $request)
     {
         try {
