@@ -34,11 +34,6 @@ class OrganizationDetailResource extends JsonResource
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
 
-        $custom_url = null;
-        if ($this->getRawOriginal('custom_url')) {
-            $custom_url = $this->getRawOriginal('custom_url');
-        }
-
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -48,7 +43,7 @@ class OrganizationDetailResource extends JsonResource
             'cover_image'                   => $this->cover_image,
             'profile_image'                 => $this->profile_image,
             'website'                       => $this->website,
-            'custom_url'                    => $custom_url,
+            'custom_url'                    => $this->custom_url,
             'about'                         => $this->about,
             'status'                        => $status,
             'total_employees'               => $this->total_employees,

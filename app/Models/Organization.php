@@ -45,12 +45,6 @@ class Organization extends LaratrustTeam
         return config('site-settings.aws_url').$value;
     }
 
-    // public function getCustomUrlAttribute($value)
-    // {
-    //     $frontendSiteUrl = config('site-settings.frontend_site_url');
-    //     return "{$frontendSiteUrl}organization/{$value}";
-    // }
-
     public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category', 'id');
