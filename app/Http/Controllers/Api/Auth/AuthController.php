@@ -1051,6 +1051,7 @@ class AuthController extends AppBaseController
                     return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
                 }
             }
+
             return $this->sendError(__('responses.not_found_organization_customization'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
