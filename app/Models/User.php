@@ -8,6 +8,7 @@ use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\UserEducationService;
@@ -81,6 +82,11 @@ class User extends Authenticatable
     ];
 
     protected $casts = ['go1_user_metadata' => 'object'];
+
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
 
     public function receivesBroadcastNotificationsOn(): string
     {

@@ -44,7 +44,6 @@ class OrganizationCustomizationResource extends JsonResource
         return [
             'enable_custom_login_and_registration'          => $enable_custom_login_and_registration,
             'use_main_org_logo'                             => $use_main_org_logo,
-            'custom_login_url'                              => $this->custom_login_url,
             'custom_logo_image'                             => $custom_logo_image,
             'custom_hero_image'                             => $custom_hero_image,
             'custom_background_color'                       => $this->custom_background_color,

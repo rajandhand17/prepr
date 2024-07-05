@@ -46,7 +46,7 @@ class ResourceGroupService
     {
         try {
             $status = config('constants.resource_group_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
@@ -139,7 +139,7 @@ class ResourceGroupService
             $resourceGroup = ResourceGroup::where('slug', $slug)->first();
             $status = $resourceGroup->status;
             $privacy = $resourceGroup->privacy;
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
@@ -199,7 +199,8 @@ class ResourceGroupService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceGroupList = $resourceGroupList->where('resource_groups.title', 'like', '%'.$request->search.'%');
+//                $resourceGroupList = $resourceGroupList->where('resource_groups.title', 'like', '%'.$request->search.'%');
+                $resourceGroupList = $resourceGroupList->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {

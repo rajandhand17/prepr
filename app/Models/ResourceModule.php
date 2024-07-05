@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -35,6 +36,11 @@ class ResourceModule extends Model
         'go1_metadata',
         'is_accessible',
     ];
+
+    public function newEloquentBuilder($query): ResourceBuilder
+    {
+        return new ResourceBuilder($query);
+    }
 
     protected $casts = ['go1_metadata' => 'object'];
 
