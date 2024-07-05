@@ -49,7 +49,8 @@ class ChallengeService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
+//                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
+                $challenge_list = $challenge_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {

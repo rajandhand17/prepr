@@ -63,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(300)->by($request->user()?->id ?: $request->ip());
         });
     }
 
@@ -160,6 +160,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
+        Route::prefix('api/v1/public/advance-search/')->middleware('api')->group(base_path('routes/v1/public/advance-search.php'));
     }
 
     public function mapDashboardRoutes()

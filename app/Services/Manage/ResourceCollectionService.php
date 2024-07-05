@@ -31,7 +31,7 @@ class ResourceCollectionService
     {
         try {
             $status = config('constants.resource_collection_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_collection_status.publish');
                     break;
@@ -124,7 +124,7 @@ class ResourceCollectionService
                 $status = $resourceCollection->status;
                 $privacy = $resourceCollection->privacy;
                 $is_accessible = $resourceCollection->is_accessible;
-                switch($request->status) {
+                switch ($request->status) {
                     case 'publish':
                         $status = config('constants.resource_collection_status.publish');
                         break;
@@ -187,7 +187,8 @@ class ResourceCollectionService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
+//                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
+                $resourceCollectionList = $resourceCollectionList->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {

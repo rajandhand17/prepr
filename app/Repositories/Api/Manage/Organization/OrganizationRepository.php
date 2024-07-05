@@ -243,17 +243,6 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function createOrganizationCustomLoginRegistration($request, $organizationData)
-    {
-        try {
-            return $this->organizationCustomizationService->createOrganizationCustomLoginRegistration($request, $organizationData);
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public function updateOrganizationCustomLoginRegistration($request, $organizationData)
     {
         try {

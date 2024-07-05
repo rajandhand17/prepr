@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\LabProgramBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,6 +34,11 @@ class LabProgram extends Model
         'is_sequential',
         'is_accessible',
     ];
+
+    public function newEloquentBuilder($query): LabProgramBuilder
+    {
+        return new LabProgramBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

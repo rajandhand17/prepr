@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ChallengeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -41,6 +42,11 @@ class Challenge extends Model
         'allow_winner_change',
         'winner_select_date',
     ];
+
+    public function newEloquentBuilder($query): ChallengeBuilder
+    {
+        return new ChallengeBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

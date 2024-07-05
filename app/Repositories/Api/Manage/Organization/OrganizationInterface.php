@@ -22,11 +22,15 @@ interface OrganizationInterface
 
     public function createOrganizationMembers($request, $organization_id);
 
+    public function createOrganizationExternalLinks($request, $organizationId);
+
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
 
     public function updatesOrganizationAddress($request, $organization_id);
 
     public function updatesOrganizationMembers($request, $organization_id);
+
+    public function updateOrganizationExternalLinks($request, $organizationId);
 
     public function deleteOrganization($organizationId, $language);
 
@@ -38,5 +42,5 @@ interface OrganizationInterface
 
     public function planData($organizationData);
 
-    public function createOrganizationCustomLoginRegistration($request, $organizationId);
+    public function updateOrganizationCustomLoginRegistration($request, $organizationData);
 }
