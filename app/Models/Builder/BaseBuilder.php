@@ -82,8 +82,8 @@ abstract class BaseBuilder extends Builder
         $sortBy = request()->get('sort_by');
         if (in_array($sortBy, ['created_data_asc', 'created_data_desc'])) {
             $sorting = [
-                'created_data_asc' => 'asc',
-                'created_data_desc' => 'desc'
+                'created_data_asc'  => 'asc',
+                'created_data_desc' => 'desc',
             ];
             $builder->orderBy('created_at', $sorting[$sortBy]);
         }
