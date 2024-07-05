@@ -79,6 +79,15 @@ abstract class BaseBuilder extends Builder
         // APACHE SOLR SERVICE INSTANCE FOR LAB
         $solrInstance = $this->getSolrInstance();
 
+        $sortBy = request()->get('sort_by');
+        if (in_array($sortBy, ['created_data_asc', 'created_data_desc'])) {
+            $sorting = [
+                'created_data_asc'  => 'asc',
+                'created_data_desc' => 'desc',
+            ];
+            $builder->orderBy('created_at', $sorting[$sortBy]);
+        }
+
         if ($solrInstance) {
             $results = $solrInstance->search(
                 $keyword,
@@ -91,15 +100,6 @@ abstract class BaseBuilder extends Builder
             })->toArray();
             // FILTERING RESULTS FROM OUR DATABASE BASED ON THE SOLR RESULT AND SORTING ACCORDINGLY
             $builder = $builder->whereIn('id', $resultIds)->orderByRaw('FIELD(id, '.implode(',', $resultIds).')');
-        }
-
-        $sortBy = request()->get('sort_by');
-        if ($sortBy && in_array($sortBy, ['created_data_asc', 'created_data_desc'])) {
-            $sorting = [
-                'created_data_asc'  => 'asc',
-                'created_data_desc' => 'desc',
-            ];
-            $builder->orderBy('created_at', $sorting[$sortBy]);
         }
 
         return $builder;
