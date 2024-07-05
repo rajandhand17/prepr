@@ -45,4 +45,14 @@ class RolesService
             return false;
         }
     }
+
+    public static function getAllRoles()
+    {
+        try {
+           return Role::get();
+        }catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }
