@@ -24,6 +24,7 @@ class Organization extends LaratrustTeam
         'slug',
         'cover_image',
         'profile_image',
+        'custom_url',
         'website',
         'about',
         'category',

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Manage\Organization;
+namespace App\Http\Resources\Auth;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,7 +15,7 @@ class OrganizationCustomizationResource extends JsonResource
      */
     public function toArray($request)
     {
-        switch ($this->enable_custom_login_and_registration) {
+        switch ($this->customization_login_register->enable_custom_login_and_registration) {
             case '0':
                 $enable_custom_login_and_registration = 'no';
                 break;
@@ -27,7 +27,7 @@ class OrganizationCustomizationResource extends JsonResource
                 break;
         }
 
-        switch ($this->use_main_org_logo) {
+        switch ($this->customization_login_register->use_main_org_logo) {
             case '0':
                 $use_main_org_logo = 'no';
                 break;
@@ -38,15 +38,22 @@ class OrganizationCustomizationResource extends JsonResource
                 $use_main_org_logo = 'no';
                 break;
         }
-        $custom_logo_image = ($this->getRawOriginal('custom_logo_image') != null) ? $this->custom_logo_image : null;
-        $custom_hero_image = ($this->getRawOriginal('custom_hero_image') != null) ? $this->custom_hero_image : null;
+        $custom_logo_image = ($this->customization_login_register->getRawOriginal('custom_logo_image') != null) ? $this->customization_login_register->custom_logo_image : null;
+        $custom_hero_image = ($this->customization_login_register->getRawOriginal('custom_hero_image') != null) ? $this->customization_login_register->custom_hero_image : null;
 
         return [
+            'id'                                            => $this->uuid,
+            'language'                                      => $this->language,
+            'title'                                         => $this->title,
+            'slug'                                          => $this->slug,
+            'cover_image'                                   => $this->cover_image,
+            'profile_image'                                 => $this->profile_image,
+            'custom_url'                                    => $this->custom_url,
             'enable_custom_login_and_registration'          => $enable_custom_login_and_registration,
             'use_main_org_logo'                             => $use_main_org_logo,
             'custom_logo_image'                             => $custom_logo_image,
             'custom_hero_image'                             => $custom_hero_image,
-            'custom_background_color'                       => $this->custom_background_color,
+            'custom_background_color'                       => $this->customization_login_register->custom_background_color,
         ];
     }
 }
