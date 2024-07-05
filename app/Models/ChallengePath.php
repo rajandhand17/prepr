@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ChallengePathBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,16 @@ class ChallengePath extends Model
         'is_auto_created',
         'is_accessible',
     ];
+
+    /**
+     * @param $query
+     *
+     * @return ChallengePathBuilder
+     */
+    public function newEloquentBuilder($query): ChallengePathBuilder
+    {
+        return new ChallengePathBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

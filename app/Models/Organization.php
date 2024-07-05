@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\OrganizationBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laratrust\Models\LaratrustTeam;
@@ -10,6 +11,7 @@ class Organization extends LaratrustTeam
 {
     use SoftDeletes;
     use HasFactory;
+
     protected $table = 'organizations';
 
     protected $fillable = [
@@ -33,6 +35,11 @@ class Organization extends LaratrustTeam
         'total_employees',
 
     ];
+
+    public function newEloquentBuilder($query): OrganizationBuilder
+    {
+        return new OrganizationBuilder($query);
+    }
 
     public function getCoverImageAttribute($value)
     {
