@@ -6,6 +6,7 @@ use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
+use App\Http\Requests\Manage\Organization\UpdateOrganizationCustomizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
@@ -365,9 +366,6 @@ class OrganizationController extends AppBaseController
                 if ($request->has('external_links') && !empty($request->external_links)) {
                     $this->organizationRepository->createOrganizationExternalLinks($request, $organization->id);
                 }
-                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
-                    $this->organizationRepository->createOrganizationCustomLoginRegistration($request, $organization);
-                }
                 $selectPlan = $this->organizationRepository->selectPlan($organization, $request);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
@@ -577,9 +575,6 @@ class OrganizationController extends AppBaseController
                 if ($request->has('external_links') && !empty($request->external_links)) {
                     $this->organizationRepository->updateOrganizationExternalLinks($request, $organization->id);
                 }
-                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
-                    $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $organization);
-                }
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfully'), 200);
             }
@@ -710,6 +705,31 @@ class OrganizationController extends AppBaseController
             }
 
             return $this->sendError(__('responses.plan_not_retrived'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
+    {
+        try {
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
+                return $this->sendError(__('responses.organization_update_access_denied'), 403);
+            }
+            if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
+                $updateOrganizationCustomLoginRegistration = $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $checkOrganization);
+                if ($updateOrganizationCustomLoginRegistration) {
+                    return $this->sendResponse(OrganizationResource::make($checkOrganization), __('responses.organization_customization_update_successfully'), 200);
+                }
+            }
+            
+            return $this->sendError(__('responses.organization_customization_not_update'), 409);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
