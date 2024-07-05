@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\LabBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -42,6 +43,16 @@ class Lab extends Model
         'is_accessible',
         'is_live_event_enabled',
     ];
+
+    /**
+     * @param $query
+     *
+     * @return LabBuilder
+     */
+    public function newEloquentBuilder($query): LabBuilder
+    {
+        return new LabBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

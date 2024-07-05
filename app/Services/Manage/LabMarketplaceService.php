@@ -32,7 +32,8 @@ class LabMarketplaceService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_marketplace_list = $lab_marketplace_list->where('lab_marketplace.title', 'like', '%'.$request->search.'%');
+//                $lab_marketplace_list = $lab_marketplace_list->where('lab_marketplace.title', 'like', '%'.$request->search.'%');
+                $lab_marketplace_list = $lab_marketplace_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
@@ -69,8 +70,8 @@ class LabMarketplaceService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $lab_marketplace_list = $lab_marketplace_list->whereIn('lab_marketplace.id', function ($query) use ($request) {
                     $query->select('lab_marketplace_skills_groups_stack.lab_marketplace_id')
-                    ->from('lab_marketplace_skills_groups_stack')
-                    ->whereIn('lab_marketplace_skills_groups_stack.foreign_id', $request->skills)
+                        ->from('lab_marketplace_skills_groups_stack')
+                        ->whereIn('lab_marketplace_skills_groups_stack.foreign_id', $request->skills)
                         ->where('lab_marketplace_skills_groups_stack.type', '0')
                         ->whereNull('lab_marketplace_skills_groups_stack.deleted_at')
                         ->distinct();
