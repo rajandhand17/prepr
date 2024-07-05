@@ -101,6 +101,7 @@ class ProjectPitchService
             $pitchData->save();
 
             $pitchValues = ['pitchData' => $pitchData, 'yesStoreActivity' => $yesStoreActivity];
+
             return $pitchValues;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -147,6 +148,7 @@ class ProjectPitchService
             $taskData->save();
 
             $taskValues = ['taskData' => $taskData, 'yesStoreActivity' => $yesStoreActivity];
+
             return $taskValues;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
