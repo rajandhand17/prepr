@@ -37,7 +37,7 @@ class ChallengeSearchRequest extends AdvanceSearchBaseFormRequest
             'duration.*' => 'numeric',
             'job'        => 'array|nullable',
             'job.*'      => 'numeric',
-            'sort_by' => 'string|nullable|in:created_data_asc,created_data_desc'
+            'sort_by'    => 'string|nullable|in:created_data_asc,created_data_desc',
         ];
     }
 
