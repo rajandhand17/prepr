@@ -28,6 +28,11 @@ class OrganizationDetailResource extends JsonResource
             $category_id = null;
         }
 
+        $custom_url = null;
+        if ($this->getRawOriginal('custom_url')) {
+            $custom_url = $this->getRawOriginal('custom_url');
+        }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -36,6 +41,7 @@ class OrganizationDetailResource extends JsonResource
             'description'                  => $this->description,
             'cover_image'                  => $this->cover_image,
             'profile_image'                => $this->profile_image,
+            'custom_url'                   => $custom_url,
             'website'                      => $this->website,
             'about'                        => $this->about,
             'total_employees'              => $this->total_employees,
@@ -54,6 +60,7 @@ class OrganizationDetailResource extends JsonResource
             'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
             'is_onboarding_completed'      => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
             'organization_type'            => OrganizationTypeModeResource::collection($this->organizationType),
+            'custom_login_register'        => OrganizationCustomizationResource::make($this->customization_login_register),
             'labs'                         => LabResource::collection($this->labs),
             'challenges'                   => ChallengeResource::collection($this->challenges_count),
             'resource_modules'             => ResourceModuleResource::collection($this->resource_modules_count),

@@ -101,6 +101,8 @@
     "responses.permission_forbidden": "Permission Forbidden",
     "responses.dimensions": "Image resolution should be 500px * 500px",
     "responses.found_organization_list": "The organization list has been successfully retrieved!",
+    "responses.found_organization_customization": "The Organization Customization details has been successfully retrieved!",
+    "responses.not_found_organization_customization": "The Organization Customization details has not been successfully retrieved!",
     "responses.not_found_organization_list": "The list of organization has not been retrieved with success.",
     "responses.organization_not_exists": "Sorry, this organization has not been registered with us!",
     "responses.title_required": "This title field is required",

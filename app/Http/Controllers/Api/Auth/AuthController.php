@@ -20,6 +20,7 @@ use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
+use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
 
@@ -1034,6 +1035,23 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function organizationCustomLoginRegistration($custom_url)
+    {
+        try {
+            $checkOrganizationCustomizationData = UtilityHelper::checkComponentSlugExistOrNot('organization', $custom_url);
+            if ($checkOrganizationCustomizationData) {
+                if ($checkOrganizationCustomizationData->customization_login_register) {
+                    return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
+                }
+            }
+            return $this->sendError(__('responses.not_found_organization_customization'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

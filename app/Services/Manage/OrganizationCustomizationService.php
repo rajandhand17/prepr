@@ -35,7 +35,6 @@ class OrganizationCustomizationService
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = '1';
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url = $request->custom_login_url;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
                 $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
@@ -87,7 +86,6 @@ class OrganizationCustomizationService
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = '1';
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url = $request->custom_login_url;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
                 $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
