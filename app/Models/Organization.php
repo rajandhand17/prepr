@@ -42,7 +42,7 @@ class Organization extends LaratrustTeam
 
     public function getProfileImageAttribute($value)
     {
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     // public function getCustomUrlAttribute($value)
@@ -50,7 +50,6 @@ class Organization extends LaratrustTeam
     //     $frontendSiteUrl = config('site-settings.frontend_site_url');
     //     return "{$frontendSiteUrl}organization/{$value}";
     // }
-
 
     public function getCategory()
     {
