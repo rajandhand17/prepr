@@ -38,13 +38,13 @@ class ProjectPitchService
 
                     if ($pitchId != null) {
                         $createPitch = self::insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer);
-                        if ($createPitch) {
+                        if ($createPitch['yesStoreActivity']) {
                             $getPitch = ChallengePitch::where('id', $pitchId)->first();
                             $activity = auth()->user()->full_name.' '.__('responses.project_pitch_activty').' '.$getPitch->title;
                             ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                         }
 
-                        if (!$createPitch) {
+                        if (!$createPitch['pitchData']) {
                             return false;
                         }
                     }
@@ -58,13 +58,13 @@ class ProjectPitchService
 
                     if ($taskId != null && $taskAnswer != null) {
                         $createTask = self::insertTaskData($projectId, $templateId, $taskId, $taskAnswer);
-                        if ($createTask) {
+                        if ($createTask['yesStoreActivity']) {
                             $getTask = ChallengeTask::where('id', $taskId)->first();
                             $activity = auth()->user()->full_name.' '.__('responses.project_task_activty').' '.$getTask->title;
                             ProjectHistoryService::storeHistory($projectId, auth()->user()->id, $activity);
                         }
 
-                        if (!$createTask) {
+                        if (!$createTask['taskData']) {
                             return false;
                         }
                     }
@@ -82,8 +82,13 @@ class ProjectPitchService
     public function insertPitchData($projectId, $templateId, $pitchId, $pitchAnswer)
     {
         try {
+            $yesStoreActivity = true;
             $checkPitchAnswer = ProjectPitchValue::where(['project_id' => $projectId, 'pitch_template_id' => $templateId, 'project_pitch_id' => $pitchId])->first();
             if ($checkPitchAnswer) {
+                $checkChange = $checkPitchAnswer->description === $pitchAnswer;
+                if ($checkChange) {
+                    $yesStoreActivity = false;
+                }
                 $pitchData = $checkPitchAnswer;
             } else {
                 $pitchData = new ProjectPitchValue();
@@ -95,7 +100,8 @@ class ProjectPitchService
             $pitchData->description = $pitchAnswer;
             $pitchData->save();
 
-            return $pitchData;
+            $pitchValues = ['pitchData' => $pitchData, 'yesStoreActivity' => $yesStoreActivity];
+            return $pitchValues;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -121,8 +127,13 @@ class ProjectPitchService
                     break;
             }
 
+            $yesStoreActivity = true;
             $checkTaskAnswer = ProjectTaskValue::where(['project_id' => $projectId, 'task_template_id' => $templateId, 'project_task_id' => $taskId])->first();
             if ($checkTaskAnswer) {
+                $checkChange = $checkTaskAnswer->status === $taskAnswerValue;
+                if ($checkChange) {
+                    $yesStoreActivity = false;
+                }
                 $taskData = $checkTaskAnswer;
             } else {
                 $taskData = new ProjectTaskValue();
@@ -135,7 +146,8 @@ class ProjectPitchService
             $taskData->completed_date = $completedAt;
             $taskData->save();
 
-            return $taskData;
+            $taskValues = ['taskData' => $taskData, 'yesStoreActivity' => $yesStoreActivity];
+            return $taskValues;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
