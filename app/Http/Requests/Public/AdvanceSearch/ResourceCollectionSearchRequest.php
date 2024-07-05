@@ -33,7 +33,7 @@ class ResourceCollectionSearchRequest extends AdvanceSearchBaseFormRequest
             'level.*'    => 'numeric',
             'duration'   => 'array|nullable',
             'duration.*' => 'numeric',
-            'sort_by' => 'string|nullable|in:created_data_asc,created_data_desc'
+            'sort_by'    => 'string|nullable|in:created_data_asc,created_data_desc',
         ];
     }
 

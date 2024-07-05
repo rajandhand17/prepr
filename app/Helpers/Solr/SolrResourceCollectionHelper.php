@@ -4,7 +4,6 @@ namespace App\Helpers\Solr;
 
 use App\Helpers\Solr\Constants\SolrCollection;
 use App\Models\ResourceCollection;
-use App\Models\ResourceGroup;
 
 class SolrResourceCollectionHelper extends SolrBaseHelper
 {

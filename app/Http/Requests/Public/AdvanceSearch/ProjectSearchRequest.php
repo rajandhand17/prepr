@@ -31,7 +31,7 @@ class ProjectSearchRequest extends AdvanceSearchBaseFormRequest
             'privacy.*'  => 'string',
             'type'       => 'array|nullable',
             'type.*'     => 'numeric',
-            'sort_by' => 'string|nullable|in:created_data_asc,created_data_desc'
+            'sort_by'    => 'string|nullable|in:created_data_asc,created_data_desc',
         ];
     }
 
