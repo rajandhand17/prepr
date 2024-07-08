@@ -145,12 +145,11 @@
         $('#lab').select2({
             placeholder: "Select lab",
             ajax: {
-                url: '{{route("getLabs")}}',
+                url: '{{route("getLabsBasedOnOrganization")}}',
                 cache: true,
                 type: 'GET',
                 dataType: 'json',
                 data: function (params) {
-                    console.log(params);
                     return {
                         search: params.term,
                         language : language,

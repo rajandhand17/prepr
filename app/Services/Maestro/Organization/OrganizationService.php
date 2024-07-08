@@ -13,7 +13,7 @@ use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
-class organizationservice
+class OrganizationService
 {
     public static function updateOrganizationById($id, $request)
     {

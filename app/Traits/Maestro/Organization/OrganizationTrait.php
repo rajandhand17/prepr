@@ -10,7 +10,7 @@ trait OrganizationTrait
     private function createOrganization($request)
     {
         try {
-            if (Organizationservice::createOrganization($request)) {
+            if (OrganizationService::createOrganization($request)) {
                 return true;
             }
 
@@ -25,7 +25,7 @@ trait OrganizationTrait
     private function updateOrganizationById($id, $request)
     {
         try {
-            if (Organizationservice::updateOrganizationById($id, $request)) {
+            if (OrganizationService::updateOrganizationById($id, $request)) {
                 return true;
             }
 
@@ -51,7 +51,7 @@ trait OrganizationTrait
     private function getOrganizations()
     {
         try {
-            $orgs = Organizationservice::getOrganizations();
+            $orgs = OrganizationService::getOrganizations();
             if ($orgs) {
                 return $orgs;
             }

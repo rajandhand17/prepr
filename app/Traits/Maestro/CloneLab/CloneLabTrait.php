@@ -2,32 +2,26 @@
 
 namespace App\Traits\Maestro\CloneLab;
 
-use App\Models\LabSkillsGroupsStack;
-use App\Services\DurationService;
-use App\Services\Maestro\Challenge\ChallengeService;
 use App\Services\Maestro\Lab\LabService;
-use App\Services\Maestro\LabAchievement\LabAchievementService;
-use App\Services\Maestro\LabExternalLinks\LabExternalLinksService;
-use App\Services\Maestro\LabSkillsGroupsStack\LabSkillsGroupsStackService;
-use App\Services\Maestro\LabTagsGroups\LabTagsGroupsService;
-use App\Services\Maestro\Language\LanguageService;
-use App\Services\Maestro\Organization\organizationservice;
 use App\Services\Maestro\LabMarketplaceService;
-use App\Services\Maestro\LabAddress\LabAddressService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 trait CloneLabTrait
 {
-    private $labService;
-    public function __construct(LabService $labService)
-    {
-        $this->labService = $labService;
-    }
+    protected $labService;
+    protected $organizationService;
+    protected $languageService;
+    protected $labAddressService;
+    protected $labSkillsGroupsStackService;
+    protected $labTagsGroupsService;
+    protected $labExternalLinksService;
+    protected $labAchievementService;
+
     public function getOrganization()
     {
         try {
-            $organization=organizationservice::getOrganizations();
+            $organization=$this->organizationService->getOrganizations();
             if($organization){
                 return $organization;
             }
@@ -40,7 +34,7 @@ trait CloneLabTrait
     public function getAllLabs()
     {
         try {
-            $labService=LabService::getList();
+            $labService = $this->labService->getList();
             if($labService){
                 return $labService;
             }
@@ -53,7 +47,7 @@ trait CloneLabTrait
     public function getAllLanguages()
     {
         try {
-            $languages=LanguageService::getLanguages();
+            $languages=$this->languageService->getLanguages();
             if($languages){
                 return $languages;
             }
@@ -68,12 +62,12 @@ trait CloneLabTrait
         try {
             $lab=LabService::getLabById($request->lab);
             $createdLab = DB::transaction(function () use ($lab,$request) {
-                $newLab=LabService::createLab($lab,$request->organization);
-                $labAddress=LabAddressService::createLabAddress($lab,$newLab);
-                $labSKillsGroupStack=LabSkillsGroupsStackService::createLabSkillsGroupsStack($lab,$newLab);
-                $labTagGroupStack=LabTagsGroupsService::createLabTagsGroups($lab,$newLab);
-                $labExternalLinks = LabExternalLinksService::createLabExternalLinks($lab,$newLab);
-                $createdLabAchievement = LabAchievementService::createLabAchievement($lab,$newLab);
+                $newLab=$this->labService->createLab($lab,$request->organization);
+                $labAddress=$this->labAddressService->createLabAddress($lab,$newLab);
+                $labSKillsGroupStack=$this->labSkillsGroupsStackService->createLabSkillsGroupsStack($lab,$newLab);
+                $labTagGroupStack=$this->labTagsGroupsService->createLabTagsGroups($lab,$newLab);
+                $labExternalLinks = $this->labExternalLinksService->createLabExternalLinks($lab,$newLab);
+                $createdLabAchievement = $this->labAchievementService->createLabAchievement($lab,$newLab);
                 return [
                     'lab'                    =>$newLab,
                     'lab_address'            =>$labAddress,
