@@ -25,7 +25,7 @@ class CreateMessageRequest extends BaseRequest
         return [
             'message'    => 'required_without:attachment',
             'attachment' => 'required_without:message|array',
-            'attachment.*' => 'file|max:5120',
+            'attachment.*' => 'file|max:2048',
         ];
     }
 
