@@ -3,7 +3,6 @@
 namespace App\Traits\Maestro\CloneLab;
 
 use App\Services\Maestro\Lab\LabService;
-use App\Services\Maestro\LabMarketplaceService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -83,7 +82,6 @@ trait CloneLabTrait
                 return $createdLab['lab'];
             }
             DB::rollBack();
-
             return false;
         }catch(Exception $e){
             DB::rollback();
