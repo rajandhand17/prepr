@@ -24,7 +24,8 @@ class CreateMessageRequest extends BaseRequest
     {
         return [
             'message'    => 'required_without:attachment',
-            'attachment' => 'required_without:message',
+            'attachment' => 'required_without:message|array',
+            'attachment.*' => 'file|max:5120',
         ];
     }
 
@@ -33,6 +34,8 @@ class CreateMessageRequest extends BaseRequest
         return [
             'message.required_without'    => __('responses.message_without_attachment'),
             'attachment.required_without' => __('responses.attachment_without_message'),
+            'attachment.*.file'           => __('responses.chat_file'),
+            'attachment.*.max'            => __('responses.chat_max_file_size'),
         ];
     }
 }
