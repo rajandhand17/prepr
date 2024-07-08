@@ -17,8 +17,10 @@ class ChannelVendorSeeder extends Seeder
             [
                 'vendor_name'  => 'Magnet',
                 'vendor_email' => null,
-                'api_key'      => 'learnlab-'.md5('Magnet').'-'.Str::random(30),
-                'secret_key'   => Str::random(30),
+//                'api_key'      => 'learnlab-'.md5('Magnet').'-'.Str::random(30),
+//                'secret_key'   => Str::random(30),
+                'api_key'          => 'learnlab-6c72aa4de620ddfe18b992ae82c0d92f-f9UjZB2di55YQt8ZOe3BN2BQjGPfBA',
+                'secret_key'       => 'A4tSdtPHvLcipMZ4lOzsc7V9nWF0W5'
             ],
         ];
 
