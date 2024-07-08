@@ -285,7 +285,7 @@ class UserService
                     $users = $users->orderBy('achievement_count', 'desc')->take(20);
                     break;
                 default:
-                    $users = $users->orderBy('user_points', 'asc')->take(20);
+                    $users = $users->orderBy('user_points', 'desc')->take(20);
             }
 
             return $users;
