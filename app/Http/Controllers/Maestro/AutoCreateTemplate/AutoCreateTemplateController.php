@@ -25,4 +25,40 @@ class AutoCreateTemplateController extends Controller
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
+
+    public function getList(Request $request)
+    {
+        try {
+            $getAllAutoTemplateList=$this->getLists($request);
+            if($getAllAutoTemplateList){
+                return $getAllAutoTemplateList;
+            }
+        }catch (\Exception $e){
+            return redirect()->back()->with(['error' =>$e->getMessage()]);
+        }
+    }
+
+    public function cloneModule(Request $request){
+        try {
+            $clone=$this->cloneModules($request);
+            if($clone){
+                return redirect()->back()->with(['success' => 'Updated  successfully']);
+            }
+            return redirect()->back()->with(['error' =>'upload failed']);
+        }catch (\Exception $e){
+            return redirect()->back()->with(['error' =>$e->getMessage()]);
+        }
+    }
+
+    public function getModuleList(Request $request)
+    {
+        try {
+            $getModuleList=$this->fetchModuleList($request);
+            if($getModuleList){
+                return $getModuleList;
+            }
+        }catch (\Exception $e){
+            return redirect()->back()->with(['error' =>$e->getMessage()]);
+        }
+    }
 }

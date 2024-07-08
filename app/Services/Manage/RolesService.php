@@ -5,7 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\UtilityHelper;
 use App\Models\Role;
 
-class RolesService
+class   RolesService
 {
     public function getRoles($role_type)
     {
