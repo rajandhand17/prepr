@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class LabController extends Controller
 {
     use LabTrait;
+
     public function __construct(LabService $labService)
     {
         $this->middleware('web');
@@ -19,11 +20,11 @@ class LabController extends Controller
     public function getLabsBasedOnOrganization(Request $request)
     {
         try {
-            $getList=$this->getLabsBasedOnOrganizations($request);
-            if($getList){
+            $getList = $this->getLabsBasedOnOrganizations($request);
+            if ($getList) {
                 return $getList;
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }

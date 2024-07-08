@@ -190,6 +190,7 @@ class ChallengeController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
+
     /**
      * Open challenge assessment edit page.
      */
@@ -202,17 +203,20 @@ class ChallengeController extends Controller
             }
             $assessment = $this->getAssessment($challenge->id);
             $criteria = $this->getCriteria($challenge->id);
-            return view('maestro.challenge.assessment', compact('assessment','challenge','criteria'));
+
+            return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }
     }
+
     public function assessmentStore(Request $request)
     {
         try {
             DB::beginTransaction();
             if ($this->storeUpdateAssessment($request)) {
                 DB::commit();
+
                 return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
             }
             DB::rollback();

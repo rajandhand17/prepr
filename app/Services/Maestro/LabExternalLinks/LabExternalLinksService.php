@@ -6,11 +6,11 @@ use App\Models\LabExternalLinks;
 
 class LabExternalLinksService
 {
-    public static function createLabExternalLinks($lab,$newLab)
+    public static function createLabExternalLinks($lab, $newLab)
     {
         try {
-            $labExternalLink=LabExternalLinks::where('lab_id',$lab->id)->get();
-            if (count($labExternalLink) > 0){
+            $labExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
+            if (count($labExternalLink) > 0) {
                 foreach ($labExternalLink as $links) {
                     $labExternalLink = new LabExternalLinks();
                     $labExternalLink->lab_id = $newLab->id;
@@ -19,8 +19,9 @@ class LabExternalLinksService
                     $labExternalLink->save();
                 }
             }
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
