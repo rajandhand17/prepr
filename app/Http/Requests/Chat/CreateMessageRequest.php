@@ -23,8 +23,8 @@ class CreateMessageRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'message'    => 'required_without:attachment',
-            'attachment' => 'required_without:message|array',
+            'message'      => 'required_without:attachment',
+            'attachment'   => 'required_without:message|array',
             'attachment.*' => 'file|max:2048',
         ];
     }
