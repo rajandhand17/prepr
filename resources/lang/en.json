@@ -908,6 +908,8 @@
     "responses.mark_user_offline_successfully": "Marked user status to offline successfully",
     "responses.mark_user_offline_failed": "Oops! The marking user offline has failed",
     "responses.project_stored_failed": "Oops! The Creation Project has failed.",
+    "responses.chat_file" : "Attachment should be of type file",
+    "responses.chat_max_file_size" : "File size should not be more than 2MB",
     "responses.challenge_status_fail": "The Challenge(s) which you are looking is not open or not published.",
     "responses.challenge_timeline_fail": "The Challenge(s) which you are looking has passed date, please select other Challenge.",
     "responses.project_stored_success": "Congratulations! You have successfully created the Project.",
