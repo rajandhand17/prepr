@@ -18,28 +18,29 @@ use Yajra\DataTables\Html\Builder;
 class CloneLabController extends Controller
 {
     use CloneLabTrait;
-    public function __construct(LabAchievementService $labAchievementService, LabExternalLinksService $labExternalLinksService,LabTagsGroupsService $labTagsGroupsService,LabSkillsGroupsStackService $labSkillsGroupsStackService,LabAddressService $labAddressService,LabService $labService,OrganizationService $organizationService,LanguageService $languageService)
+
+    public function __construct(LabAchievementService $labAchievementService, LabExternalLinksService $labExternalLinksService, LabTagsGroupsService $labTagsGroupsService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabAddressService $labAddressService, LabService $labService, OrganizationService $organizationService, LanguageService $languageService)
     {
         $this->middleware('web');
         $this->labService = $labService;
         $this->organizationService = $organizationService;
         $this->languageService = $languageService;
-        $this->labAddressService=$labAddressService;
-        $this->labSkillsGroupsStackService=$labSkillsGroupsStackService;
-        $this->labTagsGroupsService=$labTagsGroupsService;
-        $this->labExternalLinksService=$labExternalLinksService;
-        $this->labAchievementService=$labAchievementService;
-
+        $this->labAddressService = $labAddressService;
+        $this->labSkillsGroupsStackService = $labSkillsGroupsStackService;
+        $this->labTagsGroupsService = $labTagsGroupsService;
+        $this->labExternalLinksService = $labExternalLinksService;
+        $this->labAchievementService = $labAchievementService;
     }
 
     public function index(Builder $builder, Request $request)
     {
         try {
-            $organizations=$this->getOrganization();
-            $associativeLab=$this->getAllLabs();
+            $organizations = $this->getOrganization();
+            $associativeLab = $this->getAllLabs();
             $languages = $this->getAllLanguages();
-            return view('maestro.cloneLab.index', compact('organizations','languages','associativeLab'));
-        }catch (\Exception $e) {
+
+            return view('maestro.cloneLab.index', compact('organizations', 'languages', 'associativeLab'));
+        } catch (\Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }
     }
@@ -47,10 +48,11 @@ class CloneLabController extends Controller
     public function store(Request $request)
     {
         try {
-            $getResponses=$this->createLab($request);
-            if ($getResponses!==false) {
+            $getResponses = $this->createLab($request);
+            if ($getResponses !== false) {
                 return redirect()->route('clone-lab.index')->with('success', 'Lab created successfully');
             }
+
             return redirect()->route('clone-lab.index')->with(['error' => 'Something want wrong.']);
         } catch (\Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);

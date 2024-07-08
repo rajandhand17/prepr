@@ -6,19 +6,20 @@ use App\Models\LabAddress;
 
 class LabAddressService
 {
-    public static function createLabAddress($lab,$newLabId)
+    public static function createLabAddress($lab, $newLabId)
     {
-        $labAddressExitData=LabAddress::where('lab_id',$lab->id)->first();
-        if($labAddressExitData){
-            $labaddress            = new LabAddress();
-            $labaddress->lab_id    = $newLabId->id;
-            $labaddress->latitude  = $labAddressExitData->latitude;
+        $labAddressExitData = LabAddress::where('lab_id', $lab->id)->first();
+        if ($labAddressExitData) {
+            $labaddress = new LabAddress();
+            $labaddress->lab_id = $newLabId->id;
+            $labaddress->latitude = $labAddressExitData->latitude;
             $labaddress->longitude = $labAddressExitData->longitude;
-            $labaddress->address   = $labAddressExitData->address;
-            $labaddress->city      = $labAddressExitData->city;
-            $labaddress->country   = $labAddressExitData->country;
+            $labaddress->address = $labAddressExitData->address;
+            $labaddress->city = $labAddressExitData->city;
+            $labaddress->country = $labAddressExitData->country;
             $labaddress->save();
         }
+
         return true;
     }
 

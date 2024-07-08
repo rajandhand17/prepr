@@ -2,12 +2,7 @@
 
 namespace App\Services\Maestro\Language;
 
-
-use App\Helpers\UtilityHelper;
-use App\Models\Lab;
 use App\Models\Language;
-use App\Services\Manage\LabMarketplaceService;
-use HiFolks\RandoPhp\Randomize;
 
 class LanguageService
 {
@@ -18,8 +13,9 @@ class LanguageService
             if ($language != null) {
                 return $language;
             }
+
             return false;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }

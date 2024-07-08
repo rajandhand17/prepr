@@ -184,6 +184,7 @@ class MasterController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
+
     public function getUserEmail(Request $request)
     {
         try {

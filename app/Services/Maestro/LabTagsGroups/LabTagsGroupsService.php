@@ -6,10 +6,10 @@ use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
 {
-    public static function createLabTagsGroups($lab,$newLab)
+    public static function createLabTagsGroups($lab, $newLab)
     {
         try {
-            $labTagsGroup=LabTagsGroups::where('lab_id',$lab->id)->get();
+            $labTagsGroup = LabTagsGroups::where('lab_id', $lab->id)->get();
             if (count($labTagsGroup) > 0) {
                 foreach ($labTagsGroup as $tag) {
                     $labSkillsGroupsStack = new LabTagsGroups();
@@ -19,8 +19,9 @@ class LabTagsGroupsService
                     $labSkillsGroupsStack->save();
                 }
             }
+
             return true;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
