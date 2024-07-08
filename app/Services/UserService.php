@@ -229,7 +229,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select()->orderBy('user_rank');
+            $users = User::select();
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
@@ -285,7 +285,7 @@ class UserService
                     $users = $users->orderBy('achievement_count', 'desc')->take(20);
                     break;
                 default:
-                    $users = $users->orderBy('user_points', 'desc')->take(20);
+                    $users = $users->orderBy('user_points', 'asc')->take(20);
             }
 
             return $users;
