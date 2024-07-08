@@ -47,9 +47,9 @@ abstract class BaseBuilder extends Builder
 
     /**
      * @param string|null $keyword
-     * @param array       $filters
+     * @param array $filters
      * @param string|null $additionalQuery
-     * @param int|null    $rows
+     * @param int|null $rows
      *
      * @return BaseBuilder
      */
@@ -69,7 +69,7 @@ abstract class BaseBuilder extends Builder
 
         // IF THERE IS KEYWORD BUT LENGTH IS LESS THAN 1 WE DO A LIKE QUERY IN OUR DATABASE
         if ($keyword && !$validKeyword) {
-            $builder = $builder->where('title', 'like', $keyword.'%');
+            $builder = $builder->where('title', 'like', $keyword . '%');
         }
 
         // IN CASE OF INVALID KEYWORD AND INVALID FILTERS WE AVOID APACHE SOLR
@@ -79,15 +79,6 @@ abstract class BaseBuilder extends Builder
         // APACHE SOLR SERVICE INSTANCE FOR LAB
         $solrInstance = $this->getSolrInstance();
 
-        $sortBy = request()->get('sort_by');
-        if (in_array($sortBy, ['created_data_asc', 'created_data_desc'])) {
-            $sorting = [
-                'created_data_asc'  => 'asc',
-                'created_data_desc' => 'desc',
-            ];
-            $builder->orderBy('created_at', $sorting[$sortBy]);
-        }
-
         if ($solrInstance) {
             $results = $solrInstance->search(
                 $keyword,
@@ -96,10 +87,22 @@ abstract class BaseBuilder extends Builder
             );
             // THE RESULTS THAT WE GET FROM THE APACHE SOLR'S SEARCH AND FILTER
             $resultIds = collect(data_get($results, 'data') ?? [])->pluck('id')->map(function ($value) {
-                return (int) $value;
+                return (int)$value;
             })->toArray();
             // FILTERING RESULTS FROM OUR DATABASE BASED ON THE SOLR RESULT AND SORTING ACCORDINGLY
-            $builder = $builder->whereIn('id', $resultIds)->orderByRaw('FIELD(id, '.implode(',', $resultIds).')');
+            $builder = $builder->whereIn('id', $resultIds);
+
+            // SORTING LOGIC
+            $sortBy = request()->get('sort_by');
+            if (in_array($sortBy, ['created_data_asc', 'created_data_desc'])) {
+                $sorting = [
+                    'created_data_asc' => 'asc',
+                    'created_data_desc' => 'desc',
+                ];
+                $builder = $builder->orderBy('created_at', $sorting[$sortBy]);
+            } else {
+                $builder = $builder->orderByRaw('FIELD(id, ' . implode(',', $resultIds) . ')');
+            }
         }
 
         return $builder;
