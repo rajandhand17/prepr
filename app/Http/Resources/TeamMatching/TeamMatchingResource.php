@@ -57,7 +57,7 @@ class TeamMatchingResource extends JsonResource
                 $userDetails['lab_count'] = count($getUsersDetails->userlabs);
                 $userDetails['achievement_count'] = count($getUsersDetails->userAchievements);
                 $userDetails['skill_count'] = count($getUsersDetails->userSkills);
-                $userDetails['position'] = $accessLevel[$this->member->inviter_access_level];
+                $userDetails['position'] = ($this->member!==null) ? $accessLevel[$this->member->inviter_access_level] : "";
                 $userDetails['bio'] = $getUsersDetails->userPersonal !== null ? $getUsersDetails->userPersonal->about : null;
             }
             $isJoined = 'no';
