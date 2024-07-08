@@ -22,9 +22,9 @@ class LeaderboardResource extends JsonResource
             'username'                    => $this->username,
             'rank'                        => self::$rankCounter++,
             'profile_image'               => $this->profile_image,
-            'learning_points'             => $this->user_points !== null ? $this->user_points:0,
-            'learning_rank'               => $this->user_rank !== null ? $this->user_rank:0,
-            'achievement_points'          => $this->achievement_count ? $this->achievement_count :0,
+            'learning_points'             => $this->user_points !== null ? $this->user_points : 0,
+            'learning_rank'               => $this->user_rank !== null ? $this->user_rank : 0,
+            'achievement_points'          => $this->achievement_count ? $this->achievement_count : 0,
         ];
     }
 
