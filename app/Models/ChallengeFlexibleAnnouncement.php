@@ -18,6 +18,8 @@ class ChallengeFlexibleAnnouncement extends Model
         'custom_announcement_type',
         'custom_announcement_number',
         'custom_announcement_duration',
+        'custom_announcement_title',
         'custom_announcement_description',
+        'custom_announcement_schedule_status',
     ];
 }
