@@ -14,7 +14,6 @@ use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
-use App\Models\ChallengeTagsGroups;
 use App\Models\ChallengeTimelines;
 use App\Models\Host;
 use App\Models\Organization;
@@ -74,7 +73,7 @@ class Challenge extends Command
                         }
                     }
 
-                    $descriptionType = config('constants.description_type.text');;
+                    $descriptionType = config('constants.description_type.text');
                     $checkScrom = DB::connection('mysql2')->table('scorm')->where('resource_id', $challenge->id)->whereNotNull('resource_type')->first();
                     if ($checkScrom) {
                         $descriptionType = config('constants.description_type.scorm');
@@ -498,7 +497,7 @@ class Challenge extends Command
                                     }
 
                                     if ($flexibleAnnouncement->sent_status == 'email') {
-                                        $challengeFlexibleAnnouncementType = '0' ;
+                                        $challengeFlexibleAnnouncementType = '0';
                                     } else {
                                         $challengeFlexibleAnnouncementType = '1';
                                     }
