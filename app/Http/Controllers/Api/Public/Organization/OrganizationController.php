@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Public\Organization;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
+use App\Http\Resources\Public\Organization\OrganizationDetailResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
 use Illuminate\Http\Request;

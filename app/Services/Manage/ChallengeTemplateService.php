@@ -34,7 +34,8 @@ class ChallengeTemplateService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
+//                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
+                $challenge_template_list = $challenge_template_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -82,8 +83,8 @@ class ChallengeTemplateService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_template_list = $challenge_template_list->whereIn('challenge_templates.id', function ($query) use ($request) {
                     $query->select('challenge_template_skills_groups_stacks.challenge_template_id')
-                    ->from('challenge_template_skills_groups_stacks')
-                    ->whereIn('challenge_template_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('challenge_template_skills_groups_stacks')
+                        ->whereIn('challenge_template_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('challenge_template_skills_groups_stacks.type', '0')
                         ->whereNull('challenge_template_skills_groups_stacks.deleted_at')
                         ->distinct();

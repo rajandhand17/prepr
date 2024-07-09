@@ -4,8 +4,10 @@ namespace App\Http\Resources\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Profile\UserExperienceResource;
+use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Settings\UserNotificationResource;
 use App\Http\Resources\Settings\UserPrivacyResource;
+use App\Http\Resources\UserPersonalResource;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -69,23 +71,29 @@ class UserResource extends JsonResource
             'is_challenge_onboarding'     =>($this->display_challenge_mini_onboarding==0) ? 'no' : 'yes',
             'is_organization_onboarding'  =>($this->display_organization_mini_onboarding==0) ? 'no' : 'yes',
 
-            'user_experiences'            => UserExperienceResource::collection($this->userExperience),
-            'go1'                         => [
-                'can_create_resource'     => $memberManagement->canCreateGO1Resource($this),
-                'can_play_resource'       => $memberManagement->canPlayGO1Resoruces($this),
+            'user_experiences' => UserExperienceResource::collection($this->userExperience),
+            'go1'              => [
+                'can_create_resource' => $memberManagement->canCreateGO1Resource($this),
+                'can_play_resource'   => $memberManagement->canPlayGO1Resoruces($this),
             ],
-            'notification'                => UserNotificationResource::make($this->userSetting),
-            'privacy'                     => UserPrivacyResource::make($this->userSetting),
-            'sso_integrations'            => [
-                'linked-in'     => 'inactive',
-                'google'        => 'inactive',
-                'magnet'        => 'inactive',
-                'microsoft'     => 'inactive',
-                'apple'         => 'inactive',
+            'notification'     => UserNotificationResource::make($this->userSetting),
+            'privacy'          => UserPrivacyResource::make($this->userSetting),
+            'sso_integrations' => [
+                'linked-in' => 'inactive',
+                'google'    => 'inactive',
+                'magnet'    => 'inactive',
+                'microsoft' => 'inactive',
+                'apple'     => 'inactive',
             ],
-            'organization_details'      => $organization_details,
+            'organization_details' => $organization_details,
 
-            'resume'           => $this->userResume ? 'yes' : 'no',
+            'resume'                  => $this->userResume ? 'yes' : 'no',
+            'user_projects_count'     => $this->whenCounted('userProjects'),
+            'user_skills_count'       => $this->whenCounted('userSkills'),
+            'user_labs_count'         => $this->whenCounted('userLabs'),
+            'user_achievements_count' => $this->whenCounted('userAchievements'),
+            'user_personal'           => new UserPersonalResource($this->whenLoaded('userPersonal')),
+            'skills'                  => UserSkillsResource::collection($this->whenLoaded('userSkills')),
         ];
     }
 }

@@ -16,7 +16,6 @@ class OrganizationCustomization extends Model
         'organization_id',
         'enable_custom_login_and_registration',
         'use_main_org_logo',
-        'custom_login_url',
         'custom_logo_image',
         'custom_hero_image',
         'custom_background_color',
