@@ -14,7 +14,6 @@ use App\Services\Manage\ChallengeTemplateProjectTemplateService;
 use App\Services\Manage\ChallengeTemplateRequirementService;
 use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
-use App\Services\Manage\ChallengeTemplateTagsGroupsService;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
 use Exception;
 
@@ -42,11 +41,6 @@ class HandleDeleteChallengeTemplateAssociatedData
 
             $challengeTemplateSkillsGroupsStack = ChallengeTemplateSkillsGroupsStackService::deleteChallengeTemplateSkillsGroupsStacks($challengeTemplateId);
             if (!$challengeTemplateSkillsGroupsStack) {
-                return false;
-            }
-
-            $challengeTemplateTagsGroups = ChallengeTemplateTagsGroupsService::deleteChallengeTemplateTagsGroups($challengeTemplateId);
-            if (!$challengeTemplateTagsGroups) {
                 return false;
             }
 
