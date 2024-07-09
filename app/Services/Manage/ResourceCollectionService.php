@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use Exception;

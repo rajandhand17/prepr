@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceGroup;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -270,6 +268,7 @@ class ResourceGroupService
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
+
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

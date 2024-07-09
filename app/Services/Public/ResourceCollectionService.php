@@ -3,8 +3,6 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceCollection;
 
 class ResourceCollectionService
