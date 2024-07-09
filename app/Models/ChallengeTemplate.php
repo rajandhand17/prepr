@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ChallengeTemplateBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,6 +39,16 @@ class ChallengeTemplate extends Model
         'password',
         'remember_token',
     ];
+
+    /**
+     * @param $query
+     *
+     * @return ChallengeTemplateBuilder
+     */
+    public function newEloquentBuilder($query): ChallengeTemplateBuilder
+    {
+        return new ChallengeTemplateBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

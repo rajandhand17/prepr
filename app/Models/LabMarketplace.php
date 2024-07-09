@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\LabMarketPlaceBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,6 +36,16 @@ class LabMarketplace extends Model
         'is_notification_enabled',
         'is_verified',
     ];
+
+    /**
+     * @param $query
+     *
+     * @return LabMarketPlaceBuilder
+     */
+    public function newEloquentBuilder($query): LabMarketPlaceBuilder
+    {
+        return new LabMarketPlaceBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\MagnetWebhook;
+use App\Jobs\SolrDataSync;
 use App\Models\Lab;
 
 class LabObserver
@@ -10,9 +11,15 @@ class LabObserver
     /**
      * Handle the Lab "created" event.
      */
-    public function created(Lab $lab)
+    public function created(Lab $lab): void
     {
-        dispatch(new MagnetWebhook($lab, 'new'));
+        if (!app()->runningInConsole()) { // if the application is not running via console
+            $solrInstance = Lab::query()->getSolrInstance();
+            if ($solrInstance) {
+                dispatch(new SolrDataSync($lab, $solrInstance));
+            }
+            dispatch(new MagnetWebhook($lab, 'new'));
+        }
     }
 
     /**
@@ -20,7 +27,13 @@ class LabObserver
      */
     public function updated(Lab $lab): void
     {
-        dispatch(new MagnetWebhook($lab, 'updated'));
+        if (!app()->runningInConsole()) { // if the application is not running via console
+            $solrInstance = Lab::query()->getSolrInstance();
+            if ($solrInstance) {
+                dispatch(new SolrDataSync($lab, $solrInstance));
+            }
+            dispatch(new MagnetWebhook($lab, 'updated'));
+        }
     }
 
     /**
@@ -28,7 +41,13 @@ class LabObserver
      */
     public function deleted(Lab $lab): void
     {
-        dispatch(new MagnetWebhook($lab, 'deleted'));
+        if (!app()->runningInConsole()) { // if the application is not running via console
+            $solrInstance = Lab::query()->getSolrInstance();
+            if ($solrInstance) {
+                dispatch(new SolrDataSync($lab, $solrInstance, 'delete'));
+            }
+            dispatch(new MagnetWebhook($lab, 'deleted'));
+        }
     }
 
     /**
@@ -36,7 +55,12 @@ class LabObserver
      */
     public function restored(Lab $lab): void
     {
-        //
+        if (!app()->runningInConsole()) { // if the application is not running via console
+            $solrInstance = Lab::query()->getSolrInstance();
+            if ($solrInstance) {
+                dispatch(new SolrDataSync($lab, $solrInstance));
+            }
+        }
     }
 
     /**
@@ -44,6 +68,11 @@ class LabObserver
      */
     public function forceDeleted(Lab $lab): void
     {
-        //
+        if (!app()->runningInConsole()) { // if the application is not running via console
+            $solrInstance = Lab::query()->getSolrInstance();
+            if ($solrInstance) {
+                dispatch(new SolrDataSync($lab, $solrInstance, 'delete'));
+            }
+        }
     }
 }
