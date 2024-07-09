@@ -67,9 +67,9 @@ class UserResource extends JsonResource
             'is_profile_completed'        => ($this->is_profile_completed == '0') ? 'no' : 'yes',
             'member_since'                => UtilityHelper::formatDateTime($this->created_at),
             'roles'                       => $roles,
-            'is_lab_onboarding'           =>($this->display_lab_mini_onboarding==0) ? 'no' : 'yes',
-            'is_challenge_onboarding'     =>($this->display_challenge_mini_onboarding==0) ? 'no' : 'yes',
-            'is_organization_onboarding'  =>($this->display_organization_mini_onboarding==0) ? 'no' : 'yes',
+            'is_lab_onboarding'           => ($this->display_lab_mini_onboarding == 0) ? 'no' : 'yes',
+            'is_challenge_onboarding'     => ($this->display_challenge_mini_onboarding == 0) ? 'no' : 'yes',
+            'is_organization_onboarding'  => ($this->display_organization_mini_onboarding == 0) ? 'no' : 'yes',
 
             'user_experiences' => UserExperienceResource::collection($this->userExperience),
             'go1'              => [
