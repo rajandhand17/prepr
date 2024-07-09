@@ -16,12 +16,12 @@ class OrganizationCustomizationService
             DB::beginTransaction();
             if ($request->enable_custom_login_and_registration == 'none') {
                 OrganizationCustomization::where('organization_id', $organizationData->id)->delete();
+
                 return true;
             }
 
             $checkExisitingCustomDetails = OrganizationCustomization::where('organization_id', $organizationData->id)->first();
             if ($request->enable_custom_login_and_registration == 'yes') {
-
                 if ($checkExisitingCustomDetails) {
                     $organizationCustomization = $checkExisitingCustomDetails;
                 } else {
