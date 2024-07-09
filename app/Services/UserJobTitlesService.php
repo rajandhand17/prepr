@@ -171,7 +171,7 @@ class UserJobTitlesService
         }
     }
 
-    public static function getUserJob($jobIds,$save=null)
+    public static function getUserJob($jobIds, $save = null)
     {
         try {
             // Retrieve user job title IDs
@@ -184,9 +184,10 @@ class UserJobTitlesService
             $filtered = $collection->filter(function ($item) use ($userJobIds, $save) {
                 return $save === 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
             });
+
             // Return the filtered collection as an array
             return $filtered->values()->toArray();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
