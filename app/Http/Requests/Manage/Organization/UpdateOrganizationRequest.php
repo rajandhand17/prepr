@@ -37,7 +37,7 @@ class UpdateOrganizationRequest extends FormRequest
             'profile_image'                         => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'category'                              => 'required|numeric|exists:categories,id',
-            'custom_url'                            => 'required|max:255|unique:organizations,custom_url'.$organization->custom_url,
+            'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
             'website'                               => 'required|url',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
