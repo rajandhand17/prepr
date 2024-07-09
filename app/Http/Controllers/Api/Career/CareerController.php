@@ -29,11 +29,11 @@ class CareerController extends AppBaseController
             if ($getJobs) {
                 return $this->sendResponse(
                     CareerResource::collection($getJobs),
-                    __('response.job_listing_successfully')
+                    __('responses.job_listing_successfully')
                 );
             }
 
-            return $this->sendResponse([], __('response.job_listing_successfully'));
+            return $this->sendResponse([], __('responses.job_listing_successfully'));
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 

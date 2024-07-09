@@ -54,7 +54,7 @@ class ScormUserIdentifier
     public function handleMiddlewareVerificationFail(Request $request)
     {
         if ($request->expectsJson()) {
-            return response()->json(['message' => __('response.unauthorized')], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => __('responses.unauthorized')], Response::HTTP_UNAUTHORIZED);
         }
         abort(Response::HTTP_UNAUTHORIZED);
     }
