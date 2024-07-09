@@ -88,16 +88,6 @@ class Challenge extends Model
         return $this->hasMany(ChallengeJobTitles::class, 'challenge_id', 'id');
     }
 
-    public function tags()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '0');
-    }
-
-    public function tag_groups()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '1');
-    }
-
     public function durations()
     {
         return $this->belongsTo(Duration::class, 'duration_id', 'id');

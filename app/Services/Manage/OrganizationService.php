@@ -227,12 +227,13 @@ class OrganizationService
         }
     }
 
-    public static function deleteOrganization($organizationId, $language = 'en')
+    public static function deleteOrganization($organizationData, $request)
     {
         try {
-            $organization = Organization::find($organizationId)->delete();
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
+            $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
-                event(new DeleteOrganizationAssociatedData($organizationId));
+                event(new DeleteOrganizationAssociatedData($organizationData->id));
 
                 return true;
             }
