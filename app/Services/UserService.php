@@ -229,7 +229,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select()->orderBy('user_rank');
+            $users = User::select();
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
