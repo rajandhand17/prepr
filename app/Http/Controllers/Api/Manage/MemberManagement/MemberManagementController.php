@@ -13,6 +13,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\MemberManagement\ChangeRoleRequest;
 use App\Http\Requests\Manage\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\Manage\MemberManagement\DeleteMemberManagementRequest;
+use App\Http\Requests\Manage\MemberManagement\MemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Manage\Roles\RolesResource;
@@ -121,7 +122,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
+    public function acceptOrRejectLabJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);

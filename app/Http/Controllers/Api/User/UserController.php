@@ -141,7 +141,7 @@ class UserController extends AppBaseController
             }
             $miniBoard = $this->userRepository->completeMiniOnBoarding($component);
 
-            return $this->sendResponse($miniBoard, __('responses.'.$component.'_mini_onboarding'));
+            return $this->sendResponse(userResource::make($miniBoard), __('responses.'.$component.'_mini_onboarding'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
