@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\JobTitle;
+use App\Models\UserJobTitle;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -134,7 +135,11 @@ class JobTitleService
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
             $getJobIds = $getJobsIdsBasedOnSkills->merge($getCurrentUsersJobs);
-            $getJobIds = $getJobIds->unique()->take(100)->all();
+            $getJobIds = $getJobIds->unique()->all();
+            if($request->saved!==null){
+                $getJobIds=UserJobTitlesService::getUserJob($getJobIds,$request->saved);
+            }
+            $getJobIds=array_slice($getJobIds, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
 
             if ($getJobTitle) {
