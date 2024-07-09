@@ -174,19 +174,14 @@ class UserJobTitlesService
     public static function getUserJob($jobIds, $save = null)
     {
         try {
-            // Retrieve user job title IDs
             $userJobIds = UserJobTitle::where('user_id', auth()->user()->id)
                 ->pluck('job_title_id')
                 ->toArray();
-            // Convert jobIds array to a collection
             $collection = collect($jobIds);
-            // Apply the filtering based on the save parameter
             $filtered = $collection->filter(function ($item) use ($userJobIds, $save) {
-                return $save === 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
+                return $save == 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
             });
-
-            // Return the filtered collection as an array
-            return $filtered->values()->toArray();
+            return $filtered->values()->all();
         } catch (\Exception $e) {
             return false;
         }

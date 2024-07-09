@@ -133,22 +133,15 @@ class JobTitleService
             $getCurrentUsersSkills = UserSkillsService::getUserSkills();
             $getJobsIdsBasedOnSkills = JobTitleSkillServices::getJobTitleBasedOnSkills($getCurrentUsersSkills);
             $getCurrentUsersJobs = UserJobTitlesService::getUsersJobs();
-            $getJobIds = $getJobsIdsBasedOnSkills->merge($getCurrentUsersJobs);
-            $getJobIds = $getJobIds->unique()->all();
+            $getJobIds = $getJobsIdsBasedOnSkills->merge($getCurrentUsersJobs)->unique();
             if ($request->saved !== null) {
                 $getJobIds = UserJobTitlesService::getUserJob($getJobIds, $request->saved);
             }
-            $getJobIds = array_slice($getJobIds, 0, 100);
+            $getJobIds = gettype($getJobIds) == 'object' ? $getJobIds->take(100) : array_slice($getJobIds, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
-
-            if ($getJobTitle) {
-                return $getJobTitle;
-            }
-
-            return false;
+            return $getJobTitle ?: false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
