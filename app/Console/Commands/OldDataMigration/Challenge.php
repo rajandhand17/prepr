@@ -18,6 +18,7 @@ use App\Models\ChallengeTimelines;
 use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
+use App\Models\Scorm;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -74,7 +75,7 @@ class Challenge extends Command
                     }
 
                     $descriptionType = config('constants.description_type.text');
-                    $checkScrom = DB::connection('mysql2')->table('scorm')->where('resource_id', $challenge->id)->whereNotNull('resource_type')->first();
+                    $checkScrom = DB::connection('mysql2')->table('scorm')->where(['resource_id' => $challenge->id,  'resource_type' => 'App\Models\Challange'])->whereNotNull('resource_type')->first();
                     if ($checkScrom) {
                         $descriptionType = config('constants.description_type.scorm');
                     }
@@ -214,6 +215,18 @@ class Challenge extends Command
                     $newChallenge->is_accessible = $challenge->is_accessable;
                     $newChallenge->save();
 
+                    if ($checkScrom) {
+                        $newScorm = new Scorm();
+                        $newScorm->model_type = ModelChallenge::class;
+                        $newScorm->model_id = $checkScrom->resource_id;
+                        $newScorm->title = $checkScrom->title;
+                        $newScorm->origin_file = $checkScrom->origin_file;
+                        $newScorm->version = $checkScrom->version;
+                        $newScorm->uuid = $checkScrom->uuid;
+                        $newScorm->identifier = $checkScrom->identifier;
+                        $newScorm->entry_url = $checkScrom->entry_url;
+                        $newScorm->save();
+                    }
                     // For Challenge Host/Sponser
                     $arrayHost = json_decode($challenge->host_id, true);
                     if (!empty($arrayHost)) {
