@@ -3,8 +3,6 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceGroup;
 use App\Models\ResourceGroupRating;
 
@@ -109,6 +107,7 @@ class ResourceGroupService
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
+
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
