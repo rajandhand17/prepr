@@ -116,6 +116,7 @@ class Organization extends Command
                     $newOrganization->slug = $organization->slug;
                     $newOrganization->cover_image = (!empty($organization->cover_image)) ? $organization->cover_image : config('site-settings.default_organization_cover_image');
                     $newOrganization->profile_image = (!empty($organization->profile_image)) ? $organization->profile_image : config('site-settings.default_organization_profile_image');
+                    $newOrganization->custom_url = isset($organization->vanity_slug) ? $organization->vanity_slug : null;
                     $newOrganization->website = isset($organization->website) ? $organization->website : null;
                     $newOrganization->about = isset($organization->about) ? $organization->about : null;
                     $newOrganization->category = $category;
@@ -158,7 +159,6 @@ class Organization extends Command
                         $oldOrganizationCustomizations->organization_id = $newOrganization->id;
                         $oldOrganizationCustomizations->enable_custom_login_and_registration = $enable_custom_login_and_registration;
                         $oldOrganizationCustomizations->use_main_org_logo = $use_main_org_logo;
-                        $oldOrganizationCustomizations->custom_login_url = isset($organization->website) ? $organization->website : null;
                         $oldOrganizationCustomizations->custom_logo_image = $organizationCustomizations->custom_logo_image;
                         $oldOrganizationCustomizations->custom_hero_image = $organizationCustomizations->custom_hero_image;
                         $oldOrganizationCustomizations->custom_background_color = $organizationCustomizations->custom_background_color;
