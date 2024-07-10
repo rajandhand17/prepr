@@ -175,13 +175,12 @@ class UserJobTitlesService
     {
         try {
             $userJobIds = UserJobTitle::where('user_id', auth()->user()->id)
-                ->pluck('job_title_id')
-                ->toArray();
+                ->pluck('job_title_id')->all();
             $collection = collect($jobIds);
             $filtered = $collection->filter(function ($item) use ($userJobIds, $save) {
                 return $save == 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
             });
-            return $filtered->values()->all();
+            return $filtered->values();
         } catch (\Exception $e) {
             return false;
         }
