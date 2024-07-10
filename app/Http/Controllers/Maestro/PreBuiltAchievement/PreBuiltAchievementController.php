@@ -91,6 +91,7 @@ class PreBuiltAchievementController extends Controller
     {
         try {
             $languages = $this->getLanguage();
+
             return view('maestro.preBuiltAchievement.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
@@ -126,6 +127,7 @@ class PreBuiltAchievementController extends Controller
         try {
             $languages = $this->getLanguage();
             $achievement = $this->findPreBuiltAchievement($id);
+
             return view('maestro.preBuiltAchievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);

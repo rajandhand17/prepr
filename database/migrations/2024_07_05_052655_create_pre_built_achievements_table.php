@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,7 +17,7 @@ return new class extends Migration
             $table->integer('points');
             $table->string('component_type');
             $table->string('achievement_image')->nullable();
-            $table->enum('achievement_type', ['0','1','2'])->default('0')->comment('0 ->None, 1 ->Participation Achievement, 2 -> Winner Achievement');
+            $table->enum('achievement_type', ['0', '1', '2'])->default('0')->comment('0 ->None, 1 ->Participation Achievement, 2 -> Winner Achievement');
             $table->enum('status', ['0', '1'])->default('1')->comment('0 ->inactive, 1 ->active');
             $table->timestamps();
             $table->softDeletes();

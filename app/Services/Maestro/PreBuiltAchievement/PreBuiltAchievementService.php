@@ -72,47 +72,48 @@ class PreBuiltAchievementService
             }
 
             $component_type = [];
-            if(isset($request->challenge) && $request->challenge == 'on'){
-                array_push($component_type ,'challenge');
+            if (isset($request->challenge) && $request->challenge == 'on') {
+                array_push($component_type, 'challenge');
             }
-            if(isset($request->challenge_path) && $request->challenge_path == 'on'){
-                array_push($component_type ,'challenge_path');
+            if (isset($request->challenge_path) && $request->challenge_path == 'on') {
+                array_push($component_type, 'challenge_path');
             }
-            if(isset($request->lab) && $request->lab == 'on'){
-                array_push($component_type ,'lab');
+            if (isset($request->lab) && $request->lab == 'on') {
+                array_push($component_type, 'lab');
             }
-            if(isset($request->lab_program) && $request->lab_program == 'on'){
-                array_push($component_type ,'lab_program');
+            if (isset($request->lab_program) && $request->lab_program == 'on') {
+                array_push($component_type, 'lab_program');
             }
-            if(isset($request->resource_group) && $request->resource_group == 'on'){
-                array_push($component_type ,'resource_group');
+            if (isset($request->resource_group) && $request->resource_group == 'on') {
+                array_push($component_type, 'resource_group');
             }
-            if(isset($request->learning_path) && $request->learning_path == 'on'){
-                array_push($component_type ,'learning_path');
+            if (isset($request->learning_path) && $request->learning_path == 'on') {
+                array_push($component_type, 'learning_path');
             }
 
             $achievement_type = '0';
-            if(isset($request->challenge) && $request->challenge == 'on') {
-                switch ($request->achievement_type){
+            if (isset($request->challenge) && $request->challenge == 'on') {
+                switch ($request->achievement_type) {
                     case 'participation':
                         $achievement_type = '1';
-                      break;
+                        break;
                     case 'winner':
                         $achievement_type = '2';
-                      break;
+                        break;
                     default:
-                    $achievement_type = '0';
+                        $achievement_type = '0';
                 }
             }
 
             $achievement->achievement_image = $coverImage;
-            $achievement->points            = $request->points;
-            $achievement->component_type    = !empty($component_type) ? implode(',',$component_type) : null;
-            $achievement->achievement_type  = $achievement_type;
-            $achievement->status            = $request->status;
+            $achievement->points = $request->points;
+            $achievement->component_type = !empty($component_type) ? implode(',', $component_type) : null;
+            $achievement->achievement_type = $achievement_type;
+            $achievement->status = $request->status;
             if ($achievement->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

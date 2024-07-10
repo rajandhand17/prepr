@@ -40,17 +40,18 @@ class UsersController extends Controller
 
                             return $html;
                         })
-                        ->addColumn('roles', static function (User $usersInfo) use($roles){
+                        ->addColumn('roles', static function (User $usersInfo) use ($roles) {
                             $roleNames = [];
-                            if(!empty($roles)){
-                                foreach($roles as $key => $role){
-                                    if(in_array($role->name, $usersInfo->getRoles())){
-                                        $roleName = $role->display_name; 
+                            if (!empty($roles)) {
+                                foreach ($roles as $key => $role) {
+                                    if (in_array($role->name, $usersInfo->getRoles())) {
+                                        $roleName = $role->display_name;
                                         $roleNames[] = $roleName;
                                     }
                                 }
                             }
-                            return $roleNames ? implode(',',$roleNames) : 'user';
+
+                            return $roleNames ? implode(',', $roleNames) : 'user';
                         })
 
                         ->addColumn('action', static function (User $usersInfo) {

@@ -232,6 +232,7 @@ class Challenge extends Model
     {
         return $this->morphOne(Scorm::class, 'model')->latest();
     }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
