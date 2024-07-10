@@ -17,6 +17,7 @@ class TeamMatchingController extends AppBaseController
     {
         $this->teamMatchingRepository = $teamMatchingRepository;
     }
+
     public function getPendingRequests(Request $request)
     {
         try {
@@ -24,10 +25,10 @@ class TeamMatchingController extends AppBaseController
             $userData = auth()->user();
             //getting those projects ids in which users have send requests
             $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
-            if($getProjectIds){
+            if ($getProjectIds) {
                 //filtering all projects based on fronted requests
                 $projectids = $this->teamMatchingRepository->getProjectListWithoutPagination($getProjectIds, $request);
-                $getPendingRequests=$this->teamMatchingRepository->getUsersBasedOnProjectIds($userData,$projectids);
+                $getPendingRequests = $this->teamMatchingRepository->getUsersBasedOnProjectIds($userData, $projectids);
                 if ($getPendingRequests !== false) {
                     $response = [
                         'total_count'  => $getPendingRequests->total(),
@@ -38,10 +39,12 @@ class TeamMatchingController extends AppBaseController
                         'list'         => PendingRequestsResources::collection($getPendingRequests),
                     ];
                 }
-                return $this->sendResponse($response,__("responses.team_matching_list_successfully"));
+
+                return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -542,24 +542,26 @@ class ProjectMemberManagementService
             return $projectIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 
     public static function getProjectIdsBasedOnTeamLead($email)
     {
         try {
             //fetched projects ids in which given email user email is team leader
-            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' =>$email,'inviter_access_level'=>'2','invite_status'=>'1'])->pluck('project_id');
-            if($getAcceptedInvitesProjectIds){
-               return $getAcceptedInvitesProjectIds;
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' =>$email, 'inviter_access_level'=>'2', 'invite_status'=>'1'])->pluck('project_id');
+            if ($getAcceptedInvitesProjectIds) {
+                return $getAcceptedInvitesProjectIds;
             }
+
             return  false;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
+
     public static function fetchAcceptedMemberIds($projectId)
     {
         try {
