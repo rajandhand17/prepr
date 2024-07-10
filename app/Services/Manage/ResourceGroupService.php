@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceGroup;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -263,17 +261,12 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.level', $level);
-                }
+
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::where('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.duration', $duration);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
 
             return $resourceGroupList;

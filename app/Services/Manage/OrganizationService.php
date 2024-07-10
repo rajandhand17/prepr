@@ -206,7 +206,7 @@ class OrganizationService
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
                 $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
                 $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
-                $organization->description = ($request->has('custom_url')) ? $request->custom_url : $organization->custom_url;
+                $organization->custom_url = ($request->has('custom_url')) ? $request->custom_url : $organization->custom_url;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
@@ -227,12 +227,13 @@ class OrganizationService
         }
     }
 
-    public static function deleteOrganization($organizationId, $language = 'en')
+    public static function deleteOrganization($organizationData, $request)
     {
         try {
-            $organization = Organization::find($organizationId)->delete();
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
+            $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
-                event(new DeleteOrganizationAssociatedData($organizationId));
+                event(new DeleteOrganizationAssociatedData($organizationData->id));
 
                 return true;
             }
