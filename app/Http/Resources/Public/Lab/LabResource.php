@@ -217,20 +217,7 @@ class LabResource extends JsonResource
                 $type = 'na';
                 break;
         }
-        switch ($this->status) {
-            case '0':
-                $status = 'send';
-                break;
-            case '1':
-                $status = 'draft';
-                break;
-            case '2':
-                $status = 'scheduled';
-                break;
-            default:
-                $status = 'send';
-                break;
-        }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -250,7 +237,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
