@@ -162,7 +162,7 @@ class ChallengeTemplate extends Model
         return $this->hasMany(LabMarketplaceComponentAssociations::class, 'challenge_template_id', 'id');
     }
 
-        /**
+    /**
      * @return MorphOne
      */
     public function scorm(): MorphOne
