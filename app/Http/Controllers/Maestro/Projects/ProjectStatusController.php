@@ -17,7 +17,7 @@ class ProjectStatusController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     public function index(Builder $builder)
