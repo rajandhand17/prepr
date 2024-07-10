@@ -25,7 +25,6 @@ class UserService
             if ($user != null) {
                 return $user;
             }
-
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

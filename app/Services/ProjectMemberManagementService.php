@@ -522,20 +522,44 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function getPendingRequests($userData)
+    public static function getPendingRequests($userData, $projectids = null)
     {
         try {
-            $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
-            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_status' => '2'])->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+            // Fetching project ids in which current user's role is team leader
+            $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
 
-            return $getAcceptedInvitesProjectIds;
+            // Preparing the query to fetch project ids where requests are pending
+            $query = ProjectMemberManagement::where('invite_status', '2');
+
+            if ($projectids === null) {
+                // If no specific project ids provided, filter by team leader's project ids
+                $projectIds = $query->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+            } else {
+                // If specific project ids are provided, filter by those project ids
+                $projectIds = $query->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
+            }
+
+            return $projectIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
 
+
+    public static function getProjectIdsBasedOnTeamLead($email)
+    {
+        try {
+            //fetched projects ids in which given email user email is team leader
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' =>$email,'inviter_access_level'=>'2','invite_status'=>'1'])->pluck('project_id');
+            if($getAcceptedInvitesProjectIds){
+               return $getAcceptedInvitesProjectIds;
+            }
+            return  false;
+        }catch (Exception $e) {
+            return false;
+        }
+    }
     public static function fetchAcceptedMemberIds($projectId)
     {
         try {

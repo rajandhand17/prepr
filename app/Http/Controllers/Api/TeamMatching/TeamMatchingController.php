@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\TeamMatching;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\TeamMatching\PendingRequestsResources;
 use App\Http\Resources\TeamMatching\TeamMatchingResource;
 use App\Repositories\Api\TeamMatching\TeamMatchingRepository;
 use Illuminate\Http\Request;
@@ -16,8 +17,36 @@ class TeamMatchingController extends AppBaseController
     {
         $this->teamMatchingRepository = $teamMatchingRepository;
     }
+    public function getPendingRequests(Request $request)
+    {
+        try {
+            //getting current logged users details
+            $userData = auth()->user();
+            //getting those projects ids in which users have send requests
+            $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
+            if($getProjectIds){
+                //filtering all projects based on fronted requests
+                $projectids = $this->teamMatchingRepository->getProjectListWithoutPagination($getProjectIds, $request);
+                $getPendingRequests=$this->teamMatchingRepository->getUsersBasedOnProjectIds($userData,$projectids);
+                if ($getPendingRequests !== false) {
+                    $response = [
+                        'total_count'  => $getPendingRequests->total(),
+                        'per_page'     => $getPendingRequests->perPage(),
+                        'count'        => $getPendingRequests->count(),
+                        'current_page' => $getPendingRequests->currentPage(),
+                        'total_pages'  => $getPendingRequests->lastPage(),
+                        'list'         => PendingRequestsResources::collection($getPendingRequests),
+                    ];
+                }
+                return $this->sendResponse($response,__("responses.team_matching_list_successfully"));
+            }
+        }catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 
-    public function pendingRequests($action, Request $request)
+    public function browseMatchedPendingRequests($action, Request $request)
     {
         try {
             if (!in_array($action, ['browse', 'pending', 'matched'])) {

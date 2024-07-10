@@ -47,8 +47,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData);
-
-            return $getProjectsIds;
+             return $getProjectsIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -79,7 +78,25 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return false;
         }
     }
+    public function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            return $this->projectService->getProjectListWithoutPagination($getProjectIds, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function getUsersBasedOnProjectIds($userData,$projectids)
+    {
+        try {
+            return $this->projectMemberManagementService->getPendingRequests($userData,$projectids);
+        }catch (\Exception $e){
+            return false;
+        }
+    }
     public function checkSlug($slug)
     {
         try {
