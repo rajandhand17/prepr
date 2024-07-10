@@ -237,7 +237,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $this->status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
