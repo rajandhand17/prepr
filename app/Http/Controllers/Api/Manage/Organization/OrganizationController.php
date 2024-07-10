@@ -641,7 +641,7 @@ class OrganizationController extends AppBaseController
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
-            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization->id, $request->language);
+            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization, $request);
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }

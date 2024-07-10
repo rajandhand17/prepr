@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('challenges:update-challenge-passed-winner-date')->everyMinute();
         $schedule->command('member-manger:send-email')->everyMinute();
         $schedule->command('chargebee-subscription:daily-chronicle-accessed-non-accessed-data')->everyMinute();
+        $schedule->command('solr:sync')->daily();
     }
 
     /**
