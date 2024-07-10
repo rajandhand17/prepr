@@ -5,7 +5,6 @@ namespace App\Http\Resources\TeamMatching;
 use App\Services\DurationService;
 use App\Services\LevelService;
 use App\Services\Manage\ChallengeService;
-use App\Services\ProjectMemberManagementService;
 use App\Services\ProjectService;
 use App\Services\SkillService;
 use App\Services\UserService;
@@ -21,9 +20,9 @@ class PendingRequestsResources extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $skills =  null;
+        $skills = null;
         $userDetails = null;
-        $getUsersDetails=UserService::getUserByEmail($this->email);
+        $getUsersDetails = UserService::getUserByEmail($this->email);
         if ($getUsersDetails) {
             $userDetails['id'] = $getUsersDetails['id'];
             $userDetails['full_name'] = $getUsersDetails['full_name'];
@@ -40,10 +39,9 @@ class PendingRequestsResources extends JsonResource
             $userDetails['position'] = ($this->member !== null) ? $accessLevel[$this->member->inviter_access_level] : null;
             $userDetails['bio'] = $getUsersDetails->userPersonal !== null ? $getUsersDetails->userPersonal->about : null;
             $isJoined = 'no';
-
         }
         $access_level = 'viewer';
-        $project=ProjectService::getProjectBasedOnId($this->project_id);
+        $project = ProjectService::getProjectBasedOnId($this->project_id);
         if ($project->challenge_id) {
             $challenges = [];
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($project->challenge_id, $project->created_at, $project->getProjectIdBasedTemplate);
@@ -81,6 +79,7 @@ class PendingRequestsResources extends JsonResource
                 $friendRequest = 'available';
                 break;
         }
+
         return [
             'id'                    => $project->uuid,
             'language'              => $project->language,

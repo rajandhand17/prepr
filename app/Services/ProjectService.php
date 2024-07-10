@@ -42,6 +42,7 @@ class ProjectService
             return false;
         }
     }
+
     public static function getProjectListWithoutPagination($getProjectIds, $request)
     {
         try {
@@ -55,6 +56,7 @@ class ProjectService
             return false;
         }
     }
+
     public static function filterProjectList($project_list, $request)
     {
         try {
