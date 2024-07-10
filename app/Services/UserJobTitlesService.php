@@ -179,6 +179,7 @@ class UserJobTitlesService
             $filtered = $jobIds->filter(function ($item) use ($userJobIds, $save) {
                 return $save == 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
             });
+
             return $filtered->values();
         } catch (\Exception $e) {
             return false;

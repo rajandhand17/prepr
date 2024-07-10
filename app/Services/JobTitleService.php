@@ -137,12 +137,14 @@ class JobTitleService
             if ($request->saved !== null) {
                 $getJobIds = UserJobTitlesService::getUserJob($getJobIds, $request->saved);
             }
-            $getJobIds=$getJobIds->all();
+            $getJobIds = $getJobIds->all();
             $getJobIds = array_slice($getJobIds, 0, 100);
             $getJobTitle = self::getJobTitles($request->language, $request->search, $getJobIds, $request->sort_by);
+
             return $getJobTitle ?: false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
