@@ -46,10 +46,10 @@ class TeamMatchingController extends AppBaseController
         }
     }
 
-    public function browseMatchedPendingRequests($action, Request $request)
+    public function browseMatchedRequests($action, Request $request)
     {
         try {
-            if (!in_array($action, ['browse', 'pending', 'matched'])) {
+            if (!in_array($action, ['browse', 'matched'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $userData = auth()->user();
@@ -57,9 +57,6 @@ class TeamMatchingController extends AppBaseController
             switch ($action) {
                 case 'browse':
                     $getProjectIds = $this->teamMatchingRepository->getBrowsersList($userData);
-                    break;
-                case 'pending':
-                    $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
                     break;
                 case 'matched':
                     $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();

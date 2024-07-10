@@ -5,6 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/pending', [TeamMatchingController::class, 'getPendingRequests']);
-    Route::get('/{action}', [TeamMatchingController::class, 'browseMatchedPendingRequests']);
+    Route::get('/{action}', [TeamMatchingController::class, 'browseMatchedRequests']);
     Route::get('/{slug}/send-request', [TeamMatchingController::class, 'sendRequest']);
 });
