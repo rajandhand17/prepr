@@ -165,7 +165,20 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1');
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1')
+                ->whereHas('challenge_timelines', function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('timeline_type', '1')
+                            ->where('start_date', '<', now())
+                            ->where(function ($subQuery) {
+                                $subQuery->whereNotNull('registration_deadline_date')
+                                    ->where('registration_deadline_date', '>', now())
+                                    ->orWhereNull('registration_deadline_date');
+                            });
+                    })->orWhere(function ($q) {
+                        $q->where('timeline_type', '0');
+                    });
+                });
             $challenge_list = self::filterChallengeList($request, $challenge_list);
             $limit = config('site-settings.listing_limit');
 

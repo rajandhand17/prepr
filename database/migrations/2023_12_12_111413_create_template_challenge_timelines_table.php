@@ -14,12 +14,10 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('challenge_template_id');
             $table->enum('timeline_type', ['0', '1'])->comment('0 -> flexible, 1 -> restricted');
-            $table->string('open_call_date', 255)->nullable()->comment('Date of restricted challenge, start challenge');
-            $table->longText('open_call_date_description')->nullable();
-            $table->string('last_call_date', 255)->nullable()->comment('Date of restricted challenge,ending to start challenge');
-            $table->longText('last_call_date_description')->nullable();
-            $table->string('application_deadline_date', 255)->nullable()->comment('Date of restricted challenge,ending to start challenge');
-            $table->longText('application_deadline_date_description')->nullable();
+            $table->string('start_date', 255)->nullable()->comment('Date of restricted challenge, start challenge');
+            $table->longText('start_date_description')->nullable();
+            $table->string('registration_deadline_date', 255)->nullable()->comment('Date of restricted challenge,ending to start challenge');
+            $table->longText('registration_deadline_date_description')->nullable();
             $table->string('submission_deadline_date', 255)->nullable()->comment('Date of restricted challenge,submit challenge');
             $table->longText('submission_deadline_date_description')->nullable();
             $table->integer('challenge_duration')->nullable()->comment('Duration of challenge, can be null only if challenge is flex type and has no end date');

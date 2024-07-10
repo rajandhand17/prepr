@@ -24,6 +24,7 @@ class Challenge extends Model
         'level_id',
         'slug',
         'title',
+        'description_type',
         'description',
         'privacy',
         'media_type',
@@ -87,16 +88,6 @@ class Challenge extends Model
         return $this->hasMany(ChallengeJobTitles::class, 'challenge_id', 'id');
     }
 
-    public function tags()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '0');
-    }
-
-    public function tag_groups()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '1');
-    }
-
     public function durations()
     {
         return $this->belongsTo(Duration::class, 'duration_id', 'id');
@@ -145,6 +136,11 @@ class Challenge extends Model
     public function challenge_custom_timelines()
     {
         return $this->hasMany(ChallengeCustomTimelines::class, 'challenge_id', 'id');
+    }
+
+    public function challenge_flexible_announcement()
+    {
+        return $this->hasMany(ChallengeFlexibleAnnouncement::class, 'challenge_id', 'id');
     }
 
     public function challenge_project_template()
@@ -229,8 +225,17 @@ class Challenge extends Model
         return config('constants.campus_connect_status_id.'.$value);
     }
 
+<<<<<<< HEAD
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+=======
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
+>>>>>>> BetaDevelopment
     }
 }

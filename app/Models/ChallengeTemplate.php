@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builder\ChallengeTemplateBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ChallengeTemplate extends Model
@@ -23,6 +24,7 @@ class ChallengeTemplate extends Model
         'level_id',
         'slug',
         'title',
+        'description_type',
         'description',
         'privacy',
         'media_type',
@@ -32,8 +34,13 @@ class ChallengeTemplate extends Model
         'agreement',
         'is_notification_enabled',
         'project_privacy',
+        'is_pre_built',
         'is_open',
         'is_auto_created',
+        'is_ai_created',
+        'is_accessible',
+        'allow_winner_change',
+        'winner_select_date',
     ];
     protected $hidden = [
         'password',
@@ -83,16 +90,6 @@ class ChallengeTemplate extends Model
     public function skill_stacks()
     {
         return $this->hasMany(ChallengeTemplateSkillsGroupsStack::class, 'challenge_template_id', 'id')->where('type', '2');
-    }
-
-    public function tags()
-    {
-        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'challenge_template_id', 'id')->where('type', '0');
-    }
-
-    public function tag_groups()
-    {
-        return $this->hasMany(ChallengeTemplateTagsGroups::class, 'challenge_template_id', 'id')->where('type', '1');
     }
 
     public function durations()
@@ -163,5 +160,13 @@ class ChallengeTemplate extends Model
     public function challenge_association()
     {
         return $this->hasMany(LabMarketplaceComponentAssociations::class, 'challenge_template_id', 'id');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
     }
 }
