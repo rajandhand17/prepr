@@ -810,7 +810,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }
@@ -822,7 +822,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }

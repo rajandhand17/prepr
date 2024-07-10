@@ -15,7 +15,7 @@ class ChallengeCustomTimelines extends Model
     protected $fillable = [
         'challenge_id',
         'custom_timelines_title',
-        'custom_timelines_date',
+        'custom_timelines_number',
         'custom_timelines_description',
         'custom_timelines_duration',
         'schedule_custom_notify',

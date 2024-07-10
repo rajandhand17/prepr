@@ -32,7 +32,7 @@ interface OrganizationInterface
 
     public function updateOrganizationExternalLinks($request, $organizationId);
 
-    public function deleteOrganization($organizationId, $language);
+    public function deleteOrganization($organizationData, $request);
 
     public function checkSlug($slug);
 
