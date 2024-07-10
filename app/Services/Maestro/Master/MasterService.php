@@ -306,6 +306,7 @@ class MasterService
             return false;
         }
     }
+
     public static function getUsersEmail($request)
     {
         try {

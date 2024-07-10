@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PreBuiltAchievement extends Model
 {
-    use HasFactory , SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
     protected $fillable = [
         'title',
         'fr_CA_title',

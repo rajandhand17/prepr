@@ -41,7 +41,7 @@ class ChallengeController extends Controller
                     ->editColumn('status', static function (Challenge $challenges) {
                         if ($challenges->status == '0') {
                             $html = "<span class='badge badge-info'>Draft</span>";
-                        } elseif ($challenges->status == '1') { 
+                        } elseif ($challenges->status == '1') {
                             $html = "<span class='badge badge-success'>Published</span>";
                         } elseif ($challenges->status == '2') {
                             $html = "<span class='badge badge-danger'>Archive</span>";
@@ -63,7 +63,7 @@ class ChallengeController extends Controller
                     ->addColumn('action', static function (Challenge $challenges) {
                         return '<a class="mr-10" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['status','is_open', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['status', 'is_open', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
@@ -191,6 +191,7 @@ class ChallengeController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
         }
     }
+
     /**
      * Open challenge assessment edit page.
      */
@@ -203,17 +204,20 @@ class ChallengeController extends Controller
             }
             $assessment = $this->getAssessment($challenge->id);
             $criteria = $this->getCriteria($challenge->id);
-            return view('maestro.challenge.assessment', compact('assessment','challenge','criteria'));
+
+            return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
         }
     }
+
     public function assessmentStore(Request $request)
     {
         try {
             DB::beginTransaction();
             if ($this->storeUpdateAssessment($request)) {
                 DB::commit();
+
                 return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
             }
             DB::rollback();

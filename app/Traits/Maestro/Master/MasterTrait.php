@@ -132,6 +132,7 @@ trait MasterTrait
             return false;
         }
     }
+
     private function getUsersEmail($request)
     {
         try {
