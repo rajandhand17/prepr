@@ -31,27 +31,24 @@ class ChallengeTimelinesService
             }
 
             if ($request->timeline_type == 'restricted') {
-                $openDate = date('Y-m-d H:i:s', strtotime($request->open_call_date));
-                $lastDate = date('Y-m-d H:i:s', strtotime($request->last_call_date));
-                $applicationDate = date('Y-m-d H:i:s', strtotime($request->application_deadline_date));
+                $startDate = date('Y-m-d H:i:s', strtotime($request->start_date));
+                $registrationDeadlineDate = ($request->has('registration_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->registration_deadline_date)) : null;
                 $submissionDate = date('Y-m-d H:i:s', strtotime($request->submission_deadline_date));
-                $open_date = Carbon::parse($openDate);
+                $open_date = Carbon::parse($startDate);
                 $close_date = Carbon::parse($submissionDate);
                 $challenge_duration = $open_date->diffInDays($close_date);
 
-                $challengeRestrictedTimeLine = new ChallengeTimelines();
-                $challengeRestrictedTimeLine->challenge_id = $challenge_id;
-                $challengeRestrictedTimeLine->timeline_type = $time_line;
-                $challengeRestrictedTimeLine->open_call_date = $openDate;
-                $challengeRestrictedTimeLine->open_call_date_description = $request->open_call_date_description ?? null;
-                $challengeRestrictedTimeLine->last_call_date = $lastDate;
-                $challengeRestrictedTimeLine->last_call_date_description = $request->last_call_date_description ?? null;
-                $challengeRestrictedTimeLine->application_deadline_date = $applicationDate;
-                $challengeRestrictedTimeLine->application_deadline_date_description = $request->application_deadline_date_description ?? null;
-                $challengeRestrictedTimeLine->submission_deadline_date = $submissionDate;
-                $challengeRestrictedTimeLine->submission_deadline_date_description = $request->submission_deadline_date_description ?? null;
-                $challengeRestrictedTimeLine->challenge_duration = $challenge_duration;
-                $challengeRestrictedTimeLine->save();
+                $challengeTimeLine = new ChallengeTimelines();
+                $challengeTimeLine->challenge_id = $challenge_id;
+                $challengeTimeLine->timeline_type = $time_line;
+                $challengeTimeLine->start_date = $startDate;
+                $challengeTimeLine->start_date_description = $request->start_date_description ?? null;
+                $challengeTimeLine->registration_deadline_date = $registrationDeadlineDate;
+                $challengeTimeLine->registration_deadline_date_description = $request->registration_deadline_date_description ?? null;
+                $challengeTimeLine->submission_deadline_date = $submissionDate;
+                $challengeTimeLine->submission_deadline_date_description = $request->submission_deadline_date_description ?? null;
+                $challengeTimeLine->challenge_duration = $challenge_duration;
+                $challengeTimeLine->save();
             } elseif ($request->timeline_type == 'flexible') {
                 $flexibleDeadlineDate = null;
                 if ($request->flexible_expire_deadline) {
@@ -59,15 +56,27 @@ class ChallengeTimelinesService
                 }
                 $flexible_date_number = $request->flexible_date_number ?? 2;
                 $flexible_date_duration = $request->flexible_date_duration ?? 'weeks';
-                $automatic_alert = $request->automatic_alert ?? '0';
 
-                $challengeFlexibleTimeLine = new ChallengeTimelines();
-                $challengeFlexibleTimeLine->challenge_id = $challenge_id;
-                $flexible_date_number && $challengeFlexibleTimeLine->flexible_date_number = $flexible_date_number;
-                $flexible_date_duration && $challengeFlexibleTimeLine->flexible_date_duration = $flexible_date_duration;
-                $challengeFlexibleTimeLine->automatic_alert = $automatic_alert;
-                $flexibleDeadlineDate && $challengeFlexibleTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
-                $challengeFlexibleTimeLine->save();
+                $automatic_alert = '0';
+                if ($request->has('automatic_alert')) {
+                    switch ($request->automatic_alert) {
+                        case 'day':
+                            $automatic_alert = '0';
+                            break;
+                        case 'week':
+                            $automatic_alert = '1';
+                            break;
+                    }
+                }
+
+                $challengeTimeLine = new ChallengeTimelines();
+                $challengeTimeLine->challenge_id = $challenge_id;
+                $challengeTimeLine->timeline_type = $time_line;
+                $flexible_date_number && $challengeTimeLine->flexible_date_number = $flexible_date_number;
+                $flexible_date_duration && $challengeTimeLine->flexible_date_duration = $flexible_date_duration;
+                $challengeTimeLine->automatic_alert = $automatic_alert;
+                $flexibleDeadlineDate && $challengeTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
+                $challengeTimeLine->save();
             }
 
             return true;
@@ -97,39 +106,52 @@ class ChallengeTimelinesService
 
                 ChallengeTimelines::where('challenge_id', $challenge_id)->delete();
                 if ($request->timeline_type == 'restricted') {
-                    $openDate = date('Y-m-d H:i:s', strtotime($request->open_call_date));
-                    $lastDate = date('Y-m-d H:i:s', strtotime($request->last_call_date));
-                    $applicationDate = date('Y-m-d H:i:s', strtotime($request->application_deadline_date));
+                    $startDate = date('Y-m-d H:i:s', strtotime($request->start_date));
+                    $registrationDeadlineDate = ($request->has('registration_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->registration_deadline_date)) : null;
                     $submissionDate = date('Y-m-d H:i:s', strtotime($request->submission_deadline_date));
-                    $open_date = Carbon::parse($openDate);
+                    $open_date = Carbon::parse($startDate);
                     $close_date = Carbon::parse($submissionDate);
                     $challenge_duration = $open_date->diffInDays($close_date);
 
-                    $challengeRestrictedTimeLine = new ChallengeTimelines();
-                    $challengeRestrictedTimeLine->challenge_id = $challenge_id;
-                    $challengeRestrictedTimeLine->timeline_type = $time_line;
-                    $challengeRestrictedTimeLine->open_call_date = $openDate;
-                    $challengeRestrictedTimeLine->open_call_date_description = $request->open_call_date_description ?? null;
-                    $challengeRestrictedTimeLine->last_call_date = $lastDate;
-                    $challengeRestrictedTimeLine->last_call_date_description = $request->last_call_date_description ?? null;
-                    $challengeRestrictedTimeLine->application_deadline_date = $applicationDate;
-                    $challengeRestrictedTimeLine->application_deadline_date_description = $request->application_deadline_date_description ?? null;
-                    $challengeRestrictedTimeLine->submission_deadline_date = $submissionDate;
-                    $challengeRestrictedTimeLine->submission_deadline_date_description = $request->submission_deadline_date_description ?? null;
-                    $challengeRestrictedTimeLine->challenge_duration = $challenge_duration;
-                    $challengeRestrictedTimeLine->save();
+                    $challengeTimeLine = new ChallengeTimelines();
+                    $challengeTimeLine->challenge_id = $challenge_id;
+                    $challengeTimeLine->timeline_type = $time_line;
+                    $challengeTimeLine->start_date = $startDate;
+                    $challengeTimeLine->start_date_description = $request->start_date_description ?? null;
+                    $challengeTimeLine->registration_deadline_date = $registrationDeadlineDate;
+                    $challengeTimeLine->registration_deadline_date_description = $request->registration_deadline_date_description ?? null;
+                    $challengeTimeLine->submission_deadline_date = $submissionDate;
+                    $challengeTimeLine->submission_deadline_date_description = $request->submission_deadline_date_description ?? null;
+                    $challengeTimeLine->challenge_duration = $challenge_duration;
+                    $challengeTimeLine->save();
                 } elseif ($request->timeline_type == 'flexible') {
                     $flexibleDeadlineDate = null;
                     if ($request->flexible_expire_deadline) {
                         $flexibleDeadlineDate = date('Y-m-d H:i:s', strtotime($request->flexible_expire_deadline));
                     }
-                    $challengeFlexibleTimeLine = new ChallengeTimelines();
-                    $challengeFlexibleTimeLine->challenge_id = $challenge_id;
-                    $challengeFlexibleTimeLine->flexible_date_number = $request->flexible_date_number;
-                    $challengeFlexibleTimeLine->flexible_date_duration = $request->flexible_date_duration;
-                    $challengeFlexibleTimeLine->automatic_alert = $request->automatic_alert;
-                    $challengeFlexibleTimeLine->flexible_expire_deadline = $request->$flexibleDeadlineDate;
-                    $challengeFlexibleTimeLine->save();
+                    $flexible_date_number = $request->flexible_date_number ?? 2;
+                    $flexible_date_duration = $request->flexible_date_duration ?? 'weeks';
+
+                    $automatic_alert = '0';
+                    if ($request->has('automatic_alert')) {
+                        switch ($request->automatic_alert) {
+                            case 'day':
+                                $automatic_alert = '0';
+                                break;
+                            case 'week':
+                                $automatic_alert = '1';
+                                break;
+                        }
+                    }
+
+                    $challengeTimeLine = new ChallengeTimelines();
+                    $challengeTimeLine->challenge_id = $challenge_id;
+                    $challengeTimeLine->timeline_type = $time_line;
+                    $flexible_date_number && $challengeTimeLine->flexible_date_number = $flexible_date_number;
+                    $flexible_date_duration && $challengeTimeLine->flexible_date_duration = $flexible_date_duration;
+                    $challengeTimeLine->automatic_alert = $automatic_alert;
+                    $flexibleDeadlineDate && $challengeTimeLine->flexible_expire_deadline = $flexibleDeadlineDate;
+                    $challengeTimeLine->save();
                 }
             }
 

@@ -36,23 +36,23 @@ class UpdateChallengeAssessmentRequest extends FormRequest
         }
 
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
-            $base_rules['assessment_title'] = 'array';
-            $base_rules['assessment_title.*'] = 'required';
-            $base_rules['assessment_description'] = 'array';
-            $base_rules['assessment_score'] = 'array';
-            $base_rules['assessment_score.*'] = 'required|numeric';
-            $base_rules['assessment_weight'] = 'array';
-            $base_rules['assessment_weight.*'] = 'required|numeric';
-
-            // Custom validation for sum of assessment_weight
+            $base_rules['assessment_title'] = 'required|array';
+            $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed,ai';
+            $base_rules['assessment_description'] = 'required|array';
+            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed,ai|string';
+            $base_rules['assessment_score'] = 'required|array';
+            $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed,ai|numeric';
             $base_rules['assessment_weight'] = [
+                'required',
                 'array',
+                'required_if:assessment_type,open,closed,ai',
                 function ($attribute, $value, $fail) {
                     if (array_sum($value) != 100) {
                         $fail(__('responses.challenge_weight_should_be_100'));
                     }
                 },
             ];
+            $base_rules['assessment_weight.*'] = 'required_if:assessment_type,open,closed,ai|numeric';
         }
 
         return $base_rules;
