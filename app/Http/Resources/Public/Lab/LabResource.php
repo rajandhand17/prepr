@@ -231,6 +231,7 @@ class LabResource extends JsonResource
                 $status = 'send';
                 break;
         }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
