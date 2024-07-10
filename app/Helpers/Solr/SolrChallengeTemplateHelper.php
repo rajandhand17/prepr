@@ -18,7 +18,7 @@ class SolrChallengeTemplateHelper extends SolrBaseHelper
     public function formatData($value): array
     {
         $skillsIds = $value->skills()->pluck('foreign_id');
-        $tagsIds = $value->tags()->pluck('foreign_id');
+//        $tagsIds = $value->tags()->pluck('foreign_id');
 
         return [
             'id'                                 => data_get($value, 'id'),
@@ -32,7 +32,7 @@ class SolrChallengeTemplateHelper extends SolrBaseHelper
             'challenge_template_skills_id'       => $skillsIds,
             'challenge_template_status'          => data_get($value, 'status'),
             'challenge_template_open_status'     => data_get($value, 'is_open'),
-            'challenge_template_tags_id'         => $tagsIds,
+            'challenge_template_tags_id'         => [],
             'challenge_template_privacy'         => data_get($value, 'privacy'),
             'challenge_template_level_id'        => data_get($value, 'level_id'),
             'challenge_template_duration_id'     => data_get($value, 'duration_id'),
