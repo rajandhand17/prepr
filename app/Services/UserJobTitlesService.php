@@ -176,8 +176,7 @@ class UserJobTitlesService
         try {
             $userJobIds = UserJobTitle::where('user_id', auth()->user()->id)
                 ->pluck('job_title_id')->all();
-            $collection = collect($jobIds);
-            $filtered = $collection->filter(function ($item) use ($userJobIds, $save) {
+            $filtered = $jobIds->filter(function ($item) use ($userJobIds, $save) {
                 return $save == 'yes' ? in_array($item, $userJobIds) : !in_array($item, $userJobIds);
             });
             return $filtered->values();
