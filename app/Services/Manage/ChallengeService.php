@@ -313,7 +313,7 @@ class ChallengeService
             $challenge->level_id = $request->level_id;
             $challenge->title = $request->title;
             $challenge->description_type = $description_type;
-            $challenge->description = ($request->has('description')) ? $request->description : null;
+            $challenge->description = ($description_type == '0') ? ($request->description ?? null) : null;
             $challenge->privacy = $challenge_privacy;
             $challenge->media_type = $media_type;
             $challenge->media = $upload_cover_image;
@@ -478,7 +478,7 @@ class ChallengeService
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
                 $challenge->title = ($request->has('title')) ? $request->title : $challenge->title;
                 $challenge->description_type = $description_type;
-                $challenge->description = ($request->has('description')) ? $request->description : $challenge->description;
+                $challenge->description = ($description_type == '0') ? ($request->description ?? $challenge->description) : null;
                 $challenge->privacy = $privacy;
                 $challenge->media_type = $media_type;
                 $challenge->media = ($update_cover_image != null) ? $update_cover_image : $challenge->cover_image;

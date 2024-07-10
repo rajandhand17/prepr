@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builder\ChallengeTemplateBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ChallengeTemplate extends Model
