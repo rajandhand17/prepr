@@ -177,6 +177,11 @@ class MixpanelHelper
                         'dates_type'                      => $data->dates,
                     ];
                     break;
+                case config('mixpanel.delete_organization'): // Mixpanel data: delete resource
+                    $data_array = [
+                        'organization_title'  => $data->title,
+                    ];
+                    break;
                 case config('mixpanel.create_resource'): // Mixpanel data: create resource
                 case config('mixpanel.edit_resource'): // Mixpanel data: edit resource
                 case config('mixpanel.delete_resource'): // Mixpanel data: delete resource

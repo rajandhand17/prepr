@@ -29,7 +29,7 @@ class SolrChallengePathHelper extends SolrBaseHelper
             'challenge_path_privacy'         => data_get($value, 'privacy'),
             'challenge_path_description'     => data_get($value, 'description'),
             'challenge_path_skills_id'       => $skillsIds,
-            'challenge_path_duration_id'     => [data_get($value, 'duration')],
+            'challenge_path_duration_id'     => [data_get($value, 'duration_id')],
             'challenge_path_level_id'        => [data_get($value, 'level_id')],
             'challenge_path_is_accessible'   => data_get($value, 'is_accessible'),
             'challenge_path_category_id'     => data_get($value, 'category_id'),

@@ -113,6 +113,7 @@ class ChallengeTemplateService
             $templateChallenge->category_id = $originalChallenge->category_id;
             $templateChallenge->duration_id = $originalChallenge->duration_id;
             $templateChallenge->level_id = $originalChallenge->level_id;
+            $templateChallenge->description_type = $originalChallenge->description_type;
             $templateChallenge->description = $originalChallenge->description;
             $templateChallenge->privacy = $originalChallenge->privacy;
             $templateChallenge->media_type = $originalChallenge->media_type;

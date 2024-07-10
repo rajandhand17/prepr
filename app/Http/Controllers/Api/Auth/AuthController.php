@@ -971,7 +971,7 @@ class AuthController extends AppBaseController
             $authorizationCode = $request->code;
             $token = MagnetHelper::getTokenFromMagnet($authorizationCode);
             if (!$token) {
-                return $this->sendError(__('response.unauthorized'), 400);
+                return $this->sendError(__('responses.unauthorized'), 400);
             }
 
             $magnetUser = MagnetHelper::getMagnetUser($token);

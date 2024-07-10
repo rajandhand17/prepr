@@ -57,10 +57,10 @@ class UpdateOrganizationCustomizationRequest extends FormRequest
             'enable_custom_login_and_registration.in'           => __('responses.status_in'),
             'use_main_org_logo.required_if'                     => __('responses.use_main_org_logo_required'),
             'use_main_org_logo.in'                              => __('responses.use_main_org_logo_in'),
-            'custom_logo_image.image'                           => __('response.type_image'),
+            'custom_logo_image.image'                           => __('responses.type_image'),
             'custom_logo_image.mimes'                           => __('responses.mimes_image'),
             'custom_logo_image.max'                             => __('responses.mimes_image_max'),
-            'custom_hero_image.image'                           => __('response.type_image'),
+            'custom_hero_image.image'                           => __('responses.type_image'),
             'custom_hero_image.mimes'                           => __('responses.mimes_image'),
             'custom_hero_image.max'                             => __('responses.mimes_image_max'),
         ];

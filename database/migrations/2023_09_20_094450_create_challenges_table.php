@@ -21,11 +21,12 @@ return new class() extends Migration {
             $table->unsignedBigInteger('level_id');
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
+            $table->enum('description_type', ['0', '1'])->comment('0->text,1->scorm')->default('0');
             $table->longText('description')->nullable();
             $table->enum('privacy', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->string('media_type')->default('image')->nullable();
             $table->text('media')->nullable();
-            $table->enum('status', ['0', '1', '2'])->default('0')->comment('0-> draft, 1-> published, 2-> archive');
+            $table->enum('status', ['0', '1'])->default('0')->comment('0-> draft, 1-> published');
             $table->text('source_link')->nullable();
             $table->longText('agreement')->nullable();
             $table->enum('is_notification_enabled', ['0', '1'])->comment('0->no,1->yes & let users know if any updates are made')->default('0');
