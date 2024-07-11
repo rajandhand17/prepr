@@ -10,7 +10,7 @@ trait SettingTrait
     private function getSettings()
     {
         try {
-            $settings = SettingService::getSettings();
+            $settings=$this->settingService->getSettings();
             if ($settings) {
                 return $settings;
             }
@@ -24,7 +24,7 @@ trait SettingTrait
     private function getSettingById($id)
     {
         try {
-            return SettingService::getSettingById($id);
+            return $this->settingService->getSettingById($id);
         } catch (Exception $e) {
             return false;
         }
@@ -33,10 +33,10 @@ trait SettingTrait
     private function updateSettingById($id, $request)
     {
         try {
-            if (SettingService::updateSettingById($id, $request)) {
+            $updateSettingById=$this->settingService->updateSettingById($id, $request);
+            if ($updateSettingById) {
                 return true;
             }
-
             return false;
         } catch (Exception $e) {
             return false;

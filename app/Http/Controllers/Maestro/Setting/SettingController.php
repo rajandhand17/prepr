@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Maestro\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
+use App\Services\Maestro\Setting\SettingService;
 use App\Traits\Maestro\Setting\SettingTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +15,10 @@ class SettingController extends Controller
 {
     use SettingTrait;
 
-    public function __construct()
+    public function __construct(SettingService $settingService)
     {
         $this->middleware('web');
+        $this->settingService = $settingService;
     }
 
     public function index(Builder $builder, Request $request)
@@ -73,7 +75,7 @@ class SettingController extends Controller
 
             return view('maestro.setting.index', compact('html'));
         } catch (\Exception $e) {
-            return redirect()->route('setting.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('setting.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -82,32 +84,23 @@ class SettingController extends Controller
         try {
             $setting = $this->getSettingById($id);
             if (!$setting->exists) {
-                return redirect()->route('setting.index')->with(['error' => 'This setting id is not found.']);
+                return redirect()->route('setting.index')->with(['error' => 'This Id is not exists in the database']);
             }
-
             return view('maestro.setting.edit', compact('setting'));
         } catch (\Exception $e) {
-            return redirect()->route('setting.index')->with(['error'=>'Something want wrong.']);
+            return redirect()->route('setting.index')->with(['error'=>'Oops! Something went wrong. Please try again later.']);
         }
     }
 
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
-
             if ($this->updateSettingById($id, $request)) {
-                DB::commit();
-
-                return redirect()->route('setting.index')->with('success', 'Setting Updated successfully');
+                return redirect()->route('setting.index')->with('success', 'Your settings have been updated successfully');
             }
-            DB::rollback();
-
-            return redirect()->route('setting.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('setting.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('setting.index')->with(['error'=>'Something want wrong.']);
+            return redirect()->route('setting.index')->with(['error'=>'Oops! Something went wrong. Please try again later.']);
         }
     }
 }
