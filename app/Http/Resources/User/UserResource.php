@@ -50,6 +50,7 @@ class UserResource extends JsonResource
             $organization_details['lab_program']=LabProgramListNameResource::collection($fetchOrganization->lab_programs_count->take(config('site-settings.switcher_listing_limit')));
             $organization_details['resource_group']=ResourceGroupListNameResource::collection($fetchOrganization->resource_groups_count->take(config('site-settings.switcher_listing_limit')));
             $organization_details['resource_collection']=ResourceCollectionListNameResource::collection($fetchOrganization->resource_collections_count->take(config('site-settings.switcher_listing_limit')));
+
         }
 
         $memberManagement = new MemberManagementService();
