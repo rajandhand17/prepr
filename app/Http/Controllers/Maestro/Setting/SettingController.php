@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Maestro\Setting;
 
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
-use App\Services\Maestro\Setting\SettingService;
+use App\Services\Maestro\SettingService;
 use App\Traits\Maestro\Setting\SettingTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -13,7 +13,7 @@ use Yajra\DataTables\Html\Builder;
 class SettingController extends Controller
 {
     use SettingTrait;
-
+    protected $settingService;
     public function __construct(SettingService $settingService)
     {
         $this->middleware('web');
@@ -23,9 +23,11 @@ class SettingController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
+            // Getting Settings tables all records
             $settingInfo = $this->getSettings();
             if (!empty($settingInfo)) {
                 if ($request->ajax()) {
+                    // Adding html table's raws with data
                     return DataTables::eloquent($settingInfo)
                         ->editColumn('module_type', static function (Setting $settingInfo) {
                             switch ($settingInfo->module_type) {

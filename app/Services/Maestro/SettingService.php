@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Setting;
+namespace App\Services\Maestro;
 
 use App\Models\Setting;
 use Exception;
