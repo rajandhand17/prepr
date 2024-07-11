@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 trait CloneLabTrait
 {
-    protected $labService;
-    protected $organizationService;
-    protected $languageService;
-    protected $labAddressService;
-    protected $labSkillsGroupsStackService;
-    protected $labTagsGroupsService;
-    protected $labExternalLinksService;
-    protected $labAchievementService;
 
     public function getAllLabs()
     {
