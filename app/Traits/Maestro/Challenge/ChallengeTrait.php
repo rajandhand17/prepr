@@ -96,6 +96,7 @@ trait ChallengeTrait
             return false;
         }
     }
+
     private function getAssessment($challengeId)
     {
         try {
@@ -109,6 +110,7 @@ trait ChallengeTrait
             return false;
         }
     }
+
     private function getCriteria($challengeId)
     {
         try {
@@ -122,6 +124,7 @@ trait ChallengeTrait
             return false;
         }
     }
+
     private function storeUpdateAssessment($request)
     {
         try {
