@@ -44,7 +44,6 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
                 $lab_list = $lab_list->whereSearchFilter($request->search ?? '');
             }
 
