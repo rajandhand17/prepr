@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
@@ -52,6 +53,10 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
 
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
+                }
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 

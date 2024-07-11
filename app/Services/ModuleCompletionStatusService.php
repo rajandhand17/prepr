@@ -3,18 +3,18 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ModuleAchievementCompletionStatus;
+use App\Models\ModuleCompletionStatus;
 use Exception;
 
-class ModuleAchievementCompletionStatusService
+class ModuleCompletionStatusService
 {
     public static function checkChallengePathAchievementAssignedOrNot($challengePathId, $userId)
     {
         try {
-            $checkChallengePathAchievementAssignedOrNot = ModuleAchievementCompletionStatus::where([
+            $checkChallengePathAchievementAssignedOrNot = ModuleCompletionStatus::where([
                 'module_id'     => $challengePathId,
                 'user_id'       => $userId,
-                'module_type'   => '0',
+                'module_type'   => '3',
             ])->exists();
 
             return $checkChallengePathAchievementAssignedOrNot;
@@ -28,10 +28,10 @@ class ModuleAchievementCompletionStatusService
     public static function markChallengePathCompleted($challengePathId, $userId)
     {
         try {
-            $markChallengePathCompleted = ModuleAchievementCompletionStatus::create([
+            $markChallengePathCompleted = ModuleCompletionStatus::create([
                 'module_id'     => $challengePathId,
                 'user_id'       => $userId,
-                'module_type'   => '0',
+                'module_type'   => '3',
             ]);
 
             return true;
