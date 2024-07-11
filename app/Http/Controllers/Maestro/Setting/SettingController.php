@@ -7,7 +7,6 @@ use App\Models\Setting;
 use App\Services\Maestro\Setting\SettingService;
 use App\Traits\Maestro\Setting\SettingTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -86,6 +85,7 @@ class SettingController extends Controller
             if (!$setting->exists) {
                 return redirect()->route('setting.index')->with(['error' => 'This Id is not exists in the database']);
             }
+
             return view('maestro.setting.edit', compact('setting'));
         } catch (\Exception $e) {
             return redirect()->route('setting.index')->with(['error'=>'Oops! Something went wrong. Please try again later.']);
@@ -98,6 +98,7 @@ class SettingController extends Controller
             if ($this->updateSettingById($id, $request)) {
                 return redirect()->route('setting.index')->with('success', 'Your settings have been updated successfully');
             }
+
             return redirect()->route('setting.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
             return redirect()->route('setting.index')->with(['error'=>'Oops! Something went wrong. Please try again later.']);
