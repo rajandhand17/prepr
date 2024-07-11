@@ -3,6 +3,9 @@
 namespace App\Http\Resources\User;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Profile\UserExperienceResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Settings\UserNotificationResource;
@@ -43,6 +46,10 @@ class UserResource extends JsonResource
             $organization_details['slug'] = $fetchOrganization->slug;
             $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
             $organization_details['is_onboarding_completed'] = $is_onboarding_completed;
+            $organization_details['count_of_resource_module']=count($fetchOrganization->resource_modules_count);
+            $organization_details['lab_program']=LabProgramListNameResource::collection($fetchOrganization->lab_programs_count->take(4));
+            $organization_details['resource_group']=ResourceGroupListNameResource::collection($fetchOrganization->resource_groups_count->take(4));
+            $organization_details['resource_collection']=ResourceCollectionListNameResource::collection($fetchOrganization->resource_collections_count->take(4));
         }
 
         $memberManagement = new MemberManagementService();
