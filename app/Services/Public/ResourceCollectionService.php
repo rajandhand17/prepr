@@ -25,7 +25,6 @@ class ResourceCollectionService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
                 $resourceCollectionList = $resourceCollectionList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {

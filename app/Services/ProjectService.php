@@ -47,7 +47,6 @@ class ProjectService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
                 $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
