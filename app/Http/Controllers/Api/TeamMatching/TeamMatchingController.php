@@ -33,11 +33,11 @@ class TeamMatchingController extends AppBaseController
                     $getProjectIds = $this->teamMatchingRepository->getBrowsersList($userData);
                     break;
                 case 'pending':
-                    // Getting all projects ids in which users requested to join
+                    // Getting all project's ids in which users requested to join
                     $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
                     break;
                 case 'matched':
-                    // Getting projects ids in which users are invited
+                    // Getting project's ids in which users are invited
                     $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
                     break;
             }
@@ -50,7 +50,7 @@ class TeamMatchingController extends AppBaseController
                     // Setup resources based on action
                     $resource=PendingRequestsResources::collection($getDetails);
                 }else{
-                    // Fetching project ids with pagination
+                    // Fetching project's ids with pagination
                     $getDetails = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
                     // Setup resources based on action
                     $resource=TeamMatchingResource::collection($getDetails);
