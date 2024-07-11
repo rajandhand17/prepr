@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Maestro\Lab;
 
 use App\Http\Controllers\Controller;
-use App\Services\Maestro\Lab\LabService;
+use App\Services\Maestro\LabService;
 use App\Traits\Maestro\Lab\LabTrait;
 use Illuminate\Http\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\LabSkillsGroupsStack;
+namespace App\Services\Maestro;
 
 use App\Models\LabSkillsGroupsStack;
 

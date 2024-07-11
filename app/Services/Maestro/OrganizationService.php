@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Organization;
+namespace App\Services\Maestro;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
@@ -9,7 +9,6 @@ use App\Models\Organization;
 use App\Models\OrganizationAddress;
 use App\Models\OrganizationMember;
 use App\Models\OrganizationSocialLink;
-use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 

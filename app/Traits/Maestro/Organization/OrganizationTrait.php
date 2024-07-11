@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Organization;
 
-use App\Services\Maestro\Organization\OrganizationService;
+use App\Services\Maestro\OrganizationService;
 use Exception;
 
 trait OrganizationTrait

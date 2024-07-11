@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Lab;
+namespace App\Services\Maestro;
 
 use App\Models\Lab;
 use HiFolks\RandoPhp\Randomize;

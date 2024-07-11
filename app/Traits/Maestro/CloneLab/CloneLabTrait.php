@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\CloneLab;
 
-use App\Services\Maestro\Lab\LabService;
+use App\Services\Maestro\LabService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 

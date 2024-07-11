@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\LabAddress;
+namespace App\Services\Maestro;
 
 use App\Models\LabAddress;
 

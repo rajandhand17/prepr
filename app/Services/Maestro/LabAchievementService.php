@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\LabAchievement;
+namespace App\Services\Maestro;
 
 use App\Models\LabAcheivement;
 

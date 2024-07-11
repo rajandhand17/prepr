@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Language;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
 

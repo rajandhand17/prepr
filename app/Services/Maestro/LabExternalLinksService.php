@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\LabExternalLinks;
+namespace App\Services\Maestro;
 
 use App\Models\LabExternalLinks;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\LabTagsGroups;
+namespace App\Services\Maestro;
 
 use App\Models\LabTagsGroups;
 
