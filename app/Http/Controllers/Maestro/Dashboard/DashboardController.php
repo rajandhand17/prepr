@@ -12,7 +12,7 @@ class DashboardController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     /**
@@ -26,7 +26,7 @@ class DashboardController extends Controller
                 return view('maestro.dashboard.index', compact('componentCount'));
             }
         } catch (Exception $e) {
-            return redirect()->route('dashboard.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
 }

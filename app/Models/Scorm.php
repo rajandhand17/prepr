@@ -42,6 +42,7 @@ class Scorm extends Model
         'origin_file',
         'origin_file_mime',
         'entry_url',
+        'identifier',
     ];
 
     /**

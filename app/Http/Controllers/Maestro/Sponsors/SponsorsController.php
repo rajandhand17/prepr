@@ -17,7 +17,7 @@ class SponsorsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     public function index(Builder $builder, Request $request)
@@ -80,7 +80,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.create', compact('sponsor_status'));
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -98,11 +98,11 @@ class SponsorsController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -120,7 +120,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.edit', compact('sponsor', 'sponsor_status'));
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -142,7 +142,7 @@ class SponsorsController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -162,7 +162,7 @@ class SponsorsController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

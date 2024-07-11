@@ -20,6 +20,7 @@ return new class() extends Migration {
             $table->string('origin_file')->nullable();
             $table->string('origin_file_mime')->nullable();
             $table->string('entry_url')->nullable();
+            $table->string('identifier')->nullable();
             $table->timestamps();
         });
     }

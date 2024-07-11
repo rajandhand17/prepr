@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use Exception;
@@ -187,7 +185,6 @@ class ResourceCollectionService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
                 $resourceCollectionList = $resourceCollectionList->whereSearchFilter($request->search ?? '');
             }
 
@@ -251,17 +248,11 @@ class ResourceCollectionService
                         ->distinct();
                 })->distinct('resource_collections.uuid');
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.level', $level);
-                }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('level', $request->level_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::where('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('duration', $request->duration_id);
             }
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');

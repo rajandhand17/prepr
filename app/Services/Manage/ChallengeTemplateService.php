@@ -34,7 +34,6 @@ class ChallengeTemplateService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
                 $challenge_template_list = $challenge_template_list->whereSearchFilter($request->search ?? '');
             }
 
@@ -113,6 +112,7 @@ class ChallengeTemplateService
             $templateChallenge->category_id = $originalChallenge->category_id;
             $templateChallenge->duration_id = $originalChallenge->duration_id;
             $templateChallenge->level_id = $originalChallenge->level_id;
+            $templateChallenge->description_type = $originalChallenge->description_type;
             $templateChallenge->description = $originalChallenge->description;
             $templateChallenge->privacy = $originalChallenge->privacy;
             $templateChallenge->media_type = $originalChallenge->media_type;

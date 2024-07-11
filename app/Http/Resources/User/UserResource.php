@@ -3,6 +3,9 @@
 namespace App\Http\Resources\User;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Profile\UserExperienceResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Settings\UserNotificationResource;
@@ -43,30 +46,37 @@ class UserResource extends JsonResource
             $organization_details['slug'] = $fetchOrganization->slug;
             $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
             $organization_details['is_onboarding_completed'] = $is_onboarding_completed;
+            $organization_details['count_of_resource_module'] = count($fetchOrganization->resource_modules_count);
+            $organization_details['lab_program'] = LabProgramListNameResource::collection($fetchOrganization->lab_programs_count->take(config('site-settings.on_boarding_limit')));
+            $organization_details['resource_group'] = ResourceGroupListNameResource::collection($fetchOrganization->resource_groups_count->take(config('site-settings.on_boarding_limit')));
+            $organization_details['resource_collection'] = ResourceCollectionListNameResource::collection($fetchOrganization->resource_collections_count->take(config('site-settings.on_boarding_limit')));
         }
 
         $memberManagement = new MemberManagementService();
 
         return [
-            'id'                      => $this->id,
-            'preferred_language'      => $this->preferred_language,
-            'preferred_timezone'      => $this->preferred_timezone ? $this->preferred_timezone : 'EST',
-            'first_name'              => $this->first_name,
-            'last_name'               => $this->last_name,
-            'full_name'               => $this->full_name,
-            'username'                => $this->username,
-            'email'                   => $this->email,
-            'phone_number'            => $this->phone_number,
-            'profile_image'           => $this->profile_image,
-            'two_factor_verification' => ($this->two_factor_verification == '0') ? 'no' : 'yes',
-            'is_onboarding_completed' => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
-            'user_points'             => $this->user_points,
-            'user_rank'               => $this->verified_user,
-            'verified_user'           => $this->verified_user,
-            'referral_code'           => $this->referal_code,
-            'is_profile_completed'    => ($this->is_profile_completed == '0') ? 'no' : 'yes',
-            'member_since'            => UtilityHelper::formatDateTime($this->created_at),
-            'roles'                   => $roles,
+            'id'                          => $this->id,
+            'preferred_language'          => $this->preferred_language,
+            'preferred_timezone'          => $this->preferred_timezone ? $this->preferred_timezone : 'EST',
+            'first_name'                  => $this->first_name,
+            'last_name'                   => $this->last_name,
+            'full_name'                   => $this->full_name,
+            'username'                    => $this->username,
+            'email'                       => $this->email,
+            'phone_number'                => $this->phone_number,
+            'profile_image'               => $this->profile_image,
+            'two_factor_verification'     => ($this->two_factor_verification == '0') ? 'no' : 'yes',
+            'is_onboarding_completed'     => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
+            'user_points'                 => $this->user_points,
+            'user_rank'                   => $this->verified_user,
+            'verified_user'               => $this->verified_user,
+            'referral_code'               => $this->referal_code,
+            'is_profile_completed'        => ($this->is_profile_completed == '0') ? 'no' : 'yes',
+            'member_since'                => UtilityHelper::formatDateTime($this->created_at),
+            'roles'                       => $roles,
+            'is_lab_onboarding'           => ($this->display_lab_mini_onboarding == 0) ? 'no' : 'yes',
+            'is_challenge_onboarding'     => ($this->display_challenge_mini_onboarding == 0) ? 'no' : 'yes',
+            'is_organization_onboarding'  => ($this->display_organization_mini_onboarding == 0) ? 'no' : 'yes',
 
             'user_experiences' => UserExperienceResource::collection($this->userExperience),
             'go1'              => [

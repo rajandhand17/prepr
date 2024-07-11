@@ -49,7 +49,6 @@ class ChallengeService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
                 $challenge_list = $challenge_list->whereSearchFilter($request->search ?? '');
             }
 
@@ -187,9 +186,6 @@ class ChallengeService
                     case 'publish':
                         $status = config('constants.challenge_status.publish');
                         break;
-                    case 'archive':
-                        $status = config('constants.challenge_status.archive');
-                        break;
                     default:
                         $status = config('constants.challenge_status.draft');
                         break;
@@ -278,10 +274,27 @@ class ChallengeService
                     break;
             }
 
-            $source_link = $request->source_link ?? null;
+            $media_type = 'image';
+            switch ($request->cover_banner_type) {
+                case 'image':
+                    $media_type = 'image';
+                    break;
+                case 'embedded':
+                    $media_type = 'embedded';
+                    break;
+                case 'none':
+                    $media_type = 'none';
+                    break;
+            }
+
             if ($request->challengeTitle && $request->challengeDescription) {
                 $request->title = $request->challengeTitle;
                 $request->description = $request->challengeDescription;
+            }
+
+            $description_type = config('constants.description_type.text');
+            if ($request->description_type == 'scorm') {
+                $description_type = config('constants.description_type.scorm');
             }
 
             $model = new Challenge();
@@ -298,12 +311,13 @@ class ChallengeService
             $challenge->duration_id = $request->duration_id;
             $challenge->level_id = $request->level_id;
             $challenge->title = $request->title;
-            $challenge->description = $request->description;
+            $challenge->description_type = $description_type;
+            $challenge->description = ($description_type == '0') ? ($request->description ?? null) : null;
             $challenge->privacy = $challenge_privacy;
-            $challenge->media_type = 'image';
+            $challenge->media_type = $media_type;
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
-            $challenge->source_link = $source_link;
+            $challenge->source_link = $request->source_link ?? null;
             $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
@@ -338,23 +352,21 @@ class ChallengeService
                             $privacy = config('constants.challenge_privacy.no');
                             break;
                         default:
-                            $privacy = config('constants.challenge_privacy.yes');
+                            $privacy = config('constants.challenge_privacy.no');
                             break;
                     }
                 }
 
                 $status = $challenge->status;
-                if ($request->has('request_type')) {
-                    $status = config('constants.challenge_status.draft');
+                if ($request->is_ai_created) {
+                    $status = config('constants.challenge_status.publish');
+                } else {
                     switch ($request->request_type) {
                         case 'draft':
                             $status = config('constants.challenge_status.draft');
                             break;
                         case 'publish':
                             $status = config('constants.challenge_status.publish');
-                            break;
-                        case 'archive':
-                            $status = config('constants.challenge_status.archive');
                             break;
                         default:
                             $status = config('constants.challenge_status.draft');
@@ -364,7 +376,6 @@ class ChallengeService
 
                 $is_notification_enabled = $challenge->is_notification_enabled;
                 if ($request->has('is_notification_enabled')) {
-                    $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                     switch ($request->is_notification_enabled) {
                         case 'yes':
                             $is_notification_enabled = config('constants.challenge_notification_enabled.yes');
@@ -373,7 +384,7 @@ class ChallengeService
                             $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                             break;
                         default:
-                            $is_notification_enabled = config('constants.challenge_notification_enabled.yes');
+                            $is_notification_enabled = config('constants.challenge_notification_enabled.no');
                             break;
                     }
                 }
@@ -389,7 +400,7 @@ class ChallengeService
                             $project_privacy = config('constants.challenge_privacy.no');
                             break;
                         default:
-                            $project_privacy = config('constants.challenge_privacy.yes');
+                            $project_privacy = config('constants.challenge_privacy.no');
                             break;
                     }
                 }
@@ -409,9 +420,24 @@ class ChallengeService
                     }
                 }
 
+                if ($request->is_ai_created) {
+                    $is_open = config('constants.challenge_open_close.yes');
+                } else {
+                    switch ($request->is_open) {
+                        case 'yes':
+                            $is_open = config('constants.challenge_open_close.yes');
+                            break;
+                        case 'no':
+                            $is_open = config('constants.challenge_open_close.no');
+                            break;
+                        default:
+                            $is_open = config('constants.challenge_open_close.no');
+                            break;
+                    }
+                }
+
                 $is_auto_created = $challenge->is_auto_created;
                 if ($request->has('is_auto_created')) {
-                    $is_auto_created = config('constants.challenge_auto_created.no');
                     switch ($request->is_auto_created) {
                         case 'yes':
                             $is_auto_created = config('constants.challenge_auto_created.yes');
@@ -420,10 +446,29 @@ class ChallengeService
                             $is_auto_created = config('constants.challenge_auto_created.no');
                             break;
                         default:
-                            $is_auto_created = config('constants.challenge_auto_created.yes');
+                            $is_auto_created = config('constants.challenge_auto_created.no');
                             break;
                     }
                 }
+
+                $description_type = $challenge->description_type;
+                if ($request->description_type == 'scorm') {
+                    $description_type = config('constants.description_type.scorm');
+                }
+
+                $media_type = 'image';
+                switch ($request->cover_banner_type) {
+                    case 'image':
+                        $media_type = 'image';
+                        break;
+                    case 'embedded':
+                        $media_type = 'embedded';
+                        break;
+                    case 'none':
+                        $media_type = 'none';
+                        break;
+                }
+
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $challenge->language = ($request->has('language')) ? $request->language : $challenge->language;
                 $challenge->organization_id = $organizationId;
@@ -431,9 +476,10 @@ class ChallengeService
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
                 $challenge->title = ($request->has('title')) ? $request->title : $challenge->title;
-                $challenge->description = ($request->has('description')) ? $request->description : $challenge->description;
+                $challenge->description_type = $description_type;
+                $challenge->description = ($description_type == '0') ? ($request->description ?? $challenge->description) : null;
                 $challenge->privacy = $privacy;
-                $challenge->media_type = 'image';
+                $challenge->media_type = $media_type;
                 $challenge->media = ($update_cover_image != null) ? $update_cover_image : $challenge->cover_image;
                 $challenge->status = $status;
                 $challenge->source_link = ($request->has('source_link') ? $request->source_link : $challenge->source_link);
@@ -728,9 +774,7 @@ class ChallengeService
         try {
             /*get challenge id Based on Skills*/
             $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($skills);
-            /*get challenge id based on tags*/
-            $getChallengeIdBasedOnTags = ChallengeTagsGroupsService::getChallengeIdBasedOnSkills($getUsersTags);
-            $challengeIds = $getChallengeIdBasedOnTags->merge($getChallengeIdBasedOnSkill)->unique();
+            $challengeIds = $getChallengeIdBasedOnSkill->unique();
             if (!empty($challengeIds)) {
                 $challenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {

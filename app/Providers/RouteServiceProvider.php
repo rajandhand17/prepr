@@ -52,6 +52,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroEmailLogsRoutes();
             $this->mapMaestroCloneLabRoutes();
             $this->mapMaestroLabRoutes();
+            $this->mapMaestroPreBuiltAchievementRoutes();
 
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
@@ -314,5 +315,9 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroLabRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/lab.php'));
+    }
+    public function mapMaestroPreBuiltAchievementRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/prebuiltachievement/prebuiltachievement.php'));
     }
 }

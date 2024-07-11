@@ -285,7 +285,7 @@ final class ProfileControllerTest extends BaseTestCase
             ->assertJson(
                 fn (AssertableJson $json) => $json->where('success', false)
                     ->has('data.company', fn (AssertableJson $json) => $json->where('0', __('responses.company_required')))
-                    ->has('data.description', fn (AssertableJson $json) => $json->where('0', __('response.description_required')))
+                    ->has('data.description', fn (AssertableJson $json) => $json->where('0', __('responses.description_required')))
                     ->etc()
             );
 
