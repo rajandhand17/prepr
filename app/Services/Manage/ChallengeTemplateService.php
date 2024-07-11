@@ -34,7 +34,6 @@ class ChallengeTemplateService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
                 $challenge_template_list = $challenge_template_list->whereSearchFilter($request->search ?? '');
             }
 
