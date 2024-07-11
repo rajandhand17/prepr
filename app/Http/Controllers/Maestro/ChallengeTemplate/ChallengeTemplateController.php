@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\ChallengeTemplate;
 use App\Http\Controllers\Controller;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\User\UserService;
+use App\Services\Manage\ChallengeTemplateService;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,10 +15,11 @@ use Yajra\DataTables\Html\Builder;
 class ChallengeTemplateController extends Controller
 {
     use ChallengeTemplateTrait;
-
-    public function __construct()
+    protected $challengeTemplateService;
+    public function __construct(ChallengeTemplateService $challengeTemplateService)
     {
         $this->middleware('web');
+        $this->challengeTemplateService=$challengeTemplateService;
     }
 
     public function index(Builder $builder, Request $request)
@@ -91,8 +93,6 @@ class ChallengeTemplateController extends Controller
 
             return view('maestro.challengeTemplate.index', compact('html'));
         } catch (\Exception $e) {
-            dd($e);
-
             return false;
         }
     }

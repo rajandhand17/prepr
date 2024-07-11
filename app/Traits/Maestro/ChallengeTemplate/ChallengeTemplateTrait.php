@@ -10,7 +10,7 @@ trait ChallengeTemplateTrait
     public function getChallengeTemplate()
     {
         try {
-            $challengeTemplate = ChallengeTemplateService::getChallengesTemplate();
+            $challengeTemplate = $this->challengeTemplateService->getChallengesTemplate();
             if ($challengeTemplate) {
                 return $challengeTemplate;
             }
