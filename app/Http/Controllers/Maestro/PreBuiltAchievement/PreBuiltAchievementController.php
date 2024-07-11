@@ -80,7 +80,7 @@ class PreBuiltAchievementController extends Controller
 
             return view('maestro.preBuiltAchievement.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -94,7 +94,7 @@ class PreBuiltAchievementController extends Controller
 
             return view('maestro.preBuiltAchievement.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -111,11 +111,11 @@ class PreBuiltAchievementController extends Controller
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement Added successfully.']);
             }
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -130,7 +130,7 @@ class PreBuiltAchievementController extends Controller
 
             return view('maestro.preBuiltAchievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -147,11 +147,11 @@ class PreBuiltAchievementController extends Controller
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement updated successfully.']);
             }
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -172,7 +172,7 @@ class PreBuiltAchievementController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

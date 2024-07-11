@@ -104,7 +104,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.create', compact('project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -122,11 +122,11 @@ class ProjectsController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -143,7 +143,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.view', compact('project'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -172,7 +172,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.edit', compact('project', 'selected_member', 'project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -194,7 +194,7 @@ class ProjectsController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -214,7 +214,7 @@ class ProjectsController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

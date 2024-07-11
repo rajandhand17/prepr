@@ -79,7 +79,7 @@ class ChallengeController extends Controller
 
             return view('maestro.challenge.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -93,7 +93,7 @@ class ChallengeController extends Controller
 
             return view('maestro.challenge.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -105,7 +105,7 @@ class ChallengeController extends Controller
         try {
             return view('maestro.challenge.show');
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -123,11 +123,11 @@ class ChallengeController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -146,7 +146,7 @@ class ChallengeController extends Controller
 
             return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -168,7 +168,7 @@ class ChallengeController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -188,7 +188,7 @@ class ChallengeController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 
@@ -207,7 +207,7 @@ class ChallengeController extends Controller
 
             return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -226,7 +226,7 @@ class ChallengeController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 }

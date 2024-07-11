@@ -66,7 +66,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -81,7 +81,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -98,11 +98,11 @@ class ProjectStageController extends Controller
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage Added successfully.']);
             }
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -118,7 +118,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.edit', compact('projectStage', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -135,11 +135,11 @@ class ProjectStageController extends Controller
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage updated successfully.']);
             }
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -160,7 +160,7 @@ class ProjectStageController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

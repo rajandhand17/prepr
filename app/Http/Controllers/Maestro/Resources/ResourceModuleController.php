@@ -68,7 +68,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -86,7 +86,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.create', compact('users', 'languages', 'status', 'privacy', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -98,7 +98,7 @@ class ResourceModuleController extends Controller
         try {
             return view('maestro.resourcemodule.show');
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -116,11 +116,11 @@ class ResourceModuleController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
     // public function getOrgData(Request $request)
@@ -147,7 +147,7 @@ class ResourceModuleController extends Controller
     //         $json_result['result'] = $json_orgs;
     //         return response()->json($json_result);
     //     } catch (Exception $e) {
-    //         return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+    //         return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
     //     }
     // }
 
@@ -169,7 +169,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.edit', compact('users', 'languages', 'status', 'privacy', 'resourceModule', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -191,7 +191,7 @@ class ResourceModuleController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -211,7 +211,7 @@ class ResourceModuleController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

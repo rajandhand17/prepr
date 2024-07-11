@@ -101,7 +101,7 @@ class CategoriesController extends Controller
                 }
             }
 
-            return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
@@ -144,7 +144,7 @@ class CategoriesController extends Controller
                 }
             }
 
-            return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
