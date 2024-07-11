@@ -8,6 +8,8 @@ use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
+use App\Http\Resources\Public\Scorm\ScormResource;
+use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\ProjectSubmissionRequirementService;
@@ -20,8 +22,6 @@ use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -44,8 +44,6 @@ class ChallengeResource extends JsonResource
         $skills = null;
         $skill_groups = null;
         $skill_stacks = null;
-        $tags = null;
-        $tag_groups = null;
         $achievement = null;
         $incentive_achievement = null;
         $challenge_requirements = null;
@@ -60,6 +58,8 @@ class ChallengeResource extends JsonResource
         $resource_collections = [];
         $resource_groups = [];
         $challenge_template = [];
+        $jobs = null;
+        $challenge_flexible_announcement = null;
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -81,6 +81,11 @@ class ChallengeResource extends JsonResource
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
 
+        if ($this->jobs) {
+            $associatedJobs = $this->jobs->pluck('job_title_id');
+            $jobs = JobTitleService::getJobBasedOnIds($associatedJobs)->pluck('title', 'id');
+        }
+
         if ($this->skill_groups) {
             $associatedSkillGroups = $this->skill_groups->pluck('foreign_id');
             $skill_groups = SkillGroupService::getSkillGroupsBasedOnIds($associatedSkillGroups)->pluck('title', 'id');
@@ -93,16 +98,6 @@ class ChallengeResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->participation_achievement) {
@@ -127,9 +122,9 @@ class ChallengeResource extends JsonResource
         }
         if ($this->challenge_requirements) {
             $challenge_conditions = [];
-            foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
-                $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
-                if ($check_achievement_condition !== null) {
+            if ($this->challenge_requirements->project_submission_requirement_ids !== ['false'] && is_array($this->challenge_requirements->project_submission_requirement_ids) && count($this->challenge_requirements->project_submission_requirement_ids) > 0) {
+                foreach ($this->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($this->language, $project_submission_requirement);
                     $challenge_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
                 }
             }
@@ -224,21 +219,19 @@ class ChallengeResource extends JsonResource
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
                     'flexible_date_duration'        => $this->challenge_timelines->flexible_date_duration,
-                    'automatic_alert'               => $this->challenge_timelines->automatic_alert,
+                    'automatic_alert'               => $this->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                     'flexible_expire_deadline'      => $this->challenge_timelines->flexible_expire_deadline,
                 ];
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 $challenge_timelines = [
-                    'timeline_type'                         => 'restricted',
-                    'open_call_date'                        => $this->challenge_timelines->open_call_date,
-                    'open_call_date_description'            => $this->challenge_timelines->open_call_date_description,
-                    'last_call_date'                        => $this->challenge_timelines->last_call_date,
-                    'last_call_date_description'            => $this->challenge_timelines->last_call_date_description,
-                    'application_deadline_date'             => $this->challenge_timelines->application_deadline_date,
-                    'application_deadline_date_description' => $this->challenge_timelines->application_deadline_date_description,
-                    'submission_deadline_date'              => $this->challenge_timelines->submission_deadline_date,
-                    'submission_deadline_date_description'  => $this->challenge_timelines->submission_deadline_date_description,
-                    'challenge_duration'                    => $this->challenge_timelines->challenge_duration,
+                    'timeline_type'                          => 'restricted',
+                    'start_date'                             => $this->challenge_timelines->start_date,
+                    'start_date_description'                 => $this->challenge_timelines->start_date_description,
+                    'registration_deadline_date'             => $this->challenge_timelines->registration_deadline_date,
+                    'registration_deadline_date_description' => $this->challenge_timelines->registration_deadline_date_description,
+                    'submission_deadline_date'               => $this->challenge_timelines->submission_deadline_date,
+                    'submission_deadline_date_description'   => $this->challenge_timelines->submission_deadline_date_description,
+                    'challenge_duration'                     => $this->challenge_timelines->challenge_duration,
                 ];
             }
         }
@@ -247,10 +240,21 @@ class ChallengeResource extends JsonResource
             $challenge_custom_timelines = $this->challenge_custom_timelines->map(function ($item) {
                 return [
                     'custom_timelines_title'       => $item->custom_timelines_title,
-                    'custom_timelines_date'        => $item->custom_timelines_date,
+                    'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify,
+                ];
+            });
+        }
+
+        if ($this->challenge_flexible_announcement) {
+            $challenge_flexible_announcement = $this->challenge_flexible_announcement->map(function ($item) {
+                return [
+                    'custom_announcement_type'           => $item->custom_announcement_type == '0' ? 'email' : 'notification',
+                    'custom_announcement_number'         => $item->custom_announcement_number,
+                    'custom_announcement_duration'       => $item->custom_announcement_duration,
+                    'custom_announcement_description'    => $item->custom_announcement_description,
                 ];
             });
         }
@@ -323,65 +327,67 @@ class ChallengeResource extends JsonResource
         }
 
         return [
-            'id'                            => $this->uuid,
-            'language'                      => $this->language,
-            'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
-            'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
-            'category_id'                   => $category_id,
-            'category'                      => $category,
-            'duration'                      => $duration,
-            'duration_id'                   => $duration_id,
-            'level'                         => $level,
-            'level_id'                      => $level_id,
-            'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
-            'slug'                          => $this->slug,
-            'title'                         => $this->title,
-            'description'                   => $this->description,
-            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
-            'media_type'                    => $this->media_type,
-            'media'                         => $media,
-            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
-            'source_link'                   => $this->source_link,
-            'agreement'                     => $this->agreement,
-            'is_notification_enabled'       => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
-            'project_privacy'               => ($this->project_privacy == '1') ? 'yes' : 'no',
-            'is_open'                       => ($this->is_open == '1') ? 'yes' : 'no',
-            'is_auto_created'               => ($this->is_auto_created == '1') ? 'yes' : 'no',
-            'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
-            'skills'                        => $skills,
-            'skill_groups'                  => $skill_groups,
-            'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
-            'participation_achievement'     => $achievement,
-            'incentive_achievement'         => $incentive_achievement,
-            'challenge_requirements'        => $challenge_requirements,
-            'host_id'                       => $hosts,
-            'challenge_assessment_criteria' => $challenge_assessment_criteria,
-            'challenge_assessment'          => $challenge_assessment,
-            'challenge_timelines'           => $challenge_timelines,
-            'challenge_custom_timelines'    => $challenge_custom_timelines,
-            'challenge_template'            => $challenge_template,
-            'joined'                        => $join_status,
-            'likes'                         => $this->likes()->count(),
-            'shares'                        => $this->shares()->count(),
-            'member_count'                  => $this->members()->count(),
-            'liked'                         => $this->liked(),
-            'favourite'                     => $this->favourite(),
-            'submissions_count'             => $this->submitted_projects()->count(),
-            'project_submitted'             => SubmittedProjectResource::collection($this->submitted_projects),
-            'external_links'                => ChallengeExternalLinkResource::collection($this->external_links),
-            'lab_count'                     => count($labs),
-            'lab_program_count'             => count($lab_programs),
-            'resource_module_count'         => count($resource_modules),
-            'resource_collection_count'     => count($resource_collections),
-            'resource_group_count'          => count($resource_groups),
-            'labs'                          => $labs,
-            'lab_programs'                  => $lab_programs,
-            'resource_modules'              => $resource_modules,
-            'resource_collections'          => $resource_collections,
-            'resource_groups'               => $resource_groups,
+            'id'                                => $this->uuid,
+            'language'                          => $this->language,
+            'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
+            'organization_id'                   => $this->organization->uuid,
+            'organization'                      => $this->organization->title,
+            'category_id'                       => $category_id,
+            'category'                          => $category,
+            'duration'                          => $duration,
+            'duration_id'                       => $duration_id,
+            'level'                             => $level,
+            'level_id'                          => $level_id,
+            'is_pre_build'                      => ($this->is_pre_built == '1' ? 'yes' : 'no'),
+            'slug'                              => $this->slug,
+            'title'                             => $this->title,
+            'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
+            'description'                       => $this->description,
+            'scorm'                             => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
+            'media_type'                        => $this->media_type,
+            'media'                             => $media,
+            'status'                            => ($this->status == '0') ? 'draft' : 'published',
+            'source_link'                       => $this->source_link,
+            'agreement'                         => $this->agreement,
+            'is_notification_enabled'           => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
+            'project_privacy'                   => ($this->project_privacy == '1') ? 'yes' : 'no',
+            'is_open'                           => ($this->is_open == '1') ? 'yes' : 'no',
+            'is_auto_created'                   => ($this->is_auto_created == '1') ? 'yes' : 'no',
+            'is_accessible'                     => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'skills'                            => $skills,
+            'skill_groups'                      => $skill_groups,
+            'skill_stacks'                      => $skill_stacks,
+            'participation_achievement'         => $achievement,
+            'jobs'                              => $jobs,
+            'incentive_achievement'             => $incentive_achievement,
+            'challenge_requirements'            => $challenge_requirements,
+            'host_id'                           => $hosts,
+            'challenge_assessment_criteria'     => $challenge_assessment_criteria,
+            'challenge_assessment'              => $challenge_assessment,
+            'challenge_timelines'               => $challenge_timelines,
+            'challenge_custom_timelines'        => $challenge_custom_timelines,
+            'challenge_flexible_announcement'   => $challenge_flexible_announcement,
+            'challenge_template'                => $challenge_template,
+            'joined'                            => $join_status,
+            'likes'                             => $this->likes()->count(),
+            'shares'                            => $this->shares()->count(),
+            'member_count'                      => $this->members()->count(),
+            'liked'                             => $this->liked(),
+            'favourite'                         => $this->favourite(),
+            'submissions_count'                 => $this->submitted_projects()->count(),
+            'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects),
+            'external_links'                    => ChallengeExternalLinkResource::collection($this->external_links),
+            'lab_count'                         => count($labs),
+            'lab_program_count'                 => count($lab_programs),
+            'resource_module_count'             => count($resource_modules),
+            'resource_collection_count'         => count($resource_collections),
+            'resource_group_count'              => count($resource_groups),
+            'labs'                              => $labs,
+            'lab_programs'                      => $lab_programs,
+            'resource_modules'                  => $resource_modules,
+            'resource_collections'              => $resource_collections,
+            'resource_groups'                   => $resource_groups,
         ];
     }
 }

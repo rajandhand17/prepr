@@ -36,7 +36,8 @@ class LabProgramService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                //$labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                $labProgramList = $labProgramList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);

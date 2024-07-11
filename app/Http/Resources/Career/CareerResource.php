@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
 use App\Http\Resources\Master\SkillResource;
 use App\Services\JobTitleSkillServices;
+use App\Services\UserJobTitlesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,8 +19,14 @@ class CareerResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $savedOn = null;
+        $saved = 'no';
         $getPercentageOfSkills = JobTitleSkillServices::getPercentagesOfMatchedSkills($this->id);
-
+        $createdAt = UserJobTitlesService::checkJobsExistsInUsers($this->id);
+        if ($createdAt != false) {
+            $savedOn = UtilityHelper::formatDateTime($createdAt->created_at);
+            $saved = 'yes';
+        }
         $response = [
             'id'                => $this->id,
             'uuid'              => $this->uuid,
@@ -30,8 +37,8 @@ class CareerResource extends JsonResource
             'related_challenges'=> $this->related_challenge == null ? 0 : $this->related_challenge->count(),
             'related_labs'      => $this->related_labs == null ? 0 : $this->related_labs->count(),
             'related_resources' => $this->related_resource == null ? 0 : $this->related_resource->count(),
-            'saved_on'          => $this->created_at == null ? '' : UtilityHelper::formatDateTime($this->created_at),
-            'saved'             => $this->saved_jobs(),
+            'saved_on'          => $savedOn,
+            'saved'             => $saved,
             'skills_percentage' => intval($getPercentageOfSkills),
         ];
         if (auth()->user()) {

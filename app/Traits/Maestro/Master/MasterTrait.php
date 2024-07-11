@@ -132,4 +132,18 @@ trait MasterTrait
             return false;
         }
     }
+
+    private function getUsersEmail($request)
+    {
+        try {
+            $users = MasterService::getUsersEmail($request);
+            if ($users) {
+                return $users;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

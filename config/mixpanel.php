@@ -153,4 +153,8 @@ return [
         'event_name'    => 'Earn Achievment',
         'variable_name' => 'total_achievements_earned',
     ],
+    'delete_organization' => [
+        'event_name'    => 'Delete Organization',
+        'variable_name' => 'total_challenges_deleted',
+    ],
 ];

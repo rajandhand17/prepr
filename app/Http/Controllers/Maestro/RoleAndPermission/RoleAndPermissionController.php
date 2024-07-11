@@ -58,7 +58,7 @@ class RoleAndPermissionController extends Controller
 
             return view('maestro.roleandpermission.role-and-permission-list', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->withErrors(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->withErrors(['error' => 'Something went wrong.']);
         }
     }
 
@@ -72,7 +72,7 @@ class RoleAndPermissionController extends Controller
 
             return view('maestro.roleandpermission.role-and-permission-create', compact('permissions'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -90,11 +90,11 @@ class RoleAndPermissionController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
+            return redirect()->route('role.index')->with('error', 'Something went wrong.');
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->back()->with(['error' => 'Something want wrong.']);
+            return redirect()->back()->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -110,7 +110,7 @@ class RoleAndPermissionController extends Controller
 
             return view('maestro.roleandpermission.role-and-permission-edit', compact('role', 'role_permission', 'permissions'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -128,11 +128,11 @@ class RoleAndPermissionController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
+            return redirect()->route('role.index')->with('error', 'Something went wrong.');
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->with(['error' => 'Something went wrong.']);
         }
     }
 

@@ -306,4 +306,29 @@ class MasterService
             return false;
         }
     }
+
+    public static function getUsersEmail($request)
+    {
+        try {
+            $userList = User::orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $userList->where('email', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $userList = $userList->pluck('email', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($userList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

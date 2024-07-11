@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ProjectBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,11 @@ class Project extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function newEloquentBuilder($query): ProjectBuilder
+    {
+        return new ProjectBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

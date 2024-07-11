@@ -18,7 +18,7 @@ class ChallengeTemplateCustomTimelinesService
                     $challengeTemplateCustomTimeLine = new ChallengeTemplateCustomTimeLine();
                     $challengeTemplateCustomTimeLine->challenge_template_id = $templateChallengeId;
                     $challengeTemplateCustomTimeLine->custom_timelines_title = $challengeCustomTimeline->custom_timelines_title;
-                    $challengeTemplateCustomTimeLine->custom_timelines_date = $challengeCustomTimeline->custom_timelines_date;
+                    $challengeTemplateCustomTimeLine->custom_timelines_number = $challengeCustomTimeline->custom_timelines_number;
                     $challengeTemplateCustomTimeLine->custom_timelines_description = $challengeCustomTimeline->custom_timelines_description;
                     $challengeTemplateCustomTimeLine->custom_timelines_duration = $challengeCustomTimeline->custom_timelines_duration;
                     $challengeTemplateCustomTimeLine->schedule_custom_notify = $challengeCustomTimeline->schedule_custom_notify;
@@ -43,7 +43,7 @@ class ChallengeTemplateCustomTimelinesService
                     $newChallengeCustomTimeline = new ChallengeCustomTimeLines();
                     $newChallengeCustomTimeline->challenge_id = $redeemChallengeId;
                     $newChallengeCustomTimeline->custom_timelines_title = $challengeTimeline->custom_timelines_title;
-                    $newChallengeCustomTimeline->custom_timelines_date = $challengeTimeline->custom_timelines_date;
+                    $newChallengeCustomTimeline->custom_timelines_number = $challengeTimeline->custom_timelines_number;
                     $newChallengeCustomTimeline->custom_timelines_description = $challengeTimeline->custom_timelines_description;
                     $newChallengeCustomTimeline->custom_timelines_duration = $challengeTimeline->custom_timelines_duration;
                     $newChallengeCustomTimeline->schedule_custom_notify = $challengeTimeline->schedule_custom_notify;

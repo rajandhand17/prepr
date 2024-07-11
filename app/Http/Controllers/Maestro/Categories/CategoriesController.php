@@ -18,7 +18,7 @@ class CategoriesController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     public function index(Builder $builder)
@@ -101,7 +101,7 @@ class CategoriesController extends Controller
                 }
             }
 
-            return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
@@ -144,7 +144,7 @@ class CategoriesController extends Controller
                 }
             }
 
-            return redirect()->route('category.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 

@@ -47,7 +47,7 @@ class ProjectService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+                $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
@@ -646,7 +646,7 @@ class ProjectService
                     $query->select('challenges.id')
                         ->from('challenges')
                         ->whereIn('challenges.duration_id', $request->challenge_duration)
-                       ->whereNull('challenges.deleted_at');
+                        ->whereNull('challenges.deleted_at');
                 });
             }
             if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {

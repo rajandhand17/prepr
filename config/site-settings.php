@@ -6,6 +6,7 @@ return [
     'message_per_page'             => '30',
     'listing_limit'                => '20',
     'switcher_listing_limit'       => '5',
+    'on_boarding_limit'            => '5',
     'dropdown_listing_limit'       => '20',
     'explore_page_limit_max'       => '12',
     'explore_page_limit_min'       => '6',
