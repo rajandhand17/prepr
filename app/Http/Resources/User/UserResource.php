@@ -47,10 +47,9 @@ class UserResource extends JsonResource
             $organization_details['upgrade_plan_enable'] = $upgrade_plan_enable;
             $organization_details['is_onboarding_completed'] = $is_onboarding_completed;
             $organization_details['count_of_resource_module']=count($fetchOrganization->resource_modules_count);
-            $organization_details['lab_program']=LabProgramListNameResource::collection($fetchOrganization->lab_programs_count->take(config('site-settings.switcher_listing_limit')));
-            $organization_details['resource_group']=ResourceGroupListNameResource::collection($fetchOrganization->resource_groups_count->take(config('site-settings.switcher_listing_limit')));
-            $organization_details['resource_collection']=ResourceCollectionListNameResource::collection($fetchOrganization->resource_collections_count->take(config('site-settings.switcher_listing_limit')));
-
+            $organization_details['lab_program']=LabProgramListNameResource::collection($fetchOrganization->lab_programs_count->take(config('site-settings.on_boarding_limit')));
+            $organization_details['resource_group']=ResourceGroupListNameResource::collection($fetchOrganization->resource_groups_count->take(config('site-settings.on_boarding_limit')));
+            $organization_details['resource_collection']=ResourceCollectionListNameResource::collection($fetchOrganization->resource_collections_count->take(config('site-settings.on_boarding_limit')));
         }
 
         $memberManagement = new MemberManagementService();
