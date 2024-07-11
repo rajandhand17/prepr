@@ -24,18 +24,8 @@ class TrackUserProgressHelper
 
             $moduleAssetsCount = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
 
-            $userVisitedModuleAssetsCount = ResourceModuleVisit::where(['module_id' => $resourceData->id, 'user_id' => $userId])->count();
-            $isGo1ContentCompleted = false;
-            if ($isGo1Resource) {
-                // check if go1 resources learning status is complete or not.
-                $userResourceProgress = GO1UserResourceProgress::where(['resource_module_id' => $resourceData->id, 'user_id' => $userId])->first();
-                if ($userResourceProgress) {
-                    $go1ProgressStatus = $userResourceProgress->completion_status;
-                    $isGo1ContentCompleted = $go1ProgressStatus === 'completed';
-                }
-            }
+            $totalUserVisitedModuleAssetCount = ResourceModuleVisit::where(['module_id' => $resourceData->id, 'user_id' => $userId])->count();
 
-            $totalUserVisitedModuleAssetCount = $userVisitedModuleAssetsCount + ($isGo1ContentCompleted ? 1 : 0);
             $moduleProgress = 0;
             if ($moduleAssetsCount > 0) {
                 $moduleProgress = round($totalUserVisitedModuleAssetCount / $moduleAssetsCount * 100, 2);
