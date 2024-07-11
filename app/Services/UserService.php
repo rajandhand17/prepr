@@ -539,7 +539,7 @@ class UserService
             $response = false;
             switch ($component) {
                 case 'lab':
-                    if ($userData->display_lab_mini_onboarding == '0') {
+                    if ($userData->display_lab_mini_onboarding == '1') {
                         $response = true;
                     }
                     break;
