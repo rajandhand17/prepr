@@ -17,11 +17,12 @@ class TeamMatchingController extends AppBaseController
     {
         $this->teamMatchingRepository = $teamMatchingRepository;
     }
+
     public function browseMatchedPendingRequests($action, Request $request)
     {
         try {
             // Checking actions are between browser,matched or pending otherwise will raise error
-            if (!in_array($action, ['browse', 'matched','pending'])) {
+            if (!in_array($action, ['browse', 'matched', 'pending'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             // Current user details
@@ -42,21 +43,21 @@ class TeamMatchingController extends AppBaseController
                     break;
             }
             if ($getProjectIds) {
-                if($action=='pending'){
+                if ($action == 'pending') {
                     // Fetching project's ids without pagination
                     $projectIds = $this->teamMatchingRepository->getProjectListWithoutPagination($getProjectIds, $request);
                     // Getting user's details based on project ids
                     $getDetails = $this->teamMatchingRepository->getUsersBasedOnProjectIds($projectIds);
                     // Setup resources based on action
-                    $resource=PendingRequestsResources::collection($getDetails);
-                }else{
+                    $resource = PendingRequestsResources::collection($getDetails);
+                } else {
                     // Fetching project's ids with pagination
                     $getDetails = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
                     // Setup resources based on action
-                    $resource=TeamMatchingResource::collection($getDetails);
-                 }
-                if($getDetails!==false){
-                    $response=[
+                    $resource = TeamMatchingResource::collection($getDetails);
+                }
+                if ($getDetails !== false) {
+                    $response = [
                         'total_count'  => $getDetails->total(),
                         'per_page'     => $getDetails->perPage(),
                         'count'        => $getDetails->count(),
@@ -66,9 +67,11 @@ class TeamMatchingController extends AppBaseController
                     ];
                 }
             }
+
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

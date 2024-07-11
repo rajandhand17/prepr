@@ -12,7 +12,6 @@ use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use phpseclib3\Common\Functions\Strings;
 
 class ProjectMemberManagementService
 {
@@ -530,9 +529,11 @@ class ProjectMemberManagementService
             $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
             // Preparing the query to fetch project ids where requests are pending
             $projectIds = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+
             return $projectIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -541,11 +542,12 @@ class ProjectMemberManagementService
     {
         try {
             // Getting members based on project ids
-             $getMembers=ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
+            $getMembers = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
 
-             return $getMembers;
-        }catch (Exception $e){
+            return $getMembers;
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
