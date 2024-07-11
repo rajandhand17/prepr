@@ -26,7 +26,6 @@ class ResourceGroupService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $resourceGroupList = $resourceGroupList->where('resource_groups.title', 'like', '%'.$request->search.'%');
                 $resourceGroupList = $resourceGroupList->whereSearchFilter($request->search ?? '');
             }
 

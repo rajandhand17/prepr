@@ -43,7 +43,7 @@ class ResourceModuleSearchRequest extends AdvanceSearchBaseFormRequest
     {
         return [
             'resource_module_status'      => $this->mapConstants($this->get('status'), $this->statusMap),
-            'resource_module_privacy'     => $this->mapConstants($this->get('status'), $this->privacyMap),
+            'resource_module_privacy'     => $this->mapConstants($this->get('privacy'), $this->privacyMap),
             'resource_module_skills_id'   => $this->get('skill'),
             'resource_module_duration_id' => $this->get('duration'),
             'resource_module_level_id'    => $this->get('level'),

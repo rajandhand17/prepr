@@ -43,11 +43,24 @@ class ProjectService
         }
     }
 
+    public static function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+            $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterProjectList($project_list, $request)
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
                 $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
