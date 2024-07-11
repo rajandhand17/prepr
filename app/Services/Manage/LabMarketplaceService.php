@@ -32,7 +32,6 @@ class LabMarketplaceService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-//                $lab_marketplace_list = $lab_marketplace_list->where('lab_marketplace.title', 'like', '%'.$request->search.'%');
                 $lab_marketplace_list = $lab_marketplace_list->whereSearchFilter($request->search ?? '');
             }
 
