@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ChannelApiSeeder::class,
             ChannelVendorSeeder::class,
             ChannelApiAccessSeeder::class,
+            ChannelApiOrganizationSeeder::class,
         ];
 
         if (app()->environment('testing')) {
@@ -37,7 +38,6 @@ class DatabaseSeeder extends Seeder
             $classes[] = LanguageSeeder::class;
             $classes[] = SkillSeeder::class;
             $classes[] = TagSeeder::class;
-            $classes[] = ChannelApiOrganizationSeeder::class;
         }
 
         $this->call($classes);

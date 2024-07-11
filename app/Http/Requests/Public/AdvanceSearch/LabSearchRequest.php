@@ -51,7 +51,7 @@ class LabSearchRequest extends AdvanceSearchBaseFormRequest
             'level_id'        => $this->get('level'),
             'duration_id'     => $this->get('duration'),
             'type_id'         => $this->mapConstants($this->get('type'), [
-                'access'  => 0,
+                'assess'  => 0,
                 'onboard' => 1,
                 'engage'  => 2,
                 'grow'    => 3,
