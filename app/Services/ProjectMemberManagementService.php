@@ -12,6 +12,7 @@ use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use phpseclib3\Common\Functions\Strings;
 
 class ProjectMemberManagementService
 {
@@ -522,27 +523,29 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function getPendingRequests($userData, $projectids = null)
+    public static function getPendingRequests($userData)
     {
         try {
             // Fetching project ids in which current user's role is team leader
             $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
-
             // Preparing the query to fetch project ids where requests are pending
-            $query = ProjectMemberManagement::where('invite_status', '2');
-
-            if ($projectids === null) {
-                // If no specific project ids provided, filter by team leader's project ids
-                $projectIds = $query->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
-            } else {
-                // If specific project ids are provided, filter by those project ids
-                $projectIds = $query->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
-            }
-
+            $projectIds = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
             return $projectIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+            return false;
+        }
+    }
 
+    public static function getPendingRequestsBasedOnProjectIds($projectids)
+    {
+        try {
+            // Getting members based on project ids
+             $getMembers=ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
+
+             return $getMembers;
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
             return false;
         }
     }

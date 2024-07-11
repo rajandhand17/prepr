@@ -17,72 +17,58 @@ class TeamMatchingController extends AppBaseController
     {
         $this->teamMatchingRepository = $teamMatchingRepository;
     }
-
-    public function getPendingRequests(Request $request)
+    public function browseMatchedPendingRequests($action, Request $request)
     {
         try {
-            //getting current logged users details
-            $userData = auth()->user();
-            //getting those projects ids in which users have send requests
-            $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
-            if ($getProjectIds) {
-                //filtering all projects based on fronted requests
-                $projectids = $this->teamMatchingRepository->getProjectListWithoutPagination($getProjectIds, $request);
-                $getPendingRequests = $this->teamMatchingRepository->getUsersBasedOnProjectIds($userData, $projectids);
-                if ($getPendingRequests !== false) {
-                    $response = [
-                        'total_count'  => $getPendingRequests->total(),
-                        'per_page'     => $getPendingRequests->perPage(),
-                        'count'        => $getPendingRequests->count(),
-                        'current_page' => $getPendingRequests->currentPage(),
-                        'total_pages'  => $getPendingRequests->lastPage(),
-                        'list'         => PendingRequestsResources::collection($getPendingRequests),
-                    ];
-                }
-
-                return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
-            }
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function browseMatchedRequests($action, Request $request)
-    {
-        try {
-            if (!in_array($action, ['browse', 'matched'])) {
+            // Checking actions are between browser,matched or pending otherwise will raise error
+            if (!in_array($action, ['browse', 'matched','pending'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+            // Current user details
             $userData = auth()->user();
             $response = [];
             switch ($action) {
                 case 'browse':
+                    // Getting all project's ids.
                     $getProjectIds = $this->teamMatchingRepository->getBrowsersList($userData);
                     break;
+                case 'pending':
+                    // Getting all projects ids in which users requested to join
+                    $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
+                    break;
                 case 'matched':
+                    // Getting projects ids in which users are invited
                     $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
                     break;
             }
             if ($getProjectIds) {
-                $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
-                if ($project !== false) {
-                    $response = [
-                        'total_count'  => $project->total(),
-                        'per_page'     => $project->perPage(),
-                        'count'        => $project->count(),
-                        'current_page' => $project->currentPage(),
-                        'total_pages'  => $project->lastPage(),
-                        'list'         => TeamMatchingResource::collection($project),
+                if($action=='pending'){
+                    // Fetching project's ids without pagination
+                    $projectIds = $this->teamMatchingRepository->getProjectListWithoutPagination($getProjectIds, $request);
+                    // Getting user's details based on project ids
+                    $getDetails = $this->teamMatchingRepository->getUsersBasedOnProjectIds($projectIds);
+                    // Setup resources based on action
+                    $resource=PendingRequestsResources::collection($getDetails);
+                }else{
+                    // Fetching project ids with pagination
+                    $getDetails = $this->teamMatchingRepository->getProjectList($getProjectIds, $request);
+                    // Setup resources based on action
+                    $resource=TeamMatchingResource::collection($getDetails);
+                 }
+                if($getDetails!==false){
+                    $response=[
+                        'total_count'  => $getDetails->total(),
+                        'per_page'     => $getDetails->perPage(),
+                        'count'        => $getDetails->count(),
+                        'current_page' => $getDetails->currentPage(),
+                        'total_pages'  => $getDetails->lastPage(),
+                        'list'         => $resource,
                     ];
                 }
             }
-
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

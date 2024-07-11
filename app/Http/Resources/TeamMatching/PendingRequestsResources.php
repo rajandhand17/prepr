@@ -88,7 +88,6 @@ class PendingRequestsResources extends JsonResource
             'title'                 => $project->title,
             'slug'                  => $project->slug,
             'description'           => $project->description,
-            'challenge_title'       => $this->challenge !== null ? $this->challenge->title : null,
             'challenge_details'     => $challenges,
             'skills'                => $skills,
             'privacy'               => ($project->privacy == 0) ? 'Public' : 'Private',

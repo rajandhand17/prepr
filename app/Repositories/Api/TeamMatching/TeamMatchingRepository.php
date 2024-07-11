@@ -91,10 +91,10 @@ class TeamMatchingRepository implements TeamMatchingInterface
         }
     }
 
-    public function getUsersBasedOnProjectIds($userData, $projectids)
+    public function getUsersBasedOnProjectIds($projectids)
     {
         try {
-            return $this->projectMemberManagementService->getPendingRequests($userData, $projectids);
+            return $this->projectMemberManagementService->getPendingRequestsBasedOnProjectIds($projectids);
         } catch (\Exception $e) {
             return false;
         }
