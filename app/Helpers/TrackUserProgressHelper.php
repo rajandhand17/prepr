@@ -19,7 +19,7 @@ class TrackUserProgressHelper
     {
         try {
             $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $resourceData->id)->count();
-            $scromModuleData = Scorm::where(['model_id' => $resourceData->id,'model_type' => ResourceModule::class])->count();
+            $scromModuleData = Scorm::where(['model_id' => $resourceData->id, 'model_type' => ResourceModule::class])->count();
             $isGo1Resource = $resourceData->go1_course_id ? true : false;
 
             $moduleAssetsCount = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
@@ -38,7 +38,7 @@ class TrackUserProgressHelper
             $totalUserVisitedModuleAssetCount = $userVisitedModuleAssetsCount + ($isGo1ContentCompleted ? 1 : 0);
             $moduleProgress = 0;
             if ($moduleAssetsCount > 0) {
-                $moduleProgress = round((($totalUserVisitedModuleAssetCount) / ($moduleAssetsCount) * 100), 2);
+                $moduleProgress = round($totalUserVisitedModuleAssetCount / $moduleAssetsCount * 100, 2);
             }
 
             $moduleType = config('constants.module_type.resource_modules');
