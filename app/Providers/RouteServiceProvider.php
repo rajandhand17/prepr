@@ -224,7 +224,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroSettingRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/setting/setting.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/setting.php'));
     }
 
     public function mapMaestroChallengeTemplateRoutes()
