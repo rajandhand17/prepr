@@ -17,19 +17,6 @@ trait CloneLabTrait
     protected $labExternalLinksService;
     protected $labAchievementService;
 
-    public function getOrganization()
-    {
-        try {
-            $organization=$this->organizationService->getOrganizations();
-            if($organization){
-                return $organization;
-            }
-            return false;
-        }catch(Exception $e){
-            return false;
-        }
-    }
-
     public function getAllLabs()
     {
         try {
@@ -42,20 +29,6 @@ trait CloneLabTrait
             return false;
         }
     }
-
-    public function getAllLanguages()
-    {
-        try {
-            $languages=$this->languageService->getLanguages();
-            if($languages){
-                return $languages;
-            }
-            return false;
-        }catch(Exception $e){
-            return false;
-        }
-    }
-
     public function createLab($request)
     {
         try {

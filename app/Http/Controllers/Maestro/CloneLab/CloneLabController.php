@@ -35,12 +35,12 @@ class CloneLabController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $organizations=$this->getOrganization();
+            $organizations=OrganizationService::getOrganizations();
             $associativeLab=$this->getAllLabs();
-            $languages = $this->getAllLanguages();
+            $languages =LanguageService::getLanguages();
             return view('maestro.cloneLab.index', compact('organizations','languages','associativeLab'));
         }catch (\Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -51,9 +51,9 @@ class CloneLabController extends Controller
             if ($getResponses!==false) {
                 return redirect()->route('clone-lab.index')->with('success', 'Lab created successfully');
             }
-            return redirect()->route('clone-lab.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('clone-lab.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }
