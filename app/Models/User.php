@@ -199,10 +199,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserPatent::class);
     }
-    public function labProgram()
-    {
-        return $this->hasMany(LabProgram::class);
-    }
     public function userSkills()
     {
         return $this->hasMany(UserSkills::class)->where('pinned', '0');
