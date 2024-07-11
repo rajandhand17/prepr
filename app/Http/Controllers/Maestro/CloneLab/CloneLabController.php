@@ -52,12 +52,8 @@ class CloneLabController extends Controller
             if ($getResponses !== false) {
                 return redirect()->route('clone-lab.index')->with('success', 'Lab created successfully');
             }
-<<<<<<< HEAD
             return redirect()->route('clone-lab.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
-=======
 
-            return redirect()->route('clone-lab.index')->with(['error' => 'Something want wrong.']);
->>>>>>> ce76eb940b74abdc109a64f1fec899d97439b162
         } catch (\Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
