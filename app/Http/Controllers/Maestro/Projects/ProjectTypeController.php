@@ -66,7 +66,7 @@ class ProjectTypeController extends Controller
 
             return view('maestro.projects.type.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -81,7 +81,7 @@ class ProjectTypeController extends Controller
 
             return view('maestro.projects.type.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -98,11 +98,11 @@ class ProjectTypeController extends Controller
                 return redirect()->route('projects-type.index')->with(['success' => 'Project type Added successfully.']);
             }
 
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -118,7 +118,7 @@ class ProjectTypeController extends Controller
 
             return view('maestro.projects.type.edit', compact('projectType', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -135,11 +135,11 @@ class ProjectTypeController extends Controller
                 return redirect()->route('projects-type.index')->with(['success' => 'Project type updated successfully.']);
             }
 
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-type.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -160,7 +160,7 @@ class ProjectTypeController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

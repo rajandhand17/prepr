@@ -67,7 +67,7 @@ class RanksController extends Controller
 
             return view('maestro.rank.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -82,7 +82,7 @@ class RanksController extends Controller
 
             return view('maestro.rank.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -99,11 +99,11 @@ class RanksController extends Controller
                 return redirect()->route('ranks.index')->with(['success' => 'Rank Added successfully.']);
             }
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -119,7 +119,7 @@ class RanksController extends Controller
 
             return view('maestro.rank.edit', compact('rank', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -136,11 +136,11 @@ class RanksController extends Controller
                 return redirect()->route('ranks.index')->with(['success' => 'Rank updated successfully.']);
             }
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -161,7 +161,7 @@ class RanksController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

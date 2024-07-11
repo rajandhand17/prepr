@@ -74,7 +74,7 @@ class UsersController extends Controller
 
             return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -88,7 +88,7 @@ class UsersController extends Controller
 
             return view('maestro.users.create', compact('roles'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -106,11 +106,11 @@ class UsersController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -127,7 +127,7 @@ class UsersController extends Controller
 
             return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -148,7 +148,7 @@ class UsersController extends Controller
 
             return view('maestro.users.edit', compact('user', 'permissions', 'assigned_all_permission', 'roles', 'selected_role'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -170,7 +170,7 @@ class UsersController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -190,7 +190,7 @@ class UsersController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }
