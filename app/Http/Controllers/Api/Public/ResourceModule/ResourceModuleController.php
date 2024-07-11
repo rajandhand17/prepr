@@ -57,6 +57,7 @@ class ResourceModuleController extends AppBaseController
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
                 }
+
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
