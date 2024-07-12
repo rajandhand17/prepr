@@ -2,21 +2,29 @@
 
 namespace App\Traits\Maestro\CloneLab;
 
+use App\Services\Maestro\LabAchievementService;
+use App\Services\Maestro\LabExternalLinksService;
 use App\Services\Maestro\LabService;
+use App\Services\Maestro\LabAddressService;
+use App\Services\Maestro\LabSkillsGroupsStackService;
+use App\Services\Maestro\LabTagsGroupsService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 trait CloneLabTrait
 {
-
+    protected $labService;
+    public function __construct(LabService $labService)
+    {
+        $this->labService = $labService;
+    }
     public function getAllLabs()
     {
         try {
-            $labService = $this->labService->getList();
+            $labService =LabService::getList();
             if ($labService) {
                 return $labService;
             }
-
             return false;
         } catch(Exception $e) {
             return false;
@@ -27,12 +35,12 @@ trait CloneLabTrait
         try {
             $lab = LabService::getLabById($request->lab);
             $createdLab = DB::transaction(function () use ($lab, $request) {
-                $newLab = $this->labService->createLab($lab, $request->organization);
-                $labAddress = $this->labAddressService->createLabAddress($lab, $newLab);
-                $labSKillsGroupStack = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($lab, $newLab);
-                $labTagGroupStack = $this->labTagsGroupsService->createLabTagsGroups($lab, $newLab);
-                $labExternalLinks = $this->labExternalLinksService->createLabExternalLinks($lab, $newLab);
-                $createdLabAchievement = $this->labAchievementService->createLabAchievement($lab, $newLab);
+                $newLab = LabService::createLab($lab, $request->organization);
+                $labAddress = LabAddressService::createLabAddress($lab, $newLab);
+                $labSKillsGroupStack = LabSkillsGroupsStackService::createLabSkillsGroupsStack($lab, $newLab);
+                $labTagGroupStack = LabTagsGroupsService::createLabTagsGroups($lab, $newLab);
+                $labExternalLinks = LabExternalLinksService::createLabExternalLinks($lab, $newLab);
+                $createdLabAchievement = LabAchievementService::createLabAchievement($lab, $newLab);
 
                 return [
                     'lab'                    => $newLab,

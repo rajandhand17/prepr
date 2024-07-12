@@ -19,26 +19,10 @@ class CloneLabController extends Controller
 {
     use CloneLabTrait;
 
-    protected $labService;
-    protected $organizationService;
-    protected $languageService;
-    protected $labAddressService;
-    protected $labSkillsGroupsStackService;
-    protected $labTagsGroupsService;
-    protected $labExternalLinksService;
-    protected $labAchievementService;
 
-    public function __construct(LabAchievementService $labAchievementService, LabExternalLinksService $labExternalLinksService, LabTagsGroupsService $labTagsGroupsService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabAddressService $labAddressService, LabService $labService, OrganizationService $organizationService, LanguageService $languageService)
+    public function __construct()
     {
         $this->middleware('web');
-        $this->labService = $labService;
-        $this->organizationService = $organizationService;
-        $this->languageService = $languageService;
-        $this->labAddressService = $labAddressService;
-        $this->labSkillsGroupsStackService = $labSkillsGroupsStackService;
-        $this->labTagsGroupsService = $labTagsGroupsService;
-        $this->labExternalLinksService = $labExternalLinksService;
-        $this->labAchievementService = $labAchievementService;
     }
 
     public function index(Builder $builder, Request $request)

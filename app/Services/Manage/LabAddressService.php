@@ -7,7 +7,7 @@ use App\Models\LabAddress;
 
 class LabAddressService
 {
-    public function createLabAddress($request, $lab)
+    public static function createLabAddress($request, $lab)
     {
         $labaddress = new LabAddress();
         $labaddress->lab_id = $lab->id;

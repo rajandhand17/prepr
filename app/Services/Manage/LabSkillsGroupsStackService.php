@@ -7,7 +7,7 @@ use App\Models\LabSkillsGroupsStack;
 
 class LabSkillsGroupsStackService
 {
-    public function createLabSkillsGroupsStack($request, $lab)
+    public static function createLabSkillsGroupsStack($request, $lab)
     {
         try {
             if ($request->has('skills')) {
