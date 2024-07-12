@@ -162,6 +162,7 @@ class ResourceGroupResource extends JsonResource
             'tag_groups'                    => $tag_groups,
             'favourite'                     => $this->favourite(),
             'liked'                         => $this->liked(),
+            'like_count'                    => $this->liked_count(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'rating'                        => $rating,
             'module_progress'               => $module_progress,
