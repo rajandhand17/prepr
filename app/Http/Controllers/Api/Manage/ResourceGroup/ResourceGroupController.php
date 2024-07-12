@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
@@ -74,7 +75,6 @@ class ResourceGroupController extends AppBaseController
         try {
             $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if ($checkResourceGroupExistsOrNot) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -86,6 +86,9 @@ class ResourceGroupController extends AppBaseController
                 if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
+                $userId = $userData->id;
+                TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
