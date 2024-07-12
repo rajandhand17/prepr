@@ -124,7 +124,7 @@ class ResourceGroup extends Model
     public function liked_count()
     {
         if (auth('api')->check()) {
-            return $this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['like_dislike' => '1', 'user_id' => auth('api')->user()->id])->count();
+            return $this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['like_dislike' => '1'])->count();
         }
 
         return 'NA';

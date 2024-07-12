@@ -136,6 +136,7 @@ class ResourceGroupResource extends JsonResource
             'tag_groups'                    => $tag_groups,
             'rating'                        => $rating,
             'liked'                         => $this->liked(),
+            'like_count'                    => $this->liked_count(),
             'favourite'                     => $this->favourite(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'resource_collection'           => $resourceCollection,
