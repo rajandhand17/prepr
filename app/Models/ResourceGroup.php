@@ -121,6 +121,7 @@ class ResourceGroup extends Model
 
         return 'NA';
     }
+
     public function liked_count()
     {
         if (auth('api')->check()) {
@@ -129,6 +130,7 @@ class ResourceGroup extends Model
 
         return 'NA';
     }
+
     public function resource_rating()
     {
         if (auth('api')->check()) {
