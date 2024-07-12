@@ -35,6 +35,7 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $module_progress = null;
         if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
@@ -142,6 +143,25 @@ class ResourceCollectionResource extends JsonResource
             $rating = intval($this->resource_rating->rating);
         }
 
+        if ($this->resource_collection_completion_status) {
+            switch ($this->resource_collection_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->resource_collection_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -168,6 +188,7 @@ class ResourceCollectionResource extends JsonResource
             'tag_groups'                    => $tag_groups,
             'rating'                        => $rating,
             'liked'                         => $this->liked(),
+            'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
         ];
     }

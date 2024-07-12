@@ -165,22 +165,24 @@ class ResourceModuleResource extends JsonResource
                 $rating = intval($this->resource_rating->rating);
             }
 
-            switch ($this->resource_module_completion_status->status) {
-                case '0':
-                    $module_status = 'not_started';
-                    break;
-                case '1':
-                    $module_status = 'in_progress';
-                    break;
-                case '2':
-                    $module_status = 'completed';
-                    break;
-            }
+            if ($this->resource_module_completion_status) {
+                switch ($this->resource_module_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
 
-            $module_progress = [
-                'status'        => $module_status,
-                'percentage'    => $this->resource_module_completion_status->percentage,
-            ];
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->resource_module_completion_status->percentage,
+                ];
+            }
         }
 
         return [
