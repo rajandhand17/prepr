@@ -121,7 +121,14 @@ class ResourceGroup extends Model
 
         return 'NA';
     }
+    public function liked_count()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['like_dislike' => '1', 'user_id' => auth('api')->user()->id])->count();
+        }
 
+        return 'NA';
+    }
     public function resource_rating()
     {
         if (auth('api')->check()) {
