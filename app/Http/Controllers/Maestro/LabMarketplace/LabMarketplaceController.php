@@ -5,25 +5,27 @@ namespace App\Http\Controllers\Maestro\LabMarketplace;
 use App\Http\Controllers\Controller;
 use App\Models\LabMarketplace;
 use App\Services\Maestro\Category\CategoryService;
+use App\Services\Maestro\LabMarketplaceService;
 use App\Services\Maestro\User\UserService;
 use App\Traits\Maestro\LabMarketplace\LabMarketplaceTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
 class LabMarketplaceController extends Controller
 {
     use LabMarketplaceTrait;
-
-    public function __construct()
+    protected $labMarketplaceService;
+    public function __construct(LabMarketplaceService $labMarketplaceService)
     {
         $this->middleware('web');
+        $this->labMarketplaceService=$labMarketplaceService;
     }
 
     public function index(Builder $builder, Request $request)
     {
         try {
+            // Getting Lab marketplace data
             $labMarketplaceInfo = $this->getLabMarketplace();
             if (!empty($labMarketplaceInfo)) {
                 if ($request->ajax()) {
@@ -68,24 +70,25 @@ class LabMarketplaceController extends Controller
 
             return view('maestro.labMarketplace.index', compact('html'));
         } catch (\Exception $e) {
-            return false;
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
+            // Checking lab marketplace exists or not
+            $checkLabMarketPlaceExistsOrNot=$this->getLabMarketplaceById($id);
+            if (!$checkLabMarketPlaceExistsOrNot){
+                return response()->json(['status' => 'fail', 'message' => 'This LabMarketplace does not exist']);
+            }
+            // Deleting lab marketplace based on id
             if ($this->deleteLabMarketplaceById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Lab Marketplace deleted successfully']);
             }
-            DB::rollback();
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
-            DB::rollback();
-
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

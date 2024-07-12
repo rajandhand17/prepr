@@ -2,8 +2,8 @@
 
 namespace App\Traits\Maestro\ChallengeTemplate;
 
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\ChallengeTemplateService;
+use App\Services\Maestro\ChallengeService;
+use App\Services\Maestro\ChallengeTemplateService;
 
 trait ChallengeTemplateTrait
 {
@@ -24,8 +24,8 @@ trait ChallengeTemplateTrait
     public function deleteChallengeTemplateById($id)
     {
         try {
-            $getChallengeTemplate = ChallengeTemplateService::getChallengeTemplateBasedOnId($id);
-            $challengeService = ChallengeTemplateService::deleteChallengeTemplate($getChallengeTemplate->slug, $id);
+            $getChallengeTemplate = $this->challengeTemplateService->getChallengeTemplateBasedOnId($id);
+            $challengeService = $this->challengeTemplateService->deleteChallengeTemplate($getChallengeTemplate->slug, $id);
             if ($challengeService) {
                 return $challengeService;
             }
@@ -36,10 +36,10 @@ trait ChallengeTemplateTrait
         }
     }
 
-    public function getChallengeById($id)
+    public function getChallengeTemplateById($id)
     {
         try {
-            $challenges = ChallengeService::getChallengeBasedOnId($id);
+            $challenges = $this->challengeTemplateService->getChallengeTemplateBasedOnId($id);
             if ($challenges) {
                 return $challenges;
             }

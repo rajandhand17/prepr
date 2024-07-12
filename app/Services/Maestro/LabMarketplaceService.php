@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Maestro\LabMarketplace;
+namespace App\Services\Maestro;
 
+use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Models\LabMarketplace;
 use Exception;
 
@@ -25,9 +26,18 @@ class LabMarketplaceService
         }
     }
 
-    public static function deleteLabMarketplace($id)
+    public static function deleteLabMarketplace($slug, $labMarketplaceId)
     {
         try {
+            // Deleting lab marketplace
+            $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
+            if ($labMarketplace) {
+                // Triggered LabMarketplace related data deletion event
+                 event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Maestro\ChallengeTemplate;
 use App\Http\Controllers\Controller;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\User\UserService;
-use App\Services\Manage\ChallengeTemplateService;
+use App\Services\Maestro\ChallengeTemplateService;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -16,6 +15,7 @@ class ChallengeTemplateController extends Controller
 {
     use ChallengeTemplateTrait;
     protected $challengeTemplateService;
+
     public function __construct(ChallengeTemplateService $challengeTemplateService)
     {
         $this->middleware('web');
@@ -100,17 +100,24 @@ class ChallengeTemplateController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
+            if(!$this->getChallengeTemplateById($id)){
+                return response()->json(['success' =>'false','message'=>'This challenge does not exists in the database.']);
+            }
             if ($this->deleteChallengeTemplateById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Challenge Template deleted successfully']);
             }
-            DB::rollback();
         } catch (\Exception $e) {
-            DB::rollback();
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+    public function addChallengeToTemplate($slug)
+    {
+        try {
+
+        }catch (\Exception $e){
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
+
         }
     }
 }
