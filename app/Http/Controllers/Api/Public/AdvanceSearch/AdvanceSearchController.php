@@ -80,8 +80,7 @@ class AdvanceSearchController extends AppBaseController
                 return $this->sendError(__('responses.advance_search.failed_to_fetch_lab_marketplace_list'));
             }
 
-            return $this->sendResponse([...$data, 'list' =>
-                LabMarketplaceResource::collection(data_get($data, 'list')->items())], __('responses.advance_search.lab_marketplace_lists'));
+            return $this->sendResponse([...$data, 'list' => LabMarketplaceResource::collection(data_get($data, 'list')->items())], __('responses.advance_search.lab_marketplace_lists'));
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.advance_search.failed_to_fetch_lab_marketplace_list'));
         }
