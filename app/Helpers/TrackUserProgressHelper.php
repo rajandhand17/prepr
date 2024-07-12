@@ -7,6 +7,7 @@ use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
+use App\Services\ProjectService;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceModuleService;
 use Exception;
@@ -170,6 +171,35 @@ class TrackUserProgressHelper
             $feedModuleProgressData->percentage = $moduleProgress;
             $feedModuleProgressData->save();
 
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function trackChallengeUserProgress($challengeData, $userId)
+    {
+        try {
+            // Check User Joined Challenge or not to get progress
+            $joined_status = $challengeData->joined();
+            if ($joined_status != 'NA' && $joined_status != null) {
+                if ($joined_status->invite_status == '1') {
+                    $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+                    if (!$checkUserChallengeStatus) {
+                        $getUserChallengeProgress = '0';
+                    } elseif ($checkUserChallengeStatus->is_submitted == '0') {
+                        $getUserChallengeProgress = '50';
+                    } elseif ($checkUserChallengeStatus->is_submitted == '1') {
+                        $getUserChallengeProgress = '100';
+                    }
+
+                    // Feed challenge progress
+                    $moduleType = config('constants.module_type.challenges');
+                    $feedModuleProgressData = self::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
+                }
+            }
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
