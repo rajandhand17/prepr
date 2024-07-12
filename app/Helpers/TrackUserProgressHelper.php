@@ -84,7 +84,7 @@ class TrackUserProgressHelper
                 // Fetch resource collection ids
                 $collectionIds = $resourceGroupData->resource_collection->pluck('resource_collection_id');
                 $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
-                
+
                 // Fetch resource module id based on resource collection ids
                 foreach ($fetchResourceCollections as $resourceCollection) {
                     $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
@@ -148,6 +148,7 @@ class TrackUserProgressHelper
             return false;
         }
     }
+
     public static function feedModuleProgressData($userId, $moduleId, $moduleType, $moduleProgress)
     {
         try {
