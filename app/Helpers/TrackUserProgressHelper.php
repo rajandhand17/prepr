@@ -200,6 +200,7 @@ class TrackUserProgressHelper
                     $feedModuleProgressData = self::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
                 }
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
