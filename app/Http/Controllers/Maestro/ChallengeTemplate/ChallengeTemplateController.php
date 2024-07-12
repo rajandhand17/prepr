@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Maestro\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Models\ChallengeTemplate;
+use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\User\UserService;
 use App\Services\Maestro\ChallengeTemplateService;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
@@ -15,11 +18,13 @@ class ChallengeTemplateController extends Controller
 {
     use ChallengeTemplateTrait;
     protected $challengeTemplateService;
+    protected $challengeService;
 
-    public function __construct(ChallengeTemplateService $challengeTemplateService)
+    public function __construct(ChallengeTemplateService $challengeTemplateService,ChallengeService $challengeService)
     {
         $this->middleware('web');
         $this->challengeTemplateService=$challengeTemplateService;
+        $this->challengeService=$challengeService;
     }
 
     public function index(Builder $builder, Request $request)
@@ -114,10 +119,35 @@ class ChallengeTemplateController extends Controller
     public function addChallengeToTemplate($slug)
     {
         try {
+            $checkComponentBasedOnSlug = $this->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
 
+            $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($checkComponentBasedOnSlug->uuid);
+            if ($checkChallengeTemplate) {
+                return $this->sendError(__('responses.challenge_already_cloned'), 422);
+            }
+
+            $addChallengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($checkComponentBasedOnSlug->id);
+            if ($addChallengeTemplate != false) {
+                return $this->sendResponse(ChallengeTemplateResource::make($addChallengeTemplate), __('responses.challenge_add_template_success'), 200);
+            }
+
+            return $this->sendError(__('responses.challenge_clone_failed'), 400);
         }catch (\Exception $e){
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
-
         }
     }
 }

@@ -17,4 +17,14 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnSlug($slug)
+    {
+        try {
+            return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeTemplateService;
 
@@ -46,6 +47,26 @@ trait ChallengeTemplateTrait
 
             return false;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getChallengeBasedOnSlug($slug)
+    {
+        try {
+            return $this->challengeService->getChallengeBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getCheckChallengeUuid()
+    {
+        try {
+
+        }catch (\Exception $e){
             return false;
         }
     }

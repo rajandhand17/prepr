@@ -464,7 +464,6 @@ class ChallengeRepository implements ChallengeInterface
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
