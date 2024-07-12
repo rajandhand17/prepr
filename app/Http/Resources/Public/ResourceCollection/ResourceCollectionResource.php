@@ -147,6 +147,11 @@ class ResourceCollectionResource extends JsonResource
                 $rating = intval($this->resource_rating->rating);
             }
 
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
             if ($this->resource_collection_completion_status) {
                 switch ($this->resource_collection_completion_status->status) {
                     case '0':

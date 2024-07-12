@@ -35,7 +35,6 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        $module_progress = null;
         if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
@@ -143,6 +142,11 @@ class ResourceCollectionResource extends JsonResource
             $rating = intval($this->resource_rating->rating);
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
         if ($this->resource_collection_completion_status) {
             switch ($this->resource_collection_completion_status->status) {
                 case '0':

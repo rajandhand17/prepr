@@ -37,7 +37,6 @@ class ResourceModuleResource extends JsonResource
         $status = null;
         $is_global = null;
         $embedded_media = null;
-        $module_progress = null;
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
@@ -164,6 +163,11 @@ class ResourceModuleResource extends JsonResource
             $rating = intval($this->resource_rating->rating);
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
         if ($this->resource_module_completion_status) {
             switch ($this->resource_module_completion_status->status) {
                 case '0':
