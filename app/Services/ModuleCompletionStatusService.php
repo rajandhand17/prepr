@@ -33,7 +33,7 @@ class ModuleCompletionStatusService
             $checkChallengePathCompleted = ModuleCompletionStatus::where([
                 'module_id'     => $challengePathId,
                 'user_id'       => $userId,
-                'module_type'   => '3'
+                'module_type'   => '3',
             ])->first();
 
             if ($checkChallengePathCompleted) {
@@ -42,11 +42,11 @@ class ModuleCompletionStatusService
                 $markChallengePathCompleted = new ModuleCompletionStatus();
             }
 
-            $markChallengePathCompleted->module_id     = $challengePathId;
-            $markChallengePathCompleted->user_id       = $userId;
-            $markChallengePathCompleted->module_type   = '3';
-            $markChallengePathCompleted->status        = '2';
-            $markChallengePathCompleted->is_completed  = '1';
+            $markChallengePathCompleted->module_id = $challengePathId;
+            $markChallengePathCompleted->user_id = $userId;
+            $markChallengePathCompleted->module_type = '3';
+            $markChallengePathCompleted->status = '2';
+            $markChallengePathCompleted->is_completed = '1';
             $markChallengePathCompleted->save();
 
             return true;
