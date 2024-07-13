@@ -15,6 +15,8 @@ class ModuleCompletionStatusService
                 'module_id'     => $challengePathId,
                 'user_id'       => $userId,
                 'module_type'   => '3',
+                'status'        => '2',
+                'is_completed'  => '1',
             ])->exists();
 
             return $checkChallengePathAchievementAssignedOrNot;
@@ -28,11 +30,24 @@ class ModuleCompletionStatusService
     public static function markChallengePathCompleted($challengePathId, $userId)
     {
         try {
-            $markChallengePathCompleted = ModuleCompletionStatus::create([
+            $checkChallengePathCompleted = ModuleCompletionStatus::where([
                 'module_id'     => $challengePathId,
                 'user_id'       => $userId,
-                'module_type'   => '3',
-            ]);
+                'module_type'   => '3'
+            ])->first();
+
+            if ($checkChallengePathCompleted) {
+                $markChallengePathCompleted = $checkChallengePathCompleted;
+            } else {
+                $markChallengePathCompleted = new ModuleCompletionStatus();
+            }
+
+            $markChallengePathCompleted->module_id     = $challengePathId;
+            $markChallengePathCompleted->user_id       = $userId;
+            $markChallengePathCompleted->module_type   = '3';
+            $markChallengePathCompleted->status        = '2';
+            $markChallengePathCompleted->is_completed  = '1';
+            $markChallengePathCompleted->save();
 
             return true;
         } catch (Exception $e) {

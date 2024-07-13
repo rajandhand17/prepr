@@ -304,4 +304,17 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getChallengeBasedOnArrayIds($challengeIds)
+    {
+        try {
+            $challenges = Challenge::whereIn('id', $challengeIds)->where('is_accessible', '1')->get();
+
+            return $challenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

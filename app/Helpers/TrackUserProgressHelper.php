@@ -8,6 +8,7 @@ use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
 use App\Services\ProjectService;
+use App\Services\Public\ChallengeService;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceModuleService;
 use Exception;
@@ -182,24 +183,66 @@ class TrackUserProgressHelper
     public static function trackChallengeUserProgress($challengeData, $userId)
     {
         try {
-            // Check User Joined Challenge or not to get progress
-            $joined_status = $challengeData->joined();
-            if ($joined_status != 'NA' && $joined_status != null) {
-                if ($joined_status->invite_status == '1') {
-                    $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                    if (!$checkUserChallengeStatus) {
-                        $getUserChallengeProgress = '0';
-                    } elseif ($checkUserChallengeStatus->is_submitted == '0') {
-                        $getUserChallengeProgress = '50';
-                    } elseif ($checkUserChallengeStatus->is_submitted == '1') {
-                        $getUserChallengeProgress = '100';
-                    }
+            // Default Challenge Progress
+            $getUserChallengeProgress = '0';
 
-                    // Feed challenge progress
-                    $moduleType = config('constants.module_type.challenges');
-                    $feedModuleProgressData = self::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
+            // Check the Project status based on Challenge and UserId
+            $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+            if ($getUserChallengeProgress) {
+                switch ($checkUserChallengeStatus->is_submitted) {
+                    case '0':
+                        $getUserChallengeProgress = '50';
+                        break;
+                    case '1':
+                        $getUserChallengeProgress = '100';
+                        break;
                 }
             }
+
+            // Feed challenge progress
+            $moduleType = config('constants.module_type.challenges');
+            $feedModuleProgressData = self::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function trackChallengePathUserProgress($challengePathData, $userId)
+    {
+        try {
+            $totalChallengeCount = 0;
+            $completedChallengeCount = 0;
+            if ($challengePathData->challenges->count() > 0) {
+                $totalChallengeCount = $challengePathData->challenges->count();
+                $challengeIds = $challengePathData->challenges->pluck('challenge_id');
+                $getChallengeBasedOnIds = ChallengeService::getChallengeBasedOnArrayIds($challengeIds);
+                if ($getChallengeBasedOnIds->isNotEmpty()) {
+                    foreach ($getChallengeBasedOnIds as $challengeData) {
+                        // Check User Joined Challenge or not to get progress
+                        $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+                        if ($checkUserChallengeStatus) {
+                            if ($checkUserChallengeStatus->is_submitted == '1') {
+                                $completedChallengeCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Fetch challenge path progress user
+            $challengePathProgress = 0;
+            if ($totalChallengeCount > 0) {
+                $challengePathProgress = round($completedChallengeCount / $totalChallengeCount * 100, 2);
+            }
+
+            // Feed challenge path progress
+            $moduleType = config('constants.module_type.challenge_paths');
+            $feedModuleProgressData = self::feedModuleProgressData($userId, $challengePathData->id, $moduleType, $challengePathProgress);
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
