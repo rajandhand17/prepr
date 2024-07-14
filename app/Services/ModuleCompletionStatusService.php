@@ -56,4 +56,17 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function getLabUserProgressBasedOnLabsAndUserIds($labIds, $userId)
+    {
+        try {
+            $labUserProgress = ModuleCompletionStatus::whereIn('module_id', $labIds)->where(['user_id' => $userId, 'module_type' => '0'])->get();
+
+            return $labUserProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

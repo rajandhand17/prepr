@@ -36,6 +36,7 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $module_progress = null;
 
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
@@ -102,6 +103,32 @@ class LabProgramResource extends JsonResource
             ];
         }
 
+        if (auth('api')->check()) {
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->lab_program_completion_status) {
+                switch ($this->lab_program_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
+
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->lab_program_completion_status->percentage,
+                ];
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -134,6 +161,7 @@ class LabProgramResource extends JsonResource
             'liked'                         => $this->liked(),
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
+            'module_progress'               => $module_progress,
             'member_count'                  => '0', //Static for temporary basis
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];

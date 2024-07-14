@@ -7,9 +7,11 @@ use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService;
 use App\Services\Public\ChallengeService;
+use App\Services\Public\LabService;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceGroupService;
 use App\Services\Public\ResourceModuleService;
@@ -447,6 +449,43 @@ class TrackUserProgressHelper
             $userProgressBasedOnResourceIds = ['totalResourceModuleAsset' => $totalResourceModuleAsset, 'totalResourceModuleAssetVisited' => $totalResourceModuleAssetVisited];
 
             return $userProgressBasedOnResourceIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function trackLabProgramUserProgress($labProgramData, $userId)
+    {
+        try {
+            $fetchTotalLabs = 0;
+            $fetchTotalUserLabProgress = 0;
+            if ($labProgramData->labs->count() > 0) {
+                $labIds = $labProgramData->labs->pluck('lab_id');
+                $labDatas = LabService::getLabsBasedOnIds($labIds);
+                if ($labDatas->isNotEmpty()) {
+                    foreach ($labDatas as $lab) {
+                        $updateLabProgress = self::trackLabUserProgress($lab, $userId);
+                    }
+
+                    $fetchTotalLabs = 100 * $labDatas->count();
+                    $fetchUserLabProgress = ModuleCompletionStatusService::getLabUserProgressBasedOnLabsAndUserIds($labDatas->pluck('id'), $userId);
+                    $fetchTotalUserLabProgress = $fetchUserLabProgress->pluck('percentage')->sum();
+                }
+            }
+
+            // Fetch lab program progress user
+            $labProgramProgress = 0;
+            if ($fetchTotalLabs > 0) {
+                $labProgramProgress = round($fetchTotalUserLabProgress / $fetchTotalLabs * 100, 2);
+            }
+
+            // Feed lab program progress
+            $moduleType = config('constants.module_type.lab_programs');
+            $feedModuleProgressData = self::feedModuleProgressData($userId, $labProgramData->id, $moduleType, $labProgramProgress);
+
+            return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
