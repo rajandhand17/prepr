@@ -298,7 +298,6 @@ class TrackUserProgressHelper
                 $competedLabChallengePathAssociation = self::getUserProgressBasedOnChallengeIds($challengePathIds, $userId);
             }
 
-
             if ($lab->lab_resource_module_association->count() > 0) {
                 $resourceModuleIds = $lab->lab_resource_module_association->pluck('resource_module_id');
 
@@ -364,7 +363,6 @@ class TrackUserProgressHelper
                 $labResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAsset'];
                 $competedLabResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAssetVisited'];
             }
-
 
             $totalLabAssociatedData = ($labChallengeAssociation + $labChallengePathAssociation + $labResourceModuleAssociation + $labResourceCollectionAssociation + $labResourceGroupAssociation);
             $totalLabCompletedAssociatedData = ($competedLabChallengeAssociation + $competedLabChallengePathAssociation + $competedLabResourceModuleAssociation + $competedLabResourceCollectionAssociation + $competedLabResourceGroupAssociation);
