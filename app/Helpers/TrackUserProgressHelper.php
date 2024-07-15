@@ -159,17 +159,22 @@ class TrackUserProgressHelper
         try {
             // Default Challenge Progress
             $getUserChallengeProgress = '0';
-
-            // Check the Project status based on Challenge and UserId
-            $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-            if ($getUserChallengeProgress) {
-                switch ($checkUserChallengeStatus->is_submitted) {
-                    case '0':
-                        $getUserChallengeProgress = '50';
-                        break;
-                    case '1':
-                        $getUserChallengeProgress = '100';
-                        break;
+            // Check is the user has joined the challenge or not
+            $joined_status = $challengeData->joined();
+            if ($joined_status != 'NA' && $joined_status != null) {
+                if ($joined_status->invite_status == '1') {
+                    // Check the Project status based on Challenge and UserId
+                    $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+                    if ($getUserChallengeProgress) {
+                        switch ($checkUserChallengeStatus->is_submitted) {
+                            case '0':
+                                $getUserChallengeProgress = '50';
+                                break;
+                            case '1':
+                                $getUserChallengeProgress = '100';
+                                break;
+                        }
+                    }
                 }
             }
 
@@ -196,15 +201,21 @@ class TrackUserProgressHelper
                 $getChallengeBasedOnIds = ChallengeService::getChallengeBasedOnArrayIds($challengeIds);
                 if ($getChallengeBasedOnIds->isNotEmpty()) {
                     foreach ($getChallengeBasedOnIds as $challengeData) {
-                        // Check User Joined Challenge or not to get progress
-                        $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                        if ($checkUserChallengeStatus) {
-                            if ($checkUserChallengeStatus->is_submitted == '0') {
-                                // If created project but not submitted so setting progress as 50% completion
-                                $completedChallengeCount += 0.5;
-                            } elseif ($checkUserChallengeStatus->is_submitted == '1') {
-                                // If created project and submitted so setting progress as 100% completion
-                                $completedChallengeCount++;
+                        // Check is the user has joined the challenge or not
+                        $joined_status = $challengeData->joined();
+                        if ($joined_status != 'NA' && $joined_status != null) {
+                            if ($joined_status->invite_status == '1') {
+                                // Check User Joined Challenge or not to get progress
+                                $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+                                if ($checkUserChallengeStatus) {
+                                    if ($checkUserChallengeStatus->is_submitted == '0') {
+                                        // If created project but not submitted so setting progress as 50% completion
+                                        $completedChallengeCount += 0.5;
+                                    } elseif ($checkUserChallengeStatus->is_submitted == '1') {
+                                        // If created project and submitted so setting progress as 100% completion
+                                        $completedChallengeCount++;
+                                    }
+                                }
                             }
                         }
                     }
@@ -232,122 +243,128 @@ class TrackUserProgressHelper
     public static function trackLabUserProgress($lab, $userId)
     {
         try {
-            // Initialize default associated count
-            $labChallengeAssociation = 0;
-            $labChallengePathAssociation = 0;
-            $labResourceModuleAssociation = 0;
-            $labResourceCollectionAssociation = 0;
-            $labResourceGroupAssociation = 0;
+            // Check is the user has joined the lab or not
+            $joined_status = $lab->joined();
+            if ($joined_status != 'NA' && $joined_status != null) {
+                if ($joined_status->invite_status == '1') {
+                    // Initialize default associated count
+                    $labChallengeAssociation = 0;
+                    $labChallengePathAssociation = 0;
+                    $labResourceModuleAssociation = 0;
+                    $labResourceCollectionAssociation = 0;
+                    $labResourceGroupAssociation = 0;
 
-            // Initialize default completed associated count
-            $competedLabChallengeAssociation = 0;
-            $competedLabChallengePathAssociation = 0;
-            $competedLabResourceModuleAssociation = 0;
-            $competedLabResourceCollectionAssociation = 0;
-            $competedLabResourceGroupAssociation = 0;
+                    // Initialize default completed associated count
+                    $competedLabChallengeAssociation = 0;
+                    $competedLabChallengePathAssociation = 0;
+                    $competedLabResourceModuleAssociation = 0;
+                    $competedLabResourceCollectionAssociation = 0;
+                    $competedLabResourceGroupAssociation = 0;
 
-            if ($lab->lab_challenge_association->count() > 0) {
-                $labChallengeAssociation = $lab->lab_challenge_association->count();
-                $challengeIds = $lab->lab_challenge_association->pluck('challenge_id');
+                    if ($lab->lab_challenge_association->count() > 0) {
+                        $labChallengeAssociation = $lab->lab_challenge_association->count();
+                        $challengeIds = $lab->lab_challenge_association->pluck('challenge_id');
 
-                // Fetch Completed Challenge Count
-                $competedLabChallengeAssociation = self::getUserProgressBasedOnChallengeIds($challengeIds, $userId);
-            }
+                        // Fetch Completed Challenge Count
+                        $competedLabChallengeAssociation = self::getUserProgressBasedOnChallengeIds($challengeIds, $userId);
+                    }
 
-            if ($lab->lab_challenge_path_association->count() > 0) {
-                $challengePathIds = collect();
-                $pathIds = $lab->lab_challenge_path_association->pluck('challenge_path_id');
-                $fetchChallengePaths = ChallengePathService::getChallengePathBasedOnArrayIds($pathIds);
+                    if ($lab->lab_challenge_path_association->count() > 0) {
+                        $challengePathIds = collect();
+                        $pathIds = $lab->lab_challenge_path_association->pluck('challenge_path_id');
+                        $fetchChallengePaths = ChallengePathService::getChallengePathBasedOnArrayIds($pathIds);
 
-                // Fetch challenge id based on challenge path ids
-                foreach ($fetchChallengePaths as $challengePath) {
-                    $challengeIds = $challengePath->challenges->pluck('challenge_id');
-                    $challengePathIds = $challengePathIds->merge($challengeIds);
-                }
-
-                $labChallengePathAssociation = $challengePathIds->count();
-                // Fetch Completed Challenge Count
-                $competedLabChallengePathAssociation = self::getUserProgressBasedOnChallengeIds($challengePathIds, $userId);
-            }
-
-            if ($lab->lab_resource_module_association->count() > 0) {
-                $resourceModuleIds = $lab->lab_resource_module_association->pluck('resource_module_id');
-
-                // Fetch resource module assets counts with visited counts
-                $getResourceModuleAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
-                $labResourceModuleAssociation = $getResourceModuleAssetCount['totalResourceModuleAsset'];
-                $competedLabResourceModuleAssociation = $getResourceModuleAssetCount['totalResourceModuleAssetVisited'];
-            }
-
-            if ($lab->lab_resource_collection_association->count() > 0) {
-                $resourceCollectionIds = collect();
-                // Fetch resource collection ids
-                $collectionIds = $lab->lab_resource_collection_association->pluck('resource_collection_id');
-                $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
-
-                // Fetch resource module id based on resource collection ids
-                foreach ($fetchResourceCollections as $resourceCollection) {
-                    $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
-                    $resourceCollectionIds = $resourceCollectionIds->merge($resourceIds);
-                }
-
-                // Fetch resource module assets counts with visited counts
-                $getResourceCollectionAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
-                $labResourceCollectionAssociation = $getResourceCollectionAssetCount['totalResourceModuleAsset'];
-                $competedLabResourceCollectionAssociation = $getResourceCollectionAssetCount['totalResourceModuleAssetVisited'];
-            }
-
-            if ($lab->lab_resource_group_association->count() > 0) {
-                $resourceGroupIds = $lab->lab_resource_group_association->pluck('resource_group_id');
-                $fetchResourceGroups = ResourceGroupService::getResourceGroupBasedOnArrayIds($resourceGroupIds);
-
-                // Initialize default collection array
-                $labResourceModuleIds = collect();
-                $labResourceCollectionIds = collect();
-
-                // Check fetched resource groups are not empty
-                if ($fetchResourceGroups->isNotEmpty()) {
-                    foreach ($fetchResourceGroups as $resourceGroup) {
-                        // Fetch resource module ids based on lab associated resource groups ids
-                        if ($resourceGroup->resource_modules->count() > 0) {
-                            $moduleIds = $resourceGroup->resource_modules->pluck('resource_module_id');
-                            $labResourceModuleIds = $labResourceModuleIds->merge($moduleIds);
+                        // Fetch challenge id based on challenge path ids
+                        foreach ($fetchChallengePaths as $challengePath) {
+                            $challengeIds = $challengePath->challenges->pluck('challenge_id');
+                            $challengePathIds = $challengePathIds->merge($challengeIds);
                         }
 
-                        // Fetch resource module ids based on lab associated resource groups id via resource collections
-                        if ($resourceGroup->resource_collection->count() > 0) {
-                            $collectionIds = $resourceGroup->resource_collection->pluck('resource_collection_id');
-                            $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
+                        $labChallengePathAssociation = $challengePathIds->count();
+                        // Fetch Completed Challenge Count
+                        $competedLabChallengePathAssociation = self::getUserProgressBasedOnChallengeIds($challengePathIds, $userId);
+                    }
 
-                            // Fetch resource module id based on resource collection ids
-                            foreach ($fetchResourceCollections as $resourceCollection) {
-                                $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
-                                $labResourceCollectionIds = $labResourceCollectionIds->merge($resourceIds);
+                    if ($lab->lab_resource_module_association->count() > 0) {
+                        $resourceModuleIds = $lab->lab_resource_module_association->pluck('resource_module_id');
+
+                        // Fetch resource module assets counts with visited counts
+                        $getResourceModuleAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
+                        $labResourceModuleAssociation = $getResourceModuleAssetCount['totalResourceModuleAsset'];
+                        $competedLabResourceModuleAssociation = $getResourceModuleAssetCount['totalResourceModuleAssetVisited'];
+                    }
+
+                    if ($lab->lab_resource_collection_association->count() > 0) {
+                        $resourceCollectionIds = collect();
+                        // Fetch resource collection ids
+                        $collectionIds = $lab->lab_resource_collection_association->pluck('resource_collection_id');
+                        $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
+
+                        // Fetch resource module id based on resource collection ids
+                        foreach ($fetchResourceCollections as $resourceCollection) {
+                            $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
+                            $resourceCollectionIds = $resourceCollectionIds->merge($resourceIds);
+                        }
+
+                        // Fetch resource module assets counts with visited counts
+                        $getResourceCollectionAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
+                        $labResourceCollectionAssociation = $getResourceCollectionAssetCount['totalResourceModuleAsset'];
+                        $competedLabResourceCollectionAssociation = $getResourceCollectionAssetCount['totalResourceModuleAssetVisited'];
+                    }
+
+                    if ($lab->lab_resource_group_association->count() > 0) {
+                        $resourceGroupIds = $lab->lab_resource_group_association->pluck('resource_group_id');
+                        $fetchResourceGroups = ResourceGroupService::getResourceGroupBasedOnArrayIds($resourceGroupIds);
+
+                        // Initialize default collection array
+                        $labResourceModuleIds = collect();
+                        $labResourceCollectionIds = collect();
+
+                        // Check fetched resource groups are not empty
+                        if ($fetchResourceGroups->isNotEmpty()) {
+                            foreach ($fetchResourceGroups as $resourceGroup) {
+                                // Fetch resource module ids based on lab associated resource groups ids
+                                if ($resourceGroup->resource_modules->count() > 0) {
+                                    $moduleIds = $resourceGroup->resource_modules->pluck('resource_module_id');
+                                    $labResourceModuleIds = $labResourceModuleIds->merge($moduleIds);
+                                }
+
+                                // Fetch resource module ids based on lab associated resource groups id via resource collections
+                                if ($resourceGroup->resource_collection->count() > 0) {
+                                    $collectionIds = $resourceGroup->resource_collection->pluck('resource_collection_id');
+                                    $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
+
+                                    // Fetch resource module id based on resource collection ids
+                                    foreach ($fetchResourceCollections as $resourceCollection) {
+                                        $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
+                                        $labResourceCollectionIds = $labResourceCollectionIds->merge($resourceIds);
+                                    }
+                                }
                             }
                         }
+
+                        $resourceModuleIds = $labResourceModuleIds->merge($labResourceCollectionIds);
+
+                        // Fetch resource module assets counts with visited counts
+                        $getResourceGroupAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
+                        $labResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAsset'];
+                        $competedLabResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAssetVisited'];
                     }
+
+                    $totalLabAssociatedData = ($labChallengeAssociation + $labChallengePathAssociation + $labResourceModuleAssociation + $labResourceCollectionAssociation + $labResourceGroupAssociation);
+                    $totalLabCompletedAssociatedData = ($competedLabChallengeAssociation + $competedLabChallengePathAssociation + $competedLabResourceModuleAssociation + $competedLabResourceCollectionAssociation + $competedLabResourceGroupAssociation);
+
+                    // Fetch challenge path progress user
+                    $labProgress = 0;
+                    if ($totalLabAssociatedData > 0) {
+                        $labProgress = round($totalLabCompletedAssociatedData / $totalLabAssociatedData * 100, 2);
+                    }
+
+                    // Feed challenge path progress
+                    $moduleType = config('constants.module_type.labs');
+                    $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $lab->id, $moduleType, $labProgress);
                 }
-
-                $resourceModuleIds = $labResourceModuleIds->merge($labResourceCollectionIds);
-
-                // Fetch resource module assets counts with visited counts
-                $getResourceGroupAssetCount = self::getModuleAssetCountsBasedOnResourceModuleIds($resourceModuleIds, $userId);
-                $labResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAsset'];
-                $competedLabResourceGroupAssociation = $getResourceGroupAssetCount['totalResourceModuleAssetVisited'];
             }
-
-            $totalLabAssociatedData = ($labChallengeAssociation + $labChallengePathAssociation + $labResourceModuleAssociation + $labResourceCollectionAssociation + $labResourceGroupAssociation);
-            $totalLabCompletedAssociatedData = ($competedLabChallengeAssociation + $competedLabChallengePathAssociation + $competedLabResourceModuleAssociation + $competedLabResourceCollectionAssociation + $competedLabResourceGroupAssociation);
-
-            // Fetch challenge path progress user
-            $labProgress = 0;
-            if ($totalLabAssociatedData > 0) {
-                $labProgress = round($totalLabCompletedAssociatedData / $totalLabAssociatedData * 100, 2);
-            }
-
-            // Feed challenge path progress
-            $moduleType = config('constants.module_type.labs');
-            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $lab->id, $moduleType, $labProgress);
 
             return true;
         } catch (Exception $e) {
@@ -366,15 +383,21 @@ class TrackUserProgressHelper
             $getChallengeBasedOnIds = ChallengeService::getChallengeBasedOnArrayIds($challengeIds);
             if ($getChallengeBasedOnIds->isNotEmpty()) {
                 foreach ($getChallengeBasedOnIds as $challengeData) {
-                    // Check User Joined Challenge or not to get progress
-                    $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                    if ($checkUserChallengeStatus) {
-                        if ($checkUserChallengeStatus->is_submitted == '0') {
-                            // If created project but not submitted so setting progress as 50% completion
-                            $competedLabChallengeAssociation += 0.5;
-                        } elseif ($checkUserChallengeStatus->is_submitted == '1') {
-                            // If created project and submitted so setting progress as 100% completion
-                            $competedLabChallengeAssociation++;
+                    // Check is the user has joined the challenge or not
+                    $joined_status = $challengeData->joined();
+                    if ($joined_status != 'NA' && $joined_status != null) {
+                        if ($joined_status->invite_status == '1') {
+                            // Check User Joined Challenge or not to get progress
+                            $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
+                            if ($checkUserChallengeStatus) {
+                                if ($checkUserChallengeStatus->is_submitted == '0') {
+                                    // If created project but not submitted so setting progress as 50% completion
+                                    $competedLabChallengeAssociation += 0.5;
+                                } elseif ($checkUserChallengeStatus->is_submitted == '1') {
+                                    // If created project and submitted so setting progress as 100% completion
+                                    $competedLabChallengeAssociation++;
+                                }
+                            }
                         }
                     }
                 }
