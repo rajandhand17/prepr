@@ -34,6 +34,7 @@ trait CloneLabTrait
     public function createLab($request)
     {
         try {
+            // Getting Lab and related tables
             $lab=Lab::with("skills","address","tags","external_links","achievement")->where('id',$request->lab)->first();
             $createdLab = DB::transaction(function () use ($lab, $request) {
                 $newLab = LabService::createLab($lab, $request->organization);
@@ -51,18 +52,17 @@ trait CloneLabTrait
                     'lab_achievement'        => $createdLabAchievement,
                 ];
             });
+            // Checking all the tables records inserted successfully
             if ($createdLab['lab'] && $createdLab['lab_address'] && $createdLab['lab_sKills_group_stack']
                 && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement']) {
                 DB::commit();
-
+                // Returning new created table details
                 return $createdLab['lab'];
             }
             DB::rollBack();
-
             return false;
         } catch(Exception $e) {
             DB::rollback();
-            dd($e);
             return false;
         }
     }
