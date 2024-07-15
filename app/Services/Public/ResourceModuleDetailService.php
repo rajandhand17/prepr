@@ -109,4 +109,19 @@ class ResourceModuleDetailService
             return false;
         }
     }
+
+    public static function checkResourceAssetCompletedOrNot($userId, $assetId)
+    {
+        try {
+            $checkResourceModuleAssetVisit = ResourceModuleVisit::where(['user_id' => $userId, 'module_asset_id' => $assetId])->exists();
+            if ($checkResourceModuleAssetVisit) {
+                return 'yes';
+            }
+            return 'no';
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
