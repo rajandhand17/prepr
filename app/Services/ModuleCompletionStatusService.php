@@ -69,4 +69,33 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function feedModuleProgressData($userId, $moduleId, $moduleType, $moduleProgress)
+    {
+        try {
+            $checkModuleProgressData = ModuleCompletionStatus::where(['user_id' => $userId, 'module_id' => $moduleId, 'module_type' => $moduleType])->first();
+            if ($checkModuleProgressData) {
+                $feedModuleProgressData = $checkModuleProgressData;
+            } else {
+                $feedModuleProgressData = new ModuleCompletionStatus();
+            }
+
+            $moduleStatus = ($moduleProgress == '0') ? '0' : (($moduleProgress != '100') ? '1' : '2');
+            $isModuleCompleted = ($moduleStatus == '2') ? '1' : '0';
+
+            $feedModuleProgressData->user_id = $userId;
+            $feedModuleProgressData->module_id = $moduleId;
+            $feedModuleProgressData->module_type = $moduleType;
+            $feedModuleProgressData->status = $moduleStatus;
+            $feedModuleProgressData->is_completed = $isModuleCompleted;
+            $feedModuleProgressData->percentage = $moduleProgress;
+            $feedModuleProgressData->save();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

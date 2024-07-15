@@ -45,7 +45,7 @@ class TrackUserProgressHelper
 
             // Feed resource module progress
             $moduleType = config('constants.module_type.resource_modules');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $resourceModuleData->id, $moduleType, $moduleProgress);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $resourceModuleData->id, $moduleType, $moduleProgress);
 
             return true;
         } catch (Exception $e) {
@@ -65,7 +65,7 @@ class TrackUserProgressHelper
 
                 // Feed resource collection progress
                 $moduleType = config('constants.module_type.resource_collections');
-                $feedModuleProgressData = self::feedModuleProgressData($userId, $resourceCollectionData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
+                $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $resourceCollectionData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
             }
 
             return true;
@@ -104,7 +104,7 @@ class TrackUserProgressHelper
 
             // Feed resource group progress
             $moduleType = config('constants.module_type.resource_group');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $resourceGroupData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $resourceGroupData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
 
             return true;
         } catch (Exception $e) {
@@ -155,35 +155,6 @@ class TrackUserProgressHelper
         }
     }
 
-    public static function feedModuleProgressData($userId, $moduleId, $moduleType, $moduleProgress)
-    {
-        try {
-            $checkModuleProgressData = ModuleCompletionStatus::where(['user_id' => $userId, 'module_id' => $moduleId, 'module_type' => $moduleType])->first();
-            if ($checkModuleProgressData) {
-                $feedModuleProgressData = $checkModuleProgressData;
-            } else {
-                $feedModuleProgressData = new ModuleCompletionStatus();
-            }
-
-            $moduleStatus = ($moduleProgress == '0') ? '0' : (($moduleProgress != '100') ? '1' : '2');
-            $isModuleCompleted = ($moduleStatus == '2') ? '1' : '0';
-
-            $feedModuleProgressData->user_id = $userId;
-            $feedModuleProgressData->module_id = $moduleId;
-            $feedModuleProgressData->module_type = $moduleType;
-            $feedModuleProgressData->status = $moduleStatus;
-            $feedModuleProgressData->is_completed = $isModuleCompleted;
-            $feedModuleProgressData->percentage = $moduleProgress;
-            $feedModuleProgressData->save();
-
-            return true;
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function trackChallengeUserProgress($challengeData, $userId)
     {
         try {
@@ -205,7 +176,7 @@ class TrackUserProgressHelper
 
             // Feed challenge progress
             $moduleType = config('constants.module_type.challenges');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $challengeData->id, $moduleType, $getUserChallengeProgress);
 
             return true;
         } catch (Exception $e) {
@@ -249,7 +220,7 @@ class TrackUserProgressHelper
 
             // Feed challenge path progress
             $moduleType = config('constants.module_type.challenge_paths');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $challengePathData->id, $moduleType, $challengePathProgress);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $challengePathData->id, $moduleType, $challengePathProgress);
 
             return true;
         } catch (Exception $e) {
@@ -377,7 +348,7 @@ class TrackUserProgressHelper
 
             // Feed challenge path progress
             $moduleType = config('constants.module_type.labs');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $lab->id, $moduleType, $labProgress);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $lab->id, $moduleType, $labProgress);
 
             return true;
         } catch (Exception $e) {
@@ -465,10 +436,12 @@ class TrackUserProgressHelper
                 $labIds = $labProgramData->labs->pluck('lab_id');
                 $labDatas = LabService::getLabsBasedOnIds($labIds);
                 if ($labDatas->isNotEmpty()) {
+                    // Updating lab progress based on associated to lab program
                     foreach ($labDatas as $lab) {
                         $updateLabProgress = self::trackLabUserProgress($lab, $userId);
                     }
 
+                    // Total lab multiplied with 100 and only progress of lab is plucked
                     $fetchTotalLabs = 100 * $labDatas->count();
                     $fetchUserLabProgress = ModuleCompletionStatusService::getLabUserProgressBasedOnLabsAndUserIds($labDatas->pluck('id'), $userId);
                     $fetchTotalUserLabProgress = $fetchUserLabProgress->pluck('percentage')->sum();
@@ -483,7 +456,7 @@ class TrackUserProgressHelper
 
             // Feed lab program progress
             $moduleType = config('constants.module_type.lab_programs');
-            $feedModuleProgressData = self::feedModuleProgressData($userId, $labProgramData->id, $moduleType, $labProgramProgress);
+            $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $labProgramData->id, $moduleType, $labProgramProgress);
 
             return true;
         } catch (Exception $e) {
