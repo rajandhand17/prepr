@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use App\Models\ModuleCompletionStatus;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
