@@ -2,8 +2,6 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\LabExternalLinks;
-
 class LabExternalLinksService
 {
     public static function createLabExternalLinks($originalLabsTags, $clonedLabId)
@@ -16,6 +14,7 @@ class LabExternalLinksService
                     $cloneExternalLink->save();
                 }
             });
+
             return true;
         } catch(\Exception $e) {
             return false;

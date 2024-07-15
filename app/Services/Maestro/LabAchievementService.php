@@ -2,8 +2,6 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\LabAcheivement;
-
 class LabAchievementService
 {
     public static function createLabAchievement($originalLabsAchievement, $clonedLabId)
@@ -14,6 +12,7 @@ class LabAchievementService
                 $cloneLabAchievement->lab_id = $clonedLabId;
                 $cloneLabAchievement->save();
             }
+
             return true;
         } catch (\Exception $e) {
             return false;

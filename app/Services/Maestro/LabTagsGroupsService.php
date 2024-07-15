@@ -2,8 +2,6 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\LabTagsGroups;
-
 class LabTagsGroupsService
 {
     public static function createLabTagsGroups($originalLabsTags, $clonedLabId)
@@ -16,6 +14,7 @@ class LabTagsGroupsService
                     $cloneTag->save();
                 }
             });
+
             return true;
         } catch(\Exception $e) {
             return false;
