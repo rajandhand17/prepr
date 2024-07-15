@@ -3,7 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\UtilityHelper;
-use App\Models\LabSkillsGroupsStack;
 
 class LabSkillsGroupsStackService
 {
@@ -21,6 +20,7 @@ class LabSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

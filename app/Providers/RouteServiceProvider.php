@@ -316,6 +316,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/lab.php'));
     }
+
     public function mapMaestroPreBuiltAchievementRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/prebuiltachievement/prebuiltachievement.php'));
