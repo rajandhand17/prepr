@@ -117,6 +117,7 @@ class ResourceModuleDetailService
             if ($checkResourceModuleAssetVisit) {
                 return 'yes';
             }
+
             return 'no';
         } catch (Exception $e) {
             UtilityHelper::logError($e);

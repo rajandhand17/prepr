@@ -48,6 +48,7 @@ class ResourceModuleResource extends JsonResource
                     $assetId = $index->id;
                     $checkResourceAssetCompletedOrNot = ResourceModuleDetailService::checkResourceAssetCompletedOrNot($userId, $assetId);
                 }
+
                 return [
                     'id'              => $index->id,
                     'title'           => $index->title,
@@ -58,7 +59,7 @@ class ResourceModuleResource extends JsonResource
             })->all();
         }
         if ($this->images) {
-            $files = $this->images->map(function ($file){
+            $files = $this->images->map(function ($file) {
                 $checkResourceAssetCompletedOrNot = 'no';
                 if (auth('api')->check()) {
                     $userId = auth('api')->user()->id;
@@ -75,7 +76,7 @@ class ResourceModuleResource extends JsonResource
             });
         }
         if ($this->documents) {
-            $documents = $this->documents->map(function ($document){
+            $documents = $this->documents->map(function ($document) {
                 $checkResourceAssetCompletedOrNot = 'no';
                 if (auth('api')->check()) {
                     $userId = auth('api')->user()->id;
