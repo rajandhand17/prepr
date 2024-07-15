@@ -756,6 +756,21 @@ class ProjectService
 
             return $getMyProjects;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkUserChallengeStatus($challengeId, $userId)
+    {
+        try {
+            $getUserProject = Project::where(['user_id' => $userId, 'challenge_id' => $challengeId])->first();
+
+            return $getUserProject;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

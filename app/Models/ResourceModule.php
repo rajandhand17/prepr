@@ -183,4 +183,13 @@ class ResourceModule extends Model
     {
         return $this->morphOne(Scorm::class, 'model')->latest();
     }
+
+    public function resource_module_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '4']);
+        }
+
+        return 'N/A';
+    }
 }

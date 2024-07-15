@@ -328,6 +328,30 @@ class ChallengeResource extends JsonResource
             $challenge_template = ChallengeService::getTemplate($this->challenge_project_template->template_id);
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->challenge_completion_status) {
+            switch ($this->challenge_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->challenge_completion_status->percentage,
+            ];
+        }
+
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 
@@ -381,6 +405,7 @@ class ChallengeResource extends JsonResource
             'member_count'                      => $this->members()->count(),
             'liked'                             => $this->liked(),
             'favourite'                         => $this->favourite(),
+            'module_progress'                   => $module_progress,
             'submissions_count'                 => $this->submitted_projects()->count(),
             'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                    => ChallengeExternalLinkResource::collection($this->external_links),
