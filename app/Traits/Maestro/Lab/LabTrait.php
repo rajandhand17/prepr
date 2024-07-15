@@ -2,6 +2,8 @@
 
 namespace App\Traits\Maestro\Lab;
 
+use App\Services\Maestro\LabService;
+
 trait LabTrait
 {
     protected $labService;
@@ -9,7 +11,7 @@ trait LabTrait
     public function getLabsBasedOnOrganizations($request)
     {
         try {
-            $labList = $this->labService->getLabBasedOnOrganization($request);
+            $labList = LabService::getLabBasedOnOrganization($request);
             if ($labList) {
                 return $labList;
             }

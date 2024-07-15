@@ -2,26 +2,25 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabSkillsGroupsStack;
 
 class LabSkillsGroupsStackService
 {
-    public static function createLabSkillsGroupsStack($lab, $newLabId)
+    public static function createLabSkillsGroupsStack($originalLabsSkills, $clonedLabId)
     {
         try {
-            $getSkillsBasedOnLab = LabSkillsGroupsStack::where('lab_id', $lab->id)->get();
-            if (count($getSkillsBasedOnLab) > 0) {
-                foreach ($getSkillsBasedOnLab as $skill) {
-                    $labSkillsGroupsStack = new LabSkillsGroupsStack();
-                    $labSkillsGroupsStack->lab_id = $newLabId->id;
-                    $labSkillsGroupsStack->foreign_id = $skill->foreign_id;
-                    $labSkillsGroupsStack->type = $skill->type;
-                    $labSkillsGroupsStack->save();
+            $originalLabsSkills->each(function ($skills) use ($clonedLabId) {
+                if ($skills) {
+                    $cloneSkill = $skills->replicate();
+                    $cloneSkill->lab_id = $clonedLabId;
+                    $cloneSkill->save();
                 }
-            }
+            });
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

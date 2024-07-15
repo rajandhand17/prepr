@@ -11,10 +11,9 @@ class LabController extends Controller
 {
     use LabTrait;
 
-    public function __construct(LabService $labService)
+    public function __construct()
     {
         $this->middleware('web');
-        $this->labService = $labService;
     }
 
     public function getLabsBasedOnOrganization(Request $request)

@@ -6,20 +6,16 @@ use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
 {
-    public static function createLabTagsGroups($lab, $newLab)
+    public static function createLabTagsGroups($originalLabsTags, $clonedLabId)
     {
         try {
-            $labTagsGroup = LabTagsGroups::where('lab_id', $lab->id)->get();
-            if (count($labTagsGroup) > 0) {
-                foreach ($labTagsGroup as $tag) {
-                    $labSkillsGroupsStack = new LabTagsGroups();
-                    $labSkillsGroupsStack->lab_id = $newLab->id;
-                    $labSkillsGroupsStack->foreign_id = $tag->foreign_id;
-                    $labSkillsGroupsStack->type = $tag->type;
-                    $labSkillsGroupsStack->save();
+            $originalLabsTags->each(function ($tags) use ($clonedLabId) {
+                if ($tags) {
+                    $cloneTag = $tags->replicate();
+                    $cloneTag->lab_id = $clonedLabId;
+                    $cloneTag->save();
                 }
-            }
-
+            });
             return true;
         } catch(\Exception $e) {
             return false;

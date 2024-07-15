@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\CloneLab;
 
+use App\Models\Lab;
 use App\Services\Maestro\LabAchievementService;
 use App\Services\Maestro\LabExternalLinksService;
 use App\Services\Maestro\LabService;
@@ -33,15 +34,14 @@ trait CloneLabTrait
     public function createLab($request)
     {
         try {
-            $lab = LabService::getLabById($request->lab);
+            $lab=Lab::with("skills","address","tags","external_links","achievement")->where('id',$request->lab)->first();
             $createdLab = DB::transaction(function () use ($lab, $request) {
                 $newLab = LabService::createLab($lab, $request->organization);
-                $labAddress = LabAddressService::createLabAddress($lab, $newLab);
-                $labSKillsGroupStack = LabSkillsGroupsStackService::createLabSkillsGroupsStack($lab, $newLab);
-                $labTagGroupStack = LabTagsGroupsService::createLabTagsGroups($lab, $newLab);
-                $labExternalLinks = LabExternalLinksService::createLabExternalLinks($lab, $newLab);
-                $createdLabAchievement = LabAchievementService::createLabAchievement($lab, $newLab);
-
+                $labAddress = LabAddressService::createLabAddress($lab->address, $newLab->id);
+                $labSKillsGroupStack = LabSkillsGroupsStackService::createLabSkillsGroupsStack($lab->skills, $newLab->id);
+                $labTagGroupStack = LabTagsGroupsService::createLabTagsGroups($lab->tags, $newLab->id);
+                $labExternalLinks = LabExternalLinksService::createLabExternalLinks($lab->external_links, $newLab->id);
+                $createdLabAchievement = LabAchievementService::createLabAchievement($lab->achievement, $newLab->id);
                 return [
                     'lab'                    => $newLab,
                     'lab_address'            => $labAddress,
@@ -62,7 +62,7 @@ trait CloneLabTrait
             return false;
         } catch(Exception $e) {
             DB::rollback();
-
+            dd($e);
             return false;
         }
     }

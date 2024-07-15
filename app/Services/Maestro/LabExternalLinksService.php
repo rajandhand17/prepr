@@ -6,20 +6,16 @@ use App\Models\LabExternalLinks;
 
 class LabExternalLinksService
 {
-    public static function createLabExternalLinks($lab, $newLab)
+    public static function createLabExternalLinks($originalLabsTags, $clonedLabId)
     {
         try {
-            $labExternalLink = LabExternalLinks::where('lab_id', $lab->id)->get();
-            if (count($labExternalLink) > 0) {
-                foreach ($labExternalLink as $links) {
-                    $labExternalLink = new LabExternalLinks();
-                    $labExternalLink->lab_id = $newLab->id;
-                    $labExternalLink->social_media_link = $links->social_media_link;
-                    $labExternalLink->social_link_id = $links->social_link_id;
-                    $labExternalLink->save();
+            $originalLabsTags->each(function ($external_links) use ($clonedLabId) {
+                if ($external_links) {
+                    $cloneExternalLink = $external_links->replicate();
+                    $cloneExternalLink->lab_id = $clonedLabId;
+                    $cloneExternalLink->save();
                 }
-            }
-
+            });
             return true;
         } catch(\Exception $e) {
             return false;

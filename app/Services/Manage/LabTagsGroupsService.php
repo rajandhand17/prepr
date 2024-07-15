@@ -7,7 +7,7 @@ use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
 {
-    public static function createLabTagsGroups($request, $lab)
+    public function createLabTagsGroups($request, $lab)
     {
         if ($request->has('tags')) {
             if (count($request->tags) > 0) {

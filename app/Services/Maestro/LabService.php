@@ -18,17 +18,6 @@ class LabService
         }
     }
 
-    public static function getLabById($labId)
-    {
-        try {
-            $lab_list = Lab::where('labs.id', $labId)->first();
-
-            return $lab_list;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public static function createLab($labDetails, $organizationId)
     {
         try {
@@ -72,9 +61,6 @@ class LabService
             if ($request->search) {
                 $labs = $labs->where('title', 'LIKE', '%'.$request->search.'%');
             }
-            if ($request->privacy == 'public') {
-                $labs = $labs->where('privacy', $request->privacy);
-            }
             $labs = $labs->where('language', $request->language)->get()->take(20)->pluck('title', 'id');
             $count = 0;
             $json_stacks = $json_result = [];
@@ -86,7 +72,7 @@ class LabService
             $json_result['result'] = $json_stacks;
 
             return response()->json($json_result);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
