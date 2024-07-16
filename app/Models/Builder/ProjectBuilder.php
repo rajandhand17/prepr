@@ -43,7 +43,7 @@ class ProjectBuilder extends BaseBuilder
         $allowedGlobal = $this->allowedGlobalSearch();
         if (!$allowedGlobal) {
             return $this->where(function ($query) {
-                $query->where('privacy', '=', '0')->orWhere('user_id', '=', auth()->id());
+                $query->where('user_id', '=', auth()->id())->orWhere('privacy', '=', '0')->orWhere('user_id', '=', auth()->id());
             });
         }
 

@@ -127,4 +127,18 @@ class LabProgram extends Model
     {
         return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('share', '1');
     }
+
+    public function labs()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id')->where('lab_id', '!=', null);
+    }
+
+    public function lab_program_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '1']);
+        }
+
+        return 'N/A';
+    }
 }

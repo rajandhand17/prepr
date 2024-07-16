@@ -213,6 +213,30 @@ class LabResource extends JsonResource
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->lab_completion_status) {
+            switch ($this->lab_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->lab_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                               => $this->uuid,
             'type'                             => $type,
@@ -245,6 +269,7 @@ class LabResource extends JsonResource
             'is_verified'                      => ($this->is_verified == '1') ? 'yes' : 'no',
             'is_accessible'                    => ($this->is_accessible == '1') ? 'yes' : 'no',
             'is_live_event_enabled'            => $this->is_live_event_enabled ? 'yes' : 'no',
+            'module_progress'                  => $module_progress,
             'live_event'                       => AirmeetEventResource::make($this->airmeet),
             'address'                          => $address,
             'achievement'                      => $achievement,

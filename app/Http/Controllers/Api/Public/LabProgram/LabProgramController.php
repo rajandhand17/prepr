@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\LabProgram;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\LabProgram\LabProgramResource;
@@ -49,6 +50,10 @@ class LabProgramController extends AppBaseController
             if ($labProgram) {
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+                }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
                 }
 
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));

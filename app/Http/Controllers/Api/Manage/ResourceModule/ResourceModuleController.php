@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceModule\AddLinksResourceModuleRequest;
@@ -78,6 +79,8 @@ class ResourceModuleController extends AppBaseController
                 if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
+                $userId = auth()->user()->id;
+                TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
