@@ -54,4 +54,14 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabsWithRelatedTables($request)
+    {
+        try {
+            $lab = Lab::with('skills', 'address', 'tags', 'external_links', 'achievement')->where('id', $request->lab)->first();
+            return $lab;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }
