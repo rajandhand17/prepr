@@ -43,6 +43,20 @@ class ProjectService
         }
     }
 
+    public static function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+            $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterProjectList($project_list, $request)
     {
         try {
@@ -742,6 +756,21 @@ class ProjectService
 
             return $getMyProjects;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkUserChallengeStatus($challengeId, $userId)
+    {
+        try {
+            $getUserProject = Project::where(['user_id' => $userId, 'challenge_id' => $challengeId])->first();
+
+            return $getUserProject;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

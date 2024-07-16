@@ -16,10 +16,12 @@ use App\Http\Requests\Public\AdvanceSearch\ResourceGroupSearchRequest;
 use App\Http\Requests\Public\AdvanceSearch\ResourceModuleSearchRequest;
 use App\Http\Requests\Public\AdvanceSearch\UserSearchRequest;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
+use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
@@ -63,7 +65,7 @@ class AdvanceSearchController extends AppBaseController
 
             return $this->sendResponse([
                 ...$data,
-                'list' => data_get($data, 'list')->items(),
+                'list' => LabProgramResource::collection(data_get($data, 'list')->items()),
             ], __('responses.advance_search.lab_programs_lists'));
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.advance_search.failed_to_fetch_lab_programs_list'));
@@ -78,7 +80,7 @@ class AdvanceSearchController extends AppBaseController
                 return $this->sendError(__('responses.advance_search.failed_to_fetch_lab_marketplace_list'));
             }
 
-            return $this->sendResponse([...$data, 'list' => data_get($data, 'list')->items()], __('responses.advance_search.lab_marketplace_lists'));
+            return $this->sendResponse([...$data, 'list' => LabMarketplaceResource::collection(data_get($data, 'list')->items())], __('responses.advance_search.lab_marketplace_lists'));
         } catch (\Exception $exception) {
             return $this->sendError(__('responses.advance_search.failed_to_fetch_lab_marketplace_list'));
         }

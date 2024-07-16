@@ -19,6 +19,14 @@ use HiFolks\RandoPhp\Randomize;
 
 class ProjectService
 {
+    public static function getProjectCounts()
+    {
+        try {
+            return Project::count();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function getProjectsList()
     {
         try {

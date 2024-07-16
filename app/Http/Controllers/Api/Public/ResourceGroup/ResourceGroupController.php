@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceGroup;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceGroup\AddRatingRequest;
@@ -50,6 +51,10 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot) {
                 if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+                }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
                 }
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));

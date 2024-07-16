@@ -167,14 +167,14 @@
                 <p>Tag</p>
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a href="{{ route('taggroup.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tag Groups</p>
               </a>
             </li>
-    
+
           </ul>
         </li>
 
@@ -244,7 +244,12 @@
             <p>Trophy Awards</p>
           </a>
         </li>
-
+          <li class="nav-item">
+              <a href="{{ route('clone-lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'clone-lab.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Clone Lab</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
@@ -260,14 +265,14 @@
                 <p>Regular Awards</p>
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a href="{{ route('skillsaward.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Awards</p>
               </a>
             </li>
-    
+
           </ul>
         </li>
         <li class="nav-item">
