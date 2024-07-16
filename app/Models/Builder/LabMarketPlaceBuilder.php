@@ -36,7 +36,7 @@ class LabMarketPlaceBuilder extends BaseBuilder
             $organizationIds = $this->getUserOrganizationIds();
 
             return $this->where(function ($query) use ($organizationIds) {
-                $query->wherehas('organization', function ($query) use ($organizationIds) {
+                $query->where('user_id', '=', auth()->id())->orWherehas('organization', function ($query) use ($organizationIds) {
                     $query->where('is_verified', '=', '1')->orWhereIn('id', $organizationIds);
                 });
             });
