@@ -18,37 +18,15 @@ class LabService
         }
     }
 
-    public static function createLab($labDetails, $organizationId)
+    public static function createLab($lab, $organizationId)
     {
         try {
-            $lab = new Lab();
-            $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $lab->language = $labDetails->language;
-            $lab->user_id = auth()->user()->id;
-            $lab->organization_id = $organizationId;
-            $lab->category_id = $labDetails->category_id;
-            $lab->duration_id = $labDetails->duration_id;
-            $lab->level_id = $labDetails->level_id;
-            $lab->type = $labDetails->type;
-            $lab->slug = $labDetails->slug;
-            $lab->title = $labDetails->title;
-            $lab->description = $labDetails->description;
-            $lab->privacy = $labDetails->privacy;
-            $lab->media_type = $labDetails->media_type;
-            $lab->media = $labDetails->media;
-            $lab->status = $labDetails->status;
-            $lab->total_share = $labDetails->total_share;
-            $lab->is_auto_created = $labDetails->is_auto_created;
-            $lab->is_ai_created = $labDetails->is_ai_created;
-            $lab->is_resource_sequential = $labDetails->is_resource_sequential;
-            $lab->is_sequential = $labDetails->is_sequential;
-            $lab->is_achievement_enabled = $labDetails->is_achievement_enabled;
-            $lab->is_notification_enabled = $labDetails->is_notification_enabled;
-            $lab->is_verified = $labDetails->is_verified;
-            $lab->is_live_event_enabled = $labDetails->is_live_event_enabled;
-            $lab->save();
-
-            return $lab;
+            $cloneLab = $lab->replicate();
+            $cloneLab->uuid =Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $cloneLab->organization_id=$organizationId;
+            $cloneLab->user_id=auth()->user()->id;
+            $cloneLab->save();
+            return $cloneLab;
         } catch (\Exception $e) {
             return false;
         }
