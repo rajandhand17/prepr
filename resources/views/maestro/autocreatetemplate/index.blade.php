@@ -26,10 +26,10 @@
                     <div class="card-body">
                         <div class="row auto-crate-body">
                             <div class="col-md-6">
-                                <select class="form-control" id="role" onchange="changeRoles(this.value)">
+                                <select class='form-control' id='role_list' name="non_drop">
                                     <option value="">Select Role</option>
                                     @foreach($roles as $role)
-                                    <option value="{{$role->name}}">{{$role->display_name}}</option>
+                                    <option value="{{$role->id}}">{{$role->display_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -164,11 +164,10 @@
                 Are you sure you want to update the details ?
             </div>
             <div class="modal-footer">
-                {!!Form::open(array('method'=>'POST','route'=>'clonemodule'))!!}
                 <input type='hidden' id='sdc_lab' name='sdc_lab' value=''/>
                 <input type='hidden' id='sdc_challenge' name='sdc_challenge' value=''/>
                 <input type='hidden' id='selected_role' name='selected_role' value=''/>
-                <input type='hidden' id='role_user_type_slected' name='role_user_type_slected' value=''/>
+                <input type='hidden' id='user_type'     name='user_type' value=''/>
                 <input type='hidden' id='selected_lab_ids' name='selected_lab_ids' value=''/>
                 <input type='hidden' id='selected_challenge_ids' name='selected_challenge_ids' value=''/>
                 <input type='hidden' id='selected_group_challenge_ids' name='selected_group_challenge_ids' value=''/>
@@ -177,7 +176,7 @@
                 <input type='hidden' id='invite_challenge' name='invite_challenge' value=''/>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 <input type='hidden' id='selected_language' name='selected_language' value=''/>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary cloneBtn">Save</button>
                 {!!Form::close()!!}
             </div>
         </div>
@@ -194,7 +193,122 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
+    $("#role_list").change(function(){
+        console.log("1st role list");
+        $('#clone_lab_chk').prop('checked',false);
+        $('#clone_challenge_chk').prop('checked',false);
+        $("#organisation_type option:selected").removeAttr("selected");
+        $(this).find("option:selected").each(function(){
+            role_selected= $(this).val()
+            $('#lab_list_div').css('display','none')
+            $('#lab_group_list_div').css('display','none')
+            $('#challenge_list_div').css('display','none')
+            $('#challenge_group_list_div').css('display','none')
+            if(role_selected === 'free_lab_manager' ){
+                $('#clone_challenge_chk_div').css('display','none');
+                $('#invite_challenge_div').css('display','none');
+            }
+            var optionValue = $(this).attr("name");
+            if(optionValue){
+                $(".list").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".list").hide();
+            }
+        });
+    }).change();
 
+    $("#role_list").change(function(){
+        console.log("2nd role list");
+        $('#clone_lab_chk').prop('checked',false);
+        $('#clone_challenge_chk').prop('checked',false);
+        $("#org_type option:selected").removeAttr("selected");
+        $(this).find("option:selected").each(function(){
+            role_selected= $(this).val()
+            $('#lab_list_div').css('display','none')
+            $('#lab_group_list_div').css('display','none')
+            $('#challenge_list_div').css('display','none')
+            $('#challenge_group_list_div').css('display','none')
+            if(role_selected === 'free_lab_manager' ){
+                $('#clone_challenge_chk_div').css('display','none');
+                $('#invite_challenge_div').css('display','none');
+            }
+            var optionValue = $(this).attr("name");
+            if(optionValue){
+                $(".list").not("." + optionValue).hide();
+                $("." + optionValue).show();
+            } else{
+                $(".list").hide();
+            }
+
+
+        });
+    }).change();
+
+    role_type_selected= '';
+    $('#role_list').change(function(){
+        console.log("3rd role list");
+        $(".non_drop option:selected").removeAttr("selected");
+        role_type_selected= $( ".non_drop option:selected" ).val();
+        if(role_type_selected!= ''){
+            $('#clonecheckbox_div').css('display','block')
+            getPreSelectLabList(role_selected, role_type_selected);
+            getPreSelectChallengeList(role_selected, role_type_selected);
+            getPreSelectChallengeGroupList(role_selected, role_type_selected);
+            getPreSelectLabGroupList(role_selected, role_type_selected);
+        }
+    });
+
+    $('#clone_lab_chk').click(function(){
+        role_selected= $( "#role_list option:selected" ).val();
+        clone_challenge= false;
+        if ($('#clone_lab_chk').is(':checked')) {
+            clone_lab= true;
+            $('#lab_list_div').css('display','block')
+            $('#lab_group_list_div').css('display','block');
+            $('#invite_users_div').css('display','block');
+            $('#invite_lab_div').css('display','block');
+
+        }else{
+            clone_lab= false;
+            $('#lab_list_div').css('display','none')
+            $('#lab_group_list_div').css('display','none')
+            // $('#invite_users_div').css('display','none')
+            // $('#invite_lab_chk').css('display','none')
+        }
+        if(role_selected!= '' && role_type_selected!='')
+        {
+            //getPreSelectLabList(role_selected, role_type_selected);
+
+        }
+    });
+
+
+    invite_lab= 0;
+    invite_challenge= 0;
+
+    $('#clone_challenge_chk').click(function(){
+        role_selected= $( "#role_list option:selected" ).val();
+        if ($('#clone_challenge_chk').is(':checked')) {
+            clone_challenge= true;
+            $('#challenge_list_div').css('display','block')
+            $('#challenge_group_list_div').css('display','block')
+            $('#invite_users_div').css('display','block');
+            $('#invite_challenge_div').css('display','block');
+        }else{
+            clone_challenge= false;
+            $('#challenge_list_div').css('display','none')
+            $('#challenge_group_list_div').css('display','none')
+            // $('#invite_users_div').css('display','none');
+            // $('#invite_challenge_chk').css('display','none');
+        }
+
+        if(role_selected!= '' && role_type_selected!='')
+        {
+            // getPreSelectChallengeList(role_selected, role_type_selected);
+
+        }
+    });
     function changeRoles(role) {
         const elements = [
             '#org_type',
@@ -216,32 +330,36 @@
         $('#clone_lab_chk').prop('checked',false);
         $('#clone_challenge_chk').prop('checked',false);
         $('#user_type').css('display', 'none');
-        if (role === "organization_owner" || role === "organization_manager") {
+        if (role === "organization_manager"){
             $('#org_type').css('display','block');
+            $('#clonecheckbox_div').css('display','flex');
+        }
+        if( role === "organization_owner"){
+
             $('#clonecheckbox_div').css('display','flex');
         }
         if(role === "lab_manager" || role==="resource_manager" || role==="challenge_manager"){
             $('#clonecheckbox_div').css('display','flex');
         }
-        if(role === 'super_admin'){
-            role_selected=$("#role").val();
-            role_type_selected=$("#user_type").val();
-            plucked="lab_template_id";
-            getPreSelectModuleList(role_selected, role_type_selected,plucked)
-            plucked="lab_program_id";
-            getPreSelectModuleList(role_selected, role_type_selected,plucked);
-            plucked="challenge_template_id";
-            getPreSelectModuleList(role_selected, role_type_selected,plucked);
-            plucked="challenge_path_id";
-           getPreSelectModuleList(role_selected, role_type_selected,plucked);
-            $('#clonecheckbox_div').css('display','flex');
-            $('#invite_users_div').css('display','flex');
-            $('#lab_list_div').css('display','block');
-            $('#challenge_list_div').css('display','block');
-            $('#lab_group_list_div').css('display','block');
-            $('#challenge_group_list_div').css('display','block');
-
-        }
+        // if(role === 'super_admin'){
+        //     role_selected=$("#role").val();
+        //     role_type_selected=$("#user_type").val();
+        //     plucked="lab_template_id";
+        //     getPreSelectModuleList(role_selected, role_type_selected,plucked)
+        //     plucked="lab_program_id";
+        //     getPreSelectModuleList(role_selected, role_type_selected,plucked);
+        //     plucked="challenge_template_id";
+        //     getPreSelectModuleList(role_selected, role_type_selected,plucked);
+        //     plucked="challenge_path_id";
+        //    getPreSelectModuleList(role_selected, role_type_selected,plucked);
+        //     $('#clonecheckbox_div').css('display','flex');
+        //     $('#invite_users_div').css('display','flex');
+        //     $('#lab_list_div').css('display','block');
+        //     $('#challenge_list_div').css('display','block');
+        //     $('#lab_group_list_div').css('display','block');
+        //     $('#challenge_group_list_div').css('display','block');
+        //
+        // }
 
         if(role === 'user'){
             $('#clonecheckbox_div').css('display','flex');
@@ -264,10 +382,10 @@
                 url:"{{ route('getPreSelectLabList') }}",
                 aysc:false,
                 data:{
-                 //   role_selected: role_selected,
-                //    role_type_selected: role_type_selected,
+                    //   role_selected: role_selected,
+                    //    role_type_selected: role_type_selected,
                     language: $('#language :selected').val(),
-                 //   plucked: plucked
+                    //   plucked: plucked
                 },
                 success:function(response){
                     console.log(response);
@@ -382,8 +500,9 @@
         }
         $('#sdc_lab').val(clone_lab);
         $('#sdc_challenge').val(clone_challenge);
-        $('#selected_role').val(role_selected);
-        $('#role_user_type_slected').val(role_type_selected);
+        $('#selected_role').val($("#role").val());
+
+        $('#role_user_type_slected').val($("#user_type").val());
         $('#selected_lab_ids').val(selected_labs);
         $('#selected_challenge_ids').val(selected_challenges);
         $('#selected_group_challenge_ids').val(selected_group_challenges);
@@ -398,26 +517,145 @@
         }
         $('#cloneModal').modal('show');
     });
+    function getPreSelectLabList(role_selected, role_type_selected)
+    {
+        console.log(role_selected, role_type_selected);
+        $.ajax({
+            type:'POST',
+            url:"{{ route('getPreSelectLabList') }}",
+            data:{role_selected:role_selected, role_type_selected:role_type_selected,
+                language : $('#language :selected').val()},
+            success:function(respoonse){
+                if(respoonse.result!= ''){
+                    $('#clone_lab_chk').prop('checked',true);
+                    $('#lab_list_div').css('display','block');
+                    $('#lab_group_list_div').css('display','block');
+                    if(respoonse!=='' && respoonse.invite_info.invite_labs== '1'){
+                        $('#invite_lab_chk').prop('checked',true);
+                        $('#invite_users_div').css('display','block');
+                        $('#invite_lab_div').css('display','block');
+
+                    }else{
+                        $('#invite_lab_chk').prop('checked',false);
+                        $('#invite_users_div').css('display','block');
+                        $('#invite_lab_div').css('display','block');
+                    }
+
+                }else{
+                    $('#clone_lab_chk').prop('checked',false);
+                    $('#lab_list_div').css('display','none')
+
+                }
+
+                $('#lab_list').html('');
+                var toAppend = '';
+                $.each(respoonse.result,function(index,title){
+                    toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                });
+
+                $('#lab_list').append(toAppend);
 
 
-    $(document).ready(function() {
-        $('#lab_list').select({
-            placeholder: "Select Option",
-            // ajax: {
-            //     url: '{{route("getModuleList")}}',
-            //     data: function (params) {
-            //         return {
-            //             search: params.term,
-            //             language: 'en',
-            //         };
-            //     },
-            //     processResults: function (data) {
-            //         return {
-            //             results: data.result
-            //         };
-            //     }
-            // }
+            }
         });
-    });
+    }
+
+    function  getPreSelectChallengeList(role_selected, role_type_selected){
+
+        $.ajax({
+            type:'POST',
+            url:"{{ route('getPreSelectedChallengeList') }}",
+            data:{role_selected:role_selected, role_type_selected:role_type_selected,
+                language : $('#language :selected').val()},
+            success:function(respoonse) {
+                $('#challenge_list').html('');
+                var toAppend = '';
+                if(respoonse.result!= '') {
+                    $('#clone_challenge_chk').prop('checked',true);
+                    $('#challenge_list_div').css('display','block')
+                    $('#challenge_group_list_div').css('display','block');
+
+                    if (respoonse!=='' && respoonse.invite_info.invite_challenges== '1'){
+                        $('#invite_challenge_chk').prop('checked',true);
+                        $('#invite_users_div').css('display','block');
+                        $('#invite_challenge_div').css('display','block');
+                        $('#clone_challenge_chk_div').css('display','block');
+
+                    } else {
+                        $('#invite_challenge_chk').prop('checked',false);
+                        $('#invite_users_div').css('display','block');
+                        $('#invite_challenge_div').css('display','block');
+                        $('#clone_challenge_chk_div').css('display','block');
+
+                    }
+
+                } else {
+                    $('#clone_challenge_chk').prop('checked',false);
+                    $('#challenge_list_div').css('display','none');
+                    $('#challenge_group_list_div').css('display','none');
+                }
+                $.each(respoonse.result,function(index,title){
+                    toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                });
+                $('#challenge_list').append(toAppend);
+
+
+
+            }
+        });
+
+    }
+
+    function  getPreSelectChallengeGroupList(role_selected, role_type_selected){
+
+        $.ajax({
+            type:'POST',
+            url:"{{ route('getPreSelectChallengeGroupList') }}",
+            data:{role_selected:role_selected, role_type_selected:role_type_selected,
+                language : $('#language :selected').val()},
+            success:function(respoonse){
+                $('#challenge_group_list').html('');
+                var toAppend = '';
+                if(respoonse.result!= ''){
+                    $('#clone_challenge_chk').prop('checked',true);
+                    $('#challenge_group_list_div').css('display','block')
+                }
+                $.each(respoonse.result,function(index,title){
+                    toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                });
+
+                $('#challenge_group_list').append(toAppend);
+
+
+            }
+        });
+
+    }
+
+    function getPreSelectLabGroupList(role_selected, role_type_selected)
+    {
+        $.ajax({
+            type:'POST',
+            url:"{{ route('getPreSelectLabGroupList') }}",
+            data:{role_selected:role_selected, role_type_selected:role_type_selected,
+                language : $('#language :selected').val()},
+            success:function(respoonse){
+                if(respoonse.result!= ''){
+                    $('#clone_lab_chk').prop('checked',true);
+                    $('#lab_group_list_div').css('display','block')
+                }
+                $('#lab_group_list').html('');
+                var toAppend = '';
+                $.each(respoonse.result,function(index,title){
+                    toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                });
+
+                $('#lab_group_list').append(toAppend);
+
+
+            }
+        });
+    }
+
 </script>
 @endsection

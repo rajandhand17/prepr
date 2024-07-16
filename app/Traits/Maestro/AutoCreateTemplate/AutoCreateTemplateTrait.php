@@ -17,10 +17,18 @@ trait AutoCreateTemplateTrait
         }
     }
 
-    public function getLists($request)
+    public function getPreSelectLabLists($request)
     {
         try {
-            return AutoCreateTemplatesService::getList($request);
+            return AutoCreateTemplatesService::getPreSelectLabList($request);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
+    public function getPreSelectedChallengeLists($request)
+    {
+        try {
+            return AutoCreateTemplatesService::getPreSelectedChallengeList($request);
         }catch (\Exception $e) {
             return false;
         }
