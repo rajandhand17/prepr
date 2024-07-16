@@ -27,7 +27,7 @@
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>{{ $componentCount['totalUser'] }}</h3>
+                        <h3>{{ $componentCount['totalUsers'] }}</h3>
 
                         <p>Total User</p>
                     </div>
@@ -42,7 +42,7 @@
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>{{ $componentCount['totalChallenge'] }}</h3>
+                        <h3>{{ $componentCount['totalChallenges'] }}</h3>
 
                         <p>Total Challenge</p>
                     </div>

@@ -55,4 +55,13 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabCounts()
+    {
+        try {
+            return Lab::count();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

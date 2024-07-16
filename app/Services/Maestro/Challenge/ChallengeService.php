@@ -28,6 +28,14 @@ use Intervention\Image\Facades\Image;
 
 class ChallengeService
 {
+    public static function getChallengeCounts()
+    {
+        try {
+            return Challenge::count();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function getChallengeList()
     {
         try {

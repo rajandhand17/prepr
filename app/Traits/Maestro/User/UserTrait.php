@@ -2,8 +2,8 @@
 
 namespace App\Traits\Maestro\User;
 
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use App\Services\Maestro\User\UserService;
+use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use Exception;
 
 trait UserTrait
@@ -11,7 +11,9 @@ trait UserTrait
     private function createUser($request)
     {
         try {
-            if (UserService::createUser($request)) {
+            $userObj = UserService::createUser($request);
+            if ($userObj) {
+                RoleAndPermissionService::userSyncRoles($userObj, $request->roles);
                 return true;
             }
 
@@ -33,7 +35,9 @@ trait UserTrait
     private function updateUserById($id, $request)
     {
         try {
-            if (UserService::updateUserById($id, $request)) {
+            $userObj = UserService::updateUserById($id, $request);
+            if ($userObj) {
+                RoleAndPermissionService::userSyncRoles($userObj, $request->roles);
                 return true;
             }
 
@@ -73,9 +77,9 @@ trait UserTrait
     private function getAllRoles()
     {
         try {
-            $users = RoleAndPermissionService::getAllRoles();
-            if ($users) {
-                return $users;
+            $roles = RoleAndPermissionService::getAllRoles();
+            if ($roles) {
+                return $roles;
             }
 
             return false;

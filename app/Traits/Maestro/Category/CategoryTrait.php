@@ -134,9 +134,9 @@ trait CategoryTrait
     private function getCategory()
     {
         try {
-            $subCategory = CategoryService::getCategory();
-            if ($subCategory) {
-                return $subCategory;
+            $category = CategoryService::getCategory();
+            if ($category) {
+                return $category;
             }
 
             return false;
