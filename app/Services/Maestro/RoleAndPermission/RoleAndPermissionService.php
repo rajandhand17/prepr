@@ -62,6 +62,14 @@ class RoleAndPermissionService
             return false;
         }
     }
+    public static function getRoles()
+    {
+        try {
+            return Role::query();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 
     public static function updateRole($id, $request)
     {
@@ -77,19 +85,25 @@ class RoleAndPermissionService
         }
     }
 
-    public static function getRoles()
+    public static function getAllRoles()
     {
         try {
-            return Role::query();
+            return Role::get();
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function getAllRoles()
+    public static function userSyncRoles($user, $roles)
     {
         try {
-            return Role::get();
+            if (!empty($roles)) {
+                $user->syncRoles($roles);
+
+                return true;
+            }
+
+            return false;
         } catch (Exception $e) {
             return false;
         }

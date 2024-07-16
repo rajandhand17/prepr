@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'PUT','route' => ['users.update', $user->id],'files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'PUT','route' => ['users.update', $user->id],'files'=>'true','role'=>"form"))!!}
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -66,7 +66,7 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Role</label>
-                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
+                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;" required>
                                   @if(!empty($roles))
                                     @foreach($roles as $key => $role)
                                       <option value="{{ $role->name }}" @selected(in_array($role->name, $selected_role)) >{{ $role->display_name }}</option>
@@ -98,7 +98,7 @@
                           <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                     <a class="btn btn-danger mr-1" href="{{ route('users.index') }}"><i class="icon-cross2"></i> Cancel</a>
                                 </div>
                             </div>

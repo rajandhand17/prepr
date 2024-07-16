@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'users.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'users.store','files'=>'true','role'=>"form"))!!}
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -66,10 +66,12 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Role</label>
-                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
+                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;" required>
                                   @if(!empty($roles))
                                     @foreach($roles as $key => $role)
-                                      <option value="{{ $role->name }}" >{{ $role->display_name }}</option>
+                                      <option value="{{ $role->name }}" @if($role->name =='user')
+                                        @selected(true)
+                                      @endif>{{ $role->display_name }}</option>
                                     @endforeach
                                   @endif
                                 </select>

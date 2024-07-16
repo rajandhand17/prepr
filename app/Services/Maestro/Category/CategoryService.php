@@ -5,6 +5,7 @@ namespace App\Services\Maestro\Category;
 use App\Models\Category;
 use App\Models\Language;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class CategoryService
 {
@@ -82,6 +83,7 @@ class CategoryService
     public static function storeUpdateCategory($request, $id, $moduleMode)
     {
         try {
+            DB::beginTransaction();
             $componentString = '';
             $componentsArray = $request->get('components');
             if (is_array($componentsArray) && count($componentsArray) > 0) {
@@ -111,7 +113,7 @@ class CategoryService
                     $category->$columName = $request->$columName;
                 }
             }
-            if ($request->get('parent_id') !== null) {
+            if ($request->filled('parent_id')) {
                 $category->parent_id = $request->get('parent_id');
             } else {
                 $category->parent_id = '0';
@@ -119,11 +121,13 @@ class CategoryService
 
             $category->components = $componentString;
             if ($category->save()) {
+                DB::commit();
                 return true;
             }
-
+            DB::rollback();
             return false;
         } catch (Exception $e) {
+            DB::rollback();
             return false;
         }
     }
