@@ -14,8 +14,9 @@ class LabAddressService
                 $cloneLabAddress->lab_id = $newLabId;
                 $cloneLabAddress->save();
             }
+
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

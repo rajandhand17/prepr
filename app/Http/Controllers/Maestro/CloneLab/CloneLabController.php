@@ -13,7 +13,6 @@ class CloneLabController extends Controller
 {
     use CloneLabTrait;
 
-
     public function __construct()
     {
         $this->middleware('web');
@@ -24,7 +23,7 @@ class CloneLabController extends Controller
         try {
             $organizations = OrganizationService::getOrganizations();
             $associativeLab = $this->getAllLabs();
-            $languages =LanguageService::getLanguages();
+            $languages = LanguageService::getLanguages();
 
             return view('maestro.cloneLab.index', compact('organizations', 'languages', 'associativeLab'));
         } catch (\Exception $e) {
@@ -39,8 +38,8 @@ class CloneLabController extends Controller
             if ($getResponses !== false) {
                 return redirect()->route('clone-lab.index')->with('success', 'Lab created successfully');
             }
-            return redirect()->route('clone-lab.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
 
+            return redirect()->route('clone-lab.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }

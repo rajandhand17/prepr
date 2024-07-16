@@ -23,5 +23,4 @@ class LabSkillsGroupsStack extends Model
     {
         return $this->belongsTo(Lab::class);
     }
-
 }
