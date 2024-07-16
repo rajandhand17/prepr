@@ -306,6 +306,6 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroAutoCrateTemplateRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/autocreatetemplate/autocreatetemplate.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/autocreatetemplate.php'));
     }
 }

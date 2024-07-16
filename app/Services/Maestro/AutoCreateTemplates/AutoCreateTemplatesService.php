@@ -67,8 +67,6 @@ class AutoCreateTemplatesService
     public static function fetchModuleList($request)
     {
         $module=Lab::class;
-//        $searched = $request->search;
-//        $module=$request->module;
         try {
             $data = [];
             if (!empty($searched)) {
@@ -134,6 +132,7 @@ class AutoCreateTemplatesService
             }
 
             return true;
+
         } catch (Exception $e) {
             return false;
         }

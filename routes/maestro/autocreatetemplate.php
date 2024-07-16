@@ -8,6 +8,4 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('getPreSelectLabList', [AutoCreateTemplateController::class,'getList'])->name('getPreSelectLabList');
     Route::post('clonemodule', [AutoCreateTemplateController::class,'cloneModule'])->name('clonemodule');
     Route::post('get-module-list', [AutoCreateTemplateController::class,'getModuleList'])->name('getModuleList');
-
-
 });

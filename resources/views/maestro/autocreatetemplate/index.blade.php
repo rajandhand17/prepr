@@ -259,6 +259,20 @@
         if (checkbox.checked) {
             $('#lab_list_div').css('display','block');
             $('#lab_group_list_div').css('display','block');
+            $.ajax({
+                type:'POST',
+                url:"{{ route('getPreSelectLabList') }}",
+                aysc:false,
+                data:{
+                 //   role_selected: role_selected,
+                //    role_type_selected: role_type_selected,
+                    language: $('#language :selected').val(),
+                 //   plucked: plucked
+                },
+                success:function(response){
+                    console.log(response);
+                }
+            });
 
         } else {
             $('#lab_list_div').css('display','none');
@@ -389,20 +403,20 @@
     $(document).ready(function() {
         $('#lab_list').select({
             placeholder: "Select Option",
-            ajax: {
-                url: '{{route("getModuleList")}}',
-                data: function (params) {
-                    return {
-                        search: params.term,
-                        language: 'en',
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data.result
-                    };
-                }
-            }
+            // ajax: {
+            //     url: '{{route("getModuleList")}}',
+            //     data: function (params) {
+            //         return {
+            //             search: params.term,
+            //             language: 'en',
+            //         };
+            //     },
+            //     processResults: function (data) {
+            //         return {
+            //             results: data.result
+            //         };
+            //     }
+            // }
         });
     });
 </script>
