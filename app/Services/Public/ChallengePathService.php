@@ -124,4 +124,15 @@ class ChallengePathService
             return false;
         }
     }
+
+    public static function getChallengePathBasedOnArrayIds($ids)
+    {
+        try {
+            return ChallengePath::whereIn('id', $ids)->where('is_accessible', '1')->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

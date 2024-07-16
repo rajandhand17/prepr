@@ -101,6 +101,30 @@ class LabProgramResource extends JsonResource
             ];
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->lab_program_completion_status) {
+            switch ($this->lab_program_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->lab_program_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -130,6 +154,7 @@ class LabProgramResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'module_progress'               => $module_progress,
             'liked'                         => $this->liked(),
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),

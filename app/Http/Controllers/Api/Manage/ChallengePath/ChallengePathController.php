@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\ChallengePath;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ChallengePath\CreateChallengePathRequest;
@@ -230,6 +231,8 @@ class ChallengePathController extends AppBaseController
                 if ($challengePath->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
+                $userId = $userData->id;
+                TrackUserProgressHelper::trackChallengePathUserProgress($challengePath, $userId);
 
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));
             }
