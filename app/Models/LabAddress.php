@@ -21,4 +21,9 @@ class LabAddress extends Model
         'city',
         'country',
     ];
+
+    public function lab()
+    {
+        return $this->belongsTo(Lab::class);
+    }
 }
