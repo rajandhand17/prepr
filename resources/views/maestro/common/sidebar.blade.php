@@ -282,6 +282,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="{{ route('explore.index')}} " class="nav-link {{ Route::currentRouteName() == 'explore.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Explore Page</p>
+          </a>
+        </li>
+        <li class="nav-item"> 
           <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
