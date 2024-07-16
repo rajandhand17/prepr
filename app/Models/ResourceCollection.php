@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceCollectionBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,6 +32,11 @@ class ResourceCollection extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function newEloquentBuilder($query): ResourceCollectionBuilder
+    {
+        return new ResourceCollectionBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {

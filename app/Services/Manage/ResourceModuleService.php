@@ -45,7 +45,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -189,10 +189,6 @@ class ResourceModuleService
     public function createResourceModule($request, $upload_cover_image, $organizationId, $is_go1 = false)
     {
         try {
-            if ($is_go1) {
-                $organizationId = config('go1.go1_prepr_id');
-            }
-
             $status = config('constants.resource_module_status.draft');
             switch ($request->status) {
                 case 'publish':

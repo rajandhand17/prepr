@@ -8,6 +8,7 @@ use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\UserEducationService;
@@ -66,6 +67,9 @@ class User extends Authenticatable
         'go1_user_metadata',
         'magnet_user_id',
         'magnet_user_role',
+        'display_lab_mini_onboarding',
+        'display_challenge_mini_onboarding',
+        'display_organization_mini_onboarding',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -78,6 +82,11 @@ class User extends Authenticatable
     ];
 
     protected $casts = ['go1_user_metadata' => 'object'];
+
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
 
     public function receivesBroadcastNotificationsOn(): string
     {
@@ -112,6 +121,11 @@ class User extends Authenticatable
     public function userAchievements()
     {
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userFeaturedAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured', '1');
     }
 
     public function userFollow()
@@ -796,7 +810,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }
@@ -808,7 +822,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }

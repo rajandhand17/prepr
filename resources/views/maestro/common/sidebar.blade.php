@@ -17,7 +17,7 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <li class="nav-item menu-open">
+        <li class="nav-item {{ request()->segment(2) == 'dashboard' ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ request()->segment(2) == 'dashboard' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
@@ -35,8 +35,8 @@
           </ul>
         </li>
 
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'challenge' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'ranks' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-pie"></i>
             <p>
               Master
@@ -76,8 +76,8 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tree"></i>
             <p>
               Component
@@ -113,6 +113,12 @@
               <a href="{{ route('resource-module.index') }}" class="nav-link {{ Route::currentRouteName() == 'resource-module.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Resource Module</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('pre-built-achievement.index') }}" class="nav-link {{ Route::currentRouteName() == 'pre-built-achievement.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pre built Achievement</p>
               </a>
             </li>
           </ul>
@@ -171,15 +177,17 @@
     
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-submission-requirement'  ? 'active' : '' }}">
-            <i class="nav-icon fas fa-edit"></i>
+
+
+        <li class="nav-item {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects' || request()->segment(2) == 'projects-submission-requirement' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects' || request()->segment(2) == 'projects-submission-requirement' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-tree"></i>
             <p>
               Project Management
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview" style="display: none;">
+          <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
@@ -231,7 +239,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : '' }}">
+          <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'trophyawards.index' ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Trophy Awards</p>
           </a>
@@ -263,19 +271,19 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="{{ route('emailTemplates.index')}} " class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : ''  }}">
+          <a href="{{ route('emailTemplates.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailTemplates.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Templates</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ route('explore.index')}} " class="nav-link {{ Route::currentRouteName() == 'explore .index' ? 'active' : ''  }}">
+          <a href="{{ route('explore.index')}} " class="nav-link {{ Route::currentRouteName() == 'explore.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Explore Page</p>
           </a>
         </li>
         <li class="nav-item"> 
-          <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'social-links.index' ? 'active' : ''  }}">
+          <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
           </a>

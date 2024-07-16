@@ -229,7 +229,7 @@ class UserService
     {
         try {
             $authUserId = auth()->user()->id;
-            $users = User::select()->orderBy('user_rank');
+            $users = User::select();
             $users = self::filterLeaderboardUsers($users, $request, $emails);
             $users = $users->pluck('id');
             if ($users->contains($authUserId)) {
@@ -329,6 +329,48 @@ class UserService
         try {
             $user = auth()->user();
             $user->update(['is_onboarding_completed' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeLabMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_lab_mini_onboarding' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeChallengeMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_challenge_mini_onboarding' => '1']);
+
+            return $user;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeOrganizationMiniOnBoarding()
+    {
+        try {
+            $user = auth()->user();
+            $user->update(['display_organization_mini_onboarding' => '1']);
 
             return $user;
         } catch (\Exception $e) {
@@ -486,6 +528,35 @@ class UserService
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function checkComponentMiniOnBoard($component)
+    {
+        try {
+            $userData = auth()->user();
+            $response = false;
+            switch ($component) {
+                case 'lab':
+                    if ($userData->display_lab_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
+                case 'challenge':
+                    if ($userData->display_challenge_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
+                case 'organization':
+                    if ($userData->display_organization_mini_onboarding == '1') {
+                        $response = true;
+                    }
+                    break;
+            }
+
+            return $response;
+        } catch (\Exception $e) {
             return false;
         }
     }

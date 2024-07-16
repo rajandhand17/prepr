@@ -522,6 +522,20 @@ class ProjectMemberManagementService
         }
     }
 
+    public static function getPendingRequests($userData)
+    {
+        try {
+            $getMyProjectIds = ProjectService::getMyProjectIds($userData->id);
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['invite_status' => '2'])->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+
+            return $getAcceptedInvitesProjectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function fetchAcceptedMemberIds($projectId)
     {
         try {

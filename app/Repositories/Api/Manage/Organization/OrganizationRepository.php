@@ -183,10 +183,10 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function deleteOrganization($organizationId, $language)
+    public function deleteOrganization($organizationData, $request)
     {
         try {
-            return  $this->organizationService->deleteOrganization($organizationId, $language);
+            return  $this->organizationService->deleteOrganization($organizationData, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -236,17 +236,6 @@ class OrganizationRepository implements OrganizationInterface
     {
         try {
             return $this->organizationService->planData($organizationData);
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    public function createOrganizationCustomLoginRegistration($request, $organizationData)
-    {
-        try {
-            return $this->organizationCustomizationService->createOrganizationCustomLoginRegistration($request, $organizationData);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

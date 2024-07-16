@@ -36,7 +36,7 @@ class GO1Controller extends AppBaseController
         try {
             $resource = $this->go1Repository->createResourceModule($request);
             if (!$resource) {
-                return $this->sendResponse(__('responses.go1_resource_creation_failed'), 400);
+                return $this->sendError(__('responses.go1_resource_creation_failed'), 400);
             }
 
             return $this->sendResponse(ResourceModuleResource::make($resource), __('responses.go1_resource_creation_successful'));

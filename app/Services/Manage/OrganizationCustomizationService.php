@@ -10,64 +10,31 @@ use Illuminate\Support\Facades\DB;
 
 class OrganizationCustomizationService
 {
-    public function createOrganizationCustomLoginRegistration($request, $organizationData)
-    {
-        try {
-            DB::beginTransaction();
-            if ($request->enable_custom_login_and_registration == 'yes') {
-                $customLogoImage = !empty($request->custom_logo_image) ? FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization') : null;
-                $customHeroImage = !empty($request->custom_hero_image) ? FileUploadHelper::uploadImageToS3($request->custom_hero_image, 'organization') : null;
-
-                switch ($request->use_main_org_logo) {
-                    case 'no':
-                        $useMainOrgLogo = config('constants.use_main_org_logo.no');
-                        break;
-                    case 'yes':
-                        $useMainOrgLogo = config('constants.use_main_org_logo.yes');
-                        $customLogoImage = $organizationData->getRawOriginal('profile_image');
-                        break;
-                    default:
-                        $useMainOrgLogo = config('constants.use_main_org_logo.no');
-                        break;
-                }
-
-                $organizationCustomization = new OrganizationCustomization();
-                $organizationCustomization->organization_id = $organizationData->id;
-                $organizationCustomization->enable_custom_login_and_registration = '1';
-                $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url = $request->custom_login_url;
-                $organizationCustomization->custom_logo_image = $customLogoImage;
-                $organizationCustomization->custom_hero_image = $customHeroImage;
-                $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
-                $organizationCustomization->save();
-            }
-            DB::commit();
-
-            return true;
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-
-            return false;
-        }
-    }
-
     public function updateOrganizationCustomLoginRegistration($request, $organizationData)
     {
         try {
             DB::beginTransaction();
-            $deleteExisitingCustomDetails = OrganizationCustomization::where('organization_id', $organizationData->id)->delete();
+            if ($request->enable_custom_login_and_registration == 'none') {
+                OrganizationCustomization::where('organization_id', $organizationData->id)->delete();
+
+                return true;
+            }
+
+            $checkExisitingCustomDetails = OrganizationCustomization::where('organization_id', $organizationData->id)->first();
             if ($request->enable_custom_login_and_registration == 'yes') {
-                if ($request->old_custom_logo_image) {
-                    $customLogoImage = str_replace(config('site-settings.aws_url'), '', $request->old_custom_logo_image);
+                if ($checkExisitingCustomDetails) {
+                    $organizationCustomization = $checkExisitingCustomDetails;
                 } else {
-                    $customLogoImage = !empty($request->custom_logo_image) ? FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization') : null;
+                    $organizationCustomization = new OrganizationCustomization();
+                }
+                $customLogoImage = ($checkExisitingCustomDetails != null) ? str_replace(config('site-settings.aws_url'), '', $checkExisitingCustomDetails->custom_logo_image) : null;
+                if ($request->has('custom_logo_image')) {
+                    $customLogoImage = FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization');
                 }
 
-                if ($request->old_custom_hero_image) {
-                    $customHeroImage = str_replace(config('site-settings.aws_url'), '', $request->old_custom_hero_image);
-                } else {
-                    $customHeroImage = !empty($request->custom_hero_image) ? FileUploadHelper::uploadImageToS3($request->custom_hero_image, 'organization') : null;
+                $customHeroImage = ($checkExisitingCustomDetails != null) ? str_replace(config('site-settings.aws_url'), '', $checkExisitingCustomDetails->custom_hero_image) : null;
+                if ($request->has('custom_hero_image')) {
+                    $customHeroImage = FileUploadHelper::uploadImageToS3($request->custom_hero_image, 'organization');
                 }
 
                 switch ($request->use_main_org_logo) {
@@ -83,14 +50,12 @@ class OrganizationCustomizationService
                         break;
                 }
 
-                $organizationCustomization = new OrganizationCustomization();
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = '1';
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
-                $organizationCustomization->custom_login_url = $request->custom_login_url;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
-                $organizationCustomization->custom_background_color = $request->custom_background_color ?? null;
+                $organizationCustomization->custom_background_color = $request->has('custom_background_color') ? $request->custom_background_color : $checkExisitingCustomDetails->custom_background_color;
                 $organizationCustomization->save();
             }
             DB::commit();

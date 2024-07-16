@@ -17,7 +17,7 @@ class ProjectVerticalController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     public function index(Builder $builder)
@@ -66,7 +66,7 @@ class ProjectVerticalController extends Controller
 
             return view('maestro.projects.vertical.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -81,7 +81,7 @@ class ProjectVerticalController extends Controller
 
             return view('maestro.projects.vertical.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -98,11 +98,11 @@ class ProjectVerticalController extends Controller
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical Added successfully.']);
             }
 
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -118,7 +118,7 @@ class ProjectVerticalController extends Controller
 
             return view('maestro.projects.vertical.edit', compact('projectVertical', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -135,11 +135,11 @@ class ProjectVerticalController extends Controller
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical updated successfully.']);
             }
 
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -160,7 +160,7 @@ class ProjectVerticalController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
 }

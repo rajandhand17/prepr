@@ -47,7 +47,7 @@ class ProjectService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+                $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
@@ -307,7 +307,6 @@ class ProjectService
         try {
             $updateProject = Project::where('slug', $slug)->first();
             if ($updateProject !== null) {
-                $viewEnabled = $updateProject->view_enabled;
                 switch ($request->is_view_enabled) {
                     case 'yes':
                         $viewEnabled = config('constants.project_view_enabled.yes');
@@ -316,11 +315,10 @@ class ProjectService
                         $viewEnabled = config('constants.project_view_enabled.no');
                         break;
                     default:
-                        $viewEnabled = config('constants.project_view_enabled.no');
+                        $viewEnabled = $updateProject->view_enabled;
                         break;
                 }
 
-                $downloadEnabled = $updateProject->download_enabled;
                 switch ($request->is_download_enabled) {
                     case 'yes':
                         $downloadEnabled = config('constants.project_download_enabled.yes');
@@ -329,11 +327,10 @@ class ProjectService
                         $downloadEnabled = config('constants.project_download_enabled.no');
                         break;
                     default:
-                        $downloadEnabled = config('constants.project_download_enabled.no');
+                        $downloadEnabled = $updateProject->download_enabled;
                         break;
                 }
 
-                $mediaType = $updateProject->media_type;
                 switch ($request->media_type) {
                     case 'image':
                         $mediaType = config('constants.project_media_type.image');
@@ -345,11 +342,10 @@ class ProjectService
                         $mediaType = config('constants.project_media_type.video');
                         break;
                     default:
-                        $mediaType = config('constants.project_media_type.image');
+                        $mediaType = $updateProject->media_type;
                         break;
                 }
 
-                $projectPrivacy = $updateProject->privacy;
                 switch ($request->privacy) {
                     case 'public':
                         $projectPrivacy = config('constants.project_privacy.public');
@@ -358,7 +354,7 @@ class ProjectService
                         $projectPrivacy = config('constants.project_privacy.private');
                         break;
                     default:
-                        $projectPrivacy = config('constants.project_privacy.public');
+                        $projectPrivacy = $updateProject->privacy;
                         break;
                 }
 
@@ -650,7 +646,7 @@ class ProjectService
                     $query->select('challenges.id')
                         ->from('challenges')
                         ->whereIn('challenges.duration_id', $request->challenge_duration)
-                       ->whereNull('challenges.deleted_at');
+                        ->whereNull('challenges.deleted_at');
                 });
             }
             if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {

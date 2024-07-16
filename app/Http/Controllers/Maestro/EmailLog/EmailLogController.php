@@ -47,7 +47,7 @@ class EmailLogController extends Controller
             $templates = EmailLog::query();
             if (request()->ajax()) {
                 return DataTables::eloquent($templates)
-                
+
                     ->editColumn('subject', static function (EmailLog $template) {
                         return $template->subject;
                     })
@@ -88,5 +88,4 @@ class EmailLogController extends Controller
             ]);
         }
     }
-
 }

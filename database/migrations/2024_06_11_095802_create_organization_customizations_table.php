@@ -15,7 +15,6 @@ return new class() extends Migration {
             $table->unsignedBigInteger('organization_id');
             $table->enum('enable_custom_login_and_registration', ['0', '1'])->default('0')->comment('0 -> No,1 -> Yes');
             $table->enum('use_main_org_logo', ['0', '1'])->default('0')->comment('0 -> No,1 -> Yes');
-            $table->text('custom_login_url');
             $table->text('custom_logo_image')->nullable();
             $table->text('custom_hero_image')->nullable();
             $table->string('custom_background_color')->nullable();

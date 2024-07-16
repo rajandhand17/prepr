@@ -137,7 +137,11 @@ return [
     'challenge_status' => [
         'draft'   => '0',
         'publish' => '1',
-        'archive' => '2',
+    ],
+
+    'description_type' => [
+        'text'      => '0',
+        'scorm'     => '1',
     ],
 
     'resource_module_type' => [
@@ -248,6 +252,11 @@ return [
         'email' => '0',
         'inbox' => '1',
         'both'  => '2',
+    ],
+
+    'challenge_flexible_announcement_by' => [
+        'email'        => '0',
+        'notification' => '1',
     ],
 
     'challenge_announcement_send_status' => [

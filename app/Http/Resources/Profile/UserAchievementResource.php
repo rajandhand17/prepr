@@ -68,6 +68,7 @@ class UserAchievementResource extends JsonResource
             'issue_date'         => $this->issue_date,
             'valid_date'         => $this->valid_date,
             'user_notified'      => $this->user_notified,
+            'is_featured'        => ($this->is_featured == 1) ? 'yes' : 'no',
             'promo_code'         => $this->promo_code,
         ];
     }

@@ -198,8 +198,29 @@ class LabResource extends JsonResource
             }
         }
 
+        $type = 'na';
+
+        switch ($this->type) {
+            case '0':
+                $type = 'assess';
+                break;
+            case '1':
+                $type = 'onboard';
+                break;
+            case '2':
+                $type = 'engage';
+                break;
+            case '3':
+                $type = 'grow';
+                break;
+            default:
+                $type = 'na';
+                break;
+        }
+
         return [
             'id'                            => $this->uuid,
+            'type'                          => $type,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
@@ -216,7 +237,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $this->status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
