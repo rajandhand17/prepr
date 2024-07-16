@@ -44,6 +44,7 @@ class LabBuilder extends BaseBuilder
         $allowedGlobal = $this->allowedGlobalSearch();
         if (!$allowedGlobal) {
             $organizationIds = $this->getUserOrganizationIds();
+
             return $this->where(function ($query) use ($organizationIds) {
                 $query->where('user_id', '=', auth()->id())->orWhereHas('organization', function ($query) use ($organizationIds) {
                     $query->where('is_verified', '=', '1')->orWhereIn('id', $organizationIds);
