@@ -35,7 +35,7 @@ class OrganizationBuilder extends Builder
             $organizationIds = $this->getUserOrganizationIds();
 
             return $this->where(function ($query) use ($organizationIds) {
-                $query->where('is_verified', '=', '1')->orWhereIn('id', $organizationIds);
+                $query->where('user_id', '=', auth()->id())->orWhere('is_verified', '=', '1')->orWhereIn('id', $organizationIds);
             });
         }
 

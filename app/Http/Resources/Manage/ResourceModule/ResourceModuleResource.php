@@ -163,6 +163,30 @@ class ResourceModuleResource extends JsonResource
             $rating = intval($this->resource_rating->rating);
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->resource_module_completion_status) {
+            switch ($this->resource_module_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->resource_module_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -199,6 +223,7 @@ class ResourceModuleResource extends JsonResource
             'shares'                        => $this->shares()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favorites(),
+            'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
         ];
     }
