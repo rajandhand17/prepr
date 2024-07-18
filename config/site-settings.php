@@ -1,19 +1,20 @@
 <?php
 
 return [
-    'pagination_per_page'          => '15',
-    'pagination_per_page_career'   => '3',
-    'message_per_page'             => '30',
-    'listing_limit'                => '20',
-    'switcher_listing_limit'       => '5',
-    'on_boarding_limit'            => '5',
-    'dropdown_listing_limit'       => '20',
-    'explore_page_limit_max'       => '12',
-    'explore_page_limit_min'       => '6',
-    'jobs_details_par_module_limit'=> '3',
-    'skills_par_module_limit'      => '5',
-    'aws_url'                      => env('CDN_URL'),
-    'frontend_site_url'            => env('FRONTEND_SITE_URL'),
+    'pagination_per_page'                => '15',
+    'pagination_per_page_career'         => '3',
+    'pagination_per_page_advance_search' => '12',
+    'message_per_page'                   => '30',
+    'listing_limit'                      => '20',
+    'switcher_listing_limit'             => '5',
+    'on_boarding_limit'                  => '5',
+    'dropdown_listing_limit'             => '20',
+    'explore_page_limit_max'             => '12',
+    'explore_page_limit_min'             => '6',
+    'jobs_details_par_module_limit'      => '3',
+    'skills_par_module_limit'            => '5',
+    'aws_url'                            => env('CDN_URL'),
+    'frontend_site_url'                  => env('FRONTEND_SITE_URL'),
 
     'default_user_profile_image' => 'default_images/user.webp',
 
