@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Maestro\Categories;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Language;
+use App\Traits\Maestro\Category\CategoryTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Traits\Maestro\Category\CategoryTrait;
 
 class CategoriesController extends Controller
 {
@@ -156,6 +156,7 @@ class CategoriesController extends Controller
                     return response()->json(['status' => 'fail', 'message' => 'Please delete subcategory first.']);
                 } else {
                     $this->deleteCategory($category);
+
                     return response()->json(['status' => 'success', 'message' => 'Category deleted successfully.']);
                 }
             } else {
@@ -164,7 +165,6 @@ class CategoriesController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Subcategory deleted successfully.']);
             }
         } catch (Exception $e) {
-
             return response()->json(['status' => 'fail', 'message' => 'Record deleted successfully.']);
         }
     }

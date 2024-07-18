@@ -14,13 +14,6 @@ use Illuminate\Support\Facades\DB;
 
 trait CloneLabTrait
 {
-    protected $labService;
-
-    public function __construct(LabService $labService)
-    {
-        $this->labService = $labService;
-    }
-
     public function getAllLabs()
     {
         try {
@@ -39,7 +32,7 @@ trait CloneLabTrait
     {
         try {
             // Getting Lab and related tables
-            $lab = Lab::with('skills', 'address', 'tags', 'external_links', 'achievement')->where('id', $request->lab)->first();
+            $lab = LabService::getLabsWithRelatedTables($request);
             $createdLab = DB::transaction(function () use ($lab, $request) {
                 $newLab = LabService::createLab($lab, $request->organization);
                 $labAddress = LabAddressService::createLabAddress($lab->address, $newLab->id);

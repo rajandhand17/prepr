@@ -8,7 +8,6 @@ use Exception;
 
 trait ExploreTrait
 {
-
     private function updateExploreDataById($id, $request)
     {
         try {
@@ -19,6 +18,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }

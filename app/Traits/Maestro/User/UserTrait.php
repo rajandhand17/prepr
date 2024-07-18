@@ -2,8 +2,8 @@
 
 namespace App\Traits\Maestro\User;
 
-use App\Services\Maestro\UserService;
 use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Services\Maestro\UserService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -15,20 +15,24 @@ trait UserTrait
             $createUser = DB::transaction(function () use ($request) {
                 $user = UserService::createUser($request);
                 $role = RoleAndPermissionService::userSyncRoles($user, $request->roles);
+
                 return [
                     'user' => $user,
-                    'role' => $role
+                    'role' => $role,
                 ];
             });
 
             if ($createUser['user'] && $createUser['role']) {
                 DB::commit();
+
                 return $createUser['user'];
             }
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
@@ -46,22 +50,26 @@ trait UserTrait
     {
         try {
             $updateUser = DB::transaction(function () use ($id, $request) {
-                            $user = UserService::updateUserById($id, $request);
-                            $role = RoleAndPermissionService::userSyncRoles($user, $request->roles);
-                            return [
-                                'user' => $user,
-                                'role' => $role
-                            ];
-                        });
+                $user = UserService::updateUserById($id, $request);
+                $role = RoleAndPermissionService::userSyncRoles($user, $request->roles);
+
+                return [
+                    'user' => $user,
+                    'role' => $role,
+                ];
+            });
 
             if ($updateUser['user'] && $updateUser['role']) {
                 DB::commit();
+
                 return $updateUser['user'];
             }
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
