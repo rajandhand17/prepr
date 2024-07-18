@@ -5,7 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\UtilityHelper;
 use App\Models\Role;
 
-class   RolesService
+class RolesService
 {
     public function getRoles($role_type)
     {
@@ -49,9 +49,10 @@ class   RolesService
     public static function getAllRoles()
     {
         try {
-           return Role::where("role_type","1")->get();
-        }catch (\Exception $e) {
+            return Role::where('role_type', '1')->get();
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
