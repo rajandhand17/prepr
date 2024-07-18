@@ -79,8 +79,7 @@ class AutoCreateTemplateController extends Controller
     public function getPreSelectChallengeGroupList(Request $request)
     {
         try {
-            dd($request);
-            $getPreSelectedChallengeGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('challenge_group_id')->first();
+            $getPreSelectedChallengeGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('challenge_template_id')->first();
             $explodeChallengeGroupIdsArray= explode(',', $getPreSelectedChallengeGroupTemplates);
             $data = [];
             $challengeGroups = ChallengePath::whereIn('id', $explodeChallengeGroupIdsArray)->where('privacy', 'public')->where('type', '=', 'challenge')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();

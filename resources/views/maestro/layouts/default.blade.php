@@ -73,7 +73,7 @@
 
         <!-- footer -->
         @include('maestro.common.footer')
-        
+
         @yield('scripts')
         <!-- footer -->
 
