@@ -29,10 +29,12 @@ class ExploreService
                     $exploreData->role = $request->roles;
                 }
                 $exploreData->save();
+
                 return true;
             }
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }

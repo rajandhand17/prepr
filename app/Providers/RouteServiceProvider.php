@@ -307,6 +307,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/explore/explore.php'));
     }
+
     public function mapMaestroEmailLogsRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/emaillogs/emaillogs.php'));
