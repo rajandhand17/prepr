@@ -4,8 +4,8 @@ namespace App\Traits\Maestro\User;
 
 use App\Services\Maestro\RoleAndPermissionService;
 use App\Services\Maestro\UserService;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 trait UserTrait
 {

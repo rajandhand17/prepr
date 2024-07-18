@@ -318,6 +318,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/autocreatetemplate.php'));
     }
+
     public function mapMaestroCloneLabRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/clone-lab.php'));

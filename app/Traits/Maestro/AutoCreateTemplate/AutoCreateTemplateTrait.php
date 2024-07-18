@@ -2,7 +2,6 @@
 
 namespace App\Traits\Maestro\AutoCreateTemplate;
 
-use App\Models\Role;
 use App\Services\Maestro\AutoCreateTemplates\AutoCreateTemplatesService;
 use App\Services\Manage\RolesService;
 
@@ -12,17 +11,16 @@ trait AutoCreateTemplateTrait
     {
         try {
             return RolesService::getAllRoles();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
-
 
     public function fetchModuleList($request)
     {
         try {
             return AutoCreateTemplatesService::fetchModuleList($request);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -31,7 +29,7 @@ trait AutoCreateTemplateTrait
     {
         try {
             return AutoCreateTemplatesService::cloneModule($request);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
