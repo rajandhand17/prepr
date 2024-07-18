@@ -22,10 +22,11 @@ class LabService
     {
         try {
             $cloneLab = $lab->replicate();
-            $cloneLab->uuid =Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $cloneLab->organization_id=$organizationId;
-            $cloneLab->user_id=auth()->user()->id;
+            $cloneLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $cloneLab->organization_id = $organizationId;
+            $cloneLab->user_id = auth()->user()->id;
             $cloneLab->save();
+
             return $cloneLab;
         } catch (\Exception $e) {
             return false;
@@ -54,13 +55,20 @@ class LabService
             return false;
         }
     }
-
     public static function getLabsWithRelatedTables($request)
     {
         try {
             $lab = Lab::with('skills', 'address', 'tags', 'external_links', 'achievement')->where('id', $request->lab)->first();
             return $lab;
         }catch (\Exception $e){
+            return false;
+        }
+    }
+    public static function getLabCounts()
+    {
+        try {
+            return Lab::count();
+        } catch (\Exception $e) {
             return false;
         }
     }

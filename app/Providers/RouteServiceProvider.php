@@ -49,6 +49,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroMasterRoutes();
             $this->mapMaestroRankRoutes();
             $this->mapMaestroEmailTemplateRoutes();
+            $this->mapMaestroExploreRoutes();
             $this->mapMaestroEmailLogsRoutes();
             $this->mapMaestroCloneLabRoutes();
             $this->mapMaestroLabRoutes();
@@ -302,6 +303,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('maestro')->group(base_path('routes/maestro/rank/rank.php'));
     }
 
+    public function mapMaestroExploreRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/explore/explore.php'));
+    }
     public function mapMaestroEmailLogsRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/emaillogs/emaillogs.php'));

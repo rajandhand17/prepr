@@ -1,0 +1,242 @@
+<?php
+
+namespace App\Http\Controllers\Maestro\Explore;
+
+use App\Http\Controllers\Controller;
+use App\Models\Challenge;
+use App\Models\ChallengePath;
+use App\Models\Explore;
+use App\Models\Lab;
+use App\Models\LabProgram;
+use App\Models\Project;
+use App\Models\ResourceModule;
+use App\Traits\Maestro\Explore\ExploreTrait;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Html\Builder;
+
+/*-----------------------------------------------------------------------------------------
+@description: This controller is for handle explore data
+@functions: show,create,edit,store,update,destroy
+-----------------------------------------------------------------------------------------*/
+
+class ExploreController extends Controller
+{
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    use ExploreTrait;
+
+    public function construct()
+    {
+        $this->middleware('web');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @param Builder $builder
+     *
+     * @return JsonResponse
+     */
+
+    /* -----------------------------------------------------------------------------------------
+    @Description: Function for show all explore data
+    @Output: Show all explore data on admin panel
+    -------------------------------------------------------------------------------------------- */
+    public function index(Builder $builder)
+    {
+        try {
+            $data = Explore::get();
+            return view('maestro.Explore.index', compact('data'));
+        } catch (Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+    /* -----------------------------------------------------------------------------------------
+    @Description: Function for share view of  edit explore data
+    @input:id
+    -------------------------------------------------------------------------------------------- */
+    public function edit($id)
+    {
+        try {
+           $component = Explore::find($id);
+           $roles = $this->getAllRoles();
+           $selected_role = json_decode($component->role, true); // true will convert it to an associative array
+
+            return view('maestro.Explore.edit', compact('component', 'roles', 'selected_role'));
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+    /* -----------------------------------------------------------------------------------------
+    @Description: Function for update  explore data
+    @input: id, identifier, subject, content
+    @Output: update explore data in database
+    -------------------------------------------------------------------------------------------- */
+    public function update(Request $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $this->construct();
+            if ($this->updateExploreDataById($id, $request)) {
+                DB::commit();
+
+                return redirect()->route('explore.index')->with('success', 'Data has Updated successfully');
+            }
+            DB::rollback();
+
+            return redirect()->route('explore.index')->with(['error' => 'Something went wrong']);
+        } catch (Exception $e) {
+            dd($e);
+            DB::rollback();
+
+            return redirect()->route('explore.index')->with(['error' => 'Something went wrong.']);
+        }
+    }
+
+    /* -----------------------------------------------------------------------------------------
+    @Description: Function for delete  explore data
+    @input: id
+    @Output: delete explore data in database
+    -------------------------------------------------------------------------------------------- */
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+            $this->construct();
+            if ($this->deleteExploreDataById($id)) {
+                DB::commit();
+                return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
+            }
+            DB::rollback();
+        } catch (Exception $e) {
+            dd($e);
+            DB::rollback();
+
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+
+    /**
+     * Upload image from ck-editor.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $original = $request->file('upload')->getClientOriginalName();
+
+            $fileName = pathinfo($original, PATHINFO_FILENAME);
+
+            $extension = $request->file('upload')->getClientOriginalExtension();
+
+            $fileName = $fileName.'_'.time().'.'.$extension;
+
+            $url = $request->file('upload')->store('uploads', 's3');
+
+            return response()->json(['fileName' => $fileName, 'uploaded' => true, 'url' => \Config::get('app.CloudFrontUrl').'/'.$url]);
+        }
+    }
+
+    public function searchComponents(Request $request)
+    {
+        $query = $request->get('query', '');
+        $filter = $request->get('filter', ''); // Get the filter from request
+        $exploreIds = Explore::pluck('comp_id')->toArray();
+    
+        // Define a base query for each model
+        $components = collect();
+        $perPage = 10;
+        $currentPage = $request->get('page', 1);
+    
+        if ($filter == '' || $filter == 'Lab') {
+            $labs = Lab::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Lab';
+                return $item;
+            });
+            $components = $components->merge($labs);
+        }
+    
+        if ($filter == '' || $filter == 'Challenge') {
+            $challenges = Challenge::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Challenge';
+                return $item;
+            });
+            $components = $components->merge($challenges);
+        }
+    
+        if ($filter == '' || $filter == 'Project') {
+            $projects = Project::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Project';
+                return $item;
+            });
+            $components = $components->merge($projects);
+        }
+    
+        if ($filter == '' || $filter == 'Resource Module') {
+            $resources = ResourceModule::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Resource Module';
+                return $item;
+            });
+            $components = $components->merge($resources);
+        }
+    
+        if ($filter == '' || $filter == 'Lab Program') {
+            $labPrograms = LabProgram::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Lab Program';
+                return $item;
+            });
+            $components = $components->merge($labPrograms);
+        }
+    
+        if ($filter == '' || $filter == 'Challenge Path') {
+            $challengePaths = ChallengePath::where('title', 'like', '%' . $query . '%')->whereNotIn('id', $exploreIds)->get()->map(function($item) {
+                $item->type = 'Challenge Path';
+                return $item;
+            });
+            $components = $components->merge($challengePaths);
+        }
+    
+        // Paginate the results
+        $total = $components->count();
+        $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
+    
+        $html = view('maestro.Explore.searchableItems', compact('components'))->render();
+    
+        return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
+    }
+    
+
+    public function insertExploreData(Request $request) {
+            $namespace = 'App\\Models\\';
+            $class = $namespace . $request->compType;        
+            $componentRequest = resolve($class)->where('id', $request->compId)->first();
+            // Limit the description to 200 words
+            $description = substr($componentRequest->description, 0, 200);
+    
+          Explore::create([
+            'comp_type'=> $request->compType,
+            'comp_id'=> $request->compId,
+            'title' => $componentRequest->title,
+            'description'=>  $description,
+            'action_button'=> 'View',
+            'media_type' => $componentRequest->media_type,
+            'media' => $componentRequest->media,
+        ]);
+        return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200); 
+    }   
+}

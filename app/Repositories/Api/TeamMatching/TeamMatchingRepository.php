@@ -80,6 +80,26 @@ class TeamMatchingRepository implements TeamMatchingInterface
         }
     }
 
+    public function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            return $this->projectService->getProjectListWithoutPagination($getProjectIds, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getUsersBasedOnProjectIds($projectids)
+    {
+        try {
+            return $this->projectMemberManagementService->getPendingRequestsBasedOnProjectIds($projectids);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function checkSlug($slug)
     {
         try {
