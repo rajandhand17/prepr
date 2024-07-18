@@ -67,7 +67,7 @@ class ChallengeProjectTemplateService
             } else {
                 $challengeProjectTemplate->template_id = ($request->has('template_id')) ? $request->template_id : $challengeProjectTemplate->template_id;
             }
-            
+
             $challengeProjectTemplate->save();
 
             return true;
