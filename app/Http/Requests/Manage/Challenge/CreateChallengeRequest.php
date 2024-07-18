@@ -59,7 +59,8 @@ class CreateChallengeRequest extends FormRequest
             'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
-            'template_id'                           => 'required_if:request_type,publish|numeric|exists:pitch_templates,id',
+            'template_type'                         => 'required_if:request_type,publish|in:existing,new',
+            'template_id'                           => 'required_if:template_type,existing|numeric|exists:pitch_templates,id',
             'project_submission_requirement_ids'    => 'required_if:request_type,publish|array',
             'allow_submit_project'                  => 'in:yes,no',
             'complete_education_program'            => 'in:yes,no',
@@ -173,6 +174,17 @@ class CreateChallengeRequest extends FormRequest
         if ($this->request->has('resource_groups')) {
             $base_rules['resource_groups'] = 'array';
             $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
+        }
+
+        // Challenge Template new adding code
+        if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
+            $base_rules['template_title'] = 'required|unique:pitch_templates,title';
+            $base_rules['pitch_questions'] = 'array';
+            $base_rules['pitch_questions.*'] = 'nullable';
+            $base_rules['pitch_questions_description'] = 'array';
+            $base_rules['pitch_questions_description.*'] = 'nullable';
+            $base_rules['task_questions'] = 'array';
+            $base_rules['task_questions.*'] = 'nullable';
         }
 
         if ($this->request->get('assessment_type') == 'closed') {
@@ -295,6 +307,7 @@ class CreateChallengeRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {
+            // Custom validation rule to checkk assessment title and score
             $assessment_title = $this->input('assessment_title', []);
             $assessment_score = $this->input('assessment_score', []);
 
@@ -305,6 +318,13 @@ class CreateChallengeRequest extends FormRequest
                 ($count_title !== $count_score)
             ) {
                 $validator->errors()->add('assessment_data', __('responses.title_score_should_match_count'));
+            }
+
+            // Custom validation rule to check at least one of pitch_questions or task_questions is not empty
+            if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
+                if (empty($this->input('pitch_questions')) && empty($this->input('task_questions'))) {
+                    $validator->errors()->add('at_least_one_question', 'Either pitch questions or task questions must be provided.');
+                }
             }
         });
     }
