@@ -62,6 +62,7 @@ class RoleAndPermissionService
             return false;
         }
     }
+
     public static function getRoles()
     {
         try {

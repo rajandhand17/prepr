@@ -122,12 +122,15 @@ class CategoryService
             $category->components = $componentString;
             if ($category->save()) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (Exception $e) {
             DB::rollback();
+
             return false;
         }
     }
