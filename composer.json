@@ -25,6 +25,7 @@
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
+        "laravel/ui": "^4.5",
         "league/flysystem-aws-s3-v3": "^3.12",
         "mixpanel/mixpanel-php": "^2.11",
         "predis/predis": "^2.0",
@@ -32,7 +33,8 @@
         "santigarcor/laratrust": "^7.2",
         "sendgrid/sendgrid": "^7",
         "spatie/pdf-to-image": "^2.2",
-        "twilio/sdk": "^6.44"
+        "twilio/sdk": "^6.44",
+        "yajra/laravel-datatables": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
