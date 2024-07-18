@@ -111,21 +111,38 @@ class AutoCreateTemplatesService
 
     public static function fetchModuleList($request)
     {
-        $module=Lab::class;
         try {
+            switch ($request->module){
+                case 'lab_template':
+                    $module=LabMarketplace::class;
+                    break;
+                case 'lab_program':
+                    $module=LabProgram::class;
+                    break;
+                case 'challenge_template';
+                    $module=ChallengeTemplate::class;
+                    break;
+                case 'challenge_path';
+                    $module=ChallengePath::class;
+                    break;
+            }
             $data = [];
+            $searched=$request->search;
+            $modules=$module::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
             if (!empty($searched)) {
-                $moduls = $module::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->where('title', 'like', '%' . $searched . '%')->pluck('title', 'id')->toArray();
-            } else {
-                $moduls = $module::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->pluck('title', 'id')->toArray();
+                $modules = $modules->where('title', 'like', '%' . $searched . '%');
             }
+            $modules = $modules->pluck('title', 'id');
             $count = 0;
-            foreach ($moduls as $key => $title) {
-                $labsr[$count]['id'] = $key;
-                $labsr[$count]['text'] = $title;
-                $count++;
+            $data=[];
+            if(!empty($module)){
+                foreach ($modules as $key => $title) {
+                    $data[$count]['id'] = $key;
+                    $data[$count]['text'] = $title;
+                    $count++;
+                }
             }
-            $data['result'] = $labsr;
+
             return  response()->json($data);
         } catch (Exception $e) {
             return false;

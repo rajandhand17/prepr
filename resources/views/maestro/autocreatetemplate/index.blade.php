@@ -123,7 +123,8 @@
                             <div class='col-md-6' id='lab_list_div' style="display:none;">
                                 <div class='control-label mb-5'>Select Lab Template(s)</div>
                                 <div class="form-group">
-                                    <select id="lab_list" name="lab_list[]" multiple class="form-control multi-select-search" style="height: 50px;">
+                                    <select id="lab_list" name="lab_list[]" multiple class="form-control select_role_type"  style="height: 50px;">
+
                                     </select>
                                 </div>
                             </div>
@@ -159,41 +160,6 @@
         </div>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade" id="cloneModal" tabindex="-1" role="dialog" aria-labelledby="cloneModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cloneModalLabel">Info..!</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to update the details ?
-            </div>
-            <div class="modal-footer">
-                {!!Form::open(array('method'=>'POST','route'=>'cloneInfo'))!!}
-                <input type='hidden' id='sdc_lab' name='sdc_lab' value=''/>
-                <input type='hidden' id='sdc_challenge' name='sdc_challenge' value=''/>
-                <input type='hidden' id='selected_role' name='selected_role' value=''/>
-                <input type='hidden' id='user_type'     name='user_type' value=''/>
-                <input type='hidden' id='selected_lab_ids' name='selected_lab_ids' value=''/>
-                <input type='hidden' id='selected_challenge_ids' name='selected_challenge_ids' value=''/>
-                <input type='hidden' id='selected_group_challenge_ids' name='selected_group_challenge_ids' value=''/>
-                <input type='hidden' id='selected_group_lab_ids' name='selected_group_lab_ids' value=''/>
-                <input type='hidden' id='invite_lab' name='invite_lab' value=''/>
-                <input type='hidden' id='invite_challenge' name='invite_challenge' value=''/>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <input type='hidden' id='selected_language' name='selected_language' value=''/>
-                <button type="submit" class="btn btn-primary cloneBtn">Save</button>
-                {!!Form::close()!!}
-            </div>
-        </div>
-    </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
     @if(Session::has('success'))
@@ -203,89 +169,13 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
-
-    function changeRoles(role) {
-        const elements = [
-            '#org_type',
-            '#clonecheckbox_div',
-            '#lab_list_div',
-            '#lab_group_list_div',
-            '#challenge_list_div',
-            '#challenge_group_list_div',
-            '#invite_users_div',
-            '#invite_lab_div',
-            '#invite_challenge_div'
-        ];
-        elements.forEach(el => $(el).css('display', 'none'));
-        $('#lab_list').html('');
-        $('#lab_group_list').html('');
-        $('#challenge_group_list').html('');
-        $('#challenge_list').html('');
-        $('#clonecheckbox_div').css('display','flex');
-        $('#clone_lab_chk').prop('checked',false);
-        $('#clone_challenge_chk').prop('checked',false);
-        $('#user_type').css('display', 'none');
-        if (role === "2"){
-            $('#org_type').css('display','block');
-            $('#clonecheckbox_div').css('display','flex');
-        }
-        if( role === "1"){
-
-            $('#clonecheckbox_div').css('display','flex');
-        }
-        if(role === "3" || role==="5" || role==="4"){
-            $('#clonecheckbox_div').css('display','flex');
-        }
-        // if(role === 'super_admin'){
-        //     role_selected=$("#role").val();
-        //     role_type_selected=$("#user_type").val();
-        //     plucked="lab_template_id";
-        //     getPreSelectModuleList(role_selected, role_type_selected,plucked)
-        //     plucked="lab_program_id";
-        //     getPreSelectModuleList(role_selected, role_type_selected,plucked);
-        //     plucked="challenge_template_id";
-        //     getPreSelectModuleList(role_selected, role_type_selected,plucked);
-        //     plucked="challenge_path_id";
-        //    getPreSelectModuleList(role_selected, role_type_selected,plucked);
-        //     $('#clonecheckbox_div').css('display','flex');
-        //     $('#invite_users_div').css('display','flex');
-        //     $('#lab_list_div').css('display','block');
-        //     $('#challenge_list_div').css('display','block');
-        //     $('#lab_group_list_div').css('display','block');
-        //     $('#challenge_group_list_div').css('display','block');
-        //
-        // }
-
-        if(role === '6'){
-            $('#clonecheckbox_div').css('display','flex');
-            $('#invite_users_div').css('display','flex');
-            $('#user_type').css('display','flex');
-        }
-    }
-    // Get the checkbox element
     var checkbox = document.getElementById('clone_lab_chk');
     var challengecheckbox = document.getElementById('clone_challenge_chk');
-
-    // Add an event listener for the 'change' event
     checkbox.addEventListener('change', function() {
-        // Check if the checkbox is checked
         if (checkbox.checked) {
             $('#lab_list_div').css('display','block');
             $('#lab_group_list_div').css('display','block');
-            $.ajax({
-                type:'POST',
-                url:"{{ route('getPreSelectLabList') }}",
-                aysc:false,
-                data:{
-                    //   role_selected: role_selected,
-                    //    role_type_selected: role_type_selected,
-                    language: $('#language :selected').val(),
-                    //   plucked: plucked
-                },
-                success:function(response){
-                    console.log(response);
-                }
-            });
+            getData('lab_template','lab_list');
 
         } else {
             $('#lab_list_div').css('display','none');
@@ -301,151 +191,73 @@
             $('#challenge_group_list_div').css('display','none');
         }
     });
-
-
-    function getPreSelectModuleList(role_selected, role_type_selected,plucked)
-    {
-        var detail = {};
-        $.ajax({
-            type:'POST',
-            url:"{{ route('getPreSelectLabList') }}",
-            aysc:false,
-            data:{
-                role_selected: role_selected,
-                role_type_selected: role_type_selected,
-                language: $('#language :selected').val(),
-                plucked: plucked
-            },
-            success:function(respoonse){
-                if(respoonse.result!= ''){
-                    $('#clone_lab_chk').prop('checked',true);
-                    $('#clone_challenge_chk').prop('checked',true);
-                }else{
-                    $('#clone_lab_chk').prop('checked',true);
-                    $('#clone_challenge_chk').prop('checked',true);
-                    $('#lab_list_div').css('display','none');
+    function getData(module,ids){
+        try {
+            $.ajax({
+                type:'POST',
+                url:"{{ route('getModuleList') }}",
+                aysc:false,
+                data:{
+                    language: $('#language :selected').val(),
+                    module:module,
+                },
+                success:function(response){
+                    var toAppend = '';
+                    $.each(response.result,function(index,title){
+                        toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                    });
+                 //   $('#lab_list').append(toAppend);
+                    $('#'.ids).append(toAppend);
                 }
-                switch (plucked){
-                    case 'lab_template_id':
-                        $('#lab_list').html('');
-                        var toAppend = '';
-                        $.each(respoonse.result,function(index,title){
-                            toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
-                            toAppend +=',';
-                        });
-                        $('#lab_list').append(toAppend);
-                        break;
-                    case 'lab_program_id':
-                        $('#lab_group_list').html('');
-                        var toAppend = '';
-                        $.each(respoonse.result,function(index,title){
-                            toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
-                        });
-                        $('#lab_group_list').append(toAppend);
-                        break;
-                    case 'challenge_template_id':
-                        $('#challenge_list').html('');
-                        $.each(respoonse.result,function(index,title){
-                            toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
-                        });
-                        $('#challenge_list').append(toAppend);
-                        break;
-                    case 'challenge_path_id':
-                        $('#challenge_group_list').html('');
-                        var toAppend = '';
-                        $.each(respoonse.result,function(index,title){
-                            toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
-                        });
-
-                        $('#challenge_group_list').append(toAppend);
-
-                }
-            }
-        });
+            });
+        }catch (Exception $e) {
+            return false;
+        }
+    }
+    function changeRoles(role) {
+        const elements = [
+            '#org_type',
+            '#clonecheckbox_div',
+            '#lab_list_div',
+            '#lab_group_list_div',
+            '#challenge_list_div',
+            '#challenge_group_list_div',
+            '#invite_users_div',
+            '#invite_lab_div',
+            '#invite_challenge_div'
+        ];
+        // Hide all elements initially
+        elements.forEach(el => $(el).css('display', 'none'));
+        // Clear lists
+        $('#lab_list').html('');
+        $('#lab_group_list').html('');
+        $('#challenge_group_list').html('');
+        $('#challenge_list').html('');
+        // Reset checkboxes
+        $('#clone_lab_chk').prop('checked', false);
+        $('#clone_challenge_chk').prop('checked', false);
+        // Show the clonecheckbox_div by default
+        $('#clonecheckbox_div').css('display', 'flex');
+        $('#user_type').css('display', 'none');
+        // Handle role-specific logic
+        switch (role) {
+            case "2":
+                $('#org_type').css('display', 'block');
+                break;
+            case "1":
+            case "3":
+            case "4":
+            case "5":
+                // These roles only need the clonecheckbox_div which is already displayed
+                break;
+            case "6":
+                $('#invite_users_div').css('display', 'flex');
+                $('#user_type').css('display', 'flex');
+                break;
+            default:
+                break;
+        }
     }
 
-    $('.clonebtn').click(function(){
-        selected_labs= $("#lab_list").val();
-        selected_challenges= $("#challenge_list").val();
-        selected_group_challenges= $("#challenge_group_list").val();
-        selected_group_lab_ids= $("#lab_group_list").val();
-        if ($('#clone_lab_chk').is(':checked')) {
-            clone_lab= true;
-            $('#lab_list_div').css('display','block')
-            $('#lab_group_list_div').css('display','block')
-        }else{
-            clone_lab= false;
-            $('#lab_list_div').css('display','none')
-            $('#lab_group_list_div').css('display','none')
-        }
-
-        if ($('#clone_challenge_chk').is(':checked')) {
-            clone_challenge= true;
-            $('#challenge_list_div').css('display','block')
-            $('#challenge_group_list_div').css('display','block')
-        }else{
-            clone_challenge= false;
-            $('#challenge_list_div').css('display','none')
-            $('#challenge_group_list_div').css('display','none')
-        }
-        if ($('#invite_lab_chk').is(':checked')) {
-            invite_lab= 1;
-        }
-        if ($('#invite_challenge_chk').is(':checked')) {
-            invite_challenge= 1;
-        }
-        $('#sdc_lab').val(clone_lab);
-        $('#sdc_challenge').val(clone_challenge);
-        $('#selected_role').val($("#role").val());
-
-        $('#role_user_type_slected').val($("#user_type").val());
-        $('#selected_lab_ids').val(selected_labs);
-        $('#selected_challenge_ids').val(selected_challenges);
-        $('#selected_group_challenge_ids').val(selected_group_challenges);
-        $('#selected_group_lab_ids').val(selected_group_lab_ids);
-        $('#invite_lab').val(invite_lab);
-        $('#invite_challenge').val(invite_challenge);
-        $('#selected_language').val($('#language :selected').val());
-
-        colenchecked_len= $('.clonecheckbox:checked').length
-        if(colenchecked_len>0){
-
-        }
-        $('#cloneModal').modal('show');
-    });
-
-    role_selected= '';
-    $('#role').change(function(){
-        $(".non_drop option:selected").removeAttr("selected");
-       role_selected= $(this).val();
-        role_type_selected= $( "#user_type option:selected" ).val();
-
-        if(role_type_selected!==''){
-            $('#clonecheckbox_div').css('display','block')
-         //   getPreSelectModuleList(role_selected, role_type_selected);
-            // getPreSelectChallengeList(role_selected, role_type_selected);
-            // getPreSelectChallengeGroupList(role_selected, role_type_selected);
-            // getPreSelectLabGroupList(role_selected, role_type_selected);
-        }
-    });
-    $(document).ready(function() {
-        $('#lab_list').select({
-            placeholder: "Select Option",
-            // ajax: {
-            //     url: '{{route("getModuleList")}}',
-            //     data: function (params) {
-            //         return {
-            //             search: params.term,
-            //             language: 'en',
-            //         };
-            //     },
-            //     processResults: function (data) {
-            //         return {
-            //             results: data.result
-            //         };
-            //     }
-            // }
-        });
-    });
 </script>
 @endsection
