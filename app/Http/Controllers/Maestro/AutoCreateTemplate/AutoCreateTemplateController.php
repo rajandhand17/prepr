@@ -31,79 +31,13 @@ class AutoCreateTemplateController extends Controller
         }
     }
 
-    public function getPreSelectLabList(Request $request)
-    {
-        try {
-            $getAllAutoTemplateList=$this->getPreSelectLabLists($request);
-            if($getAllAutoTemplateList){
-                return $getAllAutoTemplateList;
-            }
-            return redirect()->back()->with(['error' =>'Unable to get all list']);
-        }catch (\Exception $e){
-            return redirect()->back()->with(['error' =>$e->getMessage()]);
-        }
-    }
-
-    public function getPreSelectedChallengeList(Request $request)
-    {
-        try {
-            $getAllAutoTemplateList=$this->getPreSelectedChallengeLists($request);
-            if($getAllAutoTemplateList){
-                return $getAllAutoTemplateList;
-            }
-            return redirect()->back()->with(['error' =>'Unable to get all list']);
-        }catch (\Exception $e){
-            return redirect()->back()->with(['error' =>$e->getMessage()]);
-        }
-    }
-
-    public function getPreSelectLabGroupList(Request $request)
-    {
-        try {
-            $getPreSelectedLabGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('lab_group_id')->first();
-            $explodeLabGroupIdsArray= explode(',', $getPreSelectedLabGroupTemplates);
-            $data = [];
-            $labGroups = LabProgram::whereIn('id', $explodeLabGroupIdsArray)->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
-            $count = 0;
-            foreach ($labGroups as $key => $title) {
-                $labsr[$count]['id'] = $key;
-                $labsr[$count]['text'] = $title;
-                $count++;
-            }
-            $data['result'] = $labsr ?? [];
-            return  response()->json($data);
-        }catch (\Exception $e){
-            return redirect()->back()->with(['error' =>$e->getMessage()]);
-        }
-    }
-    public function getPreSelectChallengeGroupList(Request $request)
-    {
-        try {
-            $getPreSelectedChallengeGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('challenge_template_id')->first();
-            $explodeChallengeGroupIdsArray= explode(',', $getPreSelectedChallengeGroupTemplates);
-            $data = [];
-            $challengeGroups = ChallengePath::whereIn('id', $explodeChallengeGroupIdsArray)->where('privacy', 'public')->where('type', '=', 'challenge')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
-            $count = 0;
-            foreach ($challengeGroups as $key => $title) {
-                $challengesr[$count]['id'] = $key;
-                $challengesr[$count]['text'] = $title;
-                $count++;
-            }
-
-            $data['result'] = $challengesr ?? [];
-
-            return  response()->json($data);
-        }catch (\Exception $e) {
-            return redirect()->back()->with(['error' =>$e->getMessage()]);
-        }
-    }
     public function cloneModule(Request $request){
         try {
             $clone=$this->cloneModules($request);
             if($clone){
-                return redirect()->back()->with(['success' => 'Updated  successfully']);
+                return redirect()->back()->with(['success' => 'Clone module successfully']);
             }
-            return redirect()->back()->with(['error' =>'upload failed']);
+            return redirect()->back()->with(['error' =>'Clone module failed']);
         }catch (\Exception $e){
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
@@ -116,6 +50,7 @@ class AutoCreateTemplateController extends Controller
             if($getModuleList){
                 return $getModuleList;
             }
+            return redirect()->back()->with(['error' =>'Module List Not Found']);
         }catch (\Exception $e){
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }

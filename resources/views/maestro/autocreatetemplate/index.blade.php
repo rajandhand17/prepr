@@ -76,13 +76,13 @@
                             <div class="col-md-6">
                                 <select id="org_type" name="org_type" class="form-control select_role_type" style="display:none;">
                                     <option value="" selected>Org Manager Type</option>
-                                    <option value="enterprise">Enterprise</option>
-                                    <option value="small_mid_size_business">Small/Mid-size Business</option>
-                                    <option value="startup">Startup</option>
-                                    <option value="community_organization">Community Organization</option>
-                                    <option value="ngo_charity_not_for_profit">NGO/Charity/Not-for-profit</option>
-                                    <option value="government">Government</option>
-                                    <option value="educational_institution">Educational Institution</option>
+                                    <option value="20">Enterprise</option>
+                                    <option value="17">Small/Mid-size Business</option>
+                                    <option value="11">Startup</option>
+                                    <option value="23">Community Organization</option>
+                                    <option value="19">NGO/Charity/Not-for-profit</option>
+                                    <option value="25">Government</option>
+                                    <option value="22">Educational Institution</option>
                                 </select>
                                 <span class="text-left help-block text-red">{{$errors->first('org_type')}}</span>
                             </div>
@@ -123,7 +123,7 @@
                             <div class='col-md-6' id='lab_list_div' style="display:none;">
                                 <div class='control-label mb-5'>Select Lab Template(s)</div>
                                 <div class="form-group">
-                                    <select id="lab_list" name="lab_list[]" multiple class="form-control select_role_type"  style="height: 50px;">
+                                    <select id="lab_list" name="lab_list[]" multiple  class="form-control select_role_type"  style="height: 50px;">
 
                                     </select>
                                 </div>
@@ -160,6 +160,38 @@
         </div>
     </div>
 </section>
+<div class="modal fade" id="cloneModal" tabindex="-1" role="dialog" aria-labelledby="cloneModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cloneModalLabel">Info..!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to update the details ?
+            </div>
+            <div class="modal-footer">
+                {!!Form::open(array('method'=>'POST','route'=>'cloneInfo'))!!}
+                <input type='hidden' id='sdc_lab' name='sdc_lab' value=''/>
+                <input type='hidden' id='sdc_challenge' name='sdc_challenge' value=''/>
+                <input type='hidden' id='selected_role' name='selected_role' value=''/>
+                <input type='hidden' id='role_user_type_slected' name='role_user_type_slected' value=''/>
+                <input type='hidden' id='selected_lab_ids' name='selected_lab_ids' value=''/>
+                <input type='hidden' id='selected_challenge_ids' name='selected_challenge_ids' value=''/>
+                <input type='hidden' id='selected_group_challenge_ids' name='selected_group_challenge_ids' value=''/>
+                <input type='hidden' id='selected_group_lab_ids' name='selected_group_lab_ids' value=''/>
+                <input type='hidden' id='invite_lab' name='invite_lab' value=''/>
+                <input type='hidden' id='invite_challenge' name='invite_challenge' value=''/>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <input type='hidden' id='selected_language' name='selected_language' value=''/>
+                <button type="submit" class="btn btn-primary">Save</button>
+                {!!Form::close()!!}
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     @if(Session::has('success'))
@@ -175,7 +207,38 @@
         if (checkbox.checked) {
             $('#lab_list_div').css('display','block');
             $('#lab_group_list_div').css('display','block');
-            getData('lab_template','lab_list');
+            $.ajax({
+                type:'POST',
+                url:"{{ route('getModuleList') }}",
+                aysc:false,
+                data:{
+                    language: $('#selectlang :selected').val(),
+                    module:'lab_template',
+                },
+                success:function(response){
+                    toAppend=[];
+                    $.each(response,function(index,data){
+                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
+                    });
+                    $('#lab_list').append(toAppend);
+                }
+            });
+            $.ajax({
+                type:'POST',
+                url:"{{ route('getModuleList') }}",
+                aysc:false,
+                data:{
+                    language: $('#selectlang :selected').val(),
+                    module:'lab_program',
+                },
+                success:function(response){
+                    toAppend=[];
+                    $.each(response,function(index,data){
+                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
+                    });
+                    $('#lab_group_list').append(toAppend);
+                }
+            });
 
         } else {
             $('#lab_list_div').css('display','none');
@@ -186,34 +249,44 @@
         if (challengecheckbox.checked) {
             $('#challenge_list_div').css('display','block');
             $('#challenge_group_list_div').css('display','block');
-        } else {
-            $('#challenge_list_div').css('display','none');
-            $('#challenge_group_list_div').css('display','none');
-        }
-    });
-    function getData(module,ids){
-        try {
             $.ajax({
                 type:'POST',
                 url:"{{ route('getModuleList') }}",
                 aysc:false,
                 data:{
-                    language: $('#language :selected').val(),
-                    module:module,
+                    language: $('#selectlang :selected').val(),
+                    module:'challenge_template',
                 },
                 success:function(response){
-                    var toAppend = '';
-                    $.each(response.result,function(index,title){
-                        toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+                    toAppend=[];
+                    $.each(response,function(index,data){
+                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
                     });
-                 //   $('#lab_list').append(toAppend);
-                    $('#'.ids).append(toAppend);
+                    $('#challenge_list').append(toAppend);
                 }
             });
-        }catch (Exception $e) {
-            return false;
+            $.ajax({
+                type:'POST',
+                url:"{{ route('getModuleList') }}",
+                aysc:false,
+                data:{
+                    language: $('#selectlang :selected').val(),
+                    module:'challenge_path',
+                },
+                success:function(response){
+                    toAppend=[];
+                    $.each(response,function(index,data){
+                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
+                    });
+                    $('#challenge_group_list').append(toAppend);
+                }
+            });
+        } else {
+            $('#challenge_list_div').css('display','none');
+            $('#challenge_group_list_div').css('display','none');
         }
-    }
+    });
+
     function changeRoles(role) {
         const elements = [
             '#org_type',
@@ -259,5 +332,65 @@
         }
     }
 
+
+    $('.clonebtn').click(function(){
+        role_type_selected=null;
+        selected_labs= $("#lab_list").val();
+        selected_challenges= $("#challenge_list").val();
+        selected_group_challenges= $("#challenge_group_list").val();
+        selected_group_lab_ids= $("#lab_group_list").val();
+        role_selected= $("#role").val();
+        role_type_selected=null;
+        if(role_selected=="2"){
+            role_type_selected= $("#org_type").val();
+        }
+        if(role_selected=="6"){
+            role_type_selected= $("#user_type").val();
+        }
+        alert(role_selected,role_type_selected);
+        if ($('#clone_lab_chk').is(':checked')) {
+            clone_lab= true;
+            $('#lab_list_div').css('display','block')
+            $('#lab_group_list_div').css('display','block')
+        }else{
+            clone_lab= false;
+            $('#lab_list_div').css('display','none')
+            $('#lab_group_list_div').css('display','none')
+        }
+
+        if ($('#clone_challenge_chk').is(':checked')) {
+            clone_challenge= true;
+            $('#challenge_list_div').css('display','block')
+            $('#challenge_group_list_div').css('display','block')
+        }else{
+            clone_challenge= false;
+            $('#challenge_list_div').css('display','none')
+            $('#challenge_group_list_div').css('display','none')
+        }
+        invite_lab=0;
+        if ($('#invite_lab_chk').is(':checked')) {
+            invite_lab= 1;
+        }
+        invite_challenge=0;
+        if ($('#invite_challenge_chk').is(':checked')) {
+            invite_challenge= 1;
+        }
+        $('#sdc_lab').val(clone_lab);
+        $('#sdc_challenge').val(clone_challenge);
+        $('#selected_role').val(role_selected);
+        $('#role_user_type_slected').val(role_type_selected);
+        $('#selected_lab_ids').val(selected_labs);
+        $('#selected_challenge_ids').val(selected_challenges);
+        $('#selected_group_challenge_ids').val(selected_group_challenges);
+        $('#selected_group_lab_ids').val(selected_group_lab_ids);
+        $('#invite_lab').val(invite_lab);
+        $('#invite_challenge').val(invite_challenge);
+        $('#selected_language').val($('#selectlang :selected').val());
+        colenchecked_len= $('.clonecheckbox:checked').length
+        if(colenchecked_len>0){
+
+        }
+        $('#cloneModal').modal('show');
+    })
 </script>
 @endsection

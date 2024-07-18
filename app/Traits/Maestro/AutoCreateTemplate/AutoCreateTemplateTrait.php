@@ -17,22 +17,6 @@ trait AutoCreateTemplateTrait
         }
     }
 
-    public function getPreSelectLabLists($request)
-    {
-        try {
-            return AutoCreateTemplatesService::getPreSelectLabList($request);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
-    public function getPreSelectedChallengeLists($request)
-    {
-        try {
-            return AutoCreateTemplatesService::getPreSelectedChallengeList($request);
-        }catch (\Exception $e) {
-            return false;
-        }
-    }
 
     public function fetchModuleList($request)
     {

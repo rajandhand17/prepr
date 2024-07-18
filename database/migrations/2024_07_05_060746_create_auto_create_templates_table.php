@@ -24,12 +24,12 @@ return new class extends Migration
             $table->enum('invite_challenges',['0','1'])->default('0')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('role_type')->references('id')->on('roles')->onDelete('cascade');
-            $table->foreign('lab_template_id')->references('id')->on('lab_marketplace')->onDelete('cascade');
-            $table->foreign('challenge_template_id')->references('id')->on('challenge_templates')->onDelete('cascade');
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->foreign('lab_program_id')->references('id')->on('lab_programs')->onDelete('cascade');
-            $table->foreign('challenge_path_id')->references('id')->on('challenge_paths')->onDelete('cascade');
+//            $table->foreign('role_type')->references('id')->on('roles')->onDelete('cascade');
+//            $table->foreign('lab_template_id')->references('id')->on('lab_marketplace')->onDelete('cascade');
+//            $table->foreign('challenge_template_id')->references('id')->on('challenge_templates')->onDelete('cascade');
+//            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+//            $table->foreign('lab_program_id')->references('id')->on('lab_programs')->onDelete('cascade');
+//            $table->foreign('challenge_path_id')->references('id')->on('challenge_paths')->onDelete('cascade');
 
         });
     }
