@@ -16,6 +16,7 @@ class UserService
             return false;
         }
     }
+
     public static function getUserById($id)
     {
         try {
@@ -76,7 +77,7 @@ class UserService
     public static function createUser($request)
     {
         try {
-            $createUser = User::create(['first_name' => $request->first_name, 'last_name' => $request->last_name, 'full_name' => $request->first_name.' '.$request->last_name, 'username' => $request->username, 'email' => $request->email,'is_deactivated' => $request->status,'verified_user' => $request->verified_user, 'password' => Hash::make($request->password)]);
+            $createUser = User::create(['first_name' => $request->first_name, 'last_name' => $request->last_name, 'full_name' => $request->first_name.' '.$request->last_name, 'username' => $request->username, 'email' => $request->email, 'is_deactivated' => $request->status, 'verified_user' => $request->verified_user, 'password' => Hash::make($request->password)]);
             if (!empty($createUser)) {
                 return $createUser;
             }

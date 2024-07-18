@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Maestro\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Traits\Maestro\User\UserTrait;
 use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Traits\Maestro\User\UserTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -86,7 +86,8 @@ class UsersController extends Controller
         try {
             $roles = RoleAndPermissionService::getAllRoles();
             $permissions = RoleAndPermissionService::permissions();
-            return view('maestro.users.create', compact('roles','permissions'));
+
+            return view('maestro.users.create', compact('roles', 'permissions'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -101,9 +102,9 @@ class UsersController extends Controller
             if ($this->createUser($request)) {
                 return redirect()->route('users.index')->with('success', 'User created successfully');
             }
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -137,6 +138,7 @@ class UsersController extends Controller
             }
             $roles = RoleAndPermissionService::getAllRoles();
             $permissions = RoleAndPermissionService::permissions();
+
             return view('maestro.users.edit', compact('user', 'permissions', 'roles'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -152,9 +154,9 @@ class UsersController extends Controller
             if ($this->updateUserById($id, $request)) {
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
+
             return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
-
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -169,7 +171,6 @@ class UsersController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
