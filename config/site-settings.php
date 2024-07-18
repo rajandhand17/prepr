@@ -3,6 +3,7 @@
 return [
     'pagination_per_page'          => '15',
     'pagination_per_page_career'   => '3',
+    'pagination_per_page_advance_search' => '12',
     'message_per_page'             => '30',
     'listing_limit'                => '20',
     'switcher_listing_limit'       => '5',
