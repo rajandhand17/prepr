@@ -7,7 +7,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
 use App\Services\AchievementService;
-use App\Services\ModuleAchievementCompletionStatusService;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengePathSocialActivitiesService;
 use App\Services\UserService;
@@ -41,7 +41,7 @@ class ChallengePathService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $getChallengePathList = $getChallengePathList->where('challenge_paths.title', 'like', '%'.$request->search.'%');
+                $getChallengePathList = $getChallengePathList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.category_id', $request->category);
@@ -82,8 +82,8 @@ class ChallengePathService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
                     $query->select('challenge_path_skill_group_stacks.challenge_path_id')
-                    ->from('challenge_path_skill_group_stacks')
-                    ->whereIn('challenge_path_skill_group_stacks.foreign_id', $request->skills)
+                        ->from('challenge_path_skill_group_stacks')
+                        ->whereIn('challenge_path_skill_group_stacks.foreign_id', $request->skills)
                         ->where('challenge_path_skill_group_stacks.type', '0')
                         ->whereNull('challenge_path_skill_group_stacks.deleted_at')
                         ->distinct();
@@ -92,8 +92,8 @@ class ChallengePathService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
                     $query->select('challenge_path_tag_groups.challenge_path_id')
-                    ->from('challenge_path_tag_groups')
-                    ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
+                        ->from('challenge_path_tag_groups')
+                        ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
                         ->where('challenge_path_tag_groups.type', '0')
                         ->whereNull('challenge_path_tag_groups.deleted_at')
                         ->distinct();
@@ -455,7 +455,7 @@ class ChallengePathService
                     $fetchChallengePathIdsBasedOnChallengeId = ComponentAssociationService::fetchChallengePathIdsBasedOnChallengeId($challengeId);
                     if (!empty($fetchChallengePathIdsBasedOnChallengeId)) {
                         foreach ($fetchChallengePathIdsBasedOnChallengeId as $challengePathId) {
-                            $checkChallengePathAchievementAssignedOrNot = ModuleAchievementCompletionStatusService::checkChallengePathAchievementAssignedOrNot($challengePathId, $getUserById->id);
+                            $checkChallengePathAchievementAssignedOrNot = ModuleCompletionStatusService::checkChallengePathAchievementAssignedOrNot($challengePathId, $getUserById->id);
                             if ($checkChallengePathAchievementAssignedOrNot === false) {
                                 $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociationService::fetchChallengeIdsBasedOnChallengePathId($challengePathId);
                                 if (!empty($fetchChallengeIdsBasedOnChallengePathId)) {
@@ -464,7 +464,7 @@ class ChallengePathService
                                     if ($checkChallengeDiff->isEmpty()) {
                                         $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
                                         if ($addChallengePathAchievement) {
-                                            $markChallengePathCompleted = ModuleAchievementCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
+                                            $markChallengePathCompleted = ModuleCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
                                         }
                                     }
                                 }

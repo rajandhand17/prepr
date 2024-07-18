@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceGroupBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,11 @@ class ResourceGroup extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function newEloquentBuilder($query): ResourceGroupBuilder
+    {
+        return new ResourceGroupBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -116,10 +122,28 @@ class ResourceGroup extends Model
         return 'NA';
     }
 
+    public function liked_count()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(ResourceGroupSocialActivity::class, 'resource_group_id', 'id')->where(['like_dislike' => '1'])->count();
+        }
+
+        return 'NA';
+    }
+
     public function resource_rating()
     {
         if (auth('api')->check()) {
             return $this->hasOne(ResourceGroupRating::class, 'resource_group_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
+
+    public function resource_group_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '6']);
         }
 
         return 'N/A';

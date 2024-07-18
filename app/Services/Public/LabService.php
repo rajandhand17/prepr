@@ -32,7 +32,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -209,7 +209,7 @@ class LabService
     public static function getLabsBasedOnIds($labIds)
     {
         try {
-            $labList = Lab::whereIn('id', $labIds)->get();
+            $labList = Lab::whereIn('id', $labIds)->where('is_accessible', '1')->get();
 
             return $labList;
         } catch (\Exception $e) {

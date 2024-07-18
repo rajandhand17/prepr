@@ -3,8 +3,6 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceGroup;
 use App\Models\ResourceGroupRating;
 
@@ -28,7 +26,7 @@ class ResourceGroupService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceGroupList = $resourceGroupList->where('resource_groups.title', 'like', '%'.$request->search.'%');
+                $resourceGroupList = $resourceGroupList->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -102,17 +100,11 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.level', $level);
-                }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::where('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.duration', $duration);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
 
             return $resourceGroupList;
@@ -156,6 +148,19 @@ class ResourceGroupService
     {
         try {
             return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnArrayIds($resourceGroupIds)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::whereIn('id', $resourceGroupIds)->where('is_accessible', '1')->get();
+
+            return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

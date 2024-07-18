@@ -40,6 +40,7 @@ class OrganizationResource extends JsonResource
             'description'                   => $this->description,
             'cover_image'                   => $this->cover_image,
             'profile_image'                 => $this->profile_image,
+            'custom_url'                    => $this->custom_url,
             'website'                       => $this->website,
             'about'                         => $this->about,
             'status'                        => $status,

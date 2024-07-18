@@ -18,7 +18,8 @@ return new class() extends Migration {
             $table->string('slug')->after('display_name');
             $table->text('cover_image')->nullable()->after('description');
             $table->text('profile_image')->nullable()->after('cover_image');
-            $table->string('website')->nullable()->after('profile_image');
+            $table->string('custom_url')->nullable()->after('profile_image');
+            $table->string('website')->nullable()->after('custom_url');
             $table->text('about')->nullable()->after('website');
             $table->unsignedBigInteger('category')->nullable()->after('about');
             $table->enum('status', ['0', '1', '2', '3'])->comment('0 -> draft, 1-> published, 2-> deactivated, 3-> archive')->default('1')->after('category');

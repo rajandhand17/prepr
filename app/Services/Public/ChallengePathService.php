@@ -26,7 +26,7 @@ class ChallengePathService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challengePathList = $challengePathList->where('challenge_paths.title', 'like', '%'.$request->search.'%');
+                $challengePathList = $challengePathList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $challengePathList = $challengePathList->whereIn('challenge_paths.category_id', $request->category);
@@ -119,6 +119,17 @@ class ChallengePathService
         try {
             return ChallengePath::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnArrayIds($ids)
+    {
+        try {
+            return ChallengePath::whereIn('id', $ids)->where('is_accessible', '1')->get();
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

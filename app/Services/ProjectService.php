@@ -43,11 +43,25 @@ class ProjectService
         }
     }
 
+    public static function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+            $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterProjectList($project_list, $request)
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+                $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
@@ -646,7 +660,7 @@ class ProjectService
                     $query->select('challenges.id')
                         ->from('challenges')
                         ->whereIn('challenges.duration_id', $request->challenge_duration)
-                       ->whereNull('challenges.deleted_at');
+                        ->whereNull('challenges.deleted_at');
                 });
             }
             if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {
@@ -742,6 +756,21 @@ class ProjectService
 
             return $getMyProjects;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkUserChallengeStatus($challengeId, $userId)
+    {
+        try {
+            $getUserProject = Project::where(['user_id' => $userId, 'challenge_id' => $challengeId])->first();
+
+            return $getUserProject;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

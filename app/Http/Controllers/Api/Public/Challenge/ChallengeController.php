@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Challenge;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
@@ -52,6 +53,10 @@ class ChallengeController extends AppBaseController
             if ($challenge) {
                 if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
+                }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackChallengeUserProgress($challenge, $userId);
                 }
 
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));

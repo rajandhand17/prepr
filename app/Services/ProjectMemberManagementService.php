@@ -522,6 +522,51 @@ class ProjectMemberManagementService
         }
     }
 
+    public static function getPendingRequests($userData)
+    {
+        try {
+            // Fetching project ids in which current user's role is team leader
+            $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
+            // Preparing the query to fetch project ids where requests are pending
+            $projectIds = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+
+            return $projectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getPendingRequestsBasedOnProjectIds($projectids)
+    {
+        try {
+            // Getting members based on project ids
+            $getMembers = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
+
+            return $getMembers;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectIdsBasedOnTeamLead($email)
+    {
+        try {
+            //fetched projects ids in which given email user email is team leader
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' =>$email, 'inviter_access_level'=>'2', 'invite_status'=>'1'])->pluck('project_id');
+            if ($getAcceptedInvitesProjectIds) {
+                return $getAcceptedInvitesProjectIds;
+            }
+
+            return  false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function fetchAcceptedMemberIds($projectId)
     {
         try {

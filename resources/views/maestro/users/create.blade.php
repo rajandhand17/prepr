@@ -28,7 +28,8 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'users.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'users.store','files'=>'true','role'=>"form"))!!}
+                    <b>User Information</b> <hr>
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -66,15 +67,51 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Role</label>
-                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
+                                <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;" required>
                                   @if(!empty($roles))
                                     @foreach($roles as $key => $role)
-                                      <option value="{{ $role->name }}" >{{ $role->display_name }}</option>
+                                      <option value="{{ $role->name }}" @if($role->name =='user')
+                                        @selected(true)
+                                      @endif>{{ $role->display_name }}</option>
                                     @endforeach
                                   @endif
                                 </select>
                               </div>
                             </div>
+                            <div class="col-md-3">
+                              <div class="form-group {{($errors->has('verified_user')) ? 'has-error' : ''}}">
+                                  {!! Form::label('verified_user', 'Verified User', ['class' => 'control-label']) !!}
+                                  {!! Form::select('verified_user', ['1' => 'Yes','0' => 'No'], old('verified_user'), ['class' => 'form-control']) !!}
+                                  <span class="help-block">{{ $errors->first('verified_user')}}</span>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
+                                  {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
+                                  {!! Form::select('status', ['0' => 'Active', '1' => 'Inactive'], old('status'), ['class' => 'form-control']) !!}
+                                  <span class="help-block">{{ $errors->first('status')}}</span>
+                              </div>
+                            </div>
+                        </div>
+                        @php
+                          $chunks = $permissions->chunk(ceil($permissions->count() / 4));
+                        @endphp
+                        <hr><b>User Permissions</b> <hr>
+                        <div class="row">
+                          @if(!empty($chunks))
+                            @foreach($chunks as $chunk)
+                                <div class="col-sm-3">
+                                    @foreach($chunk as $permission)
+                                        <div class="form-group">
+                                            <label class="text-uppercase">
+                                                <input type="checkbox" name="permission[]" @if(isset($permission->id) && in_array($permission->id, [])) checked @endif value="{{ $permission->name }}">
+                                                {{ $permission->display_name }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                          @endif
                         </div>
                         <div class="row">
                             <div class="col-md-6">

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ChallengeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -23,6 +24,7 @@ class Challenge extends Model
         'level_id',
         'slug',
         'title',
+        'description_type',
         'description',
         'privacy',
         'media_type',
@@ -40,6 +42,11 @@ class Challenge extends Model
         'allow_winner_change',
         'winner_select_date',
     ];
+
+    public function newEloquentBuilder($query): ChallengeBuilder
+    {
+        return new ChallengeBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -79,16 +86,6 @@ class Challenge extends Model
     public function jobs()
     {
         return $this->hasMany(ChallengeJobTitles::class, 'challenge_id', 'id');
-    }
-
-    public function tags()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '0');
-    }
-
-    public function tag_groups()
-    {
-        return $this->hasMany(ChallengeTagsGroups::class, 'challenge_id', 'id')->where('type', '1');
     }
 
     public function durations()
@@ -139,6 +136,11 @@ class Challenge extends Model
     public function challenge_custom_timelines()
     {
         return $this->hasMany(ChallengeCustomTimelines::class, 'challenge_id', 'id');
+    }
+
+    public function challenge_flexible_announcement()
+    {
+        return $this->hasMany(ChallengeFlexibleAnnouncement::class, 'challenge_id', 'id');
     }
 
     public function challenge_project_template()
@@ -226,5 +228,22 @@ class Challenge extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function scorm(): MorphOne
+    {
+        return $this->morphOne(Scorm::class, 'model')->latest();
+    }
+
+    public function challenge_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '2']);
+        }
+
+        return 'N/A';
     }
 }
