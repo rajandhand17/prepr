@@ -15,7 +15,7 @@ class LabNameListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'   => $this->uuid,
+            'uuid'   => $this->uuid,
             'title'=> $this->title,
             'media'=> $this->media,
         ];
