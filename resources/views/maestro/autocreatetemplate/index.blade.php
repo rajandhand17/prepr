@@ -120,35 +120,34 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class='col-md-6' id='lab_list_div' style="display:none;">
-                                <div class='control-label mb-5'>Select Lab Template(s)</div>
-                                <div class="form-group">
-                                    <select id="lab_list" name="lab_list[]" multiple  class="form-control select_role_type"  style="height: 50px;">
-
+                            <div class="col-md-6" id='lab_list_div' style="display:none;">
+                                <div class="form-group" >
+                                    <label>Select Lab Template(s)</label>
+                                    <select name="lab_list[]" id="lab_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
-                            <div class='col-md-6' id='challenge_list_div' style="display:none;">
-                                <div class='control-label mb-5'>Select Challenge Template(s)</div>
-                                <div class="form-group">
-                                    <select id="challenge_list" name="challenge_list[]" multiple class="form-control" style="height: 50px;">
+                            <div class="col-md-6" id='challenge_list_div' style="display:none;">
+                                <div class="form-group" >
+                                    <label>Select Challenge Template(s)</label>
+                                    <select name="challenge_list[]" id="challenge_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class='col-md-6' id='lab_group_list_div' style="display:none;">
-                                <div class='control-label mb-5'>Select Lab Program(s)</div>
-                                <div class="form-group">
-                                    <select id="lab_group_list" name="lab_group_list[]" multiple class="form-control" style="height: 50px;">
+                            <div class="col-md-6" id='lab_group_list_div' style="display:none;">
+                                <div class="form-group" >
+                                    <label>Select Lab Program(s)</label>
+                                    <select name="lab_group_list[]" id="lab_group_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
-                            <div class='col-md-6' id='challenge_group_list_div' style="display:none;">
-                                <div class='control-label mb-5'>Select Challenge Path(s)</div>
-                                <div class="form-group">
-                                    <select id="challenge_group_list" name="challenge_group_list[]" multiple class="form-control" style="height: 50px;">
+                            <div class="col-md-6" id='challenge_group_list_div' style="display:none;">
+                                <div class="form-group" >
+                                    <label>Select Challenge Path(s)</label>
+                                    <select name="challenge_group_list[]" id="challenge_group_list" class="select2" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
@@ -201,91 +200,50 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
-    var checkbox = document.getElementById('clone_lab_chk');
     var challengecheckbox = document.getElementById('clone_challenge_chk');
+
+    var checkbox = document.getElementById('clone_lab_chk');
     checkbox.addEventListener('change', function() {
         if (checkbox.checked) {
             $('#lab_list_div').css('display','block');
             $('#lab_group_list_div').css('display','block');
-            $.ajax({
-                type:'POST',
-                url:"{{ route('getModuleList') }}",
-                aysc:false,
-                data:{
-                    language: $('#selectlang :selected').val(),
-                    module:'lab_template',
-                },
-                success:function(response){
-                    toAppend=[];
-                    $.each(response,function(index,data){
-                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
-                    });
-                    $('#lab_list').append(toAppend);
-                }
-            });
-            $.ajax({
-                type:'POST',
-                url:"{{ route('getModuleList') }}",
-                aysc:false,
-                data:{
-                    language: $('#selectlang :selected').val(),
-                    module:'lab_program',
-                },
-                success:function(response){
-                    toAppend=[];
-                    $.each(response,function(index,data){
-                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
-                    });
-                    $('#lab_group_list').append(toAppend);
-                }
-            });
-
+            fetchAndAppendOptions('lab_template', '#lab_list');
+            fetchAndAppendOptions('lab_program', '#lab_group_list');
         } else {
             $('#lab_list_div').css('display','none');
             $('#lab_group_list_div').css('display','none');
         }
     });
+
     challengecheckbox.addEventListener('change', function() {
         if (challengecheckbox.checked) {
             $('#challenge_list_div').css('display','block');
             $('#challenge_group_list_div').css('display','block');
-            $.ajax({
-                type:'POST',
-                url:"{{ route('getModuleList') }}",
-                aysc:false,
-                data:{
-                    language: $('#selectlang :selected').val(),
-                    module:'challenge_template',
-                },
-                success:function(response){
-                    toAppend=[];
-                    $.each(response,function(index,data){
-                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
-                    });
-                    $('#challenge_list').append(toAppend);
-                }
-            });
-            $.ajax({
-                type:'POST',
-                url:"{{ route('getModuleList') }}",
-                aysc:false,
-                data:{
-                    language: $('#selectlang :selected').val(),
-                    module:'challenge_path',
-                },
-                success:function(response){
-                    toAppend=[];
-                    $.each(response,function(index,data){
-                        toAppend += '<option value='+data.id+' selected>'+data.title+'</option>';
-                    });
-                    $('#challenge_group_list').append(toAppend);
-                }
-            });
+            fetchAndAppendOptions('challenge_template', '#challenge_list');
+            fetchAndAppendOptions('challenge_path', '#challenge_group_list');
         } else {
             $('#challenge_list_div').css('display','none');
             $('#challenge_group_list_div').css('display','none');
         }
     });
+    function fetchAndAppendOptions(module, selectElementId) {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('getModuleList') }}",
+            async: false,
+            data: {
+                language: $('#selectlang :selected').val(),
+                module: module,
+            },
+            success: function(response) {
+                let toAppend = '';
+                $.each(response, function(index, data) {
+                    toAppend += '<option value="' + data.id + '">' + data.title + '</option>';
+                });
+                $(selectElementId).append(toAppend);
+            }
+        });
+    }
 
     function changeRoles(role) {
         const elements = [
@@ -339,6 +297,7 @@
         selected_challenges= $("#challenge_list").val();
         selected_group_challenges= $("#challenge_group_list").val();
         selected_group_lab_ids= $("#lab_group_list").val();
+
         role_selected= $("#role").val();
         role_type_selected=null;
         if(role_selected=="2"){
@@ -347,7 +306,6 @@
         if(role_selected=="6"){
             role_type_selected= $("#user_type").val();
         }
-        alert(role_selected,role_type_selected);
         if ($('#clone_lab_chk').is(':checked')) {
             clone_lab= true;
             $('#lab_list_div').css('display','block')
@@ -387,10 +345,13 @@
         $('#invite_challenge').val(invite_challenge);
         $('#selected_language').val($('#selectlang :selected').val());
         colenchecked_len= $('.clonecheckbox:checked').length
-        if(colenchecked_len>0){
 
+        if ((selected_labs && selected_labs.length > 0) ||
+            (selected_group_lab_ids && selected_group_lab_ids.length > 0) ||
+            (selected_challenges && selected_challenges.length > 0) ||
+            (selected_group_challenges && selected_group_challenges.length > 0)) {
+            $('#cloneModal').modal('show');
         }
-        $('#cloneModal').modal('show');
     })
 </script>
 @endsection

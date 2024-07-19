@@ -287,13 +287,18 @@
             <p>Explore Page</p>
           </a>
         </li>
-        <li class="nav-item"> 
+        <li class="nav-item">
           <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
           </a>
         </li>
-
+          <li class="nav-item">
+              <a href="{{ route('auto-create.index')}} " class="nav-link {{ Route::currentRouteName() == 'auto-create.index' ? 'active' : ''  }}">
+                  <i class="fa fa-database" aria-hidden="true"></i>
+                  <p>Auto Create</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
