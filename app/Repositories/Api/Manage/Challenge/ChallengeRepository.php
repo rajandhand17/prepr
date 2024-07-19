@@ -540,6 +540,10 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $challengeId, $update_assessment_attachment);
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId, $updateChallengeAssessment);
 
+                if (!$updateChallengeAssessmentCriteria || !$updateChallengeAssessment) {
+                    throw new Exception("Failed to update challenge assessment");
+                    
+                }
                 return [
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
                     'updateChallengeAssessment'         => $updateChallengeAssessment,
@@ -550,11 +554,8 @@ class ChallengeRepository implements ChallengeInterface
                 $updatedChallengeAssessment['updateChallengeAssessmentCriteria'] &&
                 $updatedChallengeAssessment['updateChallengeAssessment']
             ) {
-                DB::commit();
-
                 return $updatedChallengeAssessment;
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
@@ -585,6 +586,10 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeExternalLink = $this->challengeExternalLinkService->cloneChallengeExternalLink($originalChallenge->external_links, $cloneChallenge->id);
                 $cloneChallengeAssociaton = $this->componentAssociationService->cloneChallengeAssociaton($originalChallenge->challenge_association, $cloneChallenge->id);
 
+                if (!$cloneChallenge || !$cloneChallengeParticipationAchievement || !$cloneChallengeIncentiveAchievement || !$cloneChallengeSkills || !$cloneChallengeGroups || !$cloneChallengeStack || !$cloneChallengeSponsor || !$cloneChallengeRequirement || !$cloneChallengeAssessmentCriteria || !$cloneChallengeAssessment || !$cloneChallengeProjectTemplate || !$cloneChallengeTimelines || !$cloneChallengeCustomTimelines || !$cloneChallengeExternalLink || !$cloneChallengeAssociaton) {
+                    throw new Exception("Failed to clone challenge");
+                    
+                }
                 return [
                     'cloneChallenge'                         => $cloneChallenge,
                     'cloneChallengeParticipationAchievement' => $cloneChallengeParticipationAchievement,
@@ -621,12 +626,8 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallenge['cloneChallengeExternalLink'] &&
                 $cloneChallenge['cloneChallengeAssociaton']
             ) {
-                DB::commit();
-
                 return $cloneChallenge['cloneChallenge'];
             }
-
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
@@ -642,22 +643,16 @@ class ChallengeRepository implements ChallengeInterface
             $createAnnouncement = DB::transaction(function () use ($challengeId, $request) {
                 $createAnnouncement = $this->challengeAnnouncementService->createChallengeAnnouncement($challengeId, $request);
 
+                if (!$createAnnouncement) {
+                    throw new Exception("Failed to create announcement");
+                    
+                }
                 return [
                     'createAnnouncement' => $createAnnouncement,
                 ];
             });
 
-            if (
-                $createAnnouncement['createAnnouncement']
-            ) {
-                DB::commit();
-
-                return $createAnnouncement['createAnnouncement'];
-            }
-
-            DB::rollback();
-
-            return false;
+            return $createAnnouncement['createAnnouncement'];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -708,6 +703,10 @@ class ChallengeRepository implements ChallengeInterface
                     $updateWinnerSelectionTimeLine = $this->challengeService->updateWinnerSelectionTimeLine($challengeData);
                 }
 
+                if (!$addWinnerAchievement || !$updateWinnerSelectionTimeLine) {
+                    throw new Exception("Failed to select challenge winners");
+                    
+                }
                 return [
                     'addWinnerAchievement'          => $addWinnerAchievement,
                     'updateWinnerSelectionTimeLine' => $updateWinnerSelectionTimeLine,
@@ -718,11 +717,8 @@ class ChallengeRepository implements ChallengeInterface
                 $submitProject['addWinnerAchievement'] &&
                 $submitProject['updateWinnerSelectionTimeLine']
             ) {
-                DB::commit();
-
                 return true;
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
