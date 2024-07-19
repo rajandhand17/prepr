@@ -34,6 +34,7 @@ class ResourceGroupResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $module_progress = null;
 
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
@@ -106,8 +107,34 @@ class ResourceGroupResource extends JsonResource
             }
         }
         $rating = intval('0');
-        if ($this->resource_rating) {
-            $rating = intval($this->resource_rating->rating);
+        if (auth('api')->check()) {
+            if ($this->resource_rating) {
+                $rating = intval($this->resource_rating->rating);
+            }
+
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->resource_group_completion_status) {
+                switch ($this->resource_group_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
+
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->resource_group_completion_status->percentage,
+                ];
+            }
         }
 
         return [
@@ -138,8 +165,8 @@ class ResourceGroupResource extends JsonResource
             'like_count'                    => $this->liked_count(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'rating'                        => $rating,
+            'module_progress'               => $module_progress,
             'resource_collection'           => $resourceCollection,
-
         ];
     }
 }
