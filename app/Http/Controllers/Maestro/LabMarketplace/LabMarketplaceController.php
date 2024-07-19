@@ -16,10 +16,11 @@ class LabMarketplaceController extends Controller
 {
     use LabMarketplaceTrait;
     protected $labMarketplaceService;
+
     public function __construct(LabMarketplaceService $labMarketplaceService)
     {
         $this->middleware('web');
-        $this->labMarketplaceService=$labMarketplaceService;
+        $this->labMarketplaceService = $labMarketplaceService;
     }
 
     public function index(Builder $builder, Request $request)
@@ -33,11 +34,11 @@ class LabMarketplaceController extends Controller
                         ->editColumn('privacy', static function (LabMarketplace $labMarketplaceInfo) {
                             switch ($labMarketplaceInfo->privacy) {
                                 case '0':
-                                $html = "<span class='badge badge-success'>public</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>public</span>";
+                                    break;
                                 case '1':
-                                $html = "<span class='badge badge-success'>private</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>private</span>";
+                                    break;
                             }
 
                             return $html;
@@ -78,14 +79,15 @@ class LabMarketplaceController extends Controller
     {
         try {
             // Checking lab marketplace exists or not
-            $checkLabMarketPlaceExistsOrNot=$this->getLabMarketplaceById($id);
-            if (!$checkLabMarketPlaceExistsOrNot){
+            $checkLabMarketPlaceExistsOrNot = $this->getLabMarketplaceById($id);
+            if (!$checkLabMarketPlaceExistsOrNot) {
                 return response()->json(['status' => 'fail', 'message' => 'This LabMarketplace does not exist']);
             }
             // Deleting lab marketplace based on id
             if ($this->deleteLabMarketplaceById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Lab Marketplace deleted successfully']);
             }
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);

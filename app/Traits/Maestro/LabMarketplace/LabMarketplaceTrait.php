@@ -2,15 +2,12 @@
 
 namespace App\Traits\Maestro\LabMarketplace;
 
-use App\Services\Maestro\LabMarketplaceService;
-use Illuminate\Support\Facades\DB;
-
 trait LabMarketplaceTrait
 {
     private function getLabMarketplace()
     {
         try {
-            $labMarketplace =  $this->labMarketplaceService->getLabMarketplace();
+            $labMarketplace = $this->labMarketplaceService->getLabMarketplace();
             if ($labMarketplace) {
                 return $labMarketplace;
             }
@@ -25,10 +22,11 @@ trait LabMarketplaceTrait
     {
         try {
             $slug = $this->labMarketplaceService->getLabMarketplaceBasedOnId($id)->slug;
-            $deleteLabMarketplace =  $this->labMarketplaceService->deleteLabMarketplace($slug, $id);
+            $deleteLabMarketplace = $this->labMarketplaceService->deleteLabMarketplace($slug, $id);
             if ($deleteLabMarketplace) {
                 return $deleteLabMarketplace;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
@@ -39,10 +37,10 @@ trait LabMarketplaceTrait
     {
         try {
             $labMarketplace = $this->labMarketplaceService->getLabMarketplaceBasedOnId($id);
-            if($labMarketplace){
+            if ($labMarketplace) {
                 return $labMarketplace;
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

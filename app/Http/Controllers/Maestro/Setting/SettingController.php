@@ -14,6 +14,7 @@ class SettingController extends Controller
 {
     use SettingTrait;
     protected $settingService;
+
     public function __construct(SettingService $settingService)
     {
         $this->middleware('web');

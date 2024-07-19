@@ -14,6 +14,7 @@ class ChallengeService
             return Challenge::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -24,6 +25,7 @@ class ChallengeService
             return Challenge::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
