@@ -70,7 +70,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('name')) ? 'has-error' : ''}}">
               {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-              {!! Form::text($inputName,null, ['class' => 'form-control']) !!}
+              {!! Form::text($inputName,null, ['class' => 'form-control','required' => 'required']) !!}
               <span class="help-block">{{ $errors->first($inputName)}}</span>
             </div>
           </div>
@@ -82,7 +82,7 @@
             <div class="form-group">
               <div class="form-group">
                 {!! Form::label('components', 'components', ['class' => 'control-label']) !!}
-                <select class="form-control" , multiple , id="components" name="components[]">
+                <select class="form-control" , multiple , id="components" name="components[]" required>
                   @if(!empty($components))
                   @foreach($components as $k=>$v){
                   @if( $k == $v)

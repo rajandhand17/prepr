@@ -2,8 +2,9 @@
 
 namespace App\Traits\Maestro\User;
 
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
-use App\Services\Maestro\User\UserService;
+use App\Services\Maestro\RoleAndPermissionService;
+use App\Services\Maestro\UserService;
+use Illuminate\Support\Facades\DB;
 use Exception;
 
 trait UserTrait
@@ -11,12 +12,27 @@ trait UserTrait
     private function createUser($request)
     {
         try {
-            if (UserService::createUser($request)) {
-                return true;
+            $createUser = DB::transaction(function () use ($request) {
+                $user = UserService::createUser($request);
+                $role = RoleAndPermissionService::userSyncRoles($user, $request->roles);
+
+                return [
+                    'user' => $user,
+                    'role' => $role,
+                ];
+            });
+
+            if ($createUser['user'] && $createUser['role']) {
+                DB::commit();
+
+                return $createUser['user'];
             }
+            DB::rollBack();
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -33,12 +49,27 @@ trait UserTrait
     private function updateUserById($id, $request)
     {
         try {
-            if (UserService::updateUserById($id, $request)) {
-                return true;
+            $updateUser = DB::transaction(function () use ($id, $request) {
+                $user = UserService::updateUserById($id, $request);
+                $role = RoleAndPermissionService::userSyncRoles($user, $request->roles);
+
+                return [
+                    'user' => $user,
+                    'role' => $role,
+                ];
+            });
+
+            if ($updateUser['user'] && $updateUser['role']) {
+                DB::commit();
+
+                return $updateUser['user'];
             }
+            DB::rollBack();
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }
@@ -60,34 +91,6 @@ trait UserTrait
     {
         try {
             $users = UserService::getUsers();
-            if ($users) {
-                return $users;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getAllRoles()
-    {
-        try {
-            $users = RoleAndPermissionService::getAllRoles();
-            if ($users) {
-                return $users;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getAllPermissions()
-    {
-        try {
-            $users = RoleAndPermissionService::permissions();
             if ($users) {
                 return $users;
             }

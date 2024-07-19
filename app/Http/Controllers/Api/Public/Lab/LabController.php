@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Lab;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Lab\LabNameListResource;
@@ -59,6 +60,10 @@ class LabController extends AppBaseController
             if ($lab) {
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
                 }
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));

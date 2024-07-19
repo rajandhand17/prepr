@@ -225,6 +225,11 @@ class Challenge extends Model
         return config('constants.campus_connect_status_id.'.$value);
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     /**
      * @return MorphOne
      */
@@ -233,8 +238,12 @@ class Challenge extends Model
         return $this->morphOne(Scorm::class, 'model')->latest();
     }
 
-    public function creator()
+    public function challenge_completion_status()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '2']);
+        }
+
+        return 'N/A';
     }
 }

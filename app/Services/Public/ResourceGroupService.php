@@ -154,4 +154,17 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public static function getResourceGroupBasedOnArrayIds($resourceGroupIds)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::whereIn('id', $resourceGroupIds)->where('is_accessible', '1')->get();
+
+            return $resourceGroupList;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

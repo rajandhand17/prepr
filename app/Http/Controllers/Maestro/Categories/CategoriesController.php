@@ -8,7 +8,6 @@ use App\Models\Language;
 use App\Traits\Maestro\Category\CategoryTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -64,7 +63,7 @@ class CategoriesController extends Controller
 
             return view('maestro.categories.index', compact('html', 'module_name'));
         } catch (Exception $e) {
-            return redirect()->back()->with(['error' => $e->getMessage()]);
+            return redirect()->back()->with(['error' => 'Something went wrong.']);
         }
 
         return view('maestro.categories.index', compact('categories'));
@@ -81,7 +80,7 @@ class CategoriesController extends Controller
 
             return view('maestro.categories.create', compact('languages', 'category_list'));
         } catch (Exception $e) {
-            return redirect()->route('category.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('category.index')->withErrors(['error' => 'Something went wrong.']);
         }
     }
 
@@ -91,10 +90,8 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateCategory($request, '', 'create')) {
-                DB::commit();
-                if ($request->get('parent_id') !== null) {
+                if ($request->filled('parent_id')) {
                     return redirect()->route('category.index')->with(['success' => 'Sub Category Added successfully']);
                 } else {
                     return redirect()->route('category.index')->with(['success' => 'Category Added successfully']);
@@ -103,9 +100,7 @@ class CategoriesController extends Controller
 
             return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('category.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -124,7 +119,7 @@ class CategoriesController extends Controller
 
             return view('maestro.categories.edit', compact('root', 'category', 'components', 'category_list', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('category.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('category.index')->withErrors(['error' => 'Something went wrong.']);
         }
     }
 
@@ -134,9 +129,7 @@ class CategoriesController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateCategory($request, $id, 'update')) {
-                DB::commit();
                 if ($request->get('parent_id') !== null) {
                     return redirect()->route('category.index')->with(['success' => 'Sub Category updated successfully.']);
                 } else {
@@ -146,9 +139,7 @@ class CategoriesController extends Controller
 
             return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('category.index')->with(['error' => $e->getMessage()]);
+            return redirect()->route('category.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -158,29 +149,22 @@ class CategoriesController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $category = $this->findCategory($id);
             if ($category->parent_id === 0) {
                 $checkPCate = Category::where('parent_id', $id)->count();
                 if (!empty($checkPCate)) {
-                    DB::rollback();
-
                     return response()->json(['status' => 'fail', 'message' => 'Please delete subcategory first.']);
                 } else {
                     $this->deleteCategory($category);
-                    DB::commit();
 
                     return response()->json(['status' => 'success', 'message' => 'Category deleted successfully.']);
                 }
             } else {
                 $this->deleteCategory($category);
-                DB::commit();
 
                 return response()->json(['status' => 'success', 'message' => 'Subcategory deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Record deleted successfully.']);
         }
     }
@@ -220,7 +204,7 @@ class CategoriesController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'status'  => 'error',
-                'message' => $e->getMessage(),
+                'message' => 'Something went wrong.',
             ]);
         }
     }

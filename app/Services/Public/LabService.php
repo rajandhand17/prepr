@@ -209,7 +209,7 @@ class LabService
     public static function getLabsBasedOnIds($labIds)
     {
         try {
-            $labList = Lab::whereIn('id', $labIds)->get();
+            $labList = Lab::whereIn('id', $labIds)->where('is_accessible', '1')->get();
 
             return $labList;
         } catch (\Exception $e) {

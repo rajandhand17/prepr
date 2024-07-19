@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Maestro\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use App\Traits\Maestro\User\UserTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -24,7 +24,7 @@ class UsersController extends Controller
     {
         try {
             $usersInfo = $this->getUsers();
-            $roles = $this->getAllRoles();
+            $roles = RoleAndPermissionService::getAllRoles();
             if (!empty($usersInfo)) {
                 if ($request->ajax()) {
                     return DataTables::eloquent($usersInfo)
@@ -55,7 +55,7 @@ class UsersController extends Controller
                         })
 
                         ->addColumn('action', static function (User $usersInfo) {
-                            return '<a style="padding-left:50px" class="mr-10" href="'.route('users.show', ['user' => $usersInfo->id]).'"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="'.route('users.edit', ['user' => $usersInfo->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\''.route('users.destroy', ['user' => $usersInfo->id]).'\')"><i class="fas fa-trash"></i></a>';
+                            return '<a style="padding-left:10px" class="mr-10" href="'.route('users.show', ['user' => $usersInfo->id]).'"><i class="fas fa-eye"></i></a> <a style="padding-left:50px" class="mr-10" href="'.route('users.edit', ['user' => $usersInfo->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteUser(\''.route('users.destroy', ['user' => $usersInfo->id]).'\')"><i class="fas fa-trash"></i></a>';
                         })
                         ->addIndexColumn()
                         ->rawColumns(['is_deactivated', 'action'])
@@ -66,7 +66,7 @@ class UsersController extends Controller
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
                 ['data' => 'full_name', 'name' => 'full_name', 'title' => 'Name', 'width' => '25%'],
-                ['data' => 'roles', 'name' => 'roles', 'title' => 'roles', 'width' => '25%'],
+                ['data' => 'roles', 'name' => 'roles', 'title' => 'Roles', 'width' => '25%'],
                 ['data' => 'email', 'name' => 'email', 'title' => 'Email', 'width' => '25%'],
                 ['data' => 'is_deactivated', 'name' => 'is_deactivated', 'title' => 'status', 'width' => '5%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '15%', 'orderable' => false, 'searchable' => false],
@@ -74,7 +74,7 @@ class UsersController extends Controller
 
             return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -84,11 +84,12 @@ class UsersController extends Controller
     public function create()
     {
         try {
-            $roles = $this->getAllRoles();
+            $roles = RoleAndPermissionService::getAllRoles();
+            $permissions = RoleAndPermissionService::permissions();
 
-            return view('maestro.users.create', compact('roles'));
+            return view('maestro.users.create', compact('roles', 'permissions'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -98,19 +99,13 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createUser($request)) {
-                DB::commit();
-
                 return redirect()->route('users.index')->with('success', 'User created successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -127,7 +122,7 @@ class UsersController extends Controller
 
             return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -141,14 +136,12 @@ class UsersController extends Controller
             if (!$user->exists) {
                 return redirect()->route('users.index')->with(['error' => 'User not found.']);
             }
-            $roles = $this->getAllRoles();
-            $permissions = $this->getAllPermissions();
-            $selected_role = $user->getRoles();
-            $assigned_all_permission = $user->allPermissions()->pluck('id')->toArray();
+            $roles = RoleAndPermissionService::getAllRoles();
+            $permissions = RoleAndPermissionService::permissions();
 
-            return view('maestro.users.edit', compact('user', 'permissions', 'assigned_all_permission', 'roles', 'selected_role'));
+            return view('maestro.users.edit', compact('user', 'permissions', 'roles'));
         } catch (Exception $e) {
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -158,19 +151,13 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateUserById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
-            DB::rollback();
 
             return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -180,17 +167,11 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteUserById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

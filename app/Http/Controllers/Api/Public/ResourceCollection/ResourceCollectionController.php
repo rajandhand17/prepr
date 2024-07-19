@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceCollection;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceCollection\AddRatingRequest;
@@ -50,6 +51,10 @@ class ResourceCollectionController extends AppBaseController
             if ($checkResourceCollectionExistsOrNot) {
                 if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
+                }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userId);
                 }
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));

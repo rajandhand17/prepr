@@ -139,4 +139,15 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public static function getResourceCollectionBasedOnArrayIds($ids)
+    {
+        try {
+            return ResourceCollection::whereIn('id', $ids)->where('is_accessible', '1')->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\ResourceModule;
 
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
@@ -52,6 +53,11 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
 
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
+                }
+
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
 
@@ -90,7 +96,7 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleExistsOrNot !== null) {
+            if ($checkResourceModuleExistsOrNot != null) {
                 if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
@@ -100,7 +106,7 @@ class ResourceModuleController extends AppBaseController
                 }
                 $checkActivity = $this->resourceModuleRepository->checkSocialActivity($checkResourceModuleExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
-                if ($checkActivity === true) {
+                if ($checkActivity == true) {
                     return $this->sendError(__('responses.already_'.$action.'_resource_module'), 400);
                 }
                 $resourceModule = $this->resourceModuleRepository->captureSocialActivity($checkResourceModuleExistsOrNot->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
@@ -121,21 +127,21 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             $checkResourceModuleExistsOrNot = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
-            if ($checkResourceModuleExistsOrNot !== null) {
-                if ($checkResourceModuleExistsOrNot->is_accessible === '0') {
+            if ($checkResourceModuleExistsOrNot != null) {
+                if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 $checkResourceModuleAsset = $this->resourceModuleRepository->checkResourceModuleAsset($checkResourceModuleExistsOrNot->id, $asset_id);
-                if ($checkResourceModuleAsset === false) {
+                if ($checkResourceModuleAsset == false) {
                     return $this->sendError(__('responses.resource_module_asset_not_available'), 403);
                 }
                 $userId = auth()->user()->id;
                 $checkResourceModuleAssetVisit = $this->resourceModuleRepository->checkResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
-                if ($checkResourceModuleAssetVisit !== false) {
-                    return $this->sendError(__('responses.resource_module_asset_already_visited'), 403);
+                if ($checkResourceModuleAssetVisit != false) {
+                    return $this->sendResponse([], __('responses.resource_module_asset_already_visited'));
                 }
                 $addResourceModuleAssetVisit = $this->resourceModuleRepository->addResourceModuleAssetVisit($userId, $checkResourceModuleExistsOrNot->id, $asset_id, $checkResourceModuleAsset->type);
-                if ($addResourceModuleAssetVisit === false) {
+                if ($addResourceModuleAssetVisit == false) {
                     return $this->sendError(__('responses.resource_module_asset_visit_gone_wrong'), 403);
                 }
 

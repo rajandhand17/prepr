@@ -254,6 +254,11 @@
               <a href="{{ route('lab-marketplace.index')}} " class="nav-link {{ Route::currentRouteName() == 'lab-marketplace.index' ? 'active' : ''  }}">
                   <i class="far fa fa-book nav-icon"></i>
                   <p>Lab Marketplace</p>
+          </li>
+          <li class="nav-item">
+              <a href="{{ route('clone-lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'clone-lab.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Clone Lab</p>
               </a>
           </li>
         <li class="nav-item">
@@ -285,6 +290,12 @@
           <a href="{{ route('emailTemplates.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailTemplates.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Templates</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('explore.index')}} " class="nav-link {{ Route::currentRouteName() == 'explore.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Explore Page</p>
           </a>
         </li>
         <li class="nav-item">
