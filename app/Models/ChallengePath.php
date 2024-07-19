@@ -126,4 +126,18 @@ class ChallengePath extends Model
     {
         return $this->hasMany(ChallengePathSocialActivity::class, 'challenge_path_id', 'id')->where('share', '1');
     }
+
+    public function challenges()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'challenge_path_id', 'id')->where('challenge_id', '!=', null);
+    }
+
+    public function challenge_path_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '3']);
+        }
+
+        return 'N/A';
+    }
 }

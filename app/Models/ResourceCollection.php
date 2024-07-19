@@ -139,4 +139,13 @@ class ResourceCollection extends Model
 
         return 'N/A';
     }
+
+    public function resource_collection_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '5']);
+        }
+
+        return 'N/A';
+    }
 }

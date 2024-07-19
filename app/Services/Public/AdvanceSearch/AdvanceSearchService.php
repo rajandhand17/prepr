@@ -50,7 +50,7 @@ class AdvanceSearchService
             $data = Lab::query()
                 ->whereSearchFilter($keyword, $filter)
                 ->whereVerified()
-                ->paginate(config('site-settings.pagination_per_page'));
+                ->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -76,7 +76,7 @@ class AdvanceSearchService
     {
         try {
             $data = LabProgram::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -102,7 +102,7 @@ class AdvanceSearchService
     {
         try {
             $data = LabMarketplace::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -128,7 +128,7 @@ class AdvanceSearchService
     {
         try {
             $data = Challenge::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -154,7 +154,7 @@ class AdvanceSearchService
     {
         try {
             $data = ChallengePath::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
 
             $metadata = $this->prepareMetaData($data);
 
@@ -181,7 +181,7 @@ class AdvanceSearchService
     {
         try {
             $data = ChallengeTemplate::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -207,7 +207,7 @@ class AdvanceSearchService
     {
         try {
             $data = ResourceModule::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -233,7 +233,7 @@ class AdvanceSearchService
     {
         try {
             $data = ResourceGroup::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -259,7 +259,7 @@ class AdvanceSearchService
     {
         try {
             $data = ResourceCollection::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -285,7 +285,7 @@ class AdvanceSearchService
     {
         try {
             $data = Project::query()->whereSearchFilter($keyword, $filter)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -310,7 +310,7 @@ class AdvanceSearchService
     {
         try {
             $data = Organization::query()->whereSearch($keyword)
-                ->whereVerified()->paginate(config('site-settings.pagination_per_page'));
+                ->whereVerified()->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
 
             if (!$metadata) {
@@ -340,7 +340,7 @@ class AdvanceSearchService
                 'userSkills',
                 'userLabs',
                 'userAchievements',
-            ])->with(['userPersonal', 'userSkills'])->whereSearch($keyword)->paginate(config('site-settings.pagination_per_page'));
+            ])->with(['userPersonal', 'userSkills'])->whereSearch($keyword)->paginate(config('site-settings.pagination_per_page_advance_search'));
             $metadata = $this->prepareMetaData($data);
             if (!$metadata) {
                 return false;

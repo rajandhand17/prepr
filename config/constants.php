@@ -525,4 +525,14 @@ return [
         'scorm'                 => '7',
         'go1'                   => '8',
     ],
+
+    'module_type' => [
+        'labs'                    => '0',
+        'lab_programs'            => '1',
+        'challenges'              => '2',
+        'challenge_paths'         => '3',
+        'resource_modules'        => '4',
+        'resource_collections'    => '5',
+        'resource_group'          => '6',
+    ],
 ];

@@ -101,6 +101,30 @@ class ChallengePathResource extends JsonResource
             ];
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->challenge_path_completion_status) {
+            switch ($this->challenge_path_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->challenge_path_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -132,6 +156,7 @@ class ChallengePathResource extends JsonResource
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
             'member_count'                  => '0', //Static for temporary basis,
+            'module_progress'               => $module_progress,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }
