@@ -406,7 +406,7 @@ class ChallengeRepository implements ChallengeInterface
                 }
 
                 if (!$updateChallenge || !$updateChallengeDescription || !$updateChallengeTypeMode || !$updateChallengeAchievement || !$updateChallengeSponsor || !$updateChallengeJobs || !$updateChallengeSkillsGroupsStack || !$updateChallengeRequirement || !$updateChallengeAssessmentCriteria || !$updateChallengeAssessment || !$updateChallengeProjectTemplate || !$updateChallengeTimelines || !$updateChallengeCustomTimelines || !$updateChallengeExternalLinks || !$updateChallengeAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
-                    throw new Exception("Failed to update challenge");
+                    throw new Exception('Failed to update challenge');
                 }
 
                 return [
