@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\GO1Helper;
 use App\Helpers\RecommendationEngineHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge;
 use App\Models\Duration;
@@ -185,6 +186,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAIPreview in AIService.php: '.$e->getMessage());
 
             return false;
@@ -300,6 +302,7 @@ class AIService
 
             return $assessment;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeAssessmentUsingAi in AIService.php: '.$e->getMessage());
 
             return false;
@@ -471,6 +474,7 @@ class AIService
 
             return $validChallenges;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeFromResourceUsingAIPreview in AIService.php: '.$e->getMessage());
 
             return false;
@@ -637,6 +641,7 @@ class AIService
 
             return $validLabs;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
 
             return false;
@@ -667,7 +672,7 @@ class AIService
                             4. **Essential Skills**: Enumerate 10 essential skills required for this challenge, with emphasis on the provided and important skills.
                             5. **Category Selection**: Based on the specified careers, skills, and level, select one category from the following options: "'.$categoryTitlesStr.'".
                             6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should prompt participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
-                            
+
                             JSON output format (Ensure precise adherence):
                             {
                                 "challengeTitle": "Challenge Title",
@@ -690,6 +695,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -705,6 +711,7 @@ class AIService
 
             return $result;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in fetchChallengesByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
@@ -735,7 +742,7 @@ class AIService
                             6. **Reflective Questions**: Provide 5 questions for participants to contemplate after completing the challenge, focusing on their approach, applied skills, encountered obstacles, and overall learning experience.
                             7. **Challenge Level**: Specify the difficulty level of the challenge: "'.$levelTitles.'".
                             8. **Challenge Duration**: Determine the duration for the challenge to end: "'.$durationTitles.'".
-            
+
                             JSON output format (Ensure precise adherence):
                             {
                                 "challengeTitle": "Challenge Title",
@@ -747,7 +754,7 @@ class AIService
                                 "level": "Selected Level",
                                 "duration": "Selected Duration"
                             }
-            
+
                             Utilize the titles and descriptions of the resource modules creatively: "'.$resourceModulesTitlesAndDescriptions.'".
                             Summarize the contents of the resource modules: "'.$resourceModulesSummary.'".
                         ',
@@ -763,6 +770,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -778,6 +786,7 @@ class AIService
 
             return $result;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in fetchChallengesFromResourcesByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
@@ -810,7 +819,7 @@ class AIService
                             6. **Reflective Questions**: Provide 5 reflective questions for participants to answer after completing the challenge. These questions should encourage participants to reflect on their approach, applied skills, encountered obstacles, and overall learning experience.
                             7. **Lab Title**: Craft a concise title for the lab.
                             8. **Lab Description**: Provide a paragraph description about the lab and its focus.
-            
+
                             JSON output format (Ensure precise adherence):
                             {
                                 "labTitle": "Lab Title",
@@ -841,6 +850,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -856,6 +866,7 @@ class AIService
 
             return $result;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in fetchChallengesForLabByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
@@ -887,7 +898,7 @@ class AIService
                             6. **Challenge Duration**: "'.$durationTitle.'".
                             7. **Difficulty Level**: "'.$levelTitle.'".
                             8. **Challenge Category**: "'.$categoryTitle.'".
-            
+
                             JSON output format (Ensure precise adherence):
                             {
                                 "criteria": [
@@ -912,6 +923,7 @@ class AIService
                     $response = $this->openAIClient->post('', ['json' => $payload]);
                     break;
                 } catch (Exception $e) {
+                    UtilityHelper::logError($e);
                     if ($retry >= $maxRetries) {
                         throw new Exception('OpenAI call failed: '.$e->getMessage());
                     }
@@ -927,6 +939,7 @@ class AIService
 
             return $result;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in fetchCriteriasByOpenAI in AIService.php: '.$e->getMessage());
 
             return false;
@@ -955,6 +968,7 @@ class AIService
 
             return $updatedSkills;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in processSkills in AIService.php: '.$e->getMessage());
 
             return false;
@@ -982,6 +996,7 @@ class AIService
 
             return $result;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in selectHighestScoreSkill in AIService.php: '.$e->getMessage());
 
             return false;
@@ -1079,6 +1094,8 @@ class AIService
 
                             $articlesCollected = count($currentData['articles']) >= 6;
                         } catch (Exception $e) {
+                            UtilityHelper::logError($e);
+
                             throw new Exception($e->getMessage());
                         }
                     }
@@ -1134,6 +1151,8 @@ class AIService
 
                             $videosCollected = count($currentData['videos']) >= 6;
                         } catch (Exception $e) {
+                            UtilityHelper::logError($e);
+
                             throw new Exception($e->getMessage());
                         }
                     }
@@ -1153,6 +1172,7 @@ class AIService
                     }
                 }
             } catch (Exception $e) {
+                UtilityHelper::logError($e);
                 Log::warning("Warning in createResourceModuleUsingAIPreview in attempt $attempts in AIService.php: ".$e->getMessage());
             }
 
@@ -1254,6 +1274,7 @@ class AIService
                                 $response = $this->openAIClient->post('', ['json' => $payload]);
                                 break;
                             } catch (Exception $e) {
+                                UtilityHelper::logError($e);
                                 if ($retry >= $maxRetries) {
                                     throw new Exception('OpenAI call failed: '.$e->getMessage());
                                 }
@@ -1315,6 +1336,7 @@ class AIService
                     }
                     unset($group);
                 } catch (Exception $e) {
+                    UtilityHelper::logError($e);
                     Log::error('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
                 }
             }
@@ -1423,6 +1445,7 @@ class AIService
                         $response = json_decode($apiResponse->getBody()->getContents(), true);
                         break;
                     } catch (Exception $e) {
+                        UtilityHelper::logError($e);
                         if ($retry >= $maxRetries) {
                             throw new Exception($e->getMessage());
                         }
@@ -1526,12 +1549,14 @@ class AIService
                                 }
                             }
                         } catch (Exception $e) {
+                            UtilityHelper::logError($e);
                             Log::error("API call failed for type {$type} and keyword {$keyword}: ".$e->getMessage());
                             continue;
                         }
                     }
                 }
             } catch (Exception $e) {
+                UtilityHelper::logError($e);
                 Log::warning('Error in createResourceModuleUsingAIPreview in AIService.php: '.$e->getMessage());
 
                 return false;
@@ -1653,6 +1678,7 @@ class AIService
 
                 Log::info('Request body prepared for projectAssessor');
             } catch (Exception $e) {
+                UtilityHelper::logError($e);
                 Log::error($e->getMessage());
             }
 
@@ -1660,6 +1686,7 @@ class AIService
                 $response = $this->projectAssessor($requestBody);
                 Log::info('Response from projectAssessor');
             } catch (Exception $e) {
+                UtilityHelper::logError($e);
                 Log::error($e->getMessage());
             }
 
@@ -1669,6 +1696,7 @@ class AIService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in addAIProjectEvaluation in AIService.php: '.$e->getMessage());
 
             return false;
@@ -1685,6 +1713,7 @@ class AIService
             $response = $this->projectAssessorClient->send($request);
             Log::info('Done calling projectAssessor');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in projectAssessor in AIService.php: '.$e->getMessage());
         }
 

@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessment;
 use App\Models\Project;
 use App\Services\UserService;
@@ -28,6 +29,8 @@ class ChallengeAssessmentService
 
             return $upload_assessment_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,7 +39,7 @@ class ChallengeAssessmentService
     {
         try {
             $challengeAssessment = true;
-            if ($request->assessment_type !== null) {
+            if ($request->assessment_type != 'none') {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
                     case 'closed':
@@ -91,6 +94,8 @@ class ChallengeAssessmentService
 
             return $challengeAssessment;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,7 +106,7 @@ class ChallengeAssessmentService
             $updateChallengeAssessment = true;
             $challengeAssessment = ChallengeAssessment::where('challenge_id', $challenge_id)->get();
             ChallengeAssessment::where('challenge_id', $challenge_id)->delete();
-            if ($request->assessment_type !== null && $request->assessment_type !== 'null') {
+            if ($request->assessment_type != 'none') {
                 $challenge_assessment_type = config('constants.challenge_assessment_type.null');
                 switch ($request->assessment_type) {
                     case 'closed':
@@ -156,6 +161,8 @@ class ChallengeAssessmentService
 
             return $updateChallengeAssessment;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -206,6 +213,8 @@ class ChallengeAssessmentService
 
             return $challenge_assessment;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -221,6 +230,8 @@ class ChallengeAssessmentService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -251,6 +262,8 @@ class ChallengeAssessmentService
 
             return $bothOpenClosedAssessmentChallengeIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

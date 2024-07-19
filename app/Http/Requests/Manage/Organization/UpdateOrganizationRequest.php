@@ -32,14 +32,19 @@ class UpdateOrganizationRequest extends FormRequest
             throw new NotFoundException();
         }
         $base_rules = [
-            'title'           => 'required|max:255|unique:organizations,title,'.$organization->id,
-            'description'     => 'required',
-            'profile_image'   => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'cover_image'     => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'category'        => 'required|numeric|exists:categories,id',
-            'website'         => 'required|url',
-            'status'          => 'required|in:draft,publish,archive',
-            'total_employees' => 'integer',
+            'title'                                 => 'required|max:255|unique:organizations,title,'.$organization->id,
+            'description'                           => 'required',
+            'profile_image'                         => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'category'                              => 'required|numeric|exists:categories,id',
+            'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
+            'website'                               => 'required|url',
+            'status'                                => 'required|in:draft,publish,archive',
+            'total_employees'                       => 'integer',
+            'external_links'                        => 'array',
+            'external_link_ids'                     => 'array|exists:social_links,id',
+            'external_links.*'                      => 'url',
+            'external_link_ids.*'                   => 'numeric',
         ];
 
         if ($this->request->has('organization_address')) {
@@ -61,6 +66,14 @@ class UpdateOrganizationRequest extends FormRequest
             $base_rules['organization_members.*.image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
+        if ($this->request->has('enable_custom_login_and_registration') && $this->input('enable_custom_login_and_registration') == 'yes') {
+            $base_rules['enable_custom_login_and_registration'] = 'in:yes,no';
+            $base_rules['use_main_org_logo'] = 'required_if:enable_custom_login_and_registration,yes|in:yes,no';
+            $base_rules['custom_logo_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['custom_hero_image'] = 'image|mimes:jpeg,jpg,png,webp|max:1024|';
+            $base_rules['custom_background_color'] = ['regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'];
+        }
+
         return $base_rules;
     }
 
@@ -80,11 +93,11 @@ class UpdateOrganizationRequest extends FormRequest
             'title.max'                                       => __('responses.title_content_255'),
             'title.unique'                                    => __('responses.organization_title_unique'),
             'description.required_if'                         => __('responses.description_required'),
-            'profile_image.image'                             => __('response.type_image'),
+            'profile_image.image'                             => __('responses.type_image'),
             'profile_image.mimes'                             => __('responses.mimes_image'),
             'profile_image.max'                               => __('responses.mimes_image_max'),
             'profile_image.nullable'                          => __('responses.mimes_image_max'),
-            'cover_image.image'                               => __('response.type_image'),
+            'cover_image.image'                               => __('responses.type_image'),
             'cover_image.mimes'                               => __('responses.mimes_image'),
             'cover_image.max'                                 => __('responses.mimes_image_max'),
             'cover_image.nullable'                            => __('responses.mimes_image_max'),
@@ -122,10 +135,15 @@ class UpdateOrganizationRequest extends FormRequest
             'organization_members.*.position.required'        => __('responses.organization_members_position_required'),
             'organization_members.*.position.string'          => __('responses.organization_members_position_string'),
             'organization_members.*.image.mimes'              => __('responses.mimes_image'),
-            'organization_members.*.image.image'              => __('response.type_image'),
+            'organization_members.*.image.image'              => __('responses.type_image'),
             'organization_members.*.image.max'                => __('responses.mimes_image_max'),
             'organization_members.*.image.dimensions'         => __('responses.dimensions'),
             'total_employees.integer'                         => __('responses.total_employees_integer'),
+            'external_links.array'                            => __('responses.external_links_array'),
+            'external_links.url'                              => __('responses.external_links_valid_url_pattern'),
+            'external_link_ids.exists'                        => __('responses.external_link_ids_not_exists'),
+            'external_link_ids.array'                         => __('responses.external_link_ids_array'),
+            'external_link_ids.numeric'                       => __('responses.external_link_ids_numeric'),
         ];
     }
 }

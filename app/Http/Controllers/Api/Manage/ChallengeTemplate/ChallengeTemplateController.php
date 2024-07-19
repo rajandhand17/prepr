@@ -28,7 +28,7 @@ class ChallengeTemplateController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $request->merge(['organization_id' => $organization->id]);
 
@@ -48,6 +48,8 @@ class ChallengeTemplateController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenge_templates_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -58,6 +60,20 @@ class ChallengeTemplateController extends AppBaseController
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
 
             $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($checkComponentBasedOnSlug->uuid);
@@ -72,6 +88,8 @@ class ChallengeTemplateController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -79,12 +97,6 @@ class ChallengeTemplateController extends AppBaseController
     public function show($slug)
     {
         try {
-            $userData = auth()->user();
-            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-            if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
-            }
-
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
             if ($challengeTemplate) {
                 return $this->sendResponse(ChallengeTemplateResource::make($challengeTemplate), __('responses.found_challenge_detail'), 200);
@@ -92,6 +104,8 @@ class ChallengeTemplateController extends AppBaseController
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -102,7 +116,7 @@ class ChallengeTemplateController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
             $challengeTemplate = $this->challengeTemplateRepository->getChallengeTemplateBasedOnSlug($slug);
@@ -122,6 +136,8 @@ class ChallengeTemplateController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_template_not_redeemed'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -141,6 +157,8 @@ class ChallengeTemplateController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_template_deleted_failed'), 402);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

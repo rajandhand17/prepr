@@ -2,7 +2,11 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Repositories\Api\Manage\Scorm\ScormRepository;
+use App\Services\AchievementService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
 use App\Services\Manage\CampusConnectStoryService;
@@ -18,8 +22,8 @@ use App\Services\Manage\ChallengeRequirementService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ChallengeSponsorService;
-use App\Services\Manage\ChallengeTagsGroupsService;
 use App\Services\Manage\ChallengeTimelinesService;
+use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
@@ -30,11 +34,11 @@ use Illuminate\Support\Facades\Log;
 class ChallengeRepository implements ChallengeInterface
 {
     private $challengeService;
+    private $scormRepository;
     private $challengeAchievementService;
     private $challengeSponsorService;
     private $challengeSkillsGroupsStackService;
     private $challengeJobsService;
-    private $challengeTagsGroupsService;
     private $challengeRequirementService;
     private $challengeAssessmentCriteriaService;
     private $challengeProjectTemplateService;
@@ -48,16 +52,17 @@ class ChallengeRepository implements ChallengeInterface
     private $projectPitchService;
     private $campusConnectOpportunityService;
     private $campusConnectStoryService;
-    private $organizationService;
+    private $achievementService;
+    private $challengeTypeModeService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeTagsGroupsService $challengeTagsGroupsService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService)
+    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService)
     {
         $this->challengeService = $challengeService;
+        $this->scormRepository = $scormRepository;
         $this->challengeAchievementService = $challengeAchievementService;
         $this->challengeSponsorService = $challengeSponsorService;
         $this->challengeSkillsGroupsStackService = $challengeSkillsGroupsStackService;
         $this->challengeJobsService = $challengeJobsService;
-        $this->challengeTagsGroupsService = $challengeTagsGroupsService;
         $this->challengeRequirementService = $challengeRequirementService;
         $this->challengeAssessmentCriteriaService = $challengeAssessmentCriteriaService;
         $this->challengeProjectTemplateService = $challengeProjectTemplateService;
@@ -68,11 +73,11 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeAnnouncementService = $challengeAnnouncementService;
         $this->componentAssociationService = $componentAssociationService;
         $this->aiService = $aiService;
-        $this->componentAssociationService = $componentAssociationService;
         $this->projectPitchService = $projectPitchService;
         $this->campusConnectOpportunityService = $campusConnectOpportunityService;
         $this->campusConnectStoryService = $campusConnectStoryService;
-        $this->organizationService = $organizationService;
+        $this->achievementService = $achievementService;
+        $this->challengeTypeModeService = $challengeTypeModeService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -80,6 +85,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->getChallengeCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -89,6 +96,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->getChallengeList($request, $organization);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,6 +107,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->uploadChallengeCoverImage($image);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,22 +118,28 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeAssessmentService->uploadChallengeAssessment($attachment);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    public function createChallenge($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
-                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
+            $createChallenge = DB::transaction(function () use ($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData) {
+                $updateChallengeDescription = true;
+                $createChallenge = $this->challengeService->createChallenge($request, $uploaded_cover_image, $organizationData->id);
+                if ($request->description_type == 'scorm') {
+                    $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $createChallenge->id, $request->file('scorm_file'), $createChallenge->scorm);
+                }
+                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $uploaded_achievement_image);
+                $createChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $createChallenge->id);
                 $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
+                $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
-                $createChallengeTagsGroups = $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $createChallenge->id);
                 $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $upload_assessment_attachment);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $uploaded_assessment_attachment);
                 $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
                 $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
                 $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
@@ -138,7 +155,7 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($createChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -150,16 +167,22 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($createChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                     );
+                }
+
+                if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception('Failed to create challenge');
                 }
 
                 return [
                     'createChallenge'                     => $createChallenge,
+                    'updateChallengeDescription'          => $updateChallengeDescription,
                     'createChallengeAchievement'          => $createChallengeAchievement,
+                    'createChallengeTypeMode'             => $createChallengeTypeMode,
                     'createChallengeSponsor'              => $createChallengeSponsor,
+                    'createChallengeJobs'                 => $createChallengeJobs,
                     'createChallengeSkillsGroupsStack'    => $createChallengeSkillsGroupsStack,
-                    'createChallengeTagsGroups'           => $createChallengeTagsGroups,
                     'createChallengeRequirement'          => $createChallengeRequirement,
                     'createChallengeAssessmentCriteria'   => $createChallengeAssessmentCriteria,
                     'createChallengeAssessment'           => $createChallengeAssessment,
@@ -172,13 +195,14 @@ class ChallengeRepository implements ChallengeInterface
                     'campusConnectStory'                  => $campusConnectStory,
                 ];
             });
-
             if (
                 $createChallenge['createChallenge'] &&
+                $createChallenge['updateChallengeDescription'] &&
                 $createChallenge['createChallengeAchievement'] &&
+                $createChallenge['createChallengeTypeMode'] &&
                 $createChallenge['createChallengeSponsor'] &&
+                $createChallenge['createChallengeJobs'] &&
                 $createChallenge['createChallengeSkillsGroupsStack'] &&
-                $createChallenge['createChallengeTagsGroups'] &&
                 $createChallenge['createChallengeRequirement'] &&
                 $createChallenge['createChallengeAssessmentCriteria'] &&
                 $createChallenge['createChallengeAssessment'] &&
@@ -190,14 +214,14 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectOpportunity'] &&
                 $createChallenge['campusConnectStory']
             ) {
-                DB::commit();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
 
                 return $createChallenge['createChallenge'];
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
@@ -211,6 +235,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallengeUsingAIPreview;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
@@ -224,6 +249,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createChallengeFromResourceUsingAIPreview;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
@@ -239,7 +265,9 @@ class ChallengeRepository implements ChallengeInterface
             $request->json()->replace($updatedData);
 
             $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image);
+                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+
+                $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organization->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
                 $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
@@ -268,6 +296,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return $createdChallenge['createChallenge'];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAI in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
@@ -279,6 +308,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeAchievementService->uploadChallengeParticipationAchievementImage($image);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -288,6 +319,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeSponsorService->createChallengeSponsor($request, $challenge);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -297,15 +330,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $challenge);
         } catch (Exception $e) {
-            return false;
-        }
-    }
+            UtilityHelper::logError($e);
 
-    public function createChallengeTagsGroups($request, $challenge)
-    {
-        try {
-            return $this->challengeTagsGroupsService->createChallengeTagsGroups($request, $challenge);
-        } catch (Exception $e) {
             return false;
         }
     }
@@ -315,6 +341,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeRequirementService->createChallengeRequirement($request, $challenge);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -324,20 +352,26 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $challenge);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment)
+    public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData)
     {
         try {
-            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment) {
-                $organization = $this->organizationService->getOrganizationExistBasedOnUuid($request->organization_id);
-                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image);
+            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData) {
+                $updateChallengeDescription = true;
+                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image, $organizationData->id);
+                if ($request->description_type == 'scorm' && $request->file('scorm_file')) {
+                    $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
+                }
+                $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
                 $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
+                $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
                 $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
-                $updateChallengeTagsGroups = $this->challengeTagsGroupsService->updateChallengeTagsGroups($request, $updateChallenge->id);
                 $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
@@ -355,7 +389,7 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($updateChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                         auth()->user(),
                         $request->get('skills', [])
                     );
@@ -367,16 +401,22 @@ class ChallengeRepository implements ChallengeInterface
                         data_get($updateChallenge, 'slug', '-'),
                         Challenge::class,
                         $request->all(),
-                        $organization,
+                        $organizationData,
                     );
+                }
+
+                if (!$updateChallenge || !$updateChallengeDescription || !$updateChallengeTypeMode || !$updateChallengeAchievement || !$updateChallengeSponsor || !$updateChallengeJobs || !$updateChallengeSkillsGroupsStack || !$updateChallengeRequirement || !$updateChallengeAssessmentCriteria || !$updateChallengeAssessment || !$updateChallengeProjectTemplate || !$updateChallengeTimelines || !$updateChallengeCustomTimelines || !$updateChallengeExternalLinks || !$updateChallengeAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception('Failed to update challenge');
                 }
 
                 return [
                     'updateChallenge'                   => $updateChallenge,
+                    'updateChallengeDescription'        => $updateChallengeDescription,
+                    'updateChallengeTypeMode'           => $updateChallengeTypeMode,
                     'updateChallengeAchievement'        => $updateChallengeAchievement,
                     'updateChallengeSponsor'            => $updateChallengeSponsor,
+                    'updateChallengeJobs'               => $updateChallengeJobs,
                     'updateChallengeSkillsGroupsStack'  => $updateChallengeSkillsGroupsStack,
-                    'updateChallengeTagsGroups'         => $updateChallengeTagsGroups,
                     'updateChallengeRequirement'        => $updateChallengeRequirement,
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
                     'updateChallengeAssessment'         => $updateChallengeAssessment,
@@ -392,10 +432,12 @@ class ChallengeRepository implements ChallengeInterface
 
             if (
                 $updateChallenge['updateChallenge'] &&
+                $updateChallenge['updateChallengeDescription'] &&
+                $updateChallenge['updateChallengeTypeMode'] &&
                 $updateChallenge['updateChallengeAchievement'] &&
                 $updateChallenge['updateChallengeSponsor'] &&
+                $updateChallenge['updateChallengeJobs'] &&
                 $updateChallenge['updateChallengeSkillsGroupsStack'] &&
-                $updateChallenge['updateChallengeTagsGroups'] &&
                 $updateChallenge['updateChallengeRequirement'] &&
                 $updateChallenge['updateChallengeAssessmentCriteria'] &&
                 $updateChallenge['updateChallengeAssessment'] &&
@@ -407,14 +449,15 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                DB::commit();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
 
                 return $updateChallenge['updateChallenge'];
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -424,6 +467,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -432,17 +477,21 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             DB::beginTransaction();
-
+            $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
+            $challenge_data->skills = $challenge_data->skills->pluck('foreign_id');
+            $challenge_data->tags = $challenge_data->tags->pluck('foreign_id');
             if ($deleteChallenge == false) {
                 DB::rollBack();
 
                 return false;
             }
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
             DB::commit();
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -454,6 +503,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->getChallengeBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -465,6 +516,8 @@ class ChallengeRepository implements ChallengeInterface
 
             return $labSlug;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -474,6 +527,8 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeAssessmentService->getChallengeAssessmentData($challengeAssessment);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -485,6 +540,10 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $challengeId, $update_assessment_attachment);
                 $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $challengeId, $updateChallengeAssessment);
 
+                if (!$updateChallengeAssessmentCriteria || !$updateChallengeAssessment) {
+                    throw new Exception('Failed to update challenge assessment');
+                }
+
                 return [
                     'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
                     'updateChallengeAssessment'         => $updateChallengeAssessment,
@@ -495,14 +554,13 @@ class ChallengeRepository implements ChallengeInterface
                 $updatedChallengeAssessment['updateChallengeAssessmentCriteria'] &&
                 $updatedChallengeAssessment['updateChallengeAssessment']
             ) {
-                DB::commit();
-
                 return $updatedChallengeAssessment;
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -510,7 +568,7 @@ class ChallengeRepository implements ChallengeInterface
     public function cloneChallenge($challengeId, $organization)
     {
         try {
-            $originalChallenge = Challenge::with(['skills', 'skill_groups', 'skill_stacks', 'tags', 'tag_groups', 'participation_achievement', 'incentive_achievement', 'challenge_requirements', 'hosts', 'challenge_assessment_criteria', 'challenge_assessment', 'challenge_timelines', 'challenge_custom_timelines', 'challenge_project_template', 'external_links'])->find($challengeId);
+            $originalChallenge = Challenge::with(['skills', 'skill_groups', 'skill_stacks', 'participation_achievement', 'incentive_achievement', 'challenge_requirements', 'hosts', 'challenge_assessment_criteria', 'challenge_assessment', 'challenge_timelines', 'challenge_custom_timelines', 'challenge_project_template', 'external_links'])->find($challengeId);
             $cloneChallenge = DB::transaction(function () use ($challengeId, $organization, $originalChallenge) {
                 $cloneChallenge = $this->challengeService->cloneChallenge($challengeId, $organization);
                 $cloneChallengeParticipationAchievement = $this->challengeAchievementService->cloneChallengeParticipationAchievement($originalChallenge->participation_achievement, $cloneChallenge->id);
@@ -519,8 +577,6 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeGroups = $this->challengeSkillsGroupsStackService->cloneChallengeGroups($originalChallenge->skill_groups, $cloneChallenge->id);
                 $cloneChallengeStack = $this->challengeSkillsGroupsStackService->cloneChallengeStack($originalChallenge->skill_stacks, $cloneChallenge->id);
                 $cloneChallengeSponsor = $this->challengeSponsorService->cloneChallengeSponsor($originalChallenge->hosts, $cloneChallenge->id);
-                $cloneChallengeTags = $this->challengeTagsGroupsService->cloneChallengeTags($originalChallenge->tags, $cloneChallenge->id);
-                $cloneChallengeTagsGroups = $this->challengeTagsGroupsService->cloneChallengeTagsGroups($originalChallenge->tag_groups, $cloneChallenge->id);
                 $cloneChallengeRequirement = $this->challengeRequirementService->cloneChallengeRequirement($originalChallenge->challenge_requirements, $cloneChallenge->id);
                 $cloneChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->cloneChallengeAssessmentCriteria($originalChallenge->challenge_assessment_criteria, $cloneChallenge->id);
                 $cloneChallengeAssessment = $this->challengeAssessmentService->cloneChallengeAssessment($originalChallenge->challenge_assessment, $cloneChallenge->id);
@@ -530,6 +586,10 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallengeExternalLink = $this->challengeExternalLinkService->cloneChallengeExternalLink($originalChallenge->external_links, $cloneChallenge->id);
                 $cloneChallengeAssociaton = $this->componentAssociationService->cloneChallengeAssociaton($originalChallenge->challenge_association, $cloneChallenge->id);
 
+                if (!$cloneChallenge || !$cloneChallengeParticipationAchievement || !$cloneChallengeIncentiveAchievement || !$cloneChallengeSkills || !$cloneChallengeGroups || !$cloneChallengeStack || !$cloneChallengeSponsor || !$cloneChallengeRequirement || !$cloneChallengeAssessmentCriteria || !$cloneChallengeAssessment || !$cloneChallengeProjectTemplate || !$cloneChallengeTimelines || !$cloneChallengeCustomTimelines || !$cloneChallengeExternalLink || !$cloneChallengeAssociaton) {
+                    throw new Exception('Failed to clone challenge');
+                }
+
                 return [
                     'cloneChallenge'                         => $cloneChallenge,
                     'cloneChallengeParticipationAchievement' => $cloneChallengeParticipationAchievement,
@@ -538,8 +598,6 @@ class ChallengeRepository implements ChallengeInterface
                     'cloneChallengeGroups'                   => $cloneChallengeGroups,
                     'cloneChallengeStack'                    => $cloneChallengeStack,
                     'cloneChallengeSponsor'                  => $cloneChallengeSponsor,
-                    'cloneChallengeTags'                     => $cloneChallengeTags,
-                    'cloneChallengeTagsGroups'               => $cloneChallengeTagsGroups,
                     'cloneChallengeRequirement'              => $cloneChallengeRequirement,
                     'cloneChallengeAssessmentCriteria'       => $cloneChallengeAssessmentCriteria,
                     'cloneChallengeAssessment'               => $cloneChallengeAssessment,
@@ -559,8 +617,6 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallenge['cloneChallengeGroups'] &&
                 $cloneChallenge['cloneChallengeStack'] &&
                 $cloneChallenge['cloneChallengeSponsor'] &&
-                $cloneChallenge['cloneChallengeTags'] &&
-                $cloneChallenge['cloneChallengeTagsGroups'] &&
                 $cloneChallenge['cloneChallengeRequirement'] &&
                 $cloneChallenge['cloneChallengeAssessmentCriteria'] &&
                 $cloneChallenge['cloneChallengeAssessment'] &&
@@ -570,15 +626,13 @@ class ChallengeRepository implements ChallengeInterface
                 $cloneChallenge['cloneChallengeExternalLink'] &&
                 $cloneChallenge['cloneChallengeAssociaton']
             ) {
-                DB::commit();
-
                 return $cloneChallenge['cloneChallenge'];
             }
 
-            DB::rollback();
-
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -589,23 +643,19 @@ class ChallengeRepository implements ChallengeInterface
             $createAnnouncement = DB::transaction(function () use ($challengeId, $request) {
                 $createAnnouncement = $this->challengeAnnouncementService->createChallengeAnnouncement($challengeId, $request);
 
+                if (!$createAnnouncement) {
+                    throw new Exception('Failed to create announcement');
+                }
+
                 return [
                     'createAnnouncement' => $createAnnouncement,
                 ];
             });
 
-            if (
-                $createAnnouncement['createAnnouncement']
-            ) {
-                DB::commit();
-
-                return $createAnnouncement['createAnnouncement'];
-            }
-
-            DB::rollback();
-
-            return false;
+            return $createAnnouncement['createAnnouncement'];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -625,6 +675,7 @@ class ChallengeRepository implements ChallengeInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -636,6 +687,43 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->challengeService->getChallengeListName($request, $organization);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function selectChallengeWinner($challengeData, $request)
+    {
+        try {
+            $submitProject = DB::transaction(function () use ($challengeData, $request) {
+                $updateWinnerSelectionTimeLine = true;
+                $addWinnerAchievement = $this->achievementService->addWinnerAchievement($challengeData, $request);
+                if ($challengeData->winner_select_date == null) {
+                    $updateWinnerSelectionTimeLine = $this->challengeService->updateWinnerSelectionTimeLine($challengeData);
+                }
+
+                if (!$addWinnerAchievement || !$updateWinnerSelectionTimeLine) {
+                    throw new Exception('Failed to select challenge winners');
+                }
+
+                return [
+                    'addWinnerAchievement'          => $addWinnerAchievement,
+                    'updateWinnerSelectionTimeLine' => $updateWinnerSelectionTimeLine,
+                ];
+            });
+
+            if (
+                $submitProject['addWinnerAchievement'] &&
+                $submitProject['updateWinnerSelectionTimeLine']
+            ) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

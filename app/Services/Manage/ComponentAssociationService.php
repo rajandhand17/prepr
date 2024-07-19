@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use Exception;
@@ -129,6 +130,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -323,6 +326,8 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -340,6 +345,8 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -400,6 +407,8 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -437,6 +446,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -473,6 +484,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -492,6 +505,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -559,6 +574,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -656,6 +673,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -673,6 +692,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -719,6 +740,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -736,6 +759,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -801,6 +826,8 @@ class ComponentAssociationService
                 }
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -905,6 +932,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -1069,6 +1098,8 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -1086,6 +1117,34 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengePathIdsBasedOnChallengeId($challengeId)
+    {
+        try {
+            $fetchChallengePathIdsBasedOnChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('challenge_path_id')->pluck('challenge_path_id');
+
+            return $fetchChallengePathIdsBasedOnChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengeIdsBasedOnChallengePathId($challengePathId)
+    {
+        try {
+            $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengeIdsBasedOnChallengePathId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

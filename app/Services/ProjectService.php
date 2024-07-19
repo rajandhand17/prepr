@@ -23,6 +23,8 @@ class ProjectService
 
             return $getMyProjects;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,11 +33,26 @@ class ProjectService
     {
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
-
             $project_list = self::filterProjectList($project_list, $request);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectListWithoutPagination($getProjectIds, $request)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+            $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,7 +61,7 @@ class ProjectService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $project_list = $project_list->where('projects.title', 'like', '%'.$request->search.'%');
+                $project_list = $project_list->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
@@ -58,7 +75,27 @@ class ProjectService
                         $project_list = $project_list;
                 }
             }
-
+            if ($request->has('sort_by_team') && !empty($request->sort_by_team)) {
+                switch ($request->sort_by_team) {
+                    case 'name':
+                        $project_list = $project_list->orderBy('projects.title', 'ASC');
+                        break;
+                    case 'due_date':
+                        $project_list = $project_list->orderBy('projects.title', 'DESC');
+                        break;
+                    case 'popularity':
+                        $project_list = $project_list->withCount('members')->OrderBy('members_count', 'desc');
+                        break;
+                    default:
+                        $project_list = $project_list->whereIn('id', function ($query) {
+                            $query->select('project_id')
+                                ->from('project_member_management')
+                                ->where('invite_status', '1')
+                                ->where('inviter_id', auth()->id());
+                        });
+                        break;
+                }
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -73,6 +110,26 @@ class ProjectService
                     default:
                         $project_list = $project_list->orderBy('projects.id', 'ASC');
                 }
+            }
+
+            if ($request->has('skills') && !empty($request->skills)) {
+                $projectIds = ProjectSkillsService::getProjectIdsBasedOnSkills($request->skills);
+                $project_list = $project_list->whereIn('projects.id', $projectIds);
+            }
+
+            if ($request->has('level') && !empty($request->level)) {
+                $getChallenges = ChallengeService::getChallengesBasedOnLevelId($request->level);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallenges);
+            }
+
+            if ($request->has('duration') && !empty($request->duration)) {
+                $getChallengesBasedOnDuration = ChallengeService::getChallengesBasedOnDuration($request->duration);
+                $project_list = $project_list->whereIn('projects.challenge_id', $getChallengesBasedOnDuration);
+            }
+
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $requestStatus = ProjectMemberManagementService::getAllRequestsData($request->request_status);
+                $project_list = $project_list->whereIn('projects.id', $requestStatus);
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -124,6 +181,8 @@ class ProjectService
 
             return $project_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +197,8 @@ class ProjectService
 
             return $upload_project_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -222,6 +283,8 @@ class ProjectService
 
             return $createProject;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -231,6 +294,8 @@ class ProjectService
         try {
             return Project::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -245,6 +310,8 @@ class ProjectService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -254,7 +321,6 @@ class ProjectService
         try {
             $updateProject = Project::where('slug', $slug)->first();
             if ($updateProject !== null) {
-                $viewEnabled = $updateProject->view_enabled;
                 switch ($request->is_view_enabled) {
                     case 'yes':
                         $viewEnabled = config('constants.project_view_enabled.yes');
@@ -263,11 +329,10 @@ class ProjectService
                         $viewEnabled = config('constants.project_view_enabled.no');
                         break;
                     default:
-                        $viewEnabled = config('constants.project_view_enabled.no');
+                        $viewEnabled = $updateProject->view_enabled;
                         break;
                 }
 
-                $downloadEnabled = $updateProject->download_enabled;
                 switch ($request->is_download_enabled) {
                     case 'yes':
                         $downloadEnabled = config('constants.project_download_enabled.yes');
@@ -276,11 +341,10 @@ class ProjectService
                         $downloadEnabled = config('constants.project_download_enabled.no');
                         break;
                     default:
-                        $downloadEnabled = config('constants.project_download_enabled.no');
+                        $downloadEnabled = $updateProject->download_enabled;
                         break;
                 }
 
-                $mediaType = $updateProject->media_type;
                 switch ($request->media_type) {
                     case 'image':
                         $mediaType = config('constants.project_media_type.image');
@@ -292,11 +356,10 @@ class ProjectService
                         $mediaType = config('constants.project_media_type.video');
                         break;
                     default:
-                        $mediaType = config('constants.project_media_type.image');
+                        $mediaType = $updateProject->media_type;
                         break;
                 }
 
-                $projectPrivacy = $updateProject->privacy;
                 switch ($request->privacy) {
                     case 'public':
                         $projectPrivacy = config('constants.project_privacy.public');
@@ -305,7 +368,7 @@ class ProjectService
                         $projectPrivacy = config('constants.project_privacy.private');
                         break;
                     default:
-                        $projectPrivacy = config('constants.project_privacy.public');
+                        $projectPrivacy = $updateProject->privacy;
                         break;
                 }
 
@@ -332,6 +395,8 @@ class ProjectService
                 return $updateProject;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -378,6 +443,8 @@ class ProjectService
 
             return $challenge_conditions;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -394,6 +461,8 @@ class ProjectService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -413,6 +482,8 @@ class ProjectService
 
             return $submitEnabled;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -425,6 +496,8 @@ class ProjectService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -450,6 +523,8 @@ class ProjectService
 
             return collect($assessedProjectIds);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -475,6 +550,8 @@ class ProjectService
 
             return collect($pendingProjectIds);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -504,6 +581,8 @@ class ProjectService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -530,6 +609,8 @@ class ProjectService
 
             return $project_role;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -537,14 +618,12 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $myProjectIds = self::getMyProjectIds($userData->id);
-            $invitesIds = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-            $pending = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
-            $mergedIds = $myProjectIds->merge($invitesIds)->merge($pending);
-            $projectIds = $mergedIds->unique();
+            $projectIds = Project::pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -581,7 +660,7 @@ class ProjectService
                     $query->select('challenges.id')
                         ->from('challenges')
                         ->whereIn('challenges.duration_id', $request->challenge_duration)
-                       ->whereNull('challenges.deleted_at');
+                        ->whereNull('challenges.deleted_at');
                 });
             }
             if ($request->has('challenge_level') && !empty($request->challenge_level) && is_array($request->challenge_level)) {
@@ -610,6 +689,8 @@ class ProjectService
 
             return $project_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -623,6 +704,73 @@ class ProjectService
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectIds($projectIds)
+    {
+        try {
+            return Project::whereNotIn('id', $projectIds)->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectBasedOnUuid($projectUuid)
+    {
+        try {
+            return Project::where('uuid', $projectUuid)->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchSubmittedProjectsChallengeId($userData)
+    {
+        try {
+            $getProjectIdBasedOnMember = ProjectMemberManagement::where('email', $userData->email)->pluck('project_id');
+            $getOwnProjectIds = self::getMyProjectIds($userData->id);
+
+            $collaborateProjectIds = $getOwnProjectIds->merge($getProjectIdBasedOnMember)->unique();
+            $fetchSubmittedProjectIds = Project::whereIn('id', $collaborateProjectIds)->where('is_submitted', '1')->pluck('challenge_id');
+
+            return $fetchSubmittedProjectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectBasedOnId($id)
+    {
+        try {
+            $getMyProjects = Project::where('id', $id)->first();
+
+            return $getMyProjects;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkUserChallengeStatus($challengeId, $userId)
+    {
+        try {
+            $getUserProject = Project::where(['user_id' => $userId, 'challenge_id' => $challengeId])->first();
+
+            return $getUserProject;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,11 +2,14 @@
 
 namespace App\Services\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
+use App\Models\Scorm;
 use App\Models\ScormSco;
 use App\Models\ScormScoTracking;
 use App\Services\Manage\Scorm\Enum\ScormVersions;
 use App\Services\Manage\Scorm\Tracking\Scorm12Serializer;
 use App\Services\Manage\Scorm\Tracking\Scorm2004Serializer;
+use App\Services\Public\ResourceModuleDetailService;
 
 class ScormScoTrackingService
 {
@@ -34,8 +37,23 @@ class ScormScoTrackingService
                 'sco_id'  => $scoId,
             ], $preparedData);
 
+            // Tracking completion status in resource module visit
+            if ($scoTracking->completion_status == 'completed') {
+                $getResourveModuleId = Scorm::where('id', $scoTracking->sco_id)->first();
+                $userId = $scoTracking->user_id;
+                $resourceModuleId = $getResourveModuleId->model_id;
+                $assetId = $scoTracking->sco_id;
+                $assetType = '7';
+                $checkResourceModuleAssetVisit = ResourceModuleDetailService::checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                if ($checkResourceModuleAssetVisit == false) {
+                    $addResourceModuleAssetVisit = ResourceModuleDetailService::addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                }
+            }
+
             return $scoTracking;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -55,6 +73,8 @@ class ScormScoTrackingService
                 default                          => [],
             };
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -66,6 +86,8 @@ class ScormScoTrackingService
 
             return $sco->id;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

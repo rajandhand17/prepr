@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ProjectBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,11 @@ class Project extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function newEloquentBuilder($query): ProjectBuilder
+    {
+        return new ProjectBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -148,6 +154,11 @@ class Project extends Model
         return $this->hasMany(ProjectMemberManagement::class, 'project_id', 'id')->where('invite_status', '1');
     }
 
+    public function member()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
+    }
+
     public function history()
     {
         return $this->hasMany(ProjectHistory::class, 'project_id', 'id');
@@ -157,32 +168,44 @@ class Project extends Model
     {
         return $this->hasOne(Challenge::class, 'id', 'challenge_id');
     }
+
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
     public function getStage()
     {
         return $this->belongsTo(ProjectStage::class, 'stage_id', 'id');
     }
+
     public function getStatus()
     {
         return $this->belongsTo(ProjectStatus::class, 'status_id', 'id');
     }
+
     public function getCategory()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
     public function getVertical()
     {
         return $this->belongsTo(ProjectVertical::class, 'vertical_id', 'id');
     }
+
     public function getIndustry()
     {
         return $this->belongsTo(ProjectIndustry::class, 'industry_id', 'id');
     }
+
     public function getType()
     {
         return $this->belongsTo(ProjectType::class, 'type_id', 'id');
+    }
+
+    public function friendRequest()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
     }
 }

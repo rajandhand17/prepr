@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
+use App\Notifications\ProjectInvitationNotification;
 use App\Services\Manage\EmailTemplateService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -21,6 +22,8 @@ class ProjectMemberManagementService
 
             return $getRoles;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +36,8 @@ class ProjectMemberManagementService
 
             return $projectParticipantCollectionObject->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +133,8 @@ class ProjectMemberManagementService
 
             return $projectParticipantCollectionObject;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +146,8 @@ class ProjectMemberManagementService
 
             return $module_type;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -188,6 +197,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -218,6 +229,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -275,6 +288,14 @@ class ProjectMemberManagementService
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
+
+                        $user = UserService::getUserById(auth()->user()->id);
+                        $user->notify(new ProjectInvitationNotification(__('responses.noti_new_user_invited'), __('responses.noti_new_user_invited_message')));
+
+                        $invited_user = UserService::getUserByEmail($pariticipateData['invitee_email']);
+                        if ($invited_user) {
+                            $invited_user->notify(new ProjectInvitationNotification(__('responses.noti_you_have_invited'), __('responses.noti_you_have_invited_message')));
+                        }
                         $invited_emails[] = $pariticipateData['invitee_email'];
                     } else {
                         $already_members[] = $pariticipateData['invitee_email'];
@@ -302,6 +323,7 @@ class ProjectMemberManagementService
 
             return $data;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -327,6 +349,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -341,6 +365,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -371,6 +397,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -385,6 +413,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -414,6 +444,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -440,6 +472,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -454,6 +488,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -466,6 +502,8 @@ class ProjectMemberManagementService
 
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -478,11 +516,58 @@ class ProjectMemberManagementService
 
             return $getAcceptedInvitesProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function fetchAcceptedMemberIds($projectId)
+    public static function getPendingRequests($userData)
+    {
+        try {
+            // Fetching project ids in which current user's role is team leader
+            $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
+            // Preparing the query to fetch project ids where requests are pending
+            $projectIds = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+
+            return $projectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getPendingRequestsBasedOnProjectIds($projectids)
+    {
+        try {
+            // Getting members based on project ids
+            $getMembers = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $projectids)->paginate(config('site-settings.pagination_per_page'));
+
+            return $getMembers;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectIdsBasedOnTeamLead($email)
+    {
+        try {
+            //fetched projects ids in which given email user email is team leader
+            $getAcceptedInvitesProjectIds = ProjectMemberManagement::where(['email' =>$email, 'inviter_access_level'=>'2', 'invite_status'=>'1'])->pluck('project_id');
+            if ($getAcceptedInvitesProjectIds) {
+                return $getAcceptedInvitesProjectIds;
+            }
+
+            return  false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function fetchAcceptedMemberIds($projectId)
     {
         try {
             $getUserIdsBasedOnEmail = [];
@@ -494,6 +579,8 @@ class ProjectMemberManagementService
 
             return $getUserIdsBasedOnEmail;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -508,6 +595,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -533,6 +622,8 @@ class ProjectMemberManagementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -547,6 +638,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -574,6 +667,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -588,6 +683,8 @@ class ProjectMemberManagementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -602,6 +699,8 @@ class ProjectMemberManagementService
 
             return $getMatchedTeams;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -616,14 +715,78 @@ class ProjectMemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public static function getMembersBasedOnProjectId()
+    public static function getAllRequestsData($requestStatus)
     {
         try {
+            $memberManagement = ProjectMemberManagement::select();
+            if ($requestStatus == 'request_sent') {
+                $memberManagement = $memberManagement->where(['email'=>auth()->user()->email, 'invite_status'=>'2'])->pluck('project_id');
+            } else {
+                $projectIds = $memberManagement->where(['email'=> auth()->user()->email])->whereNot('invite_status', '3')->pluck('project_id');
+                $memberManagement = ProjectService::getProjectIds($projectIds)->pluck('id');
+            }
+
+            return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function sendRequest($projectId)
+    {
+        try {
+            $getUser = auth()->user();
+            $joinProject = ProjectMemberManagement::updateOrCreate([
+                'project_id'                => $projectId,
+                'email'                     => $getUser->email,
+            ], [
+                'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'project_id'                => $projectId,
+                'inviter_id'                => $getUser->id,
+                'email'                     => $getUser->email,
+                'invitee_name'              => $getUser->full_name,
+                'invite_type'               => '3',
+                'invite_status'             => '2',
+                'email_status'              => '1',
+                'inviter_access_level'      => '0',
+                'subject_line'              => null,
+                'email_body'                => null,
+            ]);
+            if ($joinProject) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkRequestExistsOrNotExists($projectId)
+    {
+        try {
+            $checkExistsOrNot = ProjectMemberManagement::where([
+                'email'     => auth()->user()->email,
+                'project_id'=> $projectId,
+            ])->first();
+            if ($checkExistsOrNot) {
+                return $checkExistsOrNot;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

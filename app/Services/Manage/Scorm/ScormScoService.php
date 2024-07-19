@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Scorm;
 use App\Models\ScormSco;
 
@@ -44,6 +45,8 @@ class ScormScoService
                 }
             }
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
 

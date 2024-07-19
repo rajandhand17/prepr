@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Airmeet;
 
+use App\Helpers\UtilityHelper;
 use App\Models\AirmeetAuthToken;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -41,6 +42,7 @@ class AirmeetBaseHelper
                 return false;
             }
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             /**
              * HANDLE CLIENT ERROR.
              */
@@ -86,6 +88,7 @@ class AirmeetBaseHelper
                 return false;
             }
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             /**
              * HANDLE CLIENT ERROR.
              */

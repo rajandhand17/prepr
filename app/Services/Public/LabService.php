@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\Airmeet\AirmeetEventHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
 use App\Models\Lab;
 use App\Models\MemberManagement;
@@ -21,6 +22,8 @@ class LabService
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,7 +32,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -126,6 +129,8 @@ class LabService
 
             return $lab_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +140,8 @@ class LabService
         try {
             return Lab::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -152,6 +159,8 @@ class LabService
 
             return $lab_list->limit($limit)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -164,6 +173,8 @@ class LabService
 
             return $lab_list->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -177,13 +188,20 @@ class LabService
             $getLabsIdsBasedOnTags = LabTagsGroupsService::getLabsIdBasedOnTagsId($tags);
             $labIds = $getLabsIdsBasedOnSKills->merge($getLabsIdsBasedOnTags)->unique();
             if (!empty($labIds)) {
-                $labList = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_max'));
+                $lab = Lab::whereIn('labs.id', $labIds)->where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_max'));
             } else {
-                $labList = Lab::where('user_id', '!=', auth()->user()->id)->take(config('site-settings.explore_page_limit_min'));
+                $lab = Lab::where('user_id', '!=', auth()->user()->id)->pluck('id')->take(config('site-settings.explore_page_limit_min'));
+            }
+            if (count($lab) < config('site-settings.explore_page_limit_max')) {
+                $limit = config('site-settings.explore_page_limit_max') - count($lab);
+                $labNewIds = Lab::where('user_id', '!=', auth()->user()->id)->whereNotIn('id', $lab)->pluck('id')->take($limit);
+                $lab = $lab->merge($labNewIds)->unique();
             }
 
-            return $labList->get();
+            return Lab::whereIn('id', $lab)->take(config('site-settings.explore_page_limit_max'))->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -191,10 +209,12 @@ class LabService
     public static function getLabsBasedOnIds($labIds)
     {
         try {
-            $labList = Lab::whereIn('id', $labIds)->get();
+            $labList = Lab::whereIn('id', $labIds)->where('is_accessible', '1')->get();
 
             return $labList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -204,6 +224,8 @@ class LabService
         try {
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -215,6 +237,8 @@ class LabService
 
             return ($joined && $joined !== 'NA') || $user->hasPermission('can_join_live_event_lab');
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -238,6 +262,8 @@ class LabService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -285,6 +311,8 @@ class LabService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -296,6 +324,8 @@ class LabService
 
             return $fetchLabOrganizations;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

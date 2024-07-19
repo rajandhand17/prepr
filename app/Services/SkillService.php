@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
@@ -22,7 +23,10 @@ class SkillService
                     if (gettype($skill_id) == 'string') {
                         $skill_list = $skill_list->where('id', $skill_id);
                     } else {
-                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray())->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                        $skill_list = $skill_list->whereIn('id', $skill_id->toArray());
+                        if ($sortBy == null) {
+                            $skill_list = $skill_list->orderByRaw('FIELD(id, '.$skill_id->implode(',').')');
+                        }
                     }
                 }
             } else {
@@ -70,6 +74,8 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +90,8 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +107,8 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -114,6 +124,8 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -140,6 +152,8 @@ class SkillService
 
             return $skills;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -151,6 +165,8 @@ class SkillService
             if ($getCurrentUsersSkills) {
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ChallengePathBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,6 +33,16 @@ class ChallengePath extends Model
         'is_auto_created',
         'is_accessible',
     ];
+
+    /**
+     * @param $query
+     *
+     * @return ChallengePathBuilder
+     */
+    public function newEloquentBuilder($query): ChallengePathBuilder
+    {
+        return new ChallengePathBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -114,5 +125,19 @@ class ChallengePath extends Model
     public function shares()
     {
         return $this->hasMany(ChallengePathSocialActivity::class, 'challenge_path_id', 'id')->where('share', '1');
+    }
+
+    public function challenges()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'challenge_path_id', 'id')->where('challenge_id', '!=', null);
+    }
+
+    public function challenge_path_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '3']);
+        }
+
+        return 'N/A';
     }
 }

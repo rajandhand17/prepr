@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\ResourceCollection as ResourceCollectionModule;
 use App\Models\ResourceCollectionTagsGroups;
@@ -96,6 +97,7 @@ class ResourceCollection extends Command
 
             return;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e);
 

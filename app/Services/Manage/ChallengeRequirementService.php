@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeRequirement;
 use Exception;
 
@@ -63,13 +64,13 @@ class ChallengeRequirementService
             }
 
             $min_rank = $request->min_rank ?? 0;
-            $min_points = $request->min_points ?? null;
+            $min_points = $request->min_points ?? 0;
             $project_submission_requirement_ids = $request->project_submission_requirement_ids ?? [];
-            $max_project_submission = $request->max_project_submission ?? 5;
-            $max_project_associated = $request->max_project_associated ?? 5;
-            $min_experience = $request->min_experience ?? null;
-            $min_imported_badges = $request->min_imported_badges ?? null;
-            $min_achievement_counts = $request->min_achievement_counts ?? null;
+            $max_project_submission = $request->max_project_submission ?? 100;
+            $max_project_associated = $request->max_project_associated ?? 100;
+            $min_experience = $request->min_experience ?? 0;
+            $min_imported_badges = $request->min_imported_badges ?? 0;
+            $min_achievement_counts = $request->min_achievement_counts ?? 0;
             $additional_requirements = $request->additional_requirements ?? null;
 
             $challengeRequirement = new ChallengeRequirement();
@@ -91,6 +92,8 @@ class ChallengeRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +192,8 @@ class ChallengeRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -204,6 +209,8 @@ class ChallengeRequirementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

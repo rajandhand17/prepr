@@ -15,10 +15,10 @@ php artisan migrate-old-data:tag-groups
 php artisan migrate-old-data:skills
 php artisan migrate-old-data:skill-stacks
 php artisan migrate-old-data:skill-groups
-php artisan migrate-old-data:users
-php artisan migrate-old-data:organizations
 php artisan migrate-old-data:project-pitchs
 php artisan migrate-old-data:project-tasks
+php artisan migrate-old-data:users
+php artisan migrate-old-data:organizations
 php artisan migrate-old-data:labs
 php artisan migrate-old-data:lab-program
 php artisan migrate-old-data:challenge
@@ -30,7 +30,6 @@ php artisan migrate-old-data:users-achievement
 php artisan migrate-old-data:jobs-titles
 php artisan register:go1-webhook
 php artisan migrate-old-data:component-association-migration
-php artisan migrate:feed-chargebee-data-to-data-base
 php artisan migrate-old-data:users-skills
 php artisan migrate-old-data:users-personal
 php artisan migrate-old-data:users-patent
@@ -41,3 +40,4 @@ php artisan migrate-old-data:users-address
 php artisan migrate-old-data:users-friends
 php artisan migrate-old-data:users-tags
 php artisan migrate-old-data:users-setting
+php artisan migrate:feed-chargebee-data-to-data-base

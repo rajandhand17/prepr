@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\PitchTemplate;
 
 class PitchTemplateService
@@ -27,6 +28,8 @@ class PitchTemplateService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +44,26 @@ class PitchTemplateService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function addPitchAndTaskTemplate($request)
+    {
+        try {
+            $addPitchAndTaskTemplate = new PitchTemplate();
+            $addPitchAndTaskTemplate->title = $request->template_title;
+            $addPitchAndTaskTemplate->save();
+            if (!$addPitchAndTaskTemplate) {
+                return false;
+            }
+
+            return $addPitchAndTaskTemplate;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

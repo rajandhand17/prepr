@@ -25,6 +25,8 @@ class SMSHelper
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

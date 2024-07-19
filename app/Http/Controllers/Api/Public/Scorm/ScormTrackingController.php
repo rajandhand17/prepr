@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\Scorm\ScormTrackingRequest;
 use App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingRepository;
@@ -36,6 +37,8 @@ class ScormTrackingController extends AppBaseController
 
             return $this->sendError(__('responses.failed_to_track_progress'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_track_progress'), Response::HTTP_BAD_REQUEST);
         }
     }

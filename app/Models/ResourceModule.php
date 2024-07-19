@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -35,6 +36,11 @@ class ResourceModule extends Model
         'go1_metadata',
         'is_accessible',
     ];
+
+    public function newEloquentBuilder($query): ResourceBuilder
+    {
+        return new ResourceBuilder($query);
+    }
 
     protected $casts = ['go1_metadata' => 'object'];
 
@@ -91,11 +97,6 @@ class ResourceModule extends Model
     public function images()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '6');
-    }
-
-    public function embedded_cover_videos()
-    {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->where('type', '=', '7');
     }
 
     public function users()
@@ -181,5 +182,14 @@ class ResourceModule extends Model
     public function scorm(): MorphOne
     {
         return $this->morphOne(Scorm::class, 'model')->latest();
+    }
+
+    public function resource_module_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '4']);
+        }
+
+        return 'N/A';
     }
 }

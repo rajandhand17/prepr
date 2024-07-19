@@ -53,6 +53,7 @@ class LabResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
+        $module_progress = null;
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -147,40 +148,106 @@ class LabResource extends JsonResource
 
         if (!empty($this->component_association)) {
             foreach ($this->component_association as $lab_association) {
-                if ($lab_association->lab_program_id) {
-                    $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
-                    $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                if (count($lab_programs) < 5) {
+                    if ($lab_association->lab_program_id) {
+                        $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
+                        if ($getLabProgram !== null) {
+                            $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
+                        }
+                    }
+                }
+                if (count($challenges) < 5) {
+                    if ($lab_association->challenge_id) {
+                        $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
+                        if ($getChallenge !== null) {
+                            $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
+                        }
+                    }
+                }
+                if (count($challenge_paths) < 5) {
+                    if ($lab_association->challenge_path_id) {
+                        $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
+                        if ($getChallengePath !== null) {
+                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
+                        }
+                    }
+                }
+                if (count($resource_modules) < 5) {
+                    if ($lab_association->resource_module_id) {
+                        $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
+                        if ($getResourceModule !== null) {
+                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                        }
+                    }
+                }
+                if (count($resource_collections) < 5) {
+                    if ($lab_association->resource_collection_id) {
+                        $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
+                        if ($getResourceCollection !== null) {
+                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                        }
+                    }
+                }
+                if (count($resource_groups) < 5) {
+                    if ($lab_association->resource_group_id) {
+                        $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
+                        if ($getResourceGroup !== null) {
+                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                        }
+                    }
+                }
+            }
+        }
+
+        $type = 'na';
+
+        switch ($this->type) {
+            case '0':
+                $type = 'assess';
+                break;
+            case '1':
+                $type = 'onboard';
+                break;
+            case '2':
+                $type = 'engage';
+                break;
+            case '3':
+                $type = 'grow';
+                break;
+            default:
+                $type = 'na';
+                break;
+        }
+
+        if (auth('api')->check()) {
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->lab_completion_status) {
+                switch ($this->lab_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
                 }
 
-                if ($lab_association->challenge_id) {
-                    $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
-                    $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
-                }
-
-                if ($lab_association->challenge_path_id) {
-                    $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
-                    $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
-                }
-
-                if ($lab_association->resource_module_id) {
-                    $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
-                    $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
-                }
-
-                if ($lab_association->resource_collection_id) {
-                    $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
-                    $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
-                }
-
-                if ($lab_association->resource_group_id) {
-                    $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
-                    $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
-                }
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->lab_completion_status->percentage,
+                ];
             }
         }
 
         return [
             'id'                            => $this->uuid,
+            'type'                          => $type,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
@@ -197,7 +264,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $this->status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
@@ -212,6 +279,7 @@ class LabResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'module_progress'               => $module_progress,
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),

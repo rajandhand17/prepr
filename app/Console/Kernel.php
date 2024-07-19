@@ -17,8 +17,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('challenges:close-challenge-for-passed-dates')->everyMinute();
+        $schedule->command('challenges:update-challenge-passed-winner-date')->everyMinute();
         $schedule->command('member-manger:send-email')->everyMinute();
         $schedule->command('chargebee-subscription:daily-chronicle-accessed-non-accessed-data')->everyMinute();
+        $schedule->command('solr:sync')->daily();
     }
 
     /**

@@ -14,10 +14,10 @@ return new class() extends Migration {
             $table->id();
             $table->unsignedBigInteger('challenge_template_id');
             $table->string('custom_timelines_title')->nullable();
-            $table->string('custom_timelines_date', 255)->nullable();
+            $table->integer('custom_timelines_number')->nullable();
             $table->longText('custom_timelines_description')->nullable();
             $table->enum('custom_timelines_duration', ['days', 'weeks', 'months'])->comment('Number of days, week or month, from start to end')->default('days');
-            $table->enum('schedule_custom_notify', ['0', '1'])->comment('0 -> Day before submission deadline reminder, 1 -> Week before submission deadline reminder')->default('0');
+            $table->enum('schedule_custom_notify', ['0', '1'])->comment('0 -> no, 1 -> yes')->default('0');
             $table->foreign('challenge_template_id', 'fk_challenge_template_custom_timelines')->references('id')->on('challenge_templates')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();

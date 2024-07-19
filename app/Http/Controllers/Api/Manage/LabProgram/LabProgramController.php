@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\LabProgram;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\LabProgram\CreateLabProgramRequest;
@@ -11,7 +12,6 @@ use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -32,7 +32,7 @@ class LabProgramController extends AppBaseController
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $listLabProgram = $this->labProgramRepository->getLabProgramList($request, $organization);
 
@@ -51,6 +51,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -60,15 +62,27 @@ class LabProgramController extends AppBaseController
         try {
             $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
             if ($labProgram) {
-                if ($labProgram->is_accessible === '0') {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                }
+                if ($labProgram->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.lab_program_switcher_error'), 403);
+                }
+                if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
+                $userId = $userData->id;
+                TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
 
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
             return $this->sendError(__('responses.not_found_lab_program_view'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -76,8 +90,13 @@ class LabProgramController extends AppBaseController
     public function create(CreateLabProgramRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
             // checks creation limits of the Lab Program
-            $checkLabProgramLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'labProgram');
+            $checkLabProgramLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'labProgram');
             if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabProgramCount = $this->labProgramRepository->getLabProgramCountBasedOnOrganization($checkLabProgramLimit['organizationId']);
                 if ($checkLabProgramLimit['fetchOrganizationPlanDetails'] <= $checkLabProgramCount) {
@@ -101,13 +120,15 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media, $upload_achievement_image);
+            $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media, $upload_achievement_image, $organization->id);
             if ($createLabProgram != false) {
                 return $this->sendResponse(LabProgramResource::make($createLabProgram), __('responses.lab_program_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.lab_program_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -119,7 +140,15 @@ class LabProgramController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 403);
             }
-            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_program_switcher_error'), 403);
+            }
+            if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
@@ -138,18 +167,20 @@ class LabProgramController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateLabProgram = $this->labProgramRepository->updateLabProgram($slug, $request, $upload_media, $upload_achievement_image);
+            $updateLabProgram = $this->labProgramRepository->updateLabProgram($slug, $request, $upload_media, $upload_achievement_image, $organization->id);
             if ($updateLabProgram != false) {
                 return $this->sendResponse(LabProgramResource::make($updateLabProgram), __('responses.lab_program_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.lab_program_not_update'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function checkSlug($slug, Request $request)
+    public function checkSlug($slug)
     {
         try {
             $checkLabProgramSlugExistsOrNot = $this->labProgramRepository->checkSlug($slug);
@@ -159,6 +190,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -173,18 +206,28 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_name_not_available'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function delete($slug, Request $request)
+    public function delete($slug)
     {
         try {
             $checkLabProgramSlugExistsOrNot = $this->labProgramRepository->checkSlug($slug);
             if ($checkLabProgramSlugExistsOrNot == false) {
                 return $this->sendError(__('responses.lab_program_not_found'), 404);
             }
-            if ($checkLabProgramSlugExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkLabProgramSlugExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_program_switcher_error'), 403);
+            }
+            if ($checkLabProgramSlugExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $deletLabProgram = $this->labProgramRepository->delete($slug);
@@ -194,6 +237,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -201,9 +246,10 @@ class LabProgramController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $getLabProgramListName = $this->labProgramRepository->getLabProgramListName($request, $organization);
             if ($getLabProgramListName) {
@@ -212,6 +258,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendResponse($getLabProgramListName, __('responses.found_lab_program_list'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

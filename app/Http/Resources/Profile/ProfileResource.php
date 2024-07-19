@@ -182,7 +182,7 @@ class ProfileResource extends JsonResource
             'lab_count'              => $this->userLabs->count(),
             'achievements'           => $this->userAchievements->count(),
             'achievements_list'      => UserAchievementResource::collection($this->userAchievements),
-            'featured_achievement'   => UserAchievementResource::collection($this->userAchievements),
+            'featured_achievement'   => UserAchievementResource::collection($this->userFeaturedAchievements),
             'role'                   => 'user',
             'challenge_history'      => [],
             'project_history'        => [],
@@ -210,7 +210,7 @@ class ProfileResource extends JsonResource
             'user_skills'            => $skills,
             'user_pinned_skills'     => $pinnedSkills,
             'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
-            'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friendRequest == '0' ? 'yes' : 'no') : 'yes',
+            'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
 
         ];
     }

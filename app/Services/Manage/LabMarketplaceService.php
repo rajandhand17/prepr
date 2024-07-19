@@ -22,6 +22,8 @@ class LabMarketplaceService
 
             return $lab_marketplace_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,7 +32,7 @@ class LabMarketplaceService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_marketplace_list = $lab_marketplace_list->where('lab_marketplace.title', 'like', '%'.$request->search.'%');
+                $lab_marketplace_list = $lab_marketplace_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
@@ -46,34 +48,29 @@ class LabMarketplaceService
 
             if ($request->has('organization_ids') && !empty($request->organization_ids) && is_array($request->organization_ids)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_ids)->pluck('id');
-                if (!empty($getOrganizationIds)) {
-                    $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
-                }
+                $lab_marketplace_list = $lab_marketplace_list->whereIn('organization_id', $getOrganizationIds);
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-                $getLabRedeemedIds = LabChallengeRedeem::where(['organization_id' => $organization->id, 'is_redeemed' => '1'])->whereNotNull('lab_id')->pluck('lab_marketplace_id');
-                if (!empty($getLabRedeemedIds)) {
-                    switch ($request->status) {
-                        case 'redeemed':
-                            $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
-                            break;
-                        case 'not_redeemed':
-                            $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
-                            break;
-                        default:
-                            $lab_marketplace_list = $lab_marketplace_list;
-                            break;
-                    }
+                $getLabRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('lab_id')->pluck('lab_marketplace_id');
+                switch ($request->status) {
+                    case 'redeemed':
+                        $lab_marketplace_list = $lab_marketplace_list->whereIn('id', $getLabRedeemedIds);
+                        break;
+                    case 'not_redeemed':
+                        $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
+                        break;
+                    default:
+                        $lab_marketplace_list = $lab_marketplace_list;
+                        break;
                 }
             }
 
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $lab_marketplace_list = $lab_marketplace_list->whereIn('lab_marketplace.id', function ($query) use ($request) {
                     $query->select('lab_marketplace_skills_groups_stack.lab_marketplace_id')
-                    ->from('lab_marketplace_skills_groups_stack')
-                    ->whereIn('lab_marketplace_skills_groups_stack.foreign_id', $request->skills)
+                        ->from('lab_marketplace_skills_groups_stack')
+                        ->whereIn('lab_marketplace_skills_groups_stack.foreign_id', $request->skills)
                         ->where('lab_marketplace_skills_groups_stack.type', '0')
                         ->whereNull('lab_marketplace_skills_groups_stack.deleted_at')
                         ->distinct();
@@ -98,6 +95,8 @@ class LabMarketplaceService
 
             return $lab_marketplace_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +137,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -147,6 +148,8 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -156,11 +159,13 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function deleteLabMarketplace($slug, $labMarketplaceId)
+    public static function deleteLabMarketplace($slug, $labMarketplaceId)
     {
         try {
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
@@ -172,6 +177,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -186,6 +193,8 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -233,6 +242,29 @@ class LabMarketplaceService
 
             return $newLab;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationLabMarketPlace($organizationId)
+    {
+        try {
+            $fetchOrganizationLabMarketPlaces = LabMarketplace::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationLabMarketPlaces)) {
+                foreach ($fetchOrganizationLabMarketPlaces as $organizationLabMarketPlace) {
+                    $deleteOrganizationLabMarketPlace = self::deleteLabMarketplace($organizationLabMarketPlace->slug, $organizationLabMarketPlace->id);
+                    if (!$deleteOrganizationLabMarketPlace) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

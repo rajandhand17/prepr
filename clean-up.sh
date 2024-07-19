@@ -8,5 +8,5 @@ php artisan optimize:clear
 php artisan config:cache
 chmod -R 777 storage/
 systemctl start supervisord
-/usr/bin/supervisord -c /etc/supervisord.d/supervisord.conf
+/usr/bin/supervisord -c /etc/supervisord.d/learnlab-supervisor.conf
 systemctl restart supervisord

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\Skill;
 
+use App\Helpers\UtilityHelper;
 use App\Services\SkillService;
 use App\Services\UserSkillsService;
 
@@ -27,17 +28,20 @@ class SkillRepository implements SkillInterface
 
                 return  $this->skillsService->getSkills($language, $search, $sortBy, $skillId, $pagination);
             }
-            // return $this->skillsService->getSkills($language, $search,$sortBy, $skillId);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function getMySkills($language, $search, $pinned)
+    public function getMySkills($language, $search, $pinned, $sortBy)
     {
         try {
-            return $this->userSkillsService->getMySkills($language, $search, $pinned);
+            return $this->userSkillsService->getMySkills($language, $search, $pinned, $sortBy);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +51,8 @@ class SkillRepository implements SkillInterface
         try {
             return $this->skillsService->getSkillBasedOnId($skillId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +62,8 @@ class SkillRepository implements SkillInterface
         try {
             return $this->userSkillsService->addSingleSkill($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +73,8 @@ class SkillRepository implements SkillInterface
         try {
             return $this->userSkillsService->addSkillPinned($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

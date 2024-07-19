@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\LabAchievement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabAcheivementService;
 
 class LabAchievementRepository implements LabAchievementInterface
@@ -19,6 +20,8 @@ class LabAchievementRepository implements LabAchievementInterface
         try {
             return $this->LabAcheivementService->uploadAcheivementImage($image);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -28,6 +31,8 @@ class LabAchievementRepository implements LabAchievementInterface
         try {
             return $this->LabAcheivementService->updateAcheivementImage($image);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

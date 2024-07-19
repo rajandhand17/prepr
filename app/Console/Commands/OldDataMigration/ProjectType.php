@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectType as Type;
 use DB;
 use Illuminate\Console\Command;
@@ -65,6 +66,7 @@ class ProjectType extends Command
             DB::rollback();
             $this->error('No project type found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

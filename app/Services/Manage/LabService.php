@@ -19,6 +19,8 @@ class LabService
 
             return $lab_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -32,6 +34,8 @@ class LabService
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,7 +44,7 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $lab_list = $lab_list->where('labs.title', 'like', '%'.$request->search.'%');
+                $lab_list = $lab_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -89,6 +93,8 @@ class LabService
 
             return $lab_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,6 +104,8 @@ class LabService
         try {
             return Lab::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,8 +113,10 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('id', $Id)->first();
+            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id', 'category_id', 'user_id')->where('id', $Id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -121,14 +131,15 @@ class LabService
 
             return $upload_lab_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public static function createLab($request, $upload_cover_image)
+    public static function createLab($request, $upload_cover_image, $organizationId)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             $status = config('constants.lab_status.draft');
             switch ($request->request_type) {
                 case 'draft':
@@ -200,7 +211,7 @@ class LabService
             $lab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $lab->language = $request->language;
             $lab->user_id = auth()->user()->id;
-            $lab->organization_id = $organization->id;
+            $lab->organization_id = $organizationId;
             $lab->category_id = $request->category_id;
             $lab->duration_id = $request->duration_id;
             $lab->level_id = $request->level_id;
@@ -226,6 +237,8 @@ class LabService
 
             return $lab;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -284,11 +297,10 @@ class LabService
         return $lab;
     }
 
-    public static function updateLab($slug, $request, $upload_cover_image)
+    public static function updateLab($slug, $request, $upload_cover_image, $organizationData)
     {
         try {
             $lab = Lab::where('slug', $slug)->first();
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
             if ($lab !== null) {
                 $privacy = $lab->privacy;
                 if ($request->has('privacy')) {
@@ -326,7 +338,7 @@ class LabService
 
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
                 $lab->language = ($request->has('language')) ? $request->language : $lab->language;
-                $lab->organization_id = $organization->id;
+                $lab->organization_id = $organizationData->id;
                 $lab->category_id = ($request->has('category_id')) ? $request->category_id : $lab->category_id;
                 $lab->duration_id = ($request->has('duration_id')) ? $request->duration_id : $lab->duration_id;
                 $lab->level_id = ($request->has('level_id')) ? $request->level_id : $lab->level_id;
@@ -350,6 +362,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -366,6 +380,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -380,6 +396,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -394,6 +412,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -407,6 +427,8 @@ class LabService
 
             return $lab_list->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -421,6 +443,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -435,6 +459,8 @@ class LabService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -448,6 +474,8 @@ class LabService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -469,6 +497,8 @@ class LabService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -478,6 +508,8 @@ class LabService
         try {
             return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -490,6 +522,8 @@ class LabService
 
             return $labs;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -503,6 +537,62 @@ class LabService
 
             return $getLabAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationLab($organizationId)
+    {
+        try {
+            $fetchOrganizationLabs = Lab::where('organization_id', $organizationId)->pluck('id');
+            if (!empty($fetchOrganizationLabs)) {
+                foreach ($fetchOrganizationLabs as $organizationLab) {
+                    $deleteOrganizationLab = self::deleteLab($organizationLab);
+                    if (!$deleteOrganizationLab) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getLabsBasedOnOrganizationId($organizationId)
+    {
+        try {
+            return Lab::query()->where('organization_id', $organizationId)->orderBy('id', 'desc')->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
+    public static function getLabBasedOnUserId($userId)
+    {
+        try {
+            return Lab::query()->where('user_id', $userId)->get();
+        } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
+    public static function getLabsBasedOnIds($ids)
+    {
+        try {
+            return Lab::query()->whereIn('id', $ids)->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

@@ -35,14 +35,16 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
-        if ($this->resource_modules) {
+        if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
-                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
-                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
-                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
+                $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
+                if ($resourceModuleData !== null) {
+                    $resourceModules[$resource_module->resource_module_id]['uuid'] = $resourceModuleData->uuid;
+                    $resourceModules[$resource_module->resource_module_id]['title'] = $resourceModuleData->title;
+                    $resourceModules[$resource_module->resource_module_id]['image'] = $resourceModuleData->media;
+                    $resourceModules[$resource_module->resource_module_id]['description'] = $resourceModuleData->description;
+                    $resourceModules[$resource_module->resource_module_id]['slug'] = $resourceModuleData->slug;
+                }
             }
         }
         if ($this->challenges) {
@@ -140,6 +142,30 @@ class ResourceCollectionResource extends JsonResource
             $rating = intval($this->resource_rating->rating);
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->resource_collection_completion_status) {
+            switch ($this->resource_collection_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->resource_collection_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -166,6 +192,7 @@ class ResourceCollectionResource extends JsonResource
             'tag_groups'                    => $tag_groups,
             'rating'                        => $rating,
             'liked'                         => $this->liked(),
+            'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
         ];
     }

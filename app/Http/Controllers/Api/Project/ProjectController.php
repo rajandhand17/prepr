@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Project;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
 use App\Http\Requests\Project\AddLinksProjectRequest;
@@ -89,6 +90,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -103,6 +106,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -117,6 +122,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_name_not_available'), 403);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -129,7 +136,7 @@ class ProjectController extends AppBaseController
                 $challengeStatus = ($checkChallenge->status == '1' && $checkChallenge->is_open == '0');
                 if ($challengeStatus) {
                     $checkChallengeTimelineType = $checkChallenge->challenge_timelines->timeline_type;
-                    if ($checkChallengeTimelineType === '1') {
+                    if ($checkChallengeTimelineType == '1') {
                         if (!$checkChallenge->challenge_timelines->application_deadline_date > Carbon::now()->toDateTimeString()) {
                             return $this->sendError(__('responses.challenge_timeline_fail'), 403);
                         }
@@ -160,6 +167,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -184,6 +193,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_pitch_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -204,6 +215,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_file_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -218,6 +231,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.found_not_project_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -232,10 +247,10 @@ class ProjectController extends AppBaseController
 
             $checkChallenge = ChallengeService::getChallengeBasedOnId($checkProjectExistsOrNot->challenge_id);
             if ($checkChallenge) {
-                $challengeStatus = ($checkChallenge->status === '1' && $checkChallenge->is_open === '0');
+                $challengeStatus = ($checkChallenge->status == '1' && $checkChallenge->is_open == '0');
                 if ($challengeStatus) {
                     $checkChallengeTimelineType = $checkChallenge->challenge_timelines->timeline_type;
-                    if ($checkChallengeTimelineType === '1') {
+                    if ($checkChallengeTimelineType == '1') {
                         if (!$checkChallenge->challenge_timelines->application_deadline_date > Carbon::now()->toDateTimeString()) {
                             return $this->sendError(__('responses.challenge_timeline_fail'), 403);
                         } else {
@@ -249,17 +264,16 @@ class ProjectController extends AppBaseController
             }
 
             $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkProjectExistsOrNot->media);
-            if ($request->cover_media != null) {
+            if ($request->has('media_type') && $request->media_type != 'none') {
                 if ($request->media_type == 'image') {
                     $uploaded_cover_media = $this->projectRepository->uploadCoverImage($request->cover_media);
                     if (!$uploaded_cover_media) {
                         return $this->sendError(__('responses.image_upload_failed'), 400);
                     }
+                    $update_cover_image = $uploaded_cover_media;
                 } elseif ($request->media_type == 'embedded') {
-                    $uploaded_cover_media = $request->cover_media;
+                    $update_cover_image = $request->cover_media;
                 }
-
-                $update_cover_image = $uploaded_cover_media;
             }
 
             $updateProject = $this->projectRepository->updateProject($slug, $request, $update_cover_image);
@@ -269,6 +283,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -287,6 +303,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendResponse(__('responses.add_external_links_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -305,6 +323,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendResponse(__('responses.add_additional_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -324,6 +344,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -343,6 +365,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -355,7 +379,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectSlugExistsOrNot->is_submitted === '1') {
+            if ($checkProjectSlugExistsOrNot->is_submitted == '1') {
                 return $this->sendError(__('responses.project_already_submitted'), 400);
             }
 
@@ -371,6 +395,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_submitted'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -387,7 +413,7 @@ class ProjectController extends AppBaseController
 
                 $checkActivity = $this->projectRepository->checkSocialActivity($fetchProject->id, $getColumnNameValue['column'], $getColumnNameValue['action']);
                 $action = str_replace('-', '_', $action);
-                if ($checkActivity === true) {
+                if ($checkActivity == true) {
                     return $this->sendError(__('responses.already_'.$action.'_project'), 400);
                 }
 
@@ -399,6 +425,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.found_not_project_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -417,6 +445,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_assessment_not_retrived'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -430,7 +460,7 @@ class ProjectController extends AppBaseController
             }
 
             $checkAssessmentChallenges = $this->projectRepository->checkAssessmentChallenges(auth()->user());
-            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) === false) {
+            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) == false) {
                 return $this->sendError(__('responses.project_not_allowed_assessment'), 403);
             }
 
@@ -451,6 +481,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -464,7 +496,7 @@ class ProjectController extends AppBaseController
             }
 
             $checkAssessmentChallenges = $this->projectRepository->checkAssessmentChallenges(auth()->user());
-            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) === false) {
+            if ($checkAssessmentChallenges->contains($checkProjectSlugExistsOrNot->challenge_id) == false) {
                 return $this->sendError(__('responses.project_not_allowed_assessment'), 403);
             }
 
@@ -478,6 +510,7 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in captureAIAssessmentProject in ProjectController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -503,6 +536,7 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_assessment_submitted'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in scoreAIAssessmentProject in ProjectController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -529,6 +563,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_assessment_not_delete'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -548,6 +584,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_media_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -567,6 +605,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_history_not_retrived'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -579,22 +619,22 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectExistsOrNot->recruiting_status === '1') {
+            if ($checkProjectExistsOrNot->recruiting_status == '1') {
                 return $this->sendError(__('responses.project_join_not_allowed'), 404);
             }
 
             $userEmail = auth()->user()->email;
             $checkProjectJoinedStatus = $this->projectRepository->checkProjectJoinedStatus($checkProjectExistsOrNot->id, $userEmail);
             if ($checkProjectJoinedStatus != false) {
-                if ($checkProjectJoinedStatus->invite_status === '0') {
+                if ($checkProjectJoinedStatus->invite_status == '0') {
                     return $this->sendError(__('responses.project_join_invited'), 404);
                 }
 
-                if ($checkProjectJoinedStatus->invite_status === '1') {
+                if ($checkProjectJoinedStatus->invite_status == '1') {
                     return $this->sendError(__('responses.project_join_member_already'), 404);
                 }
 
-                if ($checkProjectJoinedStatus->invite_status === '2') {
+                if ($checkProjectJoinedStatus->invite_status == '2') {
                     return $this->sendError(__('responses.project_join_request_already_sent'), 404);
                 }
             }
@@ -606,6 +646,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_joined_failed'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -625,7 +667,7 @@ class ProjectController extends AppBaseController
             }
 
             if ($checkProjectJoinedStatus != false) {
-                if ($checkProjectJoinedStatus->invite_status === '0') {
+                if ($checkProjectJoinedStatus->invite_status == '0') {
                     return $this->sendError(__('responses.project_join_invited'), 404);
                 }
             }
@@ -637,6 +679,8 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.project_unjoined_failed'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

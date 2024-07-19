@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ResourceGroup;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupService;
@@ -35,15 +36,17 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             $this->resourceGroupService->getResourceGroupCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image)
+    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId)
     {
         try {
-            $createResourceGroup = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image) {
-                $createResourceGroup = $this->resourceGroupService->createResourceGroup($request, $upload_cover_image);
+            $createResourceGroup = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $organizationId) {
+                $createResourceGroup = $this->resourceGroupService->createResourceGroup($request, $upload_cover_image, $organizationId);
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
                 $createResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->createResourceGroupTagsGroups($request, $createResourceGroup->id);
@@ -66,6 +69,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -77,6 +81,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->uploadResourceGroupCoverImage($cover_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +92,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupAchievementsService->uploadAchievementImage($achievement_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +103,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +123,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,15 +134,17 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->checkName($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image)
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId)
     {
         try {
-            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image) {
-                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image);
+            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId) {
+                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image, $organizationId);
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
                 $updateResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->updateResourceGroupTagsGroups($request, $updateResourceGroup->id);
@@ -153,6 +167,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -164,6 +179,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return  $this->resourceGroupService->getResourceGroupList($request, $organization);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +190,8 @@ class ResourceGroupRepository implements ResourceGroupInterface
         try {
             return $this->resourceGroupService->getResourceGroupListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

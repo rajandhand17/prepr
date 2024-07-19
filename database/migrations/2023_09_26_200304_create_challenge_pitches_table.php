@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('challenge_pitches', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('template_id');
-            $table->longText('title')->comment('English pitch question');
-            $table->longText('fr_CA_title')->comment('French pitch question');
+            $table->longText('title')->comment('English pitch question')->nullable();
+            $table->longText('fr_CA_title')->comment('French pitch question')->nullable();
             $table->text('description')->comment('English pitch description')->nullable();
             $table->text('fr_CA_description')->comment('French pitch description')->nullable();
             $table->foreign('template_id')->references('id')->on('pitch_templates')->onDelete('cascade');

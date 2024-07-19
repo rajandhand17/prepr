@@ -2,6 +2,9 @@
 
 namespace App\Repositories\Api\User;
 
+use App\Helpers\UtilityHelper;
+use App\Services\Manage\OrganizationService as ManageOrganizationService;
+use App\Services\Manage\OrganizationTypeModeService;
 use App\Services\Public\MemberManagementService;
 use App\Services\Public\OrganizationService;
 use App\Services\UserService;
@@ -11,12 +14,16 @@ class UserRepository implements UserInterface
     protected $userService;
     protected $organizationService;
     protected $memberManagementService;
+    protected $manageOrganizationService;
+    protected $organizationTypeModeService;
 
-    public function __construct(UserService $userService, OrganizationService $organizationService, MemberManagementService $memberManagementService)
+    public function __construct(UserService $userService, OrganizationService $organizationService, MemberManagementService $memberManagementService, ManageOrganizationService $manageOrganizationService, OrganizationTypeModeService $organizationTypeModeService)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;
         $this->memberManagementService = $memberManagementService;
+        $this->manageOrganizationService = $manageOrganizationService;
+        $this->organizationTypeModeService = $organizationTypeModeService;
     }
 
     public function getUsers($request)
@@ -24,6 +31,8 @@ class UserRepository implements UserInterface
         try {
             return  $this->userService->getUsers($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,11 +57,18 @@ class UserRepository implements UserInterface
             if ($organizationData->count() > (int) '0') {
                 if ($user->preferred_organization == null) {
                     $this->setOrganizationPreference($organizationData[0]->id);
+                } else {
+                    $fetchOrganization = ManageOrganizationService::getOrganizationExistBasedOnId($user->preferred_organization);
+                    if (empty($fetchOrganization)) {
+                        $this->setOrganizationPreference($organizationData[0]->id);
+                    }
                 }
             }
 
             return $organizationData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +78,71 @@ class UserRepository implements UserInterface
         try {
             return $this->userService->setOrganizationPreference($organizationId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function userOnboarding()
+    {
+        try {
+            return $this->userService->userOnboarding();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function completeMiniOnBoarding($component)
+    {
+        try {
+            switch ($component) {
+                case 'lab':
+                    $response = $this->userService->completeLabMiniOnBoarding();
+                    break;
+                case 'challenge':
+                    $response = $this->userService->completeChallengeMiniOnBoarding();
+                    break;
+                case 'organization':
+                    $response = $this->userService->completeOrganizationMiniOnBoarding();
+                    break;
+            }
+
+            return  $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkComponentMiniOnBoard($component)
+    {
+        try {
+            return $this->userService->checkComponentMiniOnBoard($component);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function organizationOnboarding($organizationId, $request)
+    {
+        try {
+            return $this->manageOrganizationService->organizationOnboarding($organizationId, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function storeOrganizationType($organizationId, $request)
+    {
+        try {
+            return $this->organizationTypeModeService->storeOrganizationType($organizationId, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

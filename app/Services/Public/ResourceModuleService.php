@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 
 class ResourceModuleService
@@ -13,7 +14,9 @@ class ResourceModuleService
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -22,7 +25,7 @@ class ResourceModuleService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceModule = $resourceModule->where('resource_modules.title', 'like', '%'.$request->search.'%');
+                $resourceModule = $resourceModule->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
@@ -97,8 +100,8 @@ class ResourceModuleService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
                     $query->select('resource_module_skills_groups_stacks.resource_module_id')
-                    ->from('resource_module_skills_groups_stacks')
-                    ->whereIn('resource_module_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('resource_module_skills_groups_stacks')
+                        ->whereIn('resource_module_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('resource_module_skills_groups_stacks.type', '0')
                         ->whereNull('resource_module_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -107,8 +110,8 @@ class ResourceModuleService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
                     $query->select('resource_module_tags_groups.resource_module_id')
-                    ->from('resource_module_tags_groups')
-                    ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
+                        ->from('resource_module_tags_groups')
+                        ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
                         ->where('resource_module_tags_groups.type', '0')
                         ->whereNull('resource_module_tags_groups.deleted_at')
                         ->distinct();
@@ -122,7 +125,9 @@ class ResourceModuleService
             }
 
             return $resourceModule;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -131,7 +136,9 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -141,6 +148,8 @@ class ResourceModuleService
         try {
             return ResourceModule::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +159,8 @@ class ResourceModuleService
         try {
             return ResourceModule::whereIn('id', $ids)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

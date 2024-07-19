@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
@@ -10,7 +12,6 @@ use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
-use App\Services\Manage\OrganizationService;
 use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
@@ -25,8 +26,13 @@ class ResourceCollectionController extends AppBaseController
     public function create(CreateResourceCollectionRequest $request)
     {
         try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
             // checks creation limits of the Resource Collection
-            $checkResourceCollectionLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceCollection');
+            $checkResourceCollectionLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceCollection');
             if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceCollectionCount = $this->resourceCollectionRepository->getResourceCollectionCountBasedOnOrganization($checkResourceCollectionLimit['organizationId']);
                 if ($checkResourceCollectionLimit['fetchOrganizationPlanDetails'] <= $checkResourceCollectionCount) {
@@ -42,13 +48,15 @@ class ResourceCollectionController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image);
+            $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image, $organization->id);
             if ($createResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection), __('responses.resource_collection_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -63,6 +71,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_slug_available'), 200);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -77,6 +87,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 200);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -86,15 +98,27 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
-                if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization) {
+                    return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                }
+                if ($checkResourceCollectionExistsOrNot->organization_id != $organization->id) {
+                    return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+                }
+                if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
+                TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userData->id);
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -102,15 +126,19 @@ class ResourceCollectionController extends AppBaseController
     public function update($slug, UpdateResourceCollectionRequest $request)
     {
         try {
-            $checkOrganizationExistsOrNot = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-            if ($checkOrganizationExistsOrNot == false) {
-                return $this->sendError(__('responses.organization_not_found'), 422);
-            }
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceCollectionExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionExistsOrNot->media);
@@ -121,13 +149,15 @@ class ResourceCollectionController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
-            $updateResourceCollection = $this->resourceCollectionRepository->updateResourceCollection($slug, $request, $upload_cover_image);
+            $updateResourceCollection = $this->resourceCollectionRepository->updateResourceCollection($slug, $request, $upload_cover_image, $organization->id);
             if ($updateResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($updateResourceCollection), __('responses.resource_collection_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -137,7 +167,7 @@ class ResourceCollectionController extends AppBaseController
         $userData = auth()->user();
         $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
         if (!$organization) {
-            return $this->sendError(__('responses.organization_not_found'), 404);
+            return $this->sendError(__('responses.selected_organization_not_found'), 404);
         }
         $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
 
@@ -164,7 +194,15 @@ class ResourceCollectionController extends AppBaseController
             if ($checkResourceCollectionExistsOrNot == false) {
                 return $this->sendError(__('responses.resource_collection_slug_not_found'), 404);
             }
-            if ($checkResourceCollectionExistsOrNot->is_accessible === '0') {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkResourceCollectionExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+            if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
             $responseCollectionDelete = $this->resourceCollectionRepository->deleteResourceCollection($checkResourceCollectionExistsOrNot->id);
@@ -174,6 +212,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -181,9 +221,10 @@ class ResourceCollectionController extends AppBaseController
     public function getList(Request $request)
     {
         try {
-            $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.organization_not_found'), 404);
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
             $resourceCollection = $this->resourceCollectionRepository->getListName($request, $organization);
 
@@ -193,6 +234,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

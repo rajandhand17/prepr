@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ResourceCollection;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
@@ -32,15 +33,17 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function createResourceCollection($request, $upload_cover_image)
+    public function createResourceCollection($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image);
+            $createResourceCollection = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
                 $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
@@ -61,6 +64,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -72,6 +76,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->uploadResourceCollectionCoverImage($cover_image);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +87,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionBasedOnSlug($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,15 +98,17 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->checkName($title);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function updateResourceCollection($slug, $request, $upload_cover_image)
+    public function updateResourceCollection($slug, $request, $upload_cover_image, $organizationId)
     {
         try {
-            $updateResourceCollection = DB::transaction(function () use ($slug, $request, $upload_cover_image) {
-                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image);
+            $updateResourceCollection = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
+                $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
                 $updateResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->updateCollectionModuleTagsGroups($request, $updateResourceCollection->id);
@@ -119,6 +129,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -128,6 +140,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getResourceCollectionList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -146,6 +160,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return  false;
         }
     }
@@ -155,6 +171,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         try {
             return $this->resourceCollectionService->getListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

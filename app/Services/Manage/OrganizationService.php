@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\FileUploadHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
 use App\Models\Organization;
@@ -22,6 +23,8 @@ class OrganizationService
 
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -73,6 +76,8 @@ class OrganizationService
 
             return $organization_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -82,6 +87,8 @@ class OrganizationService
         try {
             return Organization::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -96,6 +103,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +119,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -124,6 +135,8 @@ class OrganizationService
 
             return $profile_image_path;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +151,8 @@ class OrganizationService
 
             return $cover_image_path;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,6 +172,7 @@ class OrganizationService
             $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
             $organization->profile_image = $profile_image_path;
+            $organization->custom_url = $request->custom_url;
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
@@ -164,11 +180,14 @@ class OrganizationService
             $organization->total_employees = $request->total_employees;
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
+            $request->name = $request->title;
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
 
             DB::commit();
 
             return $organization;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -187,6 +206,7 @@ class OrganizationService
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
                 $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
                 $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
+                $organization->custom_url = ($request->has('custom_url')) ? $request->custom_url : $organization->custom_url;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
@@ -200,24 +220,28 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
         }
     }
 
-    public static function deleteOrganization($organizationId, $language = 'en')
+    public static function deleteOrganization($organizationData, $request)
     {
         try {
-            $organization = Organization::find($organizationId)->delete();
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
+            $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
-                event(new DeleteOrganizationAssociatedData($organizationId));
+                event(new DeleteOrganizationAssociatedData($organizationData->id));
 
                 return true;
             }
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -232,6 +256,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -246,6 +272,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -260,6 +288,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -274,6 +304,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -287,6 +319,8 @@ class OrganizationService
 
             return $organization_list->take(config('site-settings.dropdown_listing_limit'))->pluck('title', 'uuid');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -377,6 +411,8 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -386,6 +422,8 @@ class OrganizationService
         try {
             return Organization::where('user_id', $userId)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -399,6 +437,8 @@ class OrganizationService
 
             return $getOrganizationAcceptedMembersBasedOnIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -411,6 +451,8 @@ class OrganizationService
 
             return $getOrganizationAcceptedManagerMembersBasedOnIds;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -515,6 +557,72 @@ class OrganizationService
                 'manager_count'                 => $getManagerCount->count(),
             ];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function planData($organizationData)
+    {
+        try {
+            $checkLocalEntry = ChargebeeHelper::createChargebeePlanDetails($organizationData->id);
+            if ($checkLocalEntry) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return true;
+        }
+    }
+
+    public function organizationOnboarding($organizationId, $request)
+    {
+        try {
+            DB::beginTransaction();
+            $organization = Organization::find($organizationId);
+            if ($organization != null) {
+                $organization->website = ($request->has('website')) ? $request->website : $organization->website;
+                $organization->category = ($request->has('category')) ? $request->category : $organization->category;
+                $organization->total_employees = ($request->has('total_employees')) ? $request->total_employees : $organization->total_employees;
+                $organization->business_challenge_tacklings = ($request->has('business_challenge_tacklings')) ? $request->business_challenge_tacklings : $organization->business_challenge_tacklings;
+                $organization->is_onboarding_completed = '1';
+                $organization->save();
+                DB::commit();
+
+                return $organization;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityId($communityId)
+    {
+        try {
+            return Organization::where('magnet_community_id', $communityId)->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getOrganizationBasedOnCommunityIds($communityIds)
+    {
+        try {
+            return Organization::whereIn('magnet_community_id', $communityIds)->get();
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

@@ -24,6 +24,8 @@ class ChallengeTemplateService
 
             return $challenge_template_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -32,7 +34,7 @@ class ChallengeTemplateService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_template_list = $challenge_template_list->where('challenge_templates.title', 'like', '%'.$request->search.'%');
+                $challenge_template_list = $challenge_template_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {
@@ -57,18 +59,16 @@ class ChallengeTemplateService
 
             if ($request->has('status') && !empty($request->status)) {
                 $getChallengeRedeemedIds = LabChallengeRedeem::where(['organization_id' => $request->organization_id, 'is_redeemed' => '1'])->whereNotNull('challenge_id')->pluck('challenge_template_id');
-                if (!empty($getChallengeRedeemedIds)) {
-                    switch ($request->status) {
-                        case 'redeemed':
-                            $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
-                            break;
-                        case 'not_redeemed':
-                            $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
-                            break;
-                        default:
-                            $challenge_template_list = $challenge_template_list;
-                            break;
-                    }
+                switch ($request->status) {
+                    case 'redeemed':
+                        $challenge_template_list = $challenge_template_list->whereIn('id', $getChallengeRedeemedIds);
+                        break;
+                    case 'not_redeemed':
+                        $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
+                        break;
+                    default:
+                        $challenge_template_list = $challenge_template_list;
+                        break;
                 }
             }
 
@@ -82,8 +82,8 @@ class ChallengeTemplateService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_template_list = $challenge_template_list->whereIn('challenge_templates.id', function ($query) use ($request) {
                     $query->select('challenge_template_skills_groups_stacks.challenge_template_id')
-                    ->from('challenge_template_skills_groups_stacks')
-                    ->whereIn('challenge_template_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('challenge_template_skills_groups_stacks')
+                        ->whereIn('challenge_template_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('challenge_template_skills_groups_stacks.type', '0')
                         ->whereNull('challenge_template_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -92,6 +92,8 @@ class ChallengeTemplateService
 
             return $challenge_template_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +112,7 @@ class ChallengeTemplateService
             $templateChallenge->category_id = $originalChallenge->category_id;
             $templateChallenge->duration_id = $originalChallenge->duration_id;
             $templateChallenge->level_id = $originalChallenge->level_id;
+            $templateChallenge->description_type = $originalChallenge->description_type;
             $templateChallenge->description = $originalChallenge->description;
             $templateChallenge->privacy = $originalChallenge->privacy;
             $templateChallenge->media_type = $originalChallenge->media_type;
@@ -125,6 +128,8 @@ class ChallengeTemplateService
 
             return $templateChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +139,8 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +155,8 @@ class ChallengeTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,15 +198,18 @@ class ChallengeTemplateService
             $newChallenge->project_privacy = $challengeTemplateData->project_privacy;
             $newChallenge->is_open = $challengeTemplateData->is_open;
             $newChallenge->is_auto_created = $challengeTemplateData->is_auto_created;
+            $newChallenge->allow_winner_change = '0';
             $newChallenge->save();
 
             return $newChallenge;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function deleteChallengeTemplate($slug, $challengeTemplateId)
+    public static function deleteChallengeTemplate($slug, $challengeTemplateId)
     {
         try {
             $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();
@@ -209,6 +221,8 @@ class ChallengeTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -218,6 +232,8 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('uuid', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -227,6 +243,8 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -265,6 +283,8 @@ class ChallengeTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -303,6 +323,29 @@ class ChallengeTemplateService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function deleteOrganizationChallengeTemplate($organizationId)
+    {
+        try {
+            $fetchOrganizationChallengeTemplates = ChallengeTemplate::where('organization_id', $organizationId)->get();
+            if (!empty($fetchOrganizationChallengeTemplates)) {
+                foreach ($fetchOrganizationChallengeTemplates as $organizationChallengeTemplate) {
+                    $deleteOrganizationChallengeTemplate = self::deleteChallengeTemplate($organizationChallengeTemplate->slug, $organizationChallengeTemplate->id);
+                    if (!$deleteOrganizationChallengeTemplate) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

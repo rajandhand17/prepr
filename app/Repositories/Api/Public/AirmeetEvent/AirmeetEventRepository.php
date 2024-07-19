@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\AirmeetEvent;
 
+use App\Helpers\UtilityHelper;
 use App\Models\AirmeetEvent;
 use App\Services\Public\AirmeetEventService;
 
@@ -25,6 +26,8 @@ class AirmeetEventRepository implements AirmeetEventInterface
         try {
             return $this->airmeetEventService->getMeetUrl($event, $data);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

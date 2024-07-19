@@ -22,15 +22,25 @@ interface OrganizationInterface
 
     public function createOrganizationMembers($request, $organization_id);
 
+    public function createOrganizationExternalLinks($request, $organizationId);
+
     public function updateOrganization($request, $cover_images_path, $profile_images_path, $slug);
 
     public function updatesOrganizationAddress($request, $organization_id);
 
-    public function updatesOrganizationMembers($organization_address, $organization_id);
+    public function updatesOrganizationMembers($request, $organization_id);
 
-    public function deleteOrganization($organizationId, $language);
+    public function updateOrganizationExternalLinks($request, $organizationId);
+
+    public function deleteOrganization($organizationData, $request);
 
     public function checkSlug($slug);
 
     public function getOrganizationListOnlyNameAndUuid($request);
+
+    public function selectPlan($organization, $request);
+
+    public function planData($organizationData);
+
+    public function updateOrganizationCustomLoginRegistration($request, $organizationData);
 }

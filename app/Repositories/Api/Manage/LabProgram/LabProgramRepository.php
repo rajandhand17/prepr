@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\LabProgram;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabProgramAchievementsService;
 use App\Services\Manage\LabProgramService;
@@ -36,6 +37,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getLabProgramCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +48,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getLabProgramList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +59,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getLabProgramBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,15 +70,17 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->uploadLabProgramMedia($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function createLabProgram($request, $upload_media, $upload_achievement_image)
+    public function createLabProgram($request, $upload_media, $upload_achievement_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image) {
-                $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media);
+            $createLabProgram = DB::transaction(function () use ($request, $upload_media, $upload_achievement_image, $organizationId) {
+                $createdLabProgram = $this->labProgramService->createLabProgram($request, $upload_media, $organizationId);
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->createLabProgramSkillsGroupsStack($request, $createdLabProgram->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $labProgramAchievement = $this->labProgramAchievementService->createLabProgramAchievement($request, $createdLabProgram->id, $upload_achievement_image);
@@ -95,17 +104,18 @@ class LabProgramRepository implements LabProgramInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
         }
     }
 
-    public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image)
+    public function updateLabProgram($slug, $request, $upload_media, $upload_achievement_image, $organizationId)
     {
         try {
-            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image) {
-                $updateLabProgram = $this->labProgramService->updateLabProgram($slug, $request, $upload_media);
+            $createLabProgram = DB::transaction(function () use ($slug, $request, $upload_media, $upload_achievement_image, $organizationId) {
+                $updateLabProgram = $this->labProgramService->updateLabProgram($slug, $request, $upload_media, $organizationId);
                 if ($request->is_achievement_enabled == 'yes') {
                     $labProgramAchievement = $this->labProgramAchievementService->updateLabProgramAchievement($request, $updateLabProgram->id, $upload_achievement_image);
                 }
@@ -129,6 +139,8 @@ class LabProgramRepository implements LabProgramInterface
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -140,6 +152,8 @@ class LabProgramRepository implements LabProgramInterface
 
             return $checkLabProgramSlug;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +163,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->delete($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,6 +174,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->checkNameExistsOrNot($title);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -167,6 +185,8 @@ class LabProgramRepository implements LabProgramInterface
         try {
             return $this->labProgramService->getLabProgramListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

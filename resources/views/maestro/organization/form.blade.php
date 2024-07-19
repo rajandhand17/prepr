@@ -65,7 +65,7 @@
 
                                     <div class="col-sm-3 col-xs-3">
                                         <a href="{{asset('uploads/organisation').'/'.$data->cover_image}}">
-                                            <img src='{{asset($data->cover_image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}';" width='50px'>
+                                            <img src='{{asset($data->cover_image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}';" width='50px'>
 
                                         </a>
 
@@ -110,7 +110,7 @@
 
                                     <div class="col-sm-3 col-xs-3">
                                         <a href="{{asset('uploads/organisation').'/'.$data->profile_image}}">
-                                            <img src='{{asset($data->profile_image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}';" width='50px'>
+                                            <img src='{{asset($data->profile_image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}';" width='50px'>
 
                                         </a>
 
@@ -348,7 +348,7 @@
                     @if(!empty($peoples))
                         <div class="col-sm-3 col-xs-3">
                             <a href="{{asset('uploads/organisation').'/'.$peoples->image}}">
-                                <img src='{{asset($peoples->image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.maestro_cdn_url').'public/front/img/no-img.jpg')}}';" width='50px'>
+                                <img src='{{asset($peoples->image)}}' onerror="this.onerror=null;this.src='{{config(('site-settings.aws_url').'public/front/img/no-img.jpg')}}';" width='50px'>
 
                             </a>
                         </div>

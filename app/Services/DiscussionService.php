@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Discussion;
 use DB;
 
@@ -23,6 +25,8 @@ class DiscussionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +48,8 @@ class DiscussionService
 
             return $getComments;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,10 +78,16 @@ class DiscussionService
             $addComment->attachment = $attachmentPath;
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
             $addComment->save();
+            $comment_data = [
+                'comment'           => $request->comment,
+                'user_commented_on' => $component,
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.user_comment'), $comment_data, auth()->user(), request()->ip());
             DB::commit();
 
             return $addComment;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -93,6 +105,8 @@ class DiscussionService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +121,8 @@ class DiscussionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

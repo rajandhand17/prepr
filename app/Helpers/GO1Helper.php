@@ -6,6 +6,7 @@ use App\Services\Manage\GO1AccessTokenService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\UserResourceProgressTrackingService;
 use App\Services\Manage\WebhookMetadataService;
+use App\Services\Public\ResourceModuleDetailService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -18,6 +19,8 @@ class GO1Helper
         try {
             return config('go1.go1_auth_url');
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -27,6 +30,8 @@ class GO1Helper
         try {
             return config('go1.go1_base_url').'/'.config('go1.go1_api_version');
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -43,6 +48,8 @@ class GO1Helper
 
             return time() > json_decode($decodedPayload)->exp;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -76,6 +83,8 @@ class GO1Helper
 
             return $existingToken;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -97,6 +106,8 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -140,6 +151,8 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -159,6 +172,8 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -178,6 +193,8 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -218,6 +235,8 @@ class GO1Helper
 
             return $response->json();
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -229,6 +248,8 @@ class GO1Helper
 
             return isset($requestQuery['page']) ? (int) $requestQuery['page'] : 1;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -270,6 +291,7 @@ class GO1Helper
 
             return $finalQueryParams;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in prepareGO1Query in GO1Helper.php: '.$e->getMessage());
 
             return false;
@@ -285,6 +307,8 @@ class GO1Helper
 
             return $url;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -296,6 +320,8 @@ class GO1Helper
 
             return $appUrl.'/api/v1/go1/webhook';
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -305,6 +331,8 @@ class GO1Helper
         try {
             return !empty($url) && filter_var($url, FILTER_VALIDATE_URL);
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -338,10 +366,24 @@ class GO1Helper
                 return false;
             }
 
+            // Tracking completion status in resource module visit
+            if ($data->completion_status === 'completed') {
+                $userId = $data->user_id;
+                $resourceModuleId = $data->resource_module_id;
+                $assetId = $data->id;
+                $assetType = '8';
+                $checkResourceModuleAssetVisit = ResourceModuleDetailService::checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                if ($checkResourceModuleAssetVisit === false) {
+                    $addResourceModuleAssetVisit = ResourceModuleDetailService::addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
+                }
+            }
+
             WebhookMetadataService::create($type, $payload, $parentData['id']);
 
             return true;
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

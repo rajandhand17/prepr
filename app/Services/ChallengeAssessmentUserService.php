@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeAssessmentUser;
 use Exception;
@@ -36,6 +37,8 @@ class ChallengeAssessmentUserService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +64,8 @@ class ChallengeAssessmentUserService
 
             return $challenge_assessment_criteria;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,8 +76,10 @@ class ChallengeAssessmentUserService
             $project_assessment = null;
             $assessment_status = 'pending';
             $assessment_over_all_comment = null;
+            $assessment_attachment = null;
 
             if ($projectData->getProjectAssessment) {
+                $assessment_attachment = $projectData->getProjectAssessment->attachments;
                 $project_assessment = $projectData->getProjectAssessment->getAssessmentCriterias->map(function ($criteria) use ($projectData, $userId) {
                     $criteriaData = ChallengeAssessmentUserService::getcriteriaDataBasedOnId($criteria, $projectData->id, $userId);
 
@@ -114,11 +121,14 @@ class ChallengeAssessmentUserService
             }
 
             return [
+                'assessment_attachments'        => $assessment_attachment,
                 'assessment_status'             => $assessment_status,
                 'assessment_over_all_comment'   => $assessment_over_all_comment,
                 'assessment_scoring_data'       => $project_assessment,
             ];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -133,6 +143,8 @@ class ChallengeAssessmentUserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -149,6 +161,8 @@ class ChallengeAssessmentUserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

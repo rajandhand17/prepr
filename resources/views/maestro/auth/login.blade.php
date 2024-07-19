@@ -12,11 +12,11 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/fontawesome-free/css/all.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/plugins/fontawesome-free/css/all.min.css'}}">
   <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/icheck-bootstrap/icheck-bootstrap.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/plugins/icheck-bootstrap/icheck-bootstrap.min.css'}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/css/adminlte.min.css'}}">
+  <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/dist/css/adminlte.min.css'}}">
 </head>
 
 <body class="hold-transition login-page">
@@ -24,21 +24,21 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="{{ route('login') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}"> </img> </a>
+        <a href="{{ route('login') }}" class="h1"><img src="{{config('site-settings.aws_url').'public/front/img/logoNew.png'}}"> </img> </a>
       </div>
       <div class="card-body">
         <p class="login-box-msg">Sign in to Prepr Network</p>
 
         <form method="POST" action="{{ route('login') }}">
           @csrf
-          <div class="input-group mb-3">
-            <input id="email" type="email" placeholder="Email Address" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-            @error('email')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
+          @if (session('error'))
+              <span class="errorblock" style="padding: 10px 1px 10px 1px;color: red;">
+                  {{ session('error') }}
               </span>
-            @enderror
+          @endif
+
+          <div class="input-group mb-3" style="padding-top: 10px;">
+            <input id="email" type="email" placeholder="Email Address" class="form-control"  name="email" value="{{ old('email') }}" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -47,13 +47,7 @@
             </div>
           </div>
           <div class="input-group mb-3">
-            <input id="password" type="password" placeholder="Email Password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-            @error('password')
-              <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-              </span>
-            @enderror
+            <input id="password" type="password" placeholder="Email Password" class="form-control" name="password" required>
 
             <div class="input-group-append">
               <div class="input-group-text">
@@ -86,13 +80,23 @@
   <!-- /.login-box -->
 
   <!-- jQuery -->
-  <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/jquery/jquery.min.js'}}"></script>
+  <script src="{{config('site-settings.aws_url').'public/maestro/plugins/jquery/jquery.min.js'}}"></script>
   <!-- Bootstrap 4 -->
   <script
-    src="{{config('site-settings.maestro_cdn_url').'public/maestro/plugins/bootstrap/js/bootstrap.bundle.min.js'}}">
+    src="{{config('site-settings.aws_url').'public/maestro/plugins/bootstrap/js/bootstrap.bundle.min.js'}}">
   </script>
   <!-- AdminLTE App -->
-  <script src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
+  <script src="{{config('site-settings.aws_url').'public/maestro/dist/js/adminlte.min.js'}}"></script>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+  @if(Session::has('success'))
+      toastr.success("{{ Session::get('success') }}");
+  @endif
 
+  @if(Session::has('error'))
+      toastr.error("{{ Session::get('error') }}");
+  @endif
+</script>
 </html>
