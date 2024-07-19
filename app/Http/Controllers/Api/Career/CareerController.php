@@ -69,7 +69,6 @@ class CareerController extends AppBaseController
     {
         try {
             $checkJobsExistsOrNot = $this->careerRepository->getJobsDetails($request->job_ids);
-            dd($checkJobsExistsOrNot);
             if ($checkJobsExistsOrNot == null) {
                 return $this->sendError(__('responses.job_not_exists'));
             }
