@@ -2,11 +2,9 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\Category;
 use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
+use App\Models\Category;
 use Exception;
-
 
 class CategoryService
 {
@@ -83,7 +81,7 @@ class CategoryService
             $languages = LanguageService::getAllActiveLanguages();
             if (!empty($languages)) {
                 foreach ($languages as $single) {
-                    $columName = UtilityHelper::getColumName($single->iso,'title');
+                    $columName = UtilityHelper::getColumName($single->iso, 'title');
                     $category->$columName = $request->$columName;
                 }
             }
@@ -95,13 +93,11 @@ class CategoryService
 
             $category->components = $componentString;
             if ($category->save()) {
-
                 return true;
             }
 
             return false;
         } catch (Exception $e) {
-
             return false;
         }
     }

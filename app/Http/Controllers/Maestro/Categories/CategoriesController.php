@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Maestro\Categories;
 
-use App\Http\Controllers\Controller;
-use App\Traits\Maestro\Category\CategoryTrait;
-use App\Services\Maestro\LanguageService;
-use App\Services\Maestro\CategoryService;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Services\Maestro\CategoryService;
+use App\Services\Maestro\LanguageService;
+use App\Traits\Maestro\Category\CategoryTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Http\Request;
-use App\Models\Category;
-use Exception;
 
 class CategoriesController extends Controller
 {
@@ -41,15 +41,15 @@ class CategoriesController extends Controller
             $tableColumns = [
                 ['data' => 'id', 'name' => 'id', 'title' => 'Id'],
             ];
-            if($languages) {
+            if ($languages) {
                 foreach ($languages as $single) {
-                    $columName = UtilityHelper::getColumName($single->iso,'title');
+                    $columName = UtilityHelper::getColumName($single->iso, 'title');
                     $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Category Name'];
                     array_push($tableColumns, $singleLangCol);
                 }
             }
             array_push($tableColumns, ['data' => 'components', 'name' => 'components', 'title' => 'Components', 'width' => '10%']);
-            array_push($tableColumns, ['data' => 'child', 'name' => 'child', 'title' => 'Sub Category Name','orderable' => false, 'searchable' => false,'width' => '15%']);
+            array_push($tableColumns, ['data' => 'child', 'name' => 'child', 'title' => 'Sub Category Name', 'orderable' => false, 'searchable' => false, 'width' => '15%']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
             $module_name = 'Category';
