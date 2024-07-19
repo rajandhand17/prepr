@@ -307,9 +307,9 @@ class ChallengeService
             $challenge->slug = $slug;
             $challenge->user_id = auth()->user()->id;
             $challenge->organization_id = $organizationId;
-            $challenge->category_id = $request->category_id;
-            $challenge->duration_id = $request->duration_id;
-            $challenge->level_id = $request->level_id;
+            $challenge->category_id = $request->category_id ?? null;
+            $challenge->duration_id = $request->duration_id ?? null;
+            $challenge->level_id = $request->level_id ?? null;
             $challenge->title = $request->title;
             $challenge->description_type = $description_type;
             $challenge->description = ($description_type == '0') ? ($request->description ?? null) : null;

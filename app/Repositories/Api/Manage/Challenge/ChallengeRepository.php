@@ -171,6 +171,10 @@ class ChallengeRepository implements ChallengeInterface
                     );
                 }
 
+                if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception('Failed to create challenge');
+                }
+
                 return [
                     'createChallenge'                     => $createChallenge,
                     'updateChallengeDescription'          => $updateChallengeDescription,
@@ -210,12 +214,10 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectOpportunity'] &&
                 $createChallenge['campusConnectStory']
             ) {
-                DB::commit();
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
 
                 return $createChallenge['createChallenge'];
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
@@ -403,6 +405,10 @@ class ChallengeRepository implements ChallengeInterface
                     );
                 }
 
+                if (!$updateChallenge || !$updateChallengeDescription || !$updateChallengeTypeMode || !$updateChallengeAchievement || !$updateChallengeSponsor || !$updateChallengeJobs || !$updateChallengeSkillsGroupsStack || !$updateChallengeRequirement || !$updateChallengeAssessmentCriteria || !$updateChallengeAssessment || !$updateChallengeProjectTemplate || !$updateChallengeTimelines || !$updateChallengeCustomTimelines || !$updateChallengeExternalLinks || !$updateChallengeAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception("Failed to update challenge");
+                }
+
                 return [
                     'updateChallenge'                   => $updateChallenge,
                     'updateChallengeDescription'        => $updateChallengeDescription,
@@ -443,12 +449,10 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                DB::commit();
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
 
                 return $updateChallenge['updateChallenge'];
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
