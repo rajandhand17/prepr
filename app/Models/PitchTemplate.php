@@ -14,7 +14,7 @@ class PitchTemplate extends Model
     protected $table = 'pitch_templates';
     protected $fillable = [
         'title',
-        'challenge_id',
+        'fr_CA_title',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
