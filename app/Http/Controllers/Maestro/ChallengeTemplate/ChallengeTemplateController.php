@@ -7,8 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\User\UserService;
 use App\Services\Maestro\ChallengeTemplateService;
+use App\Services\Maestro\User\UserService;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -20,11 +20,11 @@ class ChallengeTemplateController extends Controller
     protected $challengeTemplateService;
     protected $challengeService;
 
-    public function __construct(ChallengeTemplateService $challengeTemplateService,ChallengeService $challengeService)
+    public function __construct(ChallengeTemplateService $challengeTemplateService, ChallengeService $challengeService)
     {
         $this->middleware('web');
-        $this->challengeTemplateService=$challengeTemplateService;
-        $this->challengeService=$challengeService;
+        $this->challengeTemplateService = $challengeTemplateService;
+        $this->challengeService = $challengeService;
     }
 
     public function index(Builder $builder, Request $request)
@@ -37,39 +37,39 @@ class ChallengeTemplateController extends Controller
                         ->editColumn('status', static function (ChallengeTemplate $challengeTemplateInfo) {
                             switch ($challengeTemplateInfo->status) {
                                 case '0':
-                                $html = "<span class='badge badge-success'>Draft</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>Draft</span>";
+                                    break;
                                 case '1':
-                                $html = "<span class='badge badge-success'>Published</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>Published</span>";
+                                    break;
                                 case '2':
-                                $html = "<span class='badge badge-success'>Archive</span>";
-                                break;
+                                    $html = "<span class='badge badge-success'>Archive</span>";
+                                    break;
                             }
 
                             return $html;
                         })->editColumn('privacy', static function (ChallengeTemplate $challengeTemplateInfo) {
                             switch ($challengeTemplateInfo->privacy) {
                                 case '0':
-                                $html = 'Public';
-                                break;
+                                    $html = 'Public';
+                                    break;
                                 case '1':
-                                $html = 'Private';
-                                break;
+                                    $html = 'Private';
+                                    break;
                             }
 
                             return $html;
                         })->editColumn('status', static function (ChallengeTemplate $challengeTemplateInfo) {
                             switch ($challengeTemplateInfo->is_open) {
                                 case '0':
-                                $status = 'Open';
-                                break;
+                                    $status = 'Open';
+                                    break;
                                 case '1':
-                                $status = 'Close';
-                                break;
+                                    $status = 'Close';
+                                    break;
                                 case '2':
-                                $status = 'Completed';
-                                break;
+                                    $status = 'Completed';
+                                    break;
                             }
 
                             return $status;
@@ -105,8 +105,8 @@ class ChallengeTemplateController extends Controller
     public function destroy(string $id)
     {
         try {
-            if(!$this->getChallengeTemplateById($id)){
-                return response()->json(['success' =>'false','message'=>'This challenge does not exists in the database.']);
+            if (!$this->getChallengeTemplateById($id)) {
+                return response()->json(['success' =>'false', 'message'=>'This challenge does not exists in the database.']);
             }
             if ($this->deleteChallengeTemplateById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Challenge Template deleted successfully']);
@@ -146,7 +146,7 @@ class ChallengeTemplateController extends Controller
             }
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

@@ -34,14 +34,16 @@ class ChallengeTemplateService
         try {
             $challengeTemplate = ChallengeTemplate::where('slug', $slug)->delete();
             if ($challengeTemplate) {
-               event(new DeleteChallengeTemplateAssociatedData($challengeTemplateId));
-               return true;
+                event(new DeleteChallengeTemplateAssociatedData($challengeTemplateId));
+
+                return true;
             }
+
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }

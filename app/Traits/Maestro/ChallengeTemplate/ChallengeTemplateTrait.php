@@ -3,8 +3,6 @@
 namespace App\Traits\Maestro\ChallengeTemplate;
 
 use App\Helpers\UtilityHelper;
-use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\ChallengeTemplateService;
 
 trait ChallengeTemplateTrait
 {
@@ -65,8 +63,7 @@ trait ChallengeTemplateTrait
     public function getCheckChallengeUuid()
     {
         try {
-
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
