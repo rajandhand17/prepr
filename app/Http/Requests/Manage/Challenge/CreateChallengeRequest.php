@@ -57,7 +57,7 @@ class CreateChallengeRequest extends FormRequest
             'jobs.*'                                => 'numeric|exists:job_titles,id',
             'external_links'                        => 'array|required_if:request_type,publish',
             'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
-            'external_links.*'                      => 'url',
+            'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
             'template_id'                           => 'required_if:template_type,existing|numeric|exists:pitch_templates,id',
