@@ -33,7 +33,7 @@
       </div>
       <!-- /.card-header -->
       <div class="card-body">
-        {!!Form::model($root,array('method'=>'PUT','route'=>array('category.update',$root->id)))!!}
+        {!!Form::model($parentCategory,array('method'=>'PUT','route'=>array('category.update',$parentCategory->id)))!!}
 
         <div class="row">
           <div class="col-md-12">
