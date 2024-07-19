@@ -73,7 +73,7 @@ class UpdateChallengeRequest extends FormRequest
             'complete_experience'                   => 'in:yes,no',
             'min_experience'                        => 'required_if:complete_experience,yes|numeric',
             'agreement'                             => 'required_if:request_type,publish',
-            'achievement_image'                     => 'required_if:request_type,publish|mimes:jpeg,jpg,png,webp|max:5120',
+            'achievement_image'                     => 'mimes:jpeg,jpg,png,webp|max:1024',
             'achievement_name'                      => 'required_if:request_type,publish|',
             'achievement_prize'                     => 'required_if:request_type,publish|numeric',
             'achievement_points'                    => 'required_if:request_type,publish|numeric',
@@ -213,8 +213,6 @@ class UpdateChallengeRequest extends FormRequest
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
             $base_rules['assessment_title'] = 'required|array';
             $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed';
-            $base_rules['assessment_description'] = 'required|array';
-            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
             $base_rules['assessment_score'] = 'required|array';
             $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed|numeric';
             $base_rules['assessment_weight'] = [
