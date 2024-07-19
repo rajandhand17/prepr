@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollectionTagsGroups;
 
 class ResourceCollectionTagsGroupsService
@@ -34,6 +35,8 @@ class ResourceCollectionTagsGroupsService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +89,8 @@ class ResourceCollectionTagsGroupsService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +108,8 @@ class ResourceCollectionTagsGroupsService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

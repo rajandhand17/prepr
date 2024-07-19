@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\ChallengePath;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\ChallengePathService;
 use App\Services\Public\ChallengePathSocialActivitiesService;
 use Exception;
@@ -22,6 +23,8 @@ class ChallengePathRepository implements ChallengePathInterface
         try {
             return $this->challengePathService->getList($request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -31,6 +34,8 @@ class ChallengePathRepository implements ChallengePathInterface
         try {
             return $this->challengePathService->getChallengePathBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +45,8 @@ class ChallengePathRepository implements ChallengePathInterface
         try {
             return $this->challengePathSocialActivitiesService->getColumnNameValue($action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +56,8 @@ class ChallengePathRepository implements ChallengePathInterface
         try {
             return $this->challengePathSocialActivitiesService->checkSocialActivity($challengePath, $column, $action);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +67,8 @@ class ChallengePathRepository implements ChallengePathInterface
         try {
             return $this->challengePathSocialActivitiesService->captureSocialActivity($challengePath, $column, $value);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

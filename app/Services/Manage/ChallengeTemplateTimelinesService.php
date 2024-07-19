@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTemplateTimeLine;
 use App\Models\ChallengeTimelines;
 use Exception;
@@ -17,12 +18,10 @@ class ChallengeTemplateTimelinesService
                     $challengeTemplateTimeline = new ChallengeTemplateTimeLine();
                     $challengeTemplateTimeline->challenge_template_id = $templateChallengeId;
                     $challengeTemplateTimeline->timeline_type = $challengeTimeline->timeline_type;
-                    $challengeTemplateTimeline->open_call_date = $challengeTimeline->open_call_date;
-                    $challengeTemplateTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;
-                    $challengeTemplateTimeline->last_call_date = $challengeTimeline->last_call_date;
-                    $challengeTemplateTimeline->last_call_date_description = $challengeTimeline->last_call_date_description;
-                    $challengeTemplateTimeline->application_deadline_date = $challengeTimeline->application_deadline_date;
-                    $challengeTemplateTimeline->application_deadline_date_description = $challengeTimeline->application_deadline_date_description;
+                    $challengeTemplateTimeline->start_date = $challengeTimeline->start_date;
+                    $challengeTemplateTimeline->start_date_description = $challengeTimeline->start_date_description;
+                    $challengeTemplateTimeline->registration_deadline_date = $challengeTimeline->registration_deadline_date;
+                    $challengeTemplateTimeline->registration_deadline_date_description = $challengeTimeline->registration_deadline_date_description;
                     $challengeTemplateTimeline->submission_deadline_date = $challengeTimeline->submission_deadline_date;
                     $challengeTemplateTimeline->submission_deadline_date_description = $challengeTimeline->submission_deadline_date_description;
                     $challengeTemplateTimeline->challenge_duration = $challengeTimeline->challenge_duration;
@@ -36,6 +35,8 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,12 +50,10 @@ class ChallengeTemplateTimelinesService
                     $newChallengeTimeline = new ChallengeTimelines();
                     $newChallengeTimeline->challenge_id = $redeemChallengeId;
                     $newChallengeTimeline->timeline_type = $challengeTimeline->timeline_type;
-                    $newChallengeTimeline->open_call_date = $challengeTimeline->open_call_date;
-                    $newChallengeTimeline->open_call_date_description = $challengeTimeline->open_call_date_description;
-                    $newChallengeTimeline->last_call_date = $challengeTimeline->last_call_date;
-                    $newChallengeTimeline->last_call_date_description = $challengeTimeline->last_call_date_description;
-                    $newChallengeTimeline->application_deadline_date = $challengeTimeline->application_deadline_date;
-                    $newChallengeTimeline->application_deadline_date_description = $challengeTimeline->application_deadline_date_description;
+                    $newChallengeTimeline->start_date = $challengeTimeline->start_date;
+                    $newChallengeTimeline->start_date_description = $challengeTimeline->start_date_description;
+                    $newChallengeTimeline->registration_deadline_date = $challengeTimeline->registration_deadline_date;
+                    $newChallengeTimeline->registration_deadline_date_description = $challengeTimeline->registration_deadline_date_description;
                     $newChallengeTimeline->submission_deadline_date = $challengeTimeline->submission_deadline_date;
                     $newChallengeTimeline->submission_deadline_date_description = $challengeTimeline->submission_deadline_date_description;
                     $newChallengeTimeline->challenge_duration = $challengeTimeline->challenge_duration;
@@ -68,6 +67,8 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +86,8 @@ class ChallengeTemplateTimelinesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

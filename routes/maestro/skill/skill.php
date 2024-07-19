@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Maestro\Skill\SkillController;
-use App\Http\Controllers\Maestro\Skill\SkillStackController;
 use App\Http\Controllers\Maestro\Skill\SkillGroupController;
+use App\Http\Controllers\Maestro\Skill\SkillStackController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {

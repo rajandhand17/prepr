@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,8 @@ class SkillGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +70,8 @@ class SkillGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -1,5 +1,5 @@
 <!-- Brand Logo -->
-  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.maestro_cdn_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
+  <a href="{{ route('dashboard.index') }}" class="h1"><img src="{{config('site-settings.aws_url').'public/front/img/logoNew.png'}}" style="padding-left: 38px;!important"> </img> </a>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -7,7 +7,7 @@
     @if (auth()->check())
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{config('site-settings.maestro_cdn_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
+        <img src="{{config('site-settings.aws_url').'public/maestro/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
           <a href="{{ route('dashboard.index') }}" class="d-block">{{ Auth::user()->name ?? Ucfirst(Auth::user()->first_name).' '.Ucfirst(Auth::user()->last_name) }}</a>
@@ -17,7 +17,7 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <li class="nav-item menu-open">
+        <li class="nav-item {{ request()->segment(2) == 'dashboard' ? 'menu-open' : '' }}">
           <a href="#" class="nav-link {{ request()->segment(2) == 'dashboard' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
@@ -35,8 +35,8 @@
           </ul>
         </li>
 
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'challenge' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'ranks' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'role' || request()->segment(2) == 'category' || request()->segment(2) == 'sponsors' || request()->segment(2) == 'social-links' || request()->segment(2) == 'ranks' ? 'active' : '' }}">
             <i class="nav-icon fas fa-chart-pie"></i>
             <p>
               Master
@@ -76,8 +76,8 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tree"></i>
             <p>
               Component
@@ -113,6 +113,12 @@
               <a href="{{ route('resource-module.index') }}" class="nav-link {{ Route::currentRouteName() == 'resource-module.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Resource Module</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('pre-built-achievement.index') }}" class="nav-link {{ Route::currentRouteName() == 'pre-built-achievement.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pre built Achievement</p>
               </a>
             </li>
           </ul>
@@ -161,25 +167,27 @@
                 <p>Tag</p>
               </a>
             </li>
-           
+
             <li class="nav-item">
               <a href="{{ route('taggroup.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tag Groups</p>
               </a>
             </li>
-    
+
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical'|| request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-status'  ? 'active' : '' }}">
-            <i class="nav-icon fas fa-edit"></i>
+
+
+        <li class="nav-item {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-pitch-template' || request()->segment(2) == 'projects-submission-requirement' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-pitch-template' || request()->segment(2) == 'projects-submission-requirement' ? 'active' : '' }}">
+            <i class="nav-icon fas fa-tree"></i>
             <p>
               Project Management
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview" style="display: none;">
+          <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
@@ -222,8 +230,70 @@
                 <p>Pitch Templates</p>
               </a>
             </li>
+            <li class="nav-item">
+              <a href="{{ route('projects-submission-requirement.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-submission-requirement.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Submission Requirement</p>
+              </a>
+            </li>
           </ul>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'trophyawards.index' ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Trophy Awards</p>
+          </a>
+        </li>
+          <li class="nav-item">
+              <a href="{{ route('clone-lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'clone-lab.index' ? 'active' : '' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Clone Lab</p>
+              </a>
+          </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-edit"></i>
+            <p>
+              Activity Awards
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: none;">
+            <li class="nav-item">
+              <a href="{{ route('communitytrophy.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Regular Awards</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a href="{{ route('skillsaward.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Skill Awards</p>
+              </a>
+            </li>
+
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('emailTemplates.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailTemplates.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Email Templates</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('explore.index')}} " class="nav-link {{ Route::currentRouteName() == 'explore.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Explore Page</p>
+          </a>
+        </li>
+        <li class="nav-item"> 
+          <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Email Logs</p>
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

@@ -6,7 +6,6 @@ use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillStack;
 use Exception;
-use Illuminate\Support\Facades\Hash;
 
 class SkillStackService
 {
@@ -23,6 +22,7 @@ class SkillStackService
             return false;
         }
     }
+
     public static function updateSkillStackById($id, $request)
     {
         try {
@@ -55,20 +55,21 @@ class SkillStackService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
-                    $columName2 = $columName . '_description';
+                    $columName1 = $columName.'_title';
+                    $columName2 = $columName.'_description';
                 }
                 $stack->$columName1 = $request->$columName1;
                 $stack->$columName2 = $request->$columName2;
             }
             $stack->skills = $request->stack_skills;
             $stack->save();
-           
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deleteSkillStackById($id)
     {
         try {
@@ -76,22 +77,23 @@ class SkillStackService
             if (!empty($skillStack)) {
                 return $skillStack->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function createSkillStack($request)
     {
         try {
             if (!empty($request->title)) {
                 $input = $request->all();
-                
-               
+
                 if (SkillStack::where('title', $request->title)->count() > 0) {
                     return redirect()->route('skillstack.index')->with(['error' => 'Stack title already exists']);
                 }
-                $stack = new SkillStack;
+                $stack = new SkillStack();
 
                 $languages = Language::where('status', 1)->get();
 
@@ -107,15 +109,15 @@ class SkillStackService
                         if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                             $columName = str_replace('-', '_', $columName);
                         }
-                        $columName1 = $columName . '_title';
-                        $columName2 = $columName . '_description';
+                        $columName1 = $columName.'_title';
+                        $columName2 = $columName.'_description';
                     }
                     $stack->$columName1 = $request->$columName1;
                     $stack->$columName2 = $request->$columName2;
                 }
                 $stack->skills = $request->stack_skills;
                 $stack->save();
-               
+
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack added successfully');
             }
 
@@ -124,6 +126,7 @@ class SkillStackService
             return redirect()->route('skillstack.index')->with(['error' => $e->getMessage()]);
         }
     }
+
     public static function getSkills()
     {
         try {

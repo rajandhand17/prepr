@@ -2,21 +2,23 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge as ModelChallenge;
 use App\Models\ChallengeAchievement;
 use App\Models\ChallengeAssessment;
 use App\Models\ChallengeAssessmentCriteria;
 use App\Models\ChallengeCustomTimelines;
+use App\Models\ChallengeFlexibleAnnouncement;
 use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
-use App\Models\ChallengeTagsGroups;
 use App\Models\ChallengeTimelines;
 use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
+use App\Models\Scorm;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -70,6 +72,12 @@ class Challenge extends Command
                                 $category = $checkCategory->id;
                             }
                         }
+                    }
+
+                    $descriptionType = config('constants.description_type.text');
+                    $checkScrom = DB::connection('mysql2')->table('scorm')->where(['resource_id' => $challenge->id,  'resource_type' => 'App\Models\Challange'])->whereNotNull('resource_type')->first();
+                    if ($checkScrom) {
+                        $descriptionType = config('constants.description_type.scorm');
                     }
 
                     $checkChallenge = ModelChallenge::find($challenge->id);
@@ -191,7 +199,8 @@ class Challenge extends Command
                     $newChallenge->level_id = '1';
                     $newChallenge->slug = $challenge->slug;
                     $newChallenge->title = $challenge->title;
-                    $newChallenge->description = $challenge->description;
+                    $newChallenge->description_type = $descriptionType;
+                    $newChallenge->description = ($descriptionType == '1') ? null : $challenge->description;
                     $newChallenge->privacy = $challengePrivacy;
                     $newChallenge->media_type = $mediaType;
                     $newChallenge->media = $challenge->cover_image;
@@ -206,6 +215,18 @@ class Challenge extends Command
                     $newChallenge->is_accessible = $challenge->is_accessable;
                     $newChallenge->save();
 
+                    if ($checkScrom) {
+                        $newScorm = new Scorm();
+                        $newScorm->model_type = ModelChallenge::class;
+                        $newScorm->model_id = $checkScrom->resource_id;
+                        $newScorm->title = $checkScrom->title;
+                        $newScorm->origin_file = $checkScrom->origin_file;
+                        $newScorm->version = $checkScrom->version;
+                        $newScorm->uuid = $checkScrom->uuid;
+                        $newScorm->identifier = $checkScrom->identifier;
+                        $newScorm->entry_url = $checkScrom->entry_url;
+                        $newScorm->save();
+                    }
                     // For Challenge Host/Sponser
                     $arrayHost = json_decode($challenge->host_id, true);
                     if (!empty($arrayHost)) {
@@ -260,19 +281,6 @@ class Challenge extends Command
                             $challengeSkillGroup->foreign_id = $skillGroup;
                             $challengeSkillGroup->type = '1';
                             $challengeSkillGroup->save();
-                        }
-                    }
-
-                    // For Challenge Tag
-                    $arrayTags = json_decode($challenge->challange_tag, true);
-                    if (!empty($arrayTags)) {
-                        ChallengeTagsGroups::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
-                        foreach (array_filter($arrayTags) as $tag) {
-                            $challengeTag = new ChallengeTagsGroups();
-                            $challengeTag->challenge_id = $challenge->id;
-                            $challengeTag->foreign_id = $tag;
-                            $challengeTag->type = '0';
-                            $challengeTag->save();
                         }
                     }
 
@@ -456,11 +464,6 @@ class Challenge extends Command
                     if ($checkChallengeCustomTimelines->isNotEmpty()) {
                         ChallengeCustomTimelines::where('challenge_id', $challenge->id)->delete();
                         foreach ($checkChallengeCustomTimelines as $checkChallengeCustomTimeline) {
-                            $custom_date = null;
-                            if ($checkChallengeCustomTimeline->date != null) {
-                                $custom_date = date('Y-m-d H:i:s', strtotime($checkChallengeCustomTimeline->date));
-                            }
-
                             switch ($checkChallengeCustomTimeline->scheduleAnnouncement) {
                                 case 'yes':
                                     $challengeScheduleNotify = '1';
@@ -484,17 +487,50 @@ class Challenge extends Command
                                     $challengeDateDuration = 'months';
                                     break;
                                 default:
-                                    $challengeDateDuration = 'days';
+                                    $challengeDateDuration = 'weeks';
                                     break;
                             }
                             $challengeCustomTimeline = new ChallengeCustomTimelines();
                             $challengeCustomTimeline->challenge_id = $checkChallengeCustomTimeline->challenge_id;
                             $challengeCustomTimeline->custom_timelines_title = $checkChallengeCustomTimeline->title;
-                            $challengeCustomTimeline->custom_timelines_date = $custom_date;
+                            $challengeCustomTimeline->custom_timelines_number = '2';
                             $challengeCustomTimeline->custom_timelines_description = $checkChallengeCustomTimeline->description;
                             $challengeCustomTimeline->custom_timelines_duration = $challengeDateDuration;
                             $challengeCustomTimeline->schedule_custom_notify = $challengeScheduleNotify;
                             $challengeCustomTimeline->save();
+
+                            $checkFlexibleAnnouncements = DB::connection('mysql2')->table('flexible_announcement')->where('customDateId', $checkChallengeCustomTimeline->id)->get();
+                            if (!empty($checkFlexibleAnnouncements)) {
+                                foreach ($checkFlexibleAnnouncements as $flexibleAnnouncement) {
+                                    $challengeFlexibleAnnouncement = ChallengeFlexibleAnnouncement::where('challenge_custom_timeline_id', $flexibleAnnouncement->customDateId)->first();
+                                    if ($challengeFlexibleAnnouncement) {
+                                        $oldChallengeRequirement = $challengeFlexibleAnnouncement;
+                                    } else {
+                                        $oldChallengeRequirement = new ChallengeFlexibleAnnouncement();
+                                    }
+
+                                    if ($flexibleAnnouncement->sent_status == 'email') {
+                                        $challengeFlexibleAnnouncementType = '0';
+                                    } else {
+                                        $challengeFlexibleAnnouncementType = '1';
+                                    }
+
+                                    if ($flexibleAnnouncement->schedule_status == 'immediately') {
+                                        $custom_announcement_schedule_status = '0';
+                                    } elseif ($flexibleAnnouncement->schedule_status == 'custome') {
+                                        $custom_announcement_schedule_status = '1';
+                                    }
+
+                                    $oldChallengeRequirement->challenge_id = $flexibleAnnouncement->challenge_id;
+                                    $oldChallengeRequirement->challenge_custom_timeline_id = (int) $flexibleAnnouncement->customDateId;
+                                    $oldChallengeRequirement->custom_announcement_type = $challengeFlexibleAnnouncementType ?? null;
+                                    $oldChallengeRequirement->custom_announcement_number = $flexibleAnnouncement->announcementNumber ?? null;
+                                    $oldChallengeRequirement->custom_announcement_title = $flexibleAnnouncement->title ?? null;
+                                    $oldChallengeRequirement->custom_announcement_description = $flexibleAnnouncement->body ?? null;
+                                    $oldChallengeRequirement->custom_announcement_schedule_status = $custom_announcement_schedule_status;
+                                    $oldChallengeRequirement->save();
+                                }
+                            }
                         }
                     }
 
@@ -543,12 +579,10 @@ class Challenge extends Command
 
                     $challengeTimelines->challenge_id = $challenge->id;
                     $challengeTimelines->timeline_type = $challengeTimelineType;
-                    $challengeTimelines->open_call_date = date('Y-m-d H:i:s', strtotime($challenge->call_date));
-                    $challengeTimelines->open_call_date_description = $challenge->call_date_desc ?? 'Start of Challenge';
-                    $challengeTimelines->last_call_date = date('Y-m-d H:i:s', strtotime($challenge->last_registration_date));
-                    $challengeTimelines->last_call_date_description = $challenge->last_registration_date_desc ?? 'Last day of registration';
-                    $challengeTimelines->application_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->application_deadline));
-                    $challengeTimelines->application_deadline_date_description = $challenge->application_dateline_desc ?? 'Last day of application deadline';
+                    $challengeTimelines->start_date = date('Y-m-d H:i:s', strtotime($challenge->call_date));
+                    $challengeTimelines->start_date_description = $challenge->call_date_desc ?? 'Start of Challenge';
+                    $challengeTimelines->registration_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->application_deadline));
+                    $challengeTimelines->registration_deadline_date_description = $challenge->application_dateline_desc ?? 'Last day of registration deadline';
                     $challengeTimelines->submission_deadline_date = date('Y-m-d H:i:s', strtotime($challenge->deadline));
                     $challengeTimelines->submission_deadline_date_description = $challenge->submission_deadline_date_desc ?? 'Last date of Challenge Submissioon';
                     $challengeTimelines->challenge_duration = ($challenge->length != null) ? $challenge->length : $challenge_duration;
@@ -565,6 +599,7 @@ class Challenge extends Command
 
             return;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

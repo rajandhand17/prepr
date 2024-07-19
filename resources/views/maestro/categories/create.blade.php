@@ -77,7 +77,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                           {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                          {!! Form::text($inputName,null, ['class' => 'form-control']) !!}
+                                          {!! Form::text($inputName,null, ['class' => 'form-control','required' => 'required']) !!}
                                       </div>
                                     </div>
                                 @endforeach
@@ -87,7 +87,7 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>component</label>
-                                <select name="components[]" class="select2" multiple="multiple" data-placeholder="Select component" style="width: 100%;">
+                                <select name="components[]" class="select2" multiple="multiple" data-placeholder="Select component" style="width: 100%;" required>
                                       <option value="lab" selected>Lab</option>
                                       <option value="challenge" selected>Challenge</option>
                                       <option value="project" selected>Project</option>

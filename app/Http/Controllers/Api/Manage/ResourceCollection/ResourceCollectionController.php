@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
@@ -53,6 +55,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -67,6 +71,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_slug_available'), 200);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -81,6 +87,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 200);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -90,6 +98,7 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -101,12 +110,15 @@ class ResourceCollectionController extends AppBaseController
                 if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
+                TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userData->id);
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -144,6 +156,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -198,6 +212,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -218,6 +234,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

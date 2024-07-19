@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -105,9 +106,12 @@ class User extends Command
                     $user->user_rank = $single_user->rank;
                     $user->achievement_count = $single_user->achievement_count;
                     $user->remember_token = $single_user->remember_token;
+                    $user->display_lab_mini_onboarding = ($single_user->display_lab_minionboarding == '1') ? '0' : '1';
+                    $user->display_challenge_mini_onboarding = ($single_user->display_challenge_minionboarding == '1') ? '0' : '1';
+                    $user->display_organization_mini_onboarding = ($single_user->display_org_minionboarding == '1') ? '0' : '1';
                     $user->created_at = Carbon::createFromTimestamp($single_user->created_at);
                     $user->verified_user = $verified;
-                    $user->is_profile_completed = '1';
+                    $user->is_profile_completed = ($single_user->is_profile_completed == 'no') ? '0' : '1';
                     $user->save();
 
                     $user->attachRole('user');
@@ -117,6 +121,7 @@ class User extends Command
             DB::commit();
             $this->info('Migrating of old data for users table completed.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

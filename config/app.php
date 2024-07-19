@@ -242,16 +242,21 @@ return [
         App\Repositories\Api\Public\ResourceGroup\ResourceGroupServiceProvider::class,
         App\Repositories\Api\Public\Achievement\AchievementServiceProvider::class,
         App\Repositories\Api\Setting\SettingServiceProvider::class,
+        App\Repositories\Api\StartPage\StartPageServiceProvider::class,
         App\Repositories\Api\Public\Skill\SkillServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormServiceProvider::class,
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
         App\Repositories\Api\Public\AirmeetEvent\AirmeetEventServiceProvider::class,
+        App\Repositories\Api\Public\AdvanceSearch\AdvanceSearchServiceProvider::class,
 
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
 
         /* Campus Connect */
         App\Repositories\Api\Manage\CampusConnect\CampusConnectServiceProvider::class,
+
+        /*Mixpanel */
+        App\Providers\MixpanelServiceProvider::class,
     ],
 
     /*
@@ -267,8 +272,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-        'PDF'   => Barryvdh\DomPDF\Facade::class,
+        'Image'      => Intervention\Image\Facades\Image::class,
+        'PDF'        => Barryvdh\DomPDF\Facade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
 
     ])->toArray(),

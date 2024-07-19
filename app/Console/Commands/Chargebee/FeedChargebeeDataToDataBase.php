@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Chargebee;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChargebeeSubscription;
 use App\Models\Organization;
 use Exception;
@@ -45,6 +46,7 @@ class FeedChargebeeDataToDataBase extends Command
 
             return;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

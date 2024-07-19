@@ -27,6 +27,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.5",
         "league/flysystem-aws-s3-v3": "^3.12",
+        "mixpanel/mixpanel-php": "^2.11",
         "predis/predis": "^2.0",
         "pusher/pusher-php-server": "^7.2",
         "santigarcor/laratrust": "^7.2",
@@ -69,6 +70,13 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+
+        "post-install-cmd": [
+            "@php -r \"if (!extension_loaded('pcntl')) { echo 'Warning: pcntl extension is not loaded. Laravel Horizon may not function properly.\n'; }\""
+        ],
+        "post-update-cmd": [
+            "@php -r \"if (!extension_loaded('pcntl')) { echo 'Warning: pcntl extension is not loaded. Laravel Horizon may not function properly.\n'; }\""
         ]
     },
     "extra": {

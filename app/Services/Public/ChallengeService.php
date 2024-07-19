@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
@@ -21,6 +22,8 @@ class ChallengeService
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,7 +32,7 @@ class ChallengeService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challenge_list = $challenge_list->where('challenges.title', 'like', '%'.$request->search.'%');
+                $challenge_list = $challenge_list->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -80,8 +83,8 @@ class ChallengeService
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_skills_groups_stacks.challenge_id')
-                    ->from('challenge_skills_groups_stacks')
-                    ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
+                        ->from('challenge_skills_groups_stacks')
+                        ->whereIn('challenge_skills_groups_stacks.foreign_id', $request->skills)
                         ->where('challenge_skills_groups_stacks.type', '0')
                         ->whereNull('challenge_skills_groups_stacks.deleted_at')
                         ->distinct();
@@ -90,8 +93,8 @@ class ChallengeService
             if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_tags_groups.challenge_id')
-                    ->from('challenge_tags_groups')
-                    ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
+                        ->from('challenge_tags_groups')
+                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
                         ->where('challenge_tags_groups.type', '0')
                         ->whereNull('challenge_tags_groups.deleted_at')
                         ->distinct();
@@ -108,7 +111,7 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                        ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -134,6 +137,8 @@ class ChallengeService
 
             return $challenge_list;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +148,8 @@ class ChallengeService
         try {
             return Challenge::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,12 +164,27 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1');
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1')
+                ->whereHas('challenge_timelines', function ($query) {
+                    $query->where(function ($q) {
+                        $q->where('timeline_type', '1')
+                            ->where('start_date', '<', now())
+                            ->where(function ($subQuery) {
+                                $subQuery->whereNotNull('registration_deadline_date')
+                                    ->where('registration_deadline_date', '>', now())
+                                    ->orWhereNull('registration_deadline_date');
+                            });
+                    })->orWhere(function ($q) {
+                        $q->where('timeline_type', '0');
+                    });
+                });
             $challenge_list = self::filterChallengeList($request, $challenge_list);
             $limit = config('site-settings.listing_limit');
 
             return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -172,6 +194,8 @@ class ChallengeService
         try {
             return Challenge::where('UUID', $uuid)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -224,6 +248,8 @@ class ChallengeService
 
             return $challenge_conditions;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -233,6 +259,8 @@ class ChallengeService
         try {
             return Challenge::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -244,6 +272,8 @@ class ChallengeService
 
             return $fetchChallengeOrganizations;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -254,21 +284,36 @@ class ChallengeService
             $templateData = [];
             if ($templateId == '0') {
                 $templateData = [
-                    'template_id'       => $templateId,
-                    'template_title'    => __('responses.any_pitch_template'),
+                    'template_id'    => $templateId,
+                    'template_title' => __('responses.any_pitch_template'),
                 ];
             } else {
                 $template = PitchTemplate::where('id', $templateId)->first();
                 if ($template) {
                     $templateData = [
-                        'template_id'       => $template->id,
-                        'template_title'    => $template->title,
+                        'template_id'    => $template->id,
+                        'template_title' => $template->title,
                     ];
                 }
             }
 
             return $templateData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengeBasedOnArrayIds($challengeIds)
+    {
+        try {
+            $challenges = Challenge::whereIn('id', $challengeIds)->where('is_accessible', '1')->get();
+
+            return $challenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

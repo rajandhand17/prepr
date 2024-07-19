@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage\Scorm;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Scorm;
 use App\Services\Manage\Scorm\Utils\ScormArchiver;
 use App\Services\Public\Scorm\ScormUserTokenService;
@@ -61,6 +62,7 @@ class ScormService
                 return false;
             }
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;
@@ -91,6 +93,7 @@ class ScormService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;

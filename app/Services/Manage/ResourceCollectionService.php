@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceCollection;
 use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use Exception;
@@ -21,6 +19,8 @@ class ResourceCollectionService
 
             return $resourceCollection_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,7 +29,7 @@ class ResourceCollectionService
     {
         try {
             $status = config('constants.resource_collection_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_collection_status.publish');
                     break;
@@ -70,6 +70,8 @@ class ResourceCollectionService
 
             return $resourceCollection;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +86,8 @@ class ResourceCollectionService
 
             return $upload_resource_collection_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +97,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +108,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select('id')->where('title', $title)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -114,7 +122,7 @@ class ResourceCollectionService
                 $status = $resourceCollection->status;
                 $privacy = $resourceCollection->privacy;
                 $is_accessible = $resourceCollection->is_accessible;
-                switch($request->status) {
+                switch ($request->status) {
                     case 'publish':
                         $status = config('constants.resource_collection_status.publish');
                         break;
@@ -153,6 +161,8 @@ class ResourceCollectionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -165,6 +175,8 @@ class ResourceCollectionService
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,7 +185,7 @@ class ResourceCollectionService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
+                $resourceCollectionList = $resourceCollectionList->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -236,17 +248,11 @@ class ResourceCollectionService
                         ->distinct();
                 })->distinct('resource_collections.uuid');
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.level', $level);
-                }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('level', $request->level_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('duration', $request->duration_id);
             }
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');
@@ -271,6 +277,8 @@ class ResourceCollectionService
 
             return $resourceCollectionList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -287,6 +295,8 @@ class ResourceCollectionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -301,6 +311,8 @@ class ResourceCollectionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -310,6 +322,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select('title', 'uuid', 'media', 'description', 'slug')->where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -319,6 +333,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -333,6 +349,8 @@ class ResourceCollectionService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -345,6 +363,8 @@ class ResourceCollectionService
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -354,6 +374,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -363,6 +385,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::select()->whereIn('id', $ids)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -382,6 +406,8 @@ class ResourceCollectionService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

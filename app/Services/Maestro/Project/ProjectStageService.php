@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro\Project;
 
-use App\Models\ProjectStage;
 use App\Models\Language;
+use App\Models\ProjectStage;
 use Exception;
 
 class ProjectStageService
@@ -21,6 +21,7 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function getProjectStage()
     {
         try {
@@ -29,6 +30,7 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function getProjectStageStatus()
     {
         try {
@@ -37,12 +39,13 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function storeUpdateProjectStage($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $projectStage = new ProjectStage;
+                $projectStage = new ProjectStage();
             } else {
                 $projectStage = ProjectStage::find($id);
             }
@@ -58,7 +61,7 @@ class ProjectStageService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
                 $projectStage->$columName = $request->$columName;
             }
@@ -67,11 +70,13 @@ class ProjectStageService
             if ($projectStage->save()) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function findProjectStage($id)
     {
         try {
@@ -80,6 +85,7 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function deleteProjectStage($projectStage)
     {
         try {

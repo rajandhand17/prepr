@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Manage\ResourceGroup;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
@@ -62,6 +64,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.resource_group_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -82,12 +86,17 @@ class ResourceGroupController extends AppBaseController
                 if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
+                $userId = $userData->id;
+                TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -102,6 +111,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_group_slug_available'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -131,6 +142,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.resource_group_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -145,6 +158,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_group_name_available'), 200);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -190,6 +205,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -218,6 +235,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -237,6 +256,8 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendResponse($getResourceGroupListName, __('responses.found_resource_group_list'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

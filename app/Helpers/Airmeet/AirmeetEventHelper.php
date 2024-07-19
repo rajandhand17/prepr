@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Airmeet;
 
+use App\Helpers\UtilityHelper;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 
@@ -19,6 +20,8 @@ class AirmeetEventHelper extends AirmeetBaseHelper
 
             return self::get($url);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -52,6 +55,8 @@ class AirmeetEventHelper extends AirmeetBaseHelper
 
             return data_get($eventJoinDetails, 'entryLink');
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

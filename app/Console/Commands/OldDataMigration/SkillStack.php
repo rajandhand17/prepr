@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\SkillStack as SkillStacks;
 use DB;
 use Illuminate\Console\Command;
@@ -76,6 +77,7 @@ class SkillStack extends Command
             DB::rollback();
             $this->error('No skill stack found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

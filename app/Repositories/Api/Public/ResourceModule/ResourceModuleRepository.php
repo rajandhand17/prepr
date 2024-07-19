@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Public\ResourceModule;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\ResourceModuleDetailService;
 use App\Services\Public\ResourceModuleRatingService;
 use App\Services\Public\ResourceModuleService;
@@ -27,6 +28,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleService->getResourceModuleList($request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +39,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return  $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +50,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleRatingService->addRating($resource_module_id, $request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -54,6 +61,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleSocialActivitiesService->getColumnNameValue($action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +72,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleSocialActivitiesService->checkSocialActivity($resource_module_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +83,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleSocialActivitiesService->captureSocialActivity($resource_module_id, $column, $action);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +94,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailService->checkResourceModuleAsset($resourceModuleId, $assetId);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +105,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailService->checkResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +116,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailService->addResourceModuleAssetVisit($userId, $resourceModuleId, $assetId, $assetType);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Public\LabProgram;
 
+use App\Helpers\TrackUserProgressHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
@@ -35,6 +37,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -47,12 +51,18 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
+                }
 
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
             }
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -82,6 +92,8 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

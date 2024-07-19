@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\Career;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Career\AddJobPinnedRequest;
+use App\Http\Requests\Career\AddJobsRequest;
+use App\Http\Requests\Career\AddMultipleJobsRequest;
 use App\Http\Resources\Career\AddJobResource;
 use App\Http\Resources\Career\CareerResource;
 use App\Http\Resources\Career\JobDetailedResource;
@@ -26,17 +29,19 @@ class CareerController extends AppBaseController
             if ($getJobs) {
                 return $this->sendResponse(
                     CareerResource::collection($getJobs),
-                    __('response.job_listing_successfully')
+                    __('responses.job_listing_successfully')
                 );
             }
 
-            return $this->sendResponse([], __('response.job_listing_successfully'));
+            return $this->sendResponse([], __('responses.job_listing_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function addJobs(Request $request)
+    public function addJobs(AddJobsRequest $request)
     {
         try {
             $checkJobsExistsOrNot = $this->careerRepository->getJobDetails($request->job_id);
@@ -54,14 +59,17 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.added_jobs_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function addMultipleJobs(Request $request)
+    public function addMultipleJobs(AddMultipleJobsRequest $request)
     {
         try {
             $checkJobsExistsOrNot = $this->careerRepository->getJobsDetails($request->job_ids);
+            dd($checkJobsExistsOrNot);
             if ($checkJobsExistsOrNot == null) {
                 return $this->sendError(__('responses.job_not_exists'));
             }
@@ -72,6 +80,8 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.added_jobs_successfully'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -88,6 +98,8 @@ class CareerController extends AppBaseController
 
             return $this->sendError(__('responses.pinned_job_failed'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -104,6 +116,8 @@ class CareerController extends AppBaseController
                 return  $this->sendResponse([], __('responses.delete_job_successfully'));
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -127,6 +141,8 @@ class CareerController extends AppBaseController
 
             return $this->sendResponse([], __('responses.related_career_successfully'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -141,6 +157,8 @@ class CareerController extends AppBaseController
 
             return $this->sendError(__('responses.job_not_exists'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

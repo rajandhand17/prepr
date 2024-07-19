@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
@@ -47,7 +46,7 @@ class LoginController extends Controller
         if (auth()->check()) {
             return redirect()->route('dashboard.index');
         }
-        
+
         return view('maestro.auth.login');
     }
 
@@ -55,17 +54,16 @@ class LoginController extends Controller
     {
         $input = $request->all();
         $validation_array = [
-            'email' => 'required|max:255',
+            'email'    => 'required|max:255',
             'password' => 'required',
         ];
-        
+
         $validation = Validator::make($request->all(), $validation_array);
         if ($validation->fails()) {
-            return redirect()->route('login')->withErrors($validation)->withInput()->with('error', 'Sorry. ' . $validation->messages()->first());
+            return redirect()->route('login')->withErrors($validation)->withInput()->with('error', 'Sorry. '.$validation->messages()->first());
         }
-        
-        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
-        {
+
+        if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
             $user = Auth::guard('maestro')->user();
             if ($user && $user->hasRole('super_admin')) {
                 return redirect()->route('dashboard.index');
@@ -73,9 +71,10 @@ class LoginController extends Controller
                 return redirect()->route('login')->with('error', "You don't have login access.");
             }
         } else {
-            return redirect()->route('login')->with('error','Sorry , Entered email and password is wrong.');
-        } 
+            return redirect()->route('login')->with('error', 'Sorry , Entered email and password is wrong.');
+        }
     }
+
     public function logout(Request $request)
     {
         $this->guard()->logout();

@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Maestro\Challenges;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Challenge;
+use App\Traits\Maestro\Challenge\ChallengeTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Challenge\ChallengeTrait;
-use App\Models\Challenge;
-use App\Models\Organization;
-use Exception;
 
 class ChallengeController extends Controller
 {
     use ChallengeTrait;
+
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
+
     public function index(Builder $builder, Request $request)
     {
         try {
@@ -36,45 +37,49 @@ class ChallengeController extends Controller
                             return ' - ';
                         }
                     })
+
                     ->editColumn('status', static function (Challenge $challenges) {
                         if ($challenges->status == '0') {
-                            $html = "Draft";
-                        } else if ($challenges->status == '1') {
-                            $html = "Published";
-                        } else if ($challenges->status == '2') { 
-                            $html = "Archive";
+                            $html = "<span class='badge badge-info'>Draft</span>";
+                        } elseif ($challenges->status == '1') {
+                            $html = "<span class='badge badge-success'>Published</span>";
+                        } elseif ($challenges->status == '2') {
+                            $html = "<span class='badge badge-danger'>Archive</span>";
                         }
+
                         return $html;
                     })
                     ->editColumn('is_open', static function (Challenge $challenges) {
                         if ($challenges->is_open == '0') {
-                            $html = "Open";
-                        } else if ($challenges->is_open == '1') {
-                            $html = "Close";
-                        } else if ($challenges->is_open == '2') { 
-                            $html = "Completed";
+                            $html = "<span class='badge badge-info'>Open</span>";
+                        } elseif ($challenges->is_open == '1') {
+                            $html = "<span class='badge badge-danger'>Close</span>";
+                        } elseif ($challenges->is_open == '2') {
+                            $html = "<span class='badge badge-success'>Completed</span>";
                         }
+
                         return $html;
                     })
                     ->addColumn('action', static function (Challenge $challenges) {
-                        return '<a class="mr-10" href="' . route('challenge.edit', ['challenge' => $challenges->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\'' . route('challenge.destroy', ['challenge' => $challenges->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a class="mr-10" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['icon', 'action','DT_Row_Index'])
+                    ->rawColumns(['status', 'is_open', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
-                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false,'width' => '5%'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Challenge Title','width' => '65%'],
+                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Challenge Title', 'width' => '65%'],
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'is_open', 'name' => 'is_open', 'title' => 'Status','width' => '8%'],
-                ['data' => 'status', 'name' => 'status', 'title' => 'Published','width' => '8%'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false,'width' => '8%'],
+                ['data' => 'is_open', 'name' => 'is_open', 'title' => 'Status', 'width' => '8%'],
+                ['data' => 'status', 'name' => 'status', 'title' => 'Published', 'width' => '8%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '8%'],
             ])->parameters([
-                'order' => [[ 1, 'asc' ]]
+                'order' => [[1, 'asc']],
             ]);
+
             return view('maestro.challenge.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -85,12 +90,14 @@ class ChallengeController extends Controller
     {
         try {
             $languages = $this->getLanguage();
-            return view('maestro.challenge.create',compact('languages'));
+
+            return view('maestro.challenge.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
-     /**
+
+    /**
      * Show the form for creating a new resource.
      */
     public function show(Request $request, string $id)
@@ -98,7 +105,7 @@ class ChallengeController extends Controller
         try {
             return view('maestro.challenge.show');
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -111,13 +118,16 @@ class ChallengeController extends Controller
             DB::beginTransaction();
             if ($this->createChallenge($request)) {
                 DB::commit();
+
                 return redirect()->route('challenge.index')->with('success', 'Challenge created successfully');
             }
             DB::rollback();
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -128,14 +138,15 @@ class ChallengeController extends Controller
     {
         try {
             $challenge = $this->getChallengeById($id);
-            if(!$challenge->exists){
+            if (!$challenge->exists) {
                 return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
             }
             $languages = $this->getLanguage();
             $challengeAssociatedItems = $this->getChallengeAssociatedItemsById($challenge);
-            return view('maestro.challenge.edit',compact('languages','challenge','challengeAssociatedItems'));
+
+            return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems'));
         } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -146,15 +157,18 @@ class ChallengeController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateChallengeById($id,$request)) {
+            if ($this->updateChallengeById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('challenge.index')->with('success', 'Challenge Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('challenge.index')->with(['error' => 'Something want wrong']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong.']);
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -167,12 +181,52 @@ class ChallengeController extends Controller
             DB::beginTransaction();
             if ($this->deleteChallengeById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Challenge deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+
+            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+
+    /**
+     * Open challenge assessment edit page.
+     */
+    public function assessment(string $id)
+    {
+        try {
+            $challenge = $this->getChallengeById($id);
+            if (!$challenge->exists) {
+                return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
+            }
+            $assessment = $this->getAssessment($challenge->id);
+            $criteria = $this->getCriteria($challenge->id);
+
+            return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
+        } catch (Exception $e) {
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
+        }
+    }
+
+    public function assessmentStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            if ($this->storeUpdateAssessment($request)) {
+                DB::commit();
+
+                return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
+            }
+            DB::rollback();
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something want wrong']);
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return redirect()->route('challenge.index')->with(['error' => 'Something went wrong.']);
         }
     }
 }

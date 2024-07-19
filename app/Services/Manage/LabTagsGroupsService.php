@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabTagsGroups;
 
 class LabTagsGroupsService
@@ -82,6 +83,8 @@ class LabTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +102,8 @@ class LabTagsGroupsService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +122,21 @@ class LabTagsGroupsService
                     $getTags = $getTags->random();
                 }
             }
+
+            return $getTags;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getTagIdBasedOnLabId($labId)
+    {
+        try {
+            $getTags = LabTagsGroups::where('lab_id', $labId)
+                ->where('type', '0')
+                ->pluck('foreign_id');
 
             return $getTags;
         } catch (\Exception $e) {

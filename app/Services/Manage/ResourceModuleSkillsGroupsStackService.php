@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleSkillsGroupsStackService
@@ -114,6 +115,8 @@ class ResourceModuleSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +128,8 @@ class ResourceModuleSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -141,6 +146,22 @@ class ResourceModuleSkillsGroupsStackService
             }
 
             return $resourceSkillIds;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getSkillsBasedOnResourceModule($resourceModuleId)
+    {
+        try {
+            $data = ResourceModuleSkillsGroupsStack::where('type', '0')
+                ->where('resource_module_id', $resourceModuleId)
+                ->pluck('foreign_id')
+                ->unique();
+
+            return $data;
         } catch(\Exception $e) {
             return false;
         }

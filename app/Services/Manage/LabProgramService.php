@@ -18,6 +18,8 @@ class LabProgramService
 
             return $labProgram_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,7 +36,8 @@ class LabProgramService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                //$labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                $labProgramList = $labProgramList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
@@ -101,6 +104,8 @@ class LabProgramService
 
             return $labProgramList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +115,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -169,6 +176,8 @@ class LabProgramService
 
             return $labProgram;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -183,6 +192,8 @@ class LabProgramService
 
             return $upload_lab_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -192,6 +203,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -201,6 +214,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->delete();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -215,6 +230,8 @@ class LabProgramService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -268,6 +285,8 @@ class LabProgramService
 
             return $labProgram;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -281,6 +300,8 @@ class LabProgramService
 
             return $labProgramList->limit($limit)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -290,6 +311,8 @@ class LabProgramService
         try {
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -299,6 +322,8 @@ class LabProgramService
         try {
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -313,6 +338,8 @@ class LabProgramService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -332,6 +359,22 @@ class LabProgramService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getLabProgramTitleBasedOnUUIDArray($uuid)
+    {
+        try {
+            $labProgram = LabProgram::whereIn('uuid', $uuid)->pluck('title')->all();
+            if ($labProgram != null) {
+                return $labProgram;
+            }
+
+            return false;
+        } catch(\Exception $e) {
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
 
 class LabProgramService
@@ -14,6 +15,8 @@ class LabProgramService
 
             return $labProgramList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -22,7 +25,7 @@ class LabProgramService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                $labProgramList = $labProgramList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
@@ -93,6 +96,8 @@ class LabProgramService
 
             return $labProgramList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +107,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -111,6 +118,8 @@ class LabProgramService
         try {
             return LabProgram::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Helpers\MagnetHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -19,6 +20,7 @@ use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
 use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
+use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
 
@@ -106,6 +108,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -179,6 +183,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -334,6 +340,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -395,6 +403,8 @@ class AuthController extends AppBaseController
                 return $this->sendResponse([], __('responses.send_otp_success'), 200);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -456,6 +466,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -515,6 +527,8 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.unique_email'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -574,6 +588,8 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.already_registered_phone_number'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -644,6 +660,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -716,6 +734,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -778,6 +798,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -863,6 +885,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -935,6 +959,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -945,7 +971,7 @@ class AuthController extends AppBaseController
             $authorizationCode = $request->code;
             $token = MagnetHelper::getTokenFromMagnet($authorizationCode);
             if (!$token) {
-                return $this->sendError(__('response.unauthorized'), 400);
+                return $this->sendError(__('responses.unauthorized'), 400);
             }
 
             $magnetUser = MagnetHelper::getMagnetUser($token);
@@ -963,6 +989,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError($tokenResponse['message'], 401);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -992,6 +1020,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.email_field_required'), 402);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -1006,6 +1036,26 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function organizationCustomLoginRegistration($custom_url)
+    {
+        try {
+            $checkOrganizationCustomizationData = UtilityHelper::checkComponentSlugExistOrNot('organization', $custom_url);
+            if ($checkOrganizationCustomizationData) {
+                if ($checkOrganizationCustomizationData->customization_login_register) {
+                    return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
+                }
+            }
+
+            return $this->sendError(__('responses.not_found_organization_customization'), 404);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

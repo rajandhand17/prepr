@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceCollectionBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,6 +32,11 @@ class ResourceCollection extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function newEloquentBuilder($query): ResourceCollectionBuilder
+    {
+        return new ResourceCollectionBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -129,6 +135,15 @@ class ResourceCollection extends Model
     {
         if (auth('api')->check()) {
             return $this->hasOne(ResourceCollectionRating::class, 'resource_collection_id', 'id')->where('user_id', auth('api')->user()->id);
+        }
+
+        return 'N/A';
+    }
+
+    public function resource_collection_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '5']);
         }
 
         return 'N/A';

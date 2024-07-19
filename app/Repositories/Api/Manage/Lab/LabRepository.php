@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\Manage\AirmeetEventService;
@@ -12,6 +14,7 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
+use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
@@ -65,6 +68,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +79,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +90,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +101,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->uploadLabCoverImage($image);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -119,7 +130,6 @@ class LabRepository implements LabInterface
                         ]
                     );
                 }
-
                 $campusConnectOpportunity = true;
                 $campusConnectStory = true;
                 if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
@@ -170,6 +180,17 @@ class LabRepository implements LabInterface
                 $createdLab['campusConnectStory']
             ) {
                 DB::commit();
+                $groups_for_mixpanel = [];
+                if ($request->has('lab_programs') && !empty($request->lab_programs)) {
+                    $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
+                }
+                MixpanelHelper::mixpanel_tracking(
+                    config('mixpanel.create_lab'),
+                    $request,
+                    auth()->user(),
+                    $request->ip(),
+                    $groups_for_mixpanel
+                );
 
                 return $createdLab['createdLab'];
             }
@@ -177,6 +198,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -257,6 +279,17 @@ class LabRepository implements LabInterface
                 $updatedLab['campusConnectStory']
             ) {
                 DB::commit();
+                $groups_for_mixpanel = [];
+                if ($request->has('lab_programs') && !empty($request->lab_programs)) {
+                    $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
+                }
+                MixpanelHelper::mixpanel_tracking(
+                    config('mixpanel.edit_lab'),
+                    $request,
+                    auth()->user(),
+                    $request->ip(),
+                    $groups_for_mixpanel
+                );
 
                 return $updatedLab['updatedLab'];
             }
@@ -264,6 +297,8 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -272,17 +307,23 @@ class LabRepository implements LabInterface
     {
         try {
             DB::beginTransaction();
-
+            $lab = $this->labService->getLabBasedOnId($lab_id);
             $deleteLab = $this->labService->deleteLab($lab_id);
             if ($deleteLab == false) {
                 DB::rollBack();
 
                 return false;
             }
+            $lab->organization_id = OrganizationService::getOrganizationExistBasedOnId($lab->id);
+            // Mixpanel tracking code: delete lab
+            $lab->skills = LabSkillsGroupsStackService::getSkillsBasedOnLabId($lab->id);
+            $lab->tags = LabTagsGroupsService::getTagIdBasedOnLabId($lab->id);
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
             DB::commit();
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -294,6 +335,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -305,6 +348,8 @@ class LabRepository implements LabInterface
 
             return $labSlug;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -314,6 +359,8 @@ class LabRepository implements LabInterface
         try {
             return $this->labService->getLabListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +372,7 @@ class LabRepository implements LabInterface
 
             return $createLabUsingAIPreview;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview in LabRepository.php: '.$e->getMessage());
 
             return false;
@@ -350,6 +398,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
 
             return false;

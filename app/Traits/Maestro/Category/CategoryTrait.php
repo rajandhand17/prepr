@@ -2,23 +2,11 @@
 
 namespace App\Traits\Maestro\Category;
 
-use App\Services\Maestro\Category\CategoryService;
+use App\Services\Maestro\CategoryService;
 use Exception;
 
 trait CategoryTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = CategoryService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
     private function getCategories()
     {
         try {
@@ -26,11 +14,13 @@ trait CategoryTrait
             if ($categories) {
                 return $categories;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getCategoryById($id)
     {
         try {
@@ -38,11 +28,13 @@ trait CategoryTrait
             if ($category) {
                 return $category;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getComponentsById($category)
     {
         try {
@@ -50,11 +42,13 @@ trait CategoryTrait
             if ($components) {
                 return $components;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getFirstCategoryById($id)
     {
         try {
@@ -62,22 +56,26 @@ trait CategoryTrait
             if ($category) {
                 return $category;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdateCategory($request, $id, $moduleMode)
     {
         try {
             if (CategoryService::storeUpdateCategory($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function findCategory($id)
     {
         try {
@@ -85,22 +83,26 @@ trait CategoryTrait
             if ($category) {
                 return $category;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deleteCategory($category)
     {
         try {
             if (CategoryService::deleteCategory($category)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getSubCategoryById($id)
     {
         try {
@@ -108,18 +110,21 @@ trait CategoryTrait
             if ($subCategory) {
                 return $subCategory;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getCategory()
     {
         try {
-            $subCategory = CategoryService::getCategory();
-            if ($subCategory) {
-                return $subCategory;
+            $category = CategoryService::getCategory();
+            if ($category) {
+                return $category;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

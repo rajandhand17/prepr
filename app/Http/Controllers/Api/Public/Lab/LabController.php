@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Public\Lab;
 
+use App\Helpers\TrackUserProgressHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
@@ -45,6 +47,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -57,12 +61,18 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
+                }
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -92,6 +102,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -112,6 +124,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_labs_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -147,6 +161,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -176,6 +192,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -220,6 +238,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_get_live_event_url'), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -243,6 +263,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_send_live_event_invitation_link_to_members'), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -266,6 +288,8 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
         }
     }

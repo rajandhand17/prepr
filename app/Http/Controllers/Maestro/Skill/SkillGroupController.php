@@ -2,41 +2,40 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use App\Models\SkillStack;
-use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Traits\Maestro\Skill\SkillTrait;
-use App\Models\User;
 use App\Traits\Maestro\Skill\SkillGroupTrait;
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class SkillGroupController extends Controller
 {
     use SkillGroupTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder, Request $request)
     {
         try {
             $groups = SkillGroup::orderBy('id', 'DESC');
-        
+
             if (request()->ajax()) {
                 return DataTables::eloquent($groups)
                 ->addColumn('action', static function ($group) {
                     $html = '';
-                    $html .= '<a href="' . route('skillgroup.show', ['skillgroup' => $group->id]) . '" class="mr-25 showUser" data-id="' . $group->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="' . route('skillgroup.edit', ['skillgroup' =>  $group->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $group->id . '"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\'' . route('skillgroup.destroy', ['skillgroup' => $group->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skillgroup.show', ['skillgroup' => $group->id]).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skillgroup.edit', ['skillgroup' =>  $group->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skillgroup.destroy', ['skillgroup' => $group->id]).'\')"> <i class="fas fa-trash"></i></a>';
+
                     return $html;
                 })
                 ->editColumn('skill_stacks', static function ($group) {
@@ -49,6 +48,7 @@ class SkillGroupController extends Controller
                             return "Stack doesn't exist";
                         }
                     }
+
                     return implode(', ', $stack_names);
                 })
                 ->editColumn('skills', static function ($group) {
@@ -61,6 +61,7 @@ class SkillGroupController extends Controller
                             return "Skill doesn't exist";
                         }
                     }
+
                     return implode(', ', $group_skill_names);
                 })
                 ->toJson();
@@ -81,7 +82,7 @@ class SkillGroupController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
+                    $columName1 = $columName.'_title';
                     $columName2 = $columName.'_description';
                 }
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Group Title'];
@@ -93,12 +94,13 @@ class SkillGroupController extends Controller
             array_push($tableColumns, ['data' => 'skills', 'name' => 'skills', 'title' => 'Group Skills']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
 
-
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skillgroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
             dd($e);
+
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -116,6 +118,7 @@ class SkillGroupController extends Controller
             $stacks = SkillStack::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
             //dd($skills);
             $selectedStacks = [];
+
             return view('maestro.skillgroup.create', compact('languages', 'skills', 'selectedSkills', 'stacks', 'selectedStacks'));
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
@@ -131,12 +134,15 @@ class SkillGroupController extends Controller
             DB::beginTransaction();
             if ($this->createSkillGroup($request)) {
                 DB::commit();
+
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group created successfully');
             }
             DB::rollback();
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -147,17 +153,17 @@ class SkillGroupController extends Controller
     public function show(string $id)
     {
         try {
-           
             $skillgroup = $this->getSkillGroupById($id);
             $selectedSkills = [];
-            foreach ( $skillgroup->skills as $skill) {
+            foreach ($skillgroup->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
             $languages = Language::where('status', 1)->get();
-            if(!$skillgroup->exists){
+            if (!$skillgroup->exists) {
                 return redirect()->route('skillgroup.index')->with(['error' => 'Skill not found.']);
             }
-            return view('maestro.skillgroup.view', compact('skillgroup', 'languages','selectedSkills'));
+
+            return view('maestro.skillgroup.view', compact('skillgroup', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
@@ -171,10 +177,10 @@ class SkillGroupController extends Controller
         try {
             $data = SkillGroup::find($id);
             $selectedSkills = [];
-            foreach ( $data->skills as $skill) {
+            foreach ($data->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
-        
+
             foreach ($data->skill_stacks as $skill_stack) {
                 $selectedStacks[] = $skill_stack;
             }
@@ -183,6 +189,7 @@ class SkillGroupController extends Controller
             $skills = Skill::pluck('title', 'id');
             $stacks = SkillStack::pluck('title', 'id');
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.skillgroup.edit', compact('skills', 'selectedSkills', 'title', 'description', 'languages', 'data', 'selectedStacks', 'stacks'));
         } catch (Exception $e) {
             dd($e);
@@ -197,14 +204,17 @@ class SkillGroupController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateSkillGroupById($id,$request)) {
+            if ($this->updateSkillGroupById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -218,11 +228,13 @@ class SkillGroupController extends Controller
             DB::beginTransaction();
             if ($this->deleteSkillGroupById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

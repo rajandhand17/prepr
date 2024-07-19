@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
@@ -55,6 +56,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -150,6 +153,8 @@ class MemberManagementService
 
             return $componentCollectionObject;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +183,8 @@ class MemberManagementService
 
             return EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), $module_type, $request->language);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -225,6 +232,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -256,6 +265,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -281,6 +292,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -393,7 +406,7 @@ class MemberManagementService
                                     }
                                 }
                             }
-                            MemberManagement::create([
+                            $invitedMember = MemberManagement::create([
                                 'uuid'          => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                                 'type'          => $member['type'],
                                 'invite_type'   => $member['invite_type'],
@@ -409,6 +422,7 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
+                            MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                             if ($member['invite_type'] === 'join_request') {
@@ -491,6 +505,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -508,6 +523,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -529,13 +546,24 @@ class MemberManagementService
                     $module_type = null;
                     break;
             }
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
+            $member = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
+            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+            if ($module_type == '1') {
+                $lab = LabService::getLabBasedOnId($member->module_id);
+                $request->organization_id = $lab->organization_id;
+                $request->privacy = $lab->privacy;
+                $request->title = $lab->title;
+                $request->category = $lab->category_id;
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+            }
             if ($member_manger) {
                 return true;
             }
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -564,6 +592,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -598,10 +628,20 @@ class MemberManagementService
                 $member->invite_status = $invite_status;
                 $member->inviter_id = auth()->user()->id;
                 $member->save();
+                if ($invite_status == '1' && $component == 'lab') {
+                    $lab = LabService::getLabBasedOnId($member->module_id);
+                    $request->organization_id = $lab->organization_id;
+                    $request->privacy = $lab->privacy;
+                    $request->title = $lab->title;
+                    $request->category = $lab->category_id;
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.join_lab'), $request, auth()->user(), $request->ip());
+                }
             }
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -634,6 +674,7 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -658,6 +699,8 @@ class MemberManagementService
                 'email_status'
             )->where($filterData)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -677,6 +720,8 @@ class MemberManagementService
 
             return $requestedData;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -697,6 +742,8 @@ class MemberManagementService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -708,6 +755,8 @@ class MemberManagementService
 
             return $this->isUserBelongToPrepr($user);
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -724,6 +773,8 @@ class MemberManagementService
 
             return false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -749,6 +800,8 @@ class MemberManagementService
 
             return $mergedEmails;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -788,6 +841,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -803,6 +858,8 @@ class MemberManagementService
                     ->orWhere('role', '=', 'super_admin');
             })->pluck('email');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -833,7 +890,7 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -865,6 +922,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -880,6 +939,8 @@ class MemberManagementService
 
             return $memberManagement;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -889,6 +950,8 @@ class MemberManagementService
         try {
             return MemberManagement::query()->where('module_type', $moduleType)->where('email', $email)->get();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

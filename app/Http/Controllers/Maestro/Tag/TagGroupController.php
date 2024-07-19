@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Maestro\Tag;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
-use App\Models\Skill;
 use App\Models\Tag;
 use App\Models\TagGroup;
-use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
 use App\Traits\Maestro\Tag\TagGroupTrait;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class TagGroupController extends Controller
 {
     use TagGroupTrait;
+
     public function __construct()
     {
         $this->middleware('web');
     }
+
     public function index(Builder $builder, Request $request)
     {
         try {
@@ -30,9 +30,10 @@ class TagGroupController extends Controller
                 return DataTables::eloquent($tagGroup)
                 ->addColumn('action', static function ($tagGroup) {
                     $html = '';
-                    $html .= '<a href="' . route('taggroup.show', ['taggroup' => $tagGroup->id]) . '" class="mr-25 showUser" data-id="' . $tagGroup->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="' . route('taggroup.edit', ['taggroup' =>  $tagGroup->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $tagGroup->id . '"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteTagGroup(\'' . route('taggroup.destroy', ['taggroup' => $tagGroup->id]) . '\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('taggroup.show', ['taggroup' => $tagGroup->id]).'" class="mr-25 showUser" data-id="'.$tagGroup->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('taggroup.edit', ['taggroup' =>  $tagGroup->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$tagGroup->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteTagGroup(\''.route('taggroup.destroy', ['taggroup' => $tagGroup->id]).'\')"> <i class="fas fa-trash"></i></a>';
+
                     return $html;
                 })
                 ->editColumn('tags', static function ($tagGroup) {
@@ -45,6 +46,7 @@ class TagGroupController extends Controller
                             return "Tag doesn't exist";
                         }
                     }
+
                     return implode(', ', $tag_names);
                 })
                 ->toJson();
@@ -65,7 +67,7 @@ class TagGroupController extends Controller
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName1 = $columName . '_title';
+                    $columName1 = $columName.'_title';
                     $columName2 = $columName.'_description';
                 }
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Tag Group Title'];
@@ -76,12 +78,13 @@ class TagGroupController extends Controller
             array_push($tableColumns, ['data' => 'tags', 'name' => 'Tags', 'title' => 'Tags']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
 
-
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.tags.taggroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
             dd($e);
+
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -96,6 +99,7 @@ class TagGroupController extends Controller
             $tags = Tag::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
             //dd($skills);
             $selectedTags = [];
+
             return view('maestro.tags.taggroup.create', compact('languages', 'tags', 'selectedTags'));
         } catch (Exception $e) {
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
@@ -111,12 +115,15 @@ class TagGroupController extends Controller
             DB::beginTransaction();
             if ($this->createTagGroup($request)) {
                 DB::commit();
+
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group created successfully');
             }
             DB::rollback();
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -127,7 +134,6 @@ class TagGroupController extends Controller
     public function show(string $id)
     {
         try {
-           
             $taggroup = $this->getTagGroupById($id);
             $selectedTags = [];
             foreach ($taggroup->tags as $tag_name) {
@@ -139,10 +145,11 @@ class TagGroupController extends Controller
             }
             $selectedTags = implode(', ', $tag_names);
             $languages = Language::where('status', 1)->get();
-            if(!$taggroup->exists){
+            if (!$taggroup->exists) {
                 return redirect()->route('taggroup.index')->with(['error' => 'Skill not found.']);
             }
-            return view('maestro.tags.taggroup.view', compact('taggroup', 'languages','selectedTags'));
+
+            return view('maestro.tags.taggroup.view', compact('taggroup', 'languages', 'selectedTags'));
         } catch (Exception $e) {
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         }
@@ -156,14 +163,15 @@ class TagGroupController extends Controller
         try {
             $data = TagGroup::find($id);
             $selectedTags = [];
-            foreach ( $data->tags as $tags) {
+            foreach ($data->tags as $tags) {
                 $selectedTags[] = $tags;
             }
             $title = $data->title;
             $description = $data->description;
             $tags = Tag::pluck('title', 'id');
-         
+
             $languages = Language::where('status', 1)->get();
+
             return view('maestro.tags.taggroup.edit', compact('tags', 'selectedTags', 'title', 'description', 'languages', 'data'));
         } catch (Exception $e) {
             dd($e);
@@ -178,14 +186,17 @@ class TagGroupController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($this->updateTagGroupById($id,$request)) {
+            if ($this->updateTagGroupById($id, $request)) {
                 DB::commit();
+
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group Updated successfully');
             }
             DB::rollback();
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -199,11 +210,13 @@ class TagGroupController extends Controller
             DB::beginTransaction();
             if ($this->deleteTagGroupById($id)) {
                 DB::commit();
+
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
             DB::rollback();
         } catch (Exception $e) {
             DB::rollback();
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

@@ -2,7 +2,9 @@
 
 namespace App\Repositories\Api\Profile;
 
+use App\Helpers\MixpanelHelper;
 use App\Helpers\ResumeParserHelper;
+use App\Helpers\UtilityHelper;
 use App\Services\FriendService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
@@ -56,6 +58,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userService->getUserByUsername($user_name);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -76,6 +80,11 @@ class ProfileRepository implements ProfileInterface
             });
             if ($personalDetail['updateUser'] && $personalDetail['updatePersonalDetail'] && $personalDetail['updateAddress']) {
                 DB::commit();
+                $profile_data = [
+                    'type' => 'certificate',
+                    'info' => $request->all(),
+                ];
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
                 return $personalDetail['updateUser'];
             }
@@ -83,6 +92,7 @@ class ProfileRepository implements ProfileInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -94,6 +104,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userExperienceService->addExperience($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +115,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userExperienceService->deleteExperience($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +126,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userExperienceService->checkUserExperience($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -121,6 +137,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userEducationService->addEducation($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -130,6 +148,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userExperienceService->fileUpload($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -161,6 +181,7 @@ class ProfileRepository implements ProfileInterface
                 return false;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -172,6 +193,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userPersonalService->profileImageUpload($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -181,6 +204,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userEducationService->deleteEducation($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -190,6 +215,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userPatentsService->addPatent($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -199,6 +226,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userPatentsService->deleteUserPatent($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +237,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userPatentsService->checkUserPatent($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -217,6 +248,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userSkillsService->addSkills($request);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -226,6 +259,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userTagsService->addTags($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -235,6 +270,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userSkillsService->deleteProfileSkill($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -244,6 +281,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userTagsService->deleteProfileTag($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -253,6 +292,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userSkillsService->checkUserSkillExists($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -262,6 +303,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userTagsService->checkUserTagExists($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -271,6 +314,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userCertificatesService->addCertificate($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -280,6 +325,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userCertificatesService->deleteUserCertificate($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -289,6 +336,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userCertificatesService->checkUserCertificate($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -298,6 +347,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->userEducationService->checkUserEducation($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -307,6 +358,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->checkAction($action);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -316,6 +369,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getRecordsBasedOnId($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +380,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->friendRequestResponse($request, $value);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -334,6 +391,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->followRequestResponse($request, $value);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -343,6 +402,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->checkRequests($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -352,6 +413,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->checkFollowRequests($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -361,6 +424,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getFriendsListing();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -370,6 +435,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getFollowersListing();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -379,6 +446,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getFollowListing();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -388,6 +457,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getFriendRequestList();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -397,6 +468,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->getFollowersRequestList();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -406,6 +479,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->checkFriendsStatus($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -415,6 +490,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->removeFriend($request);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -424,6 +501,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->unfollowFriend($request, $column);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -433,6 +512,8 @@ class ProfileRepository implements ProfileInterface
         try {
             return $this->friendService->updateFriendsBasedOnAction($request, $column, $value);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

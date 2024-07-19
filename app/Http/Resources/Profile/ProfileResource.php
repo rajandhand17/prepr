@@ -182,7 +182,7 @@ class ProfileResource extends JsonResource
             'lab_count'              => $this->userLabs->count(),
             'achievements'           => $this->userAchievements->count(),
             'achievements_list'      => UserAchievementResource::collection($this->userAchievements),
-            'featured_achievement'   => UserAchievementResource::collection($this->userAchievements),
+            'featured_achievement'   => UserAchievementResource::collection($this->userFeaturedAchievements),
             'role'                   => 'user',
             'challenge_history'      => [],
             'project_history'        => [],

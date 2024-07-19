@@ -53,6 +53,7 @@ class LabResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
+        $module_progress = null;
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
@@ -155,7 +156,7 @@ class LabResource extends JsonResource
                         }
                     }
                 }
-                if (count($lab_programs) < 5) {
+                if (count($challenges) < 5) {
                     if ($lab_association->challenge_id) {
                         $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
                         if ($getChallenge !== null) {
@@ -198,8 +199,55 @@ class LabResource extends JsonResource
             }
         }
 
+        $type = 'na';
+
+        switch ($this->type) {
+            case '0':
+                $type = 'assess';
+                break;
+            case '1':
+                $type = 'onboard';
+                break;
+            case '2':
+                $type = 'engage';
+                break;
+            case '3':
+                $type = 'grow';
+                break;
+            default:
+                $type = 'na';
+                break;
+        }
+
+        if (auth('api')->check()) {
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->lab_completion_status) {
+                switch ($this->lab_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
+
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->lab_completion_status->percentage,
+                ];
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
+            'type'                          => $type,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
@@ -216,7 +264,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $this->status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
@@ -231,6 +279,7 @@ class LabResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'module_progress'               => $module_progress,
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),

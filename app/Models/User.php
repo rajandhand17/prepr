@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Helpers\MagnetHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\UserEducationService;
@@ -65,6 +67,9 @@ class User extends Authenticatable
         'go1_user_metadata',
         'magnet_user_id',
         'magnet_user_role',
+        'display_lab_mini_onboarding',
+        'display_challenge_mini_onboarding',
+        'display_organization_mini_onboarding',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -77,6 +82,11 @@ class User extends Authenticatable
     ];
 
     protected $casts = ['go1_user_metadata' => 'object'];
+
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
 
     public function receivesBroadcastNotificationsOn(): string
     {
@@ -111,6 +121,11 @@ class User extends Authenticatable
     public function userAchievements()
     {
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userFeaturedAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured', '1');
     }
 
     public function userFollow()
@@ -232,11 +247,13 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
             if ($user->is_deactivated == 1) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'not_active', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -261,20 +278,28 @@ class User extends Authenticatable
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                    // Mixpanel Tracking Code: login attempt (successful)
+                    MixpanelHelper::mixpanel_tracking(
+                        config('mixpanel.login_success'),
+                        'successful',
+                        $data,
+                        $request->ip()
+                    );
 
-                    return $response;
+                    return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    $response = ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
 
-                    return $response;
+                    return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
             return $response;
@@ -298,6 +323,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -362,6 +389,21 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
+                        if ($request->register_type == 'organization') {
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.org_sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        } else {
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        }
 
                         return $success;
                     }
@@ -377,6 +419,7 @@ class User extends Authenticatable
 
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return ['success' => false, 'message' => __('responses.send_error')];
@@ -394,6 +437,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -409,6 +454,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -424,6 +471,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -483,6 +532,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -524,6 +575,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -539,6 +592,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -567,6 +622,8 @@ class User extends Authenticatable
                 return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -605,6 +662,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -659,6 +718,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -699,6 +760,8 @@ class User extends Authenticatable
 
             return $user;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -747,7 +810,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }
@@ -759,7 +822,7 @@ class User extends Authenticatable
 
                     return [
                         'success' => false,
-                        'message' => __('response.unauthorized'),
+                        'message' => __('responses.unauthorized'),
                     ];
                 }
             }
@@ -813,6 +876,7 @@ class User extends Authenticatable
                 'message' => __('responses.user_login_success'),
             ];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -831,6 +895,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

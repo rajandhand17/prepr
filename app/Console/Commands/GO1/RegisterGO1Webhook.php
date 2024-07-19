@@ -3,6 +3,7 @@
 namespace App\Console\Commands\GO1;
 
 use App\Helpers\GO1Helper;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -30,6 +31,7 @@ class RegisterGO1Webhook extends Command
         try {
             GO1Helper::registerWebhookToGO1($this->option('url') ?? '');
         } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
             $this->error($exception->getMessage());
         }
     }

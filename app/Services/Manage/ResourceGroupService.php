@@ -5,8 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Duration;
-use App\Models\Levels;
 use App\Models\ResourceGroup;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -20,6 +18,8 @@ class ResourceGroupService
 
             return $resourceGroup_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +34,8 @@ class ResourceGroupService
 
             return $upload_resource_group_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,7 +44,7 @@ class ResourceGroupService
     {
         try {
             $status = config('constants.resource_group_status.draft');
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
@@ -83,6 +85,8 @@ class ResourceGroupService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -92,6 +96,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -108,6 +114,8 @@ class ResourceGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +125,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::select('id')->where('title', $title)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,7 +137,7 @@ class ResourceGroupService
             $resourceGroup = ResourceGroup::where('slug', $slug)->first();
             $status = $resourceGroup->status;
             $privacy = $resourceGroup->privacy;
-            switch($request->status) {
+            switch ($request->status) {
                 case 'publish':
                     $status = config('constants.resource_group_status.publish');
                     break;
@@ -163,6 +173,8 @@ class ResourceGroupService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +187,8 @@ class ResourceGroupService
 
             return $resourceGroupList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -183,7 +197,7 @@ class ResourceGroupService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceGroupList = $resourceGroupList->where('resource_groups.title', 'like', '%'.$request->search.'%');
+                $resourceGroupList = $resourceGroupList->whereSearchFilter($request->search ?? '');
             }
 
             if ($request->has('status') && !empty($request->status)) {
@@ -246,21 +260,18 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.level', $level);
-                }
+
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceGroupList = $resourceGroupList->whereIn('resource_groups.duration', $duration);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
 
             return $resourceGroupList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -270,6 +281,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::where(['id' => $id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -283,6 +296,8 @@ class ResourceGroupService
 
             return $resourceGroupList->limit($limit)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -292,6 +307,8 @@ class ResourceGroupService
         try {
             return ResourceGroup::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -306,6 +323,8 @@ class ResourceGroupService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -325,6 +344,8 @@ class ResourceGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

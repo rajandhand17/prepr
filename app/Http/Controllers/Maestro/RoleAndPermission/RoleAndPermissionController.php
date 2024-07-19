@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\Maestro\RoleAndPermission;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Role;
 use App\Traits\Maestro\RoleAndPermission\RoleAndPermissionTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Support\Facades\DB;
-use App\Models\Role;
-use App\Models\Permission;
-use Exception;
 
 class RoleAndPermissionController extends Controller
 {
     use RoleAndPermissionTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -25,24 +24,24 @@ class RoleAndPermissionController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($roles)
                     ->editColumn('display_name', function (Role $role) {
-                        if (!empty ($role->display_name)) {
+                        if (!empty($role->display_name)) {
                             return $role->display_name;
                         } else {
                             return $role->name;
                         }
                     })
                     ->addColumn('action', function (Role $role) {
-                        if (isset ($role->id)) {
-                            return '<a class="mr-10" href="' . route('role.edit', ['role' => $role->id]) . '"><i class="fas fa-edit"></i></a>';
+                        if (isset($role->id)) {
+                            return '<a class="mr-10" href="'.route('role.edit', ['role' => $role->id]).'"><i class="fas fa-edit"></i></a>';
                         }
                     })
 
                     ->setRowData([
                         'data-id' => static function ($role) {
-                            return 'row-' . $role->id;
+                            return 'row-'.$role->id;
                         },
                         'data-name' => static function ($role) {
-                            return 'row-' . $role->name;
+                            return 'row-'.$role->name;
                         },
                     ])
                     ->rawColumns(['action'])
@@ -51,13 +50,14 @@ class RoleAndPermissionController extends Controller
             }
 
             $html = $builder->columns([
-                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => '#', "orderable" => false, "searchable" => false, "width" => '20%'],
-                ['data' => 'display_name', 'name' => 'display_name', 'title' => 'Name', 'orderable' => false, "width" => '75%'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, "width" => '5%'],
-            ])->parameters(["pageLength" => 10,]);
-            return view('maestro.roleandpermission.role-and-permission-list', compact('html'));
+                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => '#', 'orderable' => false, 'searchable' => false, 'width' => '20%'],
+                ['data' => 'display_name', 'name' => 'display_name', 'title' => 'Name', 'width' => '75%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
+            ])->parameters(['pageLength' => 10]);
+
+            return view('maestro.roleAndPermission.role-and-permission-list', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->withErrors(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->withErrors(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -68,9 +68,10 @@ class RoleAndPermissionController extends Controller
     {
         try {
             $permissions = $this->getPermissions();
-            return view('maestro.roleandpermission.role-and-permission-create', compact('permissions'));
+
+            return view('maestro.roleAndPermission.role-and-permission-create', compact('permissions'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -80,17 +81,13 @@ class RoleAndPermissionController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-            if($this->createRole($request))
-            {
-                DB::commit();
+            if ($this->createRole($request)) {
                 return redirect()->route('role.index')->with('success', 'Role Created Successfully');
             }
-            DB::rollback();
-            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
+
+            return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
         } catch (Exception $e) {
-            DB::rollback();
-            return redirect()->back()->with(['error' => 'Something want wrong.']);
+            return redirect()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -103,9 +100,10 @@ class RoleAndPermissionController extends Controller
             $role = $this->getRoleById($id);
             $permissions = $this->getPermissions();
             $role_permission = $this->getPermissionBYRoleId($id);
-            return view('maestro.roleandpermission.role-and-permission-edit', compact('role', 'role_permission','permissions'));
+
+            return view('maestro.roleAndPermission.role-and-permission-edit', compact('role', 'role_permission', 'permissions'));
         } catch (Exception $e) {
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -115,24 +113,13 @@ class RoleAndPermissionController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
-            if($this->updateRole($id,$request)){
-                DB::commit();
+            if ($this->updateRole($id, $request)) {
                 return redirect()->route('role.index')->with('success', 'Data Updated successfully.');
             }
-            DB::rollback();
-            return redirect()->route('role.index')->with('error', 'Something Want Wrong.');
-        } catch (Exception $e) {
-            DB::rollback();
-            return redirect()->route('role.index')->with(['error' => 'Something want wrong.']);
-        }
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
+        } catch (Exception $e) {
+            return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
     }
 }

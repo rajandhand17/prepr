@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Public\Challenge;
 
+use App\Helpers\TrackUserProgressHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\Challenge\ChallengeProjectRequirementResource;
@@ -38,6 +40,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -50,12 +54,18 @@ class ChallengeController extends AppBaseController
                 if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    TrackUserProgressHelper::trackChallengeUserProgress($challenge, $userId);
+                }
 
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -85,6 +95,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -97,6 +109,8 @@ class ChallengeController extends AppBaseController
                 return $this->sendResponse(ChallengeListNameResource::collection($getProjectChallengeList), __('responses.found_challenges_list'));
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -119,6 +133,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.project_not_requirement_found'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

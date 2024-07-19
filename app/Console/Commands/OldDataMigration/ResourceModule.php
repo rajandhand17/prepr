@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\ResourceModule as ResourceModules;
 use App\Models\ResourceModuleDetail;
@@ -281,6 +282,7 @@ class ResourceModule extends Command
 
             return;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e);
 

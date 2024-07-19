@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\ChallengeTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabChallengeRedeem;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateAchievementService;
@@ -14,7 +15,6 @@ use App\Services\Manage\ChallengeTemplateRequirementService;
 use App\Services\Manage\ChallengeTemplateService;
 use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
-use App\Services\Manage\ChallengeTemplateTagsGroupsService;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -28,8 +28,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
     private $challengeTemplateSkillsGroupsStackService;
 
     private $challengeTemplateSponsorService;
-
-    private $challengeTemplateTagsGroupsService;
 
     private $challengeTemplateRequirementService;
 
@@ -47,13 +45,12 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
     private $challengeService;
 
-    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService, ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService, ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService, ChallengeTemplateRequirementService $challengeTemplateRequirementService, ChallengeTemplateTagsGroupsService $challengeTemplateTagsGroupsService, ChallengeTemplateSponsorService $challengeTemplateSponsorService, ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService, ChallengeService $challengeService)
+    public function __construct(ChallengeTemplateExternalLinkService $challengeTemplateExternalLinkService, ChallengeTemplateCustomTimelinesService $challengeTemplateCustomTimelinesService, ChallengeTemplateTimelinesService $challengeTemplateTimelinesService, ChallengeTemplateProjectTemplateService $challengeTemplateProjectTemplateService, ChallengeTemplateAssessmentService $challengeTemplateAssessmentService, ChallengeTemplateAssessmentCriteriaService $challengeTemplateAssessmentCriteriaService, ChallengeTemplateRequirementService $challengeTemplateRequirementService, ChallengeTemplateSponsorService $challengeTemplateSponsorService, ChallengeTemplateSkillsGroupsStackService $challengeTemplateSkillsGroupsStackService, ChallengeTemplateService $challengeTemplateService, ChallengeTemplateAchievementService $challengeTemplateAchievementService, ChallengeService $challengeService)
     {
         $this->challengeTemplateService = $challengeTemplateService;
         $this->challengeTemplateAchievementService = $challengeTemplateAchievementService;
         $this->challengeTemplateSkillsGroupsStackService = $challengeTemplateSkillsGroupsStackService;
         $this->challengeTemplateSponsorService = $challengeTemplateSponsorService;
-        $this->challengeTemplateTagsGroupsService = $challengeTemplateTagsGroupsService;
         $this->challengeTemplateRequirementService = $challengeTemplateRequirementService;
         $this->challengeTemplateAssessmentService = $challengeTemplateAssessmentService;
         $this->challengeTemplateProjectTemplateService = $challengeTemplateProjectTemplateService;
@@ -69,6 +66,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getChallengeTemplateList($request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +77,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getCheckChallengeUuid($uuid);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,7 +91,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeTemplateParticipationAchievement = $this->challengeTemplateAchievementService->addChallengeTemplateAchievement($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateSkills = $this->challengeTemplateSkillsGroupsStackService->addChallengeTemplateSkills($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateSponsor = $this->challengeTemplateSponsorService->addChallengeTemplateSponsor($challengeId, $addChallengeTemplate->id);
-                $addChallengeTemplateTags = $this->challengeTemplateTagsGroupsService->addChallengeTemplateTagsGroups($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateRequirement = $this->challengeTemplateRequirementService->addChallengeTemplateRequirement($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->addChallengeTemplateAssessment($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateAssessmentCriteria = $this->challengeTemplateAssessmentCriteriaService->addChallengeTemplateAssessmentCriteria($challengeId, $addChallengeTemplate->id, $addChallengeTemplateAssessment);
@@ -106,7 +106,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                     'addChallengeTemplateParticipationAchievement'      => $addChallengeTemplateParticipationAchievement,
                     'addChallengeTemplateSkills'                        => $addChallengeTemplateSkills,
                     'addChallengeTemplateSponsor'                       => $addChallengeTemplateSponsor,
-                    'addChallengeTemplateTags'                          => $addChallengeTemplateTags,
                     'addChallengeTemplateRequirement'                   => $addChallengeTemplateRequirement,
                     'addChallengeTemplateAssessmentCriteria'            => $addChallengeTemplateAssessmentCriteria,
                     'addChallengeTemplateAssessment'                    => $addChallengeTemplateAssessment,
@@ -124,7 +123,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $addChallengeToTemplate['addChallengeTemplateParticipationAchievement'] &&
                 $addChallengeToTemplate['addChallengeTemplateSkills'] &&
                 $addChallengeToTemplate['addChallengeTemplateSponsor'] &&
-                $addChallengeToTemplate['addChallengeTemplateTags'] &&
                 $addChallengeToTemplate['addChallengeTemplateRequirement'] &&
                 $addChallengeToTemplate['addChallengeTemplateAssessmentCriteria'] &&
                 $addChallengeToTemplate['addChallengeTemplateAssessment'] &&
@@ -145,6 +143,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -154,6 +154,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->getChallengeTemplateBasedOnSlug($slug);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +175,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -182,6 +186,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->checkChallengeRedeemedOrNot($challengeTemplateId, $organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -193,7 +199,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplateToChallenge = $this->challengeTemplateService->redeemChallengeTemplateToChallenge($challengeTemplateId, $organizationId);
                 $redeemChallengeTemplateAchievement = $this->challengeTemplateAchievementService->redeemChallengeTemplateAchievement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateSkillGroupStack = $this->challengeTemplateSkillsGroupsStackService->redeemChallengeTemplateSkillGroupStack($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
-                $redeemChallengeTemplateTagGroup = $this->challengeTemplateTagsGroupsService->redeemChallengeTemplateTagGroup($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateSponsor = $this->challengeTemplateSponsorService->redeemChallengeTemplateSponsor($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateRequirement = $this->challengeTemplateRequirementService->redeemChallengeTemplateRequirement($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
                 $redeemChallengeTemplateAssessment = $this->challengeTemplateAssessmentService->redeemChallengeTemplateAssessment($redeemChallengeTemplateToChallenge->id, $challengeTemplateId);
@@ -208,7 +213,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                     'redeemChallengeTemplateToChallenge'            => $redeemChallengeTemplateToChallenge,
                     'redeemChallengeTemplateAchievement'            => $redeemChallengeTemplateAchievement,
                     'redeemChallengeTemplateSkillGroupStack'        => $redeemChallengeTemplateSkillGroupStack,
-                    'redeemChallengeTemplateTagGroup'               => $redeemChallengeTemplateTagGroup,
                     'redeemChallengeTemplateSponsor'                => $redeemChallengeTemplateSponsor,
                     'redeemChallengeTemplateRequirement'            => $redeemChallengeTemplateRequirement,
                     'redeemChallengeTemplateAssessmentCriteria'     => $redeemChallengeTemplateAssessmentCriteria,
@@ -225,7 +229,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
                 $redeemChallengeTemplate['redeemChallengeTemplateToChallenge'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateAchievement'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateSkillGroupStack'] &&
-                $redeemChallengeTemplate['redeemChallengeTemplateTagGroup'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateSponsor'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateRequirement'] &&
                 $redeemChallengeTemplate['redeemChallengeTemplateAssessmentCriteria'] &&
@@ -246,6 +249,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (Exception $e) {
+            dd($e);
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -267,6 +272,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -276,6 +283,8 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
         try {
             return $this->challengeTemplateService->deleteChallengeTemplate($slug, $challengeTemplateId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

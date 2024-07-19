@@ -2,15 +2,15 @@
 
 namespace App\Services\Maestro\Master;
 
-use App\Models\Organization;
 use App\Models\Category;
-use App\Models\Skill; 
-use App\Models\Lab;
-use App\Models\User;
-use App\Models\Levels;
 use App\Models\Duration;
-use App\Models\ResourceModule;
+use App\Models\Lab;
+use App\Models\Levels;
+use App\Models\Organization;
 use App\Models\Rank;
+use App\Models\ResourceModule;
+use App\Models\Skill;
+use App\Models\User;
 use Exception;
 
 class MasterService
@@ -18,12 +18,12 @@ class MasterService
     public static function getOrganizationsById($request)
     {
         try {
-            $orgList = Organization::where(['language' => $request->language,'status' => '1'])->orderBy('id', 'DESC')->take(30);
+            $orgList = Organization::where(['language' => $request->language, 'status' => '1'])->orderBy('id', 'DESC')->take(30);
 
             if ($request->search) {
-                $orgList->where('title', 'LIKE', '%' . $request->search . '%');
+                $orgList->where('title', 'LIKE', '%'.$request->search.'%');
             }
-            
+
             $orgList = $orgList->pluck('title', 'id');
             $count = 0;
             $orgResponse = $finalResult = [];
@@ -33,11 +33,13 @@ class MasterService
                 $count++;
             }
             $finalResult['result'] = $orgResponse;
+
             return response()->json($finalResult);
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getCategoriesById($request)
     {
         try {
@@ -56,7 +58,7 @@ class MasterService
                 $categories = Category::select($columName.' as text', 'id')->orderBy('id', 'DESC')->take(30);
             }
             if ($request->search) {
-                $categories->where($columName, 'LIKE', '%' . $request->search . '%');
+                $categories->where($columName, 'LIKE', '%'.$request->search.'%');
             }
             if (isset($request->component)) {
                 $categories->where('components', 'like', '%'.$request->component.'%');
@@ -65,11 +67,13 @@ class MasterService
             $jsonData['result'] = $categories;
             $jsonData['more'] = true;
             $jsonData['total_count'] = $categories->count();
+
             return response()->json($jsonData);
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getSkillsById($request)
     {
         try {
@@ -84,11 +88,11 @@ class MasterService
                 if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                     $columName = str_replace('-', '_', $columName);
                 }
-                $columName = $columName . '_title';
-                $skillsQuery = Skill::select('id', $columName . ' as title')->orderBy('id', 'DESC')->take(30);
+                $columName = $columName.'_title';
+                $skillsQuery = Skill::select('id', $columName.' as title')->orderBy('id', 'DESC')->take(30);
             }
             if ($request->search) {
-                $skillsQuery->where($columName, 'LIKE', '%' . $request->search . '%');
+                $skillsQuery->where($columName, 'LIKE', '%'.$request->search.'%');
             }
             $skillsQuery = $skillsQuery->pluck('title', 'id');
             $skillsArray = $jsonSkills = [];
@@ -107,15 +111,16 @@ class MasterService
             return false;
         }
     }
+
     public static function getUsersById($request)
     {
         try {
             $userList = User::orderBy('id', 'DESC')->take(30);
 
             if ($request->search) {
-                $userList->where('username', 'LIKE', '%' . $request->search . '%');
+                $userList->where('username', 'LIKE', '%'.$request->search.'%');
             }
-            
+
             $userList = $userList->pluck('username', 'id');
             $count = 0;
             $orgResponse = $finalResult = [];
@@ -125,17 +130,19 @@ class MasterService
                 $count++;
             }
             $finalResult['result'] = $orgResponse;
+
             return response()->json($finalResult);
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getLabsById($request)
     {
         try {
             $labs = Lab::select('id', 'title')->orderBy('id', 'DESC')->where('organization_id', $request->org_id);
             if ($request->search) {
-                $labs = $labs->where('title', 'LIKE', '%' . $request->search . '%');
+                $labs = $labs->where('title', 'LIKE', '%'.$request->search.'%');
             }
             if ($request->privacy == 'public') {
                 $labs = $labs->where('privacy', $request->privacy);
@@ -149,11 +156,13 @@ class MasterService
                 $count++;
             }
             $json_result['result'] = $json_stacks;
+
             return response()->json($json_result);
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getResourceModulesById($request)
     {
         try {
@@ -163,7 +172,7 @@ class MasterService
             $resourceJson = ResourceModule::whereIn('id', $resourceList)->orderBy('id', 'DESC');
 
             if ($request->search) {
-                $resourceJson->where('title', 'LIKE', '%' .$request->search. '%');
+                $resourceJson->where('title', 'LIKE', '%'.$request->search.'%');
             }
             $resourceJsons = $resourceJson->pluck('title', 'id');
             $total_count = $resourceJsons->count();
@@ -183,6 +192,7 @@ class MasterService
             return false;
         }
     }
+
     public static function getLevelsById($request)
     {
         try {
@@ -197,11 +207,11 @@ class MasterService
                 if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                     $columName = str_replace('-', '_', $columName);
                 }
-                $columName = $columName . '_title';
-                $levelsQuery = Levels::select('id', $columName . ' as title')->orderBy('id', 'DESC')->take(30);
+                $columName = $columName.'_title';
+                $levelsQuery = Levels::select('id', $columName.' as title')->orderBy('id', 'DESC')->take(30);
             }
             if ($request->search) {
-                $levelsQuery->where($columName, 'LIKE', '%' . $request->search . '%');
+                $levelsQuery->where($columName, 'LIKE', '%'.$request->search.'%');
             }
             $levelsQuery = $levelsQuery->pluck('title', 'id');
             $levelsArray = $jsonLevels = [];
@@ -220,6 +230,7 @@ class MasterService
             return false;
         }
     }
+
     public static function getDurationsById($request)
     {
         try {
@@ -234,11 +245,11 @@ class MasterService
                 if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                     $columName = str_replace('-', '_', $columName);
                 }
-                $columName = $columName . '_title';
-                $durationQuery = Duration::select('id', $columName . ' as title')->orderBy('id', 'DESC')->take(30);
+                $columName = $columName.'_title';
+                $durationQuery = Duration::select('id', $columName.' as title')->orderBy('id', 'DESC')->take(30);
             }
             if ($request->search) {
-                $durationQuery->where($columName, 'LIKE', '%' . $request->search . '%');
+                $durationQuery->where($columName, 'LIKE', '%'.$request->search.'%');
             }
             $durationQuery = $durationQuery->pluck('title', 'id');
             $durationsArray = $jsonDurations = [];
@@ -257,6 +268,7 @@ class MasterService
             return false;
         }
     }
+
     public static function getMinRanksById($request)
     {
         try {
@@ -271,11 +283,11 @@ class MasterService
                 if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                     $columName = str_replace('-', '_', $columName);
                 }
-                $columName = $columName . '_title';
-                $ranks = Rank::select('id', $columName . ' as title')->orderBy('id', 'DESC')->take(30);
+                $columName = $columName.'_title';
+                $ranks = Rank::select('id', $columName.' as title')->orderBy('id', 'DESC')->take(30);
             }
             if ($request->search) {
-                $ranks->where($columName, 'LIKE', '%' . $request->search . '%');
+                $ranks->where($columName, 'LIKE', '%'.$request->search.'%');
             }
             $ranks = $ranks->pluck('title', 'id');
             $durationsArray = $jsonData = [];
@@ -288,7 +300,33 @@ class MasterService
             $jsonData['result'] = $durationsArray;
             $jsonData['more'] = true;
             $jsonData['total_count'] = $ranks->count();
+
             return response()->json($jsonData);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUsersEmail($request)
+    {
+        try {
+            $userList = User::orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $userList->where('email', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $userList = $userList->pluck('email', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($userList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
         } catch (Exception $e) {
             return false;
         }

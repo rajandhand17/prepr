@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\CampusConnectStudentInformation;
 use App\Models\UserEducation;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +33,16 @@ class UserEducationService
             if ($request->enrollment_status == 'yes') {
                 $records = self::addCampusConnectStudentInformation($request);
             }
+            $profile_data = [
+                'type' => 'education',
+                'info' => $input,
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $allEducation;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +66,8 @@ class UserEducationService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +77,8 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->delete();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +88,8 @@ class UserEducationService
         try {
             return UserEducation::where('id', '=', $id)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +114,7 @@ class UserEducationService
 
             return true;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             DB::rollBack();
 
             return false;
