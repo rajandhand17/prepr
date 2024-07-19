@@ -2,25 +2,11 @@
 
 namespace App\Traits\Maestro\Category;
 
-use App\Services\Maestro\Category\CategoryService;
+use App\Services\Maestro\CategoryService;
 use Exception;
 
 trait CategoryTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = CategoryService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getCategories()
     {
         try {

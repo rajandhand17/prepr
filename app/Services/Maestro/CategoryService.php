@@ -1,28 +1,15 @@
 <?php
 
-namespace App\Services\Maestro\Category;
+namespace App\Services\Maestro;
 
 use App\Models\Category;
-use App\Models\Language;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Services\Maestro\LanguageService;
 use Exception;
-use Illuminate\Support\Facades\DB;
+
 
 class CategoryService
 {
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function getCategories()
     {
         try {
@@ -83,33 +70,20 @@ class CategoryService
     public static function storeUpdateCategory($request, $id, $moduleMode)
     {
         try {
-            DB::beginTransaction();
             $componentString = '';
             $componentsArray = $request->get('components');
             if (is_array($componentsArray) && count($componentsArray) > 0) {
                 $componentString = implode(',', $componentsArray);
             }
-            $languages = Language::where('status', 1)->get();
             if (!empty($id)) {
                 $category = Category::find($id);
             } else {
                 $category = new Category();
             }
-
+            $languages = LanguageService::getAllActiveLanguages();
             if (!empty($languages)) {
                 foreach ($languages as $single) {
-                    if ($single->iso == 'en') {
-                        $columName = 'title';
-                    } else {
-                        $columName = $single->iso;
-                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                            $columName = str_replace(' ', '_', $columName);
-                        }
-                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                            $columName = str_replace('-', '_', $columName);
-                        }
-                        $columName = $columName.'_title';
-                    }
+                    $columName = UtilityHelper::getColumName($single->iso,'title');
                     $category->$columName = $request->$columName;
                 }
             }
@@ -121,15 +95,12 @@ class CategoryService
 
             $category->components = $componentString;
             if ($category->save()) {
-                DB::commit();
 
                 return true;
             }
-            DB::rollback();
 
             return false;
         } catch (Exception $e) {
-            DB::rollback();
 
             return false;
         }
@@ -166,6 +137,15 @@ class CategoryService
     {
         try {
             return Category::where(['parent_id' => '0'])->orderBy('id', 'DESC');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getCategoryCount($parent_id)
+    {
+        try {
+            return Category::where('parent_id', $parent_id)->count();
         } catch (Exception $e) {
             return false;
         }
