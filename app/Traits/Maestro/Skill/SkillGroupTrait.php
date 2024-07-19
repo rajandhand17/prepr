@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Skill;
 
-use App\Services\Maestro\Skill\SkillGroupService;
+use App\Services\Maestro\SkillGroupService;
 use Exception;
 
 trait SkillGroupTrait

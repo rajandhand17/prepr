@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Skill;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
 use App\Models\Skill;
