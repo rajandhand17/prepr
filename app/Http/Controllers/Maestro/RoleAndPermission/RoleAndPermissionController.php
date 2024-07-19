@@ -84,6 +84,7 @@ class RoleAndPermissionController extends Controller
             if ($this->createRole($request)) {
                 return redirect()->route('role.index')->with('success', 'Role Created Successfully');
             }
+
             return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -115,6 +116,7 @@ class RoleAndPermissionController extends Controller
             if ($this->updateRole($id, $request)) {
                 return redirect()->route('role.index')->with('success', 'Data Updated successfully.');
             }
+
             return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
         } catch (Exception $e) {
             return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);

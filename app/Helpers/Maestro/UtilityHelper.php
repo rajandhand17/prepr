@@ -2,12 +2,11 @@
 
 namespace App\Helpers\Maestro;
 
-use App\Services\Maestro\LanguageService;
 use Exception;
 
 class UtilityHelper
 {
-    public static function getColumName($iso,$fieldName)
+    public static function getColumName($iso, $fieldName)
     {
         try {
             if ($iso == 'en') {
@@ -22,6 +21,7 @@ class UtilityHelper
                 }
                 $columName = $columName.'_'.$fieldName;
             }
+
             return $columName;
         } catch (Exception $e) {
             return $fieldName;

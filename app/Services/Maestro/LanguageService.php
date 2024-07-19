@@ -19,6 +19,7 @@ class LanguageService
             return false;
         }
     }
+
     public static function getAllActiveLanguages()
     {
         try {
