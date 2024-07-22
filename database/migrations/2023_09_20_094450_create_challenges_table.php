@@ -16,9 +16,9 @@ return new class() extends Migration {
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('duration_id');
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('duration_id')->nullable();
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
             $table->enum('description_type', ['0', '1'])->comment('0->text,1->scorm')->default('0');
