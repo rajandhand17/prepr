@@ -14,11 +14,13 @@ trait ProjectPitchTemplateTrait
             if ($pitchTemplate) {
                 return $pitchTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getLanguage()
     {
         try {
@@ -26,11 +28,13 @@ trait ProjectPitchTemplateTrait
             if ($languages) {
                 return $languages;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getPitchTemplate()
     {
         try {
@@ -38,11 +42,13 @@ trait ProjectPitchTemplateTrait
             if ($pitchTemplate) {
                 return $pitchTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getPitchSectionById($id)
     {
         try {
@@ -50,11 +56,13 @@ trait ProjectPitchTemplateTrait
             if ($pitchSection) {
                 return $pitchSection;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getPitchTaskById($id)
     {
         try {
@@ -62,39 +70,46 @@ trait ProjectPitchTemplateTrait
             if ($pitchTask) {
                 return $pitchTask;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storePitchTemplate($request, $id, $moduleMode)
     {
         try {
             if (ProjectPitchTemplateService::storePitchTemplate($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function updatePitchTemplate($request, $id, $moduleMode)
     {
         try {
             if (ProjectPitchTemplateService::updatePitchTemplate($request, $id, $moduleMode)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function deletePitchTemplate($pitchTemplate)
     {
         try {
             if (ProjectPitchTemplateService::deletePitchTemplate($pitchTemplate)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
