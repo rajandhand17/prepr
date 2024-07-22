@@ -57,7 +57,7 @@ class CreateChallengeRequest extends FormRequest
             'jobs.*'                                => 'numeric|exists:job_titles,id',
             'external_links'                        => 'array|required_if:request_type,publish',
             'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
-            'external_links.*'                      => 'url',
+            'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
             'template_id'                           => 'required_if:template_type,existing|numeric|exists:pitch_templates,id',
@@ -196,8 +196,6 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
             $base_rules['assessment_title'] = 'required|array';
             $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed';
-            $base_rules['assessment_description'] = 'required|array';
-            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
             $base_rules['assessment_score'] = 'required|array';
             $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed|numeric';
             $base_rules['assessment_weight'] = [
