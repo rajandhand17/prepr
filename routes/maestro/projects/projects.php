@@ -7,6 +7,7 @@ use App\Http\Controllers\Maestro\Projects\ProjectStatusController;
 use App\Http\Controllers\Maestro\Projects\ProjectSubmissionRequirementController;
 use App\Http\Controllers\Maestro\Projects\ProjectTypeController;
 use App\Http\Controllers\Maestro\Projects\ProjectVerticalController;
+use App\Http\Controllers\Maestro\Projects\ProjectPitchTemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web', 'auth']], function () {
@@ -16,5 +17,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('projects-type', ProjectTypeController::class);
     Route::resource('projects-industry', ProjectIndustryController::class);
     Route::resource('projects-status', ProjectStatusController::class);
+    Route::resource('projects-pitch-template', ProjectPitchTemplateController::class);
     Route::resource('projects-submission-requirement', ProjectSubmissionRequirementController::class);
 });

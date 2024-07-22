@@ -49,4 +49,22 @@ class PitchTemplateService
             return false;
         }
     }
+
+    public static function addPitchAndTaskTemplate($request)
+    {
+        try {
+            $addPitchAndTaskTemplate = new PitchTemplate();
+            $addPitchAndTaskTemplate->title = $request->template_title;
+            $addPitchAndTaskTemplate->save();
+            if (!$addPitchAndTaskTemplate) {
+                return false;
+            }
+
+            return $addPitchAndTaskTemplate;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
