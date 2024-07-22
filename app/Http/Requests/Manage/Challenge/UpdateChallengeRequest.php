@@ -241,7 +241,7 @@ class UpdateChallengeRequest extends FormRequest
         // For challenge flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,month';
             $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
@@ -255,7 +255,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_number'] = 'nullable|array';
             $base_rules['custom_timelines_number.*'] = 'integer';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
-            $base_rules['custom_timelines_duration.*'] = 'in:days,week,month';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,month';
             $base_rules['custom_timelines_description'] = 'nullable|array';
             $base_rules['custom_timelines_description.*'] = 'string';
         }
