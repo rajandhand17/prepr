@@ -17,6 +17,7 @@ class UserBuilder extends Builder
     public function whereSearch(string|null $keyword): UserBuilder
     {
         if ($keyword) {
+            $keyword = addcslashes($keyword, '%_\\[]^$*()');
             return $this->where('full_name', 'like', '%'.$keyword.'%')
                 ->orWhere(function ($query) use ($keyword) {
                     $names = explode(' ', $keyword);
