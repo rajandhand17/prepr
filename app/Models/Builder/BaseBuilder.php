@@ -58,6 +58,9 @@ abstract class BaseBuilder extends Builder
         // APPLICATION LANG
         $lang = app()->getLocale();
 
+        // SANITIZING KEYWORD
+        $keyword = addcslashes($keyword, '%_\\[]^$*()');
+
         // DEFINING A INSTANCE SO THAT WE CAN APPEND ACCORDINGLY
         $builder = $this->where('language', '=', $lang);
 
