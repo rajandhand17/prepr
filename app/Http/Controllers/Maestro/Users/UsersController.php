@@ -115,12 +115,12 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try {
-            $user = $this->getUserById($id);
-            if (!$user->exists) {
-                return redirect()->route('users.index')->with(['error' => 'User not found.']);
+            $vendor = $this->getVendorById($id);
+            if (!$vendor->exists) {
+                return redirect()->route('vendor.index')->with(['error' => 'Vendor not found.']);
             }
 
-            return view('maestro.users.view', compact('user'));
+            return view('maestro.vendor.view', compact('vendor'));
         } catch (Exception $e) {
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
