@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
 use App\Models\ProjectSubmissionRequirement;

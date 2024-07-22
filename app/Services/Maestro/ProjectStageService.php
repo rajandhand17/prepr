@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
-use App\Models\ProjectType;
+use App\Models\ProjectStage;
 use Exception;
 
-class ProjectTypeService
+class ProjectStageService
 {
     public static function getLanguage()
     {
@@ -22,16 +22,16 @@ class ProjectTypeService
         }
     }
 
-    public static function getProjectType()
+    public static function getProjectStage()
     {
         try {
-            return ProjectType::query()->latest();
+            return ProjectStage::query()->latest();
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function getProjectTypeStatus()
+    public static function getProjectStageStatus()
     {
         try {
             return ['1' => 'Active', '0' => 'Not Active'];
@@ -40,14 +40,14 @@ class ProjectTypeService
         }
     }
 
-    public static function storeUpdateProjectType($request, $id, $moduleMode)
+    public static function storeUpdateProjectStage($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $projectType = new ProjectType();
+                $projectStage = new ProjectStage();
             } else {
-                $projectType = ProjectType::find($id);
+                $projectStage = ProjectStage::find($id);
             }
 
             foreach ($languages as $single) {
@@ -63,11 +63,11 @@ class ProjectTypeService
                     }
                     $columName = $columName.'_title';
                 }
-                $projectType->$columName = $request->$columName;
+                $projectStage->$columName = $request->$columName;
             }
 
-            $projectType->status = $request->status;
-            if ($projectType->save()) {
+            $projectStage->status = $request->status;
+            if ($projectStage->save()) {
                 return true;
             }
 
@@ -77,19 +77,27 @@ class ProjectTypeService
         }
     }
 
-    public static function findProjectType($id)
+    public static function findProjectStage($id)
     {
         try {
-            return ProjectType::findOrFail($id);
+            return ProjectStage::findOrFail($id);
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function deleteProjectType($projectType)
+    public static function deleteProjectStage($projectStage)
     {
         try {
-            return $projectType->delete();
+            return $projectStage->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getProjectStages()
+    {
+        try {
+            return ProjectStage::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }

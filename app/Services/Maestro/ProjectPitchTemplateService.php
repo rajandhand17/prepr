@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\PitchTemplate;
 use App\Models\ChallengePitch;

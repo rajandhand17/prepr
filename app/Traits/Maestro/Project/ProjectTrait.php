@@ -2,7 +2,16 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectService;
+use App\Services\Maestro\ProjectService;
+use App\Services\Maestro\UserService;
+use App\Services\Maestro\Challenge\ChallengeService;
+use App\Services\Maestro\LabService;
+use App\Services\Maestro\ProjectStageService;
+use App\Services\Maestro\CategoryService;
+use App\Services\Maestro\ProjectIndustryService;
+use App\Services\Maestro\ProjectStatusService;
+use App\Services\Maestro\ProjectTypeService;
+use App\Services\Maestro\ProjectVerticalService;
 use Exception;
 
 trait ProjectTrait
@@ -69,15 +78,27 @@ trait ProjectTrait
         }
     }
 
-    private function getProjectAssociateItems($type)
+    private function getProjectAssociateItems($action,$project)
     {
         try {
-            $associateItems = ProjectService::getProjectAssociateItems($type);
-            if ($associateItems) {
-                return $associateItems;
+            if($action == 'edit'){
+                $responseData['user']               = UserService::getUser($action,$project->user_id);
+                $responseData['project_challenge']  = ChallengeService::getChallenge($action,$project->challenge_id);
+                $responseData['project_lab']        = LabService::getLab($action,$project->lab_id);
+            } else {
+                $responseData['user']               = UserService::getUser($action,null);
+                $responseData['project_challenge']  = ChallengeService::getChallenge($action,null);
+                $responseData['project_lab']        = LabService::getLab($action,null);
             }
-
-            return false;
+                $responseData['project_stage']      = ProjectStageService::getProjectStages();
+                $responseData['project_category']   = CategoryService::getCategoryByType('project');
+                $responseData['project_status']     = ProjectStatusService::getStatus();
+                $responseData['project_type']       = ProjectTypeService::getTypes();
+                $responseData['project_industry']   = ProjectIndustryService::getIndustries();
+                $responseData['project_verticals']  = ProjectVerticalService::getVerticals();
+                $responseData['project_privacy']    = ['0' => 'Public', '1' => 'Private'];
+                $responseData['selected_member']    = [];
+                return $responseData;
         } catch (Exception $e) {
             return false;
         }

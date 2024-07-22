@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectSubmissionRequirementService;
+use App\Services\Maestro\ProjectSubmissionRequirementService;
 use Exception;
 
 trait ProjectSubmissionRequirementTrait

@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectTypeService;
+use App\Services\Maestro\ProjectTypeService;
 use Exception;
 
 trait ProjectTypeTrait

@@ -10,13 +10,14 @@ use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Maestro\LanguageService;
 
 class ResourceModuleService
 {
     public static function getResourceModuleList()
     {
         try {
-            return ResourceModule::where('language', \Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->latest();
+            return ResourceModule::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             return false;
         }

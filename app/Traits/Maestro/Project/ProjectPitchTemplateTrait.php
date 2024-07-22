@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectPitchTemplateService;
+use App\Services\Maestro\ProjectPitchTemplateService;
 use Exception;
 
 trait ProjectPitchTemplateTrait
