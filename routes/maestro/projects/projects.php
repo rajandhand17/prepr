@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Maestro\Projects\ProjectIndustryController;
+use App\Http\Controllers\Maestro\Projects\ProjectPitchTemplateController;
 use App\Http\Controllers\Maestro\Projects\ProjectsController;
 use App\Http\Controllers\Maestro\Projects\ProjectStageController;
 use App\Http\Controllers\Maestro\Projects\ProjectStatusController;
 use App\Http\Controllers\Maestro\Projects\ProjectSubmissionRequirementController;
 use App\Http\Controllers\Maestro\Projects\ProjectTypeController;
 use App\Http\Controllers\Maestro\Projects\ProjectVerticalController;
-use App\Http\Controllers\Maestro\Projects\ProjectPitchTemplateController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web', 'auth']], function () {
