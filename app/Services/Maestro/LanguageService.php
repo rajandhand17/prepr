@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\Language;
+use Session;
 
 class LanguageService
 {
@@ -24,6 +25,20 @@ class LanguageService
     {
         try {
             $language = Language::where('status', 1)->get();
+            if ($language != null) {
+                return $language;
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getCurrentLanguage()
+    {
+        try {
+            $language = Session::get('globalLocale') ? Session::get('globalLocale') : 'en';
             if ($language != null) {
                 return $language;
             }

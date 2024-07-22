@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
-use App\Models\ProjectIndustry;
+use App\Models\ProjectVertical;
 use Exception;
 
-class ProjectIndustryService
+class ProjectVerticalService
 {
     public static function getLanguage()
     {
@@ -22,16 +22,16 @@ class ProjectIndustryService
         }
     }
 
-    public static function getProjectIndustry()
+    public static function getProjectVertical()
     {
         try {
-            return ProjectIndustry::query()->latest();
+            return ProjectVertical::query()->latest();
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function getProjectIndustryStatus()
+    public static function getProjectVerticalStatus()
     {
         try {
             return ['1' => 'Active', '0' => 'Not Active'];
@@ -40,14 +40,14 @@ class ProjectIndustryService
         }
     }
 
-    public static function storeUpdateProjectIndustry($request, $id, $moduleMode)
+    public static function storeUpdateProjectVertical($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $ProjectIndustry = new ProjectIndustry();
+                $projectVertical = new ProjectVertical();
             } else {
-                $ProjectIndustry = ProjectIndustry::find($id);
+                $projectVertical = ProjectVertical::find($id);
             }
 
             foreach ($languages as $single) {
@@ -63,11 +63,11 @@ class ProjectIndustryService
                     }
                     $columName = $columName.'_title';
                 }
-                $ProjectIndustry->$columName = $request->$columName;
+                $projectVertical->$columName = $request->$columName;
             }
 
-            $ProjectIndustry->status = $request->status;
-            if ($ProjectIndustry->save()) {
+            $projectVertical->status = $request->status;
+            if ($projectVertical->save()) {
                 return true;
             }
 
@@ -77,19 +77,27 @@ class ProjectIndustryService
         }
     }
 
-    public static function findProjectIndustry($id)
+    public static function findProjectVertical($id)
     {
         try {
-            return ProjectIndustry::findOrFail($id);
+            return ProjectVertical::findOrFail($id);
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function deleteProjectIndustry($ProjectIndustry)
+    public static function deleteProjectVertical($projectVertical)
     {
         try {
-            return $ProjectIndustry->delete();
+            return $projectVertical->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getVerticals()
+    {
+        try {
+            return ProjectVertical::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }
