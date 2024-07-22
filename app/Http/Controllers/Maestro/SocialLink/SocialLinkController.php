@@ -53,7 +53,7 @@ class SocialLinkController extends Controller
 
             return view('maestro.sociallink.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -65,7 +65,7 @@ class SocialLinkController extends Controller
         try {
             return view('maestro.sociallink.create');
         } catch (Exception $e) {
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -83,11 +83,11 @@ class SocialLinkController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -104,7 +104,7 @@ class SocialLinkController extends Controller
 
             return view('maestro.sociallink.edit', compact('socialLink'));
         } catch (Exception $e) {
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -122,11 +122,11 @@ class SocialLinkController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('social-links.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('social-links.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -146,7 +146,7 @@ class SocialLinkController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

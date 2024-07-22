@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Services\Maestro\LanguageService;
 
 class ProjectSubmissionRequirementController extends Controller
 {
@@ -40,7 +41,7 @@ class ProjectSubmissionRequirementController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
@@ -66,7 +67,7 @@ class ProjectSubmissionRequirementController extends Controller
 
             return view('maestro.projects.submissionrequirement.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,12 +77,12 @@ class ProjectSubmissionRequirementController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $status = $this->getSubmissionRequirementStatus();
 
             return view('maestro.projects.submissionrequirement.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -98,11 +99,11 @@ class ProjectSubmissionRequirementController extends Controller
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement Added successfully.']);
             }
 
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,13 +113,13 @@ class ProjectSubmissionRequirementController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $submissionRequirement = $this->findSubmissionRequirement($id);
             $status = $this->getSubmissionRequirementStatus();
 
             return view('maestro.projects.submissionrequirement.edit', compact('submissionRequirement', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -135,11 +136,11 @@ class ProjectSubmissionRequirementController extends Controller
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement updated successfully.']);
             }
 
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -160,7 +161,7 @@ class ProjectSubmissionRequirementController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

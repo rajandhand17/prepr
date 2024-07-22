@@ -7,20 +7,6 @@ use Exception;
 
 trait ProjectVerticalTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectVerticalService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectVertical()
     {
         try {

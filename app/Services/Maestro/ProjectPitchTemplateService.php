@@ -18,18 +18,6 @@ class ProjectPitchTemplateService
             return false;
         }
     }
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
     public static function getPitchTemplate()
     {
         try {

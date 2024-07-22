@@ -7,20 +7,6 @@ use Exception;
 
 trait ProjectTypeTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectTypeService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectType()
     {
         try {

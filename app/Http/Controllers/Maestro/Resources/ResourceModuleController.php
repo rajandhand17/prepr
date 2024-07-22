@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Services\Maestro\LanguageService;
 
 class ResourceModuleController extends Controller
 {
@@ -68,7 +69,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -78,7 +79,7 @@ class ResourceModuleController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $status = $this->getResourceModuleStatus();
             $users = $this->getResourceModuleUser();
             $privacy = $this->getResourceModulePrivacy();
@@ -86,7 +87,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.create', compact('users', 'languages', 'status', 'privacy', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -98,7 +99,7 @@ class ResourceModuleController extends Controller
         try {
             return view('maestro.resourcemodule.show');
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -116,41 +117,13 @@ class ResourceModuleController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
-    // public function getOrgData(Request $request)
-    // {
-    //     try {
-    //         if (!$request->language) {
-    //             return response()->json(['status' => 'fail', 'message' => __('notification.notification_pslf'),'result' => [],'more' => false,'total_count'=>0]);
-    //         }
-    //         $orgList = Organization::where(['language' => $request->language,'status' => '1'])->orderBy('id', 'DESC');
-
-    //         $orgList =  $orgList->take(20);
-
-    //         if ($request->search) {
-    //             $orgList->where('name', 'LIKE', '%' . $request->search . '%');
-    //         }
-    //         $orgList = $orgList->pluck('name', 'id');
-    //         $count = 0;
-    //         $json_orgs = $json_result = [];
-    //         foreach ($orgList as $key => $orgBuild) {
-    //             $json_orgs[$count]['id'] = $key;
-    //             $json_orgs[$count]['text'] = $orgBuild;
-    //             $count++;
-    //         }
-    //         $json_result['result'] = $json_orgs;
-    //         return response()->json($json_result);
-    //     } catch (Exception $e) {
-    //         return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
-    //     }
-    // }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -161,7 +134,7 @@ class ResourceModuleController extends Controller
             if (!$resourceModule->exists) {
                 return redirect()->route('resource-module.index')->with(['error' => 'Resource Module not found.']);
             }
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $status = $this->getResourceModuleStatus();
             $users = $this->getResourceModuleUser();
             $privacy = $this->getResourceModulePrivacy();
@@ -169,7 +142,7 @@ class ResourceModuleController extends Controller
 
             return view('maestro.resourcemodule.edit', compact('users', 'languages', 'status', 'privacy', 'resourceModule', 'organizations'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -187,11 +160,11 @@ class ResourceModuleController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -211,7 +184,7 @@ class ResourceModuleController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }
