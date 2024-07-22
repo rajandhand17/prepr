@@ -47,20 +47,6 @@ class ChallengeService
         }
     }
 
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where(['status' => 1])->pluck('name', 'iso');
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function getChallengeAssociatedItemsById($challenge)
     {
         try {

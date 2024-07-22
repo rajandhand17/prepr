@@ -21,20 +21,6 @@ trait ChallengeTrait
         }
     }
 
-    private function getLanguage()
-    {
-        try {
-            $language = ChallengeService::getLanguage();
-            if ($language) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getChallengeAssociatedItemsById($challenge)
     {
         try {

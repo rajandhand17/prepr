@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Services\Maestro\LanguageService;
 
 class ProjectStatusController extends Controller
 {
@@ -40,7 +41,7 @@ class ProjectStatusController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
@@ -66,7 +67,7 @@ class ProjectStatusController extends Controller
 
             return view('maestro.projects.status.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,12 +77,12 @@ class ProjectStatusController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $status = $this->getProjectStatusStatus();
 
             return view('maestro.projects.status.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -98,11 +99,11 @@ class ProjectStatusController extends Controller
                 return redirect()->route('projects-status.index')->with(['success' => 'Project Stage Added successfully.']);
             }
 
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,13 +113,13 @@ class ProjectStatusController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $projectStatus = $this->findProjectStatus($id);
             $status = $this->getProjectStatusStatus();
 
             return view('maestro.projects.status.edit', compact('projectStatus', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -135,11 +136,11 @@ class ProjectStatusController extends Controller
                 return redirect()->route('projects-status.index')->with(['success' => 'Project Status updated successfully.']);
             }
 
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('projects-status.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -160,7 +161,7 @@ class ProjectStatusController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

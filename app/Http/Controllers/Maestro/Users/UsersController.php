@@ -155,7 +155,7 @@ class UsersController extends Controller
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
 
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }

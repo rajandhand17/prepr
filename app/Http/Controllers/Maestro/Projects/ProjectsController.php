@@ -155,7 +155,7 @@ class ProjectsController extends Controller
             if ($this->updateProjectById($id, $request)) {
                 return redirect()->route('projects.index')->with('success', 'Project Updated successfully');
             }
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
