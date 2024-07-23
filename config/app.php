@@ -185,7 +185,7 @@ return [
         \PhpUnitGen\Console\Adapters\Laravel\PhpUnitGenServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
-
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -229,6 +229,12 @@ return [
         App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateServiceProvider::class,
         App\Repositories\Api\Manage\AirmeetEvent\AirmeetEventServiceProvider::class,
         App\Repositories\Api\Manage\UnifiedConnection\UnifiedConnectionServiceProvider::class,
+
+        /* Report */
+        App\Repositories\Api\Manage\Report\Lab\LabReportServiceProvider::class,
+        App\Repositories\Api\Manage\Report\Challenge\ChallengeReportServiceProvider::class,
+        App\Repositories\Api\Manage\Report\Organization\OrganizationReportServiceProvider::class,
+        App\Repositories\Api\Manage\Report\Resource\ResourceReportServiceProvider::class,
 
         /* Public */
         App\Repositories\Api\Public\Organization\OrganizationServiceProvider::class,
@@ -274,8 +280,8 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Image'      => Intervention\Image\Facades\Image::class,
         'PDF'        => Barryvdh\DomPDF\Facade::class,
+        'Excel'      => Maatwebsite\Excel\Facades\Excel::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-
     ])->toArray(),
 
 ];

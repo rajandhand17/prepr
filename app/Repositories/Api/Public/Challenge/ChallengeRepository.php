@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Public\Challenge;
 
 use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\ChallengeSocialActivitiesService;
@@ -125,6 +126,17 @@ class ChallengeRepository implements ChallengeInterface
         try {
             return $this->projectService->getProjectList($projectIds, $request);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            return $this->challengeService->incrementView($challenge);
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

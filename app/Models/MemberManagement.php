@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MemberManagement extends Model
@@ -33,12 +34,9 @@ class MemberManagement extends Model
         'email_body',
     ];
 
-    /***
-       * @return HasOne
-       */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, 'id', 'inviter_id');
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 
     public function organizations()
@@ -49,5 +47,10 @@ class MemberManagement extends Model
     public function organizationAddress()
     {
         return $this->hasMany(OrganizationAddress::class, 'organization_id', 'module_id');
+    }
+
+    public function organizationUser()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builder\LabProgramBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LabProgram extends Model
@@ -140,6 +141,14 @@ class LabProgram extends Model
         }
 
         return 'N/A';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function labProgramProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'module_id')->where('module_type', '=', '1');
     }
 
     public function labProgramType()

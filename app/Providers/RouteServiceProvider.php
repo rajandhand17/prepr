@@ -179,6 +179,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/manage/airmeet/')->middleware('api')->group(base_path('routes/v1/manage/airmeet.php'));
         Route::prefix('api/v1/manage/campus-connect/')->middleware('api')->group(base_path('routes/v1/campus-connect.php'));
         Route::prefix('api/v1/manage/unified/')->middleware('api')->group(base_path('routes/v1/manage/unified.php'));
+        Route::prefix('api/v1/manage/report/')->middleware('api')->group(base_path('routes/v1/manage/report.php'));
     }
 
     protected function mapPublicRoutes()

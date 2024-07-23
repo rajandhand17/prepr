@@ -3,6 +3,8 @@
 return [
     'pagination_per_page'                => '15',
     'association_pagination_per_page'    => '6',
+    'pagination_lab_report'              => '10',
+    'pagination_lab_report_achievement'  => '2',
     'pagination_per_page_career'         => '3',
     'pagination_per_page_advance_search' => '12',
     'message_per_page'                   => '30',
@@ -49,4 +51,5 @@ return [
 
     'default_logo_image'        => 'default_images/prepr_logo.webp',
     'default_achievement_image' => 'default_images/badge.webp',
+
 ];
