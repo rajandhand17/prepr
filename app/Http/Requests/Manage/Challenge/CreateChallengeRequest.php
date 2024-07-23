@@ -32,8 +32,8 @@ class CreateChallengeRequest extends FormRequest
             'description_type'                      => 'required_if:request_type,publish|in:text,scorm',
             'description'                           => 'required_if:description_type,text',
             'scorm_file'                            => 'required_if:description_type,scorm|file|mimes:zip|max:500000',
-            'duration_id'                           => 'required|exists:durations,id',
-            'level_id'                              => 'required|exists:levels,id',
+            'duration_id'                           => 'nullable|exists:durations,id',
+            'level_id'                              => 'nullable|exists:levels,id',
             'skills'                                => 'required_if:request_type,publish|array',
             'skills.*'                              => 'numeric|exists:skills,id',
             'is_open'                               => 'required|in:yes,no',
@@ -52,14 +52,15 @@ class CreateChallengeRequest extends FormRequest
             'mode'                                  => 'nullable|array',
             'mode.*'                                => 'in:team,individual',
             'source_link'                           => 'nullable|url',
-            'category_id'                           => 'required|exists:categories,id',
+            'category_id'                           => 'nullable|exists:categories,id',
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|exists:job_titles,id',
             'external_links'                        => 'array|required_if:request_type,publish',
             'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
-            'external_links.*'                      => 'url',
+            'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
-            'template_id'                           => 'required_if:request_type,publish|numeric|exists:pitch_templates,id',
+            'template_type'                         => 'required_if:request_type,publish|in:existing,new',
+            'template_id'                           => 'required_if:template_type,existing|numeric|exists:pitch_templates,id',
             'project_submission_requirement_ids'    => 'required_if:request_type,publish|array',
             'allow_submit_project'                  => 'in:yes,no',
             'complete_education_program'            => 'in:yes,no',
@@ -175,6 +176,17 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
         }
 
+        // Challenge Template new adding code
+        if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
+            $base_rules['template_title'] = 'required|unique:pitch_templates,title';
+            $base_rules['pitch_questions'] = 'array';
+            $base_rules['pitch_questions.*'] = 'nullable';
+            $base_rules['pitch_questions_description'] = 'array';
+            $base_rules['pitch_questions_description.*'] = 'nullable';
+            $base_rules['task_questions'] = 'array';
+            $base_rules['task_questions.*'] = 'nullable';
+        }
+
         if ($this->request->get('assessment_type') == 'closed') {
             $base_rules['members_email'] = 'array|required';
             $base_rules['members_email.*'] = 'email';
@@ -184,8 +196,6 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
             $base_rules['assessment_title'] = 'required|array';
             $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed';
-            $base_rules['assessment_description'] = 'required|array';
-            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
             $base_rules['assessment_score'] = 'required|array';
             $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed|numeric';
             $base_rules['assessment_weight'] = [
@@ -214,7 +224,7 @@ class CreateChallengeRequest extends FormRequest
         // For challenge flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,month';
             $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
@@ -228,7 +238,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_number'] = 'nullable|array';
             $base_rules['custom_timelines_number.*'] = 'integer';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
-            $base_rules['custom_timelines_duration.*'] = 'in:days,week,month';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,month';
             $base_rules['custom_timelines_description'] = 'nullable|array';
             $base_rules['custom_timelines_description.*'] = 'string';
         }
@@ -295,6 +305,7 @@ class CreateChallengeRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $validator->after(function ($validator) {
+            // Custom validation rule to checkk assessment title and score
             $assessment_title = $this->input('assessment_title', []);
             $assessment_score = $this->input('assessment_score', []);
 
@@ -305,6 +316,13 @@ class CreateChallengeRequest extends FormRequest
                 ($count_title !== $count_score)
             ) {
                 $validator->errors()->add('assessment_data', __('responses.title_score_should_match_count'));
+            }
+
+            // Custom validation rule to check at least one of pitch_questions or task_questions is not empty
+            if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
+                if (empty($this->input('pitch_questions')) && empty($this->input('task_questions'))) {
+                    $validator->errors()->add('at_least_one_question', 'Either pitch questions or task questions must be provided.');
+                }
             }
         });
     }

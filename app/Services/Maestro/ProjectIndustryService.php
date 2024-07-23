@@ -1,27 +1,14 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
-use App\Models\Language;
 use App\Models\ProjectIndustry;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Services\Maestro\LanguageService;
 use Exception;
 
 class ProjectIndustryService
 {
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function getProjectIndustry()
     {
         try {
@@ -30,20 +17,10 @@ class ProjectIndustryService
             return false;
         }
     }
-
-    public static function getProjectIndustryStatus()
-    {
-        try {
-            return ['1' => 'Active', '0' => 'Not Active'];
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function storeUpdateProjectIndustry($request, $id, $moduleMode)
     {
         try {
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             if ($moduleMode === 'create') {
                 $ProjectIndustry = new ProjectIndustry();
             } else {
@@ -51,18 +28,7 @@ class ProjectIndustryService
             }
 
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso,'title');
                 $ProjectIndustry->$columName = $request->$columName;
             }
 
@@ -90,6 +56,14 @@ class ProjectIndustryService
     {
         try {
             return $ProjectIndustry->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getIndustries()
+    {
+        try {
+            return ProjectIndustry::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }

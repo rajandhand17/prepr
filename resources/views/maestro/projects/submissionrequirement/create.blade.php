@@ -62,7 +62,7 @@
                         <div class="col-md-6">
                           <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
                               {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-                              {!! Form::select('status', $status, old('status'), ['class' => 'form-control']) !!}
+                              {!! Form::select('status', ['1' => 'Active', '0' => 'InActive'], old('status'), ['class' => 'form-control']) !!}
                               <span class="help-block">{{ $errors->first('status')}}</span>
                           </div>
                         </div>

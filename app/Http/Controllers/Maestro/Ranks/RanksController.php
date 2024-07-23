@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Services\Maestro\LanguageService;
 
 class RanksController extends Controller
 {
@@ -40,7 +41,7 @@ class RanksController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
@@ -67,7 +68,7 @@ class RanksController extends Controller
 
             return view('maestro.rank.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -77,12 +78,12 @@ class RanksController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $status = $this->getRankStatus();
 
             return view('maestro.rank.create', compact('languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -99,11 +100,11 @@ class RanksController extends Controller
                 return redirect()->route('ranks.index')->with(['success' => 'Rank Added successfully.']);
             }
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -113,13 +114,13 @@ class RanksController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $rank = $this->findRank($id);
             $status = $this->getRankStatus();
 
             return view('maestro.rank.edit', compact('rank', 'languages', 'status'));
         } catch (Exception $e) {
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -136,11 +137,11 @@ class RanksController extends Controller
                 return redirect()->route('ranks.index')->with(['success' => 'Rank updated successfully.']);
             }
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('ranks.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -161,7 +162,7 @@ class RanksController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

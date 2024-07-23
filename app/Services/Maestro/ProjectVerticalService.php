@@ -1,27 +1,13 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
-use App\Models\Language;
 use App\Models\ProjectVertical;
+use App\Helpers\Maestro\UtilityHelper;
 use Exception;
 
 class ProjectVerticalService
 {
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function getProjectVertical()
     {
         try {
@@ -31,19 +17,10 @@ class ProjectVerticalService
         }
     }
 
-    public static function getProjectVerticalStatus()
-    {
-        try {
-            return ['1' => 'Active', '0' => 'Not Active'];
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function storeUpdateProjectVertical($request, $id, $moduleMode)
     {
         try {
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             if ($moduleMode === 'create') {
                 $projectVertical = new ProjectVertical();
             } else {
@@ -51,18 +28,7 @@ class ProjectVerticalService
             }
 
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso,'title');
                 $projectVertical->$columName = $request->$columName;
             }
 
@@ -90,6 +56,14 @@ class ProjectVerticalService
     {
         try {
             return $projectVertical->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getVerticals()
+    {
+        try {
+            return ProjectVertical::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }

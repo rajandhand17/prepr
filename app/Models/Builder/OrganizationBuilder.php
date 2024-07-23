@@ -17,6 +17,8 @@ class OrganizationBuilder extends Builder
     public function whereSearch(string|null $keyword): OrganizationBuilder
     {
         if ($keyword) {
+            $keyword = addcslashes($keyword, '%_\\[]^$*()');
+
             return $this->where('language', '=', app()->getLocale())
                 ->where('title', 'like', '%'.$keyword.'%')
                 ->orWhere('display_name', 'like', '%'.$keyword.'%');

@@ -216,4 +216,40 @@ class LabService
             return false;
         }
     }
+
+    public static function getLab($action,$labId)
+    {
+        try {
+            $lab = Lab::select('title','id');
+            if($action == 'edit'){
+                $lab = $lab->where(['id' => $labId]);
+            }
+            return $lab->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }  
+    
+    public static function getLabs($request)
+    {
+        try {
+            $labs = Lab::select('id', 'title')->orderBy('id', 'DESC');
+            if ($request->search) {
+                $labs = $labs->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $labs = $labs->get()->take(20)->pluck('title', 'id');
+            $count = 0;
+            $json_stacks = $json_result = [];
+            foreach ($labs as $key => $lab_to_return) {
+                $json_stacks[$count]['id'] = $key;
+                $json_stacks[$count]['text'] = $lab_to_return;
+                $count++;
+            }
+            $json_result['result'] = $json_stacks;
+
+            return response()->json($json_result);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

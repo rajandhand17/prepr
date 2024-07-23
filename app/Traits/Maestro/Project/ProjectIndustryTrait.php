@@ -2,45 +2,17 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectIndustryService;
+use App\Services\Maestro\ProjectIndustryService;
 use Exception;
 
 trait ProjectIndustryTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectIndustryService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectIndustry()
     {
         try {
             $ProjectIndustry = ProjectIndustryService::getProjectIndustry();
             if ($ProjectIndustry) {
                 return $ProjectIndustry;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getProjectIndustryStatus()
-    {
-        try {
-            $status = ProjectIndustryService::getProjectIndustryStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;

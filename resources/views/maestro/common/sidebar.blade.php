@@ -185,8 +185,8 @@
         </li>
 
 
-        <li class="nav-item {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects' || request()->segment(2) == 'projects-submission-requirement' ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects' || request()->segment(2) == 'projects-submission-requirement' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-pitch-template' || request()->segment(2) == 'projects-submission-requirement' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'projects' || request()->segment(2) == 'projects-stage' || request()->segment(2) == 'projects-vertical' || request()->segment(2) == 'projects-type' || request()->segment(2) == 'projects-industry' || request()->segment(2) == 'projects-status' || request()->segment(2) == 'projects-pitch-template' || request()->segment(2) == 'projects-submission-requirement' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tree"></i>
             <p>
               Project Management
@@ -231,7 +231,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('projects.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects.index' ? 'active' : '' }}">
+              <a href="{{ route('projects-pitch-template.index') }}" class="nav-link {{ Route::currentRouteName() == 'projects-pitch-template.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pitch Templates</p>
               </a>

@@ -49,20 +49,6 @@ trait ResourceModuleTrait
         }
     }
 
-    private function getLanguage()
-    {
-        try {
-            $language = ResourceModuleService::getLanguage();
-            if ($language) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getResourceModuleList()
     {
         try {
