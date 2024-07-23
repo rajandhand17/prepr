@@ -5,7 +5,6 @@ namespace App\Services\Maestro;
 use App\Helpers\UtilityHelper;
 use App\Models\Project;
 use App\Services\Maestro\Challenge\ChallengeService;
-use App\Services\Maestro\LanguageService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -39,21 +38,21 @@ class ProjectService
             $model = new Project();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $createProject = new Project();
-            $createProject->uuid        = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $createProject->language    = $projectLanguage;
-            $createProject->user_id     = (int) $request->user_id;
-            $createProject->title       = $request->title;
-            $createProject->slug        = $slug;
+            $createProject->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $createProject->language = $projectLanguage;
+            $createProject->user_id = (int) $request->user_id;
+            $createProject->title = $request->title;
+            $createProject->slug = $slug;
             $createProject->description = $request->description;
-            $createProject->challenge_id= (int) $request->challenge_id;
-            $createProject->lab_id      = (int) $request->lab_id;
+            $createProject->challenge_id = (int) $request->challenge_id;
+            $createProject->lab_id = (int) $request->lab_id;
             $createProject->category_id = $request->category;
-            $createProject->type_id     = $request->type;
+            $createProject->type_id = $request->type;
             $createProject->industry_id = $request->industry;
-            $createProject->stage_id    = $request->stage;
+            $createProject->stage_id = $request->stage;
             $createProject->vertical_id = $request->verticals;
-            $createProject->status_id   = $request->status;
-            $createProject->privacy     = $request->privacy;
+            $createProject->status_id = $request->status;
+            $createProject->privacy = $request->privacy;
             if ($createProject->save()) {
                 return true;
             }
@@ -101,19 +100,19 @@ class ProjectService
                 if (!empty($request->challenge_id)) {
                     $projectLanguage = self::checkProjectLanguage($request->challenge_id);
                 }
-                $updateProject->user_id     = (int) $request->user_id;
-                $updateProject->title       = $request->title;
+                $updateProject->user_id = (int) $request->user_id;
+                $updateProject->title = $request->title;
                 $updateProject->description = $request->description;
-                $updateProject->challenge_id= (int) $request->challenge_id;
-                $updateProject->language    = $projectLanguage;
-                $updateProject->lab_id      = (int) $request->lab_id;
+                $updateProject->challenge_id = (int) $request->challenge_id;
+                $updateProject->language = $projectLanguage;
+                $updateProject->lab_id = (int) $request->lab_id;
                 $updateProject->category_id = $request->category;
-                $updateProject->type_id     = $request->type;
+                $updateProject->type_id = $request->type;
                 $updateProject->industry_id = $request->industry;
-                $updateProject->stage_id    = $request->stage;
+                $updateProject->stage_id = $request->stage;
                 $updateProject->vertical_id = $request->verticals;
-                $updateProject->status_id   = $request->status;
-                $updateProject->privacy     = $request->privacy;
+                $updateProject->status_id = $request->status;
+                $updateProject->privacy = $request->privacy;
                 if ($updateProject->save()) {
                     return true;
                 }

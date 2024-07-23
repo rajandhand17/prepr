@@ -2,7 +2,6 @@
 
 namespace App\Traits\Maestro\VendorManagement;
 
-use App\Models\Vendor;
 use App\Services\Maestro\VendorService;
 
 trait VendorManagementTrait
@@ -11,10 +10,10 @@ trait VendorManagementTrait
     {
         try {
             $getAllVendorData = VendorService::getVendor();
-            if($getAllVendorData){
+            if ($getAllVendorData) {
                 return $getAllVendorData;
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -22,19 +21,21 @@ trait VendorManagementTrait
     public function getVendorById($id)
     {
         try {
-            $getVendor=VendorService::getVendorById($id);
+            $getVendor = VendorService::getVendorById($id);
+
             return $getVendor;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public function updateVendorById($id,$request)
+    public function updateVendorById($id, $request)
     {
         try {
-            $getVendor=VendorService::updateVendorById($id,$request);
+            $getVendor = VendorService::updateVendorById($id, $request);
+
             return $getVendor;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -42,12 +43,13 @@ trait VendorManagementTrait
     public function deleteVendorById($id)
     {
         try {
-            $deleteVendor=VendorService::deleteVendorById($id);
-            if($deleteVendor){
+            $deleteVendor = VendorService::deleteVendorById($id);
+            if ($deleteVendor) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -55,11 +57,11 @@ trait VendorManagementTrait
     public function checkVendorExists($id)
     {
         try {
-            $deleteVendor=VendorService::getVendorById($id);
-            if($deleteVendor){
+            $deleteVendor = VendorService::getVendorById($id);
+            if ($deleteVendor) {
                 return $deleteVendor;
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -67,9 +69,10 @@ trait VendorManagementTrait
     public function createVendor($request)
     {
         try {
-            $createVendor=VendorService::createVendor($request);
+            $createVendor = VendorService::createVendor($request);
+
             return $createVendor;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

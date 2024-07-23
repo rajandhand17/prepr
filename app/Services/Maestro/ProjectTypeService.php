@@ -80,6 +80,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function getTypes()
     {
         try {

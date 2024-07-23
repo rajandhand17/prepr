@@ -80,6 +80,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function getIndustries()
     {
         try {

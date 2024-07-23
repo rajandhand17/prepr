@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProjectIndustry;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectIndustryTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
 
 class ProjectIndustryController extends Controller
 {

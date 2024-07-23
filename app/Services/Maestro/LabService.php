@@ -3,8 +3,8 @@
 namespace App\Services\Maestro;
 
 use App\Models\Lab;
-use HiFolks\RandoPhp\Randomize;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 
 class LabService
 {
@@ -76,6 +76,7 @@ class LabService
             return false;
         }
     }
+
     public static function getLabs($request)
     {
         try {
@@ -99,16 +100,17 @@ class LabService
         }
     }
 
-    public static function getLab($action,$labId)
+    public static function getLab($action, $labId)
     {
         try {
-            $lab = Lab::select('title','id');
-            if($action == 'edit'){
+            $lab = Lab::select('title', 'id');
+            if ($action == 'edit') {
                 $lab = $lab->where(['id' => $labId]);
             }
+
             return $lab->pluck('title', 'id');
         } catch (Exception $e) {
             return false;
         }
-    }    
+    }
 }

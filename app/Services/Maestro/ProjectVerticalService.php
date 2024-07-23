@@ -80,6 +80,7 @@ class ProjectVerticalService
             return false;
         }
     }
+
     public static function getVerticals()
     {
         try {

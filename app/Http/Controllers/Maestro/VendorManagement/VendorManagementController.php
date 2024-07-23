@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Maestro\VendorManagement;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Maestro\Vendor\StoreRequest;
-use App\Models\User;
 use App\Models\Vendor;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
 use App\Traits\Maestro\VendorManagement\VendorManagementTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -27,21 +24,21 @@ class VendorManagementController extends Controller
             $vendor = $this->getAllVendorData();
             if ($vendor) {
                 if ($request->ajax()) {
-                        return DataTables::eloquent($vendor)
-                            ->addColumn('action', function (Vendor $vendor) {
-                                return '<a style="padding-left:10px" class="mr-10" href="'.route('vendor-management.show', ['vendor_management' => $vendor->id]).'"><i class="fas fa-eye"></i></a>
+                    return DataTables::eloquent($vendor)
+                        ->addColumn('action', function (Vendor $vendor) {
+                            return '<a style="padding-left:10px" class="mr-10" href="'.route('vendor-management.show', ['vendor_management' => $vendor->id]).'"><i class="fas fa-eye"></i></a>
 
                             <a style="padding-left:50px" class="mr-10" href="'.route('vendor-management.edit', ['vendor_management' =>$vendor->id]).'"><i class="fas fa-edit"></i></a>
                             <a style="padding-left:50px" href="javascript:void(0)" onclick="deleteVendor(\''.route('vendor-management.destroy', ['vendor_management' => $vendor->id]).'\')"><i class="fas fa-trash"></i></a>';
-                            })
-                            ->editColumn('is_active', function (Vendor $vendor) {
-                                return $vendor->is_active == '1'
-                                    ? "<span class='badge badge-success'>Active</span>"
-                                    : "<span class='badge badge-danger'>Inactive</span>";
-                            })
-                            ->addIndexColumn()
-                            ->rawColumns(['is_active', 'action'])
-                            ->make(true);
+                        })
+                        ->editColumn('is_active', function (Vendor $vendor) {
+                            return $vendor->is_active == '1'
+                                ? "<span class='badge badge-success'>Active</span>"
+                                : "<span class='badge badge-danger'>Inactive</span>";
+                        })
+                        ->addIndexColumn()
+                        ->rawColumns(['is_active', 'action'])
+                        ->make(true);
                 }
 
                 $html = $builder->columns([
@@ -57,7 +54,7 @@ class VendorManagementController extends Controller
             } else {
                 return response()->json(['error' => 'No vendor data found'], 404);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('maestro.vendor.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -72,6 +69,7 @@ class VendorManagementController extends Controller
             if (!$vendor->exists) {
                 return redirect()->route('vendor-management.index')->with(['error' => 'This Vendor not found.']);
             }
+
             return view('maestro.vendor.edit', compact('vendor'));
         } catch (\Exception $e) {
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,21 +80,21 @@ class VendorManagementController extends Controller
     {
         try {
             return view('maestro.vendor.create');
-
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
-       }
+        }
     }
 
     public function store(Request $request)
     {
         try {
-            $creatVendor=$this->createVendor($request);
+            $creatVendor = $this->createVendor($request);
             if ($creatVendor) {
                 return redirect()->route('vendor-management.index')->with('success', 'Vendor created successfully');
             }
+
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -108,9 +106,10 @@ class VendorManagementController extends Controller
             if (!$vendor->exists) {
                 return redirect()->route('vendor.index')->with(['error' => 'Vendor not found.']);
             }
+
             return view('maestro.vendor.view', compact('vendor'));
-        }catch (\Exception $e) {
-          return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        } catch (\Exception $e) {
+            return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -120,7 +119,7 @@ class VendorManagementController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $update=$this->updateVendorById($id,$request);
+            $update = $this->updateVendorById($id, $request);
             if ($update) {
                 return redirect()->route('vendor-management.index')->with('success', 'User Updated successfully');
             }
@@ -134,16 +133,17 @@ class VendorManagementController extends Controller
     public function destroy(string $id)
     {
         try {
-            $checkVendorExistsOrNot=$this->checkVendorExists($id);
-            if (!$checkVendorExistsOrNot){
+            $checkVendorExistsOrNot = $this->checkVendorExists($id);
+            if (!$checkVendorExistsOrNot) {
                 return response()->json(['status' => 'failed', 'message' => 'Record not found']);
             }
             if ($this->deleteVendorById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
+
             return response()->json(['status' => 'failed', 'message' => 'Record deleted failed']);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
-       }
+        }
     }
 }
