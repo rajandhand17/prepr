@@ -21,20 +21,6 @@ trait ProjectSubmissionRequirementTrait
         }
     }
 
-    private function getSubmissionRequirementStatus()
-    {
-        try {
-            $status = ProjectSubmissionRequirementService::getSubmissionRequirementStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function storeUpdateSubmissionRequirement($request, $id, $moduleMode)
     {
         try {

@@ -52,7 +52,7 @@
                               <div class="col-md-6">
                                 <div class="form-group">
                                     {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                    {!! Form::text($inputName,null, ['class' => 'form-control']) !!}
+                                    {!! Form::text($inputName,null, ['class' => 'form-control','required' => 'required']) !!}
                                 </div>
                               </div>
                           @endforeach
@@ -62,7 +62,7 @@
                       <div class="col-md-6">
                         <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
                             {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-                            {!! Form::select('status', $status, $submissionRequirement->status, ['class' => 'form-control']) !!}
+                            {!! Form::select('status', ['1' => 'Active', '0' => 'InActive'], $submissionRequirement->status, ['class' => 'form-control']) !!}
                             <span class="help-block">{{ $errors->first('status')}}</span>
                         </div>
                       </div>

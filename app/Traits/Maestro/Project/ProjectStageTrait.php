@@ -7,40 +7,12 @@ use Exception;
 
 trait ProjectStageTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectStageService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectStage()
     {
         try {
             $projectStage = ProjectStageService::getProjectStage();
             if ($projectStage) {
                 return $projectStage;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getProjectStageStatus()
-    {
-        try {
-            $status = ProjectStageService::getProjectStageStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;
