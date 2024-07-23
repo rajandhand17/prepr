@@ -2,45 +2,17 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectSubmissionRequirementService;
+use App\Services\Maestro\ProjectSubmissionRequirementService;
 use Exception;
 
 trait ProjectSubmissionRequirementTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectSubmissionRequirementService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getSubmissionRequirement()
     {
         try {
             $submissionRequirement = ProjectSubmissionRequirementService::getSubmissionRequirement();
             if ($submissionRequirement) {
                 return $submissionRequirement;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getSubmissionRequirementStatus()
-    {
-        try {
-            $status = ProjectSubmissionRequirementService::getSubmissionRequirementStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;

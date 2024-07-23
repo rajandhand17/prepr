@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProjectType;
-use App\Traits\Maestro\Project\ProjectTypeTrait;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use Exception;
+use App\Traits\Maestro\Project\ProjectTypeTrait;
+use App\Services\Maestro\LanguageService;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Models\ProjectType;
 
 class ProjectTypeController extends Controller
 {
@@ -40,23 +41,12 @@ class ProjectTypeController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso,'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Type Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -66,7 +56,7 @@ class ProjectTypeController extends Controller
 
             return view('maestro.projects.type.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,12 +66,11 @@ class ProjectTypeController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
-            $status = $this->getProjectTypeStatus();
+            $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.projects.type.create', compact('languages', 'status'));
+            return view('maestro.projects.type.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -91,18 +80,12 @@ class ProjectTypeController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectType($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('projects-type.index')->with(['success' => 'Project type Added successfully.']);
             }
-
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,13 +95,11 @@ class ProjectTypeController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $projectType = $this->findProjectType($id);
-            $status = $this->getProjectTypeStatus();
-
-            return view('maestro.projects.type.edit', compact('projectType', 'languages', 'status'));
+            return view('maestro.projects.type.edit', compact('projectType', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -128,18 +109,12 @@ class ProjectTypeController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectType($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('projects-type.index')->with(['success' => 'Project type updated successfully.']);
             }
-
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('projects-type.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -149,18 +124,13 @@ class ProjectTypeController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $ProjectType = $this->findProjectType($id);
             if (!empty($ProjectType)) {
                 $this->deleteProjectType($ProjectType);
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Project type deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

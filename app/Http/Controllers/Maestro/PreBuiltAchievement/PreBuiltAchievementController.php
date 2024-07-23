@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Services\Maestro\LanguageService;
 
 class PreBuiltAchievementController extends Controller
 {
@@ -51,7 +52,7 @@ class PreBuiltAchievementController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
             ];
@@ -80,7 +81,7 @@ class PreBuiltAchievementController extends Controller
 
             return view('maestro.preBuiltAchievement.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -90,11 +91,11 @@ class PreBuiltAchievementController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.preBuiltAchievement.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -111,11 +112,11 @@ class PreBuiltAchievementController extends Controller
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement Added successfully.']);
             }
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -125,12 +126,12 @@ class PreBuiltAchievementController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $achievement = $this->findPreBuiltAchievement($id);
 
             return view('maestro.preBuiltAchievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -147,11 +148,11 @@ class PreBuiltAchievementController extends Controller
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement updated successfully.']);
             }
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -172,7 +173,7 @@ class PreBuiltAchievementController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

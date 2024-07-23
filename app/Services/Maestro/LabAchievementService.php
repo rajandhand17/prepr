@@ -4,7 +4,7 @@ namespace App\Services\Maestro;
 
 class LabAchievementService
 {
-    public static function createLabAchievement($originalLabsAchievement, $clonedLabId)
+    public static function createCloneLabAchievement($originalLabsAchievement, $clonedLabId)
     {
         try {
             if ($originalLabsAchievement) {

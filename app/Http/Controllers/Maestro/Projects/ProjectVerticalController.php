@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
-use App\Models\ProjectVertical;
-use App\Traits\Maestro\Project\ProjectVerticalTrait;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Traits\Maestro\Project\ProjectVerticalTrait;
+use App\Services\Maestro\LanguageService;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Models\ProjectVertical;
+use Exception;
 
 class ProjectVerticalController extends Controller
 {
@@ -31,7 +32,7 @@ class ProjectVerticalController extends Controller
                     })
                     ->editColumn('status', static function (ProjectVertical $vertical) {
                         if ($vertical->status == 0) {
-                            return 'Not Active';
+                            return 'InActive';
                         } else {
                             return 'Active';
                         }
@@ -40,23 +41,12 @@ class ProjectVerticalController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso,'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Vertical Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -66,7 +56,7 @@ class ProjectVerticalController extends Controller
 
             return view('maestro.projects.vertical.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,12 +66,10 @@ class ProjectVerticalController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
-            $status = $this->getProjectVerticalStatus();
-
-            return view('maestro.projects.vertical.create', compact('languages', 'status'));
+            $languages = LanguageService::getAllActiveLanguages();
+            return view('maestro.projects.vertical.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -91,18 +79,12 @@ class ProjectVerticalController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectVertical($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical Added successfully.']);
             }
-
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,13 +94,12 @@ class ProjectVerticalController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $projectVertical = $this->findProjectVertical($id);
-            $status = $this->getProjectVerticalStatus();
 
-            return view('maestro.projects.vertical.edit', compact('projectVertical', 'languages', 'status'));
+            return view('maestro.projects.vertical.edit', compact('projectVertical', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -128,18 +109,12 @@ class ProjectVerticalController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectVertical($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical updated successfully.']);
             }
-
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('projects-vertical.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -149,18 +124,13 @@ class ProjectVerticalController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $projectVertical = $this->findProjectVertical($id);
             if (!empty($projectVertical)) {
                 $this->deleteProjectVertical($projectVertical);
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Project Vertical deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }
