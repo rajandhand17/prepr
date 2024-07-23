@@ -6,7 +6,7 @@ use App\Models\LabAddress;
 
 class LabAddressService
 {
-    public static function createLabAddress($lab, $newLabId)
+    public static function createCloneLabAddress($lab, $newLabId)
     {
         try {
             if ($lab) {
@@ -21,7 +21,7 @@ class LabAddressService
         }
     }
 
-    public function updateLabAddress($request, $lab_id)
+    public static function updateLabAddress($request, $lab_id)
     {
         try {
             $labaddress = LabAddress::where('lab_id', $lab_id)->first();
@@ -51,5 +51,24 @@ class LabAddressService
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public static function createLabAddress($request, $lab)
+    {
+        try {
+            $labaddress = new LabAddress();
+            $labaddress->lab_id = $lab;
+            $labaddress->latitude = $request->latitude;
+            $labaddress->longitude = $request->longitude;
+            $labaddress->address = $request->address;
+            $labaddress->city = $request->city;
+            $labaddress->country = $request->country;
+            $labaddress->save();
+            return true;
+        } catch(\Exception $e) {
+            dd($e);
+            return false;
+        }
+
     }
 }
