@@ -29,11 +29,10 @@ class ResourceModuleTypeModesService
                     $this->createEntries($request->$key, $resourceModuleId);
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             \Log::error('Failed to create resource module type modes: ' . $e->getMessage());
-            return response()->json(['error' => 'An error occurred while creating resource module type modes.'], 500);
+            return false;
         }
     }
 

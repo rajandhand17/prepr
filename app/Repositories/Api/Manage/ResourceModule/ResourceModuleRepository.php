@@ -67,19 +67,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
                 $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
-                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
                 $resourceModuleTypeModesService=$this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $createResourceModule->id);
                 return [
                     'createResourceModule'                  => $createResourceModule,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
                     'resourceModuleTypeModesService'        => $resourceModuleTypeModesService,
                 ];
             });
             $request->organization_id = $organizationId;
             if ($createLabProgram['createResourceModule'] &&
-                $createLabProgram['resourceModuleSkillsGroupStackService'] &&
-                $createLabProgram['resourceModuleTagsGroupsService'] &&
+                $createLabProgram['resourceModuleSkillsGroupStackService']  &&
                 $createLabProgram['resourceModuleTypeModesService']
             ) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
@@ -208,16 +205,18 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
-                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
+                $resourceModuleTypeModesService=$this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'            => $updateResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
+                    'resourceModuleTypeModesService' => $resourceModuleTypeModesService,
                 ];
             });
             $request->organization_id = $organizationId;
-            if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
+            if ($updateResourceModule['updateResourceModule'] &&
+                $updateResourceModule['resourceModuleSkillsGroupsStack'] &&
+                $updateResourceModule['resourceModuleTypeModesService']) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 
