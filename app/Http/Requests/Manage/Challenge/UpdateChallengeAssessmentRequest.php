@@ -38,8 +38,6 @@ class UpdateChallengeAssessmentRequest extends FormRequest
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
             $base_rules['assessment_title'] = 'required|array';
             $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed,ai';
-            $base_rules['assessment_description'] = 'required|array';
-            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed,ai|string';
             $base_rules['assessment_score'] = 'required|array';
             $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed,ai|numeric';
             $base_rules['assessment_weight'] = [

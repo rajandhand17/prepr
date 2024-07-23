@@ -15,9 +15,9 @@ class ResourceGroupListNameResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'   => $this->uuid,
-            'title'=> $this->title,
-            'media'=> $this->media,
+            'uuid'   => $this->uuid,
+            'title'  => $this->title,
+            'media'  => $this->media,
         ];
     }
 }
