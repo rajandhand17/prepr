@@ -43,12 +43,12 @@ class ChannelApiController extends AppBaseController
 
             $labs = $this->channelApiRepository->getLabs($type, $organization, $user);
             $responseData = [
-                'total_count'  => $labs->total(),
-                'per_page'     => $labs->perPage(),
-                'count'        => $labs->count(),
+                'total_count' => $labs->total(),
+                'per_page' => $labs->perPage(),
+                'count' => $labs->count(),
                 'current_page' => $labs->currentPage(),
-                'total_pages'  => $labs->lastPage(),
-                'list'         => LabResource::collection($labs->items()),
+                'total_pages' => $labs->lastPage(),
+                'list' => LabResource::collection($labs->items()),
             ];
 
             return $this->sendResponse($responseData, 'responses.found_labs_list');
@@ -83,12 +83,12 @@ class ChannelApiController extends AppBaseController
             }
             $challenges = $this->channelApiRepository->getChallenges($type, $organization, $user);
             $responseData = [
-                'total_count'  => $challenges->total(),
-                'per_page'     => $challenges->perPage(),
-                'count'        => $challenges->count(),
+                'total_count' => $challenges->total(),
+                'per_page' => $challenges->perPage(),
+                'count' => $challenges->count(),
                 'current_page' => $challenges->currentPage(),
-                'total_pages'  => $challenges->lastPage(),
-                'list'         => ChallengeResource::collection($challenges->items()),
+                'total_pages' => $challenges->lastPage(),
+                'list' => ChallengeResource::collection($challenges->items()),
             ];
 
             return $this->sendResponse($responseData, 'responses.found_challenges_list');
@@ -117,6 +117,20 @@ class ChannelApiController extends AppBaseController
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
 
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function sso()
+    {
+        try {
+            $magnetOauthServer = UtilityHelper::sanitizeUrl(config('magnet.magnet_oauth_server'));
+            $magnetRedirectURI = UtilityHelper::sanitizeUrl(config('site-settings.frontend_site_url')). '/magnet/callback';
+            $url = sprintf("%sclient_id=%s&redirect_uri=%s&response_type=code&scope=basic connect employment education lms", $magnetOauthServer, config('magnet.client_id'), $magnetRedirectURI);
+
+            return redirect($url);
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
