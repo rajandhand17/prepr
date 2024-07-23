@@ -120,4 +120,19 @@ class ChannelApiController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function sso()
+    {
+        try {
+            $magnetOauthServer = UtilityHelper::sanitizeUrl(config('magnet.magnet_oauth_server'));
+            $magnetRedirectURI = UtilityHelper::sanitizeUrl(config('site-settings.frontend_site_url')).'/magnet/callback';
+            $url = sprintf('%sclient_id=%s&redirect_uri=%s&response_type=code&scope=basic connect employment education lms', $magnetOauthServer, config('magnet.client_id'), $magnetRedirectURI);
+
+            return redirect($url);
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
