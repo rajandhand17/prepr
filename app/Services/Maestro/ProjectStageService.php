@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
 use App\Models\ProjectStage;
@@ -8,20 +8,6 @@ use Exception;
 
 class ProjectStageService
 {
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function getProjectStage()
     {
         try {
@@ -90,6 +76,14 @@ class ProjectStageService
     {
         try {
             return $projectStage->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getProjectStages()
+    {
+        try {
+            return ProjectStage::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }

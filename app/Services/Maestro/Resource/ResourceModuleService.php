@@ -10,13 +10,14 @@ use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
+use App\Services\Maestro\LanguageService;
 
 class ResourceModuleService
 {
     public static function getResourceModuleList()
     {
         try {
-            return ResourceModule::where('language', \Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->latest();
+            return ResourceModule::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             return false;
         }
@@ -39,20 +40,6 @@ class ResourceModuleService
             $organization = Organization::pluck('title', 'id')->prepend('Please Select organization', '');
 
             return $organization;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where(['status' => 1])->pluck('name', 'iso');
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
         } catch (Exception $e) {
             return false;
         }

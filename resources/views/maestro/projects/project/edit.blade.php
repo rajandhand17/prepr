@@ -40,7 +40,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
               {!! Form::label('user_id', 'Project User', ['class' => 'control-label']) !!}
-              {!! Form::select('user_id', $project_user, $project->user_id, ['class' => 'form-control']) !!}
+              {!! Form::select('user_id', $projectData['user'] ?? [], $project->user_id, ['class' => 'form-control','id'=>'userId']) !!}
               <span class="help-block">{{ $errors->first('user_id')}}</span>
             </div>
           </div>
@@ -49,15 +49,15 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('challenge_id')) ? 'has-error' : ''}}">
               {!! Form::label('challenge_id', 'Project Challenge', ['class' => 'control-label']) !!}
-              {!! Form::select('challenge_id', $project_challenge, $project->challenge_id, ['class' => 'form-control']) !!}
-              <span class="help-block">{{ $errors->first('challenge_id')}}</span>
+              {{ Form::select('challenge_id', $projectData['project_challenge'] ?? [], $project->challenge_id, ['class' => 'form-control select2bs4','id' => 'associativeChallenge','required' => 'required']) }}
+              <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('challenge_id')}}</span>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group {{($errors->has('lab_id')) ? 'has-error' : ''}}">
               {!! Form::label('lab_id', 'Project lab', ['class' => 'control-label']) !!}
-              {!! Form::select('lab_id',$project_lab, $project->lab_id ,['class' => 'form-control']) !!}
-              <span class="help-block">{{ $errors->first('lab_id')}}</span>
+              {{ Form::select('lab_id', $projectData['project_lab'] ?? [], $project->lab_id, ['class' => 'form-control select2bs4','id' => 'associativeLab']) }}
+              <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('lab_id')}}</span>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('stage')) ? 'has-error' : ''}}">
               {!! Form::label('stage', 'Project Stage', ['class' => 'control-label']) !!}
-              {!! Form::select('stage', $project_stage, $project->stage_id, ['class' => 'form-control']) !!}
+              {!! Form::select('stage', $projectData['project_stage'] ?? [], $project->stage_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('stage')}}</span>
             </div>
           </div>
@@ -73,7 +73,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('type')) ? 'has-error' : ''}}">
               {!! Form::label('type', 'Project Type', ['class' => 'control-label']) !!}
-              {!! Form::select('type', $project_type, $project->type_id, ['class' => 'form-control']) !!}
+              {!! Form::select('type', $projectData['project_type'] ?? [], $project->type_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('type')}}</span>
             </div>
           </div>
@@ -82,7 +82,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
               {!! Form::label('status', 'Project Status', ['class' => 'control-label']) !!}
-              {!! Form::select('status', $project_status, $project->status_id, ['class' => 'form-control']) !!}
+              {!! Form::select('status', $projectData['project_status'] ?? [], $project->status_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('status')}}</span>
             </div>
           </div>
@@ -90,7 +90,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('industry')) ? 'has-error' : ''}}">
               {!! Form::label('industry', 'Project Industry', ['class' => 'control-label']) !!}
-              {!! Form::select('industry', $project_industry, $project->industry_id, ['class' => 'form-control']) !!}
+              {!! Form::select('industry', $projectData['project_industry'] ?? [], $project->industry_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('industry')}}</span>
             </div>
           </div>
@@ -99,7 +99,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('verticals')) ? 'has-error' : ''}}">
               {!! Form::label('verticals', 'Project Verticals', ['class' => 'control-label']) !!}
-              {!! Form::select('verticals', $project_verticals, $project->vertical_id, ['class' => 'form-control']) !!}
+              {!! Form::select('verticals', $projectData['project_verticals'] ?? [], $project->vertical_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('verticals')}}</span>
             </div>
           </div>
@@ -107,7 +107,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('category')) ? 'has-error' : ''}}">
               {!! Form::label('category', 'Project Category', ['class' => 'control-label']) !!}
-              {!! Form::select('category', $project_category, $project->category_id, ['class' => 'form-control']) !!}
+              {!! Form::select('category', $projectData['project_category'] ?? [], $project->category_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('category')}}</span>
             </div>
           </div>
@@ -146,16 +146,15 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('team')) ? 'has-error' : ''}}">
               {!! Form::label('team', 'Team Members', ['class' => 'control-label ']) !!}
-              {!! Form::select('team[]', $project_team, $selected_member, ['class' => 'form-control
-              select2','multiple'=>'multiple', 'id'=>'projectMembers']) !!}
-              <span class="help-block">{{ $errors->first('team')}}</span>
+              {!! Form::select('team[]',$projectData['selected_member'] ?? [],old('team'), ['class' => 'form-control select2bs4', 'id'=>'teamMemberId','required' => 'required','multiple'=>'multiple']) !!}
+              <span style="color: #ea6c41 !important;" class="help-block team_error">{{ $errors->first('team')}}</span>
             </div>
           </div>
 
           <div class="col-md-6">
             <div class="form-group {{($errors->has('privacy')) ? 'has-error' : ''}}">
               {!! Form::label('privacy', 'Project Privacy', ['class' => 'control-label']) !!}
-              {!! Form::select('privacy', $project_privacy, $project->privacy_id, ['class' => 'form-control']) !!}
+              {!! Form::select('privacy', $projectData['project_privacy'] ?? [], $project->privacy_id, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('privacy')}}</span>
             </div>
           </div>
@@ -194,7 +193,126 @@
 @stop
 
 @section('scripts')
-<script>
+  <script>
+    $(document).ready(function () {
+        getUsers();
+        getLabs();
+        getChallenges();
+        getTeamMembers();
+    });
 
+    function getUsers(){
+        $('#userId').select2({      
+            placeholder: "Select User",
+            ajax: {
+                url: '{{ route('getUsers') }}',
+                type: 'GET',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    if(data.status == 'fail'){
+                      $('#userId').select2("close");
+                      $('.user_error').show();
+                      $('.user_error').html(data.message);
+                    } else {
+                        $('.user_error').hide();
+                        return {
+                          results: data.result
+                        };
+                    }
+                }
+            }
+        });
+    }
+
+    function getTeamMembers(){
+        $('#teamMemberId').select2({      
+            placeholder: "Select team members",
+            ajax: {
+                url: '{{ route('getUsers') }}',
+                type: 'GET',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    if(data.status == 'fail'){
+                      $('#teamMemberId').select2("close");
+                      $('.team_error').show();
+                      $('.team_error').html(data.message);
+                    } else {
+                        $('.team_error').hide();
+                        return {
+                          results: data.result
+                        };
+                    }
+                }
+            }
+        });
+    }
+
+    function getLabs(){
+      $('#associativeLab').select2({
+      placeholder: "Select lab",
+      ajax: {
+          url: '{{route("getLabsForProject")}}',
+              cache: true,
+              type: 'GET',
+              dataType: 'json',
+              data: function (params) {
+                  return {
+                      search: params.term,
+                  };
+              },
+              processResults: function (data) {
+                if(data.status == 'fail'){
+                  $('#associativeLab').select2("close");
+                  $('.lab_error').show();
+                  $('.lab_error').html(data.message);
+                } else {
+                    $('.lab_error').hide();
+                    return {
+                      results: data.result
+                    };
+                }
+              }
+          }
+      });
+    }
+
+    function getChallenges(language){
+      $('#associativeChallenge').select2({
+        placeholder: "Select Challenge",
+        ajax: {
+            url: '{{route("getChallengesForProject")}}',
+                cache: true,
+                type: 'GET',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                  if(data.status == 'fail'){
+                    $('#associativeChallenge').select2("close");
+                    $('.challenge_error').show();
+                    $('.challenge_error').html(data.message);
+                  } else {
+                      $('.challenge_error').hide();
+                      return {
+                        results: data.result
+                      };
+                  }
+                }
+            }
+        });
+    }
 </script>
 @endsection

@@ -7,20 +7,6 @@ use Exception;
 
 trait PreBuiltAchievementTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = PreBuiltAchievementService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getPreBuiltAchievement()
     {
         try {

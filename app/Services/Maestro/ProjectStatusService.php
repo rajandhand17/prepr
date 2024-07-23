@@ -1,37 +1,23 @@
 <?php
 
-namespace App\Services\Maestro\Project;
+namespace App\Services\Maestro;
 
 use App\Models\Language;
-use App\Models\ProjectIndustry;
+use App\Models\ProjectStatus;
 use Exception;
 
-class ProjectIndustryService
+class ProjectStatusService
 {
-    public static function getLanguage()
+    public static function getProjectStatus()
     {
         try {
-            $language = Language::where('status', 1)->get();
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
+            return ProjectStatus::query()->latest();
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function getProjectIndustry()
-    {
-        try {
-            return ProjectIndustry::query()->latest();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getProjectIndustryStatus()
+    public static function getProjectStatusStatus()
     {
         try {
             return ['1' => 'Active', '0' => 'Not Active'];
@@ -40,14 +26,14 @@ class ProjectIndustryService
         }
     }
 
-    public static function storeUpdateProjectIndustry($request, $id, $moduleMode)
+    public static function storeUpdateProjectStatus($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1)->get();
             if ($moduleMode === 'create') {
-                $ProjectIndustry = new ProjectIndustry();
+                $projectStatus = new ProjectStatus();
             } else {
-                $ProjectIndustry = ProjectIndustry::find($id);
+                $projectStatus = ProjectStatus::find($id);
             }
 
             foreach ($languages as $single) {
@@ -63,11 +49,11 @@ class ProjectIndustryService
                     }
                     $columName = $columName.'_title';
                 }
-                $ProjectIndustry->$columName = $request->$columName;
+                $projectStatus->$columName = $request->$columName;
             }
 
-            $ProjectIndustry->status = $request->status;
-            if ($ProjectIndustry->save()) {
+            $projectStatus->status = $request->status;
+            if ($projectStatus->save()) {
                 return true;
             }
 
@@ -77,19 +63,28 @@ class ProjectIndustryService
         }
     }
 
-    public static function findProjectIndustry($id)
+    public static function findProjectStatus($id)
     {
         try {
-            return ProjectIndustry::findOrFail($id);
+            return ProjectStatus::findOrFail($id);
         } catch (Exception $e) {
             return false;
         }
     }
 
-    public static function deleteProjectIndustry($ProjectIndustry)
+    public static function deleteProjectStatus($projectStatus)
     {
         try {
-            return $ProjectIndustry->delete();
+            return $projectStatus->delete();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getStatus()
+    {
+        try {
+            return ProjectStatus::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             return false;
         }

@@ -80,7 +80,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.create', compact('sponsor_status'));
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -98,11 +98,11 @@ class SponsorsController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -120,7 +120,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.edit', compact('sponsor', 'sponsor_status'));
         } catch (Exception $e) {
-            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -138,11 +138,11 @@ class SponsorsController extends Controller
             }
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
 
-            return redirect()->route('sponsors.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -162,7 +162,7 @@ class SponsorsController extends Controller
         } catch (Exception $e) {
             DB::rollback();
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

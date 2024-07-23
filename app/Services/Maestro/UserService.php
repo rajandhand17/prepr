@@ -96,4 +96,24 @@ class UserService
             return false;
         }
     }
+    public static function getProjectTeamMembers()
+    {
+        try {
+            return User::count();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getUser($action,$userId)
+    {
+        try {
+            $user = User::select('username','id');
+            if($action == 'edit'){
+                $user = $user->where(['id' => $userId]);
+            }
+            return $user->pluck('username', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

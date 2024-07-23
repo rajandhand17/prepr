@@ -9,6 +9,7 @@ use Yajra\DataTables\Html\Builder;
 use Illuminate\Support\Facades\DB;
 use App\Traits\Maestro\Project\ProjectPitchTemplateTrait;
 use App\Models\PitchTemplate;
+use App\Services\Maestro\LanguageService;
 use Exception;
 
 class ProjectPitchTemplateController extends Controller
@@ -28,7 +29,7 @@ class ProjectPitchTemplateController extends Controller
               })
               ->toJson();
             }
-        $languages = $this->getLanguage();
+        $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
@@ -60,10 +61,10 @@ class ProjectPitchTemplateController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             return view('maestro.projects.pitchtemplate.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -78,10 +79,10 @@ class ProjectPitchTemplateController extends Controller
                 DB::commit();
                 return redirect()->route('projects-pitch-template.index')->with(['success' => 'Pitch Template Added successfully.']);
             }
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -91,13 +92,13 @@ class ProjectPitchTemplateController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $pitchTemplate = $this->findPitchTemplate($id);
             $pitchSection = $this->getPitchSectionById($id);
             $pitchTask = $this->getPitchTaskById($id);
             return view('maestro.projects.pitchtemplate.edit', compact('languages','pitchTemplate','pitchSection','pitchTask'));
         } catch (Exception $e) {
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,10 +113,10 @@ class ProjectPitchTemplateController extends Controller
                 DB::commit();
                 return redirect()->route('projects-pitch-template.index')->with(['success' => 'Pitch Template updated successfully.']);
             }
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Something want wrong.']);
+            return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -134,7 +135,7 @@ class ProjectPitchTemplateController extends Controller
             }
         } catch (Exception $e) {
             DB::rollback();
-            return response()->json(['status' => 'fail', 'message' => 'Something want wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }
