@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
-use App\Traits\Maestro\Project\ProjectStageTrait;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use Illuminate\Http\Request;
+use App\Traits\Maestro\Project\ProjectStageTrait;
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\ProjectStage;
 use App\Services\Maestro\LanguageService;
+use App\Models\ProjectStage;
 use Exception;
 
 class ProjectStageController extends Controller
@@ -32,7 +32,7 @@ class ProjectStageController extends Controller
                     })
                     ->editColumn('status', static function (ProjectStage $stage) {
                         if ($stage->status == 0) {
-                            return 'Not Active';
+                            return 'InActive';
                         } else {
                             return 'Active';
                         }
@@ -67,9 +67,7 @@ class ProjectStageController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            $status = $this->getProjectStageStatus();
-
-            return view('maestro.projects.stage.create', compact('languages', 'status'));
+            return view('maestro.projects.stage.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -81,17 +79,11 @@ class ProjectStageController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage Added successfully.']);
             }
-
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -104,9 +96,7 @@ class ProjectStageController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $projectStage = $this->findProjectStage($id);
-            $status = $this->getProjectStageStatus();
-
-            return view('maestro.projects.stage.edit', compact('projectStage', 'languages', 'status'));
+            return view('maestro.projects.stage.edit', compact('projectStage', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -118,17 +108,11 @@ class ProjectStageController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage updated successfully.']);
             }
-
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -139,17 +123,12 @@ class ProjectStageController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $projectStage = $this->findProjectStage($id);
             if (!empty($projectStage)) {
                 $this->deleteProjectStage($projectStage);
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Project Stage deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

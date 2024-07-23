@@ -20,21 +20,7 @@ trait ProjectTypeTrait
             return false;
         }
     }
-
-    private function getProjectTypeStatus()
-    {
-        try {
-            $status = ProjectTypeService::getProjectTypeStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
+    
     private function storeUpdateProjectType($request, $id, $moduleMode)
     {
         try {

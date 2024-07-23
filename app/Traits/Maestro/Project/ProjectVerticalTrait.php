@@ -21,20 +21,6 @@ trait ProjectVerticalTrait
         }
     }
 
-    private function getProjectVerticalStatus()
-    {
-        try {
-            $status = ProjectVerticalService::getProjectVerticalStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function storeUpdateProjectVertical($request, $id, $moduleMode)
     {
         try {
