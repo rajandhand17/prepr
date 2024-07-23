@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
-use App\Http\Controllers\Controller;
-use App\Traits\Maestro\Project\ProjectStageTrait;
-use Yajra\DataTables\Facades\DataTables;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Http\Request;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Http\Controllers\Controller;
 use App\Models\ProjectStage;
 use App\Services\Maestro\LanguageService;
+use App\Traits\Maestro\Project\ProjectStageTrait;
 use Exception;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class ProjectStageController extends Controller
 {
@@ -46,7 +46,7 @@ class ProjectStageController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Stage Name'];
                 array_push($tableColumns, $singleLangCol);
             }

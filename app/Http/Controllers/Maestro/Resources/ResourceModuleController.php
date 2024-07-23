@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Maestro\Resources;
 
 use App\Http\Controllers\Controller;
 use App\Models\ResourceModule;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Resource\ResourceModuleTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
 
 class ResourceModuleController extends Controller
 {
@@ -124,6 +124,7 @@ class ResourceModuleController extends Controller
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
+
     /**
      * Show the form for editing the specified resource.
      */

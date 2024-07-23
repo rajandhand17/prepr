@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Maestro\Ranks;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rank;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Rank\RankTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
 
 class RanksController extends Controller
 {

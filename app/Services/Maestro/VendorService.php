@@ -2,8 +2,6 @@
 
 namespace App\Services\Maestro;
 
-
-use App\Models\User;
 use App\Models\Vendor;
 
 class VendorService
@@ -12,10 +10,10 @@ class VendorService
     {
         try {
             $getAllVendor = Vendor::select();
-            if($getAllVendor){
+            if ($getAllVendor) {
                 return $getAllVendor;
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -23,30 +21,33 @@ class VendorService
     public static function getVendorById($id)
     {
         try {
-            $vendor=Vendor::where('id',$id)->first();
+            $vendor = Vendor::where('id', $id)->first();
+
             return $vendor;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function updateVendorById($id,$request)
+    public static function updateVendorById($id, $request)
     {
         try {
-            $getVendorById=Vendor::where('id',$id)->first();
-            if ($getVendorById){
-                $getVendorById->name=$request->name;
-                $getVendorById->email=$request->email;
-                $getVendorById->api_key=$request->api_key;
-                $getVendorById->secret_key=$request->secret_key;
-                $getVendorById->is_active=$request->is_active=="yes" ? 1 : 0;
-                if($getVendorById->save()){
+            $getVendorById = Vendor::where('id', $id)->first();
+            if ($getVendorById) {
+                $getVendorById->name = $request->name;
+                $getVendorById->email = $request->email;
+                $getVendorById->api_key = $request->api_key;
+                $getVendorById->secret_key = $request->secret_key;
+                $getVendorById->is_active = $request->is_active == 'yes' ? 1 : 0;
+                if ($getVendorById->save()) {
                     return true;
                 }
+
                 return false;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -60,7 +61,7 @@ class VendorService
             }
 
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -69,17 +70,18 @@ class VendorService
     {
         try {
             $vendor = Vendor::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'api_key' => $request->api_key,
+                'name'       => $request->name,
+                'email'      => $request->email,
+                'api_key'    => $request->api_key,
                 'secret_key' => $request->secret_key,
-                'is_active' => $request->secret_key === "yes" ? '1' : '0',
+                'is_active'  => $request->secret_key === 'yes' ? '1' : '0',
             ]);
-            if($vendor){
+            if ($vendor) {
                 return true;
             }
+
             return false;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }

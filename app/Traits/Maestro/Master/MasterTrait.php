@@ -2,10 +2,9 @@
 
 namespace App\Traits\Maestro\Master;
 
-use App\Services\Maestro\Master\MasterService;
 use App\Services\Maestro\Challenge\ChallengeService;
 use App\Services\Maestro\LabService;
-use App\Services\Maestro\UserService;
+use App\Services\Maestro\Master\MasterService;
 use Exception;
 
 trait MasterTrait
@@ -149,6 +148,7 @@ trait MasterTrait
             return false;
         }
     }
+
     private function getAllChallenges($request)
     {
         try {
@@ -162,6 +162,7 @@ trait MasterTrait
             return false;
         }
     }
+
     private function getAllLabsById($request)
     {
         try {

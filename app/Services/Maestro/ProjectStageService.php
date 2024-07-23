@@ -80,6 +80,7 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function getProjectStages()
     {
         try {

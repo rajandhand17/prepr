@@ -2,10 +2,10 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\PitchTemplate;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\Language;
+use App\Models\PitchTemplate;
 use Exception;
 
 class ProjectPitchTemplateService
@@ -18,6 +18,7 @@ class ProjectPitchTemplateService
             return false;
         }
     }
+
     public static function getPitchTemplate()
     {
         try {
@@ -26,27 +27,30 @@ class ProjectPitchTemplateService
             return false;
         }
     }
+
     public static function getPitchSectionById($id)
     {
         try {
-            return ChallengePitch::where('template_id',$id)->get();
+            return ChallengePitch::where('template_id', $id)->get();
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getPitchTaskById($id)
     {
         try {
-            return ChallengeTask::where('template_id',$id)->get();
+            return ChallengeTask::where('template_id', $id)->get();
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function storePitchTemplate($request, $id, $moduleMode)
     {
         try {
             $languages = Language::where('status', 1);
-            $pitchTemplate = new PitchTemplate;
+            $pitchTemplate = new PitchTemplate();
             foreach ($languages->get() as $key => $single) {
                 if ($single->iso == 'en') {
                     $columName = 'title';
@@ -58,15 +62,14 @@ class ProjectPitchTemplateService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
-                $pitchTemplate->$columName  = $request->$columName;
+                $pitchTemplate->$columName = $request->$columName;
             }
             if ($pitchTemplate->save()) {
-
                 $pitchSectionArray = [];
                 $pitchData = array_map(null, $request->pitch['name']['en'], $request->pitch['description']['fr-CA']);
-                foreach( $pitchData as $pitch ) {
+                foreach ($pitchData as $pitch) {
                     $pitchSection['title'] = $pitch[0];
                     $pitchSection['description'] = $pitch[1];
                     $pitchSection['fr_CA_title'] = $pitch[0];
@@ -78,15 +81,17 @@ class ProjectPitchTemplateService
 
                 $pitchTasksData = array_map(null, $request->pitch['task']['en'], $request->pitch['task']['fr-CA']);
                 $pitchTasksArray = [];
-                foreach( $pitchTasksData as $task ) {
+                foreach ($pitchTasksData as $task) {
                     $pitchTasks['title'] = $task[0];
                     $pitchTasks['fr_CA_title'] = $task[0];
                     $pitchTasks['template_id'] = $pitchTemplate->id;
                     $pitchTasksArray[] = $pitchTasks;
                 }
                 ChallengeTask::insert($pitchTasksArray);
+
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -109,15 +114,14 @@ class ProjectPitchTemplateService
                     if ($columName == trim($columName) && strpos($columName, '-') !== false) {
                         $columName = str_replace('-', '_', $columName);
                     }
-                    $columName = $columName . '_title';
+                    $columName = $columName.'_title';
                 }
-                $pitchTemplate->$columName  = $request->$columName;
+                $pitchTemplate->$columName = $request->$columName;
             }
             if ($pitchTemplate->save()) {
-
                 $pitchSectionArray = [];
                 $pitchData = array_map(null, $request->pitch['name']['en'], $request->pitch['description']['fr-CA']);
-                foreach( $pitchData as $pitch ) {
+                foreach ($pitchData as $pitch) {
                     $pitchSection['title'] = $pitch[0];
                     $pitchSection['description'] = $pitch[1];
                     $pitchSection['fr_CA_title'] = $pitch[0];
@@ -129,20 +133,23 @@ class ProjectPitchTemplateService
 
                 $pitchTasksData = array_map(null, $request->pitch['task']['en'], $request->pitch['task']['fr-CA']);
                 $pitchTasksArray = [];
-                foreach( $pitchTasksData as $task ) {
+                foreach ($pitchTasksData as $task) {
                     $pitchTasks['title'] = $task[0];
                     $pitchTasks['fr_CA_title'] = $task[0];
                     $pitchTasks['template_id'] = $pitchTemplate->id;
                     $pitchTasksArray[] = $pitchTasks;
                 }
                 ChallengeTask::insert($pitchTasksArray);
+
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function deletePitchTemplate($pitchTemplate)
     {
         try {

@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Models\ProjectVertical;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectVerticalTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
 
 class ProjectVerticalController extends Controller
 {

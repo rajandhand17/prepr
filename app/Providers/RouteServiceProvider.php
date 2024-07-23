@@ -56,7 +56,6 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroPreBuiltAchievementRoutes();
             $this->mapMaestroPreBuiltVendorManagementRoutes();
 
-
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
             Route::prefix('api/v1/user/')->middleware('api')->group(base_path('routes/v1/user.php'));
