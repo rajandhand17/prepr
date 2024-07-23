@@ -250,6 +250,12 @@
                   <p>Clone Lab</p>
               </a>
           </li>
+          <li class="nav-item">
+              <a href="{{ route('vendor-management.index') }}" class="nav-link {{ Route::currentRouteName() == 'vendor-management.index' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-tree"></i>
+                  <p>Vendor Management</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-edit"></i>
@@ -287,7 +293,7 @@
             <p>Explore Page</p>
           </a>
         </li>
-        <li class="nav-item"> 
+        <li class="nav-item">
           <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
