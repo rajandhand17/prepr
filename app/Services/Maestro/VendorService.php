@@ -64,4 +64,23 @@ class VendorService
             return false;
         }
     }
+
+    public static function createVendor($request)
+    {
+        try {
+            $vendor = Vendor::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'api_key' => $request->api_key,
+                'secret_key' => $request->secret_key,
+                'is_active' => $request->secret_key === "yes" ? '1' : '0',
+            ]);
+            if($vendor){
+                return true;
+            }
+            return false;
+        }catch (\Exception $e){
+            return false;
+        }
+    }
 }

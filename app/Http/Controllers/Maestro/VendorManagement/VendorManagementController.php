@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Maestro\VendorManagement;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Maestro\Vendor\StoreRequest;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
@@ -73,6 +74,29 @@ class VendorManagementController extends Controller
             }
             return view('maestro.vendor.edit', compact('vendor'));
         } catch (\Exception $e) {
+            return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    public function create()
+    {
+        try {
+            return view('maestro.vendor.create');
+
+        }catch (\Exception $e){
+            return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+       }
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $creatVendor=$this->createVendor($request);
+            if ($creatVendor) {
+                return redirect()->route('vendor-management.index')->with('success', 'Vendor created successfully');
+            }
+            return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }catch (\Exception $e){
             return redirect()->route('vendor-management.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

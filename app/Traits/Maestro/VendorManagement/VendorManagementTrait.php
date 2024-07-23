@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\VendorManagement;
 
+use App\Models\Vendor;
 use App\Services\Maestro\VendorService;
 
 trait VendorManagementTrait
@@ -58,6 +59,16 @@ trait VendorManagementTrait
             if($deleteVendor){
                 return $deleteVendor;
             }
+        }catch (\Exception $e){
+            return false;
+        }
+    }
+
+    public function createVendor($request)
+    {
+        try {
+            $createVendor=VendorService::createVendor($request);
+            return $createVendor;
         }catch (\Exception $e){
             return false;
         }
