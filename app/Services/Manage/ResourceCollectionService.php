@@ -6,7 +6,7 @@ use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
-use App\Services\Public\ResourceCollectionSocialActivitiesService;
+use App\Services\Manage\ResourceCollectionSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -260,7 +260,6 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
                 }
             }
-
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
                 if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
@@ -274,7 +273,12 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
                 }
             }
-
+            if($request->has('rating') && !empty($request->rating)){
+                $getResourceCollectionsRating=ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                if(count($getResourceCollectionsRating)>0){
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
+                }
+            }
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

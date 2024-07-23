@@ -19,4 +19,14 @@ class ResourceModuleRatingService
             return false;
         }
     }
+
+    public static function getResourceModuleBasedOnRating($rating)
+    {
+        try {
+            $resourceModuleRating= ResourceModuleRating::where('rating', $rating)->get();
+            return $resourceModuleRating;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
 }

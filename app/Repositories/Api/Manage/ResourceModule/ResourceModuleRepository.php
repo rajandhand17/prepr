@@ -10,6 +10,7 @@ use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
+use App\Services\Manage\ResourceModuleTypeModesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,15 +25,18 @@ class ResourceModuleRepository implements ResourceModuleInterface
     protected $resourceModuleRatingService;
 
     protected $resourceModuleTagsGroupsService;
+
+    protected $resourceModuleTypeModesService;
     private $aiService;
 
-    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
+    public function __construct(ResourceModuleTypeModesService $resourceModuleTypeModesService,ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
         $this->resouceModuleSkillsGroupStackService = $resouceModuleSkillsGroupStackService;
         $this->resourceModuleTagsGroupsService = $resourceModuleTagsGroupsService;
         $this->resourceModuleRatingService = $resourceModuleRatingService;
+        $this->resourceModuleTypeModesService = $resourceModuleTypeModesService;
         $this->aiService = $aiService;
     }
 
@@ -42,7 +46,6 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->getResourceModuleCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
@@ -65,15 +68,20 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
                 $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
-
+                $resourceModuleTypeModesService=$this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $createResourceModule->id);
                 return [
                     'createResourceModule'                  => $createResourceModule,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
                     'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
+                    'resourceModuleTypeModesService'        => $resourceModuleTypeModesService,
                 ];
             });
             $request->organization_id = $organizationId;
-            if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
+            if ($createLabProgram['createResourceModule'] &&
+                $createLabProgram['resourceModuleSkillsGroupStackService'] &&
+                $createLabProgram['resourceModuleTagsGroupsService'] &&
+                $createLabProgram['resourceModuleTypeModesService']
+            ) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 

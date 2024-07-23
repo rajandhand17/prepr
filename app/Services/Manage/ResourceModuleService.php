@@ -35,6 +35,7 @@ class ResourceModuleService
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return false;
@@ -137,7 +138,12 @@ class ResourceModuleService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
             }
-
+            if($request->has('rating') && !empty($request->rating)){
+                $resourceModuleRating=ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
+                if(count($resourceModuleRating)>0){
+                    $resourceModule=$resourceModule->whereIn('id',$resourceModuleRating->pluck('resource_module_id'));
+                }
+            }
             return $resourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

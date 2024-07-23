@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Services\Public\ResourceModuleRatingService;
 
 class ResourceModuleService
 {
@@ -124,6 +125,12 @@ class ResourceModuleService
                 $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
             }
 
+            if($request->has('rating') && !empty($request->rating)){
+                $resourceModuleRating=ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
+                if(count($resourceModuleRating)>0){
+                    $resourceModule=$resourceModule->whereIn('id',$resourceModuleRating->pluck('resource_module_id'));
+                }
+            }
             return $resourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
