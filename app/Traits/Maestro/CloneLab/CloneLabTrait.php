@@ -41,12 +41,12 @@ trait CloneLabTrait
             // Getting Lab and related tables
             $lab = Lab::with('skills', 'address', 'tags', 'external_links', 'achievement')->where('id', $request->lab)->first();
             $createdLab = DB::transaction(function () use ($lab, $request) {
-                $newLab = LabService::createLab($lab, $request->organization);
-                $labAddress = LabAddressService::createLabAddress($lab->address, $newLab->id);
-                $labSKillsGroupStack = LabSkillsGroupsStackService::createLabSkillsGroupsStack($lab->skills, $newLab->id);
-                $labTagGroupStack = LabTagsGroupsService::createLabTagsGroups($lab->tags, $newLab->id);
-                $labExternalLinks = LabExternalLinksService::createLabExternalLinks($lab->external_links, $newLab->id);
-                $createdLabAchievement = LabAchievementService::createLabAchievement($lab->achievement, $newLab->id);
+                $newLab = LabService::createCloneLab($lab, $request->organization);
+                $labAddress = LabAddressService::createCloneLabAddress($lab->address, $newLab->id);
+                $labSKillsGroupStack = LabSkillsGroupsStackService::createCloneLabSkillsGroupsStack($lab->skills, $newLab->id);
+                $labTagGroupStack = LabTagsGroupsService::createCloneLabTagsGroups($lab->tags, $newLab->id);
+                $labExternalLinks = LabExternalLinksService::createCloneLabExternalLinks($lab->external_links, $newLab->id);
+                $createdLabAchievement = LabAchievementService::createCloneLabAchievement($lab->achievement, $newLab->id);
 
                 return [
                     'lab'                    => $newLab,
