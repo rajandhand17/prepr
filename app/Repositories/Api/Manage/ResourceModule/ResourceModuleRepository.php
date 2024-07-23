@@ -93,7 +93,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, UtilityHelper::UserIdBasedPreferredOrganization(auth()->user())->id);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleUsingAI->id);
 
                 return [
