@@ -29,6 +29,7 @@
             <!-- /.card-header -->
                 <div class="card-body">
                     {!!Form::open(array('method'=>'PUT','route' => ['users.update', $user->id],'files'=>'true','role'=>"form"))!!}
+                    <b>User Information</b> <hr>
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -69,13 +70,28 @@
                                 <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;" required>
                                   @if(!empty($roles))
                                     @foreach($roles as $key => $role)
-                                      <option value="{{ $role->name }}" @selected(in_array($role->name, $selected_role)) >{{ $role->display_name }}</option>
+                                      <option value="{{ $role->name }}" @selected(in_array($role->name, $user->getRoles())) >{{ $role->display_name }}</option>
                                     @endforeach
                                   @endif
                                 </select>
                               </div>
                             </div>
+                            <div class="col-md-3">
+                              <div class="form-group {{($errors->has('verified_user')) ? 'has-error' : ''}}">
+                                  {!! Form::label('verified_user', 'Verified User', ['class' => 'control-label']) !!}
+                                  {!! Form::select('verified_user', ['1' => 'Yes','0' => 'No'], $user->verified_user, ['class' => 'form-control']) !!}
+                                  <span class="help-block">{{ $errors->first('verified_user')}}</span>
+                              </div>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
+                                  {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
+                                  {!! Form::select('status', ['0' => 'Active', '1' => 'Inactive'], $user->is_deactivated, ['class' => 'form-control']) !!}
+                                  <span class="help-block">{{ $errors->first('status')}}</span>
+                              </div>
+                            </div>
                           </div>
+                          <hr><b>User Permissions</b> <hr>
                             @php
                               $chunks = $permissions->chunk(ceil($permissions->count() / 4));
                             @endphp
@@ -86,7 +102,7 @@
                                         @foreach($chunk as $permission)
                                             <div class="form-group">
                                                 <label class="text-uppercase">
-                                                    <input type="checkbox" name="permission[]" @if(isset($permission->id) && in_array($permission->id, $assigned_all_permission)) checked @endif value="{{ $permission->name }}">
+                                                    <input type="checkbox" name="permission[]" @if(isset($permission->id) && in_array($permission->id, $user->allPermissions()->pluck('id')->toArray())) checked @endif value="{{ $permission->name }}">
                                                     {{ $permission->display_name }}
                                                 </label>
                                             </div>

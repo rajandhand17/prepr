@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\RoleAndPermission;
+namespace App\Services\Maestro;
 
 use App\Models\Permission;
 use App\Models\Role;
@@ -55,14 +55,15 @@ class RoleAndPermissionService
     {
         try {
             $role = Role::create(['name' => strtolower(str_replace(' ', '_', trim($request->display_name))), 'display_name' => trim($request->display_name), 'description' => trim($request->description)]);
-            $role->syncPermissions(!empty($request->permission) ? $request->permission : []);
+            if($role){
+                return $role;
+            }
 
-            return true;
+            return false;
         } catch (Exception $e) {
             return false;
         }
     }
-
     public static function getRoles()
     {
         try {
@@ -76,11 +77,12 @@ class RoleAndPermissionService
     {
         try {
             $role = Role::find($id);
-            $role->name = $request->name;
-            $role->save();
-            $role->syncPermissions(!empty($request->permission) ? $request->permission : []);
-
-            return true;
+            if($role){
+                $role->name = $request->name;
+                $role->save();
+                return $role;
+            }
+            return false;
         } catch (Exception $e) {
             return false;
         }

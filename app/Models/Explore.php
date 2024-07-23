@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Explore extends Model
 {
     use HasFactory;
-  //  use SoftDeletes;
+    //  use SoftDeletes;
 
     protected $table = 'explore_page_data';
 
@@ -21,6 +21,6 @@ class Explore extends Model
         'action_button',
         'role',
         'media_type',
-        'media'
+        'media',
     ];
 }

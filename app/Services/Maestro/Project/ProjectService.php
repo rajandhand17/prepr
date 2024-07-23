@@ -27,6 +27,7 @@ class ProjectService
             return false;
         }
     }
+
     public static function getProjectsList()
     {
         try {
