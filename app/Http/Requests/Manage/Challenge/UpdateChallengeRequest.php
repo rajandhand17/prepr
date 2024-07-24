@@ -255,7 +255,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_number'] = 'nullable|array';
             $base_rules['custom_timelines_number.*'] = 'integer';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
-            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,month';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
             $base_rules['custom_timelines_description.*'] = 'string';
         }
