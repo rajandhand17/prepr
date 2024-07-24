@@ -52,7 +52,17 @@ class ResourceCollection extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('resource_module_id', '!=', null);
     }
+    /* Fetching all the component associated data*/
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id');
+    }
+    /* Getting all skills groups stacks data*/
+    public function skills_groups_stack()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id');
 
+    }
     public function labs()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('lab_id', '!=', null);

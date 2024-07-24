@@ -1140,11 +1140,28 @@ class ComponentAssociationService
     {
         try {
             $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereNotNull('challenge_id')->pluck('challenge_id');
-
-            return $fetchChallengeIdsBasedOnChallengePathId;
+             return $fetchChallengeIdsBasedOnChallengePathId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function cloneResourceCollection($originalResourceCollectionAssociation,$clonedResourceCollectionId)
+    {
+        try {
+            $originalResourceCollectionAssociation->each(function ($resource_collection_associated) use ($clonedResourceCollectionId) {
+                if ($resource_collection_associated) {
+                    $cloneChallengeAssociation = $resource_collection_associated->replicate();
+                    $cloneChallengeAssociation->resource_collection_id = $clonedResourceCollectionId;
+                    $cloneChallengeAssociation->save();
+                }
+            });
+
+            return true;
+        }catch (Exception $e) {
+            dd($e);
             return false;
         }
     }

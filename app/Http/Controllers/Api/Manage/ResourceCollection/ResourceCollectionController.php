@@ -61,6 +61,34 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
+    public function cloneResourceCollection($slug)
+    {
+        try {
+            // Checking resource collection based on slug exists or not
+            $getResourceCollection=$this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if (!$getResourceCollection) {
+                return $this->sendError(__('responses.selected_resource_collection_not_found'), 404);
+            }
+            // Fetching resource collection is belongs to current users or not
+            if($getResourceCollection->user_id==auth()->user()->id){
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'),403);
+            }
+            // Fetching Resource Collections Based on title and resource current users
+            $getResourceCollectionBasedOnTitle=$this->resourceCollectionRepository->getResourceCollectionBasedOnTitle($getResourceCollection->title);
+            if($getResourceCollectionBasedOnTitle){
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'));
+            }
+            // Cloning resource collections
+            $cloneResourceCollection=$this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
+            if($cloneResourceCollection){
+                return $this->sendResponse($cloneResourceCollection,__('responses.clone_resource_collection_successfully'));
+            }
+            return $this->sendError(__('responses.clone_responses_failed'),400);
+        }catch(\Exception $e) {
+            UtilityHelper::logError($e);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function checkSlug($slug)
     {
         try {

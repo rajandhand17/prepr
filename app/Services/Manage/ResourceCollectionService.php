@@ -103,6 +103,14 @@ class ResourceCollectionService
         }
     }
 
+    public static function getResourceCollectionBasedOnTitle($title)
+    {
+        try {
+            return ResourceCollection::where(['title'=>$title,'user_id'=>auth()->user()->id])->first();
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function checkName($title)
     {
         try {
@@ -394,7 +402,14 @@ class ResourceCollectionService
             return false;
         }
     }
-
+    public static function getResourcesWithRelations($id)
+    {
+        try {
+            return ResourceCollection::with('component_association','skills_groups_stack')->find($id);
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function deleteOrganizationResourceCollection($organizationId)
     {
         try {
@@ -412,6 +427,23 @@ class ResourceCollectionService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function cloneResourceCollection($resourceCollections)
+    {
+        try {
+            $resourceCollection = new ResourceCollection();
+            $uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $slug = UtilityHelper::generateSlug($resourceCollections->title.$uuid, $resourceCollection);
+            $resourceCollection=$resourceCollections->replicate();
+            $resourceCollection->uuid            = $uuid;
+            $resourceCollection->user_id         = auth()->user()->id;
+            $resourceCollection->slug            = $slug;
+            $resourceCollection->save();
+            return  $resourceCollection;
+        }catch (\Exception $e) {
             return false;
         }
     }
