@@ -107,6 +107,7 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -407,6 +408,7 @@ class ResourceCollectionService
         try {
             return ResourceCollection::with('component_association', 'skills_groups_stack')->find($id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -446,6 +448,7 @@ class ResourceCollectionService
 
             return  $resourceCollection;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
