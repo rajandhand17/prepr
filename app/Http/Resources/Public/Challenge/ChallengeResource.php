@@ -406,6 +406,8 @@ class ChallengeResource extends JsonResource
             'submissions_count'                 => $this->submitted_projects()->count(),
             'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                    => ChallengeExternalLinkResource::collection($this->external_links),
+            'challenge_type'                    => ChallengeTypeResource::collection($this->challengeType),
+            'challenge_mode'                    => ChallengeModeResource::collection($this->challengeMode),
             'lab_count'                         => count($labs),
             'lab_program_count'                 => count($lab_programs),
             'resource_module_count'             => count($resource_modules),
