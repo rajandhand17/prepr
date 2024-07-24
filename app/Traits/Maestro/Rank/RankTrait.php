@@ -21,20 +21,6 @@ trait RankTrait
         }
     }
 
-    private function getRankStatus()
-    {
-        try {
-            $status = RankService::getRankStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function storeUpdateRank($request, $id, $moduleMode)
     {
         try {

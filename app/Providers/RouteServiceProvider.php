@@ -211,12 +211,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroDashboardRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard/dashboard.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/dashboard.php'));
     }
 
     public function mapMaestroAuthRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/auth/auth.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/auth.php'));
     }
 
     public function mapMaestroUsersRoutes()
@@ -234,10 +234,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('maestro')->group(base_path('routes/maestro/role-and-permission.php'));
     }
 
-    //     public function mapMaestroLabRoutes()
-    // {
-    //     Route::prefix('maestro')->group(base_path('routes/maestro/lab/lab.php'));
-    // }
     public function mapMaestroSkillRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/skill/skill.php'));
@@ -260,17 +256,33 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroSponsorsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/sponsors/sponsors.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/sponsors.php'));
     }
 
     public function mapMaestroSocialLinkRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/sociallink/sociallink.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/social-link.php'));
     }
 
     public function mapMaestroResourceRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/resource/resource.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/resource.php'));
+    }
+    public function mapMaestroRankRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/rank.php'));
+    }
+    public function mapMaestroChallengeRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/challenge/challenge.php'));
+    }
+    public function mapMaestroPreBuiltAchievementRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/prebuiltachievement/prebuiltachievement.php'));
+    }
+    public function mapMaestroMasterRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/master/master.php'));
     }
 
     public function mapMaestroTrophyAwardsRoutes()
@@ -286,21 +298,6 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroEmailTemplateRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/emailtemplates/emailtemplates.php'));
-    }
-
-    public function mapMaestroChallengeRoutes()
-    {
-        Route::prefix('maestro')->group(base_path('routes/maestro/challenge/challenge.php'));
-    }
-
-    public function mapMaestroMasterRoutes()
-    {
-        Route::prefix('maestro')->group(base_path('routes/maestro/master/master.php'));
-    }
-
-    public function mapMaestroRankRoutes()
-    {
-        Route::prefix('maestro')->group(base_path('routes/maestro/rank/rank.php'));
     }
 
     public function mapMaestroExploreRoutes()
@@ -321,10 +318,5 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroLabRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/lab.php'));
-    }
-
-    public function mapMaestroPreBuiltAchievementRoutes()
-    {
-        Route::prefix('maestro')->group(base_path('routes/maestro/prebuiltachievement/prebuiltachievement.php'));
     }
 }

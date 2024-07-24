@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\SocialLink;
 
-use App\Services\Maestro\SocialLink\SocialLinkService;
+use App\Services\Maestro\SocialLinkService;
 use Exception;
 
 trait SocialLinkTrait
@@ -10,9 +10,9 @@ trait SocialLinkTrait
     private function getSocialLinkList()
     {
         try {
-            $sponsorList = SocialLinkService::getSocialLinkList();
-            if ($sponsorList) {
-                return $sponsorList;
+            $socialMediaLinks = SocialLinkService::getSocialLinkList();
+            if ($socialMediaLinks) {
+                return $socialMediaLinks;
             }
 
             return false;

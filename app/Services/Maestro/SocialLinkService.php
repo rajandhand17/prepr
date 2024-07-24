@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\SocialLink;
+namespace App\Services\Maestro;
 
 use App\Models\SocialLink;
 use Exception;
@@ -39,15 +39,6 @@ class SocialLinkService
             }
 
             return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getSocialLinkStatus()
-    {
-        try {
-            return ['1' => 'Active', '0' => 'Not Active'];
         } catch (Exception $e) {
             return false;
         }
