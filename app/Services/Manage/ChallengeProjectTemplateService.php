@@ -18,7 +18,7 @@ class ChallengeProjectTemplateService
             $challengeProjectTemplate = new ChallengeProjectTemplate();
             $challengeProjectTemplate->challenge_id = $challenge_id;
             if ($request->template_type == 'new') {
-                $newTemplate = PitchTemplateService::addPitchAndTaskTemplate($request);
+                $newTemplate = PitchTemplateService::addPitchAndTaskTemplate($request->title);
                 if ($newTemplate) {
                     if ($request->has('pitch_questions') && count($request->pitch_questions) > 0) {
                         $storeChallengePitches = ChallengePitchService::storeChallengePitches($newTemplate->id, $request);
@@ -53,7 +53,7 @@ class ChallengeProjectTemplateService
         try {
             $challengeProjectTemplate = ChallengeProjectTemplate::where('challenge_id', $challenge_id)->first();
             if ($request->template_type == 'new') {
-                $newTemplate = PitchTemplateService::addPitchAndTaskTemplate($request);
+                $newTemplate = PitchTemplateService::addPitchAndTaskTemplate($request->title);
                 if ($newTemplate) {
                     if ($request->has('pitch_questions') && count($request->pitch_questions) > 0) {
                         $storeChallengePitches = ChallengePitchService::storeChallengePitches($newTemplate->id, $request);

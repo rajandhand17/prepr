@@ -178,7 +178,6 @@ class CreateChallengeRequest extends FormRequest
 
         // Challenge Template new adding code
         if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
-            $base_rules['template_title'] = 'required|unique:pitch_templates,title';
             $base_rules['pitch_questions'] = 'array';
             $base_rules['pitch_questions.*'] = 'nullable';
             $base_rules['pitch_questions_description'] = 'array';
