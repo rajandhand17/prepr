@@ -67,19 +67,17 @@ class ResourceGroup extends Model
     public function skills_group_stack()
     {
         return $this->hasMany(ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id');
-
     }
+
     public function resource_group_achievement()
     {
         return $this->hasOne(ResourceGroupAchievement::class, 'resource_group_id', 'id');
-
     }
+
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id');
-
     }
-
 
     public function skills()
     {

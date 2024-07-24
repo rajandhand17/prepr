@@ -173,9 +173,11 @@ class ResourceGroupSkillsGroupsStackService
                     $cloneResourceGroupSKills->save();
                 }
             });
+
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
