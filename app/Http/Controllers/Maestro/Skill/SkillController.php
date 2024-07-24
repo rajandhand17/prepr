@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\SkillService;
 use App\Traits\Maestro\Skill\SkillTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -59,9 +60,6 @@ class SkillController extends Controller
             }
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
-            view()->share('module_name', 'Challenge');
-            $languages = Language::where('status', 1)->get();
-
             return view('maestro.skills.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
@@ -155,6 +153,21 @@ class SkillController extends Controller
             }
         } catch (Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+
+    public function getAjaxSkills(Request $request)
+    {
+        try {
+            $response = $this->getAjaxAllSkills($request);
+            if ($response) {
+                return $response;
+            }
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            dd($e);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 }

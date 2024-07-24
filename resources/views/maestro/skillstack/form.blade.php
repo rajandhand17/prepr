@@ -44,12 +44,11 @@
             </div>
         @endforeach
     @endif
-
     <div class="col-md-6 col-xs-12">
         <div class="form-group {{($errors->has('stack_skills')) ? 'has-error' : ''}}">
             {!! Form::label('stack-skills', 'Stack Skills', ['class' => 'control-label']) !!}
-            {!! Form::select('stack_skills[]', $skills, $selectedSkills, ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'stack-skills']) !!}
-            <span class="help-block">{{ $errors->first('stack_skills')}}</span>
+            {!! Form::select('stack_skills[]', $selectedSkills, array_keys($selectedSkills), ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills']) !!}
+            <span class="help-block skill_error">{{ $errors->first('stack_skills')}}</span>
         </div>
     </div>
 </div>

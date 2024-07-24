@@ -92,4 +92,49 @@ class SkillService
             return false;
         }
     }
+
+    public static function getSkillBasedOnIds($skill_ids)
+    {
+        try {
+            $selectedSkills = [];
+            foreach ($skill_ids as $skill) {
+                $selectedSkills[] = $skill;
+            }
+            $getSkillsList = Skill::whereIn('id', $selectedSkills)->pluck('title', 'id')->toArray();
+            if ($getSkillsList) {
+                return $getSkillsList;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
+
+    public static function getAjaxAllSkills($request)
+    {
+        try {
+            $skillsQuery = Skill::select('id', 'title')->orderBy('id', 'DESC')->take(30);
+            if ($request->search) {
+                $skillsQuery->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $skillsQuery = $skillsQuery->pluck('title', 'id');
+            $skillsArray = $jsonSkills = [];
+            $count = 0;
+            foreach ($skillsQuery as $key => $skill) {
+                $skillsArray[$count]['id'] = $key;
+                $skillsArray[$count]['text'] = $skill;
+                $count++;
+            }
+            $jsonSkills['result'] = $skillsArray;
+            $jsonSkills['more'] = true;
+            $jsonSkills['total_count'] = $skillsQuery->count();
+
+            return response()->json($jsonSkills);
+        } catch (Exception $e) {
+            dd($e);
+            return false;
+        }
+    }
 }

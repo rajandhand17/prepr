@@ -55,10 +55,10 @@ trait SkillGroupTrait
         }
     }
 
-    private function getSkills()
+    private function getSkillGroup()
     {
         try {
-            $skills = SkillGroupService::getSkills();
+            $skills = SkillGroupService::getSkillGroup();
             if ($skills) {
                 return $skills;
             }

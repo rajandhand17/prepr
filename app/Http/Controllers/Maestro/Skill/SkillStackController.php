@@ -8,6 +8,7 @@ use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillStack;
 use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\SkillService;
 use App\Traits\Maestro\Skill\SkillStackTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class SkillStackController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $stacks = SkillStack::orderBy('id', 'DESC');
+            $stacks = $this->getSkillStack();
 
             if (request()->ajax()) {
                 return DataTables::eloquent($stacks)
@@ -84,10 +85,9 @@ class SkillStackController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            $skills = Skill::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
             $selectedSkills = [];
 
-            return view('maestro.skillstack.create', compact('languages', 'skills', 'selectedSkills'));
+            return view('maestro.skillstack.create', compact('languages', 'selectedSkills'));
         } catch (Exception $e) {
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
@@ -136,16 +136,10 @@ class SkillStackController extends Controller
     public function edit(string $id)
     {
         try {
-            $data = SkillStack::find($id);
-            $selectedSkills = [];
-            foreach ($data->skills as $skill) {
-                $selectedSkills[] = $skill;
-            }
-            $skills = Skill::whereIn('id', $selectedSkills)->pluck('title', 'id');
-
+            $data = $this->getSkillStackById($id);
+            $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
             $languages = LanguageService::getAllActiveLanguages();
-
-            return view('maestro.skillstack.edit', compact('skills', 'selectedSkills', 'languages', 'data'));
+            return view('maestro.skillstack.edit', compact('selectedSkills', 'languages', 'data'));
         } catch (Exception $e) {
             redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
@@ -178,6 +172,21 @@ class SkillStackController extends Controller
         } catch (Exception $e) {
 
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+        }
+    }
+
+    public function getAjaxSkillStack(Request $request)
+    {
+        try {
+            $response = $this->getAjaxAllSkillStack($request);
+            if ($response) {
+                return $response;
+            }
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            dd($e);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 }

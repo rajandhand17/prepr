@@ -68,4 +68,19 @@ trait SkillTrait
             return false;
         }
     }
+
+    private function getAjaxAllSkills($request)
+    {
+        try {
+            $skills = SkillService::getAjaxAllSkills($request);
+            if ($skills) {
+                return $skills;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

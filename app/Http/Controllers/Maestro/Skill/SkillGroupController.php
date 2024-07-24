@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use App\Models\SkillStack;
+use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\SkillService;
+use App\Services\Maestro\SkillStackService;
 use App\Traits\Maestro\Skill\SkillGroupTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,7 +29,7 @@ class SkillGroupController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $groups = SkillGroup::orderBy('id', 'DESC');
+            $groups = $this->getSkillGroup();
 
             if (request()->ajax()) {
                 return DataTables::eloquent($groups)
@@ -65,25 +69,13 @@ class SkillGroupController extends Controller
                 })
                 ->toJson();
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'id', 'title' => 'ID'],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'description';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_description';
-                }
+                $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Group Title'];
                 array_push($tableColumns, $singleLangCol);
                 $singleLangCol = ['data' => $columName2, 'name' => $columName2, 'title' => $single->name.' Group Description'];
@@ -94,8 +86,7 @@ class SkillGroupController extends Controller
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
 
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
-            $languages = Language::where('status', 1)->get();
-
+            $languages = LanguageService::getAllActiveLanguages();
             return view('maestro.skillgroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
@@ -108,13 +99,9 @@ class SkillGroupController extends Controller
     public function create()
     {
         try {
-            $languages = Language::where('status', 1)->get();
-            $skills = Skill::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
-            $selectedSkills = [];
-            $stacks = SkillStack::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
-            $selectedStacks = [];
-
-            return view('maestro.skillgroup.create', compact('languages', 'skills', 'selectedSkills', 'stacks', 'selectedStacks'));
+            $languages = LanguageService::getAllActiveLanguages();
+            $selectedSkills = $selectedStacks = [];
+            return view('maestro.skillgroup.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
@@ -146,7 +133,7 @@ class SkillGroupController extends Controller
             foreach ($skillgroup->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             if (!$skillgroup->exists) {
                 return redirect()->route('skillgroup.index')->with(['error' => 'Skill not found.']);
             }
@@ -164,21 +151,11 @@ class SkillGroupController extends Controller
     {
         try {
             $data = SkillGroup::find($id);
-            $selectedSkills = [];
-            foreach ($data->skills as $skill) {
-                $selectedSkills[] = $skill;
-            }
+            $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
+            $selectedStacks = SkillStackService::getSkillStackBasedOnIds($data->skill_stacks);
+            $languages = LanguageService::getAllActiveLanguages();
 
-            foreach ($data->skill_stacks as $skill_stack) {
-                $selectedStacks[] = $skill_stack;
-            }
-            $title = $data->title;
-            $description = $data->description;
-            $skills = Skill::pluck('title', 'id');
-            $stacks = SkillStack::pluck('title', 'id');
-            $languages = Language::where('status', 1)->get();
-
-            return view('maestro.skillgroup.edit', compact('skills', 'selectedSkills', 'title', 'description', 'languages', 'data', 'selectedStacks', 'stacks'));
+            return view('maestro.skillgroup.edit', compact('selectedSkills', 'languages', 'data', 'selectedStacks'));
         } catch (Exception $e) {
             redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }

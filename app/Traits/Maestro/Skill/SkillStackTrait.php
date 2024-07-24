@@ -55,10 +55,10 @@ trait SkillStackTrait
         }
     }
 
-    private function getSkills()
+    private function getSkillStack()
     {
         try {
-            $skills = SkillStackService::getSkills();
+            $skills = SkillStackService::getSkillStack();
             if ($skills) {
                 return $skills;
             }
@@ -68,4 +68,18 @@ trait SkillStackTrait
             return false;
         }
     }
+    private function getAjaxAllSkillStack($request)
+    {
+        try {
+            $skills = SkillStackService::getAjaxAllSkillStack($request);
+            if ($skills) {
+                return $skills;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
 }

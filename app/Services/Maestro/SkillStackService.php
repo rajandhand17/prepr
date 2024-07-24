@@ -99,4 +99,47 @@ class SkillStackService
             return false;
         }
     }
+
+    
+    public static function getSkillStackBasedOnIds($skillStackIds)
+    {
+        try {
+            $selectedSkills = [];
+            foreach ($skillStackIds as $skill) {
+                $selectedSkills[] = $skill;
+            }
+            $getSkillstackList = SkillStack::whereIn('id', $selectedSkills)->pluck('title', 'id')->toArray();
+            if ($getSkillstackList) {
+                return $getSkillstackList;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public static function getAjaxAllSkillStack($request)
+    {
+        try {
+            $skillsQuery = SkillStack::select('id', 'title')->orderBy('id', 'DESC')->take(30);
+            if ($request->search) {
+                $skillsQuery->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $skillsQuery = $skillsQuery->pluck('title', 'id');
+            $skillsArray = $jsonSkills = [];
+            $count = 0;
+            foreach ($skillsQuery as $key => $skill) {
+                $skillsArray[$count]['id'] = $key;
+                $skillsArray[$count]['text'] = $skill;
+                $count++;
+            }
+            $jsonSkills['result'] = $skillsArray;
+            $jsonSkills['more'] = true;
+            $jsonSkills['total_count'] = $skillsQuery->count();
+
+            return response()->json($jsonSkills);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
 }
