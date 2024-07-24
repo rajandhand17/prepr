@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollectionRating;
 use Exception;
 
@@ -14,6 +15,7 @@ class ResourceCollectionRatingService
 
             return $resourceCollectionRating;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

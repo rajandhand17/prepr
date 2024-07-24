@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleTypeModes;
 use function Symfony\Component\Translation\t;
 
@@ -33,23 +34,28 @@ class ResourceModuleTypeModesService
 
             return true;
         } catch (\Exception $e) {
-            \Log::error('Failed to create resource module type modes: '.$e->getMessage());
-
+            UtilityHelper::logError($e);
             return false;
         }
     }
 
     private function createEntries($items, $resourceModuleId)
     {
-        foreach ($items as $item) {
-            if (isset($this->mappings[$item])) {
-                ResourceModuleTypeModes::create([
-                    'resource_module_id' => $resourceModuleId,
-                    'type_mode'          => $this->mappings[$item][self::TYPE],
-                    'value'              => $this->mappings[$item][self::VALUE],
-                ]);
+        try {
+            foreach ($items as $item) {
+                if (isset($this->mappings[$item])) {
+                    ResourceModuleTypeModes::create([
+                        'resource_module_id' => $resourceModuleId,
+                        'type_mode'          => $this->mappings[$item][self::TYPE],
+                        'value'              => $this->mappings[$item][self::VALUE],
+                    ]);
+                }
             }
+        }catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
         }
+
     }
 
     public static function getResourceModuleBasedOnType($type)
@@ -58,6 +64,7 @@ class ResourceModuleTypeModesService
             // Type 0 belongs to type and type 1 belongs to mode
            return ResourceModuleTypeModes::where(['type_mode'=>'0','value'=>$type])->get();
         }catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
