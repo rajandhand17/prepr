@@ -241,4 +241,14 @@ class Challenge extends Model
 
         return 'N/A';
     }
+
+    public function challengeType()
+    {
+        return $this->hasMany(ChallengeTypeMode::class, 'challenge_id', 'id')->where(['type_mode' => '0']);
+    }
+
+    public function challengeMode()
+    {
+        return $this->hasMany(ChallengeTypeMode::class, 'challenge_id', 'id')->where(['type_mode' => '1']);
+    }
 }
