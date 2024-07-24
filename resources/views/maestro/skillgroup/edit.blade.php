@@ -106,10 +106,10 @@ function getSkillStack() {
             processResults: function(data) {
                 if (data.status == 'fail') {
                     $('#SkillStack').select2("close");
-                    $('.skill_error').show();
-                    $('.skill_error').html(data.message);
+                    $('.skillstack_error').show();
+                    $('.skillstack_error').html(data.message);
                 } else {
-                    $('.skill_error').hide();
+                    $('.skillstack_error').hide();
                     return {
                         results: data.result.map(function(skill) {
                             return {

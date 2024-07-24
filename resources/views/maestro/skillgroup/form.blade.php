@@ -49,14 +49,14 @@
         <div class="form-group {{($errors->has('group_skills')) ? 'has-error' : ''}}">
             {!! Form::label('group-skills', 'Group Skills', ['class' => 'control-label']) !!}
             {!! Form::select('group_skills[]', $selectedSkills, array_keys($selectedSkills), ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills']) !!}
-            <span class="help-block">{{ $errors->first('group_skills')}}</span>
+            <span class="help-block skill_error">{{ $errors->first('group_skills')}}</span>
         </div>
     </div>
     <div class="col-md-6 col-xs-12">
         <div class="form-group {{($errors->has('group_stacks')) ? 'has-error' : ''}}">
             {!! Form::label('group-stacks', 'Group Stacks', ['class' => 'control-label']) !!}
             {!! Form::select('group_stacks[]', $selectedStacks, array_keys($selectedStacks), ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'SkillStack']) !!}
-            <span class="help-block">{{ $errors->first('group_stacks')}}</span>
+            <span class="help-block skillstack_error">{{ $errors->first('group_stacks')}}</span>
         </div>
     </div>
 </div>

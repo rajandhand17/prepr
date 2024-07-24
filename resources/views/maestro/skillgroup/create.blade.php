@@ -54,6 +54,7 @@
 <script>
    $(document).ready(function() {
     getSkills();
+    getSkillStack();
 });
 
 function getSkills() {
@@ -89,6 +90,38 @@ function getSkills() {
         }
     });
 }
-
+function getSkillStack() {
+    $('#SkillStack').select2({
+        placeholder: "Select skill",
+        ajax: {
+            url: '{{route('getAjaxSkillStack')}}',
+            cache: true,
+            type: 'GET',
+            dataType: 'json',
+            data: function(params) {
+                return {
+                    search: params.term,
+                };
+            },
+            processResults: function(data) {
+                if (data.status == 'fail') {
+                    $('#SkillStack').select2("close");
+                    $('.skillstack_error').show();
+                    $('.skillstack_error').html(data.message);
+                } else {
+                    $('.skillstack_error').hide();
+                    return {
+                        results: data.result.map(function(skill) {
+                            return {
+                                id: skill.id,
+                                text: skill.text
+                            };
+                        })
+                    };
+                }
+            }
+        }
+    });
+}
 </script>
 @endsection
