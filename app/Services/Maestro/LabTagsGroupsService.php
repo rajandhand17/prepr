@@ -4,7 +4,7 @@ namespace App\Services\Maestro;
 
 class LabTagsGroupsService
 {
-    public static function createLabTagsGroups($originalLabsTags, $clonedLabId)
+    public static function createCloneLabTagsGroups($originalLabsTags, $clonedLabId)
     {
         try {
             $originalLabsTags->each(function ($tags) use ($clonedLabId) {
