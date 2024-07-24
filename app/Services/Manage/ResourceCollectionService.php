@@ -6,7 +6,6 @@ use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
-use App\Services\Manage\ResourceCollectionSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -106,11 +105,12 @@ class ResourceCollectionService
     public static function getResourceCollectionBasedOnTitle($title)
     {
         try {
-            return ResourceCollection::where(['title'=>$title,'user_id'=>auth()->user()->id])->first();
-        }catch (\Exception $e) {
+            return ResourceCollection::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function checkName($title)
     {
         try {
@@ -281,12 +281,13 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
                 }
             }
-            if($request->has('rating') && !empty($request->rating)){
-                $getResourceCollectionsRating=ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
-                if(count($getResourceCollectionsRating)>0){
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                if (count($getResourceCollectionsRating) > 0) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
                 }
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -402,14 +403,16 @@ class ResourceCollectionService
             return false;
         }
     }
+
     public static function getResourcesWithRelations($id)
     {
         try {
-            return ResourceCollection::with('component_association','skills_groups_stack')->find($id);
-        }catch (\Exception $e) {
+            return ResourceCollection::with('component_association', 'skills_groups_stack')->find($id);
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function deleteOrganizationResourceCollection($organizationId)
     {
         try {
@@ -435,15 +438,16 @@ class ResourceCollectionService
     {
         try {
             $resourceCollection = new ResourceCollection();
-            $uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $slug = UtilityHelper::generateSlug($resourceCollections->title.$uuid, $resourceCollection);
-            $resourceCollection=$resourceCollections->replicate();
-            $resourceCollection->uuid            = $uuid;
-            $resourceCollection->user_id         = auth()->user()->id;
-            $resourceCollection->slug            = $slug;
+            $resourceCollection = $resourceCollections->replicate();
+            $resourceCollection->uuid = $uuid;
+            $resourceCollection->user_id = auth()->user()->id;
+            $resourceCollection->slug = $slug;
             $resourceCollection->save();
+
             return  $resourceCollection;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

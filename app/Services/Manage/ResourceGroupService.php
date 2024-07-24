@@ -6,7 +6,6 @@ use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
-use App\Services\Manage\ResourceGroupRatingService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -268,12 +267,13 @@ class ResourceGroupService
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
             }
-            if($request->has('rating') && !empty($request->rating)){
-                $getResourceGroupList=ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
-                if(count($getResourceGroupList)>0){
-                    $resourceGroupList=$resourceGroupList->whereIn('id',$getResourceGroupList->pluck('resource_group_id'));
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
+                if (count($getResourceGroupList) > 0) {
+                    $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
                 }
             }
+
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

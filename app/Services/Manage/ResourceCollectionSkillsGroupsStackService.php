@@ -165,7 +165,7 @@ class ResourceCollectionSkillsGroupsStackService
         }
     }
 
-    public function cloneResourceCollectionSkillsGroupsStack($originalResourceCollectionAssociation,$clonedResourceCollectionId)
+    public function cloneResourceCollectionSkillsGroupsStack($originalResourceCollectionAssociation, $clonedResourceCollectionId)
     {
         try {
             $originalResourceCollectionAssociation->each(function ($resource_collection_skill_group) use ($clonedResourceCollectionId) {
@@ -177,7 +177,7 @@ class ResourceCollectionSkillsGroupsStackService
             });
 
             return true;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }

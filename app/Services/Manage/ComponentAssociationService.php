@@ -1140,7 +1140,8 @@ class ComponentAssociationService
     {
         try {
             $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereNotNull('challenge_id')->pluck('challenge_id');
-             return $fetchChallengeIdsBasedOnChallengePathId;
+
+            return $fetchChallengeIdsBasedOnChallengePathId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -1148,7 +1149,7 @@ class ComponentAssociationService
         }
     }
 
-    public function cloneResourceCollection($originalResourceCollectionAssociation,$clonedResourceCollectionId)
+    public function cloneResourceCollection($originalResourceCollectionAssociation, $clonedResourceCollectionId)
     {
         try {
             $originalResourceCollectionAssociation->each(function ($resource_collection_associated) use ($clonedResourceCollectionId) {
@@ -1160,8 +1161,9 @@ class ComponentAssociationService
             });
 
             return true;
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }
