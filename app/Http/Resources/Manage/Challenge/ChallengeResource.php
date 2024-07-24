@@ -4,6 +4,8 @@ namespace App\Http\Resources\Manage\Challenge;
 
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\Challenge\ChallengeModeResource;
+use App\Http\Resources\Manage\Challenge\ChallengeTypeResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
@@ -372,7 +374,7 @@ class ChallengeResource extends JsonResource
             'title'                             => $this->title,
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $this->description,
-            'scorm'                             => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                             => new ScormResource($this->scorm),
             'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                        => $this->media_type,
             'media'                             => $media,
@@ -409,6 +411,8 @@ class ChallengeResource extends JsonResource
             'submissions_count'                 => $this->submitted_projects()->count(),
             'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                    => ChallengeExternalLinkResource::collection($this->external_links),
+            'challenge_type'                    => ChallengeTypeResource::collection($this->challengeType),
+            'challenge_mode'                    => ChallengeModeResource ::collection($this->challengeMode),
             'lab_count'                         => count($labs),
             'lab_program_count'                 => count($lab_programs),
             'resource_module_count'             => count($resource_modules),

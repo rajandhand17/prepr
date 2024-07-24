@@ -6,7 +6,6 @@ use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
-use App\Services\Public\ResourceCollectionSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -99,6 +98,16 @@ class ResourceCollectionService
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnTitle($title)
+    {
+        try {
+            return ResourceCollection::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -260,7 +269,6 @@ class ResourceCollectionService
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
                 }
             }
-
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'favourites') {
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('favourite');
                 if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
@@ -273,6 +281,10 @@ class ResourceCollectionService
                 if ($getCollectionFavouriteList && $getCollectionFavouriteList->count() > 0) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
                 }
+            }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
             }
 
             return $resourceCollectionList;
@@ -391,6 +403,16 @@ class ResourceCollectionService
         }
     }
 
+    public static function getResourcesWithRelations($id)
+    {
+        try {
+            return ResourceCollection::with('component_association', 'skills_groups_stack')->find($id);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
     public static function deleteOrganizationResourceCollection($organizationId)
     {
         try {
@@ -408,6 +430,25 @@ class ResourceCollectionService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function cloneResourceCollection($resourceCollections)
+    {
+        try {
+            $resourceCollection = new ResourceCollection();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $slug = UtilityHelper::generateSlug($resourceCollections->title.$uuid, $resourceCollection);
+            $resourceCollection = $resourceCollections->replicate();
+            $resourceCollection->uuid = $uuid;
+            $resourceCollection->user_id = auth()->user()->id;
+            $resourceCollection->slug = $slug;
+            $resourceCollection->save();
+
+            return  $resourceCollection;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

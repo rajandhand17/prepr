@@ -255,7 +255,7 @@ class ResourceGroupController extends AppBaseController
             }
 
             return $this->sendResponse($getResourceGroupListName, __('responses.found_resource_group_list'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
