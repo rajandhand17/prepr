@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Resource;
 
-use App\Services\Maestro\Resource\ResourceModuleService;
+use App\Services\Maestro\ResourceModuleService;
 use Exception;
 
 trait ResourceModuleTrait

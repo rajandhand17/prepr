@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services\Maestro\Resource;
+namespace App\Services\Maestro;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
-use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Storage;
 use App\Services\Maestro\LanguageService;
+use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class ResourceModuleService
 {
