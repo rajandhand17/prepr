@@ -370,7 +370,7 @@ class ChallengeResource extends JsonResource
             'title'                             => $this->title,
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $this->description,
-            'scorm'                             => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                             => new ScormResource($this->scorm),
             'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                        => $this->media_type,
             'media'                             => $media,
