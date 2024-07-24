@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillStack;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Skill\SkillStackTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -52,25 +53,13 @@ class SkillStackController extends Controller
                 })
                 ->toJson();
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'id', 'title' => 'ID'],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'description';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_description';
-                }
+                $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Stack Title'];
                 array_push($tableColumns, $singleLangCol);
                 $singleLangCol = ['data' => $columName2, 'name' => $columName2, 'title' => $single->name.' Stack Description'];
@@ -80,12 +69,10 @@ class SkillStackController extends Controller
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
 
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.skillstack.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -96,9 +83,8 @@ class SkillStackController extends Controller
     public function create()
     {
         try {
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $skills = Skill::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
-            //dd($skills);
             $selectedSkills = [];
 
             return view('maestro.skillstack.create', compact('languages', 'skills', 'selectedSkills'));
@@ -113,18 +99,11 @@ class SkillStackController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createSkillStack($request)) {
-                DB::commit();
-
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -135,12 +114,12 @@ class SkillStackController extends Controller
     public function show(string $id)
     {
         try {
-            $skillstack = $this->getSkillSTackById($id);
+            $skillstack = $this->getSkillStackById($id);
             $selectedSkills = [];
             foreach ($skillstack->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             if (!$skillstack->exists) {
                 return redirect()->route('skillstack.index')->with(['error' => 'Skill not found.']);
             }
@@ -162,15 +141,12 @@ class SkillStackController extends Controller
             foreach ($data->skills as $skill) {
                 $selectedSkills[] = $skill;
             }
-            $title = $data->title;
-            $description = $data->description;
             $skills = Skill::whereIn('id', $selectedSkills)->pluck('title', 'id');
 
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skillstack.edit', compact('skills', 'selectedSkills', 'title', 'description', 'languages', 'data'));
+            return view('maestro.skillstack.edit', compact('skills', 'selectedSkills', 'languages', 'data'));
         } catch (Exception $e) {
-            dd($e);
             redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -181,18 +157,11 @@ class SkillStackController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateSkillStackById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack Updated successfully');
             }
-            DB::rollback();
-
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -203,15 +172,10 @@ class SkillStackController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteSkillStackById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
 
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }

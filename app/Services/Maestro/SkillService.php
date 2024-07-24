@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Language;
 use App\Models\Skill;
 use Exception;
@@ -28,22 +29,11 @@ class SkillService
             $skill = Skill::find($id);
             if ($skill !== null) {
                 if (!empty($request->skill)) {
-                    $languages = Language::where('status', 1)->get();
+                    $languages = LanguageService::getAllActiveLanguages();
                     $createArray = [];
 
                     foreach ($languages as $single) {
-                        if ($single->iso == 'en') {
-                            $columName = 'title';
-                        } else {
-                            $columName = $single->iso;
-                            if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                $columName = str_replace(' ', '_', $columName);
-                            }
-                            if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                $columName = str_replace('-', '_', $columName);
-                            }
-                            $columName = $columName.'_title';
-                        }
+                        $columName = UtilityHelper::getColumName($single->iso,'title');
                         $createArray[$columName] = $request->$columName;
                         $skill->$columName = $request->$columName;
                     }
@@ -77,21 +67,10 @@ class SkillService
     {
         try {
             if (!empty($request->title)) {
-                $languages = Language::where('status', 1)->get();
+                $languages = LanguageService::getAllActiveLanguages();
                 $skill = new Skill();
                 foreach ($languages as $single) {
-                    if ($single->iso == 'en') {
-                        $columName = 'title';
-                    } else {
-                        $columName = $single->iso;
-                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                            $columName = str_replace(' ', '_', $columName);
-                        }
-                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                            $columName = str_replace('-', '_', $columName);
-                        }
-                        $columName = $columName.'_title';
-                    }
+                    $columName = UtilityHelper::getColumName($single->iso,'title');
                     $skill->$columName = $request->$columName;
                 }
                 $skill->save();

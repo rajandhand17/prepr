@@ -10,7 +10,6 @@ use App\Models\SkillStack;
 use App\Traits\Maestro\Skill\SkillGroupTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -99,8 +98,6 @@ class SkillGroupController extends Controller
 
             return view('maestro.skillgroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -113,10 +110,8 @@ class SkillGroupController extends Controller
         try {
             $languages = Language::where('status', 1)->get();
             $skills = Skill::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
-            //dd($skills);
             $selectedSkills = [];
             $stacks = SkillStack::orderBy('id', 'DESC')->pluck('title', 'id')->take(50);
-            //dd($skills);
             $selectedStacks = [];
 
             return view('maestro.skillgroup.create', compact('languages', 'skills', 'selectedSkills', 'stacks', 'selectedStacks'));
@@ -131,18 +126,11 @@ class SkillGroupController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createSkillGroup($request)) {
-                DB::commit();
-
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -192,7 +180,6 @@ class SkillGroupController extends Controller
 
             return view('maestro.skillgroup.edit', compact('skills', 'selectedSkills', 'title', 'description', 'languages', 'data', 'selectedStacks', 'stacks'));
         } catch (Exception $e) {
-            dd($e);
             redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -203,18 +190,11 @@ class SkillGroupController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateSkillGroupById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group Updated successfully');
             }
-            DB::rollback();
-
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -225,16 +205,10 @@ class SkillGroupController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteSkillGroupById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
