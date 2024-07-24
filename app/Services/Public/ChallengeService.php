@@ -324,6 +324,7 @@ class ChallengeService
             return Challenge::select();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

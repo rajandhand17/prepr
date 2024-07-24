@@ -29,7 +29,7 @@ class UtilityHelper
             return false;
         }
     }
-    
+
     public static function generateSlug($name, $model)
     {
         $name = preg_replace('/[^A-Za-z0-9\-]/', '-', $name);
