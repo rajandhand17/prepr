@@ -26,7 +26,7 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 800px;">
           <tr>
             <td align="left" valign="middle" style="padding:15px;">
-            
+
             </td>
           </tr>
         </table>
@@ -45,13 +45,13 @@
                 <tr>
                     <td align="center" width="5%"></td>
                     <td align="center">
-                        <img style="width: 113px;max-width: 120px;" src="{{ CDN::asset('front/img/logoNew.png') }}"   border="0" style="max-width: 200px;"><br>
+                        <img style="width: 113px;max-width: 120px;" src="{{ config('site-settings.aws_url') }}front/img/logoNew.png"   border="0" style="max-width: 200px;"><br>
                         <div style="padding-top: 12px;color:#13A859;font-size: 29px;font-weight: bold;">{{ $summeryContent['ycs'] }}</div><br>
                         <div style="color: #777986;">{{ \Carbon\Carbon::createFromTimestamp(strtotime($summaryData['summary_date']['from']))->format('M d, Y')}} -  {{ \Carbon\Carbon::createFromTimestamp(strtotime($summaryData['summary_date']['to']))->format('M d, Y')}}</div><br>
                         <hr style="color:#D2D4DA;height: 1px;background-color: #D2D4DA;" align="center" width = "40%">
-                        <div style="padding-top: 12px;font-size: 23px;"><img src="{{ CDN::asset('front/img/complate.png')}}" style="height: 19px;"> {{ $summeryContent['uhcted'] }} </div><br>
+                        <div style="padding-top: 12px;font-size: 23px;"><img src="{{ config('site-settings.aws_url') }}front/img/complate.png" style="height: 19px;"> {{ $summeryContent['uhcted'] }} </div><br>
                     </td>
-                    <td align="center" width="5%"> <img src="{{ CDN::asset('front/img/email-bg-1.png')}}"   style="max-height: 150px; max-width: 300px;"> </td>
+                    <td align="center" width="5%"> <img src="{{ config('site-settings.aws_url') }}front/img/email-bg-1.png"   style="max-height: 150px; max-width: 300px;"> </td>
                 </tr>
               </table>
             </td>
@@ -115,7 +115,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                   <tr>
                       <td align="center">
-                        <a href="{{ route('Explore') }}"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }} </button> </a>
+                        <a href="https://dev.learnlab.ai/"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }} </button> </a>
                       </td>
                   </tr>
                 </table>
@@ -127,10 +127,10 @@
             <td style="padding:20px 30px 10px; ">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
-                  
+
                     <td align="center">
                         <hr style="color:#D2D4DA;height: 1px;background-color: #D2D4DA;" align="center" width = "40%">
-                        <div style="padding-top: 12px;font-size: 23px;"><img src="{{ CDN::asset('front/img/achievement.png')}}" style="height: 19px;"> {{ $summeryContent['ttcamt'] }} </div><br>
+                        <div style="padding-top: 12px;font-size: 23px;"><img src="{{ config('site-settings.aws_url') }}front/img/achievement.png" style="height: 19px;"> {{ $summeryContent['ttcamt'] }} </div><br>
                     </td>
                 </tr>
               </table>
@@ -166,7 +166,7 @@
                         </tr>
                         <tr>
                           <td align="center">
-                            <a href="{{ route('Explore') }}"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explore'] }} </button> </a>
+                            <a href="https://dev.learnlab.ai/"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explore'] }} </button> </a>
                           </td>
                         </tr>
                       </table>
@@ -182,7 +182,7 @@
             <td style="padding:20px 30px 10px; ">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <td align="center" width="100%">
-                  <a href="{{ route('trophy') }}"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['viewalla'] }} </button> </a>
+                  <a href="https://dev.learnlab.ai/"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['viewalla'] }} </button> </a>
                 </td>
               </table>
             </td>
@@ -265,7 +265,7 @@
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td align="center">
-                      <a href="{{ route('Explore') }}"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }}</button> </a>
+                      <a href="https://dev.learnlab.ai/"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }}</button> </a>
                         <hr style="color:#D2D4DA;height: 1px;background-color: #D2D4DA;" align="center" width = "40%">
                         <div style="padding-top: 5px;font-size: 23px;color:#13A859;">{{ $summeryContent['cymii'] }} </div><br>
                     </td>
@@ -307,13 +307,13 @@
               </tr>
             @endif
           {{-- Most interested section end --}}
-            
+
           <tr>
             <td style="padding:20px 30px 10px; ">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td align="center">
-                      <a href="{{ route('Explore') }}"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }}</button> </a>
+                      <a href="https://dev.learnlab.ai/"><button type="button" class="button btn-success" style="border: none; margin-top: 10px;padding: 10px 10px 10px 10px;color: white;background-color: #13A859;border-radius: 6px;font-size: initial;"> {{ $summeryContent['explorechallenge'] }}</button> </a>
                     </td>
                 </tr>
               </table>
@@ -324,9 +324,9 @@
             <td style="padding:20px 30px 10px; ">
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr style="font-size: 14px;">
-                    <td align="left" width="30%"><img src="{{ CDN::asset('front/img/email-bg-2.png')}}"   style="max-width: 300px;"></td>
+                    <td align="left" width="30%"><img src="{{ config('site-settings.aws_url') }}front/img/email-bg-2.png"   style="max-width: 300px;"></td>
                     <td align="right" width="70%"><span style="color:#0D8D55; text-decoration: underline;"> support@prepr.org </span> |  ©@php   echo date('Y') @endphp Preprlabs. {{ $summeryContent['arr'] }}</br>
-                    <p>{{ $summeryContent['tewst'] }} <span style="color:#0D8D55; text-decoration: underline;">{{ $user->email }}</span> {{ $summeryContent['byorc'] }}  <a href="{{ url()->shorten(route('unsubscribeSummary',['challenge',$user->id])) }}"> <span style="color:#0D8D55; text-decoration: underline;">{{ $summeryContent['unsubscribe'] }}</span></a></p>
+                    <p>{{ $summeryContent['tewst'] }} <span style="color:#0D8D55; text-decoration: underline;">{{ $user->email }}</span> {{ $summeryContent['byorc'] }}  <a href="https://dev.learnlab.ai/"> <span style="color:#0D8D55; text-decoration: underline;">{{ $summeryContent['unsubscribe'] }}</span></a></p>
                     </td>
                 </tr>
               </table>
@@ -336,7 +336,7 @@
       </td>
     </tr>
     <!-- mid end -->
-  
+
     <!-- start footer -->
     <tr>
       <td align="center" style="padding:18px 0 0;">
