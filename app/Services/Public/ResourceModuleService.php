@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Services\Public\ResourceModuleTypeModesService;
 
 class ResourceModuleService
 {
@@ -126,9 +127,12 @@ class ResourceModuleService
 
             if ($request->has('rating') && !empty($request->rating)) {
                 $resourceModuleRating = ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
-                if (count($resourceModuleRating) > 0) {
-                    $resourceModule = $resourceModule->whereIn('id', $resourceModuleRating->pluck('resource_module_id'));
-                }
+                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleRating->pluck('resource_module_id'));
+
+            }
+            if ($request->has('type') && $request->type !== null) {
+                $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
+                $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
             }
 
             return $resourceModule;

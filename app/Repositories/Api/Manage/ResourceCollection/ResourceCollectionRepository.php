@@ -209,8 +209,6 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
