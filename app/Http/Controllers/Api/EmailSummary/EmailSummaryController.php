@@ -56,7 +56,6 @@ class EmailSummaryController extends AppBaseController
                     }
                     break;
             }
-
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

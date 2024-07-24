@@ -10,7 +10,6 @@ use App\Models\ChallengeAchievement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSocialActivity;
 use App\Models\Duration;
-use App\Models\Lab;
 use App\Models\LabAcheivement;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabSocialActivity;
@@ -18,7 +17,6 @@ use App\Models\Language;
 use App\Models\Levels;
 use App\Models\ModuleCompletionStatus;
 use App\Models\Project;
-use App\Models\ResourceModule;
 use App\Models\UserAchievement;
 use App\Models\UserSkills;
 use App\Services\Public\ChallengeService;
@@ -104,6 +102,7 @@ class EmailSummaryHelper
             return false;
         }
     }
+
     public static function getSummaryDate($type)
     {
         try {
@@ -116,6 +115,7 @@ class EmailSummaryHelper
                 $from = Carbon::today()->startOfMonth()->format('Y-m-d H:i');
                 $to = $fromDate->copy()->endOfMonth()->format('Y-m-d H:i');
             }
+
             return ['from' => $from, 'to' => $to, 'type' => $type];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -128,8 +128,8 @@ class EmailSummaryHelper
     {
         try {
             $challenges = ChallengeService::getAll();
-            $labs =  LabService::getAll();
-            $resource_modules =  ResourceModuleService::getAll();
+            $labs = LabService::getAll();
+            $resource_modules = ResourceModuleService::getAll();
 
             switch ($sectionType) {
                 case 'recently_added':
@@ -146,6 +146,7 @@ class EmailSummaryHelper
                                     ->orWhere('like_dislike', '1');
                         })->orderBy('updated_at', 'desc')->limit(3)->get()->map(function ($item) {
                             $item->source = 'lab';
+
                             return $item;
                         });
 
@@ -155,6 +156,7 @@ class EmailSummaryHelper
                                     ->orWhere('like_dislike', '1');
                         })->orderBy('updated_at', 'desc')->limit(3)->get()->map(function ($item) {
                             $item->source = 'challenge';
+
                             return $item;
                         });
 
@@ -165,8 +167,6 @@ class EmailSummaryHelper
 
                         // If you need a collection instead of an array
                         $interactedModules = new Collection($combinedData->values());
-
-
                     } elseif ($summaryModuleType == 'lab') {
                         $interactedModules = LabSocialActivity::where(function ($query) use ($user) {
                             $query->where('user_id', $user->id)
@@ -245,40 +245,40 @@ class EmailSummaryHelper
 
             if ($summaryModuleType == 'network') {
                 if ($sectionType == 'most_interacted') {
-                    $resource_modules =  $resource_modules->limit(0);
-                    $labs =  $labs->limit(count($labInteractedIds));
-                    $challenges =  $challenges->limit(count($challengeInteractedIds));
+                    $resource_modules = $resource_modules->limit(0);
+                    $labs = $labs->limit(count($labInteractedIds));
+                    $challenges = $challenges->limit(count($challengeInteractedIds));
                 } else {
-                    $challenges =  $challenges->limit(1);
-                    $resource_modules =  $resource_modules->limit(1);
-                    $labs =  $labs->limit(1);
+                    $challenges = $challenges->limit(1);
+                    $resource_modules = $resource_modules->limit(1);
+                    $labs = $labs->limit(1);
                 }
             } elseif ($summaryModuleType == 'lab') {
-                $challenges =  $challenges->limit(0);
-                $labs =  $labs->limit(3);
-                $resource_modules =  $resource_modules->limit(0);
+                $challenges = $challenges->limit(0);
+                $labs = $labs->limit(3);
+                $resource_modules = $resource_modules->limit(0);
             } elseif ($summaryModuleType == 'challenge') {
-                $challenges =  $challenges->limit(3);
-                $labs =  $labs->limit(0);
-                $resource_modules =  $resource_modules->limit(0);
+                $challenges = $challenges->limit(3);
+                $labs = $labs->limit(0);
+                $resource_modules = $resource_modules->limit(0);
             }
 
             if ($sectionType == 'most_interacted') {
-                $challenges =  $challenges->get();
-                $labs =  $labs->get();
-                $resource_modules =  $resource_modules->get();
+                $challenges = $challenges->get();
+                $labs = $labs->get();
+                $resource_modules = $resource_modules->get();
             } else {
-                $challenges =  $challenges->orderBy('id', 'desc')->get();
-                $labs =  $labs->orderBy('id', 'desc')->get();
-                $resource_modules =  $resource_modules->orderBy('id', 'desc')->get();
+                $challenges = $challenges->orderBy('id', 'desc')->get();
+                $labs = $labs->orderBy('id', 'desc')->get();
+                $resource_modules = $resource_modules->orderBy('id', 'desc')->get();
             }
 
             if (!empty($challenges)) {
                 foreach ($challenges as $key => $challenge) {
                     if ($challenge->media_type == 'image') {
-                        $coverImage = !empty($challenge->media) ? $challenge->media : config('site-settings.cdn_url') . config('site-settings.default_challenge_cover_image');
+                        $coverImage = !empty($challenge->media) ? $challenge->media : config('site-settings.cdn_url').config('site-settings.default_challenge_cover_image');
                     } else {
-                        $coverImage = config('site-settings.cdn_url') . config('site-settings.default_challenge_cover_image');
+                        $coverImage = config('site-settings.cdn_url').config('site-settings.default_challenge_cover_image');
                     }
 
                     $is_earnable = 'yes';
@@ -289,10 +289,10 @@ class EmailSummaryHelper
                             $userAchievement = UserAchievement::whereIn('achievement_type', ['9', '10'])->where(['user_id' => $user->id, 'module_id' => $challenge->id])->first();
                             if (!empty($userAchievement)) {
                                 $is_earnable = 'no';
-                                $achievementName = !empty($userAchievement->title) ?  $userAchievement->title : $challenge->title .' , '.$userAchievement->achievement_points;
+                                $achievementName = !empty($userAchievement->title) ? $userAchievement->title : $challenge->title.' , '.$userAchievement->achievement_points;
                             } else {
                                 $is_earnable = 'yes';
-                                $achievementName = !empty($challengeAchievement->achievement_name) ?  $challengeAchievement->achievement_name : $challenge->title .' , '.$challengeAchievement->achievement_points;
+                                $achievementName = !empty($challengeAchievement->achievement_name) ? $challengeAchievement->achievement_name : $challenge->title.' , '.$challengeAchievement->achievement_points;
                             }
                         }
 
@@ -347,9 +347,9 @@ class EmailSummaryHelper
                     $countdata = count($summaryData);
 
                     if ($lab->media_type == 'media_type') {
-                        $coverImage = !empty($lab->media) ? $lab->media : config('site-settings.cdn_url') . config('site-settings.default_lab_cover_image');
+                        $coverImage = !empty($lab->media) ? $lab->media : config('site-settings.cdn_url').config('site-settings.default_lab_cover_image');
                     } else {
-                        $coverImage = config('site-settings.cdn_url') . config('site-settings.default_lab_cover_image');
+                        $coverImage = config('site-settings.cdn_url').config('site-settings.default_lab_cover_image');
                     }
 
                     $is_earnable = 'yes';
@@ -360,10 +360,10 @@ class EmailSummaryHelper
                             $userAchievement = UserAchievement::where(['achievement_type' => '0', 'user_id' => $user->id, 'module_id' => $challenge->id])->first();
                             if (!empty($userAchievement)) {
                                 $is_earnable = 'no';
-                                $achievementName = !empty($userAchievement->title) ?  $userAchievement->title : $lab->title . ' , ' . $userAchievement->achievement_points;
+                                $achievementName = !empty($userAchievement->title) ? $userAchievement->title : $lab->title.' , '.$userAchievement->achievement_points;
                             } else {
                                 $is_earnable = 'yes';
-                                $achievementName = !empty($labAchievement->achievement_name) ?  $labAchievement->achievement_name : $lab->title . ' , ' . $labAchievement->achievement_points;
+                                $achievementName = !empty($labAchievement->achievement_name) ? $labAchievement->achievement_name : $lab->title.' , '.$labAchievement->achievement_points;
                             }
                         }
                     }
@@ -401,9 +401,9 @@ class EmailSummaryHelper
                     $countdata = count($summaryData);
 
                     if ($resource_module->media_type == 'image') {
-                        $coverImage = !empty($resource_module->media) ? $resource_module->media : config('site-settings.cdn_url') . config('site-settings.default_resource_module_cover_image');
+                        $coverImage = !empty($resource_module->media) ? $resource_module->media : config('site-settings.cdn_url').config('site-settings.default_resource_module_cover_image');
                     } else {
-                        $coverImage = config('site-settings.cdn_url') . config('site-settings.default_resource_module_cover_image');
+                        $coverImage = config('site-settings.cdn_url').config('site-settings.default_resource_module_cover_image');
                     }
 
                     $resourceModuleDuration['title'] = 'None';
@@ -455,7 +455,7 @@ class EmailSummaryHelper
 
             $challengeCompleted = Project::where(['user_id' => '178', 'is_submitted' => '1'])->pluck('challenge_id');
             $challengesArray = Challenge::whereIn('id', $challengeCompleted)->get();
-            $verified_skills_array = array();
+            $verified_skills_array = [];
             if ($challengesArray->count() > 0) {
                 foreach ($challengesArray as $challenge) {
                     if ($challenge->skills) {
@@ -491,10 +491,10 @@ class EmailSummaryHelper
             $achievements = $achievements->where('user_id', $user->id)->limit(3)->orderBy('issue_date', 'desc')->get();
             if (!empty($achievements)) {
                 foreach ($achievements as $key => $achievement) {
-                    $achievementData[$key]['id']    = $key;
-                    $achievementData[$key]['table_id']    = $achievement->id;
-                    $achievementData[$key]['name']  = $achievement->title;
-                    $achievementData[$key]['image'] = config('site-settings.cdn_url') . $achievement->achievement_image;
+                    $achievementData[$key]['id'] = $key;
+                    $achievementData[$key]['table_id'] = $achievement->id;
+                    $achievementData[$key]['name'] = $achievement->title;
+                    $achievementData[$key]['image'] = config('site-settings.cdn_url').$achievement->achievement_image;
                 }
             }
 
@@ -504,7 +504,7 @@ class EmailSummaryHelper
                 $unlockMore = 'Unlock More';
             }
 
-            $imageUrl = env('CDN_URL') . 'public/front/img/react-email/unlock-more.png';
+            $imageUrl = env('CDN_URL').'public/front/img/react-email/unlock-more.png';
             if (!empty($achievements) && count($achievements) == 2) {
                 $emptyArry = [['name' => $unlockMore, 'image' => $imageUrl]];
                 $achievementData = array_merge($achievementData, $emptyArry);
@@ -526,133 +526,133 @@ class EmailSummaryHelper
         try {
             if ($language == 'fr-CA') {
                 return  [
-                    'subjectnetwork' => 'Prepr - Voici votre dernier résumé du réseau PreprLabs !',
-                    'subjectlab'    => 'Prepr - Voici votre dernier résumé de laboratoire sur PreprLabs!',
-                    'subjectchallenge' => 'Prepr - Voici votre dernier résumé de Challenge sur PreprLabs!',
-                    'plms'          => 'Résumé mensuel de PreprLabs',
-                    'plws'          => 'Résumé hebdomadaire de PreprLabs',
-                    'wsntm'         => "Quoi de neuf ce mois-ci",
-                    'wsntw'         => "Quoi de neuf cette semaine",
-                    'deadline'      => 'Date limite',
-                    'duration'      => 'Durée',
-                    'level'         => 'Niveau',
-                    'eap'           => 'Explorer toutes les mises à jour',
-                    'uhc'           => 'Vous avez terminé',
-                    'labs'          => 'Laboratoires',
-                    'labspro'       => 'Programme de laboratoires',
-                    'challnege'     => 'Défi',
-                    'challnegepath'  => 'Chemin du défi',
-                    'resource'      => 'Ressource',
-                    'achievement'   => 'Réalisation',
-                    'points'        => 'Points',
-                    'verifiedskills' => 'Compétences vérifiées',
-                    'yourtta'       => 'Vos 3 meilleures réalisations',
-                    'wruinteracted' => 'Ce avec quoi vous avez le plus interagi',
-                    'onpreprlab'    => 'Sur PreprLabs',
-                    'emloc'         => "Explorez plus de laboratoires ou de défis et poursuivez votre parcours d'apprentissage maintenant.",
-                    'explore'       => 'Explorer',
-                    'umbi'          => 'Vous etes peut etre intéressé',
-                    'tewst'         => 'Cet e-mail a été envoyé à',
-                    'arr'           => 'Tous les droits sont réservés.',
-                    'byorc'         => "car vous avez accepté de recevoir des communications de PreprLabs. Vous ne souhaitez pas recevoir ces e-mails ?",
-                    'unsubscribe'   => 'Se désabonner',
-                    'ulabs'         => 'Résumé de votre laboratoire',
-                    'uhcted'        => 'Vous avez terminé',
-                    'explorelab'    => 'Explorer les laboratoires',
-                    'ttlyiw'        => 'Top 3 des laboratoires avec lesquels vous avez interagi',
-                    'most'          => 'la plupart',
-                    'lymbii'        => 'Laboratoires qui pourraient vous intéresser',
-                    'ycs'           => 'Résumé de votre défi',
-                    'ttcamt'        => 'Top 3 des réalisations du défi',
-                    'ttcyi'         => 'Top 3 des défis auxquels vous avez interagi',
-                    'withmost'      => 'avec la plupart',
-                    'exploremccj'   => "Explorez plus de défis et poursuivez votre parcours d'apprentissage maintenant.",
-                    'cymii'         => 'Défis qui pourraient vous intéresser',
+                    'subjectnetwork'    => 'Prepr - Voici votre dernier résumé du réseau PreprLabs !',
+                    'subjectlab'        => 'Prepr - Voici votre dernier résumé de laboratoire sur PreprLabs!',
+                    'subjectchallenge'  => 'Prepr - Voici votre dernier résumé de Challenge sur PreprLabs!',
+                    'plms'              => 'Résumé mensuel de PreprLabs',
+                    'plws'              => 'Résumé hebdomadaire de PreprLabs',
+                    'wsntm'             => 'Quoi de neuf ce mois-ci',
+                    'wsntw'             => 'Quoi de neuf cette semaine',
+                    'deadline'          => 'Date limite',
+                    'duration'          => 'Durée',
+                    'level'             => 'Niveau',
+                    'eap'               => 'Explorer toutes les mises à jour',
+                    'uhc'               => 'Vous avez terminé',
+                    'labs'              => 'Laboratoires',
+                    'labspro'           => 'Programme de laboratoires',
+                    'challnege'         => 'Défi',
+                    'challnegepath'     => 'Chemin du défi',
+                    'resource'          => 'Ressource',
+                    'achievement'       => 'Réalisation',
+                    'points'            => 'Points',
+                    'verifiedskills'    => 'Compétences vérifiées',
+                    'yourtta'           => 'Vos 3 meilleures réalisations',
+                    'wruinteracted'     => 'Ce avec quoi vous avez le plus interagi',
+                    'onpreprlab'        => 'Sur PreprLabs',
+                    'emloc'             => "Explorez plus de laboratoires ou de défis et poursuivez votre parcours d'apprentissage maintenant.",
+                    'explore'           => 'Explorer',
+                    'umbi'              => 'Vous etes peut etre intéressé',
+                    'tewst'             => 'Cet e-mail a été envoyé à',
+                    'arr'               => 'Tous les droits sont réservés.',
+                    'byorc'             => 'car vous avez accepté de recevoir des communications de PreprLabs. Vous ne souhaitez pas recevoir ces e-mails ?',
+                    'unsubscribe'       => 'Se désabonner',
+                    'ulabs'             => 'Résumé de votre laboratoire',
+                    'uhcted'            => 'Vous avez terminé',
+                    'explorelab'        => 'Explorer les laboratoires',
+                    'ttlyiw'            => 'Top 3 des laboratoires avec lesquels vous avez interagi',
+                    'most'              => 'la plupart',
+                    'lymbii'            => 'Laboratoires qui pourraient vous intéresser',
+                    'ycs'               => 'Résumé de votre défi',
+                    'ttcamt'            => 'Top 3 des réalisations du défi',
+                    'ttcyi'             => 'Top 3 des défis auxquels vous avez interagi',
+                    'withmost'          => 'avec la plupart',
+                    'exploremccj'       => "Explorez plus de défis et poursuivez votre parcours d'apprentissage maintenant.",
+                    'cymii'             => 'Défis qui pourraient vous intéresser',
                     'explorechallenge'  => 'Explorer le défi',
-                    'viewalla'      => 'Voir toutes les réalisations',
-                    'notdata1'      => 'Explorez plus de laboratoires ou de défis et',
-                    'notdata2'      => "continuez votre voyage d'apprentissage maintenant.",
-                    'members'       => "Membres",
-                    'lupdate'       => 'Dernière mise à jour',
-                    'tsubmition'    => 'Soumissions totales',
-                    'status'        => 'Statut',
-                    'exploremlc'    => 'Explorez plus de laboratoires ou de défis et continuez votre',
-                    'lejn'          => "voyage d'apprentissage maintenant.",
-                    'emcao'         => 'Explorez plus de composants et obtenez',
-                    'abctm'         => 'réalisations en les complétant.',
-                    'emlauy'        => 'Explorez plus de laboratoires et débloquez votre',
-                    'proov'         => 'aperçu des progrès.',
-                    'emlacydd'      => "Explorez d'autres laboratoires et poursuivez votre",
-                    'emcauyds'      => 'Explorez plus de défis et débloquez votre ',
-                    'emcacue'       => 'Explorez plus de défis et continuez',
-                    'yljnw'         => "votre parcours d'apprentissage maintenant.",
-                    'ernable'       => 'Réalisations à gagner',
-                    'obtained'      => 'Réalisations obtenues'
+                    'viewalla'          => 'Voir toutes les réalisations',
+                    'notdata1'          => 'Explorez plus de laboratoires ou de défis et',
+                    'notdata2'          => "continuez votre voyage d'apprentissage maintenant.",
+                    'members'           => 'Membres',
+                    'lupdate'           => 'Dernière mise à jour',
+                    'tsubmition'        => 'Soumissions totales',
+                    'status'            => 'Statut',
+                    'exploremlc'        => 'Explorez plus de laboratoires ou de défis et continuez votre',
+                    'lejn'              => "voyage d'apprentissage maintenant.",
+                    'emcao'             => 'Explorez plus de composants et obtenez',
+                    'abctm'             => 'réalisations en les complétant.',
+                    'emlauy'            => 'Explorez plus de laboratoires et débloquez votre',
+                    'proov'             => 'aperçu des progrès.',
+                    'emlacydd'          => "Explorez d'autres laboratoires et poursuivez votre",
+                    'emcauyds'          => 'Explorez plus de défis et débloquez votre ',
+                    'emcacue'           => 'Explorez plus de défis et continuez',
+                    'yljnw'             => "votre parcours d'apprentissage maintenant.",
+                    'ernable'           => 'Réalisations à gagner',
+                    'obtained'          => 'Réalisations obtenues',
                 ];
             } else {
                 return  [
-                    'subjectnetwork' => 'Prepr - Here is your latest PreprLabs Network summary!',
-                    'subjectlab'    => 'Prepr - Here is your latest Lab summary on PreprLabs!',
-                    'subjectchallenge' => 'Prepr - Here is your latest Challenge summary on PreprLabs!',
-                    'plms'          => 'PreprLabs Monthly Summary',
-                    'plws'          => 'PreprLabs Weekly Summary',
-                    'wsntm'         => "What's New This Month",
-                    'wsntw'         => "What's New This Week",
-                    'deadline'      => 'Deadline',
-                    'duration'      => 'Duration',
-                    'level'         => 'Level',
-                    'eap'           => 'Explore All Updates',
-                    'uhc'           => 'You Have Completed',
-                    'labs'          => 'Labs',
-                    'labspro'       => 'Labs Program',
-                    'challnege'     => 'Challenge',
-                    'challnegepath' => 'Challenge Path',
-                    'resource'      => 'Resource',
-                    'achievement'   => 'Achievement',
-                    'points'        => 'Points',
-                    'verifiedskills' => 'Verified Skills',
-                    'yourtta'       => 'Your Top 3 Achievements',
-                    'wruinteracted' => 'What you interacted with most',
-                    'onpreprlab'    => 'On PreprLabs',
-                    'emloc'         => 'Explore more Labs or Challenges and continue your learning journey now.',
-                    'explore'       => 'Explore',
-                    'umbi'          => 'You May Be Interested In',
-                    'tewst'         => 'This email was sent to',
-                    'arr'           => 'All rights reserved.',
-                    'byorc'         => "because you've opted in to receive communications from PreprLabs. Don't want to receive these emails?",
-                    'unsubscribe'   => 'Unsubscribe',
-                    'ulabs'         => 'Your Lab Summary',
-                    'uhcted'        => 'You Have Completed',
-                    'explorelab'    => 'Explore Labs',
-                    'ttlyiw'        => 'Top 3 Labs you interacted with',
-                    'most'          => 'most',
-                    'lymbii'        => 'Labs You May be Interested in',
-                    'ycs'           => 'Your Challenge Summary',
-                    'ttcamt'        => 'Top 3 Challenge Achievements',
-                    'ttcyi'         => 'Top 3 Challenges you interacted',
-                    'withmost'      => 'with most',
-                    'exploremccj'   => 'Explore more Challenges and continue your learning journey now.',
-                    'cymii'         => 'Challenges You May be Interested in',
+                    'subjectnetwork'     => 'Prepr - Here is your latest PreprLabs Network summary!',
+                    'subjectlab'         => 'Prepr - Here is your latest Lab summary on PreprLabs!',
+                    'subjectchallenge'   => 'Prepr - Here is your latest Challenge summary on PreprLabs!',
+                    'plms'               => 'PreprLabs Monthly Summary',
+                    'plws'               => 'PreprLabs Weekly Summary',
+                    'wsntm'              => "What's New This Month",
+                    'wsntw'              => "What's New This Week",
+                    'deadline'           => 'Deadline',
+                    'duration'           => 'Duration',
+                    'level'              => 'Level',
+                    'eap'                => 'Explore All Updates',
+                    'uhc'                => 'You Have Completed',
+                    'labs'               => 'Labs',
+                    'labspro'            => 'Labs Program',
+                    'challnege'          => 'Challenge',
+                    'challnegepath'      => 'Challenge Path',
+                    'resource'           => 'Resource',
+                    'achievement'        => 'Achievement',
+                    'points'             => 'Points',
+                    'verifiedskills'     => 'Verified Skills',
+                    'yourtta'            => 'Your Top 3 Achievements',
+                    'wruinteracted'      => 'What you interacted with most',
+                    'onpreprlab'         => 'On PreprLabs',
+                    'emloc'              => 'Explore more Labs or Challenges and continue your learning journey now.',
+                    'explore'            => 'Explore',
+                    'umbi'               => 'You May Be Interested In',
+                    'tewst'              => 'This email was sent to',
+                    'arr'                => 'All rights reserved.',
+                    'byorc'              => "because you've opted in to receive communications from PreprLabs. Don't want to receive these emails?",
+                    'unsubscribe'        => 'Unsubscribe',
+                    'ulabs'              => 'Your Lab Summary',
+                    'uhcted'             => 'You Have Completed',
+                    'explorelab'         => 'Explore Labs',
+                    'ttlyiw'             => 'Top 3 Labs you interacted with',
+                    'most'               => 'most',
+                    'lymbii'             => 'Labs You May be Interested in',
+                    'ycs'                => 'Your Challenge Summary',
+                    'ttcamt'             => 'Top 3 Challenge Achievements',
+                    'ttcyi'              => 'Top 3 Challenges you interacted',
+                    'withmost'           => 'with most',
+                    'exploremccj'        => 'Explore more Challenges and continue your learning journey now.',
+                    'cymii'              => 'Challenges You May be Interested in',
                     'explorechallenge'   => 'Explore Challenges',
-                    'viewalla'      => 'View All Achievements',
-                    'notdata1'      => 'Explore more Labs or Challenges and',
-                    'notdata2'      => "continue your learning journey now.",
-                    'members'       => "Members",
-                    'lupdate'       => 'Last Updated',
-                    'tsubmition'    => 'Total submissions',
-                    'status'        => 'Status',
-                    'exploremlc'    => 'Explore more Labs or Challenges and continue your',
-                    'lejn'          => 'learning journey now.',
-                    'emcao'         => 'Explore more components and obtain',
-                    'abctm'         => 'achievements by completing them.',
-                    'emlauy'        => 'Explore more Labs and unlock your',
-                    'proov'         => 'progress overview.',
-                    'emlacydd'      => 'Explore more Labs and continue your',
-                    'emcauyds'      => 'Explore more Challenges and unlock your ',
-                    'emcacue'       => 'Explore more Challenges and continue',
-                    'yljnw'         => 'your learning journey now.',
-                    'ernable'       => 'Earnable Achievements',
-                    'obtained'      => 'Obtained Achievements'
+                    'viewalla'           => 'View All Achievements',
+                    'notdata1'           => 'Explore more Labs or Challenges and',
+                    'notdata2'           => 'continue your learning journey now.',
+                    'members'            => 'Members',
+                    'lupdate'            => 'Last Updated',
+                    'tsubmition'         => 'Total submissions',
+                    'status'             => 'Status',
+                    'exploremlc'         => 'Explore more Labs or Challenges and continue your',
+                    'lejn'               => 'learning journey now.',
+                    'emcao'              => 'Explore more components and obtain',
+                    'abctm'              => 'achievements by completing them.',
+                    'emlauy'             => 'Explore more Labs and unlock your',
+                    'proov'              => 'progress overview.',
+                    'emlacydd'           => 'Explore more Labs and continue your',
+                    'emcauyds'           => 'Explore more Challenges and unlock your ',
+                    'emcacue'            => 'Explore more Challenges and continue',
+                    'yljnw'              => 'your learning journey now.',
+                    'ernable'            => 'Earnable Achievements',
+                    'obtained'           => 'Obtained Achievements',
                 ];
             }
         } catch (Exception $e) {
@@ -667,22 +667,22 @@ class EmailSummaryHelper
         try {
             if ($language == 'fr-CA') {
                 return  [
-                    'emailsubject'  => "Courrier électronique d'inscription au courrier électronique de recommandation du défi Prepr",
-                    'title'         => 'Recommandation de défi',
-                    'titlehead'     => 'Consultez votre recommandation Prepr Network Challenge',
-                    'recommendationnotfound' => 'Recommandation de défi introuvable',
-                    'writeus'       => 'N`hésitez pas à nous écrire',
-                    'anyquery'      => 'pour toute demande',
+                    'emailsubject'                   => "Courrier électronique d'inscription au courrier électronique de recommandation du défi Prepr",
+                    'title'                          => 'Recommandation de défi',
+                    'titlehead'                      => 'Consultez votre recommandation Prepr Network Challenge',
+                    'recommendationnotfound'         => 'Recommandation de défi introuvable',
+                    'writeus'                        => 'N`hésitez pas à nous écrire',
+                    'anyquery'                       => 'pour toute demande',
                     'mightLikeRecommendedChallenges' => 'Des défis qui pourraient également vous plaire :',
                 ];
             } else {
                 return  [
-                    'emailsubject'  => 'Prepr Challenge Recommendation email subscription mail',
-                    'title'         => 'Challenge Recommendation',
-                    'titlehead'     => 'Check out your Prepr Network Challenge Recommendation',
-                    'recommendationnotfound' => 'Challenge Recommendation not found',
-                    'writeus'       => 'Feel free to write us',
-                    'anyquery'      => 'for any inquiries',
+                    'emailsubject'                   => 'Prepr Challenge Recommendation email subscription mail',
+                    'title'                          => 'Challenge Recommendation',
+                    'titlehead'                      => 'Check out your Prepr Network Challenge Recommendation',
+                    'recommendationnotfound'         => 'Challenge Recommendation not found',
+                    'writeus'                        => 'Feel free to write us',
+                    'anyquery'                       => 'for any inquiries',
                     'mightLikeRecommendedChallenges' => 'Challenges you might also like:',
                 ];
             }
