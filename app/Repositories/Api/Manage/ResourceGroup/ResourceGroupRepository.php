@@ -49,14 +49,12 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $createResourceGroup = $this->resourceGroupService->createResourceGroup($request, $upload_cover_image, $organizationId);
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
-                $createResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->createResourceGroupTagsGroups($request, $createResourceGroup->id);
                 $createResourceGroupsAchievements = $this->resourceGroupAchievementsService->createResourceGroupsAchievements($request, $upload_achievement_image, $createResourceGroup->id);
 
                 return[
                     'createResourceGroup'                             => $createResourceGroup,
                     'createResourceGroupComponentAssociation'         => $createResourceGroupComponentAssociation,
                     'createResourceGroupSkillsGroupStack'             => $createResourceGroupSkillsGroupStack,
-                    'createResourceGroupTagsGroups'                   => $createResourceGroupTagsGroups,
                     'createResourceGroupsAchievements'                => $createResourceGroupsAchievements,
                 ];
             });
@@ -108,7 +106,16 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+    public function getResourceGroupBasedOnTitle($title)
+    {
+        try {
+            return $this->resourceGroupService->getResourceGroupBasedOnTitle($title);
 
+        }catch(\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
     public function deleteGroupModule($checkResourceGroupId)
     {
         try {
@@ -147,20 +154,17 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image, $organizationId);
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
-                $updateResourceGroupTagsGroups = $this->resourceGroupTagsGroupService->updateResourceGroupTagsGroups($request, $updateResourceGroup->id);
                 $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
 
                 return[
                     'updateResourceGroup'                             => $updateResourceGroup,
                     'updateResourceGroupComponentAssociation'         => $updateResourceGroupComponentAssociation,
                     'updateResourceGroupSkillsGroupStack'             => $updateResourceGroupSkillsGroupStack,
-                    'updateResourceGroupTagsGroups'                   => $updateResourceGroupTagsGroups,
                     'updateResourceGroupsAchievements'                => $updateResourceGroupsAchievements,
                 ];
             });
             if ($updateResourceGroup['updateResourceGroup']) {
                 DB::commit();
-
                 return $updateResourceGroup['updateResourceGroup'];
             }
             DB::rollback();
@@ -191,6 +195,40 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return $this->resourceGroupService->getResourceGroupListName($request, $organization);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceGroup($resourceGroupId)
+    {
+        try {
+            $getResourceGroup = $this->resourceGroupService->getResourcesWithRelations($resourceGroupId);
+                $cloneResourceGroups = DB::transaction(function () use ($getResourceGroup) {
+                    $cloneResourceGroup = $this->resourceGroupService->cloneResourceGroup($getResourceGroup);
+                    $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($cloneResourceGroup->component_association, $getResourceGroup->id);
+                    $cloneResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkillsGroupsStack($cloneResourceGroup->skills_group_stack, $getResourceGroup->id);
+                    $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($cloneResourceGroup->resource_group_achievement, $getResourceGroup->id);
+
+                    return[
+                        'cloneResourceGroups'                            => $cloneResourceGroup,
+                        'cloneResourceGroupComponentAssociation'         => $cloneResourceGroupComponentAssociation,
+                        'cloneResourceGroupSkillsGroupStack'             => $cloneResourceGroupSkillsGroupStack,
+                        'cloneResourceGroupTagsGroups'                   => $cloneResourceGroupsAchievements,
+                    ];
+               });
+            if ($cloneResourceGroups['cloneResourceGroups'] &&
+                $cloneResourceGroups['cloneResourceGroupComponentAssociation'] &&
+                $cloneResourceGroups['cloneResourceGroupSkillsGroupStack'] &&
+                $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
+                DB::commit();
+                return $cloneResourceGroups['cloneResourceGroups'];
+            }
+            DB::rollback();
+            return false;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+            DB::rollback();
 
             return false;
         }

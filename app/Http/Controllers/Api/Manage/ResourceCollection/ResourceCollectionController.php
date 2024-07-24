@@ -86,6 +86,7 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.clone_responses_failed'), 400);
         } catch(\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

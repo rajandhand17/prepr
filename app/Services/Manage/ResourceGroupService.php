@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceCollection;
 use App\Models\ResourceGroup;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -101,7 +102,15 @@ class ResourceGroupService
             return false;
         }
     }
-
+    public static function getResourceGroupBasedOnTitle($title){
+        try {
+            $userId = auth()->id();
+            $resourceGroup=ResourceGroup::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+            return $resourceGroup;
+        }catch (\Exception $e) {
+            return false;
+        }
+    }
     public static function deleteGroupModule($resource_group_id)
     {
         try {
@@ -269,9 +278,7 @@ class ResourceGroupService
             }
             if ($request->has('rating') && !empty($request->rating)) {
                 $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
-                if (count($getResourceGroupList) > 0) {
-                    $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
-                }
+                $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
             }
 
             return $resourceGroupList;
@@ -352,6 +359,34 @@ class ResourceGroupService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public static function getResourcesWithRelations($id)
+    {
+        try {
+            return ResourceGroup::with('skills_group_stack', 'resource_group_achievement','component_association')->find($id);
+
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
+    public static function cloneResourceGroup($resourceGroupData){
+        try {
+            $resourceGroup = new ResourceGroup();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $slug = UtilityHelper::generateSlug($resourceGroupData->title.$uuid, $resourceGroup);
+            $resourceGroup = $resourceGroupData->replicate();
+            $resourceGroup->uuid = $uuid;
+            $resourceGroup->slug = $slug;
+            $resourceGroup->user_id=auth()->user()->id;
+            $resourceGroup->save();
+            return $resourceGroup;
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
             return false;
         }
     }

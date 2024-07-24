@@ -69,7 +69,36 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+    public function cloneResourceGroup($slug)
+    {
+        try{
+            // Checking resource group based on slug exists or not
+            $getResourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if (!$getResourceGroup) {
+                return $this->sendError(__('responses.selected_resource_group_not_found'), 404);
+            }
+            // Fetching resource group is belongs to current users or not
+            if ($getResourceGroup->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'), 403);
+            }
+            // Fetching Resource group Based on title and resource current users
+            $getResourceCollectionBasedOnTitle = $this->resourceGroupRepository->getResourceGroupBasedOnTitle($getResourceGroup->title);
+            if ($getResourceCollectionBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+            }
+            // Cloning resource groups based on title and resource group id
+            $cloneResourceModule = $this->resourceGroupRepository->cloneResourceGroup($getResourceGroup->id);
+            if ($cloneResourceModule) {
+                return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_collection_successfully'));
+            }
 
+            return $this->sendError(__('responses.clone_responses_failed'), 400);
+        }catch(\Exception $e){
+            UtilityHelper::logError($e);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+
+    }
     public function show($slug)
     {
         try {

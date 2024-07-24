@@ -4,7 +4,9 @@ namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceGroup;
 use App\Models\ResourceGroupAchievement;
+use HiFolks\RandoPhp\Randomize;
 
 class ResourceGroupAchievementService
 {
@@ -81,6 +83,19 @@ class ResourceGroupAchievementService
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public static function cloneResourceGroupsAchievements($originalResourceGroupAssociation, $clonedResourceGroupId){
+        try {
+            $resourceGroup = new ResourceGroupAchievement();
+            $resourceGroup = $originalResourceGroupAssociation->replicate();
+            $resourceGroup->resource_group_id = $clonedResourceGroupId;
+            $resourceGroup->save();
+            return true;
+        }catch(\Exception $e){
+            UtilityHelper::logError($e);
             return false;
         }
     }
