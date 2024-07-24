@@ -21,6 +21,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('member-manger:send-email')->everyMinute();
         $schedule->command('chargebee-subscription:daily-chronicle-accessed-non-accessed-data')->everyMinute();
         $schedule->command('solr:sync')->daily();
+        $schedule->command('email-summary-report:monthly-report')->monthly();
+        $schedule->command('email-summary-report:weekly-report')->weekly();
     }
 
     /**
