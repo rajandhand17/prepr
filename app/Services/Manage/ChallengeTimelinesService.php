@@ -31,9 +31,9 @@ class ChallengeTimelinesService
             }
 
             if ($request->timeline_type == 'restricted') {
-                $startDate = date('Y-m-d H:i:s', strtotime($request->start_date));
+                $startDate = ($request->has('start_date')) ? date('Y-m-d H:i:s', strtotime($request->start_date)) : null;
                 $registrationDeadlineDate = ($request->has('registration_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->registration_deadline_date)) : null;
-                $submissionDate = date('Y-m-d H:i:s', strtotime($request->submission_deadline_date));
+                $submissionDate = ($request->has('submission_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->submission_deadline_date)) : null;
                 $open_date = Carbon::parse($startDate);
                 $close_date = Carbon::parse($submissionDate);
                 $challenge_duration = $open_date->diffInDays($close_date);
@@ -106,9 +106,9 @@ class ChallengeTimelinesService
 
                 ChallengeTimelines::where('challenge_id', $challenge_id)->delete();
                 if ($request->timeline_type == 'restricted') {
-                    $startDate = date('Y-m-d H:i:s', strtotime($request->start_date));
+                    $startDate = ($request->has('start_date')) ? date('Y-m-d H:i:s', strtotime($request->start_date)) : null;
                     $registrationDeadlineDate = ($request->has('registration_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->registration_deadline_date)) : null;
-                    $submissionDate = date('Y-m-d H:i:s', strtotime($request->submission_deadline_date));
+                    $submissionDate = ($request->has('submission_deadline_date')) ? date('Y-m-d H:i:s', strtotime($request->submission_deadline_date)) : null;
                     $open_date = Carbon::parse($startDate);
                     $close_date = Carbon::parse($submissionDate);
                     $challenge_duration = $open_date->diffInDays($close_date);
