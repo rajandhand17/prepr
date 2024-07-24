@@ -236,7 +236,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroSkillRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/skill/skill.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/skill.php'));
     }
 
     public function mapMaestroTagRoutes()
