@@ -109,7 +109,6 @@ class ResourceGroupService
             if ($request->has('rating') && !empty($request->rating)) {
                 $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
                 $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
-
             }
 
             return $resourceGroupList;

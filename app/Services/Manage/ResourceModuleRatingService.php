@@ -28,6 +28,7 @@ class ResourceModuleRatingService
             return $resourceModuleRating;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
