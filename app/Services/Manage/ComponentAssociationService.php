@@ -1148,4 +1148,22 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public function cloneResourceCollection($originalResourceCollectionAssociation, $clonedResourceCollectionId)
+    {
+        try {
+            $originalResourceCollectionAssociation->each(function ($resource_collection_associated) use ($clonedResourceCollectionId) {
+                if ($resource_collection_associated) {
+                    $cloneChallengeAssociation = $resource_collection_associated->replicate();
+                    $cloneChallengeAssociation->resource_collection_id = $clonedResourceCollectionId;
+                    $cloneChallengeAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }

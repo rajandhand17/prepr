@@ -50,11 +50,11 @@ class PitchTemplateService
         }
     }
 
-    public static function addPitchAndTaskTemplate($request)
+    public static function addPitchAndTaskTemplate($requestTitle)
     {
         try {
             $addPitchAndTaskTemplate = new PitchTemplate();
-            $addPitchAndTaskTemplate->title = $request->template_title;
+            $addPitchAndTaskTemplate->title = $requestTitle;
             $addPitchAndTaskTemplate->save();
             if (!$addPitchAndTaskTemplate) {
                 return false;
