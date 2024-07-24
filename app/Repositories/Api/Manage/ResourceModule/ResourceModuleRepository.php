@@ -29,7 +29,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
     protected $resourceModuleTypeModesService;
     private $aiService;
 
-    public function __construct(ResourceModuleTypeModesService $resourceModuleTypeModesService,ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
+    public function __construct(ResourceModuleTypeModesService $resourceModuleTypeModesService, ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
@@ -46,6 +46,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->getResourceModuleCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,7 +68,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
                 $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
-                $resourceModuleTypeModesService=$this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $createResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $createResourceModule->id);
+
                 return [
                     'createResourceModule'                  => $createResourceModule,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
@@ -76,7 +78,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             });
             $request->organization_id = $organizationId;
             if ($createLabProgram['createResourceModule'] &&
-                $createLabProgram['resourceModuleSkillsGroupStackService']  &&
+                $createLabProgram['resourceModuleSkillsGroupStackService'] &&
                 $createLabProgram['resourceModuleTypeModesService']
             ) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
@@ -205,12 +207,12 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
-                $resourceModuleTypeModesService=$this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $updateResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'            => $updateResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTypeModesService' => $resourceModuleTypeModesService,
+                    'resourceModuleTypeModesService'  => $resourceModuleTypeModesService,
                 ];
             });
             $request->organization_id = $organizationId;

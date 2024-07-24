@@ -17,5 +17,4 @@ class ResourceModuleTypeModes extends Model
         'type_mode',
         'value',
     ];
-
 }

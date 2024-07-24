@@ -8,7 +8,7 @@ class ResourceModuleTypeModesService
 {
     const TYPE = 'type';
     const VALUE = 'value';
-        // Defining all values in single array
+    // Defining all values in single array
     private $mappings = [
         'assess'     => [self::TYPE => '0', self::VALUE => '0'],
         'onboard'    => [self::TYPE => '0', self::VALUE => '1'],
@@ -22,16 +22,18 @@ class ResourceModuleTypeModesService
     public function createResourceModuleTypeModes($request, $resourceModuleId)
     {
         try {
-            ResourceModuleTypeModes::where("resource_module_id", $resourceModuleId)->delete();
+            ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->delete();
 
             foreach (['type', 'mode'] as $key) {
                 if ($request->has($key)) {
                     $this->createEntries($request->$key, $resourceModuleId);
                 }
             }
+
             return true;
         } catch (\Exception $e) {
-            \Log::error('Failed to create resource module type modes: ' . $e->getMessage());
+            \Log::error('Failed to create resource module type modes: '.$e->getMessage());
+
             return false;
         }
     }
@@ -48,5 +50,4 @@ class ResourceModuleTypeModesService
             }
         }
     }
-
 }

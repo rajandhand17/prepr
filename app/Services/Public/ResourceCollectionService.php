@@ -4,7 +4,6 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
-use App\Services\Public\ResourceCollectionRatingService;
 
 class ResourceCollectionService
 {
@@ -110,12 +109,13 @@ class ResourceCollectionService
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
             }
-            if($request->has('rating') && !empty($request->rating)){
-                $getResourceCollectionsRating=ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
-                if(count($getResourceCollectionsRating)>0){
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                if (count($getResourceCollectionsRating) > 0) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
                 }
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
