@@ -6,27 +6,28 @@ environments:
     database: Learnlab-Serverless-Beta
     runtime: docker-arm
     memory: 4096
+    storage: learnlab-serverless-beta
     warm: 4
     concurrency: 50
     # queue-timeout: 10
     queues: false
     #   - default
     #   - chat
-    timeout: 30
+    timeout: 60
     cli-timeout: 900
     build:
       - "composer install --ignore-platform-reqs"
       - "php artisan event:cache"
     firewall:
       rate-limit: 1000
-      # bot-control:
+      bot-control:
       #     - CategorySearchEngine
       #     - CategorySocialMedia
-      #     - CategoryScrapingFramework
-      #     - CategoryAdvertising
-      #     - CategoryArchiver
+          - CategoryScrapingFramework
+          - CategoryAdvertising
+          - CategoryArchiver
       #     - SignalNonBrowserUserAgent
       #     - CategoryHttpLibrary
-      #     - CategoryLinkChecker
+          - CategoryLinkChecker
       #     - CategoryMiscellaneous
-      #     - SignalKnownBotDataCenter
+          - SignalKnownBotDataCenter
