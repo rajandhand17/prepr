@@ -230,7 +230,7 @@ class Challenge extends Model
      */
     public function scorm(): MorphOne
     {
-        return $this->morphOne(Scorm::class, 'model')->latest();
+        return $this->morphOne(Scorm::class, 'model');
     }
 
     public function challenge_completion_status()

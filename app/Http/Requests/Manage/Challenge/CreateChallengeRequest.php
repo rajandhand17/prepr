@@ -178,7 +178,6 @@ class CreateChallengeRequest extends FormRequest
 
         // Challenge Template new adding code
         if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
-            $base_rules['template_title'] = 'required|unique:pitch_templates,title';
             $base_rules['pitch_questions'] = 'array';
             $base_rules['pitch_questions.*'] = 'nullable';
             $base_rules['pitch_questions_description'] = 'array';
@@ -238,7 +237,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_number'] = 'nullable|array';
             $base_rules['custom_timelines_number.*'] = 'integer';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
-            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,month';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
             $base_rules['custom_timelines_description.*'] = 'string';
         }
