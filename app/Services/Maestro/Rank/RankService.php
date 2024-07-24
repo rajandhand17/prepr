@@ -20,15 +20,6 @@ class RankService
         }
     }
 
-    public static function getRankStatus()
-    {
-        try {
-            return ['1' => 'Active', '0' => 'Not Active'];
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     public static function storeUpdateRank($request, $id, $moduleMode)
     {
         try {
