@@ -537,15 +537,15 @@ return [
     ],
 
     'resource_types' => [
-            'assess'  => '0',
-            'onboard' => '1',
-            'engage'  => '2',
-            'grow'    => '3',
-            'na'      => '4',
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 
-    'resource_mode'=>[
-            'type' =>'0',
-            'mode' =>'1',
+    'resource_mode'=> [
+        'type' => '0',
+        'mode' => '1',
     ],
 ];
