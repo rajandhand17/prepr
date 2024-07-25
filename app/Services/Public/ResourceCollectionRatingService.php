@@ -16,6 +16,7 @@ class ResourceCollectionRatingService
             return $resourceCollectionRating;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

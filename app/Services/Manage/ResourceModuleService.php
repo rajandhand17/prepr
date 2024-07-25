@@ -141,13 +141,12 @@ class ResourceModuleService
             if ($request->has('rating') && !empty($request->rating)) {
                 $resourceModuleRating = ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleRating->pluck('resource_module_id'));
-
             }
             if ($request->has('type') && !empty($request->type)) {
                 $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
-
             }
+
             return $resourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
