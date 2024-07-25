@@ -114,6 +114,7 @@ class ResourceGroupService
             return $resourceGroup;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -293,6 +294,7 @@ class ResourceGroupService
                 $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
                 $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
             }
+
             if($request->has('progress') && !empty($request->progress)){
                 $resourceGroupProgress=[];
                 $moduleType=config('constants.module_completion_statuses_types.resource_group');
@@ -310,6 +312,7 @@ class ResourceGroupService
                 $resourceGroupList=$resourceGroupList->whereIn('id',$resourceGroupProgress->pluck('module_id'));
 
             }
+
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
