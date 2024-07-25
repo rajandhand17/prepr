@@ -422,4 +422,35 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }
+
+    public function cloneResourceModule($slug)
+    {
+        try {
+            // Checking resource module based on slug exists or not
+            $getResourceModule = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$getResourceModule) {
+                return $this->sendError(__('responses.selected_resource_module_not_found'), 404);
+            }
+            // Fetching resource module is belongs to current users or not
+            if ($getResourceModule->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_module_already_exists'), 403);
+            }
+            // Fetching Resource module Based on title and resource current users
+            $getResourceModuleBasedOnTitle = $this->resourceModuleRepository->getResourceModuleBasedOnTitle($getResourceModule->title);
+            if ($getResourceModuleBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+            }
+            // Cloning resource module based on title and resource group id
+            $cloneResourceModule = $this->resourceModuleRepository->cloneResourceModule($getResourceModule->id);
+            if ($cloneResourceModule) {
+                return $this->sendResponse(ResourceModuleResource::make($cloneResourceModule), __('responses.clone_resource_module_successfully'));
+            }
+
+            return $this->sendError(__('responses.clone_resource_module_responses_failed'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

@@ -81,7 +81,7 @@ class ResourceCollectionController extends AppBaseController
             // Cloning resource collections
             $cloneResourceCollection = $this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
             if ($cloneResourceCollection) {
-                return $this->sendResponse($cloneResourceCollection, __('responses.clone_resource_collection_successfully'));
+                return $this->sendResponse(ResourceCollectionResource::make($cloneResourceCollection), __('responses.clone_resource_collection_successfully'));
             }
 
             return $this->sendError(__('responses.clone_responses_failed'), 400);
