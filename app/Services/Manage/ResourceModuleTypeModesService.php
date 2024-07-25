@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleTypeModes;
-use function Symfony\Component\Translation\t;
 
 class ResourceModuleTypeModesService
 {
@@ -35,6 +34,7 @@ class ResourceModuleTypeModesService
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,20 +51,40 @@ class ResourceModuleTypeModesService
                     ]);
                 }
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
-
     }
 
     public static function getResourceModuleBasedOnType($type)
     {
         try {
             // Type 0 belongs to type and type 1 belongs to mode
-           return ResourceModuleTypeModes::where(['type_mode'=>'0','value'=>$type])->get();
-        }catch (\Exception $e) {
+            return ResourceModuleTypeModes::where(['type_mode'=>'0', 'value'=>$type])->get();
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function cloneResourceModuleTypeModes($originalResourceModuleAssociation, $clonedResourceModuleId)
+    {
+        try {
+            $originalResourceModuleAssociation->each(function ($resource_module_skill_group) use ($clonedResourceModuleId) {
+                if ($resource_module_skill_group) {
+                    $cloneResourceModuleSKills = $resource_module_skill_group->replicate();
+                    $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
+                    $cloneResourceModuleSKills->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

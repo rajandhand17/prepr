@@ -111,9 +111,7 @@ class ResourceCollectionService
             }
             if ($request->has('rating') && !empty($request->rating)) {
                 $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
-                if (count($getResourceCollectionsRating) > 0) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
-                }
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
             }
 
             return $resourceCollectionList;

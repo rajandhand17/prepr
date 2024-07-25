@@ -1163,6 +1163,26 @@ class ComponentAssociationService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceGroupComponentAssociation($originalResourceGroupAssociation, $clonedResourceGroupId)
+    {
+        try {
+            $originalResourceGroupAssociation->each(function ($resource_group_associated) use ($clonedResourceGroupId) {
+                if ($resource_group_associated) {
+                    $cloneChallengeAssociation = $resource_group_associated->replicate();
+                    $cloneChallengeAssociation->resource_group_id = $clonedResourceGroupId;
+                    $cloneChallengeAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

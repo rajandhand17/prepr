@@ -167,6 +167,17 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
+    public function getResourceModuleBasedOnTitle($title)
+    {
+        try {
+            return $this->resourceModuleService->getResourceModuleBasedOnTitle($title);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function deleteResourceModule($slug, $resource_module_id)
     {
         try {
@@ -282,6 +293,38 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             return  $this->resourceModuleService->getListName($request, $organization);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceModule($resourceModuleId)
+    {
+        try {
+            $getResourceModule = $this->resourceModuleService->getResourcesWithRelations($resourceModuleId);
+            $cloneResourceModule = DB::transaction(function () use ($getResourceModule) {
+                $cloneResourceModule = $this->resourceModuleService->cloneResourceModule($getResourceModule);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->cloneResourceModuleSkillsGroupsStack($getResourceModule->skills_group_stack, $cloneResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->cloneResourceModuleTypeModes($getResourceModule->resource_module_type_modes, $cloneResourceModule->id);
+
+                return [
+                    'cloneResourceModule'             => $cloneResourceModule,
+                    'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
+                    'resourceModuleTypeModesService'  => $resourceModuleTypeModesService,
+                ];
+            });
+            if ($cloneResourceModule['cloneResourceModule'] &&
+                $cloneResourceModule['resourceModuleSkillsGroupsStack'] &&
+                $cloneResourceModule['resourceModuleTypeModesService']) {
+                DB::commit();
+
+                return $cloneResourceModule['cloneResourceModule'];
+            }
+            DB::rollback();
+
+            return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
