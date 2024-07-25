@@ -97,10 +97,10 @@ class UpdateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
-            'lab_id.required'                =>__('responses.lab_required'),
-            'lab_id.exists'                  =>__('responses.lab_id_exists'),
-            'challenge_id.required'          =>__('responses.challenge_id_required'),
-            'challenge_id.exists'            =>__('responses.challenge_id_exists'),
+            'lab_id.required'                => __('responses.lab_required'),
+            'lab_id.exists'                  => __('responses.lab_id_exists'),
+            'challenge_id.required'          => __('responses.challenge_id_required'),
+            'challenge_id.exists'            => __('responses.challenge_id_exists'),
         ];
     }
 }

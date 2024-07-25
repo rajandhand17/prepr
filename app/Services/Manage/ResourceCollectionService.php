@@ -6,7 +6,6 @@ use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
-use App\Services\Manage\ResourceCollectionTypeModesService;
 use App\Services\ModuleCompletionStatusService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -293,23 +292,23 @@ class ResourceCollectionService
                 $resourceCollectionType = ResourceCollectionTypeModesService::getResourceCollectionBasedOnType($request->type);
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionType->pluck('resource_collection_id'));
             }
-            if($request->has('progress') && !empty($request->progress)){
-                $resourceGroupProgress=[];
-                $moduleType=config('constants.module_completion_statuses_types.resource_collection');
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceGroupProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_collection');
                 switch ($request->progress) {
                     case 'not-started':
-                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.not_started'));
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
                         break;
                     case 'in-progress':
-                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.in_progress'));
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
                         break;
                     case 'complete':
-                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.completed'));
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-                $resourceCollectionList=$resourceCollectionList->whereIn('id',$resourceGroupProgress->pluck('module_id'));
-
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
             }
+
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
