@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Maestro\Sponsors;
 
 use App\Http\Controllers\Controller;
-use App\Models\Host;
-use App\Traits\Maestro\Sponsor\SponsorTrait;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Traits\Maestro\Sponsor\SponsorTrait;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Models\Host;
+use Exception;
 
 class SponsorsController extends Controller
 {
@@ -66,7 +65,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.index', compact('html'));
         } catch (Exception $e) {
-            return response()->back()->with(['error' => $e->getMessage()]);
+            return response()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,9 +75,7 @@ class SponsorsController extends Controller
     public function create()
     {
         try {
-            $sponsor_status = $this->getSponsorStatus();
-
-            return view('maestro.sponsors.create', compact('sponsor_status'));
+            return view('maestro.sponsors.create');
         } catch (Exception $e) {
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -90,18 +87,11 @@ class SponsorsController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createSponsor($request)) {
-                DB::commit();
-
                 return redirect()->route('sponsors.index')->with('success', 'Sponsor created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -116,9 +106,7 @@ class SponsorsController extends Controller
             if (!$sponsor->exists) {
                 return redirect()->route('sponsors.index')->with(['error' => 'Sponsor not found.']);
             }
-            $sponsor_status = $this->getSponsorStatus();
-
-            return view('maestro.sponsors.edit', compact('sponsor', 'sponsor_status'));
+            return view('maestro.sponsors.edit', compact('sponsor'));
         } catch (Exception $e) {
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -130,18 +118,11 @@ class SponsorsController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateSponsorById($id, $request)) {
-                DB::commit();
-
-                return redirect()->route('sponsors.index')->with('success', 'Sponsor Updated successfully');
+                return redirect()->route('sponsors.index')->with('success', 'Sponsor Updated successfully.');
             }
-            DB::rollback();
-
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -152,16 +133,10 @@ class SponsorsController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteSponsorById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Sponsor deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

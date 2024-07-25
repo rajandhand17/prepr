@@ -53,7 +53,7 @@ class ChallengeCustomTimelinesService
     {
         try {
             if ($request->timeline_type == 'flexible') {
-                if ($request->custom_timelines_title != null && $request->custom_announcement_number != null) {
+                if ($request->custom_timelines_title != null && $request->custom_timelines_number != null) {
                     ChallengeCustomTimelines::where('challenge_id', $challenge_id)->delete();
                     foreach ($request->custom_timelines_title as $key => $value) {
                         switch ($request->schedule_custom_notify[$key]) {

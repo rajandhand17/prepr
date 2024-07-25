@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\Maestro\Sponsor;
+namespace App\Services\Maestro;
 
 use App\Models\Host;
 use Exception;
 
-class SponsorService
+class HostService
 {
     public static function getSponsorList()
     {
@@ -39,15 +39,6 @@ class SponsorService
             }
 
             return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getSponsorStatus()
-    {
-        try {
-            return ['1' => 'Active', '0' => 'Not Active'];
         } catch (Exception $e) {
             return false;
         }

@@ -56,7 +56,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('organization_id')) ? 'has-error' : ''}}">
             {!! Form::label('organization_id', 'Organization', ['class' => 'control-label ']) !!}
-            {{ Form::select('organization_id', $organizations, $resourceModule->organization_id, ['class' => 'form-control']) }}
+            {{ Form::select('organization_id', $organization, $resourceModule->organization_id, ['class' => 'form-control','id' => 'organisationId']) }}
             <span class="help-block">{{ $errors->first('organization_id')}}</span>
           </div>
         </div>
@@ -65,21 +65,21 @@
           <div class="col-md-3">
             <div class="form-group {{($errors->has('privacy')) ? 'has-error' : ''}}">
               {!! Form::label('privacy', 'Privacy', ['class' => 'control-label']) !!}
-              {!! Form::select('privacy', $privacy, $resourceModule->privacy, ['class' => 'form-control']) !!}
+              {!! Form::select('privacy', ['0' => 'Not available globally', '1' => 'Available globally'], $resourceModule->privacy, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('privacy')}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
               {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-              {!! Form::select('status', $status, $resourceModule->status, ['class' => 'form-control']) !!}
+              {!! Form::select('status', ['0' => 'Draft', '1' => 'Published', '2' => 'Archive'], $resourceModule->status, ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('status')}}</span>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
               {!! Form::label('user_id', 'User', ['class' => 'control-label ']) !!}
-              {!! Form::select('user_id', $users,$resourceModule->user_id, ['class' => 'form-control select2', 'id'=>'user_id']) !!}
+              {!! Form::select('user_id', $user ?? [],$resourceModule->user_id, ['class' => 'form-control select2', 'id'=>'user_id']) !!}
               <span class="help-block">{{ $errors->first('user_id')}}</span>
             </div>
           </div>
@@ -118,42 +118,74 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        var language = $('#languageId').val();
-        getOrganizations(language);
-    });
+  $(document).ready(function () {
+      var language = $('#languageId').val();
+      getOrganizations(language);
+      getUsers();
+  });
 
-    $("#languageId").change(function () {
-        var language = $('#languageId').val();
-        $('#organisationId').empty();
-        getOrganizations(language);
-    });
+  $("#languageId").change(function () {
+      var language = $('#languageId').val();
+      $('#organisationId').empty();
+      getOrganizations(language);
+  });
 
-    /* This function for select Organization */
-    function getOrganizations(language){
-        $('#organisationId').select2({          
-            placeholder: "Select organization data",
-            ajax: {
-                url: '{{route('getOrgData')}}',
-                data: function (params) {
-                    return {
-                        search: params.term,
-                        language: language
-                    };
-                },
-                processResults: function (data) {
-                    if(data.status=='fail'){
-                            $('#source_org_error').show();
-                            $('#source_org_error').html(data.message);
-                    }else{
-                        return {
-                            results: data.result
-                        };
-                        $('#source_org_error').hide();
-                    }
-                }
-            }
-        });
-    }
+  /* This function for select Organization */
+  function getOrganizations(language){
+      $('#organisationId').select2({    
+          placeholder: "Select organization",
+          ajax: {
+              url: '{{ route('getOrganizations') }}',
+              type: 'GET',
+              dataType: 'json',
+              data: function (params) {
+                  return {
+                      search: params.term,
+                      language: language
+                  };
+              },
+              processResults: function (data) {
+                  if(data.status == 'fail'){
+                    $('#organisationId').select2("close");
+                    $('.org_error').show();
+                    $('.org_error').html(data.message);
+                  } else {
+                      $('.org_error').hide();
+                      return {
+                        results: data.result
+                      };
+                  }
+              }
+          }
+      });
+  }
+  
+  function getUsers(){
+      $('#user_id').select2({      
+          placeholder: "Select User",
+          ajax: {
+              url: '{{ route('getUsers') }}',
+              type: 'GET',
+              dataType: 'json',
+              data: function (params) {
+                  return {
+                      search: params.term,
+                  };
+              },
+              processResults: function (data) {
+                  if(data.status == 'fail'){
+                    $('#user_id').select2("close");
+                    $('.user_error').show();
+                    $('.user_error').html(data.message);
+                  } else {
+                      $('.user_error').hide();
+                      return {
+                        results: data.result
+                      };
+                  }
+              }
+          }
+      });
+  }
 </script>
 @endsection
