@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Maestro\Tag;
+namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Language;
 use App\Models\Tag;
 use Exception;
@@ -28,22 +29,11 @@ class TagService
             $tag = Tag::find($id);
             $categorys = json_encode($request->components);
             $category_list = str_replace(str_split('\\/!;•[]}:*?"<>|'), '', $categorys);
-            $languages = Language::where('status', 1)->get();
+                $languages = LanguageService::getAllActiveLanguages();
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'tag_image';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_tag_image';
-                }
+                $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                $columName2 = UtilityHelper::getColumName($single->iso,'tag_image'); 
+                
                 $tag->$columName1 = $request->$columName1;
                 $tag_image = '';
                 if ($request->file($columName2)) {
@@ -58,8 +48,6 @@ class TagService
 
             return redirect()->route('tags.index')->with('success', 'Tag update successfully');
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -81,7 +69,7 @@ class TagService
     public static function getTags()
     {
         try {
-            return Tag::orderBy('id', 'desc');
+            return Tag::orderBy('id', 'desc')->pluck('title', 'id');
         } catch (Exception $e) {
             return false;
         }
@@ -93,23 +81,12 @@ class TagService
             $categorys = json_encode($request->components);
             $category_list = str_replace(str_split('\\/!;•[]}:*?"<>|'), '', $categorys);
 
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tag = new Tag();
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'tag_image';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_tag_image';
-                }
+                $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                $columName2 = UtilityHelper::getColumName($single->iso,'tag_image'); 
+                
                 $tag->$columName1 = $request->$columName1;
 
                 $tag_image = '';
@@ -129,4 +106,23 @@ class TagService
             return false;
         }
     }
+
+    public static function getSelectedTagByIds($tags)
+    {
+        try {
+            $selectedTags = [];
+            foreach ($tags as $tag_id) {
+                if (Tag::where('id', $tag_id)->get()->count() > 0) {
+                    $tag_names[] = Tag::find($tag_id)->title;
+                } else {
+                    $selectedTags = "Tag doesn't exist";
+                }
+            }
+            $selectedTags = implode(', ', $tag_names);
+            return $selectedTags;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+   
 }
