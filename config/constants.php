@@ -548,4 +548,16 @@ return [
             'type' =>'0',
             'mode' =>'1',
     ],
+
+    'module_completion_statuses_types'=>[
+        'resource_module'     =>'4',
+        'resource_group'      =>'5',
+        'resource_collection' =>'6',
+    ],
+
+    'status_module_completion'=>[
+        'not_started' =>'0',
+        'in_progress' =>'1',
+        'completed'   =>'2',
+    ],
 ];

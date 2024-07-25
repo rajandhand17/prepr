@@ -135,4 +135,32 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function getResourceProgress($moduleType,$status)
+    {
+        try {
+            $checkChallengePathCompleted = ModuleCompletionStatus::where([
+                'module_type'   => $moduleType,
+                'status'        => $status,
+            ])->get();
+            return $checkChallengePathCompleted;
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionProgress($module)
+    {
+        try {
+            $checkChallengePathCompleted = ModuleCompletionStatus::where([
+                'module_type'   => '6',
+                'status'        => $status,
+            ])->get();
+            return $checkChallengePathCompleted;
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }

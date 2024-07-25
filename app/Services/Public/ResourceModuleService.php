@@ -3,7 +3,9 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ModuleCompletionStatus;
 use App\Models\ResourceModule;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceModuleService
 {
@@ -131,6 +133,24 @@ class ResourceModuleService
             if ($request->has('type') && $request->type !== null) {
                 $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
+            }
+            if($request->has('progress') && !empty($request->progress)){
+                $resourceModulesProgress=[];
+                $moduleType=config('constants.module_completion_statuses_types.resource_module');
+                switch ($request->progress) {
+                    case 'not-started':
+                         $resourceModulesProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.not_started'));
+                         break;
+                    case 'in-progress':
+                        $resourceModulesProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.in_progress'));
+                         break;
+                    case 'complete':
+                        $resourceModulesProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.completed'));
+                        break;
+
+                }
+                $resourceModule=$resourceModule->whereIn('id',$resourceModulesProgress->pluck('module_id'));
+
             }
             return $resourceModule;
         } catch (\Exception $e) {

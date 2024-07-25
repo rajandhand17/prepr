@@ -18,6 +18,8 @@ class ResourceGroup extends Model
         'language',
         'user_id',
         'organization_id',
+        'lab_id',
+        'challenge_id',
         'title',
         'slug',
         'description',

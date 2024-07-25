@@ -5,6 +5,7 @@ namespace App\Services\Public;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
 use App\Models\ResourceGroupRating;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceGroupService
 {
@@ -114,6 +115,23 @@ class ResourceGroupService
             if ($request->has('type') && $request->type !== null) {
                 $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
                 $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
+            if($request->has('progress') && !empty($request->progress)){
+                $resourceGroupProgress=[];
+                $moduleType=config('constants.module_completion_statuses_types.resource_group');
+                switch ($request->progress){
+                    case 'not-started':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.completed'));
+                        break;
+                }
+                $resourceGroupList=$resourceGroupList->whereIn('id',$resourceGroupProgress->pluck('module_id'));
+
             }
 
             return $resourceGroupList;

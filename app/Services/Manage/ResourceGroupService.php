@@ -6,6 +6,7 @@ use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
+use App\Services\ModuleCompletionStatusService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -40,7 +41,7 @@ class ResourceGroupService
         }
     }
 
-    public static function createResourceGroup($request, $upload_cover_image, $organizationId)
+    public static function createResourceGroup($request, $upload_cover_image, $organizationId,$labId,$challengeId)
     {
         try {
             $status = config('constants.resource_group_status.draft');
@@ -72,6 +73,8 @@ class ResourceGroupService
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->lab_id = $labId;
+            $resourceGroup->challenge_id = $challengeId;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
@@ -144,7 +147,7 @@ class ResourceGroupService
         }
     }
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image, $organizationId)
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $organizationId,$labId,$challengeId)
     {
         try {
             $resourceGroup = ResourceGroup::where('slug', $slug)->first();
@@ -174,6 +177,8 @@ class ResourceGroupService
             }
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->lab_id = $labId;
+            $resourceGroup->challenge_id = $challengeId;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $request->media_type : $resourceGroup->media_type;
@@ -287,6 +292,23 @@ class ResourceGroupService
             if ($request->has('type') && $request->type !== null) {
                 $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
                 $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
+            if($request->has('progress') && !empty($request->progress)){
+                $resourceGroupProgress=[];
+                $moduleType=config('constants.module_completion_statuses_types.resource_group');
+                switch ($request->progress){
+                    case 'not-started':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceGroupProgress=ModuleCompletionStatusService::getResourceProgress($moduleType,config('constants.status_module_completion.completed'));
+                        break;
+                }
+                $resourceGroupList=$resourceGroupList->whereIn('id',$resourceGroupProgress->pluck('module_id'));
+
             }
             return $resourceGroupList;
         } catch (\Exception $e) {

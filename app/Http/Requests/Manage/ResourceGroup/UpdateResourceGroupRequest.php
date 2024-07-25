@@ -41,16 +41,14 @@ class UpdateResourceGroupRequest extends FormRequest
             'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
             'skills'                   => 'required|array',
             'skills.*'                 => 'numeric|exists:skills,id',
-            'tags'                     => 'required|array',
-            'tags.*'                   => 'numeric|exists:tags,id',
-            'tag_groups'               => 'array',
             'level'                    => 'required|exists:levels,id',
             'duration'                 => 'required|exists:durations,id',
-            'tag_groups.*'             => 'numeric|exists:tag_groups,id',
             'skill_groups'             => 'array',
             'skill_groups.*'           => 'numeric|exists:skill_groups,id',
             'skill_stacks'             => 'array',
             'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'lab_id'                   => 'required|exists:labs,uuid',
+            'challenge_id'             => 'required|exists:challenges,uuid',
         ];
 
         return $base_rules;
@@ -99,6 +97,10 @@ class UpdateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
+            'lab_id.required'                =>__('responses.lab_required'),
+            'lab_id.exists'                  =>__('responses.lab_id_exists'),
+            'challenge_id.required'          =>__('responses.challenge_id_required'),
+            'challenge_id.exists'            =>__('responses.challenge_id_exists'),
         ];
     }
 }

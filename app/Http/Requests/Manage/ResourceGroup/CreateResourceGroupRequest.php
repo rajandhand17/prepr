@@ -26,6 +26,8 @@ class CreateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|unique:resource_groups,title',
             'description'              => 'required',
+            'lab_id'                   => 'required|exists:labs,uuid',
+            'challenge_id'             => 'required|exists:challenges,uuid',
             'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
@@ -71,12 +73,6 @@ class CreateResourceGroupRequest extends FormRequest
             'skills.array'                   => __('responses.skills_array'),
             'skills.*.numeric'               => __('responses.skills_numeric'),
             'skills.*.exists'                => __('responses.skill_not_exists'),
-            'tags.array'                     => __('responses.tags_array'),
-            'tags.*.numeric'                 => __('responses.tags_numeric'),
-            'tags.*.exists'                  => __('responses.tag_not_exists'),
-            'tag_groups.array'               => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'           => __('responses.tag_groups_numeric'),
-            'tag_groups.*.exists'            => __('responses.tag_group_not_exists'),
             'skill_groups.array'             => __('responses.skill_groups_array'),
             'skill_groups.*.numeric'         => __('responses.skill_groups_numeric'),
             'skill_groups.*.exists'          => __('responses.skill_groups_not_exists'),
@@ -92,6 +88,10 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_ids.required'          => __('responses.resource_ids_required'),
             'resource_ids.array'             => __('responses.resource_ids_array'),
             'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
+            'lab_id.required'                =>__('responses.lab_required'),
+            'lab_id.exists'                  =>__('responses.lab_id_exists'),
+            'challenge_id.required'          =>__('responses.challenge_id_required'),
+            'challenge_id.exists'            =>__('responses.challenge_id_exists'),
         ];
     }
 }

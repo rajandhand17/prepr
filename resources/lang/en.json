@@ -900,6 +900,7 @@
     "responses.conversation_archive_failed": "Conversation archived is failed",
     "responses.conversation_users_required": "usernames field is required",
     "responses.conversation_type_required": "Type field is required",
+    "responses.lab_required": "Lab field is required",
     "responses.conversation_user_exists": "Please make sure all the users exists for given usernames.",
     "responses.type_in_announcement_or_message": "Type can be either announcement or message",
     "responses.message_without_attachment": "The message field is required when attachment is not present.",
