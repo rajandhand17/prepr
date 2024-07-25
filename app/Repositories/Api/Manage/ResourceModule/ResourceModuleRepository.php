@@ -173,6 +173,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleService->getResourceModuleBasedOnTitle($title);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

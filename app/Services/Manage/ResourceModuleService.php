@@ -174,6 +174,7 @@ class ResourceModuleService
             return $resourceGroup;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -542,6 +543,7 @@ class ResourceModuleService
             return $resourceModule;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
