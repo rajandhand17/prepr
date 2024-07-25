@@ -173,6 +173,7 @@ class ResourceModuleService
 
             return $resourceGroup;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
