@@ -118,6 +118,7 @@ class ResourceModuleDetailService
             ])->delete();
 
             self::deleteResourceModuleDetailVisitBasedOnAssetId($request->media_id, $resource_module_id);
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
