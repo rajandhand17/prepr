@@ -20,6 +20,8 @@ interface ProjectInterface
 
     public function uploadCoverImage($coverImage);
 
+    public function checkProjectCreatedWithChallenge($challengeId);
+
     public function createProject($request, $uploadedCoverMedia);
 
     public function getProjectBasedOnSlug($slug);
@@ -54,9 +56,25 @@ interface ProjectInterface
 
     public function captureProjectAssessment($projectData, $userData, $request);
 
+    public function captureProjectAIAssessment($projectData, $userData, $request);
+
+    public function assessProjectAI($request);
+
     public function addUpdateProjectSkillsRecruitingStatus($projectId, $request);
 
     public function checkChallengeProjectAssessment($projectDataId, $userData);
 
     public function deleteChallengeProjectAssessment($projectDataId, $userData);
+
+    public function deleteProjectMedia($request, $projectDataId);
+
+    public function storeHistory($projectId, $userId, $activity);
+
+    public function fetchProjectHistory($projectId);
+
+    public function checkProjectJoinedStatus($projectId, $userEmail);
+
+    public function joinProject($projectId, $userEmail);
+
+    public function unJoinProject($projectId, $userEmail);
 }
