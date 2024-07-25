@@ -136,16 +136,18 @@ class ModuleCompletionStatusService
         }
     }
 
-    public static function getResourceProgress($moduleType,$status)
+    public static function getResourceProgress($moduleType, $status)
     {
         try {
             $checkChallengePathCompleted = ModuleCompletionStatus::where([
                 'module_type'   => $moduleType,
                 'status'        => $status,
             ])->get();
+
             return $checkChallengePathCompleted;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -157,9 +159,11 @@ class ModuleCompletionStatusService
                 'module_type'   => '6',
                 'status'        => $status,
             ])->get();
+
             return $checkChallengePathCompleted;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

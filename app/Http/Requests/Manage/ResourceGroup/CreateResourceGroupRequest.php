@@ -88,10 +88,10 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_ids.required'          => __('responses.resource_ids_required'),
             'resource_ids.array'             => __('responses.resource_ids_array'),
             'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
-            'lab_id.required'                =>__('responses.lab_required'),
-            'lab_id.exists'                  =>__('responses.lab_id_exists'),
-            'challenge_id.required'          =>__('responses.challenge_id_required'),
-            'challenge_id.exists'            =>__('responses.challenge_id_exists'),
+            'lab_id.required'                => __('responses.lab_required'),
+            'lab_id.exists'                  => __('responses.lab_id_exists'),
+            'challenge_id.required'          => __('responses.challenge_id_required'),
+            'challenge_id.exists'            => __('responses.challenge_id_exists'),
         ];
     }
 }
