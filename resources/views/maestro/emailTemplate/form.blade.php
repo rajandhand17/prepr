@@ -28,43 +28,6 @@
         @endphp
         
 <div class="row">
-    <!-- <div class="col-md-4">
-        <div class="form-group">
-            <label class="control-label mb-10">
-                Identifier
-            </label>
-            @if((strpos(Request::url(),'edit')) !== false )
-                {!! Form::text('identifier', null, array('class' => 'form-control required', 'id' => 'eventRegInput1','readonly'=>'true')) !!}
-            @else
-                {!! Form::text('identifier', null, array('class' => 'form-control required', 'id' => 'eventRegInput1')) !!}
-                <span class="help-block">You can not change identifier once you save this template</span>
-            @endif
-        </div>
-    </div> -->
-    <!-- <div class="col-md-2">
-        <div class="form-group">
-            <label class="control-label mb-10">
-                Language
-            </label>
-            @if((strpos(Request::url(),'edit')) !== false )
-            <select class="form-control" name="language">
-                @if(!empty($languages))
-                    @foreach($languages as $key => $lang)
-                        <option value="{{ $lang->lang_iso }}" @if($lang->lang_iso == $template->language) selected @endif>{{ $lang->lang_name }}</option>
-                    @endforeach
-                @endif
-            </select>
-            @else
-            <select class="form-control" name="language">
-                @if(!empty($languages))
-                    @foreach($languages as $key => $lang)
-                        <option value="{{ $lang->lang_iso }}" >{{ $lang->lang_name }}</option>
-                    @endforeach
-                @endif
-            </select>
-            @endif
-        </div>
-    </div> -->
     <div class="col-md-6">
         <div class="form-group">
             <label class="control-label mb-10">

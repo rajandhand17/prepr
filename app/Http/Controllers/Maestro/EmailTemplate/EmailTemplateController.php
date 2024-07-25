@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\EmailTemplate;
 use App\Http\Controllers\Controller;
 use App\Models\EmailTemplate;
 use App\Models\Language;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\EmailTemplate\EmailTemplateTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -72,34 +73,13 @@ class EmailTemplateController extends Controller
                 ['data' => 'body_content', 'name' => 'body_content', 'title' => 'Content'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false],
             ]);
-            View::share('module_name', 'Email Template');
-            $languages = Language::where('status', 1)->get();
-
+            $languages = LanguageService::getAllActiveLanguages();
             return view('maestro.emailTemplate.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
-
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
             ]);
-        }
-    }
-
-    /* -----------------------------------------------------------------------------------------
-    @Description: Function for email template
-    @input: id
-    @Output: returns template
-    -------------------------------------------------------------------------------------------- */
-    public function show($id)
-    {
-        try {
-            $template = EmailTemplate::find($id);
-            $html = '';
-
-            return view('maestro.emailTemplate.index', compact('html'));
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -110,8 +90,7 @@ class EmailTemplateController extends Controller
     public function create()
     {
         try {
-            $languages = Language::where('status', 1)->get();
-
+            $languages = LanguageService::getAllActiveLanguages();
             return view('maestro.emailTemplate.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
@@ -125,10 +104,8 @@ class EmailTemplateController extends Controller
     public function edit($id)
     {
         try {
-            View::share('title', 'Edit Template');
-            $template = EmailTemplate::find($id);
-            $languages = Language::where('status', 1)->get();
-
+            $template =  $this->getEmailTemplatesById($id);
+            $languages = LanguageService::getAllActiveLanguages();
             return view('maestro.emailTemplate.edit', compact('template', 'languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
@@ -143,19 +120,12 @@ class EmailTemplateController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->createEmailTemplate($request)) {
-                DB::commit();
-
                 return redirect()->route('emailTemplates.index')->with('success', 'Template has created successfully');
-            }
-            DB::rollback();
-
+            } 
             return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -168,19 +138,12 @@ class EmailTemplateController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->updateEmailTemplateById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('emailTemplates.index')->with('success', 'Email Template has Updated successfully');
             }
-            DB::rollback();
-
             return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -193,18 +156,11 @@ class EmailTemplateController extends Controller
     public function destroy($id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->deleteEmailTemplateById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Email Template deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
