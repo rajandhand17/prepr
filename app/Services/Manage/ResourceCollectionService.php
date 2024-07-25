@@ -6,6 +6,7 @@ use App\Events\ResourceCollection\DeleteResourceCollectionAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
+use App\Services\Manage\ResourceCollectionTypeModesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -286,7 +287,10 @@ class ResourceCollectionService
                 $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
             }
-
+            if ($request->has('type') && $request->type !== null) {
+                $resourceCollectionType = ResourceCollectionTypeModesService::getResourceCollectionBasedOnType($request->type);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionType->pluck('resource_collection_id'));
+            }
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

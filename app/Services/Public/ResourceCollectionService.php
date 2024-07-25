@@ -116,6 +116,10 @@ class ResourceCollectionService
                 }
             }
 
+            if ($request->has('type') && $request->type !== null) {
+                $resourceCollectionType = ResourceCollectionTypeModesService::getResourceCollectionBasedOnType($request->type);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionType->pluck('resource_collection_id'));
+            }
             return $resourceCollectionList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

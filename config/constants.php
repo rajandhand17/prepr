@@ -535,4 +535,17 @@ return [
         'resource_collections'    => '5',
         'resource_group'          => '6',
     ],
+
+    'resource_types' => [
+            'assess'  => '0',
+            'onboard' => '1',
+            'engage'  => '2',
+            'grow'    => '3',
+            'na'      => '4',
+    ],
+
+    'resource_mode'=>[
+            'type' =>'0',
+            'mode' =>'1',
+    ],
 ];

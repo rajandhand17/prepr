@@ -273,7 +273,10 @@ class ResourceGroupService
                     $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
                 }
             }
-
+            if ($request->has('type') && $request->type !== null) {
+                $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
             return $resourceGroupList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
