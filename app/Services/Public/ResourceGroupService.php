@@ -108,9 +108,7 @@ class ResourceGroupService
             }
             if ($request->has('rating') && !empty($request->rating)) {
                 $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
-                if (count($getResourceGroupList) > 0) {
-                    $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
-                }
+                $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
             }
 
             if ($request->has('type') && $request->type !== null) {

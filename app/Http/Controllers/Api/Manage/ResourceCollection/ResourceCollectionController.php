@@ -81,7 +81,7 @@ class ResourceCollectionController extends AppBaseController
             // Cloning resource collections
             $cloneResourceCollection = $this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
             if ($cloneResourceCollection) {
-                return $this->sendResponse($cloneResourceCollection, __('responses.clone_resource_collection_successfully'));
+                return $this->sendResponse(ResourceCollectionResource::make($cloneResourceCollection), __('responses.clone_resource_collection_successfully'));
             }
 
             return $this->sendError(__('responses.clone_responses_failed'), 400);
@@ -214,12 +214,13 @@ class ResourceCollectionController extends AppBaseController
 
                 return $this->sendResponse($response, __('responses.found_resource_collection_list'));
             }
+
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'));
         }
-
     }
 
     public function delete($slug)
