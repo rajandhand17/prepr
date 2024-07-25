@@ -69,9 +69,10 @@ class ResourceGroupController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function cloneResourceGroup($slug)
     {
-        try{
+        try {
             // Checking resource group based on slug exists or not
             $getResourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if (!$getResourceGroup) {
@@ -93,12 +94,13 @@ class ResourceGroupController extends AppBaseController
             }
 
             return $this->sendError(__('responses.clone_responses_failed'), 400);
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
-
     }
+
     public function show($slug)
     {
         try {

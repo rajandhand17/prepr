@@ -5,7 +5,6 @@ namespace App\Services\Manage;
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Services\SkillService;
@@ -165,12 +164,15 @@ class ResourceModuleService
             return false;
         }
     }
-    public static function getResourceModuleBasedOnTitle($title){
+
+    public static function getResourceModuleBasedOnTitle($title)
+    {
         try {
             $userId = auth()->id();
-            $resourceGroup=ResourceModule::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+            $resourceGroup = ResourceModule::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+
             return $resourceGroup;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -513,29 +515,31 @@ class ResourceModuleService
         }
     }
 
-    public static function getResourcesWithRelations($id){
+    public static function getResourcesWithRelations($id)
+    {
         try {
             return ResourceModule::with('skills_group_stack', 'resource_module_type_modes')->find($id);
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public static function cloneResourceModule($getResourceModule){
+    public static function cloneResourceModule($getResourceModule)
+    {
         try {
-
             $resourceModule = new ResourceModule();
-            $uuid=Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $slug = UtilityHelper::generateSlug($getResourceModule->title.$uuid, $resourceModule);
-            $resourceModule=$getResourceModule->replicate();
+            $resourceModule = $getResourceModule->replicate();
             $resourceModule->uuid = $uuid;
             $resourceModule->slug = $slug;
             $resourceModule->user_id = auth()->user()->id;
             $resourceModule->save();
+
             return $resourceModule;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

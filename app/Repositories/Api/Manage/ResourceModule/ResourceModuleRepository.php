@@ -166,14 +166,16 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
+
     public function getResourceModuleBasedOnTitle($title)
     {
         try {
             return $this->resourceModuleService->getResourceModuleBasedOnTitle($title);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             return false;
         }
     }
+
     public function deleteResourceModule($slug, $resource_module_id)
     {
         try {
@@ -306,7 +308,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->cloneResourceModuleTypeModes($getResourceModule->resource_module_type_modes, $cloneResourceModule->id);
 
                 return [
-                    'cloneResourceModule'            => $cloneResourceModule,
+                    'cloneResourceModule'             => $cloneResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
                     'resourceModuleTypeModesService'  => $resourceModuleTypeModesService,
                 ];
@@ -315,13 +317,15 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $cloneResourceModule['resourceModuleSkillsGroupsStack'] &&
                 $cloneResourceModule['resourceModuleTypeModesService']) {
                 DB::commit();
+
                 return $cloneResourceModule['cloneResourceModule'];
             }
             DB::rollback();
 
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

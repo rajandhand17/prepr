@@ -68,15 +68,15 @@ class ResourceModule extends Model
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
+
     public function skills_group_stack()
     {
         return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id');
-
     }
 
     public function resource_module_type_modes()
     {
-        return $this->hasMany(ResourceModuleTypeModes::class,'resource_module_id','id');
+        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
     }
 
     public function documents()

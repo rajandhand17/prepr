@@ -106,16 +106,18 @@ class ResourceGroupRepository implements ResourceGroupInterface
             return false;
         }
     }
+
     public function getResourceGroupBasedOnTitle($title)
     {
         try {
             return $this->resourceGroupService->getResourceGroupBasedOnTitle($title);
-
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public function deleteGroupModule($checkResourceGroupId)
     {
         try {
@@ -165,6 +167,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
             });
             if ($updateResourceGroup['updateResourceGroup']) {
                 DB::commit();
+
                 return $updateResourceGroup['updateResourceGroup'];
             }
             DB::rollback();
@@ -204,27 +207,29 @@ class ResourceGroupRepository implements ResourceGroupInterface
     {
         try {
             $getResourceGroup = $this->resourceGroupService->getResourcesWithRelations($resourceGroupId);
-                $cloneResourceGroups = DB::transaction(function () use ($getResourceGroup) {
-                    $cloneResourceGroup = $this->resourceGroupService->cloneResourceGroup($getResourceGroup);
-                    $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($cloneResourceGroup->component_association, $getResourceGroup->id);
-                    $cloneResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkillsGroupsStack($cloneResourceGroup->skills_group_stack, $getResourceGroup->id);
-                    $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($cloneResourceGroup->resource_group_achievement, $getResourceGroup->id);
+            $cloneResourceGroups = DB::transaction(function () use ($getResourceGroup) {
+                $cloneResourceGroup = $this->resourceGroupService->cloneResourceGroup($getResourceGroup);
+                $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($cloneResourceGroup->component_association, $getResourceGroup->id);
+                $cloneResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkillsGroupsStack($cloneResourceGroup->skills_group_stack, $getResourceGroup->id);
+                $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($cloneResourceGroup->resource_group_achievement, $getResourceGroup->id);
 
-                    return[
-                        'cloneResourceGroups'                            => $cloneResourceGroup,
-                        'cloneResourceGroupComponentAssociation'         => $cloneResourceGroupComponentAssociation,
-                        'cloneResourceGroupSkillsGroupStack'             => $cloneResourceGroupSkillsGroupStack,
-                        'cloneResourceGroupTagsGroups'                   => $cloneResourceGroupsAchievements,
-                    ];
-               });
+                return[
+                    'cloneResourceGroups'                            => $cloneResourceGroup,
+                    'cloneResourceGroupComponentAssociation'         => $cloneResourceGroupComponentAssociation,
+                    'cloneResourceGroupSkillsGroupStack'             => $cloneResourceGroupSkillsGroupStack,
+                    'cloneResourceGroupTagsGroups'                   => $cloneResourceGroupsAchievements,
+                ];
+            });
             if ($cloneResourceGroups['cloneResourceGroups'] &&
                 $cloneResourceGroups['cloneResourceGroupComponentAssociation'] &&
                 $cloneResourceGroups['cloneResourceGroupSkillsGroupStack'] &&
                 $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
                 DB::commit();
+
                 return $cloneResourceGroups['cloneResourceGroups'];
             }
             DB::rollback();
+
             return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

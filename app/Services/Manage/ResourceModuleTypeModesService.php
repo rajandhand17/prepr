@@ -80,9 +80,11 @@ class ResourceModuleTypeModesService
                     $cloneResourceModuleSKills->save();
                 }
             });
+
             return true;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

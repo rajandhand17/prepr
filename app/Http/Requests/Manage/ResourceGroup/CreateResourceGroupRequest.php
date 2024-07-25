@@ -35,7 +35,7 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
             'skills'                   => 'required|array',
             'skills.*'                 => 'numeric|exists:skills,id',
-           'level'                    => 'required|exists:levels,id',
+            'level'                    => 'required|exists:levels,id',
             'duration'                 => 'required|exists:durations,id',
             'skill_groups'             => 'array',
             'skill_groups.*'           => 'numeric|exists:skill_groups,id',
