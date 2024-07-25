@@ -147,6 +147,13 @@ class ProjectController extends AppBaseController
             } else {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            // Checking user has already created project with challenge or not based on user and challenge id's
+            $checkProjectCreatedWithChallenge = $this->projectRepository->checkProjectCreatedWithChallenge($checkChallenge->id);
+            if ($checkProjectCreatedWithChallenge) {
+                return $this->sendError(__('responses.project_already_created'), 403);
+            }
+
             $upload_project_cover_media = config('site-settings.default_project_cover_image');
             if ($request->cover_media != null) {
                 if ($request->media_type == 'image') {

@@ -1324,5 +1324,6 @@
     "responses.clone_responses_group_failed": "You have failed to cloned this resource group.",
     "responses.selected_resource_module_already_exists": "This resource module already relates to you.",
     "responses.clone_resource_module_successfully": "You have successfully cloned this resource module.",
-    "responses.clone_resource_module_responses_failed": "You have failed to cloned this resource module."
+    "responses.clone_resource_module_responses_failed": "You have failed to cloned this resource module.",
+    "responses.project_already_created": "Sorry! you have already created the Project under this Challenge"
 }

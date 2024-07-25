@@ -203,6 +203,19 @@ class ProjectService
         }
     }
 
+    public function checkProjectCreatedWithChallenge($challengeId)
+    {
+        try {
+            $checkProjectCreatedWithChallenge = Project::where(['user_id' => auth()->user()->id, 'challenge_id' => $challengeId])->exists();
+
+            return $checkProjectCreatedWithChallenge;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function createProject($request, $uploadedCoverImage)
     {
         try {
