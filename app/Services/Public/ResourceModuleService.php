@@ -132,6 +132,7 @@ class ResourceModuleService
                 $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
             }
+
             return $resourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
