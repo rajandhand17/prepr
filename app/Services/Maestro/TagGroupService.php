@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Maestro\Tag;
+namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Language;
 use App\Models\Tag;
 use App\Models\TagGroup;
@@ -31,23 +32,13 @@ class TagGroupService
             if ($request->title !== $tagGroup->title && TagGroup::where('title', $request->title)->count() > 0) {
                 return redirect()->route('taggroup.index')->with(['error' => 'Tag Group title already exists']);
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'description';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_description';
-                }
+               
+                    $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                    $columName2 = UtilityHelper::getColumName($single->iso,'description'); 
+                
                 $tagGroup->$columName1 = $request->$columName1;
                 $tagGroup->$columName2 = $request->$columName2;
             }
@@ -86,30 +77,16 @@ class TagGroupService
                     return redirect()->route('taggroup.index')->with(['error' => 'Tag Group title already exists']);
                 }
                 $tagGroup = new TagGroup();
-
-                $languages = Language::where('status', 1)->get();
+                $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    if ($single->iso == 'en') {
-                        $columName1 = 'title';
-                        $columName2 = 'description';
-                    } else {
-                        $columName = $single->iso;
-                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                            $columName = str_replace(' ', '_', $columName);
-                        }
-                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                            $columName = str_replace('-', '_', $columName);
-                        }
-                        $columName1 = $columName.'_title';
-                        $columName2 = $columName.'_description';
-                    }
+                    $columName1 = UtilityHelper::getColumName($single->iso,'title');
+                    $columName2 = UtilityHelper::getColumName($single->iso,'description'); 
                     $tagGroup->$columName1 = $request->$columName1;
                     $tagGroup->$columName2 = $request->$columName2;
                 }
                 $tagGroup->tags = $request->tags;
                 $tagGroup->save();
-
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group added successfully');
             }
 
@@ -119,10 +96,10 @@ class TagGroupService
         }
     }
 
-    public static function getTags()
+    public static function getTagGroups()
     {
         try {
-            return Tag::orderBy('id', 'desc');
+            return TagGroup::orderBy('id', 'desc');
         } catch (Exception $e) {
             return false;
         }

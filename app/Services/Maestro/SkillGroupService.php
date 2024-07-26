@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Maestro\Skill;
+namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillGroup;
@@ -41,23 +42,10 @@ class SkillGroupService
             if ($request->title !== $group->title && SkillGroup::where('title', $request->title)->count() > 0) {
                 return redirect()->route('skillgroup.index')->with(['error' => 'Group title already exists']);
             }
-            $languages = Language::where('status', 1)->get();
-
+            $languages = LanguageService::getAllActiveLanguages();
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'description';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_description';
-                }
+                $columName1 =  UtilityHelper::getColumName($single->iso,'title');
+                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                 $group->$columName1 = $request->$columName1;
                 $group->$columName2 = $request->$columName2;
             }
@@ -96,23 +84,11 @@ class SkillGroupService
                 }
                 $group = new SkillGroup();
 
-                $languages = Language::where('status', 1)->get();
+                $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    if ($single->iso == 'en') {
-                        $columName1 = 'title';
-                        $columName2 = 'description';
-                    } else {
-                        $columName = $single->iso;
-                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                            $columName = str_replace(' ', '_', $columName);
-                        }
-                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                            $columName = str_replace('-', '_', $columName);
-                        }
-                        $columName1 = $columName.'_title';
-                        $columName2 = $columName.'_description';
-                    }
+                    $columName1 =  UtilityHelper::getColumName($single->iso,'title');
+                    $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                     $group->$columName1 = $request->$columName1;
                     $group->$columName2 = $request->$columName2;
                 }
@@ -129,10 +105,10 @@ class SkillGroupService
         }
     }
 
-    public static function getSkills()
+    public static function getSkillGroup()
     {
         try {
-            return Skill::orderBy('id', 'desc');
+            return SkillGroup::orderBy('id', 'desc');
         } catch (Exception $e) {
             return false;
         }

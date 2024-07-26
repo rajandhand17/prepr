@@ -9,4 +9,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('skills', SkillController::class);
     Route::resource('skillstack', SkillStackController::class);
     Route::resource('skillgroup', SkillGroupController::class);
+    Route::get('getAjaxSkills', [SkillController::class, 'getAjaxSkills'])->name('getAjaxSkills');
+    Route::get('getAjaxSkillStack', [SkillStackController::class, 'getAjaxSkillStack'])->name('getAjaxSkillStack');
 });

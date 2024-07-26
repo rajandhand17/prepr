@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\EmailTemplate;
+namespace App\Services\Maestro;
 
 use App\Models\EmailTemplate;
 use Exception;
@@ -89,4 +89,20 @@ class EmailTemplateService
             return false;
         }
     }
+
+    public static function getEmailTemplatesById($id)
+    {
+        try {
+            $EmailTemplate = EmailTemplate::find($id);
+
+            if ($EmailTemplate) {
+                return $EmailTemplate;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

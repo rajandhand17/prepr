@@ -236,12 +236,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroSkillRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/skill/skill.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/skill.php'));
     }
 
     public function mapMaestroTagRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/tag/tag.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/tag.php'));
     }
 
     public function mapMaestroCategoryRoutes()
@@ -297,7 +297,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroEmailTemplateRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/emailtemplates/emailtemplates.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/emailtemplates.php'));
     }
 
     public function mapMaestroExploreRoutes()

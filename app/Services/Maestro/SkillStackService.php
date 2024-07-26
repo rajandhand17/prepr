@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Services\Maestro\Skill;
+namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillStack;
@@ -27,37 +28,15 @@ class SkillStackService
     {
         try {
             $input = $request->all();
-            // $validation_array = [
-            //     'title' => 'required|max:255',
-            //     'stack_skills' => 'required',
-            //     'description' => 'required'
-
-            // ];
-            // $validation = Validator::make($input, $validation_array);
-            // if ($validation->fails()) {
-            //     return Redirect::back()->withErrors($validation)->withInput();
-            // }
             $stack = SkillStack::find($id);
             if ($request->title !== $stack->title && SkillStack::where('title', $request->title)->count() > 0) {
                 return redirect()->route('skillstack.index')->with(['error' => 'Stack title already exists']);
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName1 = 'title';
-                    $columName2 = 'description';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName1 = $columName.'_title';
-                    $columName2 = $columName.'_description';
-                }
+                $columName1 =  UtilityHelper::getColumName($single->iso,'title');
+                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                 $stack->$columName1 = $request->$columName1;
                 $stack->$columName2 = $request->$columName2;
             }
@@ -77,7 +56,6 @@ class SkillStackService
             if (!empty($skillStack)) {
                 return $skillStack->delete();
             }
-
             return false;
         } catch (Exception $e) {
             return false;
@@ -94,30 +72,16 @@ class SkillStackService
                     return redirect()->route('skillstack.index')->with(['error' => 'Stack title already exists']);
                 }
                 $stack = new SkillStack();
-
-                $languages = Language::where('status', 1)->get();
+                $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    if ($single->iso == 'en') {
-                        $columName1 = 'title';
-                        $columName2 = 'description';
-                    } else {
-                        $columName = $single->iso;
-                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                            $columName = str_replace(' ', '_', $columName);
-                        }
-                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                            $columName = str_replace('-', '_', $columName);
-                        }
-                        $columName1 = $columName.'_title';
-                        $columName2 = $columName.'_description';
-                    }
+                    $columName1 =  UtilityHelper::getColumName($single->iso,'title');
+                    $columName2 =  UtilityHelper::getColumName($single->iso,'description');
                     $stack->$columName1 = $request->$columName1;
                     $stack->$columName2 = $request->$columName2;
                 }
                 $stack->skills = $request->stack_skills;
                 $stack->save();
-
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack added successfully');
             }
 
@@ -127,12 +91,55 @@ class SkillStackService
         }
     }
 
-    public static function getSkills()
+    public static function getSkillStack()
     {
         try {
-            return Skill::orderBy('id', 'desc');
+            return SkillStack::orderBy('id', 'desc');
         } catch (Exception $e) {
             return false;
         }
     }
+
+    
+    public static function getSkillStackBasedOnIds($skillStackIds)
+    {
+        try {
+            $selectedSkills = [];
+            foreach ($skillStackIds as $skill) {
+                $selectedSkills[] = $skill;
+            }
+            $getSkillstackList = SkillStack::whereIn('id', $selectedSkills)->pluck('title', 'id')->toArray();
+            if ($getSkillstackList) {
+                return $getSkillstackList;
+            }
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+    public static function getAjaxAllSkillStack($request)
+    {
+        try {
+            $skillsQuery = SkillStack::select('id', 'title')->orderBy('id', 'DESC')->take(30);
+            if ($request->search) {
+                $skillsQuery->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $skillsQuery = $skillsQuery->pluck('title', 'id');
+            $skillsArray = $jsonSkills = [];
+            $count = 0;
+            foreach ($skillsQuery as $key => $skill) {
+                $skillsArray[$count]['id'] = $key;
+                $skillsArray[$count]['text'] = $skill;
+                $count++;
+            }
+            $jsonSkills['result'] = $skillsArray;
+            $jsonSkills['more'] = true;
+            $jsonSkills['total_count'] = $skillsQuery->count();
+
+            return response()->json($jsonSkills);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    
 }
