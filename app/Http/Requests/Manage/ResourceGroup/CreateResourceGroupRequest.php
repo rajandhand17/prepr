@@ -122,7 +122,6 @@ class CreateResourceGroupRequest extends FormRequest
             'skill_stacks.array'             => __('responses.skill_stacks_array'),
             'skill_stacks.*.numeric'         => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'          => __('responses.skill_stacks_not_exists'),
-            'tags.required'                  => __('responses.tags_required'),
             'skills.required'                => __('responses.skills_required'),
             'level.required'                 => __('responses.level_id_required'),
             'level.exists'                   => __('responses.level_id_exists'),
