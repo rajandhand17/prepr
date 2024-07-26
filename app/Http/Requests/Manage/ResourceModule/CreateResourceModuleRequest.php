@@ -33,20 +33,20 @@ class CreateResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'title'                  => 'required|unique:resource_modules,title',
-            'description'            => 'required',
-            'type'                   => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|in:team,individual',
+            'title'                    => 'required|unique:resource_modules,title',
+            'description'              => 'required',
+            'type'                     => 'required|in:assess,onboard,engage,grow',
+            'mode'                     => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
-            'privacy'                => 'required|in:yes,no',
-            'status'                 => 'required|in:draft,publish,archive',
-            'is_global'              => 'required|in:yes,no',
-            'skills'                 => 'required|array',
-            'skills.*'               => 'numeric|exists:skills,id',
-            'skill_groups'           => 'array',
-            'skill_groups.*'         => 'numeric|exists:skill_groups,id',
-            'skill_stacks'           => 'array',
-            'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
+            'privacy'                  => 'required|in:yes,no',
+            'status'                   => 'required|in:draft,publish,archive',
+            'is_global'                => 'required|in:yes,no',
+            'skills'                   => 'required|array',
+            'skills.*'                 => 'numeric|exists:skills,id',
+            'skill_groups'             => 'array',
+            'skill_groups.*'           => 'numeric|exists:skill_groups,id',
+            'skill_stacks'             => 'array',
+            'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
