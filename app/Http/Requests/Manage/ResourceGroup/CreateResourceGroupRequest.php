@@ -30,7 +30,7 @@ class CreateResourceGroupRequest extends FormRequest
             'mode'                     => 'required|in:team,individual',
             'lab_id'                   => 'required|exists:labs,uuid',
             'challenge_id'             => 'required|exists:challenges,uuid',
-            'media_type'               => 'in:image,embedded,none',
+            'media_type'               => 'in:image,embedded',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',

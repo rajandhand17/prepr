@@ -33,6 +33,7 @@ class UpdateResourceGroupRequest extends FormRequest
             'title'                    => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
             'description'              => 'required',
             'privacy'                  => 'required|in:yes,no',
+            'media_type'               => 'in:image,embedded',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
             'resource_ids.*'           => 'exists:resource_modules,uuid',

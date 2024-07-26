@@ -29,6 +29,7 @@ class CreateResourceCollectionRequest extends FormRequest
             'type'                   => 'required|in:assess,onboard,engage,grow',
             'mode'                   => 'required|in:team,individual',
             'privacy'                => 'required|in:yes,no',
+            'media_type'             => 'in:image,embedded',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',
             'lab_ids.*'              => 'exists:labs,uuid',

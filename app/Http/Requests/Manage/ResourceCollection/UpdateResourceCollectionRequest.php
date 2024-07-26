@@ -34,6 +34,7 @@ class UpdateResourceCollectionRequest extends FormRequest
             'description'            => 'required',
             'type'                   => 'required|in:assess,onboard,engage,grow',
             'mode'                   => 'required|in:team,individual',
+            'media_type'             => 'in:image,embedded',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',

@@ -35,6 +35,7 @@ class UpdateResourceModuleRequest extends FormRequest
             'type'                   => 'required|in:assess,onboard,engage,grow',
             'mode'                   => 'required|in:team,individual',
             'privacy'                => 'required|in:yes,no',
+            'media_type'             => 'in:image,embedded',
             'status'                 => 'required|in:draft,publish,archive',
             'is_global'              => 'required|in:yes,no',
             'skills'                 => 'required|array',
