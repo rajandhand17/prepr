@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\TrophyAwards;
 
-use App\Services\Maestro\TrophyAwards\TrophyAwardsService;
+use App\Services\Maestro\TrophyAwardsService;
 use Exception;
 
 trait TrophyAwardsTrait
@@ -13,7 +13,6 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::createTrophyAwards($request)) {
                 return true;
             }
-
             return false;
         } catch (Exception $e) {
             return false;
@@ -26,7 +25,6 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::updateTrophyAwardsById($id, $request)) {
                 return true;
             }
-
             return false;
         } catch (Exception $e) {
             return false;
@@ -39,7 +37,6 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::deleteTrophyAwards($id)) {
                 return true;
             }
-
             return false;
         } catch (Exception $e) {
             return false;
@@ -54,6 +51,19 @@ trait TrophyAwardsTrait
                 return $trophyawards;
             }
 
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getTrophyAwardsById($id)
+    {
+        try {
+            $trophyawards = TrophyAwardsService::getTrophyAwardsById($id);
+            if ($trophyawards) {
+                return $trophyawards;
+            }
             return false;
         } catch (Exception $e) {
             return false;
