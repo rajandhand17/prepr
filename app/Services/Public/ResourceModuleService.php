@@ -190,4 +190,15 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getAll()
+    {
+        try {
+            return ResourceModule::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
