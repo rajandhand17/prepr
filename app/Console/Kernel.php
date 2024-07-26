@@ -24,6 +24,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('module-progress:resource-collection-progress-status')->everyThirtyMinutes();
         $schedule->command('module-progress:resource-group-progress-status')->everyThirtyMinutes();
         $schedule->command('solr:sync')->daily();
+        $schedule->command('email-summary-report:monthly-report')->monthly();
+        $schedule->command('email-summary-report:weekly-report')->weekly();
     }
 
     /**
