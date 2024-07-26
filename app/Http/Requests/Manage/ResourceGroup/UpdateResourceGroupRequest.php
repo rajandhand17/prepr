@@ -32,7 +32,6 @@ class UpdateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
             'description'              => 'required',
-            'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
@@ -50,7 +49,49 @@ class UpdateResourceGroupRequest extends FormRequest
             'lab_id'                   => 'required|exists:labs,uuid',
             'challenge_id'             => 'required|exists:challenges,uuid',
         ];
+        if ($this->has('media_type') && $this->input('media_type') == 'image') {
+            $base_rules['cover_image'] = [
+                'mimes:jpeg,jpg,png,webp',
+                'max:5120',
+                'required'
+            ];
+        }
+        if($this->has('cover_image')){
+            $base_rules['media_type'] = [
+                'required'
+            ];
+        }
+        if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
 
+            $cover_embedded = $this->input('cover_image');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['cover_image'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
+        }
         return $base_rules;
     }
 
@@ -68,6 +109,8 @@ class UpdateResourceGroupRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.title_unique'),
+            'type'                           => 'required|in:assess,onboard,engage,grow',
+            'mode'                           => 'required|in:team,individual',
             'description.required'           => __('responses.description_required'),
             'privacy.required'               => __('responses.privacy_required'),
             'privacy.in'                     => __('responses.choose_yes_no'),
@@ -101,6 +144,11 @@ class UpdateResourceGroupRequest extends FormRequest
             'lab_id.exists'                  =>__('responses.lab_id_exists'),
             'challenge_id.required'          =>__('responses.challenge_id_required'),
             'challenge_id.exists'            =>__('responses.challenge_id_exists'),
+            'type.required'                  => __('responses.type_required'),
+            'type.in'                        => __('responses.resource_type_in'),
+            'mode.required'                  => __('responses.mode_required'),
+            'mode.in'                        => __('responses.resource_mode_in'),
+            'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }
 }

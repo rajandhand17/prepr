@@ -64,7 +64,10 @@ class ResourceCollection extends Model
     {
         return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id');
     }
-
+    public function resource_collection_type_modes()
+    {
+        return $this->hasOne(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id');
+    }
     public function labs()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('lab_id', '!=', null);

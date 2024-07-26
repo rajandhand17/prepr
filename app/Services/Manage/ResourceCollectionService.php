@@ -429,7 +429,7 @@ class ResourceCollectionService
     public static function getResourcesWithRelations($id)
     {
         try {
-            return ResourceCollection::with('component_association', 'skills_groups_stack')->find($id);
+            return ResourceCollection::with('component_association', 'skills_groups_stack','resource_collection_type_modes')->find($id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -469,11 +469,9 @@ class ResourceCollectionService
             $resourceCollection->user_id = auth()->user()->id;
             $resourceCollection->slug = $slug;
             $resourceCollection->save();
-
             return  $resourceCollection;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }

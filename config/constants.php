@@ -541,9 +541,11 @@ return [
         'onboard' => '1',
         'engage'  => '2',
         'grow'    => '3',
-        'na'      => '4',
     ],
-
+    'resource_mode_type' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
     'resource_mode'=> [
         'type' => '0',
         'mode' => '1',

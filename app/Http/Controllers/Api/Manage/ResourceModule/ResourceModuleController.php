@@ -113,9 +113,13 @@ class ResourceModuleController extends AppBaseController
 
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
+                if ($request->media_type == 'image') {
                 $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
                 if (!$uploaded_cover_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
+                }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -153,9 +157,13 @@ class ResourceModuleController extends AppBaseController
             }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }

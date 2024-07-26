@@ -26,7 +26,8 @@ class CreateResourceCollectionRequest extends FormRequest
         $base_rules = [
             'title'                  => 'required|unique:resource_collections,title',
             'description'            => 'required',
-            'cover_image'            => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
+            'type'                   => 'required|in:assess,onboard,engage,grow',
+            'mode'                   => 'required|in:team,individual',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',
@@ -44,7 +45,49 @@ class CreateResourceCollectionRequest extends FormRequest
             'skill_stacks'           => 'array',
             'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
         ];
+        if ($this->has('media_type') && $this->input('media_type') == 'image') {
+            $base_rules['cover_image'] = [
+                'mimes:jpeg,jpg,png,webp',
+                'max:5120',
+                'required'
+            ];
+        }
+        if($this->has('cover_image')){
+            $base_rules['media_type'] = [
+                'required'
+            ];
+        }
+        if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
 
+            $cover_embedded = $this->input('cover_image');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['cover_image'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
+        }
         return $base_rules;
     }
 
@@ -73,19 +116,12 @@ class CreateResourceCollectionRequest extends FormRequest
             'skills.array'                   => __('responses.skills_array'),
             'skills.*.numeric'               => __('responses.skills_numeric'),
             'skills.*.exists'                => __('responses.skill_not_exists'),
-            'tags.array'                     => __('responses.tags_array'),
-            'tags.*.numeric'                 => __('responses.tags_numeric'),
-            'tags.*.exists'                  => __('responses.tag_not_exists'),
-            'tag_groups.array'               => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'           => __('responses.tag_groups_numeric'),
-            'tag_groups.*.exists'            => __('responses.tag_group_not_exists'),
             'skill_groups.array'             => __('responses.skill_groups_array'),
             'skill_groups.*.numeric'         => __('responses.skill_groups_numeric'),
             'skill_groups.*.exists'          => __('responses.skill_groups_not_exists'),
             'skill_stacks.array'             => __('responses.skill_stacks_array'),
             'skill_stacks.*.numeric'         => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'          => __('responses.skill_stacks_not_exists'),
-            'tags.required'                  => __('responses.tags_required'),
             'skills.required'                => __('responses.skills_required'),
             'lab_ids.required'               => __('responses.lab_field_required'),
             'lab_ids.array'                  => __('responses.lab_field_array'),
@@ -97,6 +133,11 @@ class CreateResourceCollectionRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
+            'type.required'                  => __('responses.type_required'),
+            'type.in'                        => __('responses.resource_type_in'),
+            'mode.required'                  => __('responses.mode_required'),
+            'mode.in'                        => __('responses.resource_mode_in'),
+            'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }
 }
