@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectSubmissionRequirement;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectSubmissionRequirementTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
-use App\Helpers\Maestro\UtilityHelper;
 
 class ProjectSubmissionRequirementController extends Controller
 {
@@ -46,7 +46,7 @@ class ProjectSubmissionRequirementController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Project Submission Requirement Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -67,6 +67,7 @@ class ProjectSubmissionRequirementController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.projects.submissionrequirement.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,6 +83,7 @@ class ProjectSubmissionRequirementController extends Controller
             if ($this->storeUpdateSubmissionRequirement($request, '', 'create')) {
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement Added successfully.']);
             }
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -96,6 +98,7 @@ class ProjectSubmissionRequirementController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $submissionRequirement = $this->findSubmissionRequirement($id);
+
             return view('maestro.projects.submissionrequirement.edit', compact('submissionRequirement', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -111,6 +114,7 @@ class ProjectSubmissionRequirementController extends Controller
             if ($this->storeUpdateSubmissionRequirement($request, $id, 'update')) {
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement updated successfully.']);
             }
+
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -126,6 +130,7 @@ class ProjectSubmissionRequirementController extends Controller
             $submissionRequirement = $this->findSubmissionRequirement($id);
             if (!empty($submissionRequirement)) {
                 $this->deleteSubmissionRequirement($submissionRequirement);
+
                 return response()->json(['status' => 'success', 'message' => 'Project Submission Requirement deleted successfully.']);
             }
         } catch (Exception $e) {

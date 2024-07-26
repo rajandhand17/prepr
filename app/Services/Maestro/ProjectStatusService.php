@@ -2,9 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectStatus;
-use App\Services\Maestro\LanguageService;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Models\ProjectStatus;
 use Exception;
 
 class ProjectStatusService
@@ -29,7 +28,7 @@ class ProjectStatusService
             }
 
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $projectStatus->$columName = $request->$columName;
             }
 

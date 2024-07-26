@@ -5,21 +5,16 @@ namespace App\Http\Controllers\Maestro\Lab;
 use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Lab;
-use App\Traits\Maestro\Lab\LabTrait;
-use Yajra\DataTables\Html\Builder;
-use Illuminate\Http\Request;
-use App\Models\LabExternalLinks;
 use App\Models\Language;
-use App\Models\Organization;
-use App\Models\ResourceModule;
-use App\Models\Skill;
-use App\Models\SocialLink;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\SocialLink\SocialLinkService;
-use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
+use App\Traits\Maestro\Lab\LabTrait;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
 
 class LabController extends Controller
 {
@@ -51,21 +46,22 @@ class LabController extends Controller
             if (request()->ajax()) {
                 $i = 1;
                 $labes = Lab::orderBy('id', 'desc');
+
                 return DataTables::eloquent($labes)
                 ->addIndexColumn()
                     ->addColumn('action', static function (Lab $lab) {
                         $html = '';
-                            $html .= '<a href="" class="mr-25 showUser" data-id="' . $lab->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                            $html .= '<a href="' . route('lab.edit', ['lab' => $lab->id]) . '" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="' . $lab->id . '"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                            $html .= '<a href="javascript:void(0)" onclick="deleteLab(\'' . route('lab.destroy', ['lab' => $lab->id]) . '\')"> <i class="fas fa-trash"></i></a>';
-                        
+                        $html .= '<a href="" class="mr-25 showUser" data-id="'.$lab->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a href="'.route('lab.edit', ['lab' => $lab->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$lab->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a href="javascript:void(0)" onclick="deleteLab(\''.route('lab.destroy', ['lab' => $lab->id]).'\')"> <i class="fas fa-trash"></i></a>';
+
                         return $html;
                     })
                     ->editColumn('user_id', static function (Lab $lab) {
                         if ($lab->user_id === 0 || $lab->user_id === '') {
-                            return "Admin";
+                            return 'Admin';
                         } else {
-                            return $lab->user->username ?? "";
+                            return $lab->user->username ?? '';
                         }
                     })
                     ->editColumn('category', static function (Lab $lab) {
@@ -83,12 +79,14 @@ class LabController extends Controller
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
                 ['data' => 'category', 'name' => 'category', 'title' => 'Category'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action',"width" => "20%", 'orderable' => false, 'searchable' => false],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '20%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
             View::share('module_name', 'Lab');
+
             return view('maestro.lab.index', compact('html'));
         } catch (Exception $e) {
             dd($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -99,8 +97,9 @@ class LabController extends Controller
     public function create()
     {
         try {
-        $languages = Language::where(['status' => 1])->pluck('name', 'iso');
-        $social_name  = SocialLinkService::getSocialLinkList();
+            $languages = Language::where(['status' => 1])->pluck('name', 'iso');
+            $social_name = SocialLinkService::getSocialLinkList();
+
             return view('maestro.lab.create', compact('languages', 'social_name'));
         } catch (Exception $e) {
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
@@ -114,22 +113,25 @@ class LabController extends Controller
     {
         try {
             DB::beginTransaction();
-              // checks creation limits of the Lab
-              $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
-              if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
-                  $checkLabCount = $this->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
-                  if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
                     return redirect()->route('lab.index')->with(['error' => 'Lab limit reached']);
-                  }
-              }
+                }
+            }
             if ($this->createLab($request)) {
                 DB::commit();
+
                 return redirect()->route('lab.index')->with('success', 'Lab created successfully');
             }
             DB::rollback();
+
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             DB::rollback();
+
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -155,9 +157,10 @@ class LabController extends Controller
             $data = Lab::find($id);
             $labAssociatedItems = $this->getLabAssociatedItemsById($data);
             $labSocialLink = $this->getLabExternalLinks($data->id);
-            $social_name  = SocialLinkService::getSocialLinkList();
+            $social_name = SocialLinkService::getSocialLinkList();
             $languages = LanguageService::getLanguages();
-            return view('maestro.lab.edit', compact('data', 'labSocialLink',  'languages', 'labAssociatedItems', 'social_name'));
+
+            return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
@@ -172,6 +175,7 @@ class LabController extends Controller
             if ($this->updateLabById($id, $request)) {
                 return redirect()->route('lab.index')->with('success', 'Lab Updated successfully');
             }
+
             return redirect()->route('lab.index')->withErrors(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);

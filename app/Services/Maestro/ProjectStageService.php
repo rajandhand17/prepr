@@ -2,9 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectStage;
 use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
+use App\Models\ProjectStage;
 use Exception;
 
 class ProjectStageService
@@ -29,7 +28,7 @@ class ProjectStageService
             }
 
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $projectStage->$columName = $request->$columName;
             }
 
@@ -61,6 +60,7 @@ class ProjectStageService
             return false;
         }
     }
+
     public static function getProjectStages()
     {
         try {

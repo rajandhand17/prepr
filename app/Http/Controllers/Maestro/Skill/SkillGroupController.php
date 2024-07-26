@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\skill;
 
 use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Language;
 use App\Models\Skill;
 use App\Models\SkillGroup;
 use App\Models\SkillStack;
@@ -74,8 +73,8 @@ class SkillGroupController extends Controller
                 ['data' => 'id', 'name' => 'id', 'title' => 'ID'],
             ];
             foreach ($languages as $single) {
-                $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Group Title'];
                 array_push($tableColumns, $singleLangCol);
                 $singleLangCol = ['data' => $columName2, 'name' => $columName2, 'title' => $single->name.' Group Description'];
@@ -87,6 +86,7 @@ class SkillGroupController extends Controller
 
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.skillgroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
@@ -101,6 +101,7 @@ class SkillGroupController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $selectedSkills = $selectedStacks = [];
+
             return view('maestro.skillgroup.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
@@ -116,6 +117,7 @@ class SkillGroupController extends Controller
             if ($this->createSkillGroup($request)) {
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group created successfully');
             }
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
@@ -170,6 +172,7 @@ class SkillGroupController extends Controller
             if ($this->updateSkillGroupById($id, $request)) {
                 return redirect()->route('skillgroup.index')->with('success', 'Skill Group Updated successfully');
             }
+
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);

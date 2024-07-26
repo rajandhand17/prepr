@@ -82,5 +82,4 @@ trait SkillTrait
             return false;
         }
     }
-
 }

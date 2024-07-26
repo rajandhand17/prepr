@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\tag;
 
 use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Language;
 use App\Models\Tag;
 use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Tag\TagTrait;
@@ -64,7 +63,7 @@ class TagController extends Controller
             array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category']);
             array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image']);
             foreach ($languages as $single) {
-                    $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Tag Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -103,6 +102,7 @@ class TagController extends Controller
             if ($this->createTag($request)) {
                 return redirect()->route('tags.index')->with('success', 'Tag created successfully');
             }
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
@@ -153,6 +153,7 @@ class TagController extends Controller
             if ($this->updateTagById($id, $request)) {
                 return redirect()->route('tags.index')->with('success', 'Tag Updated successfully');
             }
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);

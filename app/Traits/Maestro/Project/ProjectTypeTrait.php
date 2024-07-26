@@ -20,7 +20,7 @@ trait ProjectTypeTrait
             return false;
         }
     }
-    
+
     private function storeUpdateProjectType($request, $id, $moduleMode)
     {
         try {

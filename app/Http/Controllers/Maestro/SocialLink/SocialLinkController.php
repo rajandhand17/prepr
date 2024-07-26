@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Maestro\SocialLink;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\SocialLink;
 use App\Traits\Maestro\SocialLink\SocialLinkTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\SocialLink;
-use Exception;
 
 class SocialLinkController extends Controller
 {
@@ -77,6 +77,7 @@ class SocialLinkController extends Controller
             if ($this->createSocialLink($request)) {
                 return redirect()->route('social-links.index')->with('success', 'SocialLink created successfully');
             }
+
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -93,6 +94,7 @@ class SocialLinkController extends Controller
             if (!$socialLink->exists) {
                 return redirect()->route('social-links.index')->with(['error' => 'SocialLink not found.']);
             }
+
             return view('maestro.sociallink.edit', compact('socialLink'));
         } catch (Exception $e) {
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -108,6 +110,7 @@ class SocialLinkController extends Controller
             if ($this->updateSocialLinkById($id, $request)) {
                 return redirect()->route('social-links.index')->with('success', 'SocialLink Updated successfully');
             }
+
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);

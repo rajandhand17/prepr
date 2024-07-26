@@ -21,10 +21,10 @@ trait ResourceModuleTrait
         }
     }
 
-    private function createAndUpdateResourceModule($request,$action,$id)
+    private function createAndUpdateResourceModule($request, $action, $id)
     {
         try {
-            if (ResourceModuleService::createAndUpdateResourceModule($request,$action,$id)) {
+            if (ResourceModuleService::createAndUpdateResourceModule($request, $action, $id)) {
                 return true;
             }
 

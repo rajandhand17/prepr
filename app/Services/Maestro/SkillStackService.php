@@ -3,8 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Language;
-use App\Models\Skill;
 use App\Models\SkillStack;
 use Exception;
 
@@ -35,8 +33,8 @@ class SkillStackService
             $languages = LanguageService::getAllActiveLanguages();
 
             foreach ($languages as $single) {
-                $columName1 =  UtilityHelper::getColumName($single->iso,'title');
-                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                 $stack->$columName1 = $request->$columName1;
                 $stack->$columName2 = $request->$columName2;
             }
@@ -56,6 +54,7 @@ class SkillStackService
             if (!empty($skillStack)) {
                 return $skillStack->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -75,13 +74,14 @@ class SkillStackService
                 $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    $columName1 =  UtilityHelper::getColumName($single->iso,'title');
-                    $columName2 =  UtilityHelper::getColumName($single->iso,'description');
+                    $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                    $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                     $stack->$columName1 = $request->$columName1;
                     $stack->$columName2 = $request->$columName2;
                 }
                 $stack->skills = $request->stack_skills;
                 $stack->save();
+
                 return redirect()->route('skillstack.index')->with('success', 'Skill Stack added successfully');
             }
 
@@ -100,7 +100,6 @@ class SkillStackService
         }
     }
 
-    
     public static function getSkillStackBasedOnIds($skillStackIds)
     {
         try {
@@ -112,11 +111,13 @@ class SkillStackService
             if ($getSkillstackList) {
                 return $getSkillstackList;
             }
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
+
     public static function getAjaxAllSkillStack($request)
     {
         try {
@@ -141,5 +142,4 @@ class SkillStackService
             return false;
         }
     }
-    
 }

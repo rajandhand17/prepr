@@ -2,11 +2,11 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\ProjectPitchTemplateService;
 use App\Services\Maestro\ChallengePitchService;
 use App\Services\Maestro\ChallengeTaskService;
-use Illuminate\Support\Facades\DB;
+use App\Services\Maestro\ProjectPitchTemplateService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 trait ProjectPitchTemplateTrait
 {
@@ -17,11 +17,13 @@ trait ProjectPitchTemplateTrait
             if ($pitchTemplate) {
                 return $pitchTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function getPitchTemplate()
     {
         try {
@@ -29,18 +31,21 @@ trait ProjectPitchTemplateTrait
             if ($pitchTemplate) {
                 return $pitchTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
+
     private function storeUpdatePitchTemplate($request, $id, $moduleMode)
     {
         try {
             $createPitchTemplate = DB::transaction(function () use ($request, $moduleMode, $id) {
-                $pitchTemplate  = ProjectPitchTemplateService::storeUpdatePitchTemplate($request, $id, $moduleMode);
-                $pitchSection   = ChallengePitchService::saveChallengePitch($request,$pitchTemplate);
-                $pitchTask      = ChallengeTaskService::saveChallengeTask($request,$pitchTemplate);
+                $pitchTemplate = ProjectPitchTemplateService::storeUpdatePitchTemplate($request, $id, $moduleMode);
+                $pitchSection = ChallengePitchService::saveChallengePitch($request, $pitchTemplate);
+                $pitchTask = ChallengeTaskService::saveChallengeTask($request, $pitchTemplate);
+
                 return [
                     'pitchTemplate' => $pitchTemplate,
                     'pitchSection'  => $pitchSection,
@@ -50,21 +55,26 @@ trait ProjectPitchTemplateTrait
 
             if ($createPitchTemplate['pitchTemplate'] && $createPitchTemplate['pitchSection'] && $createPitchTemplate['pitchTask']) {
                 DB::commit();
+
                 return $createPitchTemplate['pitchTemplate'];
             }
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }
+
     private function deletePitchTemplate($pitchTemplate)
     {
         try {
             if (ProjectPitchTemplateService::deletePitchTemplate($pitchTemplate)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

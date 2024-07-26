@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\PreBuiltAchievement;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
+use App\Models\PreBuiltAchievement;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\PreBuiltAchievement\PreBuiltAchievementTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
-use App\Helpers\Maestro\UtilityHelper;
-use App\Models\PreBuiltAchievement;
-use Exception;
 
 class PreBuiltAchievementController extends Controller
 {
@@ -58,7 +58,7 @@ class PreBuiltAchievementController extends Controller
             ];
             array_push($tableColumns, ['data' => 'achievement_image', 'name' => 'achievement_image', 'title' => 'Image']);
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -81,6 +81,7 @@ class PreBuiltAchievementController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.preBuiltAchievement.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -96,6 +97,7 @@ class PreBuiltAchievementController extends Controller
             if ($this->storeUpdatePreBuiltAchievement($request, '', 'create')) {
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement Added successfully.']);
             }
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -110,6 +112,7 @@ class PreBuiltAchievementController extends Controller
         try {
             $achievement = $this->findPreBuiltAchievement($id);
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.preBuiltAchievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -125,6 +128,7 @@ class PreBuiltAchievementController extends Controller
             if ($this->storeUpdatePreBuiltAchievement($request, $id, 'update')) {
                 return redirect()->route('pre-built-achievement.index')->with(['success' => 'Pre Built Achievement updated successfully.']);
             }
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -140,6 +144,7 @@ class PreBuiltAchievementController extends Controller
             $achievement = $this->findPreBuiltAchievement($id);
             if (!empty($achievement)) {
                 $this->deletePreBuiltAchievement($achievement);
+
                 return response()->json(['status' => 'success', 'message' => 'PreBuiltAchievement deleted successfully.']);
             }
         } catch (Exception $e) {

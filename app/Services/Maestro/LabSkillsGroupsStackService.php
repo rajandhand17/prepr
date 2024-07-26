@@ -26,7 +26,7 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
- 
+
     public static function createLabSkillsGroupsStack($request, $lab_id)
     {
         try {
@@ -60,7 +60,7 @@ class LabSkillsGroupsStackService
                 if (count($request->skill_stacks) > 0) {
                     foreach ($request->skill_stacks as $skill_stack) {
                         $LabSkillsGroupsStack = new LabSkillsGroupsStack();
-                        $LabSkillsGroupsStack->lab_id =  $lab_id;
+                        $LabSkillsGroupsStack->lab_id = $lab_id;
                         $LabSkillsGroupsStack->foreign_id = $skill_stack;
                         $LabSkillsGroupsStack->type = '2';
                         $LabSkillsGroupsStack->save();
@@ -71,6 +71,7 @@ class LabSkillsGroupsStackService
             return true;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
@@ -154,16 +155,17 @@ class LabSkillsGroupsStackService
 
     public static function deleteLabSkillsGroupsStack($lab_id)
     {
-        try { 
-            if(LabSkillsGroupsStack::where('lab_id' , $lab_id)->delete()) {
+        try {
+            if (LabSkillsGroupsStack::where('lab_id', $lab_id)->delete()) {
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             dd($e);
             UtilityHelper::logError($e);
+
             return false;
         }
-
     }
 }

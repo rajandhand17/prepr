@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectVertical;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Models\ProjectVertical;
 use Exception;
 
 class ProjectVerticalService
@@ -28,7 +28,7 @@ class ProjectVerticalService
             }
 
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $projectVertical->$columName = $request->$columName;
             }
 
@@ -60,6 +60,7 @@ class ProjectVerticalService
             return false;
         }
     }
+
     public static function getVerticals()
     {
         try {

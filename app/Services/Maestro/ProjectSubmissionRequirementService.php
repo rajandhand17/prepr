@@ -2,9 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectSubmissionRequirement;
-use App\Services\Maestro\LanguageService;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Models\ProjectSubmissionRequirement;
 use Exception;
 
 class ProjectSubmissionRequirementService
@@ -29,7 +28,7 @@ class ProjectSubmissionRequirementService
             }
             if (!empty($languages)) {
                 foreach ($languages as $single) {
-                    $columName = UtilityHelper::getColumName($single->iso,'title');
+                    $columName = UtilityHelper::getColumName($single->iso, 'title');
                     $submissionRequirement->$columName = $request->$columName;
                 }
             }

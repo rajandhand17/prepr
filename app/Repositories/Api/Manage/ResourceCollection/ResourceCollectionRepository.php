@@ -97,6 +97,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return $this->resourceCollectionService->getResourceCollectionBasedOnTitle($title);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -211,6 +212,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

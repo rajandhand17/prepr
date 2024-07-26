@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Maestro\Resources;
 
 use App\Http\Controllers\Controller;
-use App\Traits\Maestro\Resource\ResourceModuleTrait;
+use App\Models\ResourceModule;
 use App\Services\Maestro\LanguageService;
-use App\Services\Maestro\UserService;
 use App\Services\Maestro\OrganizationService;
+use App\Services\Maestro\UserService;
+use App\Traits\Maestro\Resource\ResourceModuleTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\ResourceModule;
-use Illuminate\Http\Request;
-use Exception;
 
 class ResourceModuleController extends Controller
 {
@@ -53,7 +53,7 @@ class ResourceModuleController extends Controller
                         return $html;
                     })
                     ->addColumn('action', static function (ResourceModule $resourceModule) {
-                        return '<a class="mr-10" href="' . route('resource-module.edit', ['resource_module' => $resourceModule->id]) . '"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\'' . route('resource-module.destroy', ['resource_module' => $resourceModule->id]) . '\')"><i class="fas fa-trash"></i></a>';
+                        return '<a class="mr-10" href="'.route('resource-module.edit', ['resource_module' => $resourceModule->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\''.route('resource-module.destroy', ['resource_module' => $resourceModule->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['icon', 'action', 'DT_Row_Index'])
                     ->make(true);
@@ -65,8 +65,8 @@ class ResourceModuleController extends Controller
                 ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%'],
             ])->parameters([
-                        'order' => [[1, 'asc']],
-                    ]);
+                'order' => [[1, 'asc']],
+            ]);
 
             return view('maestro.resourceModule.index', compact('html'));
         } catch (Exception $e) {
@@ -81,6 +81,7 @@ class ResourceModuleController extends Controller
     {
         try {
             $languages = LanguageService::getLanguages();
+
             return view('maestro.resourceModule.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -108,11 +109,13 @@ class ResourceModuleController extends Controller
             if ($this->createAndUpdateResourceModule($request, 'create', null)) {
                 return redirect()->route('resource-module.index')->with('success', 'Resource Module created successfully');
             }
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -123,10 +126,11 @@ class ResourceModuleController extends Controller
             if (!$resourceModule->exists) {
                 return redirect()->route('resource-module.index')->with(['error' => 'Resource Module not found.']);
             }
-            $languages  = LanguageService::getLanguages();
-            $user       = UserService::getUser('edit',$resourceModule->user_id);
+            $languages = LanguageService::getLanguages();
+            $user = UserService::getUser('edit', $resourceModule->user_id);
             $organization = OrganizationService::getOrganization($resourceModule->organization_id);
-            return view('maestro.resourceModule.edit', compact('languages', 'resourceModule','user','organization'));
+
+            return view('maestro.resourceModule.edit', compact('languages', 'resourceModule', 'user', 'organization'));
         } catch (Exception $e) {
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -141,6 +145,7 @@ class ResourceModuleController extends Controller
             if ($this->createAndUpdateResourceModule($request, 'update', $id)) {
                 return redirect()->route('resource-module.index')->with('success', 'Resource Module Updated successfully');
             }
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
