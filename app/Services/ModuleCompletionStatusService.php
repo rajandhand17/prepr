@@ -98,4 +98,41 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchComponentDataProgress($componentType)
+    {
+        try {
+            switch ($componentType) {
+                case 'lab':
+                    $componentId = '0';
+                    break;
+                case 'lab-program':
+                    $componentId = '1';
+                    break;
+                case 'challenge':
+                    $componentId = '2';
+                    break;
+                case 'challenge-path':
+                    $componentId = '3';
+                    break;
+                case 'resource-module':
+                    $componentId = '4';
+                    break;
+                case 'resource-collection':
+                    $componentId = '5';
+                    break;
+                case 'resource-group':
+                    $componentId = '6';
+                    break;
+            }
+
+            $fetchComponentDataProgress = ModuleCompletionStatus::where('module_type', $componentId)->get();
+
+            return $fetchComponentDataProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -61,6 +61,37 @@ class ResourceCollectionController extends AppBaseController
         }
     }
 
+    public function cloneResourceCollection($slug)
+    {
+        try {
+            // Checking resource collection based on slug exists or not
+            $getResourceCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if (!$getResourceCollection) {
+                return $this->sendError(__('responses.selected_resource_collection_not_found'), 404);
+            }
+            // Fetching resource collection is belongs to current users or not
+            if ($getResourceCollection->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'), 403);
+            }
+            // Fetching Resource Collections Based on title and resource current users
+            $getResourceCollectionBasedOnTitle = $this->resourceCollectionRepository->getResourceCollectionBasedOnTitle($getResourceCollection->title);
+            if ($getResourceCollectionBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'));
+            }
+            // Cloning resource collections
+            $cloneResourceCollection = $this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
+            if ($cloneResourceCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($cloneResourceCollection), __('responses.clone_resource_collection_successfully'));
+            }
+
+            return $this->sendError(__('responses.clone_responses_failed'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function checkSlug($slug)
     {
         try {
@@ -164,27 +195,32 @@ class ResourceCollectionController extends AppBaseController
 
     public function index(Request $request)
     {
-        $userData = auth()->user();
-        $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-        if (!$organization) {
-            return $this->sendError(__('responses.selected_organization_not_found'), 404);
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
+            if ($resourceCollection) {
+                $response = [
+                    'total_count'  => $resourceCollection->total(),
+                    'per_page'     => $resourceCollection->perPage(),
+                    'count'        => $resourceCollection->count(),
+                    'current_page' => $resourceCollection->currentPage(),
+                    'total_pages'  => $resourceCollection->lastPage(),
+                    'list'         => ResourceCollectionResource::collection($resourceCollection),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_resource_collection_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'));
         }
-        $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
-
-        if ($resourceCollection) {
-            $response = [
-                'total_count'  => $resourceCollection->total(),
-                'per_page'     => $resourceCollection->perPage(),
-                'count'        => $resourceCollection->count(),
-                'current_page' => $resourceCollection->currentPage(),
-                'total_pages'  => $resourceCollection->lastPage(),
-                'list'         => ResourceCollectionResource::collection($resourceCollection),
-            ];
-
-            return $this->sendResponse($response, __('responses.found_resource_collection_list'));
-        }
-
-        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
     }
 
     public function delete($slug)

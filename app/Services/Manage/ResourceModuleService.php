@@ -137,6 +137,14 @@ class ResourceModuleService
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
             }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $resourceModuleRating = ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
+                $resourceModule = $resourceModule->whereIn('id', $resourceModuleRating->pluck('resource_module_id'));
+            }
+            if ($request->has('type') && !empty($request->type)) {
+                $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
+                $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
+            }
 
             return $resourceModule;
         } catch (\Exception $e) {
@@ -150,6 +158,20 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select()->where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleBasedOnTitle($title)
+    {
+        try {
+            $userId = auth()->id();
+            $resourceGroup = ResourceModule::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+
+            return $resourceGroup;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -488,6 +510,37 @@ class ResourceModuleService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourcesWithRelations($id)
+    {
+        try {
+            return ResourceModule::with('skills_group_stack', 'resource_module_type_modes')->find($id);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function cloneResourceModule($getResourceModule)
+    {
+        try {
+            $resourceModule = new ResourceModule();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $slug = UtilityHelper::generateSlug($getResourceModule->title.$uuid, $resourceModule);
+            $resourceModule = $getResourceModule->replicate();
+            $resourceModule->uuid = $uuid;
+            $resourceModule->slug = $slug;
+            $resourceModule->user_id = auth()->user()->id;
+            $resourceModule->save();
+
+            return $resourceModule;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

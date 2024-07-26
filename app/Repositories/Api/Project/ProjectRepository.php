@@ -163,6 +163,17 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
+    public function checkProjectCreatedWithChallenge($challengeId)
+    {
+        try {
+            return $this->projectService->checkProjectCreatedWithChallenge($challengeId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function createProject($request, $uploadedCoverMedia)
     {
         try {

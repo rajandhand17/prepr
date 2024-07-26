@@ -46,16 +46,14 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
-                $createResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->createCollectionModuleTagsGroups($request, $createResourceCollection->id);
 
                 return[
                     'createResourceCollection'                             => $createResourceCollection,
                     'createComponentAssociation'                           => $createComponentAssociation,
                     'createResourceCollectionSkillsGroupStack'             => $createResourceCollectionSkillsGroupStack,
-                    'createResourceCollectionTagsGroups'                   => $createResourceCollectionTagsGroups,
                 ];
             });
-            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['createComponentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack'] && $createResourceCollection['createResourceCollectionTagsGroups']) {
+            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['createComponentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack']) {
                 DB::commit();
 
                 return $createResourceCollection['createResourceCollection'];
@@ -93,6 +91,17 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
         }
     }
 
+    public function getResourceCollectionBasedOnTitle($title)
+    {
+        try {
+            return $this->resourceCollectionService->getResourceCollectionBasedOnTitle($title);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function checkName($title)
     {
         try {
@@ -111,16 +120,15 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
-                $updateResourceCollectionTagsGroups = $this->resourceCollectionTagsGroupsService->updateCollectionModuleTagsGroups($request, $updateResourceCollection->id);
 
                 return[
                     'updateResourceCollection'                       => $updateResourceCollection,
                     'updateComponentAssociation'                     => $updateComponentAssociation,
                     'updateResourceCollectionSkillsGroupStack'       => $updateResourceCollectionSkillsGroupStack,
-                    'updateResourceCollectionTagsGroups'             => $updateResourceCollectionTagsGroups,
                 ];
             });
-            if ($updateResourceCollection['updateResourceCollection'] && $updateResourceCollection['updateComponentAssociation'] && $updateResourceCollection['updateResourceCollectionSkillsGroupStack'] && $updateResourceCollection['updateResourceCollectionTagsGroups']) {
+            if ($updateResourceCollection['updateResourceCollection'] &&
+                $updateResourceCollection['updateComponentAssociation'] && $updateResourceCollection['updateResourceCollectionSkillsGroupStack']) {
                 DB::commit();
 
                 return $updateResourceCollection['updateResourceCollection'];
@@ -170,6 +178,38 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
     {
         try {
             return $this->resourceCollectionService->getListName($request, $organization);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceCollection($getResourceCollectionId)
+    {
+        try {
+            $getResourceCollection = $this->resourceCollectionService->getResourcesWithRelations($getResourceCollectionId);
+            $cloneResourceCollection = DB::transaction(function () use ($getResourceCollection) {
+                $cloneResourceCollection = $this->resourceCollectionService->cloneResourceCollection($getResourceCollection);
+                $cloneComponentAssociation = $this->componentAssociationService->cloneResourceCollection($getResourceCollection->component_association, $cloneResourceCollection->id);
+                $cloneResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->cloneResourceCollectionSkillsGroupsStack($getResourceCollection->skills_groups_stack, $cloneResourceCollection->id);
+
+                return[
+                    'cloneResourceCollection'                             => $cloneResourceCollection,
+                    'cloneComponentAssociation'                           => $cloneComponentAssociation,
+                    'cloneResourceCollectionSkillsGroupStack'             => $cloneResourceCollectionSkillsGroupStack,
+                ];
+            });
+            if ($cloneResourceCollection['cloneResourceCollection'] &&
+                $cloneResourceCollection['cloneComponentAssociation'] &&
+                $cloneResourceCollection['cloneResourceCollectionSkillsGroupStack']) {
+                DB::commit();
+
+                return $cloneResourceCollection['cloneResourceCollection'];
+            }
+            DB::rollback();
+
+            return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
