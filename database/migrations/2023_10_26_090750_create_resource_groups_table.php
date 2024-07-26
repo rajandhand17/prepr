@@ -28,8 +28,6 @@ return new class() extends Migration {
             $table->enum('is_auto_created', ['0', '1'])->comment('0->no,1->yes')->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
-            $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
-            $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
             $table->foreign('level')->references('id')->on('levels')->onDelete('cascade');
             $table->foreign('duration')->references('id')->on('durations')->onDelete('cascade');
             $table->softDeletes();
