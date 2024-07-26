@@ -317,4 +317,15 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function getAll()
+    {
+        try {
+            return Challenge::select();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

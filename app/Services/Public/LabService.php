@@ -329,4 +329,15 @@ class LabService
             return false;
         }
     }
+
+    public static function getAll()
+    {
+        try {
+            return Lab::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
