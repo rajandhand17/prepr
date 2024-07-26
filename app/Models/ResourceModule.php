@@ -76,7 +76,7 @@ class ResourceModule extends Model
 
     public function resource_module_type_modes()
     {
-        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
+        return $this->hasOne(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
     }
 
     public function documents()
