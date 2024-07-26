@@ -7,7 +7,6 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
-use App\Services\Manage\ResourceGroupTagsGroupsService;
 use App\Services\Manage\ResourceGroupTypeModesService;
 use DB;
 use Exception;
@@ -51,7 +50,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
                 $createResourceGroupsAchievements = $this->resourceGroupAchievementsService->createResourceGroupsAchievements($request, $upload_achievement_image, $createResourceGroup->id);
-                $createResourceGroupTypeModesService = $this->resourceGroupTypeModesService->createResourceGroupTypeModes($request,$createResourceGroup->id);
+                $createResourceGroupTypeModesService = $this->resourceGroupTypeModesService->createResourceGroupTypeModes($request, $createResourceGroup->id);
 
                 return[
                     'createResourceGroup'                             => $createResourceGroup,

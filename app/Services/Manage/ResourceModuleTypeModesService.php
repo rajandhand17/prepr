@@ -24,7 +24,7 @@ class ResourceModuleTypeModesService
     {
         try {
             if ($request->has('type')) {
-                $value = config('constants.resource_types.' . $request->type);
+                $value = config('constants.resource_types.'.$request->type);
                 $resourceModule = new ResourceModuleTypeModes();
                 $resourceModule->resource_module_id = $resourceModuleId;
                 $resourceModule->type_mode = config('constants.resource_mode.type');
@@ -32,16 +32,18 @@ class ResourceModuleTypeModesService
                 $resourceModule->Save();
             }
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.' . $request->mode);
+                $value = config('constants.resource_mode_type.'.$request->mode);
                 $resourceModule = new ResourceModuleTypeModes();
                 $resourceModule->resource_module_id = $resourceModuleId;
                 $resourceModule->type_mode = config('constants.resource_mode.mode');
                 $resourceModule->value = $value;
                 $resourceModule->Save();
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,8 +52,8 @@ class ResourceModuleTypeModesService
     {
         try {
             if ($request->has('type') && !empty($request->type)) {
-                $value = config('constants.resource_types.' . $request->type);
-                $resourceModule=ResourceModuleTypeModes::updateOrCreate([
+                $value = config('constants.resource_types.'.$request->type);
+                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
                     'resource_module_id' => $resourceModuleId,
                     'type_mode'          => config('constants.resource_mode.type'),
                 ], [
@@ -59,21 +61,22 @@ class ResourceModuleTypeModesService
                 ]);
             }
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.' . $request->mode);
-                $resourceModule=ResourceModuleTypeModes::updateOrCreate([
+                $value = config('constants.resource_mode_type.'.$request->mode);
+                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
                     'resource_module_id' => $resourceModuleId,
                     'type_mode'          => config('constants.resource_mode.mode'),
                 ], [
                     'value'              => $value,
                 ]);
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 
     public static function getResourceModuleBasedOnType($type)
     {
@@ -90,11 +93,12 @@ class ResourceModuleTypeModesService
     public static function cloneResourceModuleTypeModes($originalResourceModuleAssociation, $clonedResourceModuleId)
     {
         try {
-            if($originalResourceModuleAssociation){
+            if ($originalResourceModuleAssociation) {
                 $cloneResourceModuleSKills = $originalResourceModuleAssociation->replicate();
                 $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
                 $cloneResourceModuleSKills->save();
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

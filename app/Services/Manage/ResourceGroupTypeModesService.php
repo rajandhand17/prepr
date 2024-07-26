@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollectionTypeModes;
 use App\Models\ResourceGroupTypeModes;
 
 class ResourceGroupTypeModesService
@@ -25,7 +24,7 @@ class ResourceGroupTypeModesService
     {
         try {
             if ($request->has('type')) {
-                $value = config('constants.resource_types.' . $request->type);
+                $value = config('constants.resource_types.'.$request->type);
                 $resourceGroupType = new ResourceGroupTypeModes();
                 $resourceGroupType->resource_group_id = $resourceGroupId;
                 $resourceGroupType->type_mode = config('constants.resource_mode.type');
@@ -33,44 +32,49 @@ class ResourceGroupTypeModesService
                 $resourceGroupType->Save();
             }
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.' . $request->mode);
+                $value = config('constants.resource_mode_type.'.$request->mode);
                 $resourceGroupMode = new ResourceGroupTypeModes();
                 $resourceGroupMode->resource_group_id = $resourceGroupId;
                 $resourceGroupMode->type_mode = config('constants.resource_mode.mode');
                 $resourceGroupMode->value = $value;
                 $resourceGroupMode->Save();
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     // Updating type's and mode's
     public function updateResourceGroupTypeModes($request, $resourceGroupId)
     {
         try {
             if ($request->has('type') && !empty($request->type)) {
-                $value = config('constants.resource_types.' . $request->type);
+                $value = config('constants.resource_types.'.$request->type);
                 ResourceGroupTypeModes::updateOrCreate([
-                    'resource_group_id' => $resourceGroupId,
+                    'resource_group_id'  => $resourceGroupId,
                     'type_mode'          => config('constants.resource_mode.type'),
                 ], [
                     'value'              => $value,
                 ]);
             }
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.' . $request->mode);
+                $value = config('constants.resource_mode_type.'.$request->mode);
                 ResourceGroupTypeModes::updateOrCreate([
-                    'resource_group_id' => $resourceGroupId,
+                    'resource_group_id'  => $resourceGroupId,
                     'type_mode'          => config('constants.resource_mode.mode'),
                 ], [
                     'value'              => $value,
                 ]);
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,11 +82,12 @@ class ResourceGroupTypeModesService
     public static function cloneResourceGroupTypeModes($originalResourceGroupAssociation, $clonedResourceGroupId)
     {
         try {
-            if($originalResourceGroupAssociation){
+            if ($originalResourceGroupAssociation) {
                 $cloneResourceGroupSKills = $originalResourceGroupAssociation->replicate();
                 $cloneResourceGroupSKills->resource_group_id = $clonedResourceGroupId;
                 $cloneResourceGroupSKills->save();
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

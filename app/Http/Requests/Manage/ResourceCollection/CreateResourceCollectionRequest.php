@@ -49,12 +49,12 @@ class CreateResourceCollectionRequest extends FormRequest
             $base_rules['cover_image'] = [
                 'mimes:jpeg,jpg,png,webp',
                 'max:5120',
-                'required'
+                'required',
             ];
         }
-        if($this->has('cover_image')){
+        if ($this->has('cover_image')) {
             $base_rules['media_type'] = [
-                'required'
+                'required',
             ];
         }
         if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
@@ -88,6 +88,7 @@ class CreateResourceCollectionRequest extends FormRequest
                 },
             ];
         }
+
         return $base_rules;
     }
 

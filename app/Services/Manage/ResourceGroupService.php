@@ -397,7 +397,7 @@ class ResourceGroupService
     public static function getResourcesWithRelations($id)
     {
         try {
-            return ResourceGroup::with('skills_group_stack', 'resource_group_achievement', 'component_association','resource_group_type_mode')->find($id);
+            return ResourceGroup::with('skills_group_stack', 'resource_group_achievement', 'component_association', 'resource_group_type_mode')->find($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
