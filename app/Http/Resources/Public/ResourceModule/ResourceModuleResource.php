@@ -217,8 +217,6 @@ class ResourceModuleResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-
-
         $rating = intval('0');
         if (auth('api')->check()) {
             if ($this->resource_rating) {

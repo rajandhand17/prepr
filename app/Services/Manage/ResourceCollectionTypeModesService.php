@@ -23,7 +23,7 @@ class ResourceCollectionTypeModesService
     {
         try {
             return ResourceCollectionTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.type'),
+                'type_mode'              => config('constants.resource_mode.type'),
                 'resource_collection_id' => $resourceCollectionId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -36,7 +36,7 @@ class ResourceCollectionTypeModesService
     {
         try {
             return ResourceCollectionTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.mode'),
+                'type_mode'              => config('constants.resource_mode.mode'),
                 'resource_collection_id' => $resourceCollectionId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -44,6 +44,7 @@ class ResourceCollectionTypeModesService
             return false;
         }
     }
+
     // Storing type's and mode's
     public function createResourceCollectionTypeModes($request, $resourceCollectionId)
     {

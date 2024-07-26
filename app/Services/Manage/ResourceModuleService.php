@@ -120,7 +120,6 @@ class ResourceModuleService
                 })->distinct('resource_modules.uuid');
             }
 
-
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceModule = $resourceModule->whereIn('duration_id', $request->duration_id);
             }

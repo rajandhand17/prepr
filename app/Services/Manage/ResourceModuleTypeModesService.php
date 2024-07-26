@@ -3,12 +3,10 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceGroupTypeModes;
 use App\Models\ResourceModuleTypeModes;
 
 class ResourceModuleTypeModesService
 {
-
     // Base on key store data
     public function createResourceModuleTypeModes($request, $resourceModuleId)
     {
@@ -101,7 +99,7 @@ class ResourceModuleTypeModesService
     {
         try {
             return ResourceModuleTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.type'),
+                'type_mode'          => config('constants.resource_mode.type'),
                 'resource_module_id' => $resourceModuleId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -114,7 +112,7 @@ class ResourceModuleTypeModesService
     {
         try {
             return ResourceModuleTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.mode'),
+                'type_mode'          => config('constants.resource_mode.mode'),
                 'resource_module_id' => $resourceModuleId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

@@ -142,7 +142,7 @@ class ModuleCompletionStatusService
             $checkChallengePathCompleted = ModuleCompletionStatus::where([
                 'module_type'   => $moduleType,
                 'status'        => $status,
-                'user_id'       =>auth()->user()->id,
+                'user_id'       => auth()->user()->id,
             ])->get();
 
             return $checkChallengePathCompleted;
@@ -152,5 +152,4 @@ class ModuleCompletionStatusService
             return false;
         }
     }
-
 }
