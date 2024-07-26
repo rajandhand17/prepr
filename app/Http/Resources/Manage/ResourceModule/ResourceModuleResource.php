@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Manage\ResourceModule;
 
 use App\Http\Resources\Manage\Scorm\ScormResource;
-use App\Services\Manage\ResourceGroupTypeModesService;
 use App\Services\Manage\ResourceModuleTypeModesService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -146,7 +145,6 @@ class ResourceModuleResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-
         $rating = intval('0');
         if ($this->resource_rating) {
             $rating = intval($this->resource_rating->rating);
@@ -175,15 +173,16 @@ class ResourceModuleResource extends JsonResource
                 'percentage'    => $this->resource_module_completion_status->percentage,
             ];
         }
-        $resourceTypeMode=$this->resource_module_type_modes;
-        $type=null;
-        $mode=null;
-        if($resourceTypeMode!==null){
-            $getType=ResourceModuleTypeModesService::getResourceModuleType($this->id);
-            $getMode=ResourceModuleTypeModesService::getResourceModuleMode($this->id);
-            $type=$getType!==null ? config("constants.resource_types_key.".$getType->value) : null;
-            $mode=$getMode!==null ? config("constants.resource_mode_type_key.".$getMode->value) : null;
+        $resourceTypeMode = $this->resource_module_type_modes;
+        $type = null;
+        $mode = null;
+        if ($resourceTypeMode !== null) {
+            $getType = ResourceModuleTypeModesService::getResourceModuleType($this->id);
+            $getMode = ResourceModuleTypeModesService::getResourceModuleMode($this->id);
+            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
+            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

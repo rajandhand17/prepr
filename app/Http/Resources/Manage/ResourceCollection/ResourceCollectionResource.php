@@ -5,7 +5,6 @@ namespace App\Http\Resources\Manage\ResourceCollection;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionTypeModesService;
-use App\Services\Manage\ResourceGroupTypeModesService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -154,15 +153,16 @@ class ResourceCollectionResource extends JsonResource
                 'percentage'    => $this->resource_collection_completion_status->percentage,
             ];
         }
-        $resourceTypeMode=$this->resource_collection_type_modes;
-        $type=null;
-        $mode=null;
-        if($resourceTypeMode!==null){
-            $getType=ResourceCollectionTypeModesService::getResourceCollectionType($this->id);
-            $getMode=ResourceCollectionTypeModesService::getResourceCollectionMode($this->id);
-            $type=$getType!==null ? config("constants.resource_types_key.".$getType->value) : null;
-            $mode=$getMode!==null ? config("constants.resource_mode_type_key.".$getMode->value) : null;
+        $resourceTypeMode = $this->resource_collection_type_modes;
+        $type = null;
+        $mode = null;
+        if ($resourceTypeMode !== null) {
+            $getType = ResourceCollectionTypeModesService::getResourceCollectionType($this->id);
+            $getMode = ResourceCollectionTypeModesService::getResourceCollectionMode($this->id);
+            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
+            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

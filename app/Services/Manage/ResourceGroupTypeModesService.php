@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollectionTypeModes;
 use App\Models\ResourceGroupTypeModes;
 
 class ResourceGroupTypeModesService
@@ -19,11 +18,12 @@ class ResourceGroupTypeModesService
             return false;
         }
     }
+
     public static function getResourceGroupType($resourceGroupId)
     {
         try {
             return ResourceGroupTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.type'),
+                'type_mode'         => config('constants.resource_mode.type'),
                 'resource_group_id' => $resourceGroupId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -36,7 +36,7 @@ class ResourceGroupTypeModesService
     {
         try {
             return ResourceGroupTypeModes::where([
-                'type_mode'=>config('constants.resource_mode.mode'),
+                'type_mode'         => config('constants.resource_mode.mode'),
                 'resource_group_id' => $resourceGroupId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

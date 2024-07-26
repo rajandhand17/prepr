@@ -123,7 +123,7 @@ class ResourceCollectionService
                         $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-                if(!empty($resourceCollectionProgress)){
+                if (!empty($resourceCollectionProgress)) {
                     $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionProgress->pluck('module_id'));
                 }
             }
