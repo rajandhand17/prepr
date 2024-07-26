@@ -40,7 +40,17 @@ class ResourceCollectionService
                     $status = config('constants.resource_collection_status.draft');
                     break;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_collection_privacy.no');
@@ -51,7 +61,6 @@ class ResourceCollectionService
                 default:
                     $privacy = null;
             }
-
             $resourceCollection = new ResourceCollection();
             $slug = UtilityHelper::generateSlug($request->title, $resourceCollection);
             $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -61,6 +70,7 @@ class ResourceCollectionService
             $resourceCollection->title = $request->title;
             $resourceCollection->slug = $slug;
             $resourceCollection->description = $request->description;
+            $resourceCollection->media_type = $media_type;
             $resourceCollection->media = $upload_cover_image;
             $resourceCollection->level = $request->level;
             $resourceCollection->duration = $request->duration;
@@ -144,7 +154,17 @@ class ResourceCollectionService
                         $status = config('constants.resource_collection_status.draft');
                         break;
                 }
-
+                $media_type = config('constants.resource_media_type.image');
+                switch ($request->media_type) {
+                    case 'image':
+                        $media_type = config('constants.resource_media_type.image');
+                        break;
+                    case 'embedded':
+                        $media_type = config('constants.resource_media_type.embedded');
+                        break;
+                    default:
+                        $media_type = null;
+                }
                 switch ($request->privacy) {
                     case 'no':
                         $privacy = config('constants.resource_collection_privacy.no');
@@ -161,6 +181,7 @@ class ResourceCollectionService
                 $resourceCollection->title = ($request->has('title')) ? $request->title : $resourceCollection->title;
                 $resourceCollection->description = ($request->has('description')) ? $request->description : $resourceCollection->description;
                 $resourceCollection->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceCollection->cover_image;
+                $resourceCollection->media_type = ($request->has('media_type')) ? $media_type : $resourceCollection->media_type;
                 $resourceCollection->level = ($request->has('level')) ? $request->level : $resourceCollection->level;
                 $resourceCollection->duration = ($request->has('duration')) ? $request->duration : $resourceCollection->duration;
                 $resourceCollection->privacy = $privacy;

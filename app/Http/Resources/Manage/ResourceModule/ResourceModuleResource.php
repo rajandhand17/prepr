@@ -200,7 +200,7 @@ class ResourceModuleResource extends JsonResource
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'media_type'                    => $this->media_type,
+            'media_type'                    => $this->media_type=='0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,
             'privacy'                       => $privacy,
             'status'                        => $status,

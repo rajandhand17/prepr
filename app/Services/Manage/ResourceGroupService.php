@@ -56,7 +56,17 @@ class ResourceGroupService
                     $status = config('constants.resource_group_status.draft');
                     break;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_group_privacy.no');
@@ -78,7 +88,7 @@ class ResourceGroupService
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
-            $resourceGroup->media_type = 'image';
+            $resourceGroup->media_type = $media_type;
             $resourceGroup->media = $upload_cover_image;
             $resourceGroup->level = $request->level;
             $resourceGroup->duration = $request->duration;
@@ -165,7 +175,17 @@ class ResourceGroupService
                     $status = config('constants.resource_group_status.draft');
                     break;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_group_privacy.no');
@@ -182,7 +202,7 @@ class ResourceGroupService
             $resourceGroup->challenge_id = $challengeId;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
-            $resourceGroup->media_type = ($request->has('media_type')) ? $request->media_type : $resourceGroup->media_type;
+            $resourceGroup->media_type = ($request->has('media_type')) ? $media_type : $resourceGroup->media_type;
             $resourceGroup->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceGroup->cover_image;
             $resourceGroup->level = ($request->has('level')) ? $request->level : $resourceGroup->level;
             $resourceGroup->duration = ($request->has('duration')) ? $request->duration : $resourceGroup->duration;

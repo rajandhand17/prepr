@@ -296,7 +296,17 @@ class ResourceModuleService
             } else {
                 $duration_id = $request->duration_id;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($title, $model);
             $resourceModule = new ResourceModule();
@@ -310,6 +320,7 @@ class ResourceModuleService
             $resourceModule->slug = $slug;
             $resourceModule->description = $description;
             $resourceModule->media = $upload_cover_image;
+            $resourceModule->media_type = $media_type;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
@@ -378,6 +389,17 @@ class ResourceModuleService
                 default:
                     $privacy = null;
             }
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             $resourceModule = ResourceModule::where('slug', $slug)->first();
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
@@ -387,6 +409,7 @@ class ResourceModuleService
             $resourceModule->description = $request->description;
             $resourceModule->organization_id = $organizationId;
             $resourceModule->media = $cover_image;
+            $resourceModule->media_type = $media_type;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;

@@ -141,7 +141,7 @@ class ResourceGroupResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'media_type'                    => $this->media_type,
+            'media_type'                    => $this->media_type=='0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),

@@ -562,4 +562,10 @@ return [
         'in_progress' => '1',
         'completed'   => '2',
     ],
+
+    'resource_media_type' => [
+        'image'    => '0',
+        'embedded' => '1',
+        'video'    => '2',
+    ],
 ];

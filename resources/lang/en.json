@@ -1070,7 +1070,7 @@
     "responses.labs_previews_created_successfully": "Labs' previews created successfully!",
     "responses.lab_created_successfully": "Lab created successfully!",
     "responses.lab_title_required": "The lab title field is required!",
-    "responses.lab_description_required": "The lab desctiption field is required!",
+    "responses.lab_description_required": "The lab description field is required!",
     "responses.access_not_exists": "Sorry, this access level is not available",
     "responses.total_employees_integer": "The total employees field must be an integer.",
     "responses.choose_open_closed_ai": "This can be between '<b>closed</b> or <b>open</b>' or <b>ai</b>' only.",
