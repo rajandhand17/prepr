@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\PreBuiltAchievement;
 
-use App\Services\Maestro\PreBuiltAchievement\PreBuiltAchievementService;
+use App\Services\Maestro\PreBuiltAchievementService;
 use Exception;
 
 trait PreBuiltAchievementTrait
