@@ -31,31 +31,19 @@
                   {!!Form::model($projectStatus,array('method'=>'PUT','files'=>true,'route'=>array('projects-status.update',$projectStatus->id)))!!}
                     <div class="row">
                       @if($languages->count() > 0)
-                          @foreach($languages as $single)
-                              @php
-                                  if ($single->iso == 'en') {
-                                      $lableName = 'English Status Name';
-                                      $inputName = 'title';
-                                  } else {
-                                        $columName = $single->iso;
-                                        $lableName = $single->name . ' Status Name';
-                                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                            $columName = str_replace(' ', '_', $columName);
-                                        }
-                                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-
-                                      $inputName = $columName . '_title';
-                                    }
-                              @endphp
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                    {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                    {!! Form::text($inputName,null, ['class' => 'form-control','required' => 'required']) !!}
-                                </div>
-                              </div>
-                          @endforeach
+                        @foreach($languages as $single)
+                          @php
+                            $titleColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'title');
+                            $titleLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'Status Name');
+                          @endphp
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              {!! Form::label($titleColumName, $titleLableName, ['class' => 'control-label']) !!}
+                              {!! Form::text($titleColumName,old($titleColumName), ['class' => 'form-control','required' => 'required'])
+                              !!}
+                            </div>
+                          </div>
+                        @endforeach
                       @endif
                     </div>
                     <div class="row">
