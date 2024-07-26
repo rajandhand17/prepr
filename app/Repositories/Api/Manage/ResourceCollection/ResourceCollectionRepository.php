@@ -20,7 +20,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
     protected $resourceCollectionTypeModesService;
 
-    public function __construct(ResourceCollectionTypeModesService $resourceCollectionTypeModesService,ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupStackService)
+    public function __construct(ResourceCollectionTypeModesService $resourceCollectionTypeModesService, ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupStackService)
     {
         $this->resourceCollectionService = $resourceCollectionService;
         $this->componentAssociationService = $componentAssociationService;
@@ -46,7 +46,8 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
-                $createResourceCollectionTypeModesService=$this->resourceCollectionTypeModesService->createResourceCollectionTypeModes($request, $createResourceCollection->id);
+                $createResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createResourceCollectionTypeModes($request, $createResourceCollection->id);
+
                 return[
                     'createResourceCollection'                        => $createResourceCollection,
                     'createComponentAssociation'                      => $createComponentAssociation,
@@ -125,7 +126,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
-                $updateResourceCollectionTypeModesService=$this->resourceCollectionTypeModesService->updateResourceCollectionTypeModes($request, $updateResourceCollection->id);
+                $updateResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->updateResourceCollectionTypeModes($request, $updateResourceCollection->id);
 
                 return[
                     'updateResourceCollection'                       => $updateResourceCollection,

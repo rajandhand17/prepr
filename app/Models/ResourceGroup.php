@@ -75,10 +75,12 @@ class ResourceGroup extends Model
     {
         return $this->hasOne(ResourceGroupAchievement::class, 'resource_group_id', 'id');
     }
+
     public function resource_group_type_mode()
     {
         return $this->hasOne(ResourceGroupTypeModes::class, 'resource_group_id', 'id');
     }
+
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id');

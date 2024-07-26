@@ -50,12 +50,12 @@ class CreateResourceGroupRequest extends FormRequest
             $base_rules['cover_image'] = [
                 'mimes:jpeg,jpg,png,webp',
                 'max:5120',
-                'required'
+                'required',
             ];
         }
-        if($this->has('cover_image')){
+        if ($this->has('cover_image')) {
             $base_rules['media_type'] = [
-                'required'
+                'required',
             ];
         }
         if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
@@ -89,6 +89,7 @@ class CreateResourceGroupRequest extends FormRequest
                 },
             ];
         }
+
         return $base_rules;
     }
 
@@ -132,10 +133,10 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_ids.required'          => __('responses.resource_ids_required'),
             'resource_ids.array'             => __('responses.resource_ids_array'),
             'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
-            'lab_id.required'                =>__('responses.lab_required'),
-            'lab_id.exists'                  =>__('responses.lab_id_exists'),
-            'challenge_id.required'          =>__('responses.challenge_id_required'),
-            'challenge_id.exists'            =>__('responses.challenge_id_exists'),
+            'lab_id.required'                => __('responses.lab_required'),
+            'lab_id.exists'                  => __('responses.lab_id_exists'),
+            'challenge_id.required'          => __('responses.challenge_id_required'),
+            'challenge_id.exists'            => __('responses.challenge_id_exists'),
             'type.required'                  => __('responses.type_required'),
             'type.in'                        => __('responses.resource_type_in'),
             'mode.required'                  => __('responses.mode_required'),
