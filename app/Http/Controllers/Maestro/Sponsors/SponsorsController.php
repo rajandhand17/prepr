@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Maestro\Sponsors;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Host;
 use App\Traits\Maestro\Sponsor\SponsorTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\Host;
-use Exception;
 
 class SponsorsController extends Controller
 {
@@ -90,6 +90,7 @@ class SponsorsController extends Controller
             if ($this->createSponsor($request)) {
                 return redirect()->route('sponsors.index')->with('success', 'Sponsor created successfully');
             }
+
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -106,6 +107,7 @@ class SponsorsController extends Controller
             if (!$sponsor->exists) {
                 return redirect()->route('sponsors.index')->with(['error' => 'Sponsor not found.']);
             }
+
             return view('maestro.sponsors.edit', compact('sponsor'));
         } catch (Exception $e) {
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -121,6 +123,7 @@ class SponsorsController extends Controller
             if ($this->updateSponsorById($id, $request)) {
                 return redirect()->route('sponsors.index')->with('success', 'Sponsor Updated successfully.');
             }
+
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);

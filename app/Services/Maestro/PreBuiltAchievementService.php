@@ -2,10 +2,9 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\PreBuiltAchievement;
-use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
 use App\Helpers\FileUploadHelper;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Models\PreBuiltAchievement;
 use Exception;
 
 class PreBuiltAchievementService
@@ -73,6 +72,7 @@ class PreBuiltAchievementService
             return false;
         }
     }
+
     public static function getComponentType($request)
     {
         try {
@@ -95,6 +95,7 @@ class PreBuiltAchievementService
             if (isset($request->learning_path) && $request->learning_path == 'on') {
                 array_push($component_type, 'learning_path');
             }
+
             return $component_type;
         } catch (Exception $e) {
             return false;
@@ -108,6 +109,7 @@ class PreBuiltAchievementService
             if ($request->file('image')) {
                 $achievementImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'pre_built_achievement');
             }
+
             return $achievementImage;
         } catch (Exception $e) {
             return false;
@@ -130,6 +132,7 @@ class PreBuiltAchievementService
                         $achievement_type = '0';
                 }
             }
+
             return $achievement_type;
         } catch (Exception $e) {
             return false;

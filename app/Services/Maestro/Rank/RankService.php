@@ -3,8 +3,8 @@
 namespace App\Services\Maestro\Rank;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
 use App\Models\Rank;
+use App\Services\Maestro\LanguageService;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -25,10 +25,10 @@ class RankService
     {
         try {
             if ($request->file('image')) {
-                $filename = Str::random(25) . '.' . $request->file('image')->getClientOriginalExtension();
+                $filename = Str::random(25).'.'.$request->file('image')->getClientOriginalExtension();
                 $image = Image::make($request->file('image'))->resize(735, 415)->stream();
-                $img = Storage::disk('s3')->put('uploads/ranks/' . $filename, $image);
-                $coverImage = 'uploads/ranks/' . $filename;
+                $img = Storage::disk('s3')->put('uploads/ranks/'.$filename, $image);
+                $coverImage = 'uploads/ranks/'.$filename;
             } else {
                 $coverImage = null;
             }

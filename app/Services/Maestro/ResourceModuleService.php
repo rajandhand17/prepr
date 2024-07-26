@@ -4,10 +4,9 @@ namespace App\Services\Maestro;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
-use HiFolks\RandoPhp\Randomize;
-use App\Services\Maestro\LanguageService;
-use Illuminate\Support\Facades\Storage;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
+use Illuminate\Support\Facades\Storage;
 
 class ResourceModuleService
 {
@@ -20,7 +19,7 @@ class ResourceModuleService
         }
     }
 
-    public static function createAndUpdateResourceModule($request,$action,$id)
+    public static function createAndUpdateResourceModule($request, $action, $id)
     {
         try {
             if ($request->file('cover_image')) {
@@ -33,24 +32,24 @@ class ResourceModuleService
                 $webp_path_cover = null;
             }
 
-            if($action == 'create') {
+            if ($action == 'create') {
                 $model = new ResourceModule();
-                $resourceModule         = new ResourceModule();
-                $resourceModule->uuid   = Randomize::chars(10)->alphanumeric()->unique()->generate();
-                $resourceModule->slug   = UtilityHelper::generateSlug($request->title, $model);
+                $resourceModule = new ResourceModule();
+                $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                $resourceModule->slug = UtilityHelper::generateSlug($request->title, $model);
                 $resourceModule->language = $request->language;
-            } else if($action == 'update') {
+            } elseif ($action == 'update') {
                 $resourceModule = ResourceModule::find($id);
                 $webp_path_cover = $resourceModule->media;
             }
 
-            $resourceModule->user_id    = $request->user_id;
-            $resourceModule->title      = $request->title;
-            $resourceModule->description= $request->description;
+            $resourceModule->user_id = $request->user_id;
+            $resourceModule->title = $request->title;
+            $resourceModule->description = $request->description;
             $resourceModule->organization_id = $request->organization_id;
-            $resourceModule->privacy    = $request->privacy;
-            $resourceModule->status     = $request->status;
-            $resourceModule->media      = $webp_path_cover;
+            $resourceModule->privacy = $request->privacy;
+            $resourceModule->status = $request->status;
+            $resourceModule->media = $webp_path_cover;
 
             if ($resourceModule->save()) {
                 return $resourceModule;

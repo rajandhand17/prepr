@@ -3,8 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Language;
-use App\Models\Tag;
 use App\Models\TagGroup;
 use Exception;
 
@@ -35,10 +33,9 @@ class TagGroupService
             $languages = LanguageService::getAllActiveLanguages();
 
             foreach ($languages as $single) {
-               
-                    $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                    $columName2 = UtilityHelper::getColumName($single->iso,'description'); 
-                
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'description');
+
                 $tagGroup->$columName1 = $request->$columName1;
                 $tagGroup->$columName2 = $request->$columName2;
             }
@@ -80,13 +77,14 @@ class TagGroupService
                 $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                    $columName2 = UtilityHelper::getColumName($single->iso,'description'); 
+                    $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                    $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                     $tagGroup->$columName1 = $request->$columName1;
                     $tagGroup->$columName2 = $request->$columName2;
                 }
                 $tagGroup->tags = $request->tags;
                 $tagGroup->save();
+
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group added successfully');
             }
 

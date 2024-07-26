@@ -57,8 +57,8 @@ class TagGroupController extends Controller
                 ['data' => 'id', 'name' => 'id', 'title' => 'ID'],
             ];
             foreach ($languages as $single) {
-                $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                $columName2 = UtilityHelper::getColumName($single->iso,'description');
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                 $singleLangCol = ['data' => $columName1, 'name' => $columName1, 'title' => $single->name.' Tag Group Title'];
                 array_push($tableColumns, $singleLangCol);
                 $singleLangCol = ['data' => $columName2, 'name' => $columName2, 'title' => $single->name.' Tag Group Description'];
@@ -85,6 +85,7 @@ class TagGroupController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $tags = TagService::getTags();
             $selectedTags = [];
+
             return view('maestro.tags.taggroup.create', compact('languages', 'tags', 'selectedTags'));
         } catch (Exception $e) {
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
@@ -100,6 +101,7 @@ class TagGroupController extends Controller
             if ($this->createTagGroup($request)) {
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group created successfully');
             }
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
@@ -131,13 +133,14 @@ class TagGroupController extends Controller
     public function edit(string $id)
     {
         try {
-            $data =  $this->getTagGroupById($id);
+            $data = $this->getTagGroupById($id);
             $selectedTags = [];
             foreach ($data->tags as $tags) {
                 $selectedTags[] = $tags;
             }
             $tags = TagService::getTags();
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.tags.taggroup.edit', compact('tags', 'selectedTags', 'languages', 'data'));
         } catch (Exception $e) {
             redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
@@ -153,6 +156,7 @@ class TagGroupController extends Controller
             if ($this->updateTagGroupById($id, $request)) {
                 return redirect()->route('taggroup.index')->with('success', 'Tag Group Updated successfully');
             }
+
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);

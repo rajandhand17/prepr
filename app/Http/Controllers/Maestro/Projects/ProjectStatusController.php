@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
+use App\Models\ProjectStatus;
+use App\Services\Maestro\LanguageService;
+use App\Traits\Maestro\Project\ProjectStatusTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Traits\Maestro\Project\ProjectStatusTrait;
-use App\Services\Maestro\LanguageService;
-use App\Helpers\Maestro\UtilityHelper;
-use App\Models\ProjectStatus;
-use Exception;
 
 class ProjectStatusController extends Controller
 {
@@ -46,7 +46,7 @@ class ProjectStatusController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Status Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -67,6 +67,7 @@ class ProjectStatusController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.projects.status.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,6 +83,7 @@ class ProjectStatusController extends Controller
             if ($this->storeUpdateProjectStatus($request, '', 'create')) {
                 return redirect()->route('projects-status.index')->with(['success' => 'Project Stage Added successfully.']);
             }
+
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -96,6 +98,7 @@ class ProjectStatusController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $projectStatus = $this->findProjectStatus($id);
+
             return view('maestro.projects.status.edit', compact('projectStatus', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -111,6 +114,7 @@ class ProjectStatusController extends Controller
             if ($this->storeUpdateProjectStatus($request, $id, 'update')) {
                 return redirect()->route('projects-status.index')->with(['success' => 'Project Status updated successfully.']);
             }
+
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-status.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -126,6 +130,7 @@ class ProjectStatusController extends Controller
             $projectStatus = $this->findProjectStatus($id);
             if (!empty($projectStatus)) {
                 $this->deleteProjectStatus($projectStatus);
+
                 return response()->json(['status' => 'success', 'message' => 'Project Status deleted successfully.']);
             }
         } catch (Exception $e) {

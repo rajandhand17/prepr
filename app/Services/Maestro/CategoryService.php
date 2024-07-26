@@ -146,6 +146,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategoryByType($type)
     {
         try {
