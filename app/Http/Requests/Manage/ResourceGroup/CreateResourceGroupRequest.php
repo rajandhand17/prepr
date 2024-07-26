@@ -141,6 +141,7 @@ class CreateResourceGroupRequest extends FormRequest
             'mode.required'                  => __('responses.mode_required'),
             'mode.in'                        => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
+
         ];
     }
 }

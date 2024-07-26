@@ -6,7 +6,7 @@ interface ResourceGroupInterface
 {
     public function getResourceGroupCountBasedOnOrganization($organizationId);
 
-    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId,$labId,$challengeId);
+    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId);
 
     public function uploadResourceGroupCoverImage($cover_image);
 
@@ -18,7 +18,7 @@ interface ResourceGroupInterface
 
     public function checkName($slug);
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId,$labId,$challengeId);
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId);
 
     public function getResourceGroupList($request, $organization);
 
