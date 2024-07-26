@@ -287,12 +287,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroTrophyAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards/trophyawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards.php'));
     }
 
     public function mapMaestroActivityAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards/activityawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards.php'));
     }
 
     public function mapMaestroEmailTemplateRoutes()
