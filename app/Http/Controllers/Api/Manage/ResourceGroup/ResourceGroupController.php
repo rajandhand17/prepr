@@ -13,8 +13,6 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\LabService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -216,16 +214,6 @@ class ResourceGroupController extends AppBaseController
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
             }
 
-            // Checking Lab exists or not
-            $lab = LabService::getLabBasedOnUUID($request->lab_id);
-            if (!$lab) {
-                return $this->sendError(__('responses.lab_not_found'), 404);
-            }
-            // Check challenge based on uuid
-            $challenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
-            if (!$challenge) {
-                return $this->sendError(__('responses.challenge_not_found'), 404);
-            }
             if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
@@ -270,6 +258,7 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
             if ($resourceGroup) {
                 $response = [
@@ -286,7 +275,6 @@ class ResourceGroupController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_group_list'), 400);
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
