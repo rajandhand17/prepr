@@ -4,7 +4,6 @@ namespace App\Services\Maestro;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ComponentAssociation;
-use App\Models\Lab;
 use App\Services\Manage\ResourceModuleService;
 use Exception;
 
@@ -243,7 +242,7 @@ class ComponentAssociationService
                     ])->pluck('resource_module_id')->all();
                     $nonExistingIdsResourceModuleId = array_diff($existComponentAssociationResourceModuleId, $getResourceGroupIds);
                     $deleteNonExistingResourceModuleId = ComponentAssociation::where('lab_id', $lab)->whereIn('resource_module_id', $nonExistingIdsResourceModuleId)->delete();
-                   
+
                     $newComponentAssociationResourceModuleId = array_diff($getResourceGroupIds, $existComponentAssociationResourceModuleId);
                     $sequences = ComponentAssociation::where([
                         ['lab_id', '=', $lab],

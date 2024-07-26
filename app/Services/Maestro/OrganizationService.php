@@ -261,13 +261,15 @@ class OrganizationService
             return false;
         }
     }
+
     public static function getOrganization($id)
     {
         try {
-            $organization = Organization::select('title','id');
-            if(!empty($id)){
+            $organization = Organization::select('title', 'id');
+            if (!empty($id)) {
                 $organization = $organization->where(['id' => $id]);
             }
+
             return $organization->pluck('title', 'id');
         } catch (Exception $e) {
             return false;

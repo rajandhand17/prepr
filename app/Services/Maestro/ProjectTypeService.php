@@ -2,9 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectType;
 use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
+use App\Models\ProjectType;
 use Exception;
 
 class ProjectTypeService
@@ -17,6 +16,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function storeUpdateProjectType($request, $id, $moduleMode)
     {
         try {
@@ -28,7 +28,7 @@ class ProjectTypeService
             }
 
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $projectType->$columName = $request->$columName;
             }
 
@@ -60,6 +60,7 @@ class ProjectTypeService
             return false;
         }
     }
+
     public static function getTypes()
     {
         try {

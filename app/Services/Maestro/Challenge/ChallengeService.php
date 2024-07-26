@@ -14,18 +14,17 @@ use App\Models\ChallengeTimelines;
 use App\Models\ComponentAssociation;
 use App\Models\Duration;
 use App\Models\Lab;
-use App\Models\Language;
 use App\Models\Levels;
 use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Services\Maestro\LanguageService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
-use App\Services\Maestro\LanguageService;
 
 class ChallengeService
 {
@@ -408,8 +407,8 @@ class ChallengeService
             $count = 0;
             $json_stacks = $json_result = [];
             foreach ($challenge as $key => $challenge_to_return) {
-                $json_stacks[$count]['id']    = $key;
-                $json_stacks[$count]['text']  = $challenge_to_return;
+                $json_stacks[$count]['id'] = $key;
+                $json_stacks[$count]['text'] = $challenge_to_return;
                 $count++;
             }
             $json_result['result'] = $json_stacks;
@@ -419,13 +418,15 @@ class ChallengeService
             return false;
         }
     }
-    public static function getChallenge($action,$challengeId)
+
+    public static function getChallenge($action, $challengeId)
     {
         try {
-            $challenge = Challenge::select('title','id');
-            if($action == 'edit'){
+            $challenge = Challenge::select('title', 'id');
+            if ($action == 'edit') {
                 $challenge = $challenge->where(['id' => $challengeId]);
             }
+
             return $challenge->pluck('title', 'id');
         } catch (Exception $e) {
             return [];

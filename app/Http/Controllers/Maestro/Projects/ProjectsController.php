@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Traits\Maestro\Project\ProjectTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use Illuminate\Http\Request;
-use App\Models\Project;
-use Exception;
 
 class ProjectsController extends Controller
 {
@@ -89,7 +89,8 @@ class ProjectsController extends Controller
     public function create()
     {
         try {
-            $projectData = $this->getProjectAssociateItems('create',null);
+            $projectData = $this->getProjectAssociateItems('create', null);
+
             return view('maestro.projects.project.create', compact('projectData'));
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -105,6 +106,7 @@ class ProjectsController extends Controller
             if ($this->createProject($request)) {
                 return redirect()->route('projects.index')->with('success', 'Project created successfully');
             }
+
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -138,7 +140,7 @@ class ProjectsController extends Controller
             if (!$project->exists) {
                 return redirect()->route('projects.index')->with(['error' => 'Project not found.']);
             }
-            $projectData = $this->getProjectAssociateItems('edit',$project);
+            $projectData = $this->getProjectAssociateItems('edit', $project);
 
             return view('maestro.projects.project.edit', compact('project', 'projectData'));
         } catch (Exception $e) {
@@ -155,6 +157,7 @@ class ProjectsController extends Controller
             if ($this->updateProjectById($id, $request)) {
                 return redirect()->route('projects.index')->with('success', 'Project Updated successfully');
             }
+
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);

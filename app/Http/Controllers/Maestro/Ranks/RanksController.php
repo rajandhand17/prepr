@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Ranks;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Rank;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Rank\RankTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
-use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Rank;
-use Exception;
 
 class RanksController extends Controller
 {
@@ -45,7 +45,7 @@ class RanksController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Rank Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -67,6 +67,7 @@ class RanksController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.rank.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,6 +83,7 @@ class RanksController extends Controller
             if ($this->storeUpdateRank($request, '', 'create')) {
                 return redirect()->route('ranks.index')->with(['success' => 'Rank Added successfully.']);
             }
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -96,6 +98,7 @@ class RanksController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $rank = $this->findRank($id);
+
             return view('maestro.rank.edit', compact('rank', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -111,6 +114,7 @@ class RanksController extends Controller
             if ($this->storeUpdateRank($request, $id, 'update')) {
                 return redirect()->route('ranks.index')->with(['success' => 'Rank updated successfully.']);
             }
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -126,6 +130,7 @@ class RanksController extends Controller
             $rank = $this->findRank($id);
             if (!empty($rank)) {
                 $this->deleteRank($rank);
+
                 return response()->json(['status' => 'success', 'message' => 'Rank deleted successfully.']);
             }
         } catch (Exception $e) {

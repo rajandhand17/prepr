@@ -13,6 +13,7 @@ trait TagTrait
             if (TagService::createTag($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -34,6 +35,7 @@ trait TagTrait
             if (TagService::updateTagById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -46,6 +48,7 @@ trait TagTrait
             if (TagService::deleteTag($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -59,6 +62,7 @@ trait TagTrait
             if ($tags) {
                 return $tags;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

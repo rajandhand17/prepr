@@ -268,18 +268,22 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/resource.php'));
     }
+
     public function mapMaestroRankRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/rank.php'));
     }
+
     public function mapMaestroChallengeRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/challenge/challenge.php'));
     }
+
     public function mapMaestroPreBuiltAchievementRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/prebuiltachievement/prebuiltachievement.php'));
     }
+
     public function mapMaestroMasterRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/master/master.php'));

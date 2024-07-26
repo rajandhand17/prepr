@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
+use App\Models\ProjectVertical;
+use App\Services\Maestro\LanguageService;
+use App\Traits\Maestro\Project\ProjectVerticalTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Traits\Maestro\Project\ProjectVerticalTrait;
-use App\Services\Maestro\LanguageService;
-use App\Helpers\Maestro\UtilityHelper;
-use App\Models\ProjectVertical;
-use Exception;
 
 class ProjectVerticalController extends Controller
 {
@@ -46,7 +46,7 @@ class ProjectVerticalController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Vertical Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -67,6 +67,7 @@ class ProjectVerticalController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.projects.vertical.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,6 +83,7 @@ class ProjectVerticalController extends Controller
             if ($this->storeUpdateProjectVertical($request, '', 'create')) {
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical Added successfully.']);
             }
+
             return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -112,6 +114,7 @@ class ProjectVerticalController extends Controller
             if ($this->storeUpdateProjectVertical($request, $id, 'update')) {
                 return redirect()->route('projects-vertical.index')->with(['success' => 'Project Vertical updated successfully.']);
             }
+
             return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-vertical.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -127,6 +130,7 @@ class ProjectVerticalController extends Controller
             $projectVertical = $this->findProjectVertical($id);
             if (!empty($projectVertical)) {
                 $this->deleteProjectVertical($projectVertical);
+
                 return response()->json(['status' => 'success', 'message' => 'Project Vertical deleted successfully.']);
             }
         } catch (Exception $e) {

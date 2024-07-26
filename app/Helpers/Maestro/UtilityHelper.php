@@ -28,10 +28,10 @@ class UtilityHelper
         }
     }
 
-    public static function getLabelName($name,$labelName)
+    public static function getLabelName($name, $labelName)
     {
         try {
-            return $name . ' '.$labelName;;
+            return $name.' '.$labelName;
         } catch (Exception $e) {
             return $labelName;
         }

@@ -3,7 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Language;
 use App\Models\Skill;
 use Exception;
 
@@ -33,7 +32,7 @@ class SkillService
                     $createArray = [];
 
                     foreach ($languages as $single) {
-                        $columName = UtilityHelper::getColumName($single->iso,'title');
+                        $columName = UtilityHelper::getColumName($single->iso, 'title');
                         $createArray[$columName] = $request->$columName;
                         $skill->$columName = $request->$columName;
                     }
@@ -70,7 +69,7 @@ class SkillService
                 $languages = LanguageService::getAllActiveLanguages();
                 $skill = new Skill();
                 foreach ($languages as $single) {
-                    $columName = UtilityHelper::getColumName($single->iso,'title');
+                    $columName = UtilityHelper::getColumName($single->iso, 'title');
                     $skill->$columName = $request->$columName;
                 }
                 $skill->save();
@@ -108,6 +107,7 @@ class SkillService
             return false;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
@@ -134,6 +134,7 @@ class SkillService
             return response()->json($jsonSkills);
         } catch (Exception $e) {
             dd($e);
+
             return false;
         }
     }

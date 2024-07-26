@@ -68,6 +68,7 @@ trait SkillStackTrait
             return false;
         }
     }
+
     private function getAjaxAllSkillStack($request)
     {
         try {
@@ -81,5 +82,4 @@ trait SkillStackTrait
             return false;
         }
     }
-    
 }
