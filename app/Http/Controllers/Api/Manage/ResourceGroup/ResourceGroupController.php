@@ -34,16 +34,6 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
-            // Checking Lab exists or not
-            $lab = LabService::getLabBasedOnUUID($request->lab_id);
-            if (!$lab) {
-                return $this->sendError(__('responses.lab_not_found'), 404);
-            }
-            // Check challenge based on uuid
-            $challenge = ChallengeService::getChallengeBasedOnUUID($request->challenge_id);
-            if (!$challenge) {
-                return $this->sendError(__('responses.challenge_not_found'), 404);
-            }
             // checks creation limits of the Resource Group
             $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceGroup');
             if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
@@ -72,7 +62,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organization->id, $lab->id, $challenge->id);
+            $createResourceGroup = $this->resourceGroupRepository->createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($createResourceGroup) {
                 return $this->sendResponse(ResourceGroupResource::make($createResourceGroup), __('responses.resource_group_stored_success'), 200);
             }
@@ -259,7 +249,7 @@ class ResourceGroupController extends AppBaseController
                 }
                 $upload_achievement_image = $uploaded_achievement_image;
             }
-            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id, $lab->id, $challenge->id);
+            $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
                 return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }

@@ -42,11 +42,11 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId)
+    public function createResourceGroup($request, $upload_cover_image, $upload_achievement_image, $organizationId)
     {
         try {
-            $createResourceGroup = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId) {
-                $createResourceGroup = $this->resourceGroupService->createResourceGroup($request, $upload_cover_image, $organizationId, $labId, $challengeId);
+            $createResourceGroup = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $organizationId) {
+                $createResourceGroup = $this->resourceGroupService->createResourceGroup($request, $upload_cover_image, $organizationId);
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
                 $createResourceGroupsAchievements = $this->resourceGroupAchievementsService->createResourceGroupsAchievements($request, $upload_achievement_image, $createResourceGroup->id);
@@ -151,11 +151,11 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId)
+    public function updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId)
     {
         try {
-            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId, $labId, $challengeId) {
-                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image, $organizationId, $labId, $challengeId);
+            $updateResourceGroup = DB::transaction(function () use ($slug, $request, $upload_cover_image, $upload_achievement_image, $organizationId) {
+                $updateResourceGroup = $this->resourceGroupService->updateResourceGroup($slug, $request, $upload_cover_image, $organizationId);
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
                 $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
