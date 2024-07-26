@@ -3,21 +3,11 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceGroupTypeModes;
 use App\Models\ResourceModuleTypeModes;
 
 class ResourceModuleTypeModesService
 {
-    const TYPE = 'type';
-    const VALUE = 'value';
-    // Defining all values in single array
-    private $mappings = [
-        'assess'     => [self::TYPE => '0', self::VALUE => '0'],
-        'onboard'    => [self::TYPE => '0', self::VALUE => '1'],
-        'engage'     => [self::TYPE => '0', self::VALUE => '2'],
-        'grow'       => [self::TYPE => '0', self::VALUE => '3'],
-        'team'       => [self::TYPE => '1', self::VALUE => '4'],
-        'individual' => [self::TYPE => '1', self::VALUE => '5'],
-    ];
 
     // Base on key store data
     public function createResourceModuleTypeModes($request, $resourceModuleId)
@@ -100,6 +90,32 @@ class ResourceModuleTypeModesService
             }
 
             return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleType($resourceModuleId)
+    {
+        try {
+            return ResourceModuleTypeModes::where([
+                'type_mode'=>config('constants.resource_mode.type'),
+                'resource_module_id' => $resourceModuleId])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleMode($resourceModuleId)
+    {
+        try {
+            return ResourceModuleTypeModes::where([
+                'type_mode'=>config('constants.resource_mode.mode'),
+                'resource_module_id' => $resourceModuleId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

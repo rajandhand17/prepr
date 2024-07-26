@@ -80,16 +80,6 @@ class ResourceCollectionService
                         ->distinct();
                 })->distinct('resource_collections.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
-                    $query->select('resource_collection_tags_groups.challenge_id')
-                        ->from('resource_collection_tags_groups')
-                        ->whereIn('resource_collection_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_collection_tags_groups.type', '0')
-                        ->whereNull('resource_collection_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_collections.uuid');
-            }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceCollectionList = $resourceCollectionList->whereIn('level', $request->level_id);
             }
@@ -120,20 +110,22 @@ class ResourceCollectionService
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionType->pluck('resource_collection_id'));
             }
             if ($request->has('progress') && !empty($request->progress)) {
-                $resourceGroupProgress = [];
+                $resourceCollectionProgress = [];
                 $moduleType = config('constants.module_completion_statuses_types.resource_collection');
                 switch ($request->progress) {
                     case 'not-started':
-                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
                         break;
                     case 'in-progress':
-                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
                         break;
                     case 'complete':
-                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-                $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
+                if(!empty($resourceCollectionProgress)){
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionProgress->pluck('module_id'));
+                }
             }
 
             return $resourceCollectionList;

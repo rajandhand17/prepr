@@ -542,9 +542,20 @@ return [
         'engage'  => '2',
         'grow'    => '3',
     ],
+
+    'resource_types_key' => [
+        '0'       => 'assess',
+        '1'       => 'onboard',
+        '2'       => 'engage',
+        '3'       => 'grow',
+    ],
     'resource_mode_type' => [
         'team'       => '4',
         'individual' => '5',
+    ],
+    'resource_mode_type_key' => [
+        '4'       => 'team',
+        '5'       => 'individual',
     ],
     'resource_mode'=> [
         'type' => '0',

@@ -47,8 +47,6 @@ class UpdateResourceGroupRequest extends FormRequest
             'skill_groups.*'           => 'numeric|exists:skill_groups,id',
             'skill_stacks'             => 'array',
             'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
-            'lab_id'                   => 'required|exists:labs,uuid',
-            'challenge_id'             => 'required|exists:challenges,uuid',
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
@@ -142,10 +140,6 @@ class UpdateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
-            'lab_id.required'                => __('responses.lab_required'),
-            'lab_id.exists'                  => __('responses.lab_id_exists'),
-            'challenge_id.required'          => __('responses.challenge_id_required'),
-            'challenge_id.exists'            => __('responses.challenge_id_exists'),
             'type.required'                  => __('responses.type_required'),
             'type.in'                        => __('responses.resource_type_in'),
             'mode.required'                  => __('responses.mode_required'),

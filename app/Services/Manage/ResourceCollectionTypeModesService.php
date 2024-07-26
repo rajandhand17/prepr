@@ -19,6 +19,31 @@ class ResourceCollectionTypeModesService
         }
     }
 
+    public static function getResourceCollectionType($resourceCollectionId)
+    {
+        try {
+            return ResourceCollectionTypeModes::where([
+                'type_mode'=>config('constants.resource_mode.type'),
+                'resource_collection_id' => $resourceCollectionId])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionMode($resourceCollectionId)
+    {
+        try {
+            return ResourceCollectionTypeModes::where([
+                'type_mode'=>config('constants.resource_mode.mode'),
+                'resource_collection_id' => $resourceCollectionId])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
     // Storing type's and mode's
     public function createResourceCollectionTypeModes($request, $resourceCollectionId)
     {

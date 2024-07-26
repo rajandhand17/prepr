@@ -91,16 +91,6 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceGroupList = $resourceGroupList->whereIn('resource_groups.id', function ($query) use ($request) {
-                    $query->select('resource_group_tags_groups.challenge_id')
-                        ->from('resource_group_tags_groups')
-                        ->whereIn('resource_group_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_group_tags_groups.type', '0')
-                        ->whereNull('resource_group_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_groups.uuid');
-            }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
@@ -130,7 +120,9 @@ class ResourceGroupService
                         $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
+                if(!empty($resourceGroupProgress)){
+                    $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
+                }
             }
 
             return $resourceGroupList;

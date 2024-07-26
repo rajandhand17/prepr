@@ -3,11 +3,11 @@
 namespace App\Http\Resources\Manage\ResourceModule;
 
 use App\Http\Resources\Manage\Scorm\ScormResource;
+use App\Services\Manage\ResourceGroupTypeModesService;
+use App\Services\Manage\ResourceModuleTypeModesService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -26,8 +26,6 @@ class ResourceModuleResource extends JsonResource
         $skills = null;
         $skill_groups = null;
         $skill_stacks = null;
-        $tags = null;
-        $tag_groups = null;
         $links = null;
         $files = null;
         $document = null;
@@ -148,15 +146,6 @@ class ResourceModuleResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
 
         $rating = intval('0');
         if ($this->resource_rating) {
@@ -186,7 +175,15 @@ class ResourceModuleResource extends JsonResource
                 'percentage'    => $this->resource_module_completion_status->percentage,
             ];
         }
-
+        $resourceTypeMode=$this->resource_module_type_modes;
+        $type=null;
+        $mode=null;
+        if($resourceTypeMode!==null){
+            $getType=ResourceModuleTypeModesService::getResourceModuleType($this->id);
+            $getMode=ResourceModuleTypeModesService::getResourceModuleMode($this->id);
+            $type=$getType!==null ? config("constants.resource_types_key.".$getType->value) : null;
+            $mode=$getMode!==null ? config("constants.resource_mode_type_key.".$getMode->value) : null;
+        }
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -197,6 +194,8 @@ class ResourceModuleResource extends JsonResource
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
+            'type'                          => $type,
+            'mode'                          => $mode,
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
@@ -210,8 +209,6 @@ class ResourceModuleResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'links'                         => $links,
             'files'                         => $files,
             'documents'                     => $document,

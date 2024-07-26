@@ -270,16 +270,6 @@ class ResourceCollectionService
                         ->distinct();
                 })->distinct('resource_collections.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
-                    $query->select('resource_collection_tags_groups.challenge_id')
-                        ->from('resource_collection_tags_groups')
-                        ->whereIn('resource_collection_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_collection_tags_groups.type', '0')
-                        ->whereNull('resource_collection_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_collections.uuid');
-            }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceCollectionList = $resourceCollectionList->whereIn('level', $request->level_id);
             }

@@ -7,8 +7,6 @@ use App\Services\Public\ResourceModuleDetailService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -27,8 +25,6 @@ class ResourceModuleResource extends JsonResource
         $skills = null;
         $skill_groups = null;
         $skill_stacks = null;
-        $tags = null;
-        $tag_groups = null;
         $links = null;
         $files = null;
         $documents = null;
@@ -221,15 +217,7 @@ class ResourceModuleResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
 
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
 
         $rating = intval('0');
         if (auth('api')->check()) {
@@ -284,8 +272,6 @@ class ResourceModuleResource extends JsonResource
             'skills'                => $skills,
             'skill_groups'          => $skill_groups,
             'skill_stacks'          => $skill_stacks,
-            'tags'                  => $tags,
-            'tag_groups'            => $tag_groups,
             'links'                 => $links,
             'files'                 => $files,
             'documents'             => $documents,
