@@ -318,7 +318,7 @@ class ChallengeService
         }
     }
 
-    public function getAll()
+    public static function getAll()
     {
         try {
             return Challenge::select();

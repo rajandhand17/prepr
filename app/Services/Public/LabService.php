@@ -330,7 +330,7 @@ class LabService
         }
     }
 
-    public function getAll()
+    public static function getAll()
     {
         try {
             return Lab::select();
