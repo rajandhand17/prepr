@@ -7,6 +7,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleSkillsGroupsStack;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\SkillService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -119,17 +120,6 @@ class ResourceModuleService
                 })->distinct('resource_modules.uuid');
             }
 
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
-                    $query->select('resource_module_tags_groups.resource_module_id')
-                        ->from('resource_module_tags_groups')
-                        ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_module_tags_groups.type', '0')
-                        ->whereNull('resource_module_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_modules.uuid');
-            }
-
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceModule = $resourceModule->whereIn('duration_id', $request->duration_id);
             }
@@ -144,6 +134,22 @@ class ResourceModuleService
             if ($request->has('type') && !empty($request->type)) {
                 $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
+            }
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceModulesProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_module');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                $resourceModule = $resourceModule->whereIn('id', $resourceModulesProgress->pluck('module_id'));
             }
 
             return $resourceModule;
@@ -279,7 +285,17 @@ class ResourceModuleService
             } else {
                 $duration_id = $request->duration_id;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($title, $model);
             $resourceModule = new ResourceModule();
@@ -293,6 +309,7 @@ class ResourceModuleService
             $resourceModule->slug = $slug;
             $resourceModule->description = $description;
             $resourceModule->media = $upload_cover_image;
+            $resourceModule->media_type = $media_type;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
@@ -361,6 +378,17 @@ class ResourceModuleService
                 default:
                     $privacy = null;
             }
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             $resourceModule = ResourceModule::where('slug', $slug)->first();
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
@@ -370,6 +398,7 @@ class ResourceModuleService
             $resourceModule->description = $request->description;
             $resourceModule->organization_id = $organizationId;
             $resourceModule->media = $cover_image;
+            $resourceModule->media_type = $media_type;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;

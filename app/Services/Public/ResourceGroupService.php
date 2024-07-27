@@ -5,6 +5,7 @@ namespace App\Services\Public;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
 use App\Models\ResourceGroupRating;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceGroupService
 {
@@ -90,16 +91,6 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceGroupList = $resourceGroupList->whereIn('resource_groups.id', function ($query) use ($request) {
-                    $query->select('resource_group_tags_groups.challenge_id')
-                        ->from('resource_group_tags_groups')
-                        ->whereIn('resource_group_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_group_tags_groups.type', '0')
-                        ->whereNull('resource_group_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_groups.uuid');
-            }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
@@ -109,6 +100,29 @@ class ResourceGroupService
             if ($request->has('rating') && !empty($request->rating)) {
                 $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
                 $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
+            }
+
+            if ($request->has('type') && $request->type !== null) {
+                $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceGroupProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_group');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                if (!empty($resourceGroupProgress)) {
+                    $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
+                }
             }
 
             return $resourceGroupList;

@@ -7,28 +7,25 @@ use App\Models\ResourceModuleTypeModes;
 
 class ResourceModuleTypeModesService
 {
-    const TYPE = 'type';
-    const VALUE = 'value';
-    // Defining all values in single array
-    private $mappings = [
-        'assess'     => [self::TYPE => '0', self::VALUE => '0'],
-        'onboard'    => [self::TYPE => '0', self::VALUE => '1'],
-        'engage'     => [self::TYPE => '0', self::VALUE => '2'],
-        'grow'       => [self::TYPE => '0', self::VALUE => '3'],
-        'team'       => [self::TYPE => '1', self::VALUE => '4'],
-        'individual' => [self::TYPE => '1', self::VALUE => '5'],
-    ];
-
     // Base on key store data
     public function createResourceModuleTypeModes($request, $resourceModuleId)
     {
         try {
-            ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->delete();
-
-            foreach (['type', 'mode'] as $key) {
-                if ($request->has($key)) {
-                    $this->createEntries($request->$key, $resourceModuleId);
-                }
+            if ($request->has('type')) {
+                $value = config('constants.resource_types.'.$request->type);
+                $resourceModule = new ResourceModuleTypeModes();
+                $resourceModule->resource_module_id = $resourceModuleId;
+                $resourceModule->type_mode = config('constants.resource_mode.type');
+                $resourceModule->value = $value;
+                $resourceModule->Save();
+            }
+            if ($request->has('mode')) {
+                $value = config('constants.resource_mode_type.'.$request->mode);
+                $resourceModule = new ResourceModuleTypeModes();
+                $resourceModule->resource_module_id = $resourceModuleId;
+                $resourceModule->type_mode = config('constants.resource_mode.mode');
+                $resourceModule->value = $value;
+                $resourceModule->Save();
             }
 
             return true;
@@ -39,18 +36,29 @@ class ResourceModuleTypeModesService
         }
     }
 
-    private function createEntries($items, $resourceModuleId)
+    public function updateResourceModuleTypeModes($request, $resourceModuleId)
     {
         try {
-            foreach ($items as $item) {
-                if (isset($this->mappings[$item])) {
-                    ResourceModuleTypeModes::create([
-                        'resource_module_id' => $resourceModuleId,
-                        'type_mode'          => $this->mappings[$item][self::TYPE],
-                        'value'              => $this->mappings[$item][self::VALUE],
-                    ]);
-                }
+            if ($request->has('type') && !empty($request->type)) {
+                $value = config('constants.resource_types.'.$request->type);
+                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
+                    'resource_module_id' => $resourceModuleId,
+                    'type_mode'          => config('constants.resource_mode.type'),
+                ], [
+                    'value'              => $value,
+                ]);
             }
+            if ($request->has('mode')) {
+                $value = config('constants.resource_mode_type.'.$request->mode);
+                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
+                    'resource_module_id' => $resourceModuleId,
+                    'type_mode'          => config('constants.resource_mode.mode'),
+                ], [
+                    'value'              => $value,
+                ]);
+            }
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -62,7 +70,7 @@ class ResourceModuleTypeModesService
     {
         try {
             // Type 0 belongs to type and type 1 belongs to mode
-            return ResourceModuleTypeModes::where(['type_mode'=>'0', 'value'=>$type])->get();
+            return ResourceModuleTypeModes::where(['type_mode'=>config('constants.resource_mode.type'), 'value'=>config('constants.resource_types.'.$type)])->get();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -73,15 +81,39 @@ class ResourceModuleTypeModesService
     public static function cloneResourceModuleTypeModes($originalResourceModuleAssociation, $clonedResourceModuleId)
     {
         try {
-            $originalResourceModuleAssociation->each(function ($resource_module_skill_group) use ($clonedResourceModuleId) {
-                if ($resource_module_skill_group) {
-                    $cloneResourceModuleSKills = $resource_module_skill_group->replicate();
-                    $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
-                    $cloneResourceModuleSKills->save();
-                }
-            });
+            if ($originalResourceModuleAssociation) {
+                $cloneResourceModuleSKills = $originalResourceModuleAssociation->replicate();
+                $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
+                $cloneResourceModuleSKills->save();
+            }
 
             return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleType($resourceModuleId)
+    {
+        try {
+            return ResourceModuleTypeModes::where([
+                'type_mode'          => config('constants.resource_mode.type'),
+                'resource_module_id' => $resourceModuleId])->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleMode($resourceModuleId)
+    {
+        try {
+            return ResourceModuleTypeModes::where([
+                'type_mode'          => config('constants.resource_mode.mode'),
+                'resource_module_id' => $resourceModuleId])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

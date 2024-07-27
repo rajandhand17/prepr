@@ -7,7 +7,7 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
-use App\Services\Manage\ResourceGroupTagsGroupsService;
+use App\Services\Manage\ResourceGroupTypeModesService;
 use DB;
 use Exception;
 
@@ -18,17 +18,17 @@ class ResourceGroupRepository implements ResourceGroupInterface
     private $componentAssociationService;
     private $resourceGroupSkillsGroupStackService;
 
-    private $resourceGroupTagsGroupService;
-
     private $resourceGroupAchievementsService;
 
-    public function __construct(ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService, ResourceGroupSkillsGroupsStackService $resourceGroupSkillsGroupStackService, ResourceGroupTagsGroupsService $resourceGroupTagsGroupService, ResourceGroupAchievementService $resourceGroupAchievementsService)
+    private $resourceGroupTypeModesService;
+
+    public function __construct(ResourceGroupTypeModesService $resourceGroupTypeModesService, ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService, ResourceGroupSkillsGroupsStackService $resourceGroupSkillsGroupStackService, ResourceGroupAchievementService $resourceGroupAchievementsService)
     {
         $this->resourceGroupService = $resourceGroupService;
         $this->componentAssociationService = $componentAssociationService;
         $this->resourceGroupSkillsGroupStackService = $resourceGroupSkillsGroupStackService;
-        $this->resourceGroupTagsGroupService = $resourceGroupTagsGroupService;
         $this->resourceGroupAchievementsService = $resourceGroupAchievementsService;
+        $this->resourceGroupTypeModesService = $resourceGroupTypeModesService;
     }
 
     public function getResourceGroupCountBasedOnOrganization($organizationId)
@@ -50,12 +50,14 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
                 $createResourceGroupsAchievements = $this->resourceGroupAchievementsService->createResourceGroupsAchievements($request, $upload_achievement_image, $createResourceGroup->id);
+                $createResourceGroupTypeModesService = $this->resourceGroupTypeModesService->createResourceGroupTypeModes($request, $createResourceGroup->id);
 
                 return[
                     'createResourceGroup'                             => $createResourceGroup,
                     'createResourceGroupComponentAssociation'         => $createResourceGroupComponentAssociation,
                     'createResourceGroupSkillsGroupStack'             => $createResourceGroupSkillsGroupStack,
                     'createResourceGroupsAchievements'                => $createResourceGroupsAchievements,
+                    'createResourceGroupTypeModesService'             => $createResourceGroupTypeModesService,
                 ];
             });
             if ($createResourceGroup['createResourceGroup']) {
@@ -157,12 +159,14 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
                 $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
+                $updateResourceGroupTypeModes = $this->resourceGroupTypeModesService->updateResourceGroupTypeModes($request, $upload_achievement_image, $updateResourceGroup->id);
 
                 return[
                     'updateResourceGroup'                             => $updateResourceGroup,
                     'updateResourceGroupComponentAssociation'         => $updateResourceGroupComponentAssociation,
                     'updateResourceGroupSkillsGroupStack'             => $updateResourceGroupSkillsGroupStack,
                     'updateResourceGroupsAchievements'                => $updateResourceGroupsAchievements,
+                    'updateResourceGroupTypeModes'                    => $updateResourceGroupTypeModes,
                 ];
             });
             if ($updateResourceGroup['updateResourceGroup']) {
@@ -212,17 +216,20 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($cloneResourceGroup->component_association, $getResourceGroup->id);
                 $cloneResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkillsGroupsStack($cloneResourceGroup->skills_group_stack, $getResourceGroup->id);
                 $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($cloneResourceGroup->resource_group_achievement, $getResourceGroup->id);
+                $cloneResourceGroupsTypeMode = $this->resourceGroupTypeModesService->cloneResourceGroupTypeModes($cloneResourceGroup->resource_group_type_mode, $getResourceGroup->id);
 
                 return[
                     'cloneResourceGroups'                            => $cloneResourceGroup,
                     'cloneResourceGroupComponentAssociation'         => $cloneResourceGroupComponentAssociation,
                     'cloneResourceGroupSkillsGroupStack'             => $cloneResourceGroupSkillsGroupStack,
                     'cloneResourceGroupTagsGroups'                   => $cloneResourceGroupsAchievements,
+                    'cloneResourceGroupsTypeMode'                    => $cloneResourceGroupsTypeMode,
                 ];
             });
             if ($cloneResourceGroups['cloneResourceGroups'] &&
                 $cloneResourceGroups['cloneResourceGroupComponentAssociation'] &&
                 $cloneResourceGroups['cloneResourceGroupSkillsGroupStack'] &&
+                $cloneResourceGroups['cloneResourceGroupsTypeMode'] &&
                 $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
                 DB::commit();
 
