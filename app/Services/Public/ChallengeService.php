@@ -28,6 +28,18 @@ class ChallengeService
         }
     }
 
+    public function getChallengeList($challengeIds)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $challengeIds)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+
+            return $challenge_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
     public function filterChallengeList($request, $challenge_list)
     {
         try {
@@ -80,6 +92,7 @@ class ChallengeService
                         break;
                 }
             }
+
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_skills_groups_stacks.challenge_id')
@@ -90,22 +103,15 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
-                    $query->select('challenge_tags_groups.challenge_id')
-                        ->from('challenge_tags_groups')
-                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
-                        ->where('challenge_tags_groups.type', '0')
-                        ->whereNull('challenge_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenges.uuid');
-            }
+
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
             }
+
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
+
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];

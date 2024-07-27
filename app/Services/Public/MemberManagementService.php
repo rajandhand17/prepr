@@ -125,4 +125,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function challengeRequestIds($userData, $inviteStatus)
+    {
+        try {
+            $challengeRequestIds = MemberManagement::where(['module_type' => '2', 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');
+
+            return $challengeRequestIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
