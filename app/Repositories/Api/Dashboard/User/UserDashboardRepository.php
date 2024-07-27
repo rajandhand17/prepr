@@ -10,7 +10,6 @@ use Exception;
 
 class UserDashboardRepository implements UserDashboardInterface
 {
-
     private $memberManagementService;
     private $challengeSocialActivitiesService;
     private $challengeService;

@@ -40,6 +40,7 @@ class ChallengeService
             return false;
         }
     }
+
     public function filterChallengeList($request, $challenge_list)
     {
         try {
