@@ -2,8 +2,11 @@
 
 namespace App\Traits\Maestro\Project;
 
+use App\Services\Maestro\ChallengePitchService;
+use App\Services\Maestro\ChallengeTaskService;
 use App\Services\Maestro\ProjectPitchTemplateService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 trait ProjectPitchTemplateTrait
 {
@@ -20,8 +23,7 @@ trait ProjectPitchTemplateTrait
             return false;
         }
     }
-
-    private function getLanguage()
+ private function getLanguage()
     {
         try {
             $languages = ProjectPitchTemplateService::getLanguage();
@@ -96,9 +98,38 @@ trait ProjectPitchTemplateTrait
             if (ProjectPitchTemplateService::updatePitchTemplate($request, $id, $moduleMode)) {
                 return true;
             }
-
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
+            return false;
+        }
+    }
+    private function storeUpdatePitchTemplate($request, $id, $moduleMode)
+    {
+        try {
+            $createPitchTemplate = DB::transaction(function () use ($request, $moduleMode, $id) {
+                $pitchTemplate = ProjectPitchTemplateService::storeUpdatePitchTemplate($request, $id, $moduleMode);
+                $pitchSection = ChallengePitchService::saveChallengePitch($request, $pitchTemplate);
+                $pitchTask = ChallengeTaskService::saveChallengeTask($request, $pitchTemplate);
+
+                return [
+                    'pitchTemplate' => $pitchTemplate,
+                    'pitchSection'  => $pitchSection,
+                    'pitchTask'     => $pitchTask,
+                ];
+            });
+
+            if ($createPitchTemplate['pitchTemplate'] && $createPitchTemplate['pitchSection'] && $createPitchTemplate['pitchTask']) {
+                DB::commit();
+
+                return $createPitchTemplate['pitchTemplate'];
+            }
+            DB::rollBack();
+            return false;
+        } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }

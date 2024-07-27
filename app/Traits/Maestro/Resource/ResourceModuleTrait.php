@@ -2,59 +2,17 @@
 
 namespace App\Traits\Maestro\Resource;
 
-use App\Services\Maestro\Resource\ResourceModuleService;
+use App\Services\Maestro\ResourceModuleService;
 use Exception;
 
 trait ResourceModuleTrait
 {
-    private function getResourceModuleUser()
-    {
-        try {
-            $users = ResourceModuleService::getResourceModuleUser();
-            if ($users) {
-                return $users;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getResourceModuleOrganization()
-    {
-        try {
-            $organizations = ResourceModuleService::getResourceModuleOrganization();
-            if ($organizations) {
-                return $organizations;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getResourceModulePrivacy()
-    {
-        try {
-            $privacy = ResourceModuleService::getResourceModulePrivacy();
-            if ($privacy) {
-                return $privacy;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getResourceModuleList()
     {
         try {
-            $sponsorList = ResourceModuleService::getResourceModuleList();
-            if ($sponsorList) {
-                return $sponsorList;
+            $resourceModules = ResourceModuleService::getResourceModuleList();
+            if ($resourceModules) {
+                return $resourceModules;
             }
 
             return false;
@@ -63,24 +21,10 @@ trait ResourceModuleTrait
         }
     }
 
-    private function getResourceModuleStatus()
+    private function createAndUpdateResourceModule($request, $action, $id)
     {
         try {
-            $status = ResourceModuleService::getResourceModuleStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function createResourceModule($request)
-    {
-        try {
-            if (ResourceModuleService::createResourceModule($request)) {
+            if (ResourceModuleService::createAndUpdateResourceModule($request, $action, $id)) {
                 return true;
             }
 
@@ -107,19 +51,6 @@ trait ResourceModuleTrait
     {
         try {
             return ResourceModuleService::getResourceModuleById($id);
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function updateResourceModuleById($id, $request)
-    {
-        try {
-            if (ResourceModuleService::updateResourceModuleById($id, $request)) {
-                return true;
-            }
-
-            return false;
         } catch (Exception $e) {
             return false;
         }

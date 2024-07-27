@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectSubmissionRequirement;
 use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectSubmissionRequirementTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -34,7 +34,7 @@ class ProjectSubmissionRequirementController extends Controller
                         if ($projectSubmissionRequirement->status == 1) {
                             return 'Active';
                         } else {
-                            return 'Not Active';
+                            return 'InActive';
                         }
                     })
                     ->addIndexColumn()
@@ -46,18 +46,7 @@ class ProjectSubmissionRequirementController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Project Submission Requirement Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -78,9 +67,8 @@ class ProjectSubmissionRequirementController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            $status = $this->getSubmissionRequirementStatus();
 
-            return view('maestro.projects.submissionrequirement.create', compact('languages', 'status'));
+            return view('maestro.projects.submissionrequirement.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -92,17 +80,12 @@ class ProjectSubmissionRequirementController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateSubmissionRequirement($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement Added successfully.']);
             }
 
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -115,9 +98,8 @@ class ProjectSubmissionRequirementController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $submissionRequirement = $this->findSubmissionRequirement($id);
-            $status = $this->getSubmissionRequirementStatus();
 
-            return view('maestro.projects.submissionrequirement.edit', compact('submissionRequirement', 'languages', 'status'));
+            return view('maestro.projects.submissionrequirement.edit', compact('submissionRequirement', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -129,17 +111,12 @@ class ProjectSubmissionRequirementController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateSubmissionRequirement($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('projects-submission-requirement.index')->with(['success' => 'Project Submission Requirement updated successfully.']);
             }
 
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-submission-requirement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -150,17 +127,13 @@ class ProjectSubmissionRequirementController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $submissionRequirement = $this->findSubmissionRequirement($id);
             if (!empty($submissionRequirement)) {
                 $this->deleteSubmissionRequirement($submissionRequirement);
-                DB::commit();
 
                 return response()->json(['status' => 'success', 'message' => 'Project Submission Requirement deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

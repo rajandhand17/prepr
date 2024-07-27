@@ -21,10 +21,18 @@ class UtilityHelper
                 }
                 $columName = $columName.'_'.$fieldName;
             }
-
             return $columName;
         } catch (Exception $e) {
             return $fieldName;
+        }
+    }
+
+    public static function getLabelName($name, $labelName)
+    {
+        try {
+            return $name.' '.$labelName;
+        } catch (Exception $e) {
+            return $labelName;
         }
     }
 }

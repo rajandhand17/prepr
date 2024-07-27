@@ -84,4 +84,20 @@ class ResourceGroupAchievementService
             return false;
         }
     }
+
+    public static function cloneResourceGroupsAchievements($originalResourceGroupAssociation, $clonedResourceGroupId)
+    {
+        try {
+            $resourceGroup = new ResourceGroupAchievement();
+            $resourceGroup = $originalResourceGroupAssociation->replicate();
+            $resourceGroup->resource_group_id = $clonedResourceGroupId;
+            $resourceGroup->save();
+
+            return true;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

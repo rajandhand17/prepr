@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Models\PitchTemplate;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Services\Maestro\ChallengePitchService;
+use App\Services\Maestro\ChallengeTaskService;
 use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectPitchTemplateTrait;
 use Exception;
@@ -37,18 +40,7 @@ class ProjectPitchTemplateController extends Controller
         ];
         $columName = 'Pitch Template Title';
         foreach ($languages as $single) {
-            if ($single->iso == 'en') {
-                $columName = 'title';
-            } else {
-                $columName = $single->iso;
-                if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                    $columName = str_replace(' ', '_', $columName);
-                }
-                if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                    $columName = str_replace('-', '_', $columName);
-                }
-                $columName = $columName.'_title';
-            }
+            $columName = UtilityHelper::getColumName($single->iso, 'title');
             $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Pitch Template Title'];
             array_push($tableColumns, $singleLangCol);
         }
@@ -78,17 +70,12 @@ class ProjectPitchTemplateController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-            if ($this->storePitchTemplate($request, '', 'create')) {
-                DB::commit();
-
+            if ($this->storeUpdatePitchTemplate($request, '', 'create')) {
                 return redirect()->route('projects-pitch-template.index')->with(['success' => 'Pitch Template Added successfully.']);
             }
 
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -99,10 +86,10 @@ class ProjectPitchTemplateController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = LanguageService::getAllActiveLanguages();
             $pitchTemplate = $this->findPitchTemplate($id);
-            $pitchSection = $this->getPitchSectionById($id);
-            $pitchTask = $this->getPitchTaskById($id);
+            $pitchSection = ChallengePitchService::getChallengePitchById($id);
+            $pitchTask = ChallengeTaskService::getChallengeTaskById($id);
+            $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.projects.pitchtemplate.edit', compact('languages', 'pitchTemplate', 'pitchSection', 'pitchTask'));
         } catch (Exception $e) {
@@ -116,17 +103,12 @@ class ProjectPitchTemplateController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
-            if ($this->updatePitchTemplate($request, $id, 'update')) {
-                DB::commit();
-
+            if ($this->storeUpdatePitchTemplate($request, $id, 'update')) {
                 return redirect()->route('projects-pitch-template.index')->with(['success' => 'Pitch Template updated successfully.']);
             }
 
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -137,17 +119,13 @@ class ProjectPitchTemplateController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $pitchTemplate = $this->findPitchTemplate($id);
             if (!empty($pitchTemplate)) {
                 $this->deletePitchTemplate($pitchTemplate);
-                DB::commit();
 
                 return response()->json(['status' => 'success', 'message' => 'Pitch Template deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

@@ -109,6 +109,10 @@ class ResourceCollectionService
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
             }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
+            }
 
             return $resourceCollectionList;
         } catch (\Exception $e) {

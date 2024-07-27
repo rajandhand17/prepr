@@ -174,7 +174,7 @@ class MasterService
             if ($request->search) {
                 $resourceJson->where('title', 'LIKE', '%'.$request->search.'%');
             }
-            $resourceJsons = $resourceJson->pluck('title', 'id');
+            $resourceJsons = $resourceJson->pluck('title', 'uuid');
             $total_count = $resourceJsons->count();
             $resourcesr = $jsonTags = [];
             $count = 0;

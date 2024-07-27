@@ -30,6 +30,10 @@ class HandleDeleteResourceModuleAssociatedData
             if (!$deleteResourceModuleDetail) {
                 return false;
             }
+            $deleteResourceModuleDetailVisit = ResourceModuleDetailService::deleteResourceModuleDetailVisit($resourceModuleId);
+            if (!$deleteResourceModuleDetailVisit) {
+                return false;
+            }
             $deleteResourceModuleSkillsGroupsStack = ResourceModuleSkillsGroupsStackService::deleteResourceModuleSkillsGroupsStack($resourceModuleId);
             if (!$deleteResourceModuleSkillsGroupsStack) {
                 return false;

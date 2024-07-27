@@ -14,6 +14,22 @@ use Illuminate\Support\Str;
 
 class UtilityHelper
 {
+    public static function fetchLangaugeISO($languageISO)
+    {
+        try {
+            $language = Language::select('iso')->where('iso', $languageISO)->first();
+            if (!empty($language)) {
+                return $language['iso'];
+            }
+
+            return 'en';
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function generateSlug($name, $model)
     {
         $name = preg_replace('/[^A-Za-z0-9\-]/', '-', $name);

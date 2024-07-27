@@ -5,6 +5,7 @@ namespace App\Services\Maestro;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\Language;
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\PitchTemplate;
 use Exception;
 
@@ -23,6 +24,26 @@ class ProjectPitchTemplateService
     {
         try {
             return PitchTemplate::orderBy('id', 'desc');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function storeUpdatePitchTemplate($request, $id, $moduleMode)
+    {
+        try {
+            $languages = LanguageService::getAllActiveLanguages();
+            if ($moduleMode == 'edit') {
+                $pitchTemplate = PitchTemplate::findOrFail($id);
+            } else {
+                $pitchTemplate = new PitchTemplate();
+            }
+            foreach ($languages as $key => $single) {
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
+                $pitchTemplate->$columName = $request->$columName;
+            }
+            if ($pitchTemplate->save()) {
+                return $pitchTemplate;
+            }
         } catch (Exception $e) {
             return false;
         }

@@ -124,6 +124,15 @@ class ResourceModuleService
                 $resourceModule = $resourceModule->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('rating') && !empty($request->rating)) {
+                $resourceModuleRating = ResourceModuleRatingService::getResourceModuleBasedOnRating($request->rating);
+                $resourceModule = $resourceModule->whereIn('id', $resourceModuleRating->pluck('resource_module_id'));
+            }
+            if ($request->has('type') && $request->type !== null) {
+                $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
+                $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
+            }
+
             return $resourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -158,6 +167,17 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getAll()
+    {
+        try {
+            return ResourceModule::select();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

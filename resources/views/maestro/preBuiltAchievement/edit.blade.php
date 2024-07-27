@@ -32,40 +32,37 @@
                     <div class="row">
                       @if($languages->count() > 0)
                           @foreach($languages as $single)
-                              @php
-                                  if ($single->iso == 'en') {
-                                      $lableName = 'English Achievement Title';
-                                      $inputName = 'title';
-                                  } else {
-                                        $columName = $single->iso;
-                                        $lableName = $single->name . ' Achievement Title';
-                                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                            $columName = str_replace(' ', '_', $columName);
-                                        }
-                                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-
-                                      $inputName = $columName . '_title';
-                                    }
-                              @endphp
+                            @php
+                                $titleColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'title');
+                                $titleLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'Achievement Title');
+                            @endphp
                               <div class="col-md-6">
                                 <div class="form-group">
-                                    {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                    {!! Form::text($inputName,$achievement->$inputName, ['class' => 'form-control','required' => 'required']) !!}
+                                    {!! Form::label($titleColumName, $titleLableName, ['class' => 'control-label']) !!}
+                                    {!! Form::text($titleColumName,$achievement->$titleColumName, ['class' => 'form-control','required' => 'required']) !!}
                                 </div>
                               </div>
                           @endforeach
                       @endif
                     </div>
                     <div class="row">
-                      <div class="col-md-12">
+                      @if(empty($achievement->getRawOriginal('achievement_image')))
+                        @php $notExist = 12;  $exist = 0; @endphp
+                      @else 
+                        @php $notExist = 10;  $exist = 2; @endphp
+                      @endif
+                      <div class="col-md-{{$notExist}}">
                         <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
                           {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
                           {!! Form::file('image', ['class' => 'form-control']) !!}
                           <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
                         </div>
                       </div>
+                      @if($exist > 0)
+                        <div class="col-md-{{$exist}}" style="text-align: center; padding-top: 34px;">
+                          <img src='{{$achievement->achievement_image}}' width='50px'>
+                        </div>
+                      @endif
                     </div>
                     <div class="row">
                         <div class="col-md-6">

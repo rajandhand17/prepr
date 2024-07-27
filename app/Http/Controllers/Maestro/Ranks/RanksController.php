@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\Ranks;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Rank;
 use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Rank\RankTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -34,30 +34,18 @@ class RanksController extends Controller
                         if ($rankData->status == 1) {
                             return 'Active';
                         } else {
-                            return 'Not Active';
+                            return 'InActive';
                         }
                     })
                     ->addIndexColumn()
                     ->toJson();
             }
-
             $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Rank Title'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -79,9 +67,8 @@ class RanksController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            $status = $this->getRankStatus();
 
-            return view('maestro.rank.create', compact('languages', 'status'));
+            return view('maestro.rank.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -93,17 +80,12 @@ class RanksController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateRank($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('ranks.index')->with(['success' => 'Rank Added successfully.']);
             }
 
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -116,9 +98,8 @@ class RanksController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $rank = $this->findRank($id);
-            $status = $this->getRankStatus();
 
-            return view('maestro.rank.edit', compact('rank', 'languages', 'status'));
+            return view('maestro.rank.edit', compact('rank', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
@@ -130,17 +111,12 @@ class RanksController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateRank($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('ranks.index')->with(['success' => 'Rank updated successfully.']);
             }
 
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -151,17 +127,13 @@ class RanksController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $rank = $this->findRank($id);
             if (!empty($rank)) {
                 $this->deleteRank($rank);
-                DB::commit();
 
                 return response()->json(['status' => 'success', 'message' => 'Rank deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
