@@ -47,4 +47,17 @@ class ProjectMemberManagementService
             return false;
         }
     }
+
+    public function projectRequestIds($userData, $inviteStatus)
+    {
+        try {
+            $projectRequestIds = ProjectMemberManagement::where(['invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('project_id');
+
+            return $projectRequestIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -43,6 +43,19 @@ class ProjectService
         }
     }
 
+    public function getDashboardProjectList($getProjectIds)
+    {
+        try {
+            $project_list = Project::whereIn('projects.id', $getProjectIds);
+
+            return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getProjectListWithoutPagination($getProjectIds, $request)
     {
         try {

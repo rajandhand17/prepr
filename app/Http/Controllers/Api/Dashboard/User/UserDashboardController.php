@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Dashboard\User\UserDashboardRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -57,6 +59,98 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyLabs(Request $request)
+    {
+        try {
+            // Check valid request or not for my lab request
+            if (!in_array($request->type, ['my', 'invites', 'favourite'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // Fetch lab ids based on request
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'my':
+                    $inviteStatus = config('constants.member_management_invite_status.accepted');
+                    $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
+                    break;
+                case 'invites':
+                    $inviteStatus = config('constants.member_management_invite_status.invited');
+                    $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
+                    break;
+                case 'favourite':
+                    $labIds = $this->userDashboardRepository->labFavouriteIds($userData);
+                    break;
+            }
+
+            $labs = $this->userDashboardRepository->getLabList($labIds);
+            if ($labs !== false) {
+                $response = [
+                    'total_count'  => $labs->total(),
+                    'per_page'     => $labs->perPage(),
+                    'count'        => $labs->count(),
+                    'current_page' => $labs->currentPage(),
+                    'total_pages'  => $labs->lastPage(),
+                    'list'         => LabResource::collection($labs),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_labs_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyProjects(Request $request)
+    {
+        try {
+            // Check valid request or not for my project request
+            if (!in_array($request->type, ['my', 'invites', 'favourite'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // Fetch project ids based on request
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'my':
+                    $inviteStatus = config('constants.project_member_management_invite_status.accepted');
+                    $projectIds = $this->userDashboardRepository->projectRequestIds($userData, $inviteStatus);
+                    break;
+                case 'invites':
+                    $inviteStatus = config('constants.project_member_management_invite_status.invited');
+                    $projectIds = $this->userDashboardRepository->projectRequestIds($userData, $inviteStatus);
+                    break;
+                case 'favourite':
+                    $projectIds = $this->userDashboardRepository->projectFavouriteIds($userData);
+                    break;
+            }
+
+            $projects = $this->userDashboardRepository->getDashboardProjectList($projectIds);
+            if ($projects !== false) {
+                $response = [
+                    'total_count'  => $projects->total(),
+                    'per_page'     => $projects->perPage(),
+                    'count'        => $projects->count(),
+                    'current_page' => $projects->currentPage(),
+                    'total_pages'  => $projects->lastPage(),
+                    'list'         => ProjectResource::collection($projects),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

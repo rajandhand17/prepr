@@ -138,4 +138,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function labRequestIds($userData, $inviteStatus)
+    {
+        try {
+            $labRequestIds = MemberManagement::where(['module_type' => '1', 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');
+
+            return $labRequestIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
