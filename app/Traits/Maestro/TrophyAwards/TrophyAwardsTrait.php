@@ -13,6 +13,7 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::createTrophyAwards($request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -25,6 +26,7 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::updateTrophyAwardsById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -37,6 +39,7 @@ trait TrophyAwardsTrait
             if (TrophyAwardsService::deleteTrophyAwards($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -64,6 +67,7 @@ trait TrophyAwardsTrait
             if ($trophyawards) {
                 return $trophyawards;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

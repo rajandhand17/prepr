@@ -7,14 +7,14 @@ use App\Models\Category;
 use App\Models\ComponentAssociation;
 use App\Models\Duration;
 use App\Models\Lab;
-use Exception;
-use HiFolks\RandoPhp\Randomize;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\Levels;
 use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use Exception;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 

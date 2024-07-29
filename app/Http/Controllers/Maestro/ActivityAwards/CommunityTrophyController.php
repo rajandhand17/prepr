@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Maestro\ActivityAwards;
 use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityTrophy;
-use App\Models\Language;
 use App\Models\User;
 use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\CommunityTrophy\CommunityTrophyTrait;
@@ -64,9 +63,8 @@ class CommunityTrophyController extends Controller
                 ['data' => 'id', 'name' => 'id', 'title' => 'Id'],
             ];
             foreach ($languages as $single) {
-              
-                    $columName = UtilityHelper::getColumName($single->iso,'name');
-                
+                $columName = UtilityHelper::getColumName($single->iso, 'name');
+
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -112,6 +110,7 @@ class CommunityTrophyController extends Controller
         try {
             $status = ['0' => 'Active', '1' => 'Deactive'];
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.activityawards.communityTrophy.create', compact('status', 'languages'));
         } catch (Exception $e) {
             return response()->json([
@@ -132,6 +131,7 @@ class CommunityTrophyController extends Controller
             if ($this->createCommunityTrophy($request)) {
                 return redirect()->route('communitytrophy.index')->with('success', 'Trophy Awards created successfully');
             }
+
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
@@ -148,6 +148,7 @@ class CommunityTrophyController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $status = ['0' => 'Active', '1' => 'Deactive'];
             $trophy = communityTrophy::find($id);
+
             return view('maestro.activityawards.communityTrophy.edit', compact('trophy', 'languages', 'status'));
         } catch (Exception $e) {
             return response()->json([
@@ -168,6 +169,7 @@ class CommunityTrophyController extends Controller
             if ($this->updateCommunityTrophyById($id, $request)) {
                 return redirect()->route('communitytrophy.index')->with('success', 'Trophy Award Updated successfully');
             }
+
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);

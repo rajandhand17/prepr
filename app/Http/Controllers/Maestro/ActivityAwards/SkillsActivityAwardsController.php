@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Maestro\ActivityAwards;
 
 use App\Http\Controllers\Controller;
-use App\Models\Language;
-use App\Models\Skill;
 use App\Models\SkillsActivityAward;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\SkillService;
@@ -78,6 +76,7 @@ class SkillsActivityAwardsController extends Controller
         try {
             $selectedSkills = [];
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.activityawards.skillsAwards.create', compact('selectedSkills', 'languages'));
         } catch (Exception $e) {
             return response()->json([
@@ -100,6 +99,7 @@ class SkillsActivityAwardsController extends Controller
             if ($this->createSkillsActivityAward($request)) {
                 return redirect()->route('skillsaward.index')->with('success', 'Activity Award has been created successfully');
             }
+
             return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
@@ -131,7 +131,8 @@ class SkillsActivityAwardsController extends Controller
             $award = SkillsActivityAward::find($id);
             $selectedSkills = SkillService::getSkillBasedOnIds(json_decode($award->skill, true));
             $languages = LanguageService::getAllActiveLanguages();
-            return view('maestro.activityAwards.skillsAwards.edit', compact('award', 'selectedSkills','languages'));
+
+            return view('maestro.activityAwards.skillsAwards.edit', compact('award', 'selectedSkills', 'languages'));
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -154,6 +155,7 @@ class SkillsActivityAwardsController extends Controller
             if ($this->updateSkillsActivityAwardById($id, $request)) {
                 return redirect()->route('skillsaward.index')->with('success', 'Activity Award has been Updated successfully');
             }
+
             return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
