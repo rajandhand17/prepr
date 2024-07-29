@@ -304,7 +304,13 @@ class LabController extends AppBaseController
     {
         try {
             // checks creation limits of the Lab
-            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
                 if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
