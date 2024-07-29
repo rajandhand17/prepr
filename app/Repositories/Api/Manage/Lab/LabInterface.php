@@ -26,5 +26,5 @@ interface LabInterface
 
     public function createLabUsingAIPreview($request);
 
-    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image);
+    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image, $organization);
 }
