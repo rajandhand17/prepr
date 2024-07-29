@@ -20,7 +20,6 @@ class LabSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
@@ -70,8 +69,6 @@ class LabSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -90,9 +87,7 @@ class LabSkillsGroupsStackService
                         ['lab_id', '=', $lab_id],
                         ['type', '=', '0'],
                     ])->whereIn('foreign_id', $nonExistingIds)->delete();
-                    //dd($deleteNonExistingSkills);
                     $newSkills = array_diff($request->labSkills, $getExistsSkills);
-                    //dd($newSkills);
                     foreach ($newSkills as $skill) {
                         $LabSkillsGroupsStack = new LabSkillsGroupsStack();
                         $LabSkillsGroupsStack->lab_id = $lab_id;
@@ -162,7 +157,6 @@ class LabSkillsGroupsStackService
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;

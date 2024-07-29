@@ -151,8 +151,6 @@ trait LabTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -170,8 +168,6 @@ trait LabTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }

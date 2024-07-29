@@ -35,7 +35,6 @@ class LabService
     {
         try {
             $skillIds = LabSkillsGroupsStack::where(['lab_id' => $lab->id, 'type' => '0'])->pluck('foreign_id');
-            //$labIds = ComponentAssociation::where(['challenge_id' => $lab->id])->pluck('lab_id');
             $moduleIds = ComponentAssociation::where(['lab_id' => $lab->id])->pluck('resource_module_id');
 
             $organization = !empty($lab->organization_id) ? Organization::where(['id' => $lab->organization_id])->pluck('title', 'id') : null;
@@ -44,13 +43,10 @@ class LabService
             $duration = !empty($lab->duration_id) ? Duration::where(['id' => $lab->duration_id])->pluck('title', 'id') : null;
             $user = !empty($lab->user_id) ? User::where(['id' => $lab->user_id])->pluck('username', 'id') : null;
             $skills = !empty($lab->id) ? Skill::whereIn('id', $skillIds)->pluck('title', 'id') : null;
-            //  $labs = !empty($lab->user_id) ? Lab::whereIn('id', $labIds)->pluck('title', 'id') : null;
             $resourceModules = !empty($lab->user_id) ? ResourceModule::whereIn('id', $moduleIds)->pluck('title', 'uuid') : null;
 
             return ['category' => $category ?? [], 'organization' => $organization, 'skills' => $skills, 'skillIds' => $skillIds, 'user' => $user, 'level' => $level, 'duration' => $duration, 'resourceModules' => $resourceModules, 'moduleIds' => $moduleIds];
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -100,8 +96,6 @@ class LabService
 
             return $lab;
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
