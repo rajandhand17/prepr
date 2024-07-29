@@ -260,17 +260,4 @@ class LabService
             return false;
         }
     }
-    public static function getLab($action, $labId)
-    {
-        try {
-            $lab = Lab::select('title', 'id');
-            if ($action == 'edit') {
-                $lab = $lab->where(['id' => $labId]);
-            }
-
-            return $lab->pluck('title', 'id');
-        } catch (Exception $e) {
-            return false;
-        }
-    }
 }
