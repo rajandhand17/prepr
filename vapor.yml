@@ -4,7 +4,7 @@ environments:
   beta:
     domain: 'api.beta.learnlab.ai'
     database: Learnlab-Serverless-Beta
-    runtime: docker-arm
+    runtime: docker
     memory: 4096
     storage: learnlab-serverless-beta
     warm: 4
