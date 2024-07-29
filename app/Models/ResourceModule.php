@@ -101,7 +101,7 @@ class ResourceModule extends Model
 
     public function urls()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id','type')->where('type', '=', '5');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id', 'type')->where('type', '=', '5');
     }
 
     public function images()
