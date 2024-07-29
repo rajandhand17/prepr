@@ -196,14 +196,17 @@ class UserDashboardController extends AppBaseController
             switch ($request->type) {
                 case 'challenges':
                     $fetchRecommendedChallenges = $this->userDashboardRepository->fetchRecommendedChallenges($fetchUserSkills, $userData);
+
                     return $this->sendResponse(ChallengeResource::collection($fetchRecommendedChallenges), __('responses.challenge_recommended_found'), 200);
                     break;
                 case 'labs':
                     $fetchRecommendedLabs = $this->userDashboardRepository->fetchRecommendedLabs($fetchUserSkills, $userData);
+
                     return $this->sendResponse(LabResource::collection($fetchRecommendedLabs), __('responses.lab_recommended_found'), 200);
                     break;
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->userDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
+
                     return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
                     break;
             }
