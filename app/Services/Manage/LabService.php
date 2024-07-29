@@ -243,9 +243,8 @@ class LabService
         }
     }
 
-    public static function createLabUsingAI($request, $upload_cover_image)
+    public static function createLabUsingAI($request, $upload_cover_image, $organization)
     {
-        $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
         $status = config('constants.lab_status.publish');
         $type = config('constants.lab_type.na');
         $privacy = config('constants.lab_privacy.yes');
