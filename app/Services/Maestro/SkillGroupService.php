@@ -3,8 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Language;
-use App\Models\Skill;
 use App\Models\SkillGroup;
 use Exception;
 
@@ -44,8 +42,8 @@ class SkillGroupService
             }
             $languages = LanguageService::getAllActiveLanguages();
             foreach ($languages as $single) {
-                $columName1 =  UtilityHelper::getColumName($single->iso,'title');
-                $columName2 =  UtilityHelper::getColumName($single->iso,'description');
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                 $group->$columName1 = $request->$columName1;
                 $group->$columName2 = $request->$columName2;
             }
@@ -87,8 +85,8 @@ class SkillGroupService
                 $languages = LanguageService::getAllActiveLanguages();
 
                 foreach ($languages as $single) {
-                    $columName1 =  UtilityHelper::getColumName($single->iso,'title');
-                    $columName2 =  UtilityHelper::getColumName($single->iso,'description');
+                    $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                    $columName2 = UtilityHelper::getColumName($single->iso, 'description');
                     $group->$columName1 = $request->$columName1;
                     $group->$columName2 = $request->$columName2;
                 }

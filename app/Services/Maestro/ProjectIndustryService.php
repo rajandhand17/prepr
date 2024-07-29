@@ -2,9 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ProjectIndustry;
 use App\Helpers\Maestro\UtilityHelper;
-use App\Services\Maestro\LanguageService;
+use App\Models\ProjectIndustry;
 use Exception;
 
 class ProjectIndustryService
@@ -17,6 +16,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function storeUpdateProjectIndustry($request, $id, $moduleMode)
     {
         try {
@@ -28,7 +28,7 @@ class ProjectIndustryService
             }
 
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $ProjectIndustry->$columName = $request->$columName;
             }
 
@@ -60,6 +60,7 @@ class ProjectIndustryService
             return false;
         }
     }
+
     public static function getIndustries()
     {
         try {

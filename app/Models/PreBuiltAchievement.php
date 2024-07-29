@@ -19,4 +19,9 @@ class PreBuiltAchievement extends Model
         'achievement_type',
         'status',
     ];
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

@@ -163,6 +163,27 @@ class ResourceModuleSkillsGroupsStackService
 
             return $data;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function cloneResourceModuleSkillsGroupsStack($originalResourceModuleAssociation, $clonedResourceModuleId)
+    {
+        try {
+            $originalResourceModuleAssociation->each(function ($resource_module_skill_group) use ($clonedResourceModuleId) {
+                if ($resource_module_skill_group) {
+                    $cloneResourceModuleSKills = $resource_module_skill_group->replicate();
+                    $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
+                    $cloneResourceModuleSKills->save();
+                }
+            });
+
+            return true;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

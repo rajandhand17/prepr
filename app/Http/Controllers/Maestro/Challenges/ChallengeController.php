@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Maestro\Challenges;
 
 use App\Http\Controllers\Controller;
 use App\Models\Challenge;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Challenge\ChallengeTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
 
 class ChallengeController extends Controller
 {

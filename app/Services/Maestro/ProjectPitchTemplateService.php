@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\PitchTemplate;
 use App\Helpers\Maestro\UtilityHelper;
+use App\Models\PitchTemplate;
 use Exception;
 
 class ProjectPitchTemplateService
@@ -16,6 +16,7 @@ class ProjectPitchTemplateService
             return false;
         }
     }
+
     public static function getPitchTemplate()
     {
         try {
@@ -24,22 +25,24 @@ class ProjectPitchTemplateService
             return false;
         }
     }
+
     public static function storeUpdatePitchTemplate($request, $id, $moduleMode)
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            if($moduleMode == 'edit'){
+            if ($moduleMode == 'edit') {
                 $pitchTemplate = PitchTemplate::findOrFail($id);
             } else {
-                $pitchTemplate = new PitchTemplate;
+                $pitchTemplate = new PitchTemplate();
             }
             foreach ($languages as $key => $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
-                $pitchTemplate->$columName  = $request->$columName;
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
+                $pitchTemplate->$columName = $request->$columName;
             }
             if ($pitchTemplate->save()) {
                 return $pitchTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             return false;

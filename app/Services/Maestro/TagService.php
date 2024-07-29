@@ -3,7 +3,6 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
-use App\Models\Language;
 use App\Models\Tag;
 use Exception;
 
@@ -29,11 +28,11 @@ class TagService
             $tag = Tag::find($id);
             $categorys = json_encode($request->components);
             $category_list = str_replace(str_split('\\/!;•[]}:*?"<>|'), '', $categorys);
-                $languages = LanguageService::getAllActiveLanguages();
+            $languages = LanguageService::getAllActiveLanguages();
             foreach ($languages as $single) {
-                $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                $columName2 = UtilityHelper::getColumName($single->iso,'tag_image'); 
-                
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'tag_image');
+
                 $tag->$columName1 = $request->$columName1;
                 $tag_image = '';
                 if ($request->file($columName2)) {
@@ -84,9 +83,9 @@ class TagService
             $languages = LanguageService::getAllActiveLanguages();
             $tag = new Tag();
             foreach ($languages as $single) {
-                $columName1 = UtilityHelper::getColumName($single->iso,'title');
-                $columName2 = UtilityHelper::getColumName($single->iso,'tag_image'); 
-                
+                $columName1 = UtilityHelper::getColumName($single->iso, 'title');
+                $columName2 = UtilityHelper::getColumName($single->iso, 'tag_image');
+
                 $tag->$columName1 = $request->$columName1;
 
                 $tag_image = '';
@@ -119,10 +118,10 @@ class TagService
                 }
             }
             $selectedTags = implode(', ', $tag_names);
+
             return $selectedTags;
         } catch (Exception $e) {
             return false;
         }
     }
-   
 }

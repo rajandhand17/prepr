@@ -15,6 +15,7 @@ class ChallengeTaskService
             return false;
         }
     }
+
     public static function saveChallengeTask($request, $pitchTemplate)
     {
         try {
@@ -27,6 +28,7 @@ class ChallengeTaskService
                 $pitchTasksArray[] = $pitchTasks;
             }
             ChallengeTask::insert($pitchTasksArray);
+
             return true;
         } catch (Exception $e) {
             return false;

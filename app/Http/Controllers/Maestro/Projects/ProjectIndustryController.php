@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectIndustry;
+use App\Services\Maestro\LanguageService;
+use App\Traits\Maestro\Project\ProjectIndustryTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Services\Maestro\LanguageService;
-use App\Traits\Maestro\Project\ProjectIndustryTrait;
-use App\Helpers\Maestro\UtilityHelper;
-use Exception;
 
 class ProjectIndustryController extends Controller
 {
@@ -46,7 +46,7 @@ class ProjectIndustryController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                $columName = UtilityHelper::getColumName($single->iso,'title');
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Industry Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -67,6 +67,7 @@ class ProjectIndustryController extends Controller
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
+
             return view('maestro.projects.industry.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -82,6 +83,7 @@ class ProjectIndustryController extends Controller
             if ($this->storeUpdateProjectIndustry($request, '', 'create')) {
                 return redirect()->route('projects-industry.index')->with(['success' => 'Project Industry Added successfully.']);
             }
+
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -96,6 +98,7 @@ class ProjectIndustryController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
             $projectIndustry = $this->findProjectIndustry($id);
+
             return view('maestro.projects.industry.edit', compact('projectIndustry', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -111,6 +114,7 @@ class ProjectIndustryController extends Controller
             if ($this->storeUpdateProjectIndustry($request, $id, 'update')) {
                 return redirect()->route('projects-industry.index')->with(['success' => 'Project Industry updated successfully.']);
             }
+
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -126,6 +130,7 @@ class ProjectIndustryController extends Controller
             $ProjectIndustry = $this->findProjectIndustry($id);
             if (!empty($ProjectIndustry)) {
                 $this->deleteProjectIndustry($ProjectIndustry);
+
                 return response()->json(['status' => 'success', 'message' => 'Project Industry deleted successfully.']);
             }
         } catch (Exception $e) {
