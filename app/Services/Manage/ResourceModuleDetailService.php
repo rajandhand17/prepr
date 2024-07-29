@@ -154,9 +154,9 @@ class ResourceModuleDetailService
         try {
             $duplicatedValues = [];
             foreach ($request->links as  $value) {
-                $resourceModuleDetailed = ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id,'path'=>$value['path'],'social_link_id'=>$value['social_link_id']])->first();
-                if($resourceModuleDetailed) {
-                    $duplicatedValues=$resourceModuleDetailed;
+                $resourceModuleDetailed = ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$value['path'], 'social_link_id'=>$value['social_link_id']])->first();
+                if ($resourceModuleDetailed) {
+                    $duplicatedValues = $resourceModuleDetailed;
                 }
             }
 
