@@ -21,4 +21,6 @@ interface UserDashboardInterface
     public function projectFavouriteIds($userData);
 
     public function getDashboardProjectList($projectIds);
+
+    public function getMyLatestAchievement($userData);
 }

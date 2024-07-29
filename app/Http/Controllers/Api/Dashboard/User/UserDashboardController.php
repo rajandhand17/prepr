@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Dashboard\User;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Repositories\Api\Dashboard\User\UserDashboardRepository;
@@ -151,6 +152,23 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyLatestAchievement()
+    {
+        try {
+            $userData = auth()->user();
+            $getMyLatestAchievement = $this->userDashboardRepository->getMyLatestAchievement($userData);
+            if ($getMyLatestAchievement != false) {
+                return $this->sendResponse(AchievementResource::make($getMyLatestAchievement), __('responses.found_latest_achievement'));
+            }
+
+            return $this->sendError(__('responses.not_found_latest_achievement'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

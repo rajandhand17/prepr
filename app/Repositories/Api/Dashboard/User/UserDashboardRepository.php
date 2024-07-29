@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Dashboard\User;
 use App\Helpers\UtilityHelper;
 use App\Services\ProjectService;
 use App\Services\ProjectSocialActivitiesService;
+use App\Services\Public\AchievementService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use App\Services\Public\LabService;
@@ -23,8 +24,9 @@ class UserDashboardRepository implements UserDashboardInterface
     private $projectMemberManagementService;
     private $projectSocialActivitiesService;
     private $projectService;
+    private $achievementService;
 
-    public function __construct(MemberManagementService $memberManagementService, ChallengeSocialActivitiesService $challengeSocialActivitiesService, ChallengeService $challengeService, LabSocialActivitiesService $labSocialActivitiesService, LabService $labService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ProjectService $projectService)
+    public function __construct(MemberManagementService $memberManagementService, ChallengeSocialActivitiesService $challengeSocialActivitiesService, ChallengeService $challengeService, LabSocialActivitiesService $labSocialActivitiesService, LabService $labService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ProjectService $projectService, AchievementService $achievementService)
     {
         $this->memberManagementService = $memberManagementService;
         $this->challengeSocialActivitiesService = $challengeSocialActivitiesService;
@@ -34,6 +36,7 @@ class UserDashboardRepository implements UserDashboardInterface
         $this->projectMemberManagementService = $projectMemberManagementService;
         $this->projectSocialActivitiesService = $projectSocialActivitiesService;
         $this->projectService = $projectService;
+        $this->achievementService = $achievementService;
     }
 
     public function challengeRequestIds($userData, $inviteStatus)
@@ -128,6 +131,17 @@ class UserDashboardRepository implements UserDashboardInterface
     {
         try {
             return $this->projectService->getDashboardProjectList($projectIds);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getMyLatestAchievement($userData)
+    {
+        try {
+            return $this->achievementService->getMyLatestAchievement($userData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
