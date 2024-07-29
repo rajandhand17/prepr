@@ -61,7 +61,16 @@ class ChallengeResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
+        $hosted_by = [];
 
+        if($this->organization_id){
+            $hosted_by=[
+                'title'       =>$this->organization->title,
+                'image'       =>$this->organization->image,
+                'description' =>$this->organization->description,
+                'slug'        =>$this->organization->slug,
+            ];
+        }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
             $category_id = $this->getCategory->id;
@@ -361,6 +370,7 @@ class ChallengeResource extends JsonResource
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                   => $this->organization->uuid,
             'organization'                      => $this->organization->title,
+            'hosted_by'                         => $hosted_by,
             'category_id'                       => $category_id,
             'category'                          => $category,
             'duration'                          => $duration,

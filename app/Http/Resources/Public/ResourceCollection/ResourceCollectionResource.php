@@ -37,7 +37,16 @@ class ResourceCollectionResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
+        $hosted_by = [];
 
+        if($this->organization_id){
+            $hosted_by=[
+                'title'       =>$this->getOrganization->title,
+                'image'       =>$this->getOrganization->cover_image,
+                'description' =>$this->getOrganization->description,
+                'slug'        =>$this->getOrganization->slug,
+            ];
+        }
         if ($this->resource_modules) {
             if (count($this->resource_modules) > 0) {
                 foreach ($this->resource_modules as $resource_module) {
@@ -180,6 +189,7 @@ class ResourceCollectionResource extends JsonResource
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,
+            'hosted_by'                     => $hosted_by,
             'privacy'                       => $privacy,
             'status'                        => $status,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',

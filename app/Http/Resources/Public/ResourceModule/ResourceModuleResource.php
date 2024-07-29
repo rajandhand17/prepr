@@ -35,6 +35,16 @@ class ResourceModuleResource extends JsonResource
         $is_global = null;
         $embedded_media = null;
         $module_progress = null;
+        $hosted_by = [];
+
+        if($this->organization_id){
+            $hosted_by=[
+                'title'       =>$this->organization->title,
+                'image'       =>$this->organization->cover_image,
+                'description' =>$this->organization->description,
+                'slug'        =>$this->organization->slug,
+            ];
+        }
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {

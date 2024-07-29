@@ -31,6 +31,16 @@ class ResourceGroupResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
+        $hosted_by = [];
+
+        if($this->organization_id){
+            $hosted_by=[
+                'title'       =>$this->getOrganization->title,
+                'image'       =>$this->getOrganization->cover_image,
+                'description' =>$this->getOrganization->description,
+                'slug'        =>$this->getOrganization->slug,
+            ];
+        }
 
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
@@ -129,6 +139,7 @@ class ResourceGroupResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => $hosted_by,
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,

@@ -36,7 +36,7 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
+        $hosted_by=[];
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
@@ -53,6 +53,12 @@ class LabProgramResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $hosted_by=[
+                'title'       =>$this->getOrganization->title,
+                'image'       =>$this->getOrganization->image,
+                'description' =>$this->getOrganization->description,
+                'slug'        =>$this->getOrganization->slug,
+            ];
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -129,6 +135,7 @@ class LabProgramResource extends JsonResource
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'title'                         => $this->title,
+            'hosted_by'                     => $hosted_by,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
             'labs'                          => $componentAssociation,

@@ -32,6 +32,17 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $hosted_by = [];
+
+        if($this->organization_id){
+            $hosted_by=[
+                'title'       =>$this->getOrganization->title,
+                'image'       =>$this->getOrganization->cover_image,
+                'description' =>$this->getOrganization->description,
+                'slug'        =>$this->getOrganization->slug,
+            ];
+        }
+
         if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
@@ -168,6 +179,7 @@ class ResourceCollectionResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => $this->hosted_by,
             'description'                   => $this->description,
             'media_type'                    => $this->media_type == '0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,
