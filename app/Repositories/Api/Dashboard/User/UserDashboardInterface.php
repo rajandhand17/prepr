@@ -16,7 +16,9 @@ interface UserDashboardInterface
 
     public function getLabList($labIds);
 
-    public function projectRequestIds($userData, $inviteStatus);
+    public function myProjectDashboardRequestIds($userData, $inviteStatus);
+
+    public function invitesProjectDashboardRequestIds($userData, $inviteStatus);
 
     public function projectFavouriteIds($userData);
 

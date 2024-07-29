@@ -126,11 +126,11 @@ class UserDashboardController extends AppBaseController
             switch ($request->type) {
                 case 'my':
                     $inviteStatus = config('constants.project_member_management_invite_status.accepted');
-                    $projectIds = $this->userDashboardRepository->projectRequestIds($userData, $inviteStatus);
+                    $projectIds = $this->userDashboardRepository->myProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
                     $inviteStatus = config('constants.project_member_management_invite_status.invited');
-                    $projectIds = $this->userDashboardRepository->projectRequestIds($userData, $inviteStatus);
+                    $projectIds = $this->userDashboardRepository->invitesProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
                     $projectIds = $this->userDashboardRepository->projectFavouriteIds($userData);

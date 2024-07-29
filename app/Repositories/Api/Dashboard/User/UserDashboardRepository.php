@@ -105,10 +105,21 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function projectRequestIds($userData, $inviteStatus)
+    public function myProjectDashboardRequestIds($userData, $inviteStatus)
     {
         try {
-            return $this->projectMemberManagementService->projectRequestIds($userData, $inviteStatus);
+            return $this->projectMemberManagementService->myProjectDashboardRequestIds($userData, $inviteStatus);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function invitesProjectDashboardRequestIds($userData, $inviteStatus)
+    {
+        try {
+            return $this->projectMemberManagementService->invitesProjectDashboardRequestIds($userData, $inviteStatus);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
