@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\TrophyAwards;
+namespace App\Services\Maestro;
 
 use App\Models\TrophyAwards;
 use App\Models\User;
@@ -206,6 +206,15 @@ class TrophyAwardsService
     {
         try {
             return TrophyAwards::orderBy('id', 'desc');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getTrophyAwardsById($id)
+    {
+        try {
+            return TrophyAwards::find($id);
         } catch (Exception $e) {
             return false;
         }

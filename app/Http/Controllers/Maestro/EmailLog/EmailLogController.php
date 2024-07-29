@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Maestro\EmailLog;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmailLog;
-use App\Models\Language;
+use App\Services\Maestro\LanguageService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Facades\DataTables;
@@ -78,7 +78,7 @@ class EmailLogController extends Controller
                 ['data' => 'body', 'name' => 'body', 'title' => 'Body'],
                 ['data' => 'created_at', 'name' => 'created_at', 'title' => 'Date'],
             ]);
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.emaillog.index', compact('html', 'languages'));
         } catch (Exception $e) {

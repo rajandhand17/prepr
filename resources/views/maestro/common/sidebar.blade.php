@@ -244,6 +244,12 @@
             </li>
           </ul>
         </li>
+          <li class="nav-item">
+              <a href="{{ route('challenge-template.index')}} " class="nav-link {{ Route::currentRouteName() == 'challenge-template.index' ? 'active' : ''  }}">
+                  <i class="far fa fa-book nav-icon"></i>
+                  <p>Challenge Marketplace</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'trophyawards.index' ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
@@ -251,9 +257,21 @@
           </a>
         </li>
           <li class="nav-item">
+          <a href="{{ route('lab-marketplace.index')}} " class="nav-link {{ Route::currentRouteName() == 'lab-marketplace.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Lab Marketplace</p>
+          </a>
+        </li>
+          <li class="nav-item">
               <a href="{{ route('clone-lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'clone-lab.index' ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Clone Lab</p>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a href="{{ route('vendor-management.index') }}" class="nav-link {{ Route::currentRouteName() == 'vendor-management.index' ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-tree"></i>
+                  <p>Vendor Management</p>
               </a>
           </li>
         <li class="nav-item">
@@ -293,13 +311,18 @@
             <p>Explore Page</p>
           </a>
         </li>
-        <li class="nav-item"> 
+        <li class="nav-item">
           <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
           </a>
         </li>
-
+          <li class="nav-item">
+              <a href="{{ route('setting.index')}} " class="nav-link {{ Route::currentRouteName() == 'setting.index' ? 'active' : ''  }}">
+                  <i class="far fa fa-cog nav-icon"></i>
+                  <p>Setting</p>
+              </a>
+          </li>
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

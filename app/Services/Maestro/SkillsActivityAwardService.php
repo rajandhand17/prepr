@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\SkillsActivityAward;
+namespace App\Services\Maestro;
 
 use App\Models\SkillsActivityAward;
 use Exception;
@@ -28,13 +28,17 @@ class SkillsActivityAwardService
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {
-                return Redirect::back()->withErrors($validation)->withInput();
+                return false;
             }
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
                     $insertArray[$key] = $value;
                 }
+            }
+            if ($request->skill) {
+                $skills = json_encode($request->skill);
+                $insertArray['skill'] = $skills;
             }
             if ($image !== '') {
                 $insertArray['image'] = $image;
@@ -75,7 +79,6 @@ class SkillsActivityAwardService
                 'image'  => 'required|mimes:jpg,png,jpeg',
                 'points' => 'required|integer|min:0',
             ];
-
             $image = '';
             if ($request->image) {
                 $image = $request->image->store('uploads/trophy', 's3');
@@ -90,8 +93,10 @@ class SkillsActivityAwardService
                     $insertArray[$key] = $value;
                 }
             }
+            $skills = json_encode($request->skill);
+            $insertArray['skill'] = $skills;
             $insertArray['image'] = $image;
-            // $insertArray['skill'] = $request->skill
+
             if ($insertArray !== null) {
                 $award = SkillsActivityAward::create($insertArray);
 

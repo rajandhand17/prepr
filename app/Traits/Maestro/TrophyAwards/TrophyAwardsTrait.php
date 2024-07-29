@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\TrophyAwards;
 
-use App\Services\Maestro\TrophyAwards\TrophyAwardsService;
+use App\Services\Maestro\TrophyAwardsService;
 use Exception;
 
 trait TrophyAwardsTrait
@@ -50,6 +50,20 @@ trait TrophyAwardsTrait
     {
         try {
             $trophyawards = TrophyAwardsService::getTrophyAwards();
+            if ($trophyawards) {
+                return $trophyawards;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getTrophyAwardsById($id)
+    {
+        try {
+            $trophyawards = TrophyAwardsService::getTrophyAwardsById($id);
             if ($trophyawards) {
                 return $trophyawards;
             }

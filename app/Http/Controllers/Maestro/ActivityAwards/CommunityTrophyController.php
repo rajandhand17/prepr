@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Maestro\ActivityAwards;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityTrophy;
-use App\Models\Language;
 use App\Models\User;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\CommunityTrophy\CommunityTrophyTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -58,23 +58,13 @@ class CommunityTrophyController extends Controller
                     ->make(true);
             }
 
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'id', 'title' => 'Id'],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'name';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_name';
-                }
+                $columName = UtilityHelper::getColumName($single->iso, 'name');
+
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -118,10 +108,10 @@ class CommunityTrophyController extends Controller
     public function create()
     {
         try {
-            View::share('status', ['0' => 'Active', '1' => 'Deactive']);
-            $languages = Language::where('status', 1)->get();
+            $status = ['0' => 'Active', '1' => 'Deactive'];
+            $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.activityawards.communityTrophy.create', compact('languages'));
+            return view('maestro.activityawards.communityTrophy.create', compact('status', 'languages'));
         } catch (Exception $e) {
             return response()->json([
                 'status'  => 'error',
@@ -138,18 +128,12 @@ class CommunityTrophyController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createCommunityTrophy($request)) {
-                DB::commit();
-
                 return redirect()->route('communitytrophy.index')->with('success', 'Trophy Awards created successfully');
             }
-            DB::rollback();
 
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -161,12 +145,11 @@ class CommunityTrophyController extends Controller
     public function edit($id)
     {
         try {
-            $languages = Language::where('status', 1)->get();
-            View::share('status', ['0' => 'Active', '1' => 'Deactive']);
-            View::share('title', 'Edit Trophy');
+            $languages = LanguageService::getAllActiveLanguages();
+            $status = ['0' => 'Active', '1' => 'Deactive'];
             $trophy = communityTrophy::find($id);
 
-            return view('maestro.activityawards.communityTrophy.edit', compact('trophy', 'languages'));
+            return view('maestro.activityawards.communityTrophy.edit', compact('trophy', 'languages', 'status'));
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -183,19 +166,12 @@ class CommunityTrophyController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateCommunityTrophyById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('communitytrophy.index')->with('success', 'Trophy Award Updated successfully');
             }
-            DB::rollback();
 
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -208,16 +184,10 @@ class CommunityTrophyController extends Controller
     public function destroy($id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteCommunityTrophyById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

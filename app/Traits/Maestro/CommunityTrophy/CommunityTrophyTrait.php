@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\CommunityTrophy;
 
-use App\Services\Maestro\CommunityTrophy\CommunityTrophyService;
+use App\Services\Maestro\CommunityTrophyService;
 use Exception;
 
 trait CommunityTrophyTrait

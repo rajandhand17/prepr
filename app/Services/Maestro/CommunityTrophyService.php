@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\CommunityTrophy;
+namespace App\Services\Maestro;
 
 use App\Models\CommunityTrophy;
 use Exception;

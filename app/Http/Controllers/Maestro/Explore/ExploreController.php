@@ -14,7 +14,6 @@ use App\Traits\Maestro\Explore\ExploreTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Html\Builder;
 
 /*-----------------------------------------------------------------------------------------
@@ -87,20 +86,13 @@ class ExploreController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->updateExploreDataById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('explore.index')->with('success', 'Data has Updated successfully');
             }
-            DB::rollback();
 
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -113,18 +105,11 @@ class ExploreController extends Controller
     public function destroy($id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->deleteExploreDataById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
@@ -229,22 +214,8 @@ class ExploreController extends Controller
 
     public function insertExploreData(Request $request)
     {
-        $namespace = 'App\\Models\\';
-        $class = $namespace.$request->compType;
-        $componentRequest = resolve($class)->where('id', $request->compId)->first();
-        // Limit the description to 200 words
-        $description = substr($componentRequest->description, 0, 200);
-
-        Explore::create([
-            'comp_type'    => $request->compType,
-            'comp_id'      => $request->compId,
-            'title'        => $componentRequest->title,
-            'description'  => $description,
-            'action_button'=> 'View',
-            'media_type'   => $componentRequest->media_type,
-            'media'        => $componentRequest->media,
-        ]);
-
-        return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+        if ($this->insertExploreDatas($request)) {
+            return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+        }
     }
 }
