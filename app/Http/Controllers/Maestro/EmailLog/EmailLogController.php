@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\EmailLog;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmailLog;
-use App\Models\Language;
 use App\Services\Maestro\LanguageService;
 use Exception;
 use Illuminate\Http\JsonResponse;

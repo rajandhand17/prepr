@@ -99,6 +99,7 @@ class SkillsActivityAwardService
 
             if ($insertArray !== null) {
                 $award = SkillsActivityAward::create($insertArray);
+
                 return true;
             }
         } catch (Exception $e) {
