@@ -41,7 +41,7 @@ trait ChallengeTrait
         }
     }
 
-    private function createUser($request)
+    private function createChallenge($request)
     {
         try {
             $createChallenge = DB::transaction(function () use ($request) {
