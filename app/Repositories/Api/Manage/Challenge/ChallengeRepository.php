@@ -256,7 +256,7 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization)
     {
         try {
             $createChallengeAssessmentUsingAi = $this->aiService->createChallengeAssessmentUsingAi($request);
@@ -264,9 +264,7 @@ class ChallengeRepository implements ChallengeInterface
             $updatedData = array_merge($request->json()->all(), $createChallengeAssessmentUsingAi);
             $request->json()->replace($updatedData);
 
-            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-
+            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organization->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);

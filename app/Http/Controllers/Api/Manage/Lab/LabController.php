@@ -320,7 +320,7 @@ class LabController extends AppBaseController
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = config('site-settings.default_achievement_image');
 
-            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
+            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image, $organization);
 
             if ($createLabUsingAI) {
                 return $this->sendResponse(LabResource::make($createLabUsingAI), __('responses.lab_created_successfully'), 200);

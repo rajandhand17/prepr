@@ -379,11 +379,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image)
+    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image, $organization)
     {
         try {
-            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image) {
-                $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image);
+            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image, $upload_achievements_image, $organization) {
+                $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image, $organization);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLabUsingAI);
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLabUsingAI);
 
