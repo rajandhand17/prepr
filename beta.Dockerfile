@@ -1,4 +1,4 @@
-FROM laravelphp/vapor:php82-arm
+FROM laravelphp/vapor:php82
 
 COPY . /var/task
 
