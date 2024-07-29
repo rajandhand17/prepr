@@ -23,19 +23,6 @@ trait ProjectPitchTemplateTrait
             return false;
         }
     }
- private function getLanguage()
-    {
-        try {
-            $languages = ProjectPitchTemplateService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
 
     private function getPitchTemplate()
     {
@@ -51,60 +38,6 @@ trait ProjectPitchTemplateTrait
         }
     }
 
-    private function getPitchSectionById($id)
-    {
-        try {
-            $pitchSection = ProjectPitchTemplateService::getPitchSectionById($id);
-            if ($pitchSection) {
-                return $pitchSection;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getPitchTaskById($id)
-    {
-        try {
-            $pitchTask = ProjectPitchTemplateService::getPitchTaskById($id);
-            if ($pitchTask) {
-                return $pitchTask;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function storePitchTemplate($request, $id, $moduleMode)
-    {
-        try {
-            if (ProjectPitchTemplateService::storePitchTemplate($request, $id, $moduleMode)) {
-                return true;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function updatePitchTemplate($request, $id, $moduleMode)
-    {
-        try {
-            if (ProjectPitchTemplateService::updatePitchTemplate($request, $id, $moduleMode)) {
-                return true;
-            }
-            return false;
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return false;
-        }
-    }
     private function storeUpdatePitchTemplate($request, $id, $moduleMode)
     {
         try {
@@ -126,6 +59,7 @@ trait ProjectPitchTemplateTrait
                 return $createPitchTemplate['pitchTemplate'];
             }
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();

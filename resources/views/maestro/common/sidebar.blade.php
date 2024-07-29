@@ -257,10 +257,11 @@
           </a>
         </li>
           <li class="nav-item">
-              <a href="{{ route('lab-marketplace.index')}} " class="nav-link {{ Route::currentRouteName() == 'lab-marketplace.index' ? 'active' : ''  }}">
-                  <i class="far fa fa-book nav-icon"></i>
-                  <p>Lab Marketplace</p>
-          </li>
+          <a href="{{ route('lab-marketplace.index')}} " class="nav-link {{ Route::currentRouteName() == 'lab-marketplace.index' ? 'active' : ''  }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Lab Marketplace</p>
+          </a>
+        </li>
           <li class="nav-item">
               <a href="{{ route('clone-lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'clone-lab.index' ? 'active' : '' }}">
                   <i class="far fa-circle nav-icon"></i>
