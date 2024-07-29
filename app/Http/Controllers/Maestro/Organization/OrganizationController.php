@@ -11,10 +11,15 @@ use App\Models\OrganizationMember;
 use App\Models\OrganizationSocialLink;
 use App\Models\SocialLink;
 use App\Models\User;
+use App\Services\Manage\CategoryService;
+use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\OrganizationAddressService;
+use App\Services\Maestro\OrganizationMemberService;
+use App\Services\Maestro\OrganizationSocialLinkService;
+use App\Services\Maestro\SocialLinkService;
 use App\Traits\Maestro\Organization\OrganizationTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -25,14 +30,10 @@ class OrganizationController extends Controller
 
     public function construct()
     {
-        $categories = Category::pluck('title', 'id')->prepend('Category', '');
-        //dd( $categories );
         $status_array = [];
         $status_array['0'] = 'Inactive';
         $status_array['1'] = 'Active';
         View::share('status_array', $status_array);
-        View::share('categories', $categories);
-        View::share('module_name', 'Organization');
     }
 
     /**
@@ -43,8 +44,6 @@ class OrganizationController extends Controller
         try {
             $this->construct();
             $organizations = $this->getOrganizations();
-            $organizations = Organization::orderBy('id', 'desc');
-            //dd($organizations);
             if (request()->ajax()) {
                 return DataTables::eloquent($organizations)
                     ->editColumn('profile_image', function (Organization $organizations) {
@@ -74,12 +73,8 @@ class OrganizationController extends Controller
                 ['data' => 'website', 'name' => 'website', 'title' => 'Website', 'width' => '5%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false],
             ]);
-            View::share('module_name', 'Project Type');
-
             return view('maestro.organization.index', compact('html'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -90,26 +85,12 @@ class OrganizationController extends Controller
     public function create()
     {
         try {
-            $organization = [];
-
             $this->construct();
-            //$this->orgData();
-            $org_user = [];
             $data = collect();
-            $orgSocialLink = [];
-            $categories = Category::pluck('title', 'id')->prepend('Select category', '');
-            $users = User::pluck('username', 'id');
-            $social_name = SocialLink::pluck('title', 'id')->prepend('Social', '')->toArray();
-            unset($social_name[15]);
-            View::share('org_user', $org_user);
-            View::share('social_name', $social_name);
-            $languages = Language::where(['status' => 1])->pluck('name', 'iso');
-
-            return view('maestro.organization.create', compact('data', 'orgSocialLink', 'languages', 'categories', 'users'));
+            $languages = LanguageService::getLanguages();
+            $social_name  = SocialLinkService::getSocialLinkList();
+            return view('maestro.organization.create', compact('data', 'languages','social_name'));
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -120,19 +101,12 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->createOrganization($request)) {
-                DB::commit();
-
                 return redirect()->route('organization.index')->with('success', 'Organization created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -153,26 +127,14 @@ class OrganizationController extends Controller
         try {
             $this->construct();
             $data = Organization::find($id);
-            $org_user = User::where('id', $data->user_id)->pluck('username', 'id');
-            $users = User::pluck('username', 'id');
-            $orgSocialLink = OrganizationSocialLink::where('organization_id', $id)->get();
-            $org_members = OrganizationMember::where('organization_id', $id)->get();
-            foreach ($orgSocialLink as $value) {
-                $social_name = SocialLink::where('id', $value->social_link_id)->first();
-                $value->link_name = (!empty($social_name->title)) ? $social_name->title : '';
-            }
-            $social_name = SocialLink::pluck('title', 'id')->prepend('Social', '')->toArray();
-            $org_address = OrganizationAddress::where('organization_id', $id)->get();
-            unset($social_name[15]);
-            View::share('social_name', $social_name);
-            View::share('org_user', $org_user);
-            View::share('people', '');
-            $languages = Language::where(['status' => 1])->pluck('name', 'iso');
-
-            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages', 'org_address', 'org_members', 'users'));
+            $org_members = OrganizationMemberService::getOrganizationMembersById($id);
+            $orgSocialLink = OrganizationSocialLinkService::getOrganizationSocialLink($id);
+            $social_name  = SocialLinkService::getSocialLinkList();
+            $orgAssociatedItems = $this->getOrgAssociatedItemsById($data);
+            $org_address = OrganizationAddressService::getOrganizationAddressById($id);
+            $languages = LanguageService::getLanguages();
+            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages', 'org_address', 'org_members','social_name', 'orgAssociatedItems'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -183,19 +145,13 @@ class OrganizationController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->updateOrganizationById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('organization.index')->with('success', 'Organization Updated successfully');
             }
-            DB::rollback();
 
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -206,18 +162,11 @@ class OrganizationController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $this->construct();
             if ($this->deleteOrganizationById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Organization deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
