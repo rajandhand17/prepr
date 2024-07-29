@@ -2,14 +2,14 @@
 
 namespace App\Traits\Maestro\Challenge;
 
-use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\ChallengeTimelineService;
-use App\Services\Maestro\ChallengeSkillsGroupsStackService;
-use App\Services\Maestro\ChallengeRequirementService;
-use App\Services\Maestro\ComponentAssociationService;
 use App\Services\Maestro\ChallengeAchievementService;
-use Illuminate\Support\Facades\DB;
+use App\Services\Maestro\ChallengeRequirementService;
+use App\Services\Maestro\ChallengeService;
+use App\Services\Maestro\ChallengeSkillsGroupsStackService;
+use App\Services\Maestro\ChallengeTimelineService;
+use App\Services\Maestro\ComponentAssociationService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 trait ChallengeTrait
 {
@@ -45,33 +45,36 @@ trait ChallengeTrait
     {
         try {
             $createChallenge = DB::transaction(function () use ($request) {
-                $challenge      = ChallengeService::createChallenge($request);
-                $requirement    = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
-                $timeline       = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
-                $skill_group    = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
-                $labs           = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
-                $resource_module= ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
-                $incentives     = ChallengeAchievementService::challengeIncentives($request, $challenge);
+                $challenge = ChallengeService::createChallenge($request);
+                $requirement = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
+                $timeline = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
+                $skill_group = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
+                $labs = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
+                $resource_module = ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
+                $incentives = ChallengeAchievementService::challengeIncentives($request, $challenge);
 
                 return [
-                    'challenge'     => $challenge,
-                    'requirement'   => $requirement,
-                    'timeline'      => $timeline,
-                    'skill_group'   => $skill_group,
-                    'labs'          => $labs,
+                    'challenge'      => $challenge,
+                    'requirement'    => $requirement,
+                    'timeline'       => $timeline,
+                    'skill_group'    => $skill_group,
+                    'labs'           => $labs,
                     'resource_module'=> $resource_module,
-                    'incentives'    => $incentives,
+                    'incentives'     => $incentives,
                 ];
             });
 
             if ($createChallenge['challenge'] && $createChallenge['requirement'] && $createChallenge['timeline'] && $createChallenge['skill_group'] && $createChallenge['labs'] && $createChallenge['resource_module'] && $createChallenge['incentives']) {
                 DB::commit();
+
                 return $createChallenge['challenge'];
             }
             DB::rollBack();
+
             return false;
         } catch (Exception $e) {
             DB::rollBack();
+
             return false;
         }
     }

@@ -138,6 +138,26 @@ class SkillService
             return false;
         }
     }
+
+    public static function getSelectedSkillsNameByIds($selectedSkills)
+    {
+        try {
+            $selectedSkills_names = [];
+            foreach ($selectedSkills as $skill) {
+                if (Skill::where('id', $skill)->get()->count() > 0) {
+                    $selectedSkills_names[] = Skill::find($skill)->title;
+                } else {
+                    return "Skill doesn't exist";
+                }
+            }
+            $selectedSkills_names = implode(', ', $selectedSkills_names);
+
+            return $selectedSkills_names;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function getSkillsById($skillIds)
     {
         try {
