@@ -33,6 +33,9 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroAuthRoutes();
             $this->mapMaestroDashboardRoutes();
             $this->mapMaestroUsersRoutes();
+            $this->mapMaestroSettingRoutes();
+            $this->mapMaestroChallengeTemplateRoutes();
+            $this->mapMaestroLabMarketplaceRoutes();
             $this->mapMaestroOrganizationRoutes();
             $this->mapMaestroRoleAndPermissionRoutes();
             // $this->mapMaestroLabRoutes();
@@ -225,6 +228,21 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('maestro')->group(base_path('routes/maestro/users.php'));
     }
 
+    public function mapMaestroSettingRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/setting.php'));
+    }
+
+    public function mapMaestroChallengeTemplateRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/challenge-template.php'));
+    }
+
+    public function mapMaestroLabMarketplaceRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/lab-marketplace.php'));
+    }
+
     public function mapMaestroOrganizationRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/organization/organization.php'));
@@ -292,12 +310,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroTrophyAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards/trophyawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards.php'));
     }
 
     public function mapMaestroActivityAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards/activityawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards.php'));
     }
 
     public function mapMaestroEmailTemplateRoutes()
@@ -307,12 +325,12 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroExploreRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/explore/explore.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/explore.php'));
     }
 
     public function mapMaestroEmailLogsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/emaillogs/emaillogs.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/emaillogs.php'));
     }
 
     public function mapMaestroCloneLabRoutes()

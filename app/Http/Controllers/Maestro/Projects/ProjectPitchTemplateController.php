@@ -4,17 +4,15 @@ namespace App\Http\Controllers\Maestro\Projects;
 
 use App\Http\Controllers\Controller;
 use App\Models\PitchTemplate;
+use App\Traits\Maestro\Project\ProjectPitchTemplateTrait;
+use Exception;
+use Illuminate\Http\Request;
 use App\Helpers\Maestro\UtilityHelper;
 use App\Services\Maestro\ChallengePitchService;
 use App\Services\Maestro\ChallengeTaskService;
 use App\Services\Maestro\LanguageService;
-use App\Traits\Maestro\Project\ProjectPitchTemplateTrait;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-
 class ProjectPitchTemplateController extends Controller
 {
     use ProjectPitchTemplateTrait;
