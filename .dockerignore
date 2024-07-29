@@ -5,3 +5,4 @@ POM_QA_Scripts
 tests
 reports
 .gitignore
+.env

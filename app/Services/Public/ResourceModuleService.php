@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceModuleService
 {
@@ -107,16 +108,6 @@ class ResourceModuleService
                         ->distinct();
                 })->distinct('resource_modules.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
-                    $query->select('resource_module_tags_groups.resource_module_id')
-                        ->from('resource_module_tags_groups')
-                        ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_module_tags_groups.type', '0')
-                        ->whereNull('resource_module_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_modules.uuid');
-            }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceModule = $resourceModule->whereIn('duration_id', $request->duration_id);
             }
@@ -131,6 +122,24 @@ class ResourceModuleService
             if ($request->has('type') && $request->type !== null) {
                 $resourceModuleType = ResourceModuleTypeModesService::getResourceModuleBasedOnType($request->type);
                 $resourceModule = $resourceModule->whereIn('id', $resourceModuleType->pluck('resource_module_id'));
+            }
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceModulesProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_module');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                if (!empty($resourceModulesProgress)) {
+                    $resourceModule = $resourceModule->whereIn('id', $resourceModulesProgress->pluck('module_id'));
+                }
             }
 
             return $resourceModule;
@@ -167,6 +176,17 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::whereIn('id', $ids)->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getAll()
+    {
+        try {
+            return ResourceModule::select();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

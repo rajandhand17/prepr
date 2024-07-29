@@ -218,7 +218,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
-                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $updateResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->updateResourceModuleTypeModes($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'            => $updateResourceModule,
