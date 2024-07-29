@@ -17,6 +17,7 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\Manage\OrganizationService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -409,8 +410,10 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.reached_resource_module_limit'), 400);
                 }
             }
+
+            $organizationId = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id)->id;
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
-            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request, $upload_cover_image);
+            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request, $upload_cover_image, $organizationId);
 
             $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModuleUsingAI->id);
 
