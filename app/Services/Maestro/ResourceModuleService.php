@@ -88,6 +88,7 @@ class ResourceModuleService
             return false;
         }
     }
+
     public static function getResourceModulesByIds($moduleIds)
     {
         try {

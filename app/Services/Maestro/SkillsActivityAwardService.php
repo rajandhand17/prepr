@@ -44,6 +44,7 @@ class SkillsActivityAwardService
             }
             if (!empty($insertArray)) {
                 $award->update($insertArray);
+
                 return true;
             }
         } catch (Exception $e) {

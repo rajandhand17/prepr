@@ -6,7 +6,6 @@ use App\Models\OrganizationAddress;
 
 class OrganizationAddressService
 {
-
     public static function updateOrganizationAddress($request, $org_id)
     {
         try {
@@ -28,7 +27,8 @@ class OrganizationAddressService
     {
         try {
             if ($orgId) {
-               $orgAdress = OrganizationAddress::where('organization_id', $orgId)->get();
+                $orgAdress = OrganizationAddress::where('organization_id', $orgId)->get();
+
                 return $orgAdress;
             }
 
@@ -65,11 +65,12 @@ class OrganizationAddressService
 
             ];
             $orgAdreess = OrganizationAddress::create($org_address);
-            return  true ;
+
+            return  true;
         } catch(\Exception $e) {
             dd($e);
+
             return false;
         }
-
     }
 }
