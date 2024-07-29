@@ -69,8 +69,8 @@
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('skill')) ? 'has-error' : ''}}">
         {!! Form::label('skills', 'Skill', ['class' => 'control-label ']) !!}
-        {!! Form::select('skill', $skills, null, ['class' => 'form-control', 'multiple'=> 'multiple','id' => 'skill']) !!}
-        <span class="help-block">{{ $errors->first('skill')}}</span>
+        {!! Form::select('skill[]', $selectedSkills, array_keys($selectedSkills),  ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills']) !!}
+        <span class="help-block skill_error">{{ $errors->first('skill')}}</span>
     </div>
 </div>
 <div class="col-sm-12 mt-20 mb-10"><h5>Conditions:</h5></div>

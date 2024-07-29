@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Maestro\Explore;
+namespace App\Services\Maestro;
 
 use App\Models\Explore;
 use Exception;
@@ -26,15 +26,12 @@ class ExploreService
                     $exploreData->media = $cover_Image ? $cover_Image : 'NULL';
                 }
                 if ($request->roles) {
-                    $exploreData->role = $request->roles;
+                    $exploreData->role = json_encode($request->roles);
                 }
                 $exploreData->save();
-
                 return true;
             }
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -62,4 +59,29 @@ class ExploreService
             return false;
         }
     }
-}
+
+    public static function insertExploreDatas($request)
+    {
+        try {
+            $namespace = 'App\\Models\\';
+            $class = $namespace.$request->compType;
+            $componentRequest = resolve($class)->where('id', $request->compId)->first();
+            // Limit the description to 200 words
+            $description = substr($componentRequest->description, 0, 200);
+
+            Explore::create([
+                'comp_type'    => $request->compType,
+                'comp_id'      => $request->compId,
+                'role'         => '["user"]',
+                'title'        => $componentRequest->title,
+                'description'  => $description,
+                'action_button'=> 'View',
+                'media_type'   => $componentRequest->media_type,
+                'media'        => $componentRequest->media,
+            ]);
+            return true;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+    }
