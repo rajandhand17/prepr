@@ -60,12 +60,12 @@ class LabResource extends JsonResource
             $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
         }
-        if($this->organization_id){
-            $host_by=[
-                'title'       =>$this->organization->title,
-                'image'       =>$this->organization->image,
-                'description' =>$this->organization->description,
-                'slug'        =>$this->organization->slug,
+        if ($this->organization_id) {
+            $host_by = [
+                'title'       => $this->organization->title,
+                'image'       => $this->organization->image,
+                'description' => $this->organization->description,
+                'slug'        => $this->organization->slug,
             ];
         }
         if ($this->durations) {
