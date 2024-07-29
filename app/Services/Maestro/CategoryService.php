@@ -155,4 +155,12 @@ class CategoryService
             return false;
         }
     }
+    public static function getCategoriesById($category_id)
+    {
+        try {
+            return Category::where(['id' => $category_id])->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

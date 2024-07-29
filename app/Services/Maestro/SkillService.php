@@ -138,4 +138,12 @@ class SkillService
             return false;
         }
     }
+    public static function getSkillsById($skillIds)
+    {
+        try {
+            return Skill::whereIn('id', $skillIds)->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
