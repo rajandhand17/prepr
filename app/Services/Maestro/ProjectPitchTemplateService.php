@@ -2,10 +2,10 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\Language;
-use App\Helpers\Maestro\UtilityHelper;
 use App\Models\PitchTemplate;
 use Exception;
 
@@ -28,6 +28,7 @@ class ProjectPitchTemplateService
             return false;
         }
     }
+
     public static function storeUpdatePitchTemplate($request, $id, $moduleMode)
     {
         try {

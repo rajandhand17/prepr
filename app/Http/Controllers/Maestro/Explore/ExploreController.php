@@ -51,6 +51,7 @@ class ExploreController extends Controller
     {
         try {
             $data = Explore::get();
+
             return view('maestro.Explore.index', compact('data'));
         } catch (Exception $e) {
             return response()->json([
@@ -89,6 +90,7 @@ class ExploreController extends Controller
             if ($this->updateExploreDataById($id, $request)) {
                 return redirect()->route('explore.index')->with('success', 'Data has Updated successfully');
             }
+
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong.']);

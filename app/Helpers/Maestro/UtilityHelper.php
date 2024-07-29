@@ -21,6 +21,7 @@ class UtilityHelper
                 }
                 $columName = $columName.'_'.$fieldName;
             }
+
             return $columName;
         } catch (Exception $e) {
             return $fieldName;

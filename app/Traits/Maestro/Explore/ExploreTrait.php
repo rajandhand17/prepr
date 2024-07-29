@@ -14,6 +14,7 @@ trait ExploreTrait
             if (ExploreService::updateExploreDataById($id, $request)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -26,6 +27,7 @@ trait ExploreTrait
             if (ExploreService::deleteExploreData($id)) {
                 return true;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -39,6 +41,7 @@ trait ExploreTrait
             if ($data) {
                 return $data;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -52,18 +55,21 @@ trait ExploreTrait
             if ($roles) {
                 return $roles;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
         }
     }
 
-    private function insertExploreDatas($request) {
+    private function insertExploreDatas($request)
+    {
         try {
             $data = ExploreService::insertExploreDatas($request);
             if ($data) {
                 return $data;
             }
+
             return false;
         } catch (Exception $e) {
             return false;
