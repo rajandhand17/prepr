@@ -2,45 +2,17 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectVerticalService;
+use App\Services\Maestro\ProjectVerticalService;
 use Exception;
 
 trait ProjectVerticalTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectVerticalService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectVertical()
     {
         try {
             $projectVertical = ProjectVerticalService::getProjectVertical();
             if ($projectVertical) {
                 return $projectVertical;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getProjectVerticalStatus()
-    {
-        try {
-            $status = ProjectVerticalService::getProjectVerticalStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;

@@ -110,6 +110,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="{{ route('lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'lab.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Lab Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="{{ route('resource-module.index') }}" class="nav-link {{ Route::currentRouteName() == 'resource-module.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Resource Module</p>

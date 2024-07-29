@@ -14,12 +14,12 @@ use App\Models\ChallengeTimelines;
 use App\Models\ComponentAssociation;
 use App\Models\Duration;
 use App\Models\Lab;
-use App\Models\Language;
 use App\Models\Levels;
 use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Services\Maestro\LanguageService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
@@ -40,21 +40,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::where('language', \Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->latest();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function getLanguage()
-    {
-        try {
-            $language = Language::where(['status' => 1])->pluck('name', 'iso');
-            if ($language != null) {
-                return $language;
-            }
-
-            return false;
+            return Challenge::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             return false;
         }
@@ -407,6 +393,43 @@ class ChallengeService
             return true;
         } catch (Exception $e) {
             return false;
+        }
+    }
+
+    public static function getChallenges($request)
+    {
+        try {
+            $challenge = Challenge::select('id', 'title')->orderBy('id', 'DESC');
+            if ($request->search) {
+                $challenge = $challenge->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $challenge = $challenge->get()->take(20)->pluck('title', 'id');
+            $count = 0;
+            $json_stacks = $json_result = [];
+            foreach ($challenge as $key => $challenge_to_return) {
+                $json_stacks[$count]['id'] = $key;
+                $json_stacks[$count]['text'] = $challenge_to_return;
+                $count++;
+            }
+            $json_result['result'] = $json_stacks;
+
+            return response()->json($json_result);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallenge($action, $challengeId)
+    {
+        try {
+            $challenge = Challenge::select('title', 'id');
+            if ($action == 'edit') {
+                $challenge = $challenge->where(['id' => $challengeId]);
+            }
+
+            return $challenge->pluck('title', 'id');
+        } catch (Exception $e) {
+            return [];
         }
     }
 }

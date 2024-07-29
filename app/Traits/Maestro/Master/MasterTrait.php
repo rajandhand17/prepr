@@ -2,6 +2,8 @@
 
 namespace App\Traits\Maestro\Master;
 
+use App\Services\Maestro\Challenge\ChallengeService;
+use App\Services\Maestro\LabService;
 use App\Services\Maestro\Master\MasterService;
 use Exception;
 
@@ -139,6 +141,34 @@ trait MasterTrait
             $users = MasterService::getUsersEmail($request);
             if ($users) {
                 return $users;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getAllChallenges($request)
+    {
+        try {
+            $challenges = ChallengeService::getChallenges($request);
+            if ($challenges) {
+                return $challenges;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getAllLabsById($request)
+    {
+        try {
+            $labs = LabService::getLabs($request);
+            if ($labs) {
+                return $labs;
             }
 
             return false;

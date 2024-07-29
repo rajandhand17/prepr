@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Maestro\Resources;
 
 use App\Http\Controllers\Controller;
 use App\Models\ResourceModule;
+use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\OrganizationService;
+use App\Services\Maestro\UserService;
 use App\Traits\Maestro\Resource\ResourceModuleTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -66,9 +68,9 @@ class ResourceModuleController extends Controller
                 'order' => [[1, 'asc']],
             ]);
 
-            return view('maestro.resourcemodule.index', compact('html'));
+            return view('maestro.resourceModule.index', compact('html'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -78,15 +80,11 @@ class ResourceModuleController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
-            $status = $this->getResourceModuleStatus();
-            $users = $this->getResourceModuleUser();
-            $privacy = $this->getResourceModulePrivacy();
-            $organizations = $this->getResourceModuleOrganization();
+            $languages = LanguageService::getLanguages();
 
-            return view('maestro.resourcemodule.create', compact('users', 'languages', 'status', 'privacy', 'organizations'));
+            return view('maestro.resourceModule.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -96,9 +94,9 @@ class ResourceModuleController extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            return view('maestro.resourcemodule.show');
+            return view('maestro.resourceModule.show');
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -108,48 +106,15 @@ class ResourceModuleController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-            if ($this->createResourceModule($request)) {
-                DB::commit();
-
+            if ($this->createAndUpdateResourceModule($request, 'create', null)) {
                 return redirect()->route('resource-module.index')->with('success', 'Resource Module created successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
-    // public function getOrgData(Request $request)
-    // {
-    //     try {
-    //         if (!$request->language) {
-    //             return response()->json(['status' => 'fail', 'message' => __('notification.notification_pslf'),'result' => [],'more' => false,'total_count'=>0]);
-    //         }
-    //         $orgList = Organization::where(['language' => $request->language,'status' => '1'])->orderBy('id', 'DESC');
-
-    //         $orgList =  $orgList->take(20);
-
-    //         if ($request->search) {
-    //             $orgList->where('name', 'LIKE', '%' . $request->search . '%');
-    //         }
-    //         $orgList = $orgList->pluck('name', 'id');
-    //         $count = 0;
-    //         $json_orgs = $json_result = [];
-    //         foreach ($orgList as $key => $orgBuild) {
-    //             $json_orgs[$count]['id'] = $key;
-    //             $json_orgs[$count]['text'] = $orgBuild;
-    //             $count++;
-    //         }
-    //         $json_result['result'] = $json_orgs;
-    //         return response()->json($json_result);
-    //     } catch (Exception $e) {
-    //         return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
-    //     }
-    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -161,15 +126,13 @@ class ResourceModuleController extends Controller
             if (!$resourceModule->exists) {
                 return redirect()->route('resource-module.index')->with(['error' => 'Resource Module not found.']);
             }
-            $languages = $this->getLanguage();
-            $status = $this->getResourceModuleStatus();
-            $users = $this->getResourceModuleUser();
-            $privacy = $this->getResourceModulePrivacy();
-            $organizations = $this->getResourceModuleOrganization();
+            $languages = LanguageService::getLanguages();
+            $user = UserService::getUser('edit', $resourceModule->user_id);
+            $organization = OrganizationService::getOrganization($resourceModule->organization_id);
 
-            return view('maestro.resourcemodule.edit', compact('users', 'languages', 'status', 'privacy', 'resourceModule', 'organizations'));
+            return view('maestro.resourceModule.edit', compact('languages', 'resourceModule', 'user', 'organization'));
         } catch (Exception $e) {
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -179,19 +142,13 @@ class ResourceModuleController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
-            if ($this->updateResourceModuleById($id, $request)) {
-                DB::commit();
-
+            if ($this->createAndUpdateResourceModule($request, 'update', $id)) {
                 return redirect()->route('resource-module.index')->with('success', 'Resource Module Updated successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('resource-module.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
-            return redirect()->route('resource-module.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -201,17 +158,11 @@ class ResourceModuleController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteResourceModuleById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Resource Module deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

@@ -182,9 +182,11 @@ class ChallengeController extends AppBaseController
             if ($request->has('cover_banner_type')) {
                 switch ($request->cover_banner_type) {
                     case 'image':
-                        $uploaded_challenge_cover = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
-                        if (!$uploaded_challenge_cover) {
-                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                            $uploaded_challenge_cover = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
+                            if (!$uploaded_challenge_cover) {
+                                return $this->sendError(__('responses.image_upload_failed'), 400);
+                            }
                         }
                         break;
                     case 'embedded':

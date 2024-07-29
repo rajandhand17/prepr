@@ -2,45 +2,17 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectTypeService;
+use App\Services\Maestro\ProjectTypeService;
 use Exception;
 
 trait ProjectTypeTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectTypeService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectType()
     {
         try {
             $projectType = ProjectTypeService::getProjectType();
             if ($projectType) {
                 return $projectType;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getProjectTypeStatus()
-    {
-        try {
-            $status = ProjectTypeService::getProjectTypeStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;

@@ -26,7 +26,7 @@ class DashboardController extends Controller
                 return view('maestro.dashboard.index', compact('componentCount'));
             }
         } catch (Exception $e) {
-            return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('dashboard.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

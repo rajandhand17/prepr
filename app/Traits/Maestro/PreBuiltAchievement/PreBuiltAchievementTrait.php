@@ -2,25 +2,11 @@
 
 namespace App\Traits\Maestro\PreBuiltAchievement;
 
-use App\Services\Maestro\PreBuiltAchievement\PreBuiltAchievementService;
+use App\Services\Maestro\PreBuiltAchievementService;
 use Exception;
 
 trait PreBuiltAchievementTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = PreBuiltAchievementService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getPreBuiltAchievement()
     {
         try {

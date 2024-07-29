@@ -51,5 +51,44 @@
 @stop
 
 @section('scripts')
-    
+<script>
+   $(document).ready(function() {
+    getSkills();
+});
+
+function getSkills() {
+    $('#Skills').select2({
+        placeholder: "Select skill",
+        ajax: {
+            url: '{{route('getAjaxSkills')}}',
+            cache: true,
+            type: 'GET',
+            dataType: 'json',
+            data: function(params) {
+                return {
+                    search: params.term,
+                };
+            },
+            processResults: function(data) {
+                if (data.status == 'fail') {
+                    $('#Skills').select2("close");
+                    $('.skill_error').show();
+                    $('.skill_error').html(data.message);
+                } else {
+                    $('.skill_error').hide();
+                    return {
+                        results: data.result.map(function(skill) {
+                            return {
+                                id: skill.id,
+                                text: skill.text
+                            };
+                        })
+                    };
+                }
+            }
+        }
+    });
+}
+
+</script>
 @endsection

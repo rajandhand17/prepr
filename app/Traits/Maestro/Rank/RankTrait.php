@@ -7,40 +7,12 @@ use Exception;
 
 trait RankTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = RankService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getRank()
     {
         try {
             $projectStatus = RankService::getRank();
             if ($projectStatus) {
                 return $projectStatus;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getRankStatus()
-    {
-        try {
-            $status = RankService::getRankStatus();
-            if ($status) {
-                return $status;
             }
 
             return false;

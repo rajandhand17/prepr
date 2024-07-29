@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Tag;
 
-use App\Services\Maestro\Tag\TagGroupService;
+use App\Services\Maestro\TagGroupService;
 use Exception;
 
 trait TagGroupTrait
@@ -16,8 +16,6 @@ trait TagGroupTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
-
             return false;
         }
     }

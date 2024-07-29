@@ -30,9 +30,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -47,9 +47,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -64,9 +64,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -78,9 +78,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -97,9 +97,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -116,9 +116,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -133,9 +133,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -150,9 +150,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -167,9 +167,9 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 
@@ -181,7 +181,7 @@ class MasterController extends Controller
 
             return response()->json(['status' => 'success', 'message' => 'Language switched successfully.']);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -193,9 +193,37 @@ class MasterController extends Controller
                 return $response;
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        }
+    }
+
+    public function getChallengesForProject(Request $request)
+    {
+        try {
+            $response = $this->getAllChallenges($request);
+            if ($response) {
+                return $response;
+            }
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        }
+    }
+
+    public function getLabsForProject(Request $request)
+    {
+        try {
+            $response = $this->getAllLabsById($request);
+            if ($response) {
+                return $response;
+            }
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\tag;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Language;
 use App\Models\Tag;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Tag\TagTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -56,37 +56,24 @@ class TagController extends Controller
                     })
                     ->toJson();
             }
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => '', 'title' => 'id', 'orderable' => false, 'searchable' => false],
             ];
             array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category']);
             array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image']);
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Tag Title'];
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
             view()->share('module_name', 'Challenge');
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.tags.tag.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -97,13 +84,11 @@ class TagController extends Controller
     public function create()
     {
         try {
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $category = Tag::pluck('title', 'id');
 
             return view('maestro.tags.tag.create', compact('languages', 'category'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -114,18 +99,12 @@ class TagController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createTag($request)) {
-                DB::commit();
-
                 return redirect()->route('tags.index')->with('success', 'Tag created successfully');
             }
-            DB::rollback();
 
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -137,15 +116,13 @@ class TagController extends Controller
     {
         try {
             $tag = $this->getTagById($id);
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             if (!$tag->exists) {
                 return redirect()->route('tags.index')->with(['error' => 'Tag not found.']);
             }
 
             return view('maestro.tags.tag.view', compact('tag', 'languages'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -157,14 +134,12 @@ class TagController extends Controller
     {
         try {
             $data = Tag::find($id);
-            $languages = Language::where('status', 1)->get();
+            $languages = LanguageService::getAllActiveLanguages();
             $tag_image = Tag::where('id', '=', $id)->value('tag_image');
             $category = [];
 
             return view('maestro.tags.tag.edit', compact('data', 'languages', 'category', 'tag_image'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -175,18 +150,12 @@ class TagController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateTagById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('tags.index')->with('success', 'Tag Updated successfully');
             }
-            DB::rollback();
 
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -197,16 +166,10 @@ class TagController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteTagById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

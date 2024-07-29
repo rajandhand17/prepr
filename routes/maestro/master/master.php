@@ -14,4 +14,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('get-min-points', [MasterController::class, 'getMinRanks'])->name('getMinRanks');
     Route::post('change-language', [MasterController::class, 'switchLanguage'])->name('switchLanguage');
     Route::get('get-users-email', [MasterController::class, 'getUserEmail'])->name('getUserEmail');
+    Route::get('get-challenges', [MasterController::class, 'getChallengesForProject'])->name('getChallengesForProject');
+    Route::get('get-labs', [MasterController::class, 'getLabsForProject'])->name('getLabsForProject');
 });

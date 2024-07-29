@@ -146,4 +146,13 @@ class CategoryService
             return false;
         }
     }
+
+    public static function getCategoryByType($type)
+    {
+        try {
+            return Category::Where('components', 'like', '%'.$type.'%')->pluck('title', 'id')->prepend('Please Select', '');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
