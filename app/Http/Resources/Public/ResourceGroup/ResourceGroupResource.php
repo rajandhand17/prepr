@@ -33,12 +33,12 @@ class ResourceGroupResource extends JsonResource
         $module_progress = null;
         $hosted_by = [];
 
-        if($this->organization_id){
-            $hosted_by=[
-                'title'       =>$this->getOrganization->title,
-                'image'       =>$this->getOrganization->cover_image,
-                'description' =>$this->getOrganization->description,
-                'slug'        =>$this->getOrganization->slug,
+        if ($this->organization_id) {
+            $hosted_by = [
+                'title'       => $this->getOrganization->title,
+                'image'       => $this->getOrganization->cover_image,
+                'description' => $this->getOrganization->description,
+                'slug'        => $this->getOrganization->slug,
             ];
         }
 

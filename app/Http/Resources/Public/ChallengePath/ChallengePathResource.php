@@ -37,7 +37,7 @@ class ChallengePathResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
-        $hosted_by=[];
+        $hosted_by = [];
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->challenge_id) {
@@ -54,11 +54,11 @@ class ChallengePathResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
-            $hosted_by=[
-                'title'       =>$this->getOrganization->title,
-                'image'       =>$this->getOrganization->image,
-                'description' =>$this->getOrganization->description,
-                'slug'        =>$this->getOrganization->slug,
+            $hosted_by = [
+                'title'       => $this->getOrganization->title,
+                'image'       => $this->getOrganization->image,
+                'description' => $this->getOrganization->description,
+                'slug'        => $this->getOrganization->slug,
             ];
         }
         if ($this->getCategory) {

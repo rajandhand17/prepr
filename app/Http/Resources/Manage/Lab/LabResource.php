@@ -56,7 +56,7 @@ class LabResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
-        $hosted_by=[];
+        $hosted_by = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -82,12 +82,12 @@ class LabResource extends JsonResource
                 'country'   => $this->address->country,
             ];
         }
-        if($this->organization_id){
-            $hosted_by=[
-                'title'       =>$this->organization->title,
-                'image'       =>$this->organization->image,
-                'description' =>$this->organization->description,
-                'slug'        =>$this->organization->slug,
+        if ($this->organization_id) {
+            $hosted_by = [
+                'title'       => $this->organization->title,
+                'image'       => $this->organization->image,
+                'description' => $this->organization->description,
+                'slug'        => $this->organization->slug,
             ];
         }
         if ($this->achievement) {
