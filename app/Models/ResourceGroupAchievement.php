@@ -18,4 +18,9 @@ class ResourceGroupAchievement extends Model
         'achievement_points',
         'achievement_image',
     ];
+
+    public function getAchievementImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

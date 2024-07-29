@@ -273,11 +273,9 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
-
     public function addEmbeddedMedia($request, $resource_module_id)
     {
         try {

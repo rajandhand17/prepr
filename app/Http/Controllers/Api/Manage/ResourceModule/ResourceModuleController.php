@@ -237,6 +237,7 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             if ($request->has('links') && !empty($request->links)) {
+
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addLinks) {
                     return $this->sendError(__('responses.add_links_failed'), 403);

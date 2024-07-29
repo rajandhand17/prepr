@@ -132,16 +132,34 @@ class ResourceModuleDetailService
         try {
             foreach ($request->links as  $value) {
                 $type = config('constants.resource_module_type.url');
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
-                if (!$resourceModuleDetailed) {
-                    return false;
+                $checkExistsResourceModules=self::checkDuplicateLinks($request,$resource_module_id);
+                if(!$checkExistsResourceModules){
+                 $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
+                    if (!$resourceModuleDetailed) {
+                        return false;
+                    }
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+            return false;
+        }
+    }
 
+    public function checkDuplicateLinks($request, $resource_module_id)
+    {
+        try {
+            $duplicatedValues=[];
+            foreach ($request->links as  $value) {
+                $type = config('constants.resource_module_type.url');
+                $resourceModuleDetailed = ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id,'social_link_id'=>$value['social_link_id']])->first();
+                if($resourceModuleDetailed) {
+                    $duplicatedValues=$resourceModuleDetailed;
+                }
+            }
+            return $duplicatedValues;
+        }   catch (\Exception $e) {
             return false;
         }
     }
