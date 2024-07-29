@@ -3,15 +3,7 @@
 namespace App\Http\Controllers\Maestro\Organization;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\Language;
 use App\Models\Organization;
-use App\Models\OrganizationAddress;
-use App\Models\OrganizationMember;
-use App\Models\OrganizationSocialLink;
-use App\Models\SocialLink;
-use App\Models\User;
-use App\Services\Manage\CategoryService;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\OrganizationAddressService;
 use App\Services\Maestro\OrganizationMemberService;
@@ -73,6 +65,7 @@ class OrganizationController extends Controller
                 ['data' => 'website', 'name' => 'website', 'title' => 'Website', 'width' => '5%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false],
             ]);
+
             return view('maestro.organization.index', compact('html'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -88,8 +81,9 @@ class OrganizationController extends Controller
             $this->construct();
             $data = collect();
             $languages = LanguageService::getLanguages();
-            $social_name  = SocialLinkService::getSocialLinkList();
-            return view('maestro.organization.create', compact('data', 'languages','social_name'));
+            $social_name = SocialLinkService::getSocialLinkList();
+
+            return view('maestro.organization.create', compact('data', 'languages', 'social_name'));
         } catch (Exception $e) {
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
@@ -105,6 +99,7 @@ class OrganizationController extends Controller
             if ($this->createOrganization($request)) {
                 return redirect()->route('organization.index')->with('success', 'Organization created successfully');
             }
+
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
@@ -129,11 +124,12 @@ class OrganizationController extends Controller
             $data = Organization::find($id);
             $org_members = OrganizationMemberService::getOrganizationMembersById($id);
             $orgSocialLink = OrganizationSocialLinkService::getOrganizationSocialLink($id);
-            $social_name  = SocialLinkService::getSocialLinkList();
+            $social_name = SocialLinkService::getSocialLinkList();
             $orgAssociatedItems = $this->getOrgAssociatedItemsById($data);
             $org_address = OrganizationAddressService::getOrganizationAddressById($id);
             $languages = LanguageService::getLanguages();
-            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages', 'org_address', 'org_members','social_name', 'orgAssociatedItems'));
+
+            return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages', 'org_address', 'org_members', 'social_name', 'orgAssociatedItems'));
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

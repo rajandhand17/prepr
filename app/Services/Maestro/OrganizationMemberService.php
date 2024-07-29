@@ -6,7 +6,6 @@ use App\Models\OrganizationMember;
 
 class OrganizationMemberService
 {
-
     public static function updateOrganizationMember($request, $org_id)
     {
         try {
@@ -82,22 +81,21 @@ class OrganizationMemberService
                     $people = OrganizationMember::create($people_data);
                 }
             }
-          
+
             return $people;
         } catch(\Exception $e) {
             return false;
         }
-
     }
 
     public static function getOrganizationMembersById($orgId)
     {
         try {
             $people = OrganizationMember::where('organization_id', $orgId)->get();
+
             return $people;
         } catch(\Exception $e) {
             return false;
         }
-
     }
 }

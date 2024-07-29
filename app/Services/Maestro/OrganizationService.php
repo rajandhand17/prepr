@@ -39,6 +39,7 @@ class OrganizationService
                 $organization->category = $request->category;
                 $organization->status = $request->status;
                 $org = $organization->save();
+
                 return $org;
             }
 
@@ -55,6 +56,7 @@ class OrganizationService
             if ($organization) {
                 return $organization->delete();
             }
+
             return false;
         } catch (Exception $e) {
             return false;
@@ -93,6 +95,7 @@ class OrganizationService
                 'vanity_link'   => $request->vanity_link,
             ];
             $organization = Organization::create($data);
+
             return $organization;
         } catch (Exception $e) {
             return false;
@@ -176,13 +179,14 @@ class OrganizationService
     {
         try {
             $user = !empty($org->user_id) ? User::where(['id' => $org->user_id])->pluck('username', 'id') : null;
-            $category =  !empty($org->category) ? Category::where(['id' => $org->category])->pluck('title', 'id') : null;
-            return ['user' => $user , 'category' => $category];
+            $category = !empty($org->category) ? Category::where(['id' => $org->category])->pluck('title', 'id') : null;
+
+            return ['user' => $user, 'category' => $category];
         } catch (Exception $e) {
             return false;
         }
     }
-    
+
     public static function getOrganizationById($organization_id)
     {
         try {

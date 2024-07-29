@@ -22,17 +22,18 @@ trait OrganizationTrait
                 $organizationMember = OrganizationMemberService::createOrganizationMember($request, $newOrg->id);
                 $organizationSocialLink = OrganizationSocialLinkService::createOrganizationSocialLink($request, $newOrg->id);
                 $selectPlan = OrganizationService::selectPlan($request, $newOrg);
+
                 return [
                     'org'                    => $newOrg,
                     'org_address'            => $organizationAddress,
                     'organizationMember'     => $organizationMember,
                     'organizationSocialLink' => $organizationSocialLink,
-                    'selectPlan'            => $selectPlan
+                    'selectPlan'             => $selectPlan,
                 ];
             });
             // Checking all the tables records inserted successfully
             if ($createdOrg['org'] && $createdOrg['org_address'] && $createdOrg['organizationSocialLink']
-                 && $createdOrg['organizationSocialLink'] &&  $createdOrg['selectPlan']) {
+                 && $createdOrg['organizationSocialLink'] && $createdOrg['selectPlan']) {
                 DB::commit();
 
                 // Returning new created table details
@@ -49,37 +50,39 @@ trait OrganizationTrait
     }
 
     private function updateOrganizationById($id, $request)
-    {    try {
-        // Getting Lab and related tables
-        $updatedOrg = DB::transaction(function () use ($request, $id) {
-            $org = OrganizationService::updateOrganizationById($request, $id);
-            $orgAddress = OrganizationAddressService::updateOrganizationAddress($request, $id);
-            $organizationMember = OrganizationMemberService::updateOrganizationMember($request, $id);
-            $organizationSocialLink = OrganizationSocialLinkService::updateOrganizationSocialLink($request, $id);
-            //$selectPlan = OrganizationService::selectPlan($request, $org);
-            return [
-                'org'                    => $org,
-                'org_address'            => $orgAddress,
-                'organizationSocialLink' => $organizationSocialLink,
-                'organizationMember' => $organizationMember,
-               // 'selectPlan' => $selectPlan,
-            ];
-        });
+    {
+        try {
+            // Getting Lab and related tables
+            $updatedOrg = DB::transaction(function () use ($request, $id) {
+                $org = OrganizationService::updateOrganizationById($request, $id);
+                $orgAddress = OrganizationAddressService::updateOrganizationAddress($request, $id);
+                $organizationMember = OrganizationMemberService::updateOrganizationMember($request, $id);
+                $organizationSocialLink = OrganizationSocialLinkService::updateOrganizationSocialLink($request, $id);
 
-        // Checking all the tables records inserted successfully
-        if ($updatedOrg['org'] && $updatedOrg['org_address']
-             && $updatedOrg['organizationSocialLink'] && $updatedOrg['organizationMember']) {
-            DB::commit();
+                //$selectPlan = OrganizationService::selectPlan($request, $org);
+                return [
+                    'org'                    => $org,
+                    'org_address'            => $orgAddress,
+                    'organizationSocialLink' => $organizationSocialLink,
+                    'organizationMember'     => $organizationMember,
+                    // 'selectPlan' => $selectPlan,
+                ];
+            });
 
-            // Returning new created table details
-            return $updatedOrg['org'];
+            // Checking all the tables records inserted successfully
+            if ($updatedOrg['org'] && $updatedOrg['org_address']
+                 && $updatedOrg['organizationSocialLink'] && $updatedOrg['organizationMember']) {
+                DB::commit();
+
+                // Returning new created table details
+                return $updatedOrg['org'];
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (Exception $e) {
+            return false;
         }
-        DB::rollBack();
-
-        return false;
-    } catch (Exception $e) {
-        return false;
-    }
     }
 
     private function deleteOrganizationById($id)
@@ -89,11 +92,13 @@ trait OrganizationTrait
             $deleteOrg = OrganizationService::deleteOrganization($id);
             $deleteLinks = OrganizationSocialLinkService::deleteOrgExternalLinks($id);
             $deleteOrgAddress = OrganizationAddressService::deleteOrganizationAddress($id);
-           if ($deleteOrg  && $deleteLinks && $deleteOrgAddress == false) {
+            if ($deleteOrg && $deleteLinks && $deleteOrgAddress == false) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -130,6 +135,7 @@ trait OrganizationTrait
             return false;
         }
     }
+
     private function getOrgAssociatedItemsById($org)
     {
         try {
