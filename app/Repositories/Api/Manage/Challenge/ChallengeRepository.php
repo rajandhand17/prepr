@@ -25,7 +25,6 @@ use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTimelinesService;
 use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
-use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use Exception;
 use Illuminate\Support\Facades\DB;
