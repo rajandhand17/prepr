@@ -88,4 +88,12 @@ class ResourceModuleService
             return false;
         }
     }
+    public static function getResourceModulesByIds($moduleIds)
+    {
+        try {
+            return ResourceModule::whereIn('id', $moduleIds)->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

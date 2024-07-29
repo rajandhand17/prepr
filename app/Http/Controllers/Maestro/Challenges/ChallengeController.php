@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Maestro\Challenges;
 
 use App\Http\Controllers\Controller;
-use App\Models\Challenge;
-use App\Services\Maestro\LanguageService;
-use App\Traits\Maestro\Challenge\ChallengeTrait;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Traits\Maestro\Challenge\ChallengeTrait;
+use App\Services\Maestro\LanguageService;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use App\Models\Challenge;
+use Exception;
 
 class ChallengeController extends Controller
 {
@@ -99,35 +98,16 @@ class ChallengeController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function show(Request $request, string $id)
-    {
-        try {
-            return view('maestro.challenge.show');
-        } catch (Exception $e) {
-            return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
-        }
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createChallenge($request)) {
-                DB::commit();
-
                 return redirect()->route('challenge.index')->with('success', 'Challenge created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -157,18 +137,11 @@ class ChallengeController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateChallengeById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('challenge.index')->with('success', 'Challenge Updated successfully');
             }
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -179,16 +152,10 @@ class ChallengeController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteChallengeById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Challenge deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -215,18 +182,11 @@ class ChallengeController extends Controller
     public function assessmentStore(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateAssessment($request)) {
-                DB::commit();
-
                 return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
             }
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

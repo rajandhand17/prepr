@@ -119,4 +119,13 @@ class UserService
             return false;
         }
     }
+
+    public static function getUserPluckById($user_id)
+    {
+        try {
+            return User::where(['id' => $user_id])->pluck('username', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
