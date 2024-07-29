@@ -353,4 +353,56 @@ class ComponentAssociationService
             return false;
         }
     }
+    public static function addAssociatedLabWithChallenge($request,$challenge)
+    {
+        try {
+            if (!empty($request->associativeLab)) {
+                $labNewArray = [];
+                foreach ($request->associativeLab as $key => $lab) {
+                    $labData['challenge_id'] = $challenge->id;
+                    $labData['lab_id'] = $lab;
+                    $labData['sequence'] = $key + 1;
+                    $labNewArray[] = $labData;
+                }
+                ComponentAssociation::insert($labNewArray);
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function addAssociatedResourceModuleWithChallenge($request,$challenge)
+    {
+        try {
+            if (!empty($request->associativeResourceModule)) {
+                $resourceModuleNewArray = [];
+                foreach ($request->associativeResourceModule as $key => $resourceModule) {
+                    $resourceModuleData['challenge_id'] = $challenge->id;
+                    $resourceModuleData['resource_module_id'] = $resourceModule;
+                    $resourceModuleData['sequence'] = $key + 1;
+                    $resourceModuleNewArray[] = $resourceModuleData;
+                }
+                ComponentAssociation::insert($resourceModuleNewArray);
+            }
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getChallengeAssociatedLab($challenge)
+    {
+        try {
+            return ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('lab_id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+    public static function getChallengeAssociatedResourceModule($challenge)
+    {
+        try {
+            return ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('resource_module_id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

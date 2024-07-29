@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Services\Maestro;
+
+use App\Models\ChallengeSkillsGroupsStack;
+use Exception;
+
+class ChallengeSkillsGroupsStackService
+{
+    public static function challengeSkillsGroupsStacks($request, $challenge)
+    {
+        try {
+            if (!empty($request->skills)) {
+                $skillNewArray = [];
+                foreach ($request->skills as $skill) {
+                    $skillData['challenge_id'] = $challenge->id;
+                    $skillData['foreign_id'] = $skill;
+                    $skillData['type'] = '0';
+                    $skillNewArray[] = $skillData;
+                }
+                ChallengeSkillsGroupsStack::insert($skillNewArray);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getPluckSkillGroupStack($challenge)
+    {
+        try {
+            return ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'type' => '0'])->pluck('foreign_id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+}

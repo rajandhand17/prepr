@@ -182,4 +182,18 @@ class OrganizationService
             return false;
         }
     }
+    
+    public static function getOrganizationById($organization_id)
+    {
+        try {
+            $organization = Organization::where(['id' => $organization_id])->pluck('title', 'id');
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

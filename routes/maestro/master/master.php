@@ -16,4 +16,5 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('get-users-email', [MasterController::class, 'getUserEmail'])->name('getUserEmail');
     Route::get('get-challenges', [MasterController::class, 'getChallengesForProject'])->name('getChallengesForProject');
     Route::get('get-labs', [MasterController::class, 'getLabsForProject'])->name('getLabsForProject');
+    Route::get('get-challenge-labs', [MasterController::class, 'getLabs'])->name('getAssociatedLabs');
 });

@@ -535,4 +535,10 @@ return [
         'resource_collections'    => '5',
         'resource_group'          => '6',
     ],
+
+    'assessment_type' => [
+        'no_evaluation'         => 'noEvAttachments',
+        'open_evaluation'       => 'openEvAttachments',
+        'close_evaluation'      => 'closeEvAttachments',
+    ],
 ];
