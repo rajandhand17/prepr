@@ -29,6 +29,7 @@ class ExploreService
                     $exploreData->role = json_encode($request->roles);
                 }
                 $exploreData->save();
+
                 return true;
             }
         } catch (Exception $e) {
@@ -79,9 +80,10 @@ class ExploreService
                 'media_type'   => $componentRequest->media_type,
                 'media'        => $componentRequest->media,
             ]);
+
             return true;
-            } catch (Exception $e) {
-                return false;
-            }
+        } catch (Exception $e) {
+            return false;
         }
     }
+}

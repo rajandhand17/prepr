@@ -33,6 +33,9 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroAuthRoutes();
             $this->mapMaestroDashboardRoutes();
             $this->mapMaestroUsersRoutes();
+            $this->mapMaestroSettingRoutes();
+            $this->mapMaestroChallengeTemplateRoutes();
+            $this->mapMaestroLabMarketplaceRoutes();
             $this->mapMaestroOrganizationRoutes();
             $this->mapMaestroRoleAndPermissionRoutes();
             // $this->mapMaestroLabRoutes();
@@ -54,6 +57,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroCloneLabRoutes();
             $this->mapMaestroLabRoutes();
             $this->mapMaestroPreBuiltAchievementRoutes();
+            $this->mapMaestroPreBuiltVendorManagementRoutes();
 
             Route::prefix('api/v1/master/')->middleware('api')->group(base_path('routes/v1/master.php'));
             Route::prefix('api/v1/auth/')->middleware('api')->group(base_path('routes/v1/auth.php'));
@@ -224,6 +228,21 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('maestro')->group(base_path('routes/maestro/users.php'));
     }
 
+    public function mapMaestroSettingRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/setting.php'));
+    }
+
+    public function mapMaestroChallengeTemplateRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/challenge-template.php'));
+    }
+
+    public function mapMaestroLabMarketplaceRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/lab-marketplace.php'));
+    }
+
     public function mapMaestroOrganizationRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/organization/organization.php'));
@@ -322,5 +341,10 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroLabRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/lab.php'));
+    }
+
+    public function mapMaestroPreBuiltVendorManagementRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/vendor-management.php'));
     }
 }
