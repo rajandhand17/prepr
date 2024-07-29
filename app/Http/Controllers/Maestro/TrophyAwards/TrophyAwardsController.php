@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Traits\Maestro\TrophyAwards\TrophyAwardsTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -71,8 +70,6 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.index', compact('html'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -106,18 +103,11 @@ class TrophyAwardsController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createTrophyAwards($request)) {
-                DB::commit();
-
                 return redirect()->route('trophyawards.index')->with('success', 'Trophy Awards created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -130,22 +120,13 @@ class TrophyAwardsController extends Controller
     public function edit($id)
     {
         try {
-            $status = [
-                'active'   => 'Active',
-                'inactive' => 'Inactive',
-            ];
-
-            $awardedTrophies = TrophyAwards::find($id);
-
+            $status = ['active'   => 'Active','inactive' => 'Inactive'];
+            $awardedTrophies = $this->getTrophyAwardsById($id);
             // get awarded members
             $awardedMembers = explode(',', $awardedTrophies->user_id);
-
             $users = User::pluck('username', 'id');
-
             return view('maestro.trophy.edit', compact('awardedTrophies', 'users', 'status', 'awardedMembers'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('trophyawards.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -159,19 +140,11 @@ class TrophyAwardsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateTrophyAwardsById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('trophyawards.index')->with('success', 'Trophy Award Updated successfully');
             }
-            DB::rollback();
-
             return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
-
             return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -185,16 +158,10 @@ class TrophyAwardsController extends Controller
     public function destroy($id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteTrophyAwardsById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
-
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

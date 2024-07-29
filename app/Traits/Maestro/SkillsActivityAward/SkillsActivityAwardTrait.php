@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\SkillsActivityAward;
 
-use App\Services\Maestro\SkillsActivityAward\SkillsActivityAwardService;
+use App\Services\Maestro\SkillsActivityAwardService;
 use Exception;
 
 trait SkillsActivityAwardTrait
