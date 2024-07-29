@@ -353,4 +353,19 @@ class LabService
             return false;
         }
     }
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData)
+    {
+        try {
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($fetchUserSkills);
+            $labIds = $getLabsIdsBasedOnSKills->unique();
+            $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedLabs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

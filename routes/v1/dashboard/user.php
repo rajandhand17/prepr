@@ -8,4 +8,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/my-labs', [UserDashboardController::class, 'getMyLabs']);
     Route::get('/my-projects', [UserDashboardController::class, 'getMyProjects']);
     Route::get('/my-latest-achievement', [UserDashboardController::class, 'getMyLatestAchievement']);
+    Route::get('/my-recommendations', [UserDashboardController::class, 'getMyRecommendations']);
 });

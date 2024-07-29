@@ -25,4 +25,12 @@ interface UserDashboardInterface
     public function getDashboardProjectList($projectIds);
 
     public function getMyLatestAchievement($userData);
+
+    public function fetchUserSkills($userData);
+
+    public function fetchRecommendedChallenges($fetchUserSkills, $userData);
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData);
+
+    public function fetchRecommendedResourceModules($fetchUserSkills, $userData);
 }

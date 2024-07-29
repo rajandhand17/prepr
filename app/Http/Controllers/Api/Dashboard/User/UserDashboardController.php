@@ -8,6 +8,7 @@ use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Dashboard\User\UserDashboardRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -169,6 +170,45 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_latest_achievement'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyRecommendations(Request $request)
+    {
+        try {
+            // Check valid request or not for my recommendations request
+            if (!in_array($request->type, ['challenges', 'labs', 'resource_modules'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $userData = auth()->user();
+
+            // Fetch User Skills.
+            $fetchUserSkills = $this->userDashboardRepository->fetchUserSkills($userData);
+            if ($fetchUserSkills == false) {
+                return $this->sendError(__('responses.user_skills_not_found'));
+            }
+
+            switch ($request->type) {
+                case 'challenges':
+                    $fetchRecommendedChallenges = $this->userDashboardRepository->fetchRecommendedChallenges($fetchUserSkills, $userData);
+                    return $this->sendResponse(ChallengeResource::collection($fetchRecommendedChallenges), __('responses.challenge_recommended_found'), 200);
+                    break;
+                case 'labs':
+                    $fetchRecommendedLabs = $this->userDashboardRepository->fetchRecommendedLabs($fetchUserSkills, $userData);
+                    return $this->sendResponse(LabResource::collection($fetchRecommendedLabs), __('responses.lab_recommended_found'), 200);
+                    break;
+                case 'resource_modules':
+                    $fetchRecommendedResourceModules = $this->userDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    break;
+            }
+
+            return $this->sendError(__('responses.failed_to_find_recommended_data'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

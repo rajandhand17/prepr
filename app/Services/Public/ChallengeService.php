@@ -9,6 +9,7 @@ use App\Models\ChallengeTask;
 use App\Models\MemberManagement;
 use App\Models\PitchTemplate;
 use App\Models\Project;
+use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 
@@ -329,6 +330,21 @@ class ChallengeService
     {
         try {
             return Challenge::select();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedChallenges($fetchUserSkills, $userData)
+    {
+        try {
+            $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($fetchUserSkills);
+            $challengeIds = $getChallengeIdBasedOnSkill->unique();
+            $fetchRecommendedChallenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedChallenges;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

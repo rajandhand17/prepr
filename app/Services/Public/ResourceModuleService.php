@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\ModuleCompletionStatusService;
 
 class ResourceModuleService
@@ -187,6 +188,21 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedResourceModules($fetchUserSkills, $userData)
+    {
+        try {
+            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasesOnSKillsId($fetchUserSkills);
+            $resourceModuleIds = $getResourceModulesIdsBasedOnSKills->unique();
+            $fetchRecommendedResourceModules = ResourceModule::whereIn('id', $resourceModuleIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedResourceModules;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

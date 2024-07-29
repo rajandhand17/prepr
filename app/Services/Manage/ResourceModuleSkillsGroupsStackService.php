@@ -187,4 +187,26 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getResourceModuleIdBasesOnSKillsId($usersSkills)
+    {
+        try {
+            if (count($usersSkills) > 0) {
+                $getSkills = ResourceModuleSkillsGroupsStack::where('type', 0)
+                ->whereIn('foreign_id', $usersSkills)
+                    ->pluck('foreign_id');
+            } else {
+                $getSkills = ResourceModuleSkillsGroupsStack::where('type', 0)->pluck('foreign_id');
+                if (count($getSkills) > 0) {
+                    $getSkills = $getSkills->random();
+                }
+            }
+
+            return $getSkills;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
