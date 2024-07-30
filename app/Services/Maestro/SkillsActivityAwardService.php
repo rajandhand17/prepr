@@ -21,7 +21,6 @@ class SkillsActivityAwardService
                 'image'  => 'mimes:jpg,png,jpeg',
                 'points' => 'required|integer|min:0',
             ];
-            // dd($request->skill);
             $image = '';
             if ($request->image) {
                 $image = $request->image->store('uploads/trophy', 's3');
@@ -43,7 +42,6 @@ class SkillsActivityAwardService
             if ($image !== '') {
                 $insertArray['image'] = $image;
             }
-
             if (!empty($insertArray)) {
                 $award->update($insertArray);
 

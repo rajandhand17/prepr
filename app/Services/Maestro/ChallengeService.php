@@ -2,12 +2,12 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Services\Maestro\LanguageService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use App\Helpers\FileUploadHelper;
 
 class ChallengeService
 {
@@ -36,6 +36,7 @@ class ChallengeService
             if ($request->file('cover_image')) {
                 $achievementImage = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'challenge');
             }
+
             return $achievementImage;
         } catch (Exception $e) {
             return false;
@@ -45,17 +46,17 @@ class ChallengeService
     public static function getChallengeAssociatedItemsById($challenge)
     {
         try {
-            $skillIds   = ChallengeSkillsGroupsStackService::getPluckSkillGroupStack($challenge);
-            $labIds     = ComponentAssociationService::getChallengeAssociatedLab($challenge);
-            $moduleIds  = ComponentAssociationService::getChallengeAssociatedResourceModule($challenge);
+            $skillIds = ChallengeSkillsGroupsStackService::getPluckSkillGroupStack($challenge);
+            $labIds = ComponentAssociationService::getChallengeAssociatedLab($challenge);
+            $moduleIds = ComponentAssociationService::getChallengeAssociatedResourceModule($challenge);
             $organization = !empty($challenge->organization_id) ? OrganizationService::getOrganizationById($challenge->organization_id) : null;
-            $category   = !empty($challenge->category_id) ? CategoryService::getCategoriesById($challenge->category_id) : null;
-            $level      = !empty($challenge->level_id) ? LevelsService::getLevelById($challenge->level_id) : null;
-            $duration   = !empty($challenge->duration_id) ? DurationService::getLevelById($challenge->duration_id) : null;
-            $user       = !empty($challenge->user_id) ? UserService::getUserPluckById($challenge->user_id) : null;
-            $skills     = SkillService::getSkillsById($skillIds);
-            $labs       = LabService::getLabByIds($labIds);
-            $resourceModules = ResourceModuleService::getResourceModulesByIds($moduleIds);
+            $category = !empty($challenge->category_id) ? CategoryService::getCategoriesById($challenge->category_id) : null;
+            $level = !empty($challenge->level_id) ? LevelsService::getLevelById($challenge->level_id) : null;
+            $duration = !empty($challenge->duration_id) ? DurationService::getLevelById($challenge->duration_id) : null;
+            $user = !empty($challenge->user_id) ? UserService::getUserPluckById($challenge->user_id) : null;
+            $skills = !empty($challenge->id) ? SkillService::getSkillsById($skillIds) : null;
+            $labs = !empty($challenge->user_id) ? LabService::getLab('edit', $labIds) : null;
+            $resourceModules = !empty($challenge->user_id) ? ResourceModuleService::getResourceModulesByIds($moduleIds) : null;
 
             return ['category' => $category ?? [], 'organization' => $organization ?? [], 'skills' => $skills ?? [], 'skillIds' => $skillIds ?? [], 'user' => $user ?? [], 'level' => $level ?? [],'associatedLabs' => $labs ?? [],  'duration' => $duration ?? [], 'labIds' => $labIds ?? [], 'moduleIds' => $moduleIds ?? [], 'resourceModules' => $resourceModules ?? []];
         } catch (Exception $e) {
@@ -69,15 +70,15 @@ class ChallengeService
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($request->title, $model);
             $challenge = new Challenge();
-            $challenge->uuid        = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $challenge->language    = $request->language;
-            $challenge->title       = $request->title;
-            $challenge->slug        = $slug;
-            $challenge->user_id     = $request->user_id;
+            $challenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $challenge->language = $request->language;
+            $challenge->title = $request->title;
+            $challenge->slug = $slug;
+            $challenge->user_id = $request->user_id;
             $challenge->organization_id = $request->organization_id;
             $challenge->category_id = $request->category;
             $challenge->duration_id = $request->duration;
-            $challenge->level_id    = $request->level;
+            $challenge->level_id = $request->level;
             $challenge->description = $request->description;
             $challenge->is_open     = $request->is_open;
             $challenge->status      = $request->status;
@@ -95,7 +96,7 @@ class ChallengeService
             return false;
         }
     }
-    
+
     public static function deleteChallenge($id)
     {
         try {
@@ -197,6 +198,7 @@ class ChallengeService
             return [];
         }
     }
+
     public static function getChallengeBasedOnId($id)
     {
         try {

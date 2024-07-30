@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Maestro\Challenges;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Traits\Maestro\Challenge\ChallengeTrait;
+use App\Models\Challenge;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\ChallengeAssessmentService;
 use App\Services\Maestro\ChallengeAssessmentCriteriaService;
+use App\Traits\Maestro\Challenge\ChallengeTrait;
+use Exception;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Models\Challenge;
-use Exception;
 
 class ChallengeController extends Controller
 {
@@ -108,6 +108,7 @@ class ChallengeController extends Controller
             if ($this->createChallenge($request)) {
                 return redirect()->route('challenge.index')->with('success', 'Challenge created successfully');
             }
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -141,6 +142,7 @@ class ChallengeController extends Controller
             if ($this->updateChallengeById($id, $request)) {
                 return redirect()->route('challenge.index')->with('success', 'Challenge Updated successfully');
             }
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -186,6 +188,7 @@ class ChallengeController extends Controller
             if ($this->storeUpdateAssessment($request)) {
                 return redirect()->route('challenge.index')->with('success', 'Challenge Assessment saved successfully.');
             }
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);

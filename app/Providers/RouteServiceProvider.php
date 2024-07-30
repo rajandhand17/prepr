@@ -245,7 +245,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroOrganizationRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/organization/organization.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/organization.php'));
     }
 
     public function mapMaestroRoleAndPermissionRoutes()

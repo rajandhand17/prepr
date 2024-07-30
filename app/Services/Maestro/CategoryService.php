@@ -155,6 +155,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategoriesById($category_id)
     {
         try {

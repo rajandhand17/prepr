@@ -153,7 +153,7 @@
             <div class="form-group {{($errors->has('language')) ? 'has-error' : ''}}">
                 {!! Form::label('language', 'Language', ['class' => 'control-label ']) !!}
                 @if((strpos(Request::url(),'edit')) !== false )
-                    {!! Form::select('language', $languages, $data->language, ['class' => 'form-control','id' => 'languageId','disabled' => 'disabled']) !!}
+                    {!! Form::select('language', $languages, $data->language, ['class' => 'form-control ','id' => 'languageId','disabled' => 'disabled']) !!}
                 @else
                     {!! Form::select('language', $languages, old('language'), ['class' => 'form-control','id' => 'languageId']) !!}            
                 @endif
@@ -187,7 +187,7 @@
         <div class="col-sm-6 col-xs-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
                 {!! Form::label('user_id', 'Organization User', ['class' => 'control-label ']) !!}
-                {!! Form::select('user_id', $users, old('user_id'),['class' => 'form-control ', 'id'=>'users_multi_select2','placeholder'=>'Select User']) !!}
+                {!! Form::select('user_id', @$orgAssociatedItems['user'] ?? [], old('user_id'),['class' => 'form-control ', 'id'=>'userId','placeholder'=>'Select User']) !!}
                 <span class="help-block">{{ $errors->first('user_id')}}</span>
             </div>
         </div>
@@ -196,15 +196,14 @@
     @endif
     <div class="clearfix"></div>
 </div>
-
 <div class="row form-group ">
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('category')) ? 'has-error' : ''}}">
             {!! Form::label('category', 'Category', ['class' => 'control-label ']) !!}
             @if((strpos(Request::url(),'edit')) !== false )
-                {{ Form::select('category', $categories, @$data->category, ['class' => 'form-control','id' => '']) }}
+                {{ Form::select('category',  @$orgAssociatedItems['category'] ?? [], [], ['class' => 'form-control select2','id' => 'listCategory']) }}
             @else
-                {{ Form::select('category', $categories, old('category'), ['class' => 'form-control','id' => '']) }}
+                {{ Form::select('category', [], old('category'), ['class' => 'form-control select2','id' => 'listCategory']) }}
             @endif
             <span class="help-block">{{ $errors->first('category')}}</span>
         </div>
@@ -263,7 +262,7 @@
                 <div class="col-sm-3 col-xs-3">
                     <div class="form-group {{($errors->has('org_social')) ? 'has-error' : ''}}">
                         {!! Form::label('org_social', 'Social Media', ['class' => 'control-label ']) !!}
-                        {!! Form::select('org_social[]',$social_name,$link->social_link_id, ['class' => 'form-control org_social']) !!}
+                        {!! Form::select('org_social[]',$social_name->pluck('title', 'id'), $link->social_link_id, ['class' => 'form-control org_social']) !!}
                         <span class="help-block">{{ $errors->first('org_social')}}</span>
                     </div>
                 </div>
@@ -292,7 +291,7 @@
             <div class="col-sm-3 col-xs-3">
                 <div class="form-group {{($errors->has('org_social')) ? 'has-error' : ''}}">
                     {!! Form::label('org_social', 'Social Media', ['class' => 'control-label ']) !!}
-                    {!! Form::select('org_social[]',$social_name,null, ['class' => 'form-control org_social']) !!}
+                    {!! Form::select('org_social[]',$social_name->pluck('title', 'id'),null, ['class' => 'form-control org_social']) !!}
                     <span class="help-block">{{ $errors->first('org_social')}}</span>
                 </div>
             </div>
@@ -404,46 +403,6 @@
 
 </div>
 <hr>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var language = $('#languageId').val();
-        getCategories(language);
-    });
-
-    $("#languageId").change(function () {
-        var language = $('#languageId').val();
-        $('#listCategory').empty();
-        getCategories(language);
-    });
-
-    /* This function for select categorys */
-    function getCategories(language){
-        $("#listCategory").closest(".input-group").siblings(".help-block").text('');
-        $('#listCategory').select2({           
-            placeholder: "Select category",
-            ajax: {
-                url: "",
-                cache: true,
-                data: function (params) {
-                    return {
-                        search: params.term,
-                        language: language,
-                        component: 'organization'
-                    };
-                },
-                processResults: function (data) {
-                    if(data.status=='fail'){
-                        $("#listCategory").closest(".input-group").siblings(".help-block").text(data.message);
-                    }
-                    return {
-                        results: data.result
-                    };
-                }
-            }
-        });
-    }
-
-</script>
 
 <script type="text/javascript"
         src="{{asset('adminassets/vendors/bower_components/moment/min/moment-with-locales.min.js')}}"></script>

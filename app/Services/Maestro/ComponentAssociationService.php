@@ -130,7 +130,7 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
-            dd($e);
+            
             UtilityHelper::logError($e);
 
             return false;
@@ -328,7 +328,7 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
-            dd($e);
+            
             UtilityHelper::logError($e);
 
             return false;
@@ -353,7 +353,8 @@ class ComponentAssociationService
             return false;
         }
     }
-    public static function addAssociatedLabWithChallenge($request,$challenge)
+
+    public static function addAssociatedLabWithChallenge($request, $challenge)
     {
         try {
             if (!empty($request->associativeLab)) {
@@ -366,12 +367,14 @@ class ComponentAssociationService
                 }
                 ComponentAssociation::insert($labNewArray);
             }
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
-    public static function addAssociatedResourceModuleWithChallenge($request,$challenge)
+
+    public static function addAssociatedResourceModuleWithChallenge($request, $challenge)
     {
         try {
             if (!empty($request->associativeResourceModule)) {
@@ -384,11 +387,13 @@ class ComponentAssociationService
                 }
                 ComponentAssociation::insert($resourceModuleNewArray);
             }
+
             return true;
         } catch (Exception $e) {
             return false;
         }
     }
+
     public static function getChallengeAssociatedLab($challenge)
     {
         try {
@@ -397,6 +402,7 @@ class ComponentAssociationService
             return false;
         }
     }
+
     public static function getChallengeAssociatedResourceModule($challenge)
     {
         try {

@@ -85,8 +85,6 @@ class LabController extends Controller
 
             return view('maestro.lab.index', compact('html'));
         } catch (Exception $e) {
-            dd($e);
-
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -97,7 +95,7 @@ class LabController extends Controller
     public function create()
     {
         try {
-            $languages = Language::where(['status' => 1])->pluck('name', 'iso');
+            $languages = LanguageService::getLanguages();
             $social_name = SocialLinkService::getSocialLinkList();
 
             return view('maestro.lab.create', compact('languages', 'social_name'));
@@ -112,7 +110,6 @@ class LabController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             // checks creation limits of the Lab
             $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
@@ -122,16 +119,10 @@ class LabController extends Controller
                 }
             }
             if ($this->createLab($request)) {
-                DB::commit();
-
                 return redirect()->route('lab.index')->with('success', 'Lab created successfully');
             }
-            DB::rollback();
-
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
-
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         }
     }

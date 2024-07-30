@@ -41,8 +41,6 @@ class LabExternalLinksService
 
             return true;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -67,8 +65,6 @@ class LabExternalLinksService
 
             return [];
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -84,14 +80,10 @@ class LabExternalLinksService
                     $lab_social_data['social_media_link'] = $value;
                     LabExternalLinks::create($lab_social_data);
                 }
-
                 return true;
             }
-
             return false;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
@@ -102,11 +94,8 @@ class LabExternalLinksService
             if (LabExternalLinks::where('lab_id', $id)->delete()) {
                 return true;
             }
-
             return false;
         } catch(\Exception $e) {
-            dd($e);
-
             return false;
         }
     }
