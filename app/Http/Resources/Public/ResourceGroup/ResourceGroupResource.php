@@ -150,7 +150,7 @@ class ResourceGroupResource extends JsonResource
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
             'skills'                        => $skills,
-            'achievements'                  => $achievements,
+            'achievement'                   => $achievements,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'favourite'                     => $this->favourite(),
