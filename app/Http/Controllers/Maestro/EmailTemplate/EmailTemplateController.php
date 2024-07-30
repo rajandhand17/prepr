@@ -47,7 +47,7 @@ class EmailTemplateController extends Controller
     public function index(Builder $builder)
     {
         try {
-            $templates = EmailTemplate::query()->latest();
+            $templates = $this->getEmailTemplates();
             if (request()->ajax()) {
                 return DataTables::eloquent($templates)
                     ->addColumn('action', static function (EmailTemplate $template) {
