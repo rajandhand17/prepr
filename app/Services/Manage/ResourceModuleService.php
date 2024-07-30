@@ -292,8 +292,6 @@ class ResourceModuleService
                 case 'embedded':
                     $media_type = config('constants.resource_media_type.embedded');
                     break;
-                default:
-                    $media_type = config('constants.resource_media_type.image');
             }
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($title, $model);
