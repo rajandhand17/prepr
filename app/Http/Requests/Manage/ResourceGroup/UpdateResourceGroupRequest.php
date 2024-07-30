@@ -32,7 +32,7 @@ class UpdateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
             'description'              => 'required',
-            'category_id'             => 'required|exists:categories,id',
+            'category_id'              => 'required|exists:categories,id',
             'privacy'                  => 'required|in:yes,no',
             'media_type'               => 'in:image,embedded',
             'status'                   => 'required|in:draft,publish,archive',
