@@ -108,16 +108,6 @@ class ResourceModuleService
                         ->distinct();
                 })->distinct('resource_modules.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceModule = $resourceModule->whereIn('resource_modules.id', function ($query) use ($request) {
-                    $query->select('resource_module_tags_groups.resource_module_id')
-                        ->from('resource_module_tags_groups')
-                        ->whereIn('resource_module_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_module_tags_groups.type', '0')
-                        ->whereNull('resource_module_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_modules.uuid');
-            }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceModule = $resourceModule->whereIn('duration_id', $request->duration_id);
             }
@@ -147,8 +137,7 @@ class ResourceModuleService
                         $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-
-                if(!empty($resourceModulesProgress)){
+                if (!empty($resourceModulesProgress)) {
                     $resourceModule = $resourceModule->whereIn('id', $resourceModulesProgress->pluck('module_id'));
                 }
             }

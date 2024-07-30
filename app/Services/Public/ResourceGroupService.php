@@ -120,7 +120,7 @@ class ResourceGroupService
                         $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
-                if(!empty($resourceGroupProgress)){
+                if (!empty($resourceGroupProgress)) {
                     $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
                 }
             }

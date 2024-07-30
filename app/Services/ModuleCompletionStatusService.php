@@ -153,5 +153,4 @@ class ModuleCompletionStatusService
             return false;
         }
     }
-
 }
