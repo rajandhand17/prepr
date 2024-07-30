@@ -42,9 +42,9 @@ class ResourceGroupResource extends JsonResource
             $level = $this->getLevel->title;
             $level_id = $this->getLevel->id;
         }
-        if($this->getCategory){
-            $category=$this->getCategory->title;
-            $category_id=$this->getCategory->id;
+        if ($this->getCategory) {
+            $category = $this->getCategory->title;
+            $category_id = $this->getCategory->id;
         }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;

@@ -46,9 +46,9 @@ class ResourceGroupResource extends JsonResource
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
         }
-        if($this->getCategory){
-            $category=$this->getCategory->title;
-            $category_id=$this->getCategory->id;
+        if ($this->getCategory) {
+            $category = $this->getCategory->title;
+            $category_id = $this->getCategory->id;
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
