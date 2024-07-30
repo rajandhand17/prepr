@@ -39,4 +39,10 @@ interface UserDashboardInterface
     public function fetchRecommendedLabs($fetchUserSkills, $userData);
 
     public function fetchRecommendedResourceModules($fetchUserSkills, $userData);
+
+    public function fetchMyChallengeProgress($userData);
+
+    public function fetchMyLabProgress($userData);
+
+    public function fetchMyResourceModuleProgress($userData);
 }

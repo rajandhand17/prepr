@@ -1336,5 +1336,9 @@
     "responses.failed_to_find_recommended_data": "Fail to retrieved recommendations",
     "responses.resource_module_recommended_found": "Recommended Resource Modules retrieved successfully",
     "responses.challenge_recommended_found": "Recommended Challenges retrieved successfully",
-    "responses.lab_recommended_found": "Recommended Labs retrieved successfully"
+    "responses.lab_recommended_found": "Recommended Labs retrieved successfully",
+    "responses.failed_to_retrieved_user_progress": "Failed to retireved user progress.",
+    "responses.user_challenges_progress_retrived": "User Challenges progress retrieved.",
+    "responses.user_labs_progress_retrived": "User Labs progress retrieved.",
+    "responses.user_resource_modules_progress_retrived": "User Resource Modules progress retrieved."
 }

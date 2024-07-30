@@ -259,4 +259,41 @@ class UserDashboardController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getMyProgress(Request $request)
+    {
+        try {
+            // Check valid request or not for my recommendations request
+            if (!in_array($request->type, ['challenges', 'labs', 'resource_modules'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // Fetch user's progress based on components
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'challenges':
+                    $fetchUserProgress = $this->userDashboardRepository->fetchMyChallengeProgress($userData);
+                    $message = __('responses.user_challenges_progress_retrived');
+                    break;
+                case 'labs':
+                    $fetchUserProgress = $this->userDashboardRepository->fetchMyLabProgress($userData);
+                    $message = __('responses.user_labs_progress_retrived');
+                    break;
+                case 'resource_modules':
+                    $fetchUserProgress = $this->userDashboardRepository->fetchMyResourceModuleProgress($userData);
+                    $message = __('responses.user_resource_modules_progress_retrived');
+                    break;
+            }
+
+            if (!empty($fetchUserProgress)) {
+                return $this->sendResponse($fetchUserProgress, $message, 200);
+            }
+
+            return $this->sendError(__('responses.failed_to_retrieved_user_progress'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

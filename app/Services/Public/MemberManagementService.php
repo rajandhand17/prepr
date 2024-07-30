@@ -126,7 +126,7 @@ class MemberManagementService
         }
     }
 
-    public function challengeRequestIds($userData, $inviteStatus)
+    public static function challengeRequestIds($userData, $inviteStatus)
     {
         try {
             $challengeRequestIds = MemberManagement::where(['module_type' => '2', 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');
@@ -139,7 +139,7 @@ class MemberManagementService
         }
     }
 
-    public function labRequestIds($userData, $inviteStatus)
+    public static function labRequestIds($userData, $inviteStatus)
     {
         try {
             $labRequestIds = MemberManagement::where(['module_type' => '1', 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');

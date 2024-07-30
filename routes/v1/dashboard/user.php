@@ -10,4 +10,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/my-resource-modules', [UserDashboardController::class, 'getMyResourceModules']);
     Route::get('/my-latest-achievement', [UserDashboardController::class, 'getMyLatestAchievement']);
     Route::get('/my-recommendations', [UserDashboardController::class, 'getMyRecommendations']);
+    Route::get('/my-progress', [UserDashboardController::class, 'getMyProgress']);
 });

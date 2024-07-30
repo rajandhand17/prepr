@@ -239,4 +239,31 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function fetchMyResourceModuleProgress($userData)
+    {
+        try {
+            $inProgressResourceModulesCount = 0;
+            $completedResourceModulesCount = 0;
+            $fetchResourceModuleBasedOnUserId = ModuleCompletionStatusService::fetchResourceModuleBasedOnUserId($userData);
+            if ($fetchResourceModuleBasedOnUserId->isNotEmpty()) {
+                foreach ($fetchResourceModuleBasedOnUserId as $fetchResourceModule) {
+                    if ($fetchResourceModule->percentage == '100') {
+                        $completedResourceModulesCount++;
+                    } elseif ($fetchResourceModule->percentage > '0' && $fetchResourceModule->percentage < '100') {
+                        $inProgressResourceModulesCount++;
+                    }
+                }
+            }
+            $overAllJoinedResourceModules = ($inProgressResourceModulesCount + $completedResourceModulesCount);
+
+            $fetchMyResourceModuleProgress = ['overAllJoined' => $overAllJoinedResourceModules, 'completedCount' => $completedResourceModulesCount, 'inProgressCount' => $inProgressResourceModulesCount];
+
+            return $fetchMyResourceModuleProgress;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

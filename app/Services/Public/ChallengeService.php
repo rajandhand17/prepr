@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\PitchTemplate;
 use App\Models\Project;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
+use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
 use Exception;
 
@@ -345,6 +346,28 @@ class ChallengeService
             $fetchRecommendedChallenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 
             return $fetchRecommendedChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyChallengeProgress($userData)
+    {
+        try {
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchChallenge = MemberManagementService::challengeRequestIds($userData, $inviteStatus);
+            $overAllJoinedChallenges = $fetchChallenge->count();
+            $completedChallengesCount = ProjectService::fetchCompletedChallenges($fetchChallenge, $userData);
+            $inProgressChallengesCount = ProjectService::fetchInProgressChallenges($fetchChallenge, $userData);
+            $deadlineMissedChallengesCount = ProjectService::fetchDeadlineMissedChallenges($fetchChallenge, $userData);
+            $notStartedChallengesCount = $overAllJoinedChallenges - ($completedChallengesCount + $inProgressChallengesCount + $deadlineMissedChallengesCount);
+            
+
+            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount];
+
+            return $fetchMyChallengeProgress;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

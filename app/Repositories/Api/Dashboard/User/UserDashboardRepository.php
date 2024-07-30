@@ -245,4 +245,37 @@ class UserDashboardRepository implements UserDashboardInterface
             return false;
         }
     }
+
+    public function fetchMyChallengeProgress($userData)
+    {
+        try {
+            return $this->challengeService->fetchMyChallengeProgress($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyLabProgress($userData)
+    {
+        try {
+            return $this->labService->fetchMyLabProgress($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyResourceModuleProgress($userData)
+    {
+        try {
+            return $this->resourceModuleService->fetchMyResourceModuleProgress($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

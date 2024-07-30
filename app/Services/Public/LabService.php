@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\ModuleCompletionStatusService;
 use Carbon\Carbon;
 
 class LabService
@@ -362,6 +363,35 @@ class LabService
             $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 
             return $fetchRecommendedLabs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyLabProgress($userData)
+    {
+        try {
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchLabIds = MemberManagementService::labRequestIds($userData, $inviteStatus);
+            $fetchUserLabProgressBasedOnLabids = ModuleCompletionStatusService::fetchUserLabProgressBasedOnLabids($fetchLabIds, $userData);
+            $inProgressLabsCount = 0;
+            $completedLabsCount = 0;
+            if ($fetchUserLabProgressBasedOnLabids->isNotEmpty()) {
+                foreach ($fetchUserLabProgressBasedOnLabids as $fetchUserLabProgress) {
+                    if ($fetchUserLabProgress->percentage == '100') {
+                        $completedLabsCount++;
+                    } elseif ($fetchUserLabProgress->percentage > '0' && $fetchUserLabProgress->percentage < '100') {
+                        $inProgressLabsCount++;
+                    }
+                }
+            }
+            $overAllJoinedLabs = $fetchLabIds->count();
+            $notStartedLabsCount = $overAllJoinedLabs - ($inProgressLabsCount + $completedLabsCount);
+            $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressLabsCount' => $inProgressLabsCount, 'notStartedLabsCount' => $notStartedLabsCount];
+
+            return $fetchMyLabProgress;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
