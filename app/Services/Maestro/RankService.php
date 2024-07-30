@@ -2,12 +2,10 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Rank;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\FileUploadHelper;
 use Exception;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
 
 class RankService
 {
@@ -23,15 +21,7 @@ class RankService
     public static function storeUpdateRank($request, $id, $moduleMode)
     {
         try {
-            if ($request->file('image')) {
-                $filename = Str::random(25).'.'.$request->file('image')->getClientOriginalExtension();
-                $image = Image::make($request->file('image'))->resize(735, 415)->stream();
-                $img = Storage::disk('s3')->put('uploads/ranks/'.$filename, $image);
-                $coverImage = 'uploads/ranks/'.$filename;
-            } else {
-                $coverImage = null;
-            }
-
+            $coverImage = self::uploadImage($request);
             if ($moduleMode === 'create') {
                 $rank = new Rank();
             } else {
@@ -75,6 +65,19 @@ class RankService
         try {
             return $rank->delete();
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function uploadImage($request)
+    {
+        try {
+            $coverImage = null;
+            if ($request->file('image')) {
+                $coverImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'rank_trophy');
+            }
+            return $coverImage;
+        } catch (Exception $e){
             return false;
         }
     }

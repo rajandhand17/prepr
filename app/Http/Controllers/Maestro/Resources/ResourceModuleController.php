@@ -34,33 +34,38 @@ class ResourceModuleController extends Controller
                     })
                     ->editColumn('status', static function (ResourceModule $resourceModule) {
                         if ($resourceModule->status == '0') {
-                            $html = 'Draft';
+                            $html = "<span class='badge badge-info'>Draft</span>";
                         } elseif ($resourceModule->status == '1') {
-                            $html = 'Published';
+                            $html = "<span class='badge badge-success'>Published</span>";
                         } elseif ($resourceModule->status == '2') {
-                            $html = 'Archive';
+                            $html = "<span class='badge badge-danger'>Archive</span>";
                         }
-
                         return $html;
                     })
                     ->editColumn('privacy', static function (ResourceModule $resourceModule) {
                         if ($resourceModule->privacy == '0') {
-                            $html = 'Not available globally';
+                            $html = "<span class='badge badge-info'>Not available globally</span>";
                         } else {
-                            $html = 'Available globally';
+                            $html = "<span class='badge badge-success'>Available globally</span>";
                         }
-
                         return $html;
                     })
+                    ->editColumn('media', static function (ResourceModule $resourceModule) {
+                        $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
+
+                        return "<img src='".$resourceModule->media."' width='30px' ".$onerror.'>';
+                    })
+                    ->addIndexColumn()
                     ->addColumn('action', static function (ResourceModule $resourceModule) {
                         return '<a class="mr-10" href="'.route('resource-module.edit', ['resource_module' => $resourceModule->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\''.route('resource-module.destroy', ['resource_module' => $resourceModule->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['icon', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['media', 'status','privacy','action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Resource Name', 'width' => '65%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Resource Name', 'width' => '55%'],
+                ['data' => 'media', 'name' => 'media', 'title' => 'Cover Image', 'width' => '10%'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '15%'],
                 ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%'],
