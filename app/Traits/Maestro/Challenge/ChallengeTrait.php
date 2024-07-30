@@ -5,11 +5,13 @@ namespace App\Traits\Maestro\Challenge;
 use App\Services\Maestro\ChallengeAchievementService;
 use App\Services\Maestro\ChallengeRequirementService;
 use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\ChallengeSkillsGroupsStackService;
+use App\Services\Maestro\ChallengeAssessmentService;
 use App\Services\Maestro\ChallengeTimelineService;
+use App\Services\Maestro\ChallengeSkillsGroupsStackService;
 use App\Services\Maestro\ComponentAssociationService;
-use Exception;
+use App\Services\Maestro\ChallengeAssessmentCriteriaService;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 trait ChallengeTrait
 {
@@ -114,44 +116,26 @@ trait ChallengeTrait
         }
     }
 
-    private function getAssessment($challengeId)
-    {
-        try {
-            $assessment = ChallengeService::getAssessment($challengeId);
-            if ($assessment) {
-                return $assessment;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getCriteria($challengeId)
-    {
-        try {
-            $criteria = ChallengeService::getCriteria($challengeId);
-            if ($criteria) {
-                return $criteria;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function storeUpdateAssessment($request)
     {
         try {
-            $assessment = ChallengeService::storeUpdateAssessment($request);
-            if ($assessment) {
-                return $assessment;
-            }
+            $createChallenge = DB::transaction(function () use ($request) {
+                $assessmentType     = ChallengeAssessmentService::storeUpdateAssessment($request);
+                $assessmentCriteria = ChallengeAssessmentCriteriaService::addUpdateAssessmentCriteria($request);
+                return [
+                    'assessmentType'     => $assessmentType,
+                    'assessmentCriteria' => $assessmentCriteria,
+                ];
+            });
 
+            if ($createChallenge['assessmentType'] && $createChallenge['assessmentCriteria'] ) {
+                DB::commit();
+                return $createChallenge['assessmentType'];
+            }
+            DB::rollBack();
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
             return false;
         }
     }

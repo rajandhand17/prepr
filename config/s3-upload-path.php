@@ -21,4 +21,6 @@ return [
     'chat'                      => 'chat/upload',
     'campus_connect'            => 'campus_connect/upload',
     'pre_built_achievement'     => 'pre_built_achievement/upload',
+    'challenge_assessment'      => 'uploads/challenge/assessment/',
+    'challenge_incentives'      => 'uploads/trophy/',
 ];

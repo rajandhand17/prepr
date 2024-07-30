@@ -3,7 +3,7 @@
 namespace App\Traits\Maestro\Project;
 
 use App\Services\Maestro\CategoryService;
-use App\Services\Maestro\Challenge\ChallengeService;
+use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\LabService;
 use App\Services\Maestro\ProjectIndustryService;
 use App\Services\Maestro\ProjectService;

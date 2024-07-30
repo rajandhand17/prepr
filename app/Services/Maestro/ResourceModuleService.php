@@ -97,4 +97,33 @@ class ResourceModuleService
             return false;
         }
     }
+    public static function getResourceModulesById($request)
+    {
+        try {
+            $resourceOrg = ResourceModule::where(['organization_id'=> (int) $request->org_id, 'language' => $request->language])->pluck('id')->toArray();
+            $resourceGlobal = ResourceModule::where(['is_global' => '1'])->pluck('id')->toArray();
+            $resourceList = array_merge($resourceOrg, $resourceGlobal);
+            $resourceJson = ResourceModule::whereIn('id', $resourceList)->orderBy('id', 'DESC');
+
+            if ($request->search) {
+                $resourceJson->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+            $resourceJsons = $resourceJson->pluck('title', 'uuid');
+            $total_count = $resourceJsons->count();
+            $resourcesr = $jsonTags = [];
+            $count = 0;
+            foreach ($resourceJsons as $key => $tag) {
+                $resourcesr[$count]['id'] = $key;
+                $resourcesr[$count]['text'] = $tag;
+                $count++;
+            }
+            $jsonTags['result'] = $resourcesr;
+            $jsonTags['more'] = true;
+            $jsonTags['total_count'] = $total_count;
+
+            return response()->json($jsonTags);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
