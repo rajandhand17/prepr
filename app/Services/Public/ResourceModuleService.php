@@ -209,4 +209,34 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function myResourceModuleIds($userData)
+    {
+        try {
+            $fetchResourceModuleIdsBasedOnProgress = ModuleCompletionStatusService::fetchResourceModuleIdsBasedOnProgress($userData);
+            $myResourceModuleIds = ResourceModule::whereIn('id', $fetchResourceModuleIdsBasedOnProgress)->pluck('id');
+            if (!empty($myResourceModuleIds)) {
+                return $myResourceModuleIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleDashboardList($resourceModuleIds)
+    {
+        try {
+            $resourceModule = ResourceModule::whereIn('id', $resourceModuleIds)->where('is_accessible', '1');
+            
+            return $resourceModule->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -152,4 +152,17 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchResourceModuleIdsBasedOnProgress($userData)
+    {
+        try {
+            $fetchResourceModuleIdsBasedOnProgress = ModuleCompletionStatus::where(['user_id' => $userData->id, 'module_type' => '4'])->where('percentage', '<>', 0)->pluck('module_id');
+
+            return $fetchResourceModuleIdsBasedOnProgress->unique();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

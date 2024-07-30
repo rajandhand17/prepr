@@ -13,6 +13,7 @@ use App\Services\Public\LabSocialActivitiesService;
 use App\Services\Public\MemberManagementService;
 use App\Services\Public\ProjectMemberManagementService;
 use App\Services\Public\ResourceModuleService;
+use App\Services\Public\ResourceModuleSocialActivitiesService;
 use App\Services\UserSkillsService;
 use Exception;
 
@@ -29,8 +30,9 @@ class UserDashboardRepository implements UserDashboardInterface
     private $achievementService;
     private $userSkillsService;
     private $resourceModuleService;
+    private $resourceModuleSocialActivitiesService;
 
-    public function __construct(MemberManagementService $memberManagementService, ChallengeSocialActivitiesService $challengeSocialActivitiesService, ChallengeService $challengeService, LabSocialActivitiesService $labSocialActivitiesService, LabService $labService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ProjectService $projectService, AchievementService $achievementService, UserSkillsService $userSkillsService, ResourceModuleService $resourceModuleService)
+    public function __construct(MemberManagementService $memberManagementService, ChallengeSocialActivitiesService $challengeSocialActivitiesService, ChallengeService $challengeService, LabSocialActivitiesService $labSocialActivitiesService, LabService $labService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ProjectService $projectService, AchievementService $achievementService, UserSkillsService $userSkillsService, ResourceModuleService $resourceModuleService, ResourceModuleSocialActivitiesService $resourceModuleSocialActivitiesService)
     {
         $this->memberManagementService = $memberManagementService;
         $this->challengeSocialActivitiesService = $challengeSocialActivitiesService;
@@ -43,6 +45,7 @@ class UserDashboardRepository implements UserDashboardInterface
         $this->achievementService = $achievementService;
         $this->userSkillsService = $userSkillsService;
         $this->resourceModuleService = $resourceModuleService;
+        $this->resourceModuleSocialActivitiesService = $resourceModuleSocialActivitiesService;
     }
 
     public function challengeRequestIds($userData, $inviteStatus)
@@ -148,6 +151,39 @@ class UserDashboardRepository implements UserDashboardInterface
     {
         try {
             return $this->projectService->getDashboardProjectList($projectIds);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function myResourceModuleIds($userData)
+    {
+        try {
+            return $this->resourceModuleService->myResourceModuleIds($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function resourceModuleFavouriteIds($userData)
+    {
+        try {
+            return $this->resourceModuleSocialActivitiesService->resourceModuleFavouriteIds($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getResourceModuleDashboardList($resourceModuleIds)
+    {
+        try {
+            return $this->resourceModuleService->getResourceModuleDashboardList($resourceModuleIds);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

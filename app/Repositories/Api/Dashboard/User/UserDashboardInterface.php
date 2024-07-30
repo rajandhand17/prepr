@@ -24,6 +24,12 @@ interface UserDashboardInterface
 
     public function getDashboardProjectList($projectIds);
 
+    public function myResourceModuleIds($userData);
+
+    public function resourceModuleFavouriteIds($userData);
+
+    public function getResourceModuleDashboardList($resourceModuleIds);
+
     public function getMyLatestAchievement($userData);
 
     public function fetchUserSkills($userData);

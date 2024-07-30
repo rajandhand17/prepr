@@ -160,6 +160,47 @@ class UserDashboardController extends AppBaseController
         }
     }
 
+    public function getMyResourceModules(Request $request)
+    {
+        try {
+            // Check valid request or not for my resource module request
+            if (!in_array($request->type, ['my', 'favourite'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // Fetch resource module ids based on request
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'my':
+                    $resourceModuleIds = $this->userDashboardRepository->myResourceModuleIds($userData);
+                    break;
+                case 'favourite':
+                    $resourceModuleIds = $this->userDashboardRepository->resourceModuleFavouriteIds($userData);
+                    break;
+            }
+
+            $resourceModules = $this->userDashboardRepository->getResourceModuleDashboardList($resourceModuleIds);
+            if ($resourceModules !== false) {
+                $response = [
+                    'total_count'  => $resourceModules->total(),
+                    'per_page'     => $resourceModules->perPage(),
+                    'count'        => $resourceModules->count(),
+                    'current_page' => $resourceModules->currentPage(),
+                    'total_pages'  => $resourceModules->lastPage(),
+                    'list'         => ResourceModuleResource::collection($resourceModules),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_resource_module_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_module_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function getMyLatestAchievement()
     {
         try {
