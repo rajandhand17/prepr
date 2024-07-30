@@ -249,7 +249,6 @@ class ChargebeeHelper
 
             return true;
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;

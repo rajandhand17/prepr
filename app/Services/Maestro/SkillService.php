@@ -106,7 +106,7 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
+            
 
             return false;
         }
@@ -133,7 +133,7 @@ class SkillService
 
             return response()->json($jsonSkills);
         } catch (Exception $e) {
-            dd($e);
+            
 
             return false;
         }
