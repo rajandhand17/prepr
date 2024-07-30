@@ -83,6 +83,7 @@ class ResourceGroupService
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = $request->category_id;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;

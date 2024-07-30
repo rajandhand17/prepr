@@ -26,6 +26,7 @@ class CreateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|unique:resource_groups,title',
             'description'              => 'required',
+            'category_id'              => 'required|exists:categories,id',
             'type'                     => 'required|in:assess,onboard,engage,grow',
             'mode'                     => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
@@ -105,6 +106,8 @@ class CreateResourceGroupRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.title_unique'),
+            'category_id.required'           => __('responses.category_id_required'),
+            'category_id.exists'             => __('responses.category_not_found'),
             'description.required'           => __('responses.description_required'),
             'privacy.required'               => __('responses.privacy_required'),
             'privacy.in'                     => __('responses.choose_yes_no'),

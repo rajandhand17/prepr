@@ -32,6 +32,7 @@ class UpdateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
             'description'              => 'required',
+            'category_id'             => 'required|exists:categories,id',
             'privacy'                  => 'required|in:yes,no',
             'media_type'               => 'in:image,embedded',
             'status'                   => 'required|in:draft,publish,archive',
@@ -47,6 +48,8 @@ class UpdateResourceGroupRequest extends FormRequest
             'skill_groups.*'           => 'numeric|exists:skill_groups,id',
             'skill_stacks'             => 'array',
             'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'type'                     => 'required|in:assess,onboard,engage,grow',
+            'mode'                     => 'required|in:team,individual',
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
@@ -109,8 +112,8 @@ class UpdateResourceGroupRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.title_unique'),
-            'type'                           => 'required|in:assess,onboard,engage,grow',
-            'mode'                           => 'required|in:team,individual',
+            'category_id.required'           => __('responses.category_id_required'),
+            'category_id.exists'             => __('responses.category_not_found'),
             'description.required'           => __('responses.description_required'),
             'privacy.required'               => __('responses.privacy_required'),
             'privacy.in'                     => __('responses.choose_yes_no'),

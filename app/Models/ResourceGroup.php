@@ -18,6 +18,7 @@ class ResourceGroup extends Model
         'language',
         'user_id',
         'organization_id',
+        'category_id',
         'title',
         'slug',
         'description',
@@ -52,6 +53,11 @@ class ResourceGroup extends Model
     public function getDuration()
     {
         return $this->belongsTo(Duration::class, 'duration', 'id');
+    }
+
+    public function getCategory()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
     public function getLevel()

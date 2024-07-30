@@ -31,6 +31,8 @@ class ResourceGroupResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
+        $category = null;
+        $category_id = null;
 
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
@@ -39,6 +41,10 @@ class ResourceGroupResource extends JsonResource
         if ($this->getLevel) {
             $level = $this->getLevel->title;
             $level_id = $this->getLevel->id;
+        }
+        if($this->getCategory){
+            $category=$this->getCategory->title;
+            $category_id=$this->getCategory->id;
         }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
@@ -136,6 +142,8 @@ class ResourceGroupResource extends JsonResource
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'duration_id'                   => $duration_id,
             'duration'                      => $duration,
+            'category'                      => $category,
+            'category_id'                   => $category_id,
             'level_id'                      => $level_id,
             'level'                         => $level,
             'resource_modules'              => $resourceModules,
