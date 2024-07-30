@@ -147,7 +147,6 @@ class ModuleCompletionStatusService
 
             return $checkChallengePathCompleted;
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
