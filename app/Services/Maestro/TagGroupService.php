@@ -44,8 +44,6 @@ class TagGroupService
 
             return true;
         } catch (Exception $e) {
-            
-
             return false;
         }
     }

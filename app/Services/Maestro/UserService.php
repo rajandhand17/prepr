@@ -128,6 +128,7 @@ class UserService
             return false;
         }
     }
+
     public static function getUsersById($request)
     {
         try {

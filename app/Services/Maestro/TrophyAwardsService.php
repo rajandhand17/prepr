@@ -98,8 +98,6 @@ class TrophyAwardsService
                 return true;
             }
         } catch (Exception $e) {
-            
-
             return false;
         }
     }
@@ -196,8 +194,6 @@ class TrophyAwardsService
                 return true;
             }
         } catch (Exception $e) {
-            
-
             return false;
         }
     }

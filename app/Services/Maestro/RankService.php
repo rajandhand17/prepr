@@ -4,7 +4,6 @@ namespace App\Services\Maestro;
 
 use App\Helpers\Maestro\UtilityHelper;
 use App\Models\Rank;
-use App\Services\Maestro\LanguageService;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -79,6 +78,7 @@ class RankService
             return false;
         }
     }
+
     public static function getMinRanksById($request)
     {
         try {

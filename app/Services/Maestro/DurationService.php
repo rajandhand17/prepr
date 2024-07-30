@@ -15,6 +15,7 @@ class DurationService
             return false;
         }
     }
+
     public static function getDurationsById($request)
     {
         try {

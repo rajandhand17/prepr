@@ -185,8 +185,6 @@ class SkillStackController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }

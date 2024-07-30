@@ -164,6 +164,7 @@ class CategoryService
             return false;
         }
     }
+
     public static function getCategoriesByLanguageId($request)
     {
         try {
