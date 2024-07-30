@@ -6,7 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
-use App\Services\Manage\ResourceCollectionTagsGroupsService;
+use App\Services\Manage\ResourceCollectionTypeModesService;
 use DB;
 use Exception;
 
@@ -18,14 +18,14 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
 
     private $resourceCollectionSkillsGroupStackService;
 
-    private $resourceCollectionTagsGroupsService;
+    protected $resourceCollectionTypeModesService;
 
-    public function __construct(ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupStackService, ResourceCollectionTagsGroupsService $resourceCollectionTagsGroupsService)
+    public function __construct(ResourceCollectionTypeModesService $resourceCollectionTypeModesService, ResourceCollectionService $resourceCollectionService, ComponentAssociationService $componentAssociationService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupStackService)
     {
         $this->resourceCollectionService = $resourceCollectionService;
         $this->componentAssociationService = $componentAssociationService;
         $this->resourceCollectionSkillsGroupStackService = $resourceCollectionSkillsGroupStackService;
-        $this->resourceCollectionTagsGroupsService = $resourceCollectionTagsGroupsService;
+        $this->resourceCollectionTypeModesService = $resourceCollectionTypeModesService;
     }
 
     public function getResourceCollectionCountBasedOnOrganization($organizationId)
@@ -46,14 +46,20 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
+                $createResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createResourceCollectionTypeModes($request, $createResourceCollection->id);
 
                 return[
-                    'createResourceCollection'                             => $createResourceCollection,
-                    'createComponentAssociation'                           => $createComponentAssociation,
-                    'createResourceCollectionSkillsGroupStack'             => $createResourceCollectionSkillsGroupStack,
+                    'createResourceCollection'                        => $createResourceCollection,
+                    'createComponentAssociation'                      => $createComponentAssociation,
+                    'createResourceCollectionSkillsGroupStack'        => $createResourceCollectionSkillsGroupStack,
+                    'createResourceCollectionTypeModes'               => $createResourceCollectionTypeModesService,
                 ];
             });
-            if ($createResourceCollection['createResourceCollection'] && $createResourceCollection['createComponentAssociation'] && $createResourceCollection['createResourceCollectionSkillsGroupStack']) {
+            if ($createResourceCollection['createResourceCollection'] &&
+                $createResourceCollection['createComponentAssociation'] &&
+                $createResourceCollection['createResourceCollectionSkillsGroupStack'] &&
+                $createResourceCollection['createResourceCollectionTypeModes']
+            ) {
                 DB::commit();
 
                 return $createResourceCollection['createResourceCollection'];
@@ -120,15 +126,20 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
+                $updateResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->updateResourceCollectionTypeModes($request, $updateResourceCollection->id);
 
                 return[
                     'updateResourceCollection'                       => $updateResourceCollection,
                     'updateComponentAssociation'                     => $updateComponentAssociation,
                     'updateResourceCollectionSkillsGroupStack'       => $updateResourceCollectionSkillsGroupStack,
+                    'updateResourceCollectionTypeModesService'       => $updateResourceCollectionTypeModesService,
                 ];
             });
             if ($updateResourceCollection['updateResourceCollection'] &&
-                $updateResourceCollection['updateComponentAssociation'] && $updateResourceCollection['updateResourceCollectionSkillsGroupStack']) {
+                $updateResourceCollection['updateComponentAssociation'] &&
+                $updateResourceCollection['updateResourceCollectionSkillsGroupStack'] &&
+                $updateResourceCollection['updateResourceCollectionTypeModesService']
+            ) {
                 DB::commit();
 
                 return $updateResourceCollection['updateResourceCollection'];
@@ -193,15 +204,18 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $cloneResourceCollection = $this->resourceCollectionService->cloneResourceCollection($getResourceCollection);
                 $cloneComponentAssociation = $this->componentAssociationService->cloneResourceCollection($getResourceCollection->component_association, $cloneResourceCollection->id);
                 $cloneResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->cloneResourceCollectionSkillsGroupsStack($getResourceCollection->skills_groups_stack, $cloneResourceCollection->id);
+                $cloneResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->cloneResourceCollectionTypeModes($getResourceCollection->resource_collection_type_modes, $cloneResourceCollection->id);
 
                 return[
                     'cloneResourceCollection'                             => $cloneResourceCollection,
                     'cloneComponentAssociation'                           => $cloneComponentAssociation,
                     'cloneResourceCollectionSkillsGroupStack'             => $cloneResourceCollectionSkillsGroupStack,
+                    'cloneResourceCollectionTypeModesService'             => $cloneResourceCollectionTypeModesService,
                 ];
             });
             if ($cloneResourceCollection['cloneResourceCollection'] &&
                 $cloneResourceCollection['cloneComponentAssociation'] &&
+                $cloneResourceCollection['cloneResourceCollectionTypeModesService'] &&
                 $cloneResourceCollection['cloneResourceCollectionSkillsGroupStack']) {
                 DB::commit();
 

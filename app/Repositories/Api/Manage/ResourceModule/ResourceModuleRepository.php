@@ -96,11 +96,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModuleUsingAI($request, $upload_cover_image)
+    public function createResourceModuleUsingAI($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleUsingAI->id);
 
                 return [
@@ -218,7 +218,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
-                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $updateResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->updateResourceModuleTypeModes($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'            => $updateResourceModule,

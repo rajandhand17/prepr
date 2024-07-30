@@ -34,7 +34,6 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
     {
         $base_rules = [
             'title'                          => 'required',
-            'organization_id'                => 'required|exists:organizations,uuid',
             'description'                    => 'required',
             'duration_id'                    => 'required|exists:durations,id',
             'level_id'                       => 'required|exists:levels,id',
@@ -56,8 +55,6 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
             'title.required'                        => __('responses.title_required'),
             'title.unique'                          => __('responses.title_unique'),
             'description.required'                  => __('responses.description_required'),
-            'organization_id.required'              => __('responses.organization_id_required'),
-            'organization_id.exists'                => __('responses.organization_not_exists'),
             'skills.array'                          => __('responses.skills_array'),
             'skills.*.numeric'                      => __('responses.skills_numeric'),
             'skills.*.exists'                       => __('responses.skill_not_exists'),
