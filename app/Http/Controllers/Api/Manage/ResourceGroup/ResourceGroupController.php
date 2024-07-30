@@ -9,7 +9,6 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
@@ -239,7 +238,7 @@ class ResourceGroupController extends AppBaseController
             }
             $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
-                return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
+                return $this->sendResponse(ResourceGroupResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
