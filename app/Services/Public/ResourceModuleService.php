@@ -147,6 +147,7 @@ class ResourceModuleService
                         $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
+
                 if(!empty($resourceModulesProgress)){
                     $resourceModule = $resourceModule->whereIn('id', $resourceModulesProgress->pluck('module_id'));
                 }
