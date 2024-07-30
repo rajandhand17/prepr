@@ -77,7 +77,7 @@ class LabController extends Controller
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
                 ['data' => 'category', 'name' => 'category', 'title' => 'Category'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '20%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
             View::share('module_name', 'Lab');
 

@@ -37,17 +37,18 @@ class PreBuiltAchievementController extends Controller
                     })
                     ->editColumn('status', static function (PreBuiltAchievement $achievementData) {
                         if ($achievementData->status == '1') {
-                            return 'Active';
+                            $html = "<span class='badge badge-success'>Active</span>";
                         } else {
-                            return 'DeActive';
+                            $html = "<span class='badge badge-info'>DeActive</span>";
                         }
+                        return $html;
                     })
                     ->editColumn('component_type', static function (PreBuiltAchievement $achievementData) {
                         if (!empty($achievementData->component_type)) {
                             return ucwords(str_replace('_', ' ', $achievementData->component_type));
                         }
                     })
-                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['achievement_image', 'action','status', 'DT_Row_Index'])
                     ->addIndexColumn()
                     ->toJson();
             }

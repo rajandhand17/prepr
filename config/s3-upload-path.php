@@ -23,4 +23,5 @@ return [
     'pre_built_achievement'     => 'pre_built_achievement/upload',
     'challenge_assessment'      => 'uploads/challenge/assessment/',
     'challenge_incentives'      => 'uploads/trophy/',
+    'rank_trophy'                => 'uploads/ranks/',
 ];
