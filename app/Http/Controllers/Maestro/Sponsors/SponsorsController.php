@@ -43,12 +43,13 @@ class SponsorsController extends Controller
                         } else {
                             $html = "<span class='badge badge-danger'>InActive</span>";
                         }
+
                         return $html;
                     })
                     ->addColumn('action', static function (Host $sponsors) {
                         return '<a class="mr-10" href="'.route('sponsors.edit', ['sponsor' => $sponsors->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSponsor(\''.route('sponsors.destroy', ['sponsor' => $sponsors->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['image', 'status','action', 'DT_Row_Index'])
+                    ->rawColumns(['image', 'status', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
