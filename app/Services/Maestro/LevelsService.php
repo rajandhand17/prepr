@@ -15,6 +15,7 @@ class LevelsService
             return false;
         }
     }
+
     public static function getLevelsById($request)
     {
         try {

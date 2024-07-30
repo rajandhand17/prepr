@@ -280,10 +280,11 @@ class LabService
             return false;
         }
     }
+
     public static function getLabByIds($labId)
     {
         try {
-            return Lab::select('title', 'id')->whereIn('id' ,$labId)->pluck('title', 'id');
+            return Lab::select('title', 'id')->whereIn('id', $labId)->pluck('title', 'id');
         } catch (Exception $e) {
             return false;
         }

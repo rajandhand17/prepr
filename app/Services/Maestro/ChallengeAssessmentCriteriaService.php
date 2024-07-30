@@ -44,15 +44,16 @@ class ChallengeAssessmentCriteriaService
             if (!empty($criteria)) {
                 $criteriaNewArray = [];
                 foreach ($criteria as $key => $criteriaObj) {
-                    $criteriaObjData['challenge_id']    = (int) $request->challenge_id;
-                    $criteriaObjData['assessment_id']   = (int) $request->assessment_id;
-                    $criteriaObjData['title']           = $criteriaObj[0];
-                    $criteriaObjData['score']           = (int) $criteriaObj[1];
-                    $criteriaObjData['weight']          = (int) $criteriaObj[2];
-                    $criteriaNewArray[]                 = $criteriaObjData;
+                    $criteriaObjData['challenge_id'] = (int) $request->challenge_id;
+                    $criteriaObjData['assessment_id'] = (int) $request->assessment_id;
+                    $criteriaObjData['title'] = $criteriaObj[0];
+                    $criteriaObjData['score'] = (int) $criteriaObj[1];
+                    $criteriaObjData['weight'] = (int) $criteriaObj[2];
+                    $criteriaNewArray[] = $criteriaObjData;
                 }
                 ChallengeAssessmentCriteria::insert($criteriaNewArray);
             }
+
             return true;
         } catch (Exception $e) {
             return false;

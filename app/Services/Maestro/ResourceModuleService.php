@@ -97,6 +97,7 @@ class ResourceModuleService
             return false;
         }
     }
+
     public static function getResourceModulesById($request)
     {
         try {

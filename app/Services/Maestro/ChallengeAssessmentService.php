@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ChallengeAssessment;
 use App\Helpers\FileUploadHelper;
+use App\Models\ChallengeAssessment;
 use Exception;
 
 class ChallengeAssessmentService
@@ -21,6 +21,7 @@ class ChallengeAssessmentService
             return false;
         }
     }
+
     public static function storeUpdateAssessment($request)
     {
         try {
@@ -59,6 +60,7 @@ class ChallengeAssessmentService
             } elseif ($request->request_type == 'update') {
                 ChallengeAssessment::where('id', $request->assessment_id)->update(['challenge_id' => $request->challenge_id, 'assessment_type' => $request->assessment_type, 'visibility' => $visibility, 'members_email' => $memberEmails, 'guidelines' => $guidelines, 'attachments' => $attachment]);
             }
+
             return true;
         } catch (Exception $e) {
             return false;

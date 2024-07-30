@@ -106,8 +106,6 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
-            
-
             return false;
         }
     }
@@ -133,8 +131,6 @@ class SkillService
 
             return response()->json($jsonSkills);
         } catch (Exception $e) {
-            
-
             return false;
         }
     }
@@ -166,6 +162,7 @@ class SkillService
             return false;
         }
     }
+
     public static function getSkillsByLanguageId($request)
     {
         try {
