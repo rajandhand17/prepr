@@ -2,12 +2,11 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Storage;
-use App\Helpers\FileUploadHelper;
 
 class ResourceModuleService
 {
@@ -60,6 +59,7 @@ class ResourceModuleService
             if ($request->file('cover_image')) {
                 $coverImage = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'resource_module');
             }
+
             return $coverImage;
         } catch (Exception $e) {
             return false;

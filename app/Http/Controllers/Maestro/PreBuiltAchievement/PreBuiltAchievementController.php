@@ -41,6 +41,7 @@ class PreBuiltAchievementController extends Controller
                         } else {
                             $html = "<span class='badge badge-info'>DeActive</span>";
                         }
+
                         return $html;
                     })
                     ->editColumn('component_type', static function (PreBuiltAchievement $achievementData) {
@@ -48,7 +49,7 @@ class PreBuiltAchievementController extends Controller
                             return ucwords(str_replace('_', ' ', $achievementData->component_type));
                         }
                     })
-                    ->rawColumns(['achievement_image', 'action','status', 'DT_Row_Index'])
+                    ->rawColumns(['achievement_image', 'action', 'status', 'DT_Row_Index'])
                     ->addIndexColumn()
                     ->toJson();
             }

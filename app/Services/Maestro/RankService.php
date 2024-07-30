@@ -2,9 +2,9 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\Rank;
-use App\Helpers\Maestro\UtilityHelper;
 use App\Helpers\FileUploadHelper;
+use App\Helpers\Maestro\UtilityHelper;
+use App\Models\Rank;
 use Exception;
 
 class RankService
@@ -76,8 +76,9 @@ class RankService
             if ($request->file('image')) {
                 $coverImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'rank_trophy');
             }
+
             return $coverImage;
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return false;
         }
     }

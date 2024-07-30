@@ -40,6 +40,7 @@ class ResourceModuleController extends Controller
                         } elseif ($resourceModule->status == '2') {
                             $html = "<span class='badge badge-danger'>Archive</span>";
                         }
+
                         return $html;
                     })
                     ->editColumn('privacy', static function (ResourceModule $resourceModule) {
@@ -48,6 +49,7 @@ class ResourceModuleController extends Controller
                         } else {
                             $html = "<span class='badge badge-success'>Available globally</span>";
                         }
+
                         return $html;
                     })
                     ->editColumn('media', static function (ResourceModule $resourceModule) {
@@ -59,7 +61,7 @@ class ResourceModuleController extends Controller
                     ->addColumn('action', static function (ResourceModule $resourceModule) {
                         return '<a class="mr-10" href="'.route('resource-module.edit', ['resource_module' => $resourceModule->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\''.route('resource-module.destroy', ['resource_module' => $resourceModule->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['media', 'status','privacy','action', 'DT_Row_Index'])
+                    ->rawColumns(['media', 'status', 'privacy', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
