@@ -127,8 +127,9 @@ class ChallengeController extends Controller
             }
             $languages = LanguageService::getLanguages();
             $challengeAssociatedItems = $this->getChallengeAssociatedItemsById($challenge);
-
-            return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems'));
+            $incentives = $this->getChallengeIncentives($challenge);
+            $timeLines = $this->getChallengeTimeLine($challenge);
+            return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems','incentives','timeLines'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
