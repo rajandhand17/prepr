@@ -26,7 +26,6 @@ class CreateLabUsingAIRequest extends FormRequest
         $base_rules = [
             'labTitle'                              => 'required',
             'labDescription'                        => 'required',
-            'organization_id'                       => 'required|exists:organizations,uuid',
             'duration_id'                           => 'required|exists:durations,id',
             'duration'                              => 'nullable',
             'level_id'                              => 'required|exists:levels,id',
@@ -70,8 +69,6 @@ class CreateLabUsingAIRequest extends FormRequest
             'labTitle.required'                        => __('responses.lab_title_required'),
             'labTitle.unique'                          => __('responses.lab_title_unique'),
             'labDescription.required'                  => __('responses.lab_description_required'),
-            'organization_id.required'                 => __('responses.organization_id_required'),
-            'organization_id.exists'                   => __('responses.organization_not_found'),
             'category_id.required'                     => __('responses.category_id_required'),
             'category_id.exists'                       => __('responses.category_not_found'),
             'duration_id.required'                     => __('responses.duration_id_required'),

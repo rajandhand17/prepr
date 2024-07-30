@@ -10,7 +10,7 @@ interface ResourceModuleInterface
 
     public function createResourceModule($request, $upload_cover_image, $organizationId);
 
-    public function createResourceModuleUsingAI($request, $upload_cover_image);
+    public function createResourceModuleUsingAI($request, $upload_cover_image, $organizationId);
 
     public function createResourceModuleDetailsAI($request, $resource_module_id);
 

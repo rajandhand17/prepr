@@ -96,11 +96,11 @@ class ResourceModuleRepository implements ResourceModuleInterface
         }
     }
 
-    public function createResourceModuleUsingAI($request, $upload_cover_image)
+    public function createResourceModuleUsingAI($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleUsingAI->id);
 
                 return [
