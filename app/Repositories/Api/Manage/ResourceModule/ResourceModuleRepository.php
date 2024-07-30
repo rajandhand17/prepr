@@ -308,6 +308,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $cloneResourceModule = $this->resourceModuleService->cloneResourceModule($getResourceModule);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->cloneResourceModuleSkillsGroupsStack($getResourceModule->skills_group_stack, $cloneResourceModule->id);
                 $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->cloneResourceModuleTypeModes($getResourceModule->resource_module_type_modes, $cloneResourceModule->id);
+
                 return [
                     'cloneResourceModule'             => $cloneResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,

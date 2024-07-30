@@ -287,10 +287,10 @@ class ResourceModuleService
             $media_type = config('constants.resource_media_type.image');
             switch ($request->media_type) {
                 case 'image':
-                    $media_type =config('constants.resource_media_type.image');
+                    $media_type = config('constants.resource_media_type.image');
                     break;
                 case 'embedded':
-                    $media_type =config('constants.resource_media_type.embedded');
+                    $media_type = config('constants.resource_media_type.embedded');
                     break;
                 default:
                     $media_type = config('constants.resource_media_type.image');
