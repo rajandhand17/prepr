@@ -152,7 +152,7 @@ class SkillGroupController extends Controller
     public function edit(string $id)
     {
         try {
-            $data = SkillGroup::find($id);
+            $data = $this->getSkillGroupById($id);
             $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
             $selectedStacks = SkillStackService::getSkillStackBasedOnIds($data->skill_stacks);
             $languages = LanguageService::getAllActiveLanguages();
