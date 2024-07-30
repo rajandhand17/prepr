@@ -18,7 +18,7 @@ interface ChallengeInterface
 
     public function createChallengeFromResourceUsingAIPreview($request);
 
-    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
 
     public function uploadChallengeParticipationAchievementImage($image);
 

@@ -69,7 +69,7 @@ class ResourceCollection extends Command
                     $resourceCollection->title = $singleResourceCollection->title;
                     $resourceCollection->slug = $singleResourceCollection->slug;
                     $resourceCollection->description = $singleResourceCollection->description;
-                    $resourceCollection->media_type = 'image';
+                    $resourceCollection->media_type = '0';  //0 for image and 1 for embedded
                     $resourceCollection->media = $singleResourceCollection->image;
                     $resourceCollection->level = '1';
                     $resourceCollection->duration = '1';
