@@ -849,6 +849,7 @@ class ProjectService
             return $countChallenges;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
