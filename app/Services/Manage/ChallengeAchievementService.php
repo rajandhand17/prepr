@@ -92,7 +92,15 @@ class ChallengeAchievementService
             $challengeAchievement->achievement_image = ($update_participation_achievement_image) ? $update_participation_achievement_image : $challengeAchievement->achievement_image;
             $challengeAchievement->save();
 
-            $challengeIncentiveData = !empty($request->winner_achievement_image) ? array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? [], $request->winner_achievement_image ?? []) : array_map(null, $request->winner_achievement_name, $request->winner_achievement_prize, $request->winner_achievement_points, $request->old_winner_achievement_image ?? []);
+            // Initialize arrays for the winner achievement data
+            $winner_achievement_name = $request->input('winner_achievement_name', []);
+            $winner_achievement_prize = $request->input('winner_achievement_prize', []);
+            $winner_achievement_points = $request->input('winner_achievement_points', []);
+            $old_winner_achievement_image = $request->input('old_winner_achievement_image', []);
+            $winner_achievement_image = $request->input('winner_achievement_image', []);
+
+            // Combine the arrays
+            $challengeIncentiveData = array_map(null, $winner_achievement_name, $winner_achievement_prize, $winner_achievement_points, $old_winner_achievement_image, $winner_achievement_image);
             if (!empty($challengeIncentiveData)) {
                 $challengeIncentiveArrayData = [];
                 foreach ($challengeIncentiveData as $key => $value) {
@@ -120,6 +128,8 @@ class ChallengeAchievementService
                     ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '1'])->delete();
                     ChallengeAchievement::insert($challengeIncentiveArrayData);
                 }
+            } else {
+                ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '1'])->delete();
             }
 
             return true;
