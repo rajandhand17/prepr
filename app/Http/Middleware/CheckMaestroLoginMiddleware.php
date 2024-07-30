@@ -19,13 +19,13 @@ class CheckMaestroLoginMiddleware
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::check()) {
-            if (Auth::user()->hasRole('super_admin')) {
+        //    if (Auth::user()->hasRole('super_admin')) {
                 return $next($request);
-            } else {
-                auth()->logout();
-
-                return redirect()->route('login')->with('error', "You don't have admin access.");
-            }
+//            } else {
+//                auth()->logout();
+//
+//                return redirect()->route('login')->with('error', "You don't have admin access.");
+//            }
         } else {
             return redirect()->route('login')->with('error', 'Please login to view panel.');
         }
