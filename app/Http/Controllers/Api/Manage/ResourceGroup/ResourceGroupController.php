@@ -239,7 +239,7 @@ class ResourceGroupController extends AppBaseController
             }
             $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
-                return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
+                return $this->sendResponse(ResourceGroupResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);

@@ -197,6 +197,7 @@ class ResourceGroupService
             }
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = ($request->has('category_id')) ? $request->category_id : $resourceGroup->category_id;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $media_type : $resourceGroup->media_type;
