@@ -149,6 +149,7 @@ class ResourceModuleService
                         $resourceModulesProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
                         break;
                 }
+
                 $resourceModule = $resourceModule->whereIn('id', $resourceModulesProgress->pluck('module_id'));
             }
 
@@ -241,7 +242,6 @@ class ResourceModuleService
                 default:
                     $is_global = config('constants.resource_module_is_global.no');
             }
-
             $privacy = null;
             switch ($request->privacy) {
                 case 'no':
@@ -253,7 +253,6 @@ class ResourceModuleService
                 default:
                     $privacy = null;
             }
-
             function getIsAiCreatedValue($isAiCreatedInput)
             {
                 if ($isAiCreatedInput === 'yes' || $isAiCreatedInput === true) {
@@ -293,8 +292,6 @@ class ResourceModuleService
                 case 'embedded':
                     $media_type = config('constants.resource_media_type.embedded');
                     break;
-                default:
-                    $media_type = null;
             }
             $model = new ResourceModule();
             $slug = UtilityHelper::generateSlug($title, $model);
@@ -563,9 +560,13 @@ class ResourceModuleService
             $resourceModule = new ResourceModule();
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $slug = UtilityHelper::generateSlug($getResourceModule->title.$uuid, $resourceModule);
+            $mediaType = ($getResourceModule->media_type == '' || $getResourceModule->media_type == 'image')
+                ? config('constants.resource_media_type.image')
+                : config('constants.resource_media_type.embedded');
             $resourceModule = $getResourceModule->replicate();
             $resourceModule->uuid = $uuid;
             $resourceModule->slug = $slug;
+            $resourceModule->media_type = $mediaType;
             $resourceModule->user_id = auth()->user()->id;
             $resourceModule->save();
 
