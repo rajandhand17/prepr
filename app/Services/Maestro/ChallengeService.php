@@ -5,7 +5,6 @@ namespace App\Services\Maestro;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
-use App\Services\Maestro\LanguageService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -58,7 +57,7 @@ class ChallengeService
             $labs = !empty($challenge->user_id) ? LabService::getLab('edit', $labIds) : null;
             $resourceModules = !empty($challenge->user_id) ? ResourceModuleService::getResourceModulesByIds($moduleIds) : null;
 
-            return ['category' => $category ?? [], 'organization' => $organization ?? [], 'skills' => $skills ?? [], 'skillIds' => $skillIds ?? [], 'user' => $user ?? [], 'level' => $level ?? [],'associatedLabs' => $labs ?? [],  'duration' => $duration ?? [], 'labIds' => $labIds ?? [], 'moduleIds' => $moduleIds ?? [], 'resourceModules' => $resourceModules ?? []];
+            return ['category' => $category ?? [], 'organization' => $organization ?? [], 'skills' => $skills ?? [], 'skillIds' => $skillIds ?? [], 'user' => $user ?? [], 'level' => $level ?? [], 'associatedLabs' => $labs ?? [],  'duration' => $duration ?? [], 'labIds' => $labIds ?? [], 'moduleIds' => $moduleIds ?? [], 'resourceModules' => $resourceModules ?? []];
         } catch (Exception $e) {
             return false;
         }
@@ -80,12 +79,12 @@ class ChallengeService
             $challenge->duration_id = $request->duration;
             $challenge->level_id = $request->level;
             $challenge->description = $request->description;
-            $challenge->is_open     = $request->is_open;
-            $challenge->status      = $request->status;
-            $challenge->media_type  = 'image';
-            $challenge->media       = self::uploadBannerImage($request);
-            $challenge->status      = $request->status;
-            $challenge->agreement   = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
+            $challenge->is_open = $request->is_open;
+            $challenge->status = $request->status;
+            $challenge->media_type = 'image';
+            $challenge->media = self::uploadBannerImage($request);
+            $challenge->status = $request->status;
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
             $challenge->project_privacy = $request->project_privacy;
             if ($challenge->save()) {
                 return $challenge;
