@@ -2,11 +2,11 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Storage;
 
 class ResourceModuleService
 {
@@ -22,16 +22,7 @@ class ResourceModuleService
     public static function createAndUpdateResourceModule($request, $action, $id)
     {
         try {
-            if ($request->file('cover_image')) {
-                $pathsArray = config('s3-upload-path');
-                $file = $request->file('cover_image');
-                $image_contents_cover = fopen($file->getRealPath(), 'rb');
-                $webp_path_cover = $pathsArray['resource_module'].time().'.webp';
-                Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-            } else {
-                $webp_path_cover = null;
-            }
-
+            $resourceCoverImage = self::resourceModuleCoverImageUpload($request);
             if ($action == 'create') {
                 $model = new ResourceModule();
                 $resourceModule = new ResourceModule();
@@ -40,7 +31,7 @@ class ResourceModuleService
                 $resourceModule->language = $request->language;
             } elseif ($action == 'update') {
                 $resourceModule = ResourceModule::find($id);
-                $webp_path_cover = $resourceModule->media;
+                $resourceCoverImage = $resourceModule->media;
             }
 
             $resourceModule->user_id = $request->user_id;
@@ -49,13 +40,27 @@ class ResourceModuleService
             $resourceModule->organization_id = $request->organization_id;
             $resourceModule->privacy = $request->privacy;
             $resourceModule->status = $request->status;
-            $resourceModule->media = $webp_path_cover;
+            $resourceModule->media = $resourceCoverImage ? $resourceCoverImage : null;
 
             if ($resourceModule->save()) {
                 return $resourceModule;
             }
 
             return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function resourceModuleCoverImageUpload($request)
+    {
+        try {
+            $coverImage = null;
+            if ($request->file('cover_image')) {
+                $coverImage = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'resource_module');
+            }
+
+            return $coverImage;
         } catch (Exception $e) {
             return false;
         }

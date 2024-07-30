@@ -73,11 +73,16 @@
                             <span class="help-block">{{ $errors->first('point')}}</span>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
                           {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
                           {!! Form::file('image', ['class' => 'form-control']) !!}
                           <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div>
+                          <img src="{{ $rank->image }}" height="80px" width="80px">
                         </div>
                       </div>
                   </div>
