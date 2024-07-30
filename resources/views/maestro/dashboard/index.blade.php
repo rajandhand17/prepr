@@ -1,4 +1,5 @@
 @extends('maestro.layouts.default')
+@section('title') Dashboard @endsection
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
