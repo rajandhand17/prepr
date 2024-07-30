@@ -231,7 +231,7 @@ class ResourceModuleService
     {
         try {
             $resourceModule = ResourceModule::whereIn('id', $resourceModuleIds)->where('is_accessible', '1');
-            
+
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
