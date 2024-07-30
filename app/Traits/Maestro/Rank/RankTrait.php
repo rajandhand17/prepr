@@ -2,7 +2,7 @@
 
 namespace App\Traits\Maestro\Rank;
 
-use App\Services\Maestro\Rank\RankService;
+use App\Services\Maestro\RankService;
 use Exception;
 
 trait RankTrait

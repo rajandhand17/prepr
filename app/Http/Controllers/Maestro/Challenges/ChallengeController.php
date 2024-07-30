@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\Maestro\Challenge\ChallengeTrait;
 use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\ChallengeAssessmentService;
+use App\Services\Maestro\ChallengeAssessmentCriteriaService;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 use App\Models\Challenge;
@@ -124,7 +126,6 @@ class ChallengeController extends Controller
             }
             $languages = LanguageService::getLanguages();
             $challengeAssociatedItems = $this->getChallengeAssociatedItemsById($challenge);
-
             return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
@@ -170,8 +171,8 @@ class ChallengeController extends Controller
             if (!$challenge->exists) {
                 return redirect()->route('challenge.index')->with(['error' => 'Challenge not found.']);
             }
-            $assessment = $this->getAssessment($challenge->id);
-            $criteria = $this->getCriteria($challenge->id);
+            $assessment = ChallengeAssessmentService::getAssessment($challenge->id);
+            $criteria   = ChallengeAssessmentCriteriaService::getCriteria($challenge->id);
 
             return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
         } catch (Exception $e) {

@@ -3,7 +3,7 @@
 namespace App\Traits\Maestro\Explore;
 
 use App\Services\Maestro\ExploreService;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Services\Maestro\RoleAndPermissionService;
 use Exception;
 
 trait ExploreTrait

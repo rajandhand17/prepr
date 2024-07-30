@@ -51,7 +51,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('organization_id')) ? 'has-error' : ''}}">
             {!! Form::label('organization_id', 'Organization', ['class' => 'control-label']) !!}
-            {{ Form::select('organization_id',$challengeAssociatedItems['organization'],$challenge->organization_id, ['class' => 'form-control select2bs4','required' => 'required','id' =>'organisationId','required' => 'required']) }}
+            {{ Form::select('organization_id',$challengeAssociatedItems['organization'] ?? [],$challenge->organization_id, ['class' => 'form-control select2bs4','required' => 'required','id' =>'organisationId','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block org_error">{{ $errors->first('organization_id')}}</span>
           </div>
         </div>
@@ -68,7 +68,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('category_id')) ? 'has-error' : ''}}">
             {!! Form::label('category', 'Category', ['class' => 'control-label']) !!}
-            {{ Form::select('category', $challengeAssociatedItems['category'], $challenge->category_id, ['class' => 'form-control select2bs4','id' => 'listCategory','required' => 'required']) }}
+            {{ Form::select('category', $challengeAssociatedItems['category'] ?? [], $challenge->category_id, ['class' => 'form-control select2bs4','id' => 'listCategory','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block category_error">{{ $errors->first('category_id')}}</span>
           </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('skills')) ? 'has-error' : ''}}">
             {!! Form::label('skills', 'Challenge Skills', ['class' => 'control-label']) !!}
-            {{ Form::select('skills[]', $challengeAssociatedItems['skills'], $challengeAssociatedItems['skillIds'], ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required' ,'multiple' => 'multiple']) }}
+            {{ Form::select('skills[]', $challengeAssociatedItems['skills'] ?? [], $challengeAssociatedItems['skillIds'] ?? [], ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required' ,'multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block skill_error">{{ $errors->first('skills')}}</span>
           </div>
         </div>
@@ -85,7 +85,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('level')) ? 'has-error' : ''}}">
             {!! Form::label('level', 'Challenge Level', ['class' => 'control-label']) !!}
-            {{ Form::select('level', $challengeAssociatedItems['level'], $challenge->level_id, ['class' => 'form-control select2bs4','id' => 'challengeLevels','required' => 'required']) }}
+            {{ Form::select('level', $challengeAssociatedItems['level'] ?? [], $challenge->level_id, ['class' => 'form-control select2bs4','id' => 'challengeLevels','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block level_error">{{ $errors->first('level')}}</span>
           </div>
         </div>
@@ -93,7 +93,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('duration')) ? 'has-error' : ''}}">
             {!! Form::label('duration', 'Challenge Duration', ['class' => 'control-label']) !!}
-            {{ Form::select('duration', $challengeAssociatedItems['duration'], $challenge->duration_id, ['class' => 'form-control select2bs4','id' => 'challengeDuration','required' => 'required']) }}
+            {{ Form::select('duration', $challengeAssociatedItems['duration'] ?? [], $challenge->duration_id, ['class' => 'form-control select2bs4','id' => 'challengeDuration','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block duration_error">{{ $errors->first('duration')}}</span>
           </div>
         </div>
@@ -117,7 +117,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
               {!! Form::label('user_id', 'Challenge Creator', ['class' => 'control-label ']) !!}
-              {!! Form::select('user_id',$challengeAssociatedItems['user'],$challenge->user_id, ['class' => 'form-control select2bs4', 'id'=>'userId','required' => 'required']) !!}
+              {!! Form::select('user_id',$challengeAssociatedItems['user'] ?? [],$challenge->user_id, ['class' => 'form-control select2bs4', 'id'=>'userId','required' => 'required']) !!}
               <span style="color: #ea6c41 !important;" class="help-block user_error">{{ $errors->first('user_id')}}</span>
             </div>
           </div>
@@ -396,7 +396,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('associativeLab')) ? 'has-error' : ''}}">
             {!! Form::label('associativeLab', 'Associat Lab', ['class' => 'control-label']) !!}
-            {{ Form::select('associativeLab[]', $challengeAssociatedItems['labs'], $challengeAssociatedItems['labIds'], ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required','multiple' => 'multiple']) }}
+            {{ Form::select('associativeLab[]', $challengeAssociatedItems['associatedLabs'] , [], ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required','multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('associativeLab')}}</span>
           </div>
         </div>
@@ -404,7 +404,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('associativeResourceModule')) ? 'has-error' : ''}}">
             {!! Form::label('associativeResourceModule', 'Resource Module', ['class' => 'control-label']) !!}
-            {{ Form::select('associativeResourceModule[]', $challengeAssociatedItems['resourceModules'], $challengeAssociatedItems['moduleIds'], ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required','multiple' => 'multiple']) }}
+            {{ Form::select('associativeResourceModule[]', $challengeAssociatedItems['resourceModules'] ?? [], $challengeAssociatedItems['moduleIds'] ?? [], ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required','multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block resource_module_error">{{ $errors->first('associativeResourceModule')}}</span>
           </div>
         </div>

@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\ChallengeAchievement;
+use App\Helpers\FileUploadHelper;
 use Exception;
 
 class ChallengeAchievementService
@@ -12,10 +13,7 @@ class ChallengeAchievementService
         try {
             if ($request->file('incentive_trophy') && count($request->file('incentive_trophy')) > 0) {
                 foreach ($request->incentive_trophy as $key => $image) {
-                    $filename = Str::random(10).'.'.$image->getClientOriginalExtension();
-                    $images = Image::make($image)->resize(256, 256)->stream();
-                    $img = Storage::disk('s3')->put('uploads/trophy/'.$filename, $images);
-                    $incentive_trophy[] = 'uploads/trophy/'.$filename;
+                    $incentive_trophy[] = FileUploadHelper::uploadImageToS3($image->file('incentive_trophy'), 'challenge_incentives');
                 }
             }
 

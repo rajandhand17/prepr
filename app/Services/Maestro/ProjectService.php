@@ -4,7 +4,7 @@ namespace App\Services\Maestro;
 
 use App\Helpers\UtilityHelper;
 use App\Models\Project;
-use App\Services\Maestro\Challenge\ChallengeService;
+use App\Services\Maestro\ChallengeService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 

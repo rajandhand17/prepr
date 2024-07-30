@@ -288,4 +288,29 @@ class OrganizationService
             return false;
         }
     }
+
+    public static function getOrganizationsById($request)
+    {
+        try {
+            $orgList = Organization::where(['language' => $request->language, 'status' => '1'])->orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $orgList->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $orgList = $orgList->pluck('title', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($orgList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

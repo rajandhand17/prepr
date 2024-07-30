@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Lab;
 use App\Models\Language;
 use App\Services\Maestro\LanguageService;
-use App\Services\Maestro\SocialLink\SocialLinkService;
+use App\Services\Maestro\SocialLinkService;
 use App\Traits\Maestro\Lab\LabTrait;
 use Exception;
 use Illuminate\Http\Request;
