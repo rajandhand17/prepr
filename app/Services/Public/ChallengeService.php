@@ -387,6 +387,7 @@ class ChallengeService
             return false;
         }
     }
+
     public function fetchUpComingDeadlineChallenges($challengeIds, $userData)
     {
         try {
@@ -413,10 +414,10 @@ class ChallengeService
                                             break;
                                     }
                                     $flexibleDeadline = [
-                                        'id' => $fetchChallenge->uuid,
-                                        'title' => $fetchChallenge->title,
-                                        'slug' => $fetchChallenge->slug,
-                                        'deadline' => UtilityHelper::formatDateTime($convertedDeadline) ?? null
+                                        'id'       => $fetchChallenge->uuid,
+                                        'title'    => $fetchChallenge->title,
+                                        'slug'     => $fetchChallenge->slug,
+                                        'deadline' => UtilityHelper::formatDateTime($convertedDeadline) ?? null,
                                     ];
                                     $flexibleDeadlineCollection->push($flexibleDeadline);
                                 }
@@ -424,10 +425,10 @@ class ChallengeService
                         } elseif ($fetchChallenge->challenge_timelines->timeline_type == '1') {
                             // For restricted challenge
                             $restrictedDeadline = [
-                                'id' => $fetchChallenge->uuid,
-                                'title' => $fetchChallenge->title,
-                                'slug' => $fetchChallenge->slug,
-                                'deadline' => UtilityHelper::formatDateTime($fetchChallenge->challenge_timelines->submission_deadline_date) ?? null
+                                'id'       => $fetchChallenge->uuid,
+                                'title'    => $fetchChallenge->title,
+                                'slug'     => $fetchChallenge->slug,
+                                'deadline' => UtilityHelper::formatDateTime($fetchChallenge->challenge_timelines->submission_deadline_date) ?? null,
                             ];
                             $restrictedDeadlineCollection->push($restrictedDeadline);
                         }
