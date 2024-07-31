@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\MemberManagement;
 
+use App\Helpers\UtilityHelper;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -50,6 +51,7 @@ class MemberManagementResource extends JsonResource
             'email_status'  => $email_status,
             'subject'       => $this->subject_line,
             'email_content' => $this->email_body,
+            'joined_at'     => !empty($this->created_at) ? UtilityHelper::formatDateTime($this->created_at) : null,
         ];
     }
 }
