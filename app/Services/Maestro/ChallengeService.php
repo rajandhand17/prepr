@@ -22,7 +22,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::select('id','title','user_id','status','is_open')->where('language', LanguageService::getCurrentLanguage())->latest();
+            return Challenge::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             return false;
         }

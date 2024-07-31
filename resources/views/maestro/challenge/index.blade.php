@@ -59,9 +59,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @section('scripts')
-    
+
     {!! $html->scripts() !!}
-    
+
     <script>
         @if(Session::has('success'))
             toastr.success("{{ Session::get('success') }}");
@@ -114,6 +114,61 @@
                             Swal.fire(
                                 'Error!',
                                 'An error occurred while deleting the Challenge.',
+                                'error'
+                            );
+                        }
+                    });
+                }else {
+                    Swal.fire(
+                        'Canceled!',
+                        'You are safe , Record is not deleted!',
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function ChallengeToChallengeTemplate(slug) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to made template this challenge!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/challenge-template/".slug."/clone",
+                        type: 'create',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function (result) {
+                            if(result.status == 'success'){
+                                Swal.fire(
+                                    'Created!',
+                                    result.message,
+                                    'success'
+                                );
+                            } else if(result.status == 'fail'){
+                                Swal.fire(
+                                    'Error!',
+                                    result.message,
+                                    'fail'
+                                );
+                            }
+                            setTimeout(
+                                function () {
+                                    window.location.reload(true);
+                                }, 1500);
+                        },
+                        error: function (error) {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while creating the Challenge Template.',
                                 'error'
                             );
                         }
