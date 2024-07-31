@@ -26,7 +26,7 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
-        
+
         $created_by = [];
         if (!empty($this->user_id)) {
             $userDetails = UserService::getUserById($this->user_id);
