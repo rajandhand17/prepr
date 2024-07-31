@@ -447,7 +447,7 @@ class ConversationService
             ->limit(1))
             ->take(5)->get();
 
-        return $conversation;
+            return $conversation;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
