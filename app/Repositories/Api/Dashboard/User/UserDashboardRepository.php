@@ -278,4 +278,15 @@ class UserDashboardRepository implements UserDashboardInterface
             return false;
         }
     }
+
+    public function fetchUpComingDeadlineChallenges($challengeIds, $userData)
+    {
+        try {
+            return $this->challengeService->fetchUpComingDeadlineChallenges($challengeIds, $userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

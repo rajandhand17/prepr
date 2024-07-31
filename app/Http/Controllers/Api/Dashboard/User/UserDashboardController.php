@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Dashboard\UpComingDeadlineResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
@@ -290,6 +291,26 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.failed_to_retrieved_user_progress'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getUpComingChallengeDeadlines()
+    {
+        try {
+            $userData = auth()->user();
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
+
+            $fetchUpComingDeadlineChallenges = $this->userDashboardRepository->fetchUpComingDeadlineChallenges($challengeIds, $userData);
+            if (!empty($fetchUpComingDeadlineChallenges)) {
+                return $this->sendResponse(UpComingDeadlineResource::collection($fetchUpComingDeadlineChallenges), __('responses.user_upcomming_deadline_retrieved'), 200);
+            }
+
+            return $this->sendError(__('responses.not_user_upcomming_deadline_retrieved'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

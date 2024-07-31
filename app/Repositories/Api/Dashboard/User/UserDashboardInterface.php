@@ -45,4 +45,6 @@ interface UserDashboardInterface
     public function fetchMyLabProgress($userData);
 
     public function fetchMyResourceModuleProgress($userData);
+
+    public function fetchUpComingDeadlineChallenges($challengeIds, $userData);
 }

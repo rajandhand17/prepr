@@ -1341,5 +1341,7 @@
     "responses.failed_to_retrieved_user_progress": "Failed to retireved user progress.",
     "responses.user_challenges_progress_retrived": "User Challenges progress retrieved.",
     "responses.user_labs_progress_retrived": "User Labs progress retrieved.",
-    "responses.user_resource_modules_progress_retrived": "User Resource Modules progress retrieved."
+    "responses.user_resource_modules_progress_retrived": "User Resource Modules progress retrieved.",
+    "responses.user_upcomming_deadline_retrieved": "User upcoming deadline retrieved successfully.",
+    "responses.not_user_upcomming_deadline_retrieved": "Failed to retrieve user's upcoming deadlines."
 }
