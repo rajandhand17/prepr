@@ -32,6 +32,7 @@ class CreateLabProgramRequest extends FormRequest
             'duration_id'             => 'required|exists:durations,id',
             'lab_ids'                 => 'required|array',
             'lab_ids.*'               => 'exists:labs,uuid',
+            'skills.*'                => 'numeric|exists:skills,id',
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
