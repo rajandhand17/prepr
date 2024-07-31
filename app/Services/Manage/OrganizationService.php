@@ -74,6 +74,30 @@ class OrganizationService
                 }
             }
 
+            if ($request->has('plan') && !empty($request->plan)) {
+                $getPlan = config('chargebee.chargebee_plan.'.$request->plan);
+                if ($getPlan) {
+                    $getOrganizationIds = ChargebeeSubscriptionService::getChargebeeBasedOnSubscription($request->plan);
+                    $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationIds);
+                }
+            }
+            if ($request->has('total_employees') && !empty($request->total_employees)) {
+                switch ($request->total_employees) {
+                    case '1':
+                        $organization_list = $organization_list->whereBetween('total_employees', [0, 50]);
+                        break;
+                    case '2':
+                        $organization_list = $organization_list->whereBetween('total_employees', [51, 250]);
+                        break;
+                    case '3':
+                        $organization_list = $organization_list->whereBetween('total_employees', [251, 1000]);
+                        break;
+                    case '4':
+                        $organization_list = $organization_list->where('total_employees', '>=', 1000);
+                        break;
+                }
+            }
+
             return $organization_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -540,7 +564,8 @@ class OrganizationService
                 'lab_count'                     => $organizationData->labs_count->count(),
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $organizationData->lab_programs_count->count(),
-                'pre_build_lab'                 => $preBuildLab,
+                'pre_build_lab_limit'           => $preBuildLab,
+                'pre_build_lab_count'           => $organizationData->preBuiltLabs_count->count(),
                 'challenge_limit'               => $challengeLimit,
                 'challenge_count'               => $organizationData->challenges_count->count(),
                 'challenge_path_limit'          => $challengePathLimit,
