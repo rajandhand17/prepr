@@ -75,9 +75,9 @@ class OrganizationService
             }
 
             if ($request->has('plan') && !empty($request->plan)) {
-                $getPlan=config('chargebee.chargebee_plan.'.$request->plan);
-                if($getPlan){
-                    $getOrganizationIds=ChargebeeSubscriptionService::getChargebeeBasedOnSubscription($request->plan);
+                $getPlan = config('chargebee.chargebee_plan.'.$request->plan);
+                if ($getPlan) {
+                    $getOrganizationIds = ChargebeeSubscriptionService::getChargebeeBasedOnSubscription($request->plan);
                     $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationIds);
                 }
             }

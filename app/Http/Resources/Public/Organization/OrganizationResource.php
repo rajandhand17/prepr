@@ -26,11 +26,12 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
-        $created_by=null;
-        if(!empty($this->user_id)) {
-            $userDetails=UserService::getUserById($this->user_id);
-            $created_by=$userDetails->full_name;
+        $created_by = null;
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by = $userDetails->full_name;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
