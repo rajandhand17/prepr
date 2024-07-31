@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -25,7 +26,11 @@ class OrganizationResource extends JsonResource
             $category = null;
             $category_id = null;
         }
-
+        $created_by=null;
+        if(!empty($this->user_id)) {
+            $userDetails=UserService::getUserById($this->user_id);
+            $created_by=$userDetails->full_name;
+        }
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -59,6 +64,7 @@ class OrganizationResource extends JsonResource
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_details'         => OrganizationChargebeeLimitResource::make($this),
             'external_links'               => OrganizationExternalLinkResource::collection($this->external_links),
+            'created_by'                   => $created_by,
         ];
     }
 }
