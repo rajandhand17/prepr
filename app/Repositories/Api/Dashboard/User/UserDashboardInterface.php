@@ -47,4 +47,8 @@ interface UserDashboardInterface
     public function fetchMyResourceModuleProgress($userData);
 
     public function fetchUpComingDeadlineChallenges($challengeIds, $userData);
+
+    public function userDashboardInboxList($userData);
+
+    public function userDashboardFriendList($userData);
 }

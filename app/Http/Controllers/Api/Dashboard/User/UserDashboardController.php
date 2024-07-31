@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
+use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
@@ -311,6 +313,39 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_user_upcomming_deadline_retrieved'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getInboxFriendRequests(Request $request)
+    {
+        try {
+            // Check valid request or not for inbox and friend request
+            if (!in_array($request->type, ['inbox', 'friend'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // User's chat and friends pending request
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'inbox':
+                    $userDashboardInboxList = $this->userDashboardRepository->userDashboardInboxList($userData);
+                    if ($userDashboardInboxList != false) {
+                        return $this->sendResponse(ConversationResource::collection($userDashboardInboxList), __('responses.list_conversation'), 200);
+                    }
+                    break;
+                case 'friend':
+                    $userDashboardFriendList = $this->userDashboardRepository->userDashboardFriendList($userData);
+                    if ($userDashboardFriendList != false) {
+                        return $this->sendResponse(FriendsResource::collection($userDashboardFriendList), __('responses.friends_listing_retrieved'));
+                    }
+                    break;
+            }
+
+            return $this->sendError(__('responses.inbox_friends_listing_retrieved'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

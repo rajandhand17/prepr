@@ -1351,5 +1351,7 @@
     "responses.user_labs_progress_retrived": "User Labs progress retrieved.",
     "responses.user_resource_modules_progress_retrived": "User Resource Modules progress retrieved.",
     "responses.user_upcomming_deadline_retrieved": "User upcoming deadline retrieved successfully.",
-    "responses.not_user_upcomming_deadline_retrieved": "Failed to retrieve user's upcoming deadlines."
+    "responses.not_user_upcomming_deadline_retrieved": "Failed to retrieve user's upcoming deadlines.",
+    "responses.inbox_friends_listing_retrieved": "Failed to retireved user related data.",
+    "responses.friends_listing_retrieved": "You have successfully retrieved the friends listing."
 }
