@@ -32,15 +32,16 @@ class OrganizationResource extends JsonResource
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
-        $created_by=[];
-        if(!empty($this->user_id)){
-            $userDetails=UserService::getUserById($this->user_id);
-            $created_by['uuid']=$userDetails->uuid;
-            $created_by['full_name']=$userDetails->full_name;
-            $created_by['username']=$userDetails->username;
-            $created_by['email']=$userDetails->email;
-            $created_by['profile_image']=$userDetails->profile_image;
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

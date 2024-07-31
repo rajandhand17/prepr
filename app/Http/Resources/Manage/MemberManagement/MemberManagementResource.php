@@ -4,7 +4,6 @@ namespace App\Http\Resources\Manage\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Services\UserService;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MemberManagementResource extends JsonResource
