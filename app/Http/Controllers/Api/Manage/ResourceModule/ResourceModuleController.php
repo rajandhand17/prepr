@@ -376,13 +376,20 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             // checks creation limits of the Resource Module
-            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
             if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
                 if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
                     return $this->sendError(__('responses.reached_resource_module_limit'), 400);
                 }
             }
+
             $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
             if ($createResourceModuleUsingAIPreview) {
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
