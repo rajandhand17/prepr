@@ -356,8 +356,8 @@ class ComponentAssociationService
     {
         try {
             if (!empty($request->associativeLab)) {
-                if(ComponentAssociation::where('challenge_id',$challenge->id)->whereNotNull('lab_id')->exists()) {
-                    ComponentAssociation::where('challenge_id',$challenge->id)->whereNotNull('lab_id')->delete();
+                if (ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('lab_id')->exists()) {
+                    ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('lab_id')->delete();
                 }
                 $labNewArray = [];
                 foreach ($request->associativeLab as $key => $lab) {
@@ -379,8 +379,8 @@ class ComponentAssociationService
     {
         try {
             if (!empty($request->associativeResourceModule)) {
-                if(ComponentAssociation::where('challenge_id',$challenge->id)->whereNotNull('resource_module_id')->exists()) {
-                    ComponentAssociation::where('challenge_id',$challenge->id)->whereNotNull('resource_module_id')->delete();
+                if (ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('resource_module_id')->exists()) {
+                    ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('resource_module_id')->delete();
                 }
                 $resourceModuleNewArray = [];
                 foreach ($request->associativeResourceModule as $key => $resourceModule) {

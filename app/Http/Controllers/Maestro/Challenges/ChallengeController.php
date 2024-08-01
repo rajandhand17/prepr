@@ -129,7 +129,8 @@ class ChallengeController extends Controller
             $challengeAssociatedItems = $this->getChallengeAssociatedItemsById($challenge);
             $incentives = $this->getChallengeIncentives($challenge);
             $timeLines = $this->getChallengeTimeLine($challenge);
-            return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems','incentives','timeLines'));
+
+            return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems', 'incentives', 'timeLines'));
         } catch (Exception $e) {
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
