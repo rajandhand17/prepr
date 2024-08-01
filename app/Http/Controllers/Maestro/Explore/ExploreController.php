@@ -52,7 +52,7 @@ class ExploreController extends Controller
         try {
             $data = Explore::get();
 
-            return view('maestro.Explore.index', compact('data'));
+            return view('maestro.explore.index', compact('data'));
         } catch (Exception $e) {
             return response()->json([
                 'status'  => 'error',
@@ -72,7 +72,7 @@ class ExploreController extends Controller
             $roles = $this->getAllRoles();
             $selected_role = json_decode($component->role, true); // true will convert it to an associative array
 
-            return view('maestro.Explore.edit', compact('component', 'roles', 'selected_role'));
+            return view('maestro.explore.edit', compact('component', 'roles', 'selected_role'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
@@ -207,7 +207,7 @@ class ExploreController extends Controller
         $total = $components->count();
         $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
 
-        $html = view('maestro.Explore.searchableItems', compact('components'))->render();
+        $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
         return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
     }

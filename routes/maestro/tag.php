@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {
     Route::resource('tags', TagController::class);
-    Route::resource('taggroup', TagGroupController::class);
+    Route::resource('tag-group', TagGroupController::class);
 });

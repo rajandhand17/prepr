@@ -26,19 +26,9 @@ class SkillGroupService
     {
         try {
             $input = $request->all();
-            // $validation_array = [
-            //     'title' => 'required|max:255',
-            //     'group_skills' => 'required',
-            //     'description' => 'required'
-
-            // ];
-            // $validation = Validator::make($input, $validation_array);
-            // if ($validation->fails()) {
-            //     return Redirect::back()->withErrors($validation)->withInput();
-            // }
             $group = SkillGroup::find($id);
             if ($request->title !== $group->title && SkillGroup::where('title', $request->title)->count() > 0) {
-                return redirect()->route('skillgroup.index')->with(['error' => 'Group title already exists']);
+                return redirect()->route('skill-group.index')->with(['error' => 'Group title already exists']);
             }
             $languages = LanguageService::getAllActiveLanguages();
             foreach ($languages as $single) {
@@ -78,7 +68,7 @@ class SkillGroupService
                 $input = $request->all();
 
                 if (SkillGroup::where('title', $request->title)->count() > 0) {
-                    return redirect()->route('skillgroup.index')->with(['error' => 'Group title already exists']);
+                    return redirect()->route('skill-group.index')->with(['error' => 'Group title already exists']);
                 }
                 $group = new SkillGroup();
 
@@ -94,12 +84,12 @@ class SkillGroupService
                 $group->skill_stacks = $request->group_stacks;
                 $group->save();
 
-                return redirect()->route('skillgroup.index')->with('success', 'Skill Group added successfully');
+                return true;
             }
 
             return redirect()->with('error', 'Enter Skill Groups');
         } catch (Exception $e) {
-            return redirect()->route('skillgroup.index')->with(['error' => $e->getMessage()]);
+            return false;
         }
     }
 

@@ -28,7 +28,7 @@ class SkillStackService
             $input = $request->all();
             $stack = SkillStack::find($id);
             if ($request->title !== $stack->title && SkillStack::where('title', $request->title)->count() > 0) {
-                return redirect()->route('skillstack.index')->with(['error' => 'Stack title already exists']);
+                return redirect()->route('skill-stack.index')->with(['error' => 'Stack title already exists']);
             }
             $languages = LanguageService::getAllActiveLanguages();
 
@@ -68,7 +68,7 @@ class SkillStackService
                 $input = $request->all();
 
                 if (SkillStack::where('title', $request->title)->count() > 0) {
-                    return redirect()->route('skillstack.index')->with(['error' => 'Stack title already exists']);
+                    return redirect()->route('skill-stack.index')->with(['error' => 'Stack title already exists']);
                 }
                 $stack = new SkillStack();
                 $languages = LanguageService::getAllActiveLanguages();
@@ -82,12 +82,12 @@ class SkillStackService
                 $stack->skills = $request->stack_skills;
                 $stack->save();
 
-                return redirect()->route('skillstack.index')->with('success', 'Skill Stack added successfully');
+                return true;
             }
 
             return redirect()->with('error', 'Enter Skill Stacks');
         } catch (Exception $e) {
-            return redirect()->route('skillstack.index')->with(['error' => $e->getMessage()]);
+            return false;
         }
     }
 

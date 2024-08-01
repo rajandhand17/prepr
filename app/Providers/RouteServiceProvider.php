@@ -310,17 +310,17 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroTrophyAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/trophyawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/trophy-awards.php'));
     }
 
     public function mapMaestroActivityAwardsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/activityawards.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/activity-awards.php'));
     }
 
     public function mapMaestroEmailTemplateRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/emailtemplates.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/email-templates.php'));
     }
 
     public function mapMaestroExploreRoutes()
@@ -330,7 +330,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public function mapMaestroEmailLogsRoutes()
     {
-        Route::prefix('maestro')->group(base_path('routes/maestro/emaillogs.php'));
+        Route::prefix('maestro')->group(base_path('routes/maestro/email-logs.php'));
     }
 
     public function mapMaestroCloneLabRoutes()

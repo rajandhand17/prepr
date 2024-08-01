@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'trophyawards.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'trophy-awards.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
                         @include('maestro.trophy.form')
                         <div class="form-actions mt-10">
                             {!!Form::submit('Save',array('class'=>'btn btn-primary mr-10'))!!}

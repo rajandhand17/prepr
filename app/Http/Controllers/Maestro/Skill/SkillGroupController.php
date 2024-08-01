@@ -34,9 +34,9 @@ class SkillGroupController extends Controller
                 return DataTables::eloquent($groups)
                 ->addColumn('action', static function ($group) {
                     $html = '';
-                    $html .= '<a href="'.route('skillgroup.show', ['skillgroup' => $group->id]).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="'.route('skillgroup.edit', ['skillgroup' =>  $group->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skillgroup.destroy', ['skillgroup' => $group->id]).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skill-group.show', ['skillgroup' => $group->id]).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skill-group.edit', ['skillgroup' =>  $group->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skillgroup.destroy', ['skill-group' => $group->id]).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
@@ -87,7 +87,7 @@ class SkillGroupController extends Controller
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skillgroup.index', compact('html', 'languages'));
+            return view('maestro.skill-group.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
@@ -102,9 +102,9 @@ class SkillGroupController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $selectedSkills = $selectedStacks = [];
 
-            return view('maestro.skillgroup.create', compact('languages', 'selectedSkills', 'selectedStacks'));
+            return view('maestro.skill-group.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -115,12 +115,12 @@ class SkillGroupController extends Controller
     {
         try {
             if ($this->createSkillGroup($request)) {
-                return redirect()->route('skillgroup.index')->with('success', 'Skill Group created successfully');
+                return redirect()->route('skill-group.index')->with('success', 'Skill Group created successfully');
             }
 
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -137,12 +137,12 @@ class SkillGroupController extends Controller
             }
             $languages = LanguageService::getAllActiveLanguages();
             if (!$skillgroup->exists) {
-                return redirect()->route('skillgroup.index')->with(['error' => 'Skill not found.']);
+                return redirect()->route('skill-group.index')->with(['error' => 'Skill not found.']);
             }
 
-            return view('maestro.skillgroup.view', compact('skillgroup', 'languages', 'selectedSkills'));
+            return view('maestro.skill-group.view', compact('skillgroup', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -157,9 +157,9 @@ class SkillGroupController extends Controller
             $selectedStacks = SkillStackService::getSkillStackBasedOnIds($data->skill_stacks);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skillgroup.edit', compact('selectedSkills', 'languages', 'data', 'selectedStacks'));
+            return view('maestro.skill-group.edit', compact('selectedSkills', 'languages', 'data', 'selectedStacks'));
         } catch (Exception $e) {
-            redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -170,12 +170,12 @@ class SkillGroupController extends Controller
     {
         try {
             if ($this->updateSkillGroupById($id, $request)) {
-                return redirect()->route('skillgroup.index')->with('success', 'Skill Group Updated successfully');
+                return redirect()->route('skill-group.index')->with('success', 'Skill Group Updated successfully');
             }
 
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('skillgroup.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
 

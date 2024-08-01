@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CommunityTrophy;
 use App\Models\User;
 use App\Services\Maestro\LanguageService;
+use App\Services\Maestro\UserService;
 use App\Traits\Maestro\CommunityTrophy\CommunityTrophyTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -40,7 +41,6 @@ class CommunityTrophyController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            // $trophys = User::query()->where('id','<>',Auth::id());
             $users = $this->getCommunityTrophy();
             if (request()->ajax()) {
                 return DataTables::eloquent($users)
@@ -53,7 +53,7 @@ class CommunityTrophyController extends Controller
                         return "<img src ='".asset($trophy->image)."' width='60' ".$onerror.'>';
                     })->rawColumns(['image', 'action'])
                     ->addColumn('action', static function (communityTrophy $trophy) {
-                        return '<a href="'.route('communitytrophy.edit', $trophy->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteCommunityAward(\''.route('communitytrophy.destroy', $trophy->id).'\')"> <i class="fas fa-trash"></i></a>';
+                        return '<a href="'.route('community-trophy.edit', $trophy->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteCommunityAward(\''.route('community-trophy.destroy', $trophy->id).'\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->make(true);
             }
@@ -73,12 +73,9 @@ class CommunityTrophyController extends Controller
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
 
-            return view('maestro.activityawards.communityTrophy.index', compact('html'));
+            return view('maestro.activity-awards.community-trophy.index', compact('html'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -90,14 +87,11 @@ class CommunityTrophyController extends Controller
     public function show(Request $request)
     {
         try {
-            $user = User::find($request->id);
+            $user = UserService::getUserById($request->id);
 
             return view('maestro.trophy.show', compact('user'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -111,12 +105,9 @@ class CommunityTrophyController extends Controller
             $status = ['0' => 'Active', '1' => 'Deactive'];
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.activityawards.communityTrophy.create', compact('status', 'languages'));
+            return view('maestro.activity-awards.community-trophy.create', compact('status', 'languages'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -129,12 +120,12 @@ class CommunityTrophyController extends Controller
     {
         try {
             if ($this->createCommunityTrophy($request)) {
-                return redirect()->route('communitytrophy.index')->with('success', 'Trophy Awards created successfully');
+                return redirect()->route('community-trophy.index')->with('success', 'Trophy Awards created successfully');
             }
 
-            return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -149,12 +140,9 @@ class CommunityTrophyController extends Controller
             $status = ['0' => 'Active', '1' => 'Deactive'];
             $trophy = communityTrophy::find($id);
 
-            return view('maestro.activityawards.communityTrophy.edit', compact('trophy', 'languages', 'status'));
+            return view('maestro.activity-awards.community-trophy.edit', compact('trophy', 'languages', 'status'));
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'status'  => 'error',
-            ]);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -167,12 +155,12 @@ class CommunityTrophyController extends Controller
     {
         try {
             if ($this->updateCommunityTrophyById($id, $request)) {
-                return redirect()->route('communitytrophy.index')->with('success', 'Trophy Award Updated successfully');
+                return redirect()->route('community-trophy.index')->with('success', 'Trophy Award Updated successfully');
             }
 
-            return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('communitytrophy.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
