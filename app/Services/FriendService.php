@@ -319,4 +319,17 @@ class FriendService
             return false;
         }
     }
+
+    public function userDashboardFriendList($userData)
+    {
+        try {
+            $userDashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->get();
+
+            return $userDashboardFriendList;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
