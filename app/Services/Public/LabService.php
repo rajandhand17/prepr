@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\ModuleCompletionStatusService;
 use Carbon\Carbon;
 
 class LabService
@@ -19,6 +20,19 @@ class LabService
         try {
             $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getLabList($labIds)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $labIds)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
@@ -334,6 +348,50 @@ class LabService
     {
         try {
             return Lab::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData)
+    {
+        try {
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($fetchUserSkills);
+            $labIds = $getLabsIdsBasedOnSKills->unique();
+            $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedLabs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyLabProgress($userData)
+    {
+        try {
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchLabIds = MemberManagementService::labRequestIds($userData, $inviteStatus);
+            $fetchUserLabProgressBasedOnLabids = ModuleCompletionStatusService::fetchUserLabProgressBasedOnLabids($fetchLabIds, $userData);
+            $inProgressLabsCount = 0;
+            $completedLabsCount = 0;
+            if ($fetchUserLabProgressBasedOnLabids->isNotEmpty()) {
+                foreach ($fetchUserLabProgressBasedOnLabids as $fetchUserLabProgress) {
+                    if ($fetchUserLabProgress->percentage == '100') {
+                        $completedLabsCount++;
+                    } elseif ($fetchUserLabProgress->percentage > '0' && $fetchUserLabProgress->percentage < '100') {
+                        $inProgressLabsCount++;
+                    }
+                }
+            }
+            $overAllJoinedLabs = $fetchLabIds->count();
+            $notStartedLabsCount = $overAllJoinedLabs - ($inProgressLabsCount + $completedLabsCount);
+            $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressLabsCount' => $inProgressLabsCount, 'notStartedLabsCount' => $notStartedLabsCount];
+
+            return $fetchMyLabProgress;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -5,6 +5,7 @@ namespace App\Http\Resources\Manage\Organization;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -30,6 +31,15 @@ class OrganizationResource extends JsonResource
 
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
+        }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
         }
 
         return [
@@ -63,6 +73,7 @@ class OrganizationResource extends JsonResource
             'external_links'                => OrganizationExternalLinkResource::collection($this->external_links),
             'organization_details'          => OrganizationChargebeeLimitResource::make($this),
             'custom_login_register'         => OrganizationCustomizationResource::make($this->customization_login_register),
+            'created_by'                    => $created_by,
         ];
     }
 }

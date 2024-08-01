@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ChallengeTemplate;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
@@ -128,7 +129,14 @@ class ChallengeTemplateController extends AppBaseController
             if (!$checkChallengeRedeemedOrNot) {
                 return $this->sendError(__('responses.challenge_template_already_redeemed'), 404);
             }
-
+            // checks creation limits of the Challenge
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
+            if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($organization->id);
+                if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
             $challengeRedeem = $this->challengeTemplateRepository->challengeRedeem($challengeTemplate->id, $organization->id);
             if ($challengeRedeem) {
                 return $this->sendResponse(ChallengeResource::make($challengeRedeem), __('responses.challenge_template_redeemed'), 200);

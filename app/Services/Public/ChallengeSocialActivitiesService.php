@@ -134,4 +134,17 @@ class ChallengeSocialActivitiesService
             return false;
         }
     }
+
+    public function challengeFavouriteIds($userData)
+    {
+        try {
+            $challengeFavouriteIds = ChallengeSocialActivity::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('challenge_id');
+
+            return $challengeFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

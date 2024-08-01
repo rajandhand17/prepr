@@ -61,4 +61,15 @@ class ChargebeeSubscriptionService
             return false;
         }
     }
+
+    public static function getChargebeeBasedOnSubscription($plan)
+    {
+        try {
+            return ChargebeeSubscription::where('plan', config('chargebee.chargebee_plan.'.$plan))->pluck('organization_id');
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
