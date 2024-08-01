@@ -7,6 +7,7 @@ use App\Services\Manage\ResourceModuleTypeModesService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
+use App\Services\SocialLinkService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
@@ -37,12 +38,15 @@ class ResourceModuleResource extends JsonResource
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
+                $socialLinks=SocialLinkService::getSocialLinkBasedOnId($index->social_link_id);
+
                 return [
-                    'id'            => $index->id,
-                    'title'         => $index->title,
-                    'path'          => $index->getRawOriginal('path'),
-                    'social_link_id'=> $index->social_link_id,
-                    'type'          => 'url',
+                    'id'               => $index->id,
+                    'title'            => $index->title,
+                    'path'             => $index->getRawOriginal('path'),
+                    'social_link_id'   => $index->social_link_id,
+                    'social_link_title'=> $socialLinks->title,
+                    'type'             => 'url',
                 ];
             })->all();
         }
