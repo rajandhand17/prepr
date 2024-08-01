@@ -22,7 +22,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::select('id','title','user_id','status','is_open')->where('language', LanguageService::getCurrentLanguage())->latest();
+            return Challenge::select('id', 'title', 'user_id', 'status', 'is_open')->where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             return false;
         }
@@ -45,16 +45,16 @@ class ChallengeService
     public static function getChallengeAssociatedItemsById($challenge)
     {
         try {
-            $skillIds   = ChallengeSkillsGroupsStackService::getPluckSkillGroupStack($challenge);
-            $labIds     = ComponentAssociationService::getChallengeAssociatedLab($challenge);
-            $moduleIds  = ComponentAssociationService::getChallengeAssociatedResourceModule($challenge);
+            $skillIds = ChallengeSkillsGroupsStackService::getPluckSkillGroupStack($challenge);
+            $labIds = ComponentAssociationService::getChallengeAssociatedLab($challenge);
+            $moduleIds = ComponentAssociationService::getChallengeAssociatedResourceModule($challenge);
             $organization = !empty($challenge->organization_id) ? OrganizationService::getOrganizationById($challenge->organization_id) : null;
-            $category   = !empty($challenge->category_id) ? CategoryService::getCategoriesById($challenge->category_id) : null;
-            $level      = !empty($challenge->level_id) ? LevelsService::getLevelById($challenge->level_id) : null;
-            $duration   = !empty($challenge->duration_id) ? DurationService::getLevelById($challenge->duration_id) : null;
-            $user       = !empty($challenge->user_id) ? UserService::getUserPluckById($challenge->user_id) : null;
-            $skills     = SkillService::getSkillsById($skillIds);
-            $labs       = LabService::getLabByIds($labIds);
+            $category = !empty($challenge->category_id) ? CategoryService::getCategoriesById($challenge->category_id) : null;
+            $level = !empty($challenge->level_id) ? LevelsService::getLevelById($challenge->level_id) : null;
+            $duration = !empty($challenge->duration_id) ? DurationService::getLevelById($challenge->duration_id) : null;
+            $user = !empty($challenge->user_id) ? UserService::getUserPluckById($challenge->user_id) : null;
+            $skills = SkillService::getSkillsById($skillIds);
+            $labs = LabService::getLabByIds($labIds);
             $resourceModules = ResourceModuleService::getResourceModulesByIds($moduleIds);
 
             return ['category' => $category ?? [], 'organization' => $organization ?? [], 'skills' => $skills ?? [], 'skillIds' => $skillIds ?? [], 'user' => $user ?? [], 'level' => $level ?? [], 'associatedLabs' => $labs ?? [],  'duration' => $duration ?? [], 'labIds' => $labIds ?? [], 'moduleIds' => $moduleIds ?? [], 'resourceModules' => $resourceModules ?? []];

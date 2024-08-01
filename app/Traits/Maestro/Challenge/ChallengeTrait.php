@@ -42,6 +42,7 @@ trait ChallengeTrait
             return false;
         }
     }
+
     private function getChallengeIncentives($challenge)
     {
         try {
@@ -74,13 +75,13 @@ trait ChallengeTrait
     {
         try {
             $createChallenge = DB::transaction(function () use ($request) {
-                $challenge      = ChallengeService::createChallenge($request);
-                $requirement    = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
-                $timeline       = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
-                $skill_group    = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
-                $labs           = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
-                $resource_module= ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
-                $incentives     = ChallengeAchievementService::challengeIncentives($request, $challenge);
+                $challenge = ChallengeService::createChallenge($request);
+                $requirement = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
+                $timeline = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
+                $skill_group = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
+                $labs = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
+                $resource_module = ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
+                $incentives = ChallengeAchievementService::challengeIncentives($request, $challenge);
 
                 return [
                     'challenge'      => $challenge,
@@ -133,14 +134,14 @@ trait ChallengeTrait
     private function updateChallengeById($id, $request)
     {
         try {
-            $createChallenge = DB::transaction(function () use ($request,$id) {
-                $challenge      = ChallengeService::updateChallengeById($id, $request);
-                $requirement    = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
-                $timeline       = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
-                $skill_group    = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
-                $labs           = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
-                $resource_module= ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
-                $incentives     = ChallengeAchievementService::challengeIncentives($request, $challenge);
+            $createChallenge = DB::transaction(function () use ($request, $id) {
+                $challenge = ChallengeService::updateChallengeById($id, $request);
+                $requirement = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
+                $timeline = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
+                $skill_group = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
+                $labs = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
+                $resource_module = ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
+                $incentives = ChallengeAchievementService::challengeIncentives($request, $challenge);
 
                 return [
                     'challenge'      => $challenge,

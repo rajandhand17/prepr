@@ -11,8 +11,8 @@ class ChallengeSkillsGroupsStackService
     {
         try {
             if (!empty($request->skills)) {
-                if(ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge,'type' => '0'])->exists()){
-                    ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge,'type' => '0'])->delete();
+                if (ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge, 'type' => '0'])->exists()) {
+                    ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge, 'type' => '0'])->delete();
                 }
                 $skillNewArray = [];
                 foreach ($request->skills as $skill) {
