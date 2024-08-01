@@ -1,4 +1,5 @@
 @extends('maestro.layouts.default')
+@section('title') Role and Permissions @endsection
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">

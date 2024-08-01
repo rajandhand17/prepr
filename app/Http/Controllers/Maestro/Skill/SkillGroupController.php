@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Maestro\skill;
 use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
-use App\Models\SkillGroup;
 use App\Models\SkillStack;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\SkillService;
@@ -152,7 +151,7 @@ class SkillGroupController extends Controller
     public function edit(string $id)
     {
         try {
-            $data = SkillGroup::find($id);
+            $data = $this->getSkillGroupById($id);
             $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
             $selectedStacks = SkillStackService::getSkillStackBasedOnIds($data->skill_stacks);
             $languages = LanguageService::getAllActiveLanguages();

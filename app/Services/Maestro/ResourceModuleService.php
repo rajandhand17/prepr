@@ -2,12 +2,11 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\Storage;
-use App\Helpers\FileUploadHelper;
 
 class ResourceModuleService
 {
@@ -60,6 +59,7 @@ class ResourceModuleService
             if ($request->file('cover_image')) {
                 $coverImage = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'resource_module');
             }
+
             return $coverImage;
         } catch (Exception $e) {
             return false;
@@ -114,16 +114,16 @@ class ResourceModuleService
             if ($request->search) {
                 $resourceJson->where('title', 'LIKE', '%'.$request->search.'%');
             }
-            $resourceJsons = $resourceJson->pluck('title', 'uuid');
+            $resourceJsons = $resourceJson->pluck('title', 'id');
             $total_count = $resourceJsons->count();
-            $resourcesr = $jsonTags = [];
+            $resourceResults = $jsonTags = [];
             $count = 0;
             foreach ($resourceJsons as $key => $tag) {
-                $resourcesr[$count]['id'] = $key;
-                $resourcesr[$count]['text'] = $tag;
+                $resourceResults[$count]['id'] = $key;
+                $resourceResults[$count]['text'] = $tag;
                 $count++;
             }
-            $jsonTags['result'] = $resourcesr;
+            $jsonTags['result'] = $resourceResults;
             $jsonTags['more'] = true;
             $jsonTags['total_count'] = $total_count;
 

@@ -29,7 +29,7 @@ class SkillsActivityAwardsController extends Controller
     public function index(Builder $builder, Request $request)
     {
         try {
-            $skills_activity_awards = SkillsActivityAward::orderBy('id', 'DESC');
+            $skills_activity_awards = $this->getSkillsActivityAward();
             if (request()->ajax()) {
                 return DataTables::eloquent($skills_activity_awards)
                     ->editColumn('name', static function (SkillsActivityAward $award) {

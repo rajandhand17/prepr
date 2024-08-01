@@ -41,7 +41,7 @@ class CommunityTrophyController extends Controller
     {
         try {
             // $trophys = User::query()->where('id','<>',Auth::id());
-            $users = communityTrophy::query();
+            $users = $this->getCommunityTrophy();
             if (request()->ajax()) {
                 return DataTables::eloquent($users)
                     ->editColumn('name', static function (communityTrophy $trophy) {

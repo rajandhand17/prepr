@@ -36,6 +36,7 @@ class RanksController extends Controller
                         } else {
                             $html = "<span class='badge badge-danger'>InActive</span>";
                         }
+
                         return $html;
                     })
                     ->editColumn('image', static function (Rank $rankData) {
@@ -44,7 +45,7 @@ class RanksController extends Controller
                         return "<img src='".$rankData->image."' width='30px' ".$onerror.'>';
                     })
                     ->addIndexColumn()
-                    ->rawColumns(['image','status', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['image', 'status', 'action', 'DT_Row_Index'])
                     ->toJson();
             }
             $languages = LanguageService::getAllActiveLanguages();

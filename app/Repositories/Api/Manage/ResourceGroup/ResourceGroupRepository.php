@@ -34,7 +34,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
     public function getResourceGroupCountBasedOnOrganization($organizationId)
     {
         try {
-            $this->resourceGroupService->getResourceGroupCountBasedOnOrganization($organizationId);
+            return $this->resourceGroupService->getResourceGroupCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -124,6 +124,11 @@ class Organization extends LaratrustTeam
         return 'NA';
     }
 
+    public function preBuiltLabs_count()
+    {
+        return $this->hasMany(Lab::class, 'organization_id', 'id')->where(['is_pre_built' => '1']);
+    }
+
     public function labs_count()
     {
         return $this->hasMany(Lab::class, 'organization_id', 'id');

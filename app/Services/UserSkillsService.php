@@ -203,4 +203,20 @@ class UserSkillsService
             return false;
         }
     }
+
+    public function fetchUserSkills($userData)
+    {
+        try {
+            $fetchUserSkills = UserSkills::where('user_id', $userData->id)->pluck('skill');
+            if (!empty($fetchUserSkills)) {
+                return $fetchUserSkills;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
