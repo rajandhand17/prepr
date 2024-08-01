@@ -35,8 +35,8 @@ class SocialLinkService
     public static function getSocialLinkBasedOnId($id)
     {
         try {
-            return SocialLink::where('id',$id)->first();
-        }catch (\Exception $e) {
+            return SocialLink::where('id', $id)->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
