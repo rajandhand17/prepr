@@ -1,16 +1,17 @@
 @extends('maestro.layouts.default')
+@section('title', 'Create Tag Group')
 @section('content')
      <!-- Content Header (Page header) -->
      <section class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Edit Regular Award</h1>
+              <h1>Create Tag Group</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('communitytrophy.index') }}">Home</a></li>
-                <li class="breadcrumb-item active">Edit Regular Award</li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
+                <li class="breadcrumb-item active">Create Tag Group</li>
               </ol>
             </div>
           </div>
@@ -23,19 +24,19 @@
           <!-- SELECT2 EXAMPLE -->
           <div class="card card-default">
             <div class="card-header">
-              <h3 class="card-title">Edit Regular Award</h3>
+              <h3 class="card-title">Create Tag Group</h3>
             </div>
             <!-- /.card-header -->
-                <div class="card-body">
-                {!!Form::model($trophy,array('method'=>'PUT','files'=>true,'route'=>array('communitytrophy.update',$trophy->id)))!!}
-                   
-                    @include('maestro.activityawards.communityTrophy.form')
-                    <div class="form-actions mt-10">
-                        {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('communitytrophy.index') }}">
-                            <i class="icon-cross2"></i> Cancel
-                        </a>
-                    </div>
+            <div class="card-body">
+                    {!!Form::open(array('method'=>'POST','route'=>'tag-group.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                        @include('maestro.tags.tag-group.form')
+                        <div class="form-actions mt-10">
+                            {!!Form::submit('Save',array('class'=>'btn btn-primary mr-10'))!!}
+
+                            <a class="btn btn-danger mr-1" href="{{ route('skills.index') }}">
+                                <i class="icon-cross2"></i> Cancel
+                            </a>
+                        </div>
                     {!!Form::close()!!}
                 </div>
               <!-- /.row -->

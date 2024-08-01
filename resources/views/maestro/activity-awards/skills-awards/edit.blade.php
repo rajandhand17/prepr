@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('skillsaward.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item active">Edit Skills Award</li>
               </ol>
             </div>
@@ -27,9 +27,9 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                {!!Form::model($award,array('method'=>'PUT','files'=>true,'route'=>array('skillsaward.update',$award->id)))!!}
+                {!!Form::model($award,array('method'=>'PUT','files'=>true,'route'=>array('skills-award.update',$award->id)))!!}
                    
-                    @include('maestro.activityawards.skillsAwards.form')
+                    @include('maestro.activity-awards.skills-awards.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
                         <a class="btn btn-danger mr-1" href="{{ route('skillsaward.index') }}">

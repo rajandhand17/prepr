@@ -31,9 +31,9 @@ class SkillStackController extends Controller
                 return DataTables::eloquent($stacks)
                 ->addColumn('action', static function ($stack) {
                     $html = '';
-                    $html .= '<a href="'.route('skillstack.show', ['skillstack' => $stack->id]).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="'.route('skillstack.edit', ['skillstack' =>  $stack->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skillstack.destroy', ['skillstack' => $stack->id]).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skill-stack.show', ['skillstack' => $stack->id]).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skill-stack.edit', ['skillstack' =>  $stack->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skill-stack.destroy', ['skillstack' => $stack->id]).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
@@ -70,7 +70,7 @@ class SkillStackController extends Controller
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skillstack.index', compact('html', 'languages'));
+            return view('maestro.skill-stack.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
@@ -85,7 +85,7 @@ class SkillStackController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $selectedSkills = [];
 
-            return view('maestro.skillstack.create', compact('languages', 'selectedSkills'));
+            return view('maestro.skill-stack.create', compact('languages', 'selectedSkills'));
         } catch (Exception $e) {
             return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
         }
@@ -98,12 +98,12 @@ class SkillStackController extends Controller
     {
         try {
             if ($this->createSkillStack($request)) {
-                return redirect()->route('skillstack.index')->with('success', 'Skill Stack created successfully');
+                return redirect()->route('skill-stack.index')->with('success', 'Skill Stack created successfully');
             }
 
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -120,12 +120,12 @@ class SkillStackController extends Controller
             }
             $languages = LanguageService::getAllActiveLanguages();
             if (!$skillstack->exists) {
-                return redirect()->route('skillstack.index')->with(['error' => 'Skill not found.']);
+                return redirect()->route('skill-stack.index')->with(['error' => 'Skill not found.']);
             }
 
-            return view('maestro.skillstack.view', compact('skillstack', 'languages', 'selectedSkills'));
+            return view('maestro.skill-stack.view', compact('skillstack', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -139,9 +139,9 @@ class SkillStackController extends Controller
             $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skillstack.edit', compact('selectedSkills', 'languages', 'data'));
+            return view('maestro.skill-stack.edit', compact('selectedSkills', 'languages', 'data'));
         } catch (Exception $e) {
-            redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -152,12 +152,12 @@ class SkillStackController extends Controller
     {
         try {
             if ($this->updateSkillStackById($id, $request)) {
-                return redirect()->route('skillstack.index')->with('success', 'Skill Stack Updated successfully');
+                return redirect()->route('skill-stack.index')->with('success', 'Skill Stack Updated successfully');
             }
 
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         }
     }
 

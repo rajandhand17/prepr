@@ -139,13 +139,13 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('skillstack.index') }}" class="nav-link">
+              <a href="{{ route('skill-stack.index') }}" class="nav-link {{ Route::currentRouteName() == 'skill-stack.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Stacks</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('skillgroup.index') }}" class="nav-link">
+              <a href="{{ route('skill-group.index') }}" class="nav-link {{ Route::currentRouteName() == 'skill-group.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Groups</p>
               </a>
@@ -169,7 +169,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="{{ route('taggroup.index') }}" class="nav-link">
+              <a href="{{ route('tag-group.index') }}" class="nav-link {{ Route::currentRouteName() == 'tag-group.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tag Groups</p>
               </a>
@@ -245,7 +245,7 @@
               </a>
           </li>
         <li class="nav-item">
-          <a href="{{ route('trophyawards.index') }}" class="nav-link {{ Route::currentRouteName() == 'trophyawards.index' ? 'active' : '' }}">
+          <a href="{{ route('trophy-awards.index') }}" class="nav-link {{ Route::currentRouteName() == 'trophy-awards.index' ? 'active' : '' }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Trophy Awards</p>
           </a>
@@ -278,14 +278,14 @@
           </a>
           <ul class="nav nav-treeview" style="display: none;">
             <li class="nav-item">
-              <a href="{{ route('communitytrophy.index') }}" class="nav-link">
+              <a href="{{ route('community-trophy.index') }}" class="nav-link {{ Route::currentRouteName() == 'community-trophy.index' ? 'active' : ''  }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Regular Awards</p>
               </a>
             </li>
 
             <li class="nav-item">
-              <a href="{{ route('skillsaward.index') }}" class="nav-link">
+              <a href="{{ route('skills-award.index') }}" class="nav-link {{ Route::currentRouteName() == 'skills-award.index' ? 'active' : ''  }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Skill Awards</p>
               </a>
@@ -294,7 +294,7 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="{{ route('emailTemplates.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailTemplates.index' ? 'active' : ''  }}">
+          <a href="{{ route('email-templates.index')}} " class="nav-link {{ Route::currentRouteName() == 'email-templates.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Templates</p>
           </a>
@@ -306,7 +306,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="{{ route('emailLogs.index')}} " class="nav-link {{ Route::currentRouteName() == 'emailLogs.index' ? 'active' : ''  }}">
+          <a href="{{ route('email-logs.index')}} " class="nav-link {{ Route::currentRouteName() == 'email-logs.index' ? 'active' : ''  }}">
             <i class="far fa-circle nav-icon"></i>
             <p>Email Logs</p>
           </a>

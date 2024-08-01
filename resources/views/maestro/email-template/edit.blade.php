@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('emailTemplates.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
                 <li class="breadcrumb-item active">Edit Email Template</li>
               </ol>
             </div>
@@ -27,9 +27,9 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                {!!Form::model($template,array('method'=>'PUT','files'=>true,'route'=>array('emailTemplates.update',$template->id)))!!}
+                {!!Form::model($template,array('method'=>'PUT','files'=>true,'route'=>array('email-templates.update',$template->id)))!!}
                    
-                    @include('maestro.emailTemplate.form')
+                    @include('maestro.email-template.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
                         <a class="btn btn-danger mr-1" href="{{ route('emailTemplates.index') }}">

@@ -5,6 +5,6 @@ use App\Http\Controllers\Maestro\ActivityAwards\SkillsActivityAwardsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {
-    Route::resource('communitytrophy', CommunityTrophyController::class);
-    Route::resource('skillsaward', SkillsActivityAwardsController::class);
+    Route::resource('community-trophy', CommunityTrophyController::class);
+    Route::resource('skills-award', SkillsActivityAwardsController::class);
 });
