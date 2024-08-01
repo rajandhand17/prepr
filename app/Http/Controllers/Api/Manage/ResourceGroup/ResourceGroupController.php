@@ -12,6 +12,7 @@ use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -119,8 +120,13 @@ class ResourceGroupController extends AppBaseController
                 if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_group');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceGroupExistsOrNot->id, $userId, $moduleType);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));

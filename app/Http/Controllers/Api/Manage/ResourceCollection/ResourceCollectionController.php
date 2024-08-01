@@ -12,6 +12,7 @@ use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
@@ -145,7 +146,12 @@ class ResourceCollectionController extends AppBaseController
                 if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
+                // For user progress tracking
                 TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userData->id);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_collections');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceCollectionExistsOrNot->id, $userData->id, $moduleType);
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
