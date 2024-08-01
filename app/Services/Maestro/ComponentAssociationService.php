@@ -130,7 +130,6 @@ class ComponentAssociationService
 
             return true;
         } catch (Exception $e) {
-            
             UtilityHelper::logError($e);
 
             return false;
@@ -328,7 +327,6 @@ class ComponentAssociationService
 
             return true;
         } catch (\Exception $e) {
-            
             UtilityHelper::logError($e);
 
             return false;
@@ -358,6 +356,9 @@ class ComponentAssociationService
     {
         try {
             if (!empty($request->associativeLab)) {
+                if (ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('lab_id')->exists()) {
+                    ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('lab_id')->delete();
+                }
                 $labNewArray = [];
                 foreach ($request->associativeLab as $key => $lab) {
                     $labData['challenge_id'] = $challenge->id;
@@ -378,10 +379,13 @@ class ComponentAssociationService
     {
         try {
             if (!empty($request->associativeResourceModule)) {
+                if (ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('resource_module_id')->exists()) {
+                    ComponentAssociation::where('challenge_id', $challenge->id)->whereNotNull('resource_module_id')->delete();
+                }
                 $resourceModuleNewArray = [];
                 foreach ($request->associativeResourceModule as $key => $resourceModule) {
                     $resourceModuleData['challenge_id'] = $challenge->id;
-                    $resourceModuleData['resource_module_id'] = $resourceModule;
+                    $resourceModuleData['resource_module_id'] = (int) $resourceModule;
                     $resourceModuleData['sequence'] = $key + 1;
                     $resourceModuleNewArray[] = $resourceModuleData;
                 }
@@ -406,7 +410,7 @@ class ComponentAssociationService
     public static function getChallengeAssociatedResourceModule($challenge)
     {
         try {
-            return ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('resource_module_id');
+            return ComponentAssociation::where(['challenge_id' => (int) $challenge->id])->pluck('resource_module_id');
         } catch (Exception $e) {
             return false;
         }

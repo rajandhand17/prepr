@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use App\Services\Maestro\LanguageService;
@@ -185,8 +185,6 @@ class SkillStackController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         } catch (Exception $e) {
-            
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }

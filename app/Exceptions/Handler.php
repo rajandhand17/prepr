@@ -70,8 +70,6 @@ class Handler extends ExceptionHandler
         }
 
         if ($e) {
-            dd($e);
-
             return Response::json(ResponseUtil::makeError(__('responses.send_error')), 500);
         }
 

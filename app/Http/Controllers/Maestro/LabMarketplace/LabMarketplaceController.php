@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Maestro\LabMarketplace;
 
 use App\Http\Controllers\Controller;
 use App\Models\LabMarketplace;
-use App\Services\Maestro\Category\CategoryService;
+use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\LabMarketplaceService;
-use App\Services\Maestro\User\UserService;
+use App\Services\Maestro\UserService;
 use App\Traits\Maestro\LabMarketplace\LabMarketplaceTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

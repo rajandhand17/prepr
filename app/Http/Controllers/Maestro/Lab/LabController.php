@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Maestro\Lab;
 use App\Helpers\ChargebeeHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Lab;
-use App\Models\Language;
 use App\Services\Maestro\LanguageService;
-use App\Services\Maestro\SocialLink\SocialLinkService;
+use App\Services\Maestro\SocialLinkService;
 use App\Traits\Maestro\Lab\LabTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -79,7 +77,7 @@ class LabController extends Controller
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
                 ['data' => 'category', 'name' => 'category', 'title' => 'Category'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '20%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
             View::share('module_name', 'Lab');
 
@@ -121,6 +119,7 @@ class LabController extends Controller
             if ($this->createLab($request)) {
                 return redirect()->route('lab.index')->with('success', 'Lab created successfully');
             }
+
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);

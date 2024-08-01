@@ -2,7 +2,7 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\TagGroup;
 use Exception;
 
@@ -44,8 +44,6 @@ class TagGroupService
 
             return true;
         } catch (Exception $e) {
-            
-
             return false;
         }
     }

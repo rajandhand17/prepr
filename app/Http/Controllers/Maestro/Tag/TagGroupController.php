@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Tag;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use App\Models\TagGroup;

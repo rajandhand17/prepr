@@ -51,7 +51,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('organization_id')) ? 'has-error' : ''}}">
             {!! Form::label('organization_id', 'Organization', ['class' => 'control-label']) !!}
-            {{ Form::select('organization_id',$challengeAssociatedItems['organization'],$challenge->organization_id, ['class' => 'form-control select2bs4','required' => 'required','id' =>'organisationId','required' => 'required']) }}
+            {{ Form::select('organization_id',$challengeAssociatedItems['organization'] ?? [],$challenge->organization_id, ['class' => 'form-control select2bs4','required' => 'required','id' =>'organisationId','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block org_error">{{ $errors->first('organization_id')}}</span>
           </div>
         </div>
@@ -68,7 +68,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('category_id')) ? 'has-error' : ''}}">
             {!! Form::label('category', 'Category', ['class' => 'control-label']) !!}
-            {{ Form::select('category', $challengeAssociatedItems['category'], $challenge->category_id, ['class' => 'form-control select2bs4','id' => 'listCategory','required' => 'required']) }}
+            {{ Form::select('category', $challengeAssociatedItems['category'] ?? [], $challenge->category_id, ['class' => 'form-control select2bs4','id' => 'listCategory','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block category_error">{{ $errors->first('category_id')}}</span>
           </div>
         </div>
@@ -76,7 +76,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('skills')) ? 'has-error' : ''}}">
             {!! Form::label('skills', 'Challenge Skills', ['class' => 'control-label']) !!}
-            {{ Form::select('skills[]', $challengeAssociatedItems['skills'], $challengeAssociatedItems['skillIds'], ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required' ,'multiple' => 'multiple']) }}
+            {{ Form::select('skills[]', $challengeAssociatedItems['skills'] ?? [], $challengeAssociatedItems['skillIds'] ?? [], ['class' => 'form-control select2bs4','id' => 'challengeSkills','required' => 'required' ,'multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block skill_error">{{ $errors->first('skills')}}</span>
           </div>
         </div>
@@ -85,7 +85,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('level')) ? 'has-error' : ''}}">
             {!! Form::label('level', 'Challenge Level', ['class' => 'control-label']) !!}
-            {{ Form::select('level', $challengeAssociatedItems['level'], $challenge->level_id, ['class' => 'form-control select2bs4','id' => 'challengeLevels','required' => 'required']) }}
+            {{ Form::select('level', $challengeAssociatedItems['level'] ?? [], $challenge->level_id, ['class' => 'form-control select2bs4','id' => 'challengeLevels','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block level_error">{{ $errors->first('level')}}</span>
           </div>
         </div>
@@ -93,7 +93,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('duration')) ? 'has-error' : ''}}">
             {!! Form::label('duration', 'Challenge Duration', ['class' => 'control-label']) !!}
-            {{ Form::select('duration', $challengeAssociatedItems['duration'], $challenge->duration_id, ['class' => 'form-control select2bs4','id' => 'challengeDuration','required' => 'required']) }}
+            {{ Form::select('duration', $challengeAssociatedItems['duration'] ?? [], $challenge->duration_id, ['class' => 'form-control select2bs4','id' => 'challengeDuration','required' => 'required']) }}
             <span style="color: #ea6c41 !important;" class="help-block duration_error">{{ $errors->first('duration')}}</span>
           </div>
         </div>
@@ -117,7 +117,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
               {!! Form::label('user_id', 'Challenge Creator', ['class' => 'control-label ']) !!}
-              {!! Form::select('user_id',$challengeAssociatedItems['user'],$challenge->user_id, ['class' => 'form-control select2bs4', 'id'=>'userId','required' => 'required']) !!}
+              {!! Form::select('user_id',$challengeAssociatedItems['user'] ?? [],$challenge->user_id, ['class' => 'form-control select2bs4', 'id'=>'userId','required' => 'required']) !!}
               <span style="color: #ea6c41 !important;" class="help-block user_error">{{ $errors->first('user_id')}}</span>
             </div>
           </div>
@@ -204,7 +204,7 @@
             <div class="col-md-6">
               <div class="form-group {{($errors->has('open_call_date_description')) ? 'has-error' : ''}}">
                 {!! Form::label('open_call_date_description', 'Open Call Date Description', ['class' => 'control-label']) !!}
-                {!! Form::text('open_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                {!! Form::text('open_call_date_description',$timeLines->open_call_date_description ?? null, ['class' => 'form-control']) !!}
                 <span style="color: #ea6c41 !important;" class="help-block open_call_error">{{ $errors->first('open_call_date_description')}}</span>
               </div>
             </div>
@@ -225,7 +225,7 @@
             <div class="col-md-6">
               <div class="form-group {{($errors->has('last_call_date_description')) ? 'has-error' : ''}}">
                 {!! Form::label('last_call_date_description', 'Last Registration Date Description', ['class' => 'control-label']) !!}
-                {!! Form::text('last_call_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                {!! Form::text('last_call_date_description',$timeLines->last_call_date_description ?? null, ['class' => 'form-control']) !!}
                 <span style="color: #ea6c41 !important;" class="help-block last_call_date_description_error">{{ $errors->first('last_call_date_description')}}</span>
               </div>
             </div>
@@ -246,7 +246,7 @@
             <div class="col-md-6">
               <div class="form-group {{($errors->has('application_deadline_date_description')) ? 'has-error' : ''}}">
                 {!! Form::label('application_deadline_date_description', 'Application Deadline Description', ['class' => 'control-label']) !!}
-                {!! Form::text('application_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                {!! Form::text('application_deadline_date_description',$timeLines->application_deadline_date_description ?? null, ['class' => 'form-control']) !!}
                 <span style="color: #ea6c41 !important;" class="help-block application_deadline_date_description_error">{{ $errors->first('application_deadline_date_description')}}</span>
               </div>
             </div>
@@ -267,7 +267,7 @@
             <div class="col-md-6">
               <div class="form-group {{($errors->has('submission_deadline_date_description')) ? 'has-error' : ''}}">
                 {!! Form::label('submission_deadline_date_description', 'Submission Deadline Description', ['class' => 'control-label']) !!}
-                {!! Form::text('submission_deadline_date_description',null, ['class' => 'form-control','required' => 'required']) !!}
+                {!! Form::text('submission_deadline_date_description',$timeLines->submission_deadline_date_description ?? null, ['class' => 'form-control']) !!}
                 <span style="color: #ea6c41 !important;" class="help-block submission_deadline_date_description_error">{{ $errors->first('submission_deadline_date_description')}}</span>
               </div>
             </div>
@@ -334,27 +334,72 @@
 
         {{-- Challenge Incentives section start --}}
         <hr>
-          <h3><b> Challenge Incentives </b></h3>
+          
+          <div class="maindiv" style="display: flex;">
+            <div class="subdiv1"><h3><b> Challenge Incentives </b> 
+              @if($incentives->isNotEmpty())<button style="margin-left: 1200px;" class="btn btn-success add_new_incentive" type="button" row-no="1" style="margin-top: 20px;">+</button>@endif</h3></div>
+            <div class="subdiv2"></div>
+          </div>
+          
         <hr>
+        @if($incentives->isNotEmpty())
+        @foreach($incentives as $key => $incentive)
+          <div class="row form-group" id="row_no_{{$key+1}}">
+            <div class="col-md-3">
+                <div class="form-group {{($errors->has('incentive_name')) ? 'has-error' : ''}}">
+                    {!! Form::label('incentive_name', 'Incentive Name', ['class' => 'control-label']) !!}
+                    {!! Form::text('incentive_name[]',$incentive->achievement_name , ['class' => 'form-control incentive_name' ,'required' => 'required']) !!}
+                    <span class="help-block">{{ $errors->first('incentive_name')}}</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group {{($errors->has('incentive_prize')) ? 'has-error' : ''}}">
+                    {!! Form::label('incentive_prize', 'Incentive Prize', ['class' => 'control-label']) !!}
+                    {!! Form::text('incentive_prize[]',$incentive->achievement_prize, ['class' => 'form-control incentive_prize','min'=>'0' ,'required' => 'required']) !!}
+                    <span class="help-block">{{ $errors->first('incentive_prize')}}</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group {{($errors->has('incentive_point')) ? 'has-error' : ''}}">
+                    {!! Form::label('incentive_point', 'Incentive Point', ['class' => 'control-label']) !!}
+                    {!! Form::number('incentive_point[]',$incentive->achievement_points, ['class' => 'form-control incentive_point','min'=>'0' ,'required' => 'required']) !!}
+                    <span class="help-block">{{ $errors->first('incentive_point')}}</span>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group {{($errors->has('incentive_trophy')) ? 'has-error' : ''}}">
+                    {!! Form::label('incentive_trophy', 'Incentive Trophy', ['class' => 'control-label']) !!}
+                    {!! Form::file('incentive_trophy[]', ['class' => 'incentive_trophy']) !!}
+                    <span class="help-block">{{ $errors->first('incentive_trophy')}}</span>
+                    <span class="help-block" style="color: #ea6c41;">{{ $errors->first('incentive_trophy.0')}}</span>
+                </div>
+            </div>
+            <div class="col-sm-1 col-xs-1 button_add_remove">
+                <button class="btn btn-danger" onclick="removeIncentive({{$key+1}})" type="button" style="margin-top: 20px;">-</button>
+            </div>
+          </div>
+        @endforeach
+      @endif
+      @if($incentives->isEmpty())
         <div class="row form-group" id="row_no_1">
           <div class="col-md-3">
               <div class="form-group {{($errors->has('incentive_name')) ? 'has-error' : ''}}">
                   {!! Form::label('incentive_name', 'Incentive Name', ['class' => 'control-label']) !!}
-                  {!! Form::text('incentive_name[]',null, ['class' => 'form-control incentive_name']) !!}
+                  {!! Form::text('incentive_name[]',null, ['class' => 'form-control incentive_name','required' => 'required']) !!}
                   <span class="help-block">{{ $errors->first('incentive_name')}}</span>
               </div>
           </div>
           <div class="col-md-3">
               <div class="form-group {{($errors->has('incentive_prize')) ? 'has-error' : ''}}">
                   {!! Form::label('incentive_prize', 'Incentive Prize', ['class' => 'control-label']) !!}
-                  {!! Form::text('incentive_prize[]',null, ['class' => 'form-control incentive_prize','min'=>'0']) !!}
+                  {!! Form::text('incentive_prize[]',null, ['class' => 'form-control incentive_prize','min'=>'0','required' => 'required']) !!}
                   <span class="help-block">{{ $errors->first('incentive_prize')}}</span>
               </div>
           </div>
           <div class="col-md-3">
               <div class="form-group {{($errors->has('incentive_point')) ? 'has-error' : ''}}">
                   {!! Form::label('incentive_point', 'Incentive Point', ['class' => 'control-label']) !!}
-                  {!! Form::number('incentive_point[]',null, ['class' => 'form-control incentive_point','min'=>'0']) !!}
+                  {!! Form::number('incentive_point[]',null, ['class' => 'form-control incentive_point','min'=>'0','required' => 'required']) !!}
                   <span class="help-block">{{ $errors->first('incentive_point')}}</span>
               </div>
           </div>
@@ -370,6 +415,7 @@
               <button class="btn btn-success add_new_incentive" type="button" row-no="1" style="margin-top: 20px;">+</button>
           </div>
       </div>
+      @endif
       <div class="incentive_area_appends" id="incentive_area_appends"></div>
       {{-- Challenge Incentives section end --}}
 
@@ -396,7 +442,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('associativeLab')) ? 'has-error' : ''}}">
             {!! Form::label('associativeLab', 'Associat Lab', ['class' => 'control-label']) !!}
-            {{ Form::select('associativeLab[]', $challengeAssociatedItems['labs'], $challengeAssociatedItems['labIds'], ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required','multiple' => 'multiple']) }}
+            {{ Form::select('associativeLab[]', $challengeAssociatedItems['associatedLabs'] , $challengeAssociatedItems['labIds'], ['class' => 'form-control select2bs4','id' => 'associativeLab','required' => 'required','multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('associativeLab')}}</span>
           </div>
         </div>
@@ -404,7 +450,7 @@
         <div class="col-md-6">
           <div class="form-group {{($errors->has('associativeResourceModule')) ? 'has-error' : ''}}">
             {!! Form::label('associativeResourceModule', 'Resource Module', ['class' => 'control-label']) !!}
-            {{ Form::select('associativeResourceModule[]', $challengeAssociatedItems['resourceModules'], $challengeAssociatedItems['moduleIds'], ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required','multiple' => 'multiple']) }}
+            {{ Form::select('associativeResourceModule[]', $challengeAssociatedItems['resourceModules'] ?? [], $challengeAssociatedItems['moduleIds'] ?? [], ['class' => 'form-control select2bs4','id' => 'resourceModule','required' => 'required','multiple' => 'multiple']) }}
             <span style="color: #ea6c41 !important;" class="help-block resource_module_error">{{ $errors->first('associativeResourceModule')}}</span>
           </div>
         </div>

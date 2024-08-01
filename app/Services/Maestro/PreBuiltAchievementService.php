@@ -3,7 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\PreBuiltAchievement;
 use Exception;
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Maestro\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Services\Maestro\RoleAndPermissionService;
 use App\Traits\Maestro\User\UserTrait;
 use Exception;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Ranks;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Rank;
 use App\Services\Maestro\LanguageService;
@@ -32,12 +32,20 @@ class RanksController extends Controller
                     })
                     ->editColumn('status', static function (Rank $rankData) {
                         if ($rankData->status == 1) {
-                            return 'Active';
+                            $html = "<span class='badge badge-success'>Active</span>";
                         } else {
-                            return 'InActive';
+                            $html = "<span class='badge badge-danger'>InActive</span>";
                         }
+
+                        return $html;
+                    })
+                    ->editColumn('image', static function (Rank $rankData) {
+                        $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
+
+                        return "<img src='".$rankData->image."' width='30px' ".$onerror.'>';
                     })
                     ->addIndexColumn()
+                    ->rawColumns(['image', 'status', 'action', 'DT_Row_Index'])
                     ->toJson();
             }
             $languages = LanguageService::getAllActiveLanguages();
@@ -50,6 +58,7 @@ class RanksController extends Controller
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'point', 'name' => 'point', 'title' => 'Points', 'width' => '10%']);
+            array_push($tableColumns, ['data' => 'image', 'name' => 'image', 'title' => 'Image', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);

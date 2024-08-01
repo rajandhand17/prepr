@@ -9,7 +9,6 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
@@ -40,12 +39,15 @@ class ResourceGroupController extends AppBaseController
                     return $this->sendError(__('responses.reached_resource_group_limit'), 400);
                 }
             }
-
             $upload_cover_image = config('site-settings.default_resource_group_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -210,14 +212,19 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
             }
+
             if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->media);
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -231,7 +238,7 @@ class ResourceGroupController extends AppBaseController
             }
             $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
-                return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
+                return $this->sendResponse(ResourceGroupResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
@@ -250,6 +257,7 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
             if ($resourceGroup) {
                 $response = [

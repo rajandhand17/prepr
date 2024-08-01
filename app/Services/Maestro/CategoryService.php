@@ -2,7 +2,7 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use Exception;
 
@@ -160,6 +160,40 @@ class CategoryService
     {
         try {
             return Category::where(['id' => $category_id])->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getCategoriesByLanguageId($request)
+    {
+        try {
+            if ($request->language == 'en') {
+                $columName = 'title';
+                $categories = Category::select('title as text', 'id')->orderBy('id', 'DESC')->take(30);
+            } else {
+                $columName = $request->language;
+                if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
+                    $columName = str_replace(' ', '_', $columName);
+                }
+                if ($columName == trim($columName) && strpos($columName, '-') !== false) {
+                    $columName = str_replace('-', '_', $columName);
+                }
+                $columName = $columName.'_title';
+                $categories = Category::select($columName.' as text', 'id')->orderBy('id', 'DESC')->take(30);
+            }
+            if ($request->search) {
+                $categories->where($columName, 'LIKE', '%'.$request->search.'%');
+            }
+            if (isset($request->component)) {
+                $categories->where('components', 'like', '%'.$request->component.'%');
+            }
+            $categories = $categories->get();
+            $jsonData['result'] = $categories;
+            $jsonData['more'] = true;
+            $jsonData['total_count'] = $categories->count();
+
+            return response()->json($jsonData);
         } catch (Exception $e) {
             return false;
         }

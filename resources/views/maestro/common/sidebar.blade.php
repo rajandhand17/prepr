@@ -76,8 +76,8 @@
             </li>
           </ul>
         </li>
-        <li class="nav-item {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'menu-open' : '' }}">
-          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' ? 'active' : '' }}">
+        <li class="nav-item {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge' || request()->segment(2) == 'lab' ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->segment(2) == 'users' || request()->segment(2) == 'resource-module' || request()->segment(2) == 'organization' || request()->segment(2) == 'pre-built-achievement' || request()->segment(2) == 'challenge'|| request()->segment(2) == 'lab' ? 'active' : '' }}">
             <i class="nav-icon fas fa-tree"></i>
             <p>
               Component
@@ -92,27 +92,21 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('organization.index') }}" class="nav-link">
+              <a href="{{ route('organization.index') }}" class="nav-link {{ Route::currentRouteName() == 'organization.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Organization</p>
-              </a>
-            </li>
-            {{-- <li class="nav-item">
-              <a href="{{ route('lab.index') }}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Lab</p>
-              </a>
-            </li> --}}
-            <li class="nav-item">
-              <a href="{{ route('challenge.index') }}" class="nav-link {{ Route::currentRouteName() == 'challenge.index' ? 'active' : '' }}">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Challenge Management</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="{{ route('lab.index') }}" class="nav-link {{ Route::currentRouteName() == 'lab.index' ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lab Management</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('challenge.index') }}" class="nav-link {{ Route::currentRouteName() == 'challenge.index' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Challenge Management</p>
               </a>
             </li>
             <li class="nav-item">

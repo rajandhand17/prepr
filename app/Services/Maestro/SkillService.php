@@ -2,7 +2,7 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Skill;
 use Exception;
 
@@ -106,8 +106,6 @@ class SkillService
 
             return false;
         } catch (\Exception $e) {
-            
-
             return false;
         }
     }
@@ -133,8 +131,6 @@ class SkillService
 
             return response()->json($jsonSkills);
         } catch (Exception $e) {
-            
-
             return false;
         }
     }
@@ -162,6 +158,44 @@ class SkillService
     {
         try {
             return Skill::whereIn('id', $skillIds)->pluck('title', 'id');
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getSkillsByLanguageId($request)
+    {
+        try {
+            if ($request->language == 'en') {
+                $skillsQuery = Skill::select('id', 'title')->orderBy('id', 'DESC')->take(30);
+                $columName = 'title';
+            } else {
+                $columName = $request->language;
+                if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
+                    $columName = str_replace(' ', '_', $columName);
+                }
+                if ($columName == trim($columName) && strpos($columName, '-') !== false) {
+                    $columName = str_replace('-', '_', $columName);
+                }
+                $columName = $columName.'_title';
+                $skillsQuery = Skill::select('id', $columName.' as title')->orderBy('id', 'DESC')->take(30);
+            }
+            if ($request->search) {
+                $skillsQuery->where($columName, 'LIKE', '%'.$request->search.'%');
+            }
+            $skillsQuery = $skillsQuery->pluck('title', 'id');
+            $skillsArray = $jsonSkills = [];
+            $count = 0;
+            foreach ($skillsQuery as $key => $skill) {
+                $skillsArray[$count]['id'] = $key;
+                $skillsArray[$count]['text'] = $skill;
+                $count++;
+            }
+            $jsonSkills['result'] = $skillsArray;
+            $jsonSkills['more'] = true;
+            $jsonSkills['total_count'] = $skillsQuery->count();
+
+            return response()->json($jsonSkills);
         } catch (Exception $e) {
             return false;
         }

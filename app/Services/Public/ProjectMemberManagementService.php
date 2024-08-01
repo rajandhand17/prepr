@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ProjectMemberManagement;
+use App\Services\ProjectService;
 use Exception;
 
 class ProjectMemberManagementService
@@ -41,6 +42,34 @@ class ProjectMemberManagementService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function myProjectDashboardRequestIds($userData, $inviteStatus)
+    {
+        try {
+            $myProjectIds = ProjectService::getMyProjectIds($userData->id);
+            $myProjectAcceptedIds = self::invitesProjectDashboardRequestIds($userData, $inviteStatus);
+            $myProjectDashboardRequestIds = $myProjectIds->merge($myProjectAcceptedIds);
+
+            return $myProjectDashboardRequestIds->unique();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function invitesProjectDashboardRequestIds($userData, $inviteStatus)
+    {
+        try {
+            $invitesProjectDashboardRequestIds = ProjectMemberManagement::where(['invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('project_id');
+
+            return $invitesProjectDashboardRequestIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

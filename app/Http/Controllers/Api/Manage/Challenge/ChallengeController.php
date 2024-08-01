@@ -402,9 +402,9 @@ class ChallengeController extends AppBaseController
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
-                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($organization->id);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
@@ -600,13 +600,19 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
+
             $createChallengeUsingAIPreview = $this->challengeRepository->createChallengeUsingAIPreview($request);
 
             if ($createChallengeUsingAIPreview) {
@@ -626,13 +632,19 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
+
             $createChallengeFromResourceUsingAIPreview = $this->challengeRepository->createChallengeFromResourceUsingAIPreview($request);
             if ($createChallengeFromResourceUsingAIPreview) {
                 return $this->sendResponse($createChallengeFromResourceUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
@@ -651,7 +663,12 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
@@ -663,7 +680,7 @@ class ChallengeController extends AppBaseController
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
             $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
 
-            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
 
             if ($createChallengeUsingAI) {
                 return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_successfully'), 200);

@@ -22,12 +22,11 @@ class MasterController extends Controller
     public function getOrganizations(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getOrganizationsById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getOrganizationsById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -39,12 +38,11 @@ class MasterController extends Controller
     public function getCategories(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getCategoriesById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getCategoriesById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -56,12 +54,11 @@ class MasterController extends Controller
     public function getSkills(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getSkillsById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getSkillsById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -125,12 +122,11 @@ class MasterController extends Controller
     public function getLevels(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getLevelsById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getLevelsById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -142,12 +138,11 @@ class MasterController extends Controller
     public function getDurations(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getDurationsById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getDurationsById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -159,12 +154,11 @@ class MasterController extends Controller
     public function getMinRanks(Request $request)
     {
         try {
-            if (!$request->language || is_null($request->language)) {
-                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
-            }
-            $response = $this->getMinRanksById($request);
-            if ($response) {
-                return $response;
+            if ($this->checkLanguage($request)) {
+                $response = $this->getMinRanksById($request);
+                if ($response) {
+                    return $response;
+                }
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
@@ -222,6 +216,19 @@ class MasterController extends Controller
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
+        }
+    }
+
+    public function checkLanguage($request)
+    {
+        try {
+            if (!$request->language || is_null($request->language)) {
+                return response()->json(['status' => 'fail', 'message' => 'Please select language first.', 'result' => [], 'more' => false, 'total_count' => 0]);
+            } else {
+                return true;
+            }
         } catch (Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }

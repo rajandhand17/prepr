@@ -3,6 +3,8 @@
 namespace App\Traits\Maestro\Challenge;
 
 use App\Services\Maestro\ChallengeAchievementService;
+use App\Services\Maestro\ChallengeAssessmentCriteriaService;
+use App\Services\Maestro\ChallengeAssessmentService;
 use App\Services\Maestro\ChallengeRequirementService;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeSkillsGroupsStackService;
@@ -33,6 +35,34 @@ trait ChallengeTrait
             $associateItems = ChallengeService::getChallengeAssociatedItemsById($challenge);
             if ($associateItems) {
                 return $associateItems;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getChallengeIncentives($challenge)
+    {
+        try {
+            $achievements = ChallengeAchievementService::getChallengeIncentives($challenge);
+            if ($achievements) {
+                return $achievements;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getChallengeTimeLine($challenge)
+    {
+        try {
+            $timelines = ChallengeTimelineService::getChallengeTimeLines($challenge);
+            if ($timelines) {
+                return $timelines;
             }
 
             return false;
@@ -104,37 +134,32 @@ trait ChallengeTrait
     private function updateChallengeById($id, $request)
     {
         try {
-            if (ChallengeService::updateChallengeById($id, $request)) {
-                return true;
+            $createChallenge = DB::transaction(function () use ($request, $id) {
+                $challenge = ChallengeService::updateChallengeById($id, $request);
+                $requirement = ChallengeRequirementService::challengeRequirementsSave($request, $challenge);
+                $timeline = ChallengeTimelineService::challengeTimelinesSave($request, $challenge);
+                $skill_group = ChallengeSkillsGroupsStackService::challengeSkillsGroupsStacks($request, $challenge);
+                $labs = ComponentAssociationService::addAssociatedLabWithChallenge($request, $challenge);
+                $resource_module = ComponentAssociationService::addAssociatedResourceModuleWithChallenge($request, $challenge);
+                $incentives = ChallengeAchievementService::challengeIncentives($request, $challenge);
+
+                return [
+                    'challenge'      => $challenge,
+                    'requirement'    => $requirement,
+                    'timeline'       => $timeline,
+                    'skill_group'    => $skill_group,
+                    'labs'           => $labs,
+                    'resource_module'=> $resource_module,
+                    'incentives'     => $incentives,
+                ];
+            });
+
+            if ($createChallenge['challenge'] && $createChallenge['requirement'] && $createChallenge['timeline'] && $createChallenge['skill_group'] && $createChallenge['labs'] && $createChallenge['resource_module'] && $createChallenge['incentives']) {
+                DB::commit();
+
+                return $createChallenge['challenge'];
             }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getAssessment($challengeId)
-    {
-        try {
-            $assessment = ChallengeService::getAssessment($challengeId);
-            if ($assessment) {
-                return $assessment;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getCriteria($challengeId)
-    {
-        try {
-            $criteria = ChallengeService::getCriteria($challengeId);
-            if ($criteria) {
-                return $criteria;
-            }
+            DB::rollBack();
 
             return false;
         } catch (Exception $e) {
@@ -145,13 +170,27 @@ trait ChallengeTrait
     private function storeUpdateAssessment($request)
     {
         try {
-            $assessment = ChallengeService::storeUpdateAssessment($request);
-            if ($assessment) {
-                return $assessment;
+            $createChallenge = DB::transaction(function () use ($request) {
+                $assessmentType = ChallengeAssessmentService::storeUpdateAssessment($request);
+                $assessmentCriteria = ChallengeAssessmentCriteriaService::addUpdateAssessmentCriteria($request);
+
+                return [
+                    'assessmentType'     => $assessmentType,
+                    'assessmentCriteria' => $assessmentCriteria,
+                ];
+            });
+
+            if ($createChallenge['assessmentType'] && $createChallenge['assessmentCriteria']) {
+                DB::commit();
+
+                return $createChallenge['assessmentType'];
             }
+            DB::rollBack();
 
             return false;
         } catch (Exception $e) {
+            DB::rollBack();
+
             return false;
         }
     }

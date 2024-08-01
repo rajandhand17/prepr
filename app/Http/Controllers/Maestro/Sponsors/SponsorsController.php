@@ -38,10 +38,10 @@ class SponsorsController extends Controller
                         return "<img src='".asset($sponsors->image)."' width='50px' ".$onerror.'>';
                     })
                     ->editColumn('status', static function (Host $sponsors) {
-                        if ($sponsors->status == '1') {
-                            $html = 'Active';
+                        if ($sponsors->status == 1) {
+                            $html = "<span class='badge badge-success'>Active</span>";
                         } else {
-                            $html = 'Deactive';
+                            $html = "<span class='badge badge-danger'>InActive</span>";
                         }
 
                         return $html;
@@ -49,7 +49,7 @@ class SponsorsController extends Controller
                     ->addColumn('action', static function (Host $sponsors) {
                         return '<a class="mr-10" href="'.route('sponsors.edit', ['sponsor' => $sponsors->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteSponsor(\''.route('sponsors.destroy', ['sponsor' => $sponsors->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['image', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['image', 'status', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([

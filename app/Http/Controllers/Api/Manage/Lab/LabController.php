@@ -278,7 +278,13 @@ class LabController extends AppBaseController
     {
         try {
             // checks creation limits of the Lab
-            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
                 if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
@@ -304,7 +310,13 @@ class LabController extends AppBaseController
     {
         try {
             // checks creation limits of the Lab
-            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
                 if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
@@ -314,7 +326,7 @@ class LabController extends AppBaseController
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = config('site-settings.default_achievement_image');
 
-            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
+            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image, $organization);
 
             if ($createLabUsingAI) {
                 return $this->sendResponse(LabResource::make($createLabUsingAI), __('responses.lab_created_successfully'), 200);

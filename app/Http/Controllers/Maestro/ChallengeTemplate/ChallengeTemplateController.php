@@ -8,7 +8,7 @@ use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeTemplateService;
-use App\Services\Maestro\User\UserService;
+use App\Services\Maestro\UserService;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

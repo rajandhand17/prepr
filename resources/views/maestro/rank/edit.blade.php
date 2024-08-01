@@ -33,8 +33,8 @@
                       @if($languages->count() > 0)
                           @foreach($languages as $single)
                             @php
-                                $titleColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'title');
-                                $titleLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'Rank Title');
+                                $titleColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'title');
+                                $titleLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Rank Title');
                             @endphp
                               <div class="col-md-6">
                                 <div class="form-group">
@@ -46,8 +46,8 @@
 
                           @foreach($languages as $single)
                             @php
-                                $descriptionColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'description');
-                                $descriptionLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'Description');
+                                $descriptionColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'description');
+                                $descriptionLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Description');
                             @endphp
                               <div class="col-md-6">
                                 <div class="form-group">
@@ -73,11 +73,16 @@
                             <span class="help-block">{{ $errors->first('point')}}</span>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
                           {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
                           {!! Form::file('image', ['class' => 'form-control']) !!}
                           <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div>
+                          <img src="{{ $rank->image }}" height="80px" width="80px">
                         </div>
                       </div>
                   </div>

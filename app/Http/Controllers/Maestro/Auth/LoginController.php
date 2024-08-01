@@ -64,7 +64,7 @@ class LoginController extends Controller
         }
 
         if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
-            $user = Auth::guard('maestro')->user();
+            $user = Auth::user();
             if ($user && $user->hasRole('super_admin')) {
                 return redirect()->route('dashboard.index');
             } else {
