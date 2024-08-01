@@ -114,16 +114,16 @@ class ResourceModuleService
             if ($request->search) {
                 $resourceJson->where('title', 'LIKE', '%'.$request->search.'%');
             }
-            $resourceJsons = $resourceJson->pluck('title', 'uuid');
+            $resourceJsons = $resourceJson->pluck('title', 'id');
             $total_count = $resourceJsons->count();
-            $resourcesr = $jsonTags = [];
+            $resourceResults = $jsonTags = [];
             $count = 0;
             foreach ($resourceJsons as $key => $tag) {
-                $resourcesr[$count]['id'] = $key;
-                $resourcesr[$count]['text'] = $tag;
+                $resourceResults[$count]['id'] = $key;
+                $resourceResults[$count]['text'] = $tag;
                 $count++;
             }
-            $jsonTags['result'] = $resourcesr;
+            $jsonTags['result'] = $resourceResults;
             $jsonTags['more'] = true;
             $jsonTags['total_count'] = $total_count;
 

@@ -129,4 +129,17 @@ class ProjectSocialActivitiesService
             return false;
         }
     }
+
+    public function projectFavouriteIds($userData)
+    {
+        try {
+            $projectFavouriteIds = ProjectSocialActivity::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('project_id');
+
+            return $projectFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
