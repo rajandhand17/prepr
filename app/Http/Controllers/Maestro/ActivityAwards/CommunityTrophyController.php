@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\ActivityAwards;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityTrophy;
 use App\Models\User;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Ranks;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Rank;
 use App\Services\Maestro\LanguageService;

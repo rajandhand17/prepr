@@ -33,8 +33,8 @@
                       @if($languages->count() > 0)
                         @foreach($languages as $single)
                           @php
-                            $titleColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'title');
-                            $titleLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'Project Submission Requirement Title');
+                            $titleColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'title');
+                            $titleLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Project Submission Requirement Title');
                           @endphp
                           <div class="col-md-6">
                             <div class="form-group">
