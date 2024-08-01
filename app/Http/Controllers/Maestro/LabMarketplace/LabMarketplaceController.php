@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\LabMarketplace;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Models\LabMarketplace;
 use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\LabMarketplaceService;
@@ -114,18 +113,18 @@ class LabMarketplaceController extends Controller
             }
 
             if ($checkLabExistsOrNot->is_accessible == '0') {
-                return response()->json(['success' =>'false', 'message'=>"Sorry, this Lab is not accessible with your existing plan."]);
+                return response()->json(['success' =>'false', 'message'=>'Sorry, this Lab is not accessible with your existing plan.']);
             }
-            if($checkLabExistsOrNot->is_pre_built=='1'){
-                return response()->json(['success' =>'false', 'message'=>"This Lab already cloned in Lab Marketplace"]);
+            if ($checkLabExistsOrNot->is_pre_built == '1') {
+                return response()->json(['success' =>'false', 'message'=>'This Lab already cloned in Lab Marketplace']);
             }
             $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
             if ($labMarketplace) {
-                return response()->json(['success' =>'true', 'message'=>"This Lab has cloned in Lab Marketplace successfully"]);
+                return response()->json(['success' =>'true', 'message'=>'This Lab has cloned in Lab Marketplace successfully']);
             }
-            return response()->json(['success' =>'false', 'message'=>"This Lab has failed to clone"]);
 
-        }catch (\Exception $e){
+            return response()->json(['success' =>'false', 'message'=>'This Lab has failed to clone']);
+        } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
