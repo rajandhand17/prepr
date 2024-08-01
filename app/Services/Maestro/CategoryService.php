@@ -2,7 +2,7 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use Exception;
 

@@ -293,8 +293,8 @@ class LabService
     public static function getLabBasedOnSlug($slug)
     {
         try {
-            return Lab::where('slug',$slug)->first();
-        }catch (Exception $e) {
+            return Lab::where('slug', $slug)->first();
+        } catch (Exception $e) {
             return false;
         }
     }

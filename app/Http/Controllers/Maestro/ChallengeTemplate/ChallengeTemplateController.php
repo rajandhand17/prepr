@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\ChallengeTemplate;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeTemplateService;
@@ -131,16 +130,18 @@ class ChallengeTemplateController extends Controller
             if ($checkChallengeBasedOnSlug->is_accessible == '0') {
                 return response()->json(['status' => 'fail', 'message' => 'Sorry, this Challenge is not accessible with your existing plan.']);
             }
-            if ($checkChallengeBasedOnSlug->is_pre_built == '1'){
+            if ($checkChallengeBasedOnSlug->is_pre_built == '1') {
                 return response()->json(['status' => 'fail', 'message' => 'This Challenge already cloned in Challenge Template']);
             }
             $addChallengeTemplate = $this->createChallengeTemplate($checkChallengeBasedOnSlug->id);
             if ($addChallengeTemplate != false) {
                 return response()->json(['status' => 'success', 'message' => 'Challenge cloned successfully']);
             }
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! The clonning Challenge has failed.']);
         } catch (\Exception $e) {
             dd($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

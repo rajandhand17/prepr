@@ -46,7 +46,8 @@ class LabMarketplaceService
         }
     }
 
-    Public static function addLabToMarketplace($slug){
+    public static function addLabToMarketplace($slug)
+    {
         try {
             $existsLabs = Lab::where('slug', $slug)->first();
             if ($existsLabs != null) {
@@ -74,8 +75,10 @@ class LabMarketplaceService
                 $labTemplate->is_notification_enabled = $existsLabs->is_notification_enabled;
                 $labTemplate->is_verified = $existsLabs->is_verified;
                 $labTemplate->save();
+
                 return $labTemplate;
             }
+
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

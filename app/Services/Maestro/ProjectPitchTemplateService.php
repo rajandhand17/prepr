@@ -2,7 +2,7 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePitch;
 use App\Models\ChallengeTask;
 use App\Models\Language;
