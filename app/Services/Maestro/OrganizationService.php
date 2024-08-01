@@ -13,6 +13,17 @@ use HiFolks\RandoPhp\Randomize;
 
 class OrganizationService
 {
+    public static function getOrgById($id){
+        try {
+            $organization = Organization::find($id);
+            if ($organization) {
+                return $organization;
+            }
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
     public static function updateOrganizationById($request, $id)
     {
         try {
@@ -222,7 +233,28 @@ class OrganizationService
 
             return response()->json($finalResult);
         } catch (Exception $e) {
+                return false;
+            }
+        }
+
+    public static function verifyOrg($request)
+    {
+        try {
+            if ($request->org_v == '0') {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '1']);
+                $message = 'Organization has been successfully verified.';
+            } else {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '0']);
+                $message = 'Organization verification has been removed.';
+            }
+            if ($message) {
+                return $message;
+            }
+
+            return false;
+        } catch (Exception $e) {
             return false;
         }
     }
+
 }
