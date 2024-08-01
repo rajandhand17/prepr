@@ -371,14 +371,14 @@ class UserDashboardController extends AppBaseController
             $userData = auth()->user();
             // Fetch lasted visited component
             $fetchLastVisited = $this->userDashboardRepository->fetchLastVisited($userData);
-            if ($fetchLastVisited !=  false) {
+            if ($fetchLastVisited != false) {
                 // Based on module type fetch component data
                 switch ($fetchLastVisited->module_type) {
                     case '0':
                         $fetchComponentData = LabService::getLabBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
                             return $this->sendResponse(LabResource::make($fetchComponentData), __('responses.last_visited_lab'), 200);
-                        };
+                        }
                         break;
                     case '1':
                         $fetchComponentData = LabProgramService::getLabProgramBasedOnId($fetchLastVisited->module_id);
@@ -424,6 +424,7 @@ class UserDashboardController extends AppBaseController
                         break;
                 }
             }
+
             return $this->sendError(__('responses.last_visited_not_found'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
