@@ -3,6 +3,7 @@
 namespace App\Traits\Maestro\Project;
 
 use App\Services\Maestro\ProjectStatusService;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 trait ProjectStatusTrait
@@ -17,6 +18,7 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -30,6 +32,7 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,6 +47,7 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +61,7 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

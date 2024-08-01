@@ -4,6 +4,7 @@ namespace App\Traits\Maestro\User;
 
 use App\Services\Maestro\RoleAndPermissionService;
 use App\Services\Maestro\UserService;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -31,6 +32,7 @@ trait UserTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -42,6 +44,7 @@ trait UserTrait
         try {
             return UserService::getUserById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -68,6 +71,7 @@ trait UserTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -83,6 +87,7 @@ trait UserTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -97,6 +102,7 @@ trait UserTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -70,8 +70,9 @@ class PreBuiltAchievementController extends Controller
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
 
-            return view('maestro.preBuiltAchievement.index', compact('html', 'languages'));
+            return view('maestro.pre-built-achievement.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -84,8 +85,9 @@ class PreBuiltAchievementController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.preBuiltAchievement.create', compact('languages'));
+            return view('maestro.pre-built-achievement.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -102,6 +104,7 @@ class PreBuiltAchievementController extends Controller
 
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -115,8 +118,9 @@ class PreBuiltAchievementController extends Controller
             $achievement = $this->findPreBuiltAchievement($id);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.preBuiltAchievement.edit', compact('achievement', 'languages'));
+            return view('maestro.pre-built-achievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -133,6 +137,7 @@ class PreBuiltAchievementController extends Controller
 
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -150,6 +155,7 @@ class PreBuiltAchievementController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'PreBuiltAchievement deleted successfully.']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

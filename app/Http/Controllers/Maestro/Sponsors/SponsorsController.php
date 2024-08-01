@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\Sponsors;
 use App\Http\Controllers\Controller;
 use App\Models\Host;
 use App\Traits\Maestro\Sponsor\SponsorTrait;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -65,6 +66,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -77,6 +79,7 @@ class SponsorsController extends Controller
         try {
             return view('maestro.sponsors.create');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -93,6 +96,7 @@ class SponsorsController extends Controller
 
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -110,6 +114,7 @@ class SponsorsController extends Controller
 
             return view('maestro.sponsors.edit', compact('sponsor'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -126,6 +131,7 @@ class SponsorsController extends Controller
 
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('sponsors.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -140,6 +146,7 @@ class SponsorsController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Sponsor deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

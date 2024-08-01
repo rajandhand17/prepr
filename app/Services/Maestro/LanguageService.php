@@ -3,6 +3,8 @@
 namespace App\Services\Maestro;
 
 use App\Models\Language;
+use App\Helpers\UtilityHelper;
+use Exception;
 use Session;
 
 class LanguageService
@@ -16,7 +18,8 @@ class LanguageService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -30,7 +33,8 @@ class LanguageService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,7 +48,8 @@ class LanguageService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -6,12 +6,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Pre-built Achievement</h1>
+                <h1 class="m-0">Pre Built Achievement</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pre-built-achievement.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Pre-built Achievement</li>
+                    <li class="breadcrumb-item active">Pre Built Achievement</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,7 +30,7 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('pre-built-achievement.create')}}" role="menuitem">Create Pre-built Achievement</a>
+                            href="{{route('pre-built-achievement.create')}}" role="menuitem">Create Pre Built Achievement</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -107,7 +107,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while deleting the Pre-built Achievement.',
+                                'An error occurred while deleting the Pre Built Achievement.',
                                 'error'
                             );
                         }

@@ -10,6 +10,7 @@ use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeSkillsGroupsStackService;
 use App\Services\Maestro\ChallengeTimelineService;
 use App\Services\Maestro\ComponentAssociationService;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -25,6 +26,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -39,6 +41,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -53,6 +56,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -67,6 +71,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -103,6 +108,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -118,6 +124,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -127,6 +134,7 @@ trait ChallengeTrait
         try {
             return ChallengeService::getChallengeById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -163,6 +171,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -189,6 +198,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;

@@ -3,6 +3,7 @@
 namespace App\Traits\Maestro\Category;
 
 use App\Services\Maestro\CategoryService;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 trait CategoryTrait
@@ -17,6 +18,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -31,6 +33,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -45,6 +48,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -59,6 +63,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -72,6 +77,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -86,6 +92,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -99,6 +106,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -113,6 +121,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -127,6 +136,7 @@ trait CategoryTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

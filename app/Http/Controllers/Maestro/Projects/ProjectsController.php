@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\Projects;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Traits\Maestro\Project\ProjectTrait;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -79,6 +80,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.index', compact('html', 'module_name'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->route('projects.index')->with(['error' => $e->getMessage()]);
         }
     }
@@ -93,6 +95,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.create', compact('projectData'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -109,6 +112,7 @@ class ProjectsController extends Controller
 
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -126,6 +130,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.view', compact('project'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -144,6 +149,7 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.edit', compact('project', 'projectData'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -160,6 +166,7 @@ class ProjectsController extends Controller
 
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -174,6 +181,7 @@ class ProjectsController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Project deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
