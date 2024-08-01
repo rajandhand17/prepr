@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\SocialLink;
+use App\Helpers\FileUploadHelper;
 use Exception;
 
 class SocialLinkService
@@ -21,10 +22,9 @@ class SocialLinkService
         try {
             $socialLinkImage = null;
             if ($request->file('icon')) {
-                $socialLinkImage = $request->file('icon')->store('uploads/social_link', 's3');
+                $socialLinkImage = FileUploadHelper::uploadImageToS3($request->file('icon'), 'social_link_icon');
             }
-
-            return SocialLink::create(['title' => $request->title, 'link' => $request->link, 'icon' => $socialLinkImage]);
+            return SocialLink::create(['title' => $request->title, 'icon' => $socialLinkImage]);
         } catch (Exception $e) {
             return false;
         }
@@ -64,7 +64,7 @@ class SocialLinkService
             $socialLink = SocialLink::findOrFail($id);
             if (!empty($socialLink)) {
                 if ($request->file('icon')) {
-                    $socialLink->icon = $request->file('icon')->store('uploads/social_link', 's3');
+                    $socialLink->icon = FileUploadHelper::uploadImageToS3($request->file('icon'), 'social_link_icon');
                 }
                 $socialLink->title = $request->title;
                 if ($socialLink->save()) {

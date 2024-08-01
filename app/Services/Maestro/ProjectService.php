@@ -62,6 +62,15 @@ class ProjectService
         }
     }
 
+    public static function checkProjectLanguage($id)
+    {
+        try {
+            return ChallengeService::getProjectLanguageByChallengeId($id);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function deleteProject($id)
     {
         try {
@@ -120,18 +129,6 @@ class ProjectService
             }
 
             return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    public static function checkProjectLanguage($id)
-    {
-        try {
-            $challenge = ChallengeService::getChallengeById($id);
-            if (!empty($challenge)) {
-                return $challenge->language;
-            }
         } catch (Exception $e) {
             return false;
         }
