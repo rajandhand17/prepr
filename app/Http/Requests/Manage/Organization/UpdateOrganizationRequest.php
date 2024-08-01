@@ -34,8 +34,8 @@ class UpdateOrganizationRequest extends FormRequest
         $base_rules = [
             'title'                                 => 'required|max:255|unique:organizations,title,'.$organization->id,
             'description'                           => 'required',
-            'profile_image'                         => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'profile_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'cover_image'                           => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'category'                              => 'required|numeric|exists:categories,id',
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
             'website'                               => 'required|url',
@@ -50,7 +50,7 @@ class UpdateOrganizationRequest extends FormRequest
         if ($this->request->has('organization_address')) {
             $base_rules['organization_address'] = 'array';
             $base_rules['organization_address.*.address_1'] = 'required|string';
-            $base_rules['organization_address.*.address_2'] = 'required|string';
+            $base_rules['organization_address.*.address_2'] = 'string';
             $base_rules['organization_address.*.city'] = 'required|string';
             $base_rules['organization_address.*.state'] = 'required|string';
             $base_rules['organization_address.*.country'] = 'required|string';
@@ -115,7 +115,6 @@ class UpdateOrganizationRequest extends FormRequest
             'organization_address.array'                      => __('responses.status_array'),
             'organization_address.*.address_1.required'       => __('responses.organization_address_required'),
             'organization_address.*.address_1.string'         => __('responses.organization_address_string'),
-            'organization_address.*.address_2.required'       => __('responses.organization_address_required'),
             'organization_address.*.address_2.string'         => __('responses.organization_address_string'),
             'organization_address.*.city.required'            => __('responses.city_required'),
             'organization_address.*.city.string'              => __('responses.city_string'),

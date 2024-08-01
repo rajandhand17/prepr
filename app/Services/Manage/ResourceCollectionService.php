@@ -80,7 +80,6 @@ class ResourceCollectionService
 
             return $resourceCollection;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
