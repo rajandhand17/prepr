@@ -5,12 +5,9 @@ namespace App\Services\Maestro;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
-use App\Models\ChallengePathTemplate;
-use App\Models\ChallengeTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplaceComponentAssociations;
 use App\Repositories\Api\Manage\ChallengePathTemplate\ChallengePathTemplateRepository;
-use App\Repositories\Api\Manage\ChallengeTemplate\ChallengeTemplateRepository;
 use App\Traits\Maestro\ChallengeTemplate\ChallengeTemplateTrait;
 use Exception;
 
@@ -140,5 +137,4 @@ class LabMarketplaceComponentAssociationService
             return false;
         }
     }
-
 }

@@ -33,4 +33,4 @@ class ChallengeTemplateCustomTimelinesService
             return false;
         }
     }
-    }
+}

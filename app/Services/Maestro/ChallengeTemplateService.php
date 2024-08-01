@@ -61,11 +61,10 @@ class ChallengeTemplateService
         }
     }
 
-
     public static function getChallengeTemplateBasedOnUuid($uuid)
     {
         try {
-            return ChallengeTemplate::where('uuid',$uuid)->first();
+            return ChallengeTemplate::where('uuid', $uuid)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -76,36 +75,36 @@ class ChallengeTemplateService
     public static function createChallengeTemplate($challengeId)
     {
         try {
-            $originalChallenge =Challenge::find($challengeId);
-            $templateChallenge                  = new ChallengeTemplate();
-            $templateChallenge->language        = $originalChallenge->language;
-            $templateChallenge->uuid            = $originalChallenge->uuid;
-            $templateChallenge->title           = $originalChallenge->title;
-            $templateChallenge->slug            = $originalChallenge->slug;
-            $templateChallenge->user_id         = auth()->user()->id;
+            $originalChallenge = Challenge::find($challengeId);
+            $templateChallenge = new ChallengeTemplate();
+            $templateChallenge->language = $originalChallenge->language;
+            $templateChallenge->uuid = $originalChallenge->uuid;
+            $templateChallenge->title = $originalChallenge->title;
+            $templateChallenge->slug = $originalChallenge->slug;
+            $templateChallenge->user_id = auth()->user()->id;
             $templateChallenge->organization_id = $originalChallenge->organization_id;
-            $templateChallenge->category_id     = $originalChallenge->category_id;
-            $templateChallenge->duration_id     = $originalChallenge->duration_id;
-            $templateChallenge->level_id        = $originalChallenge->level_id;
-            $templateChallenge->description_type= $originalChallenge->description_type;
-            $templateChallenge->description     = $originalChallenge->description;
-            $templateChallenge->privacy         = $originalChallenge->privacy;
-            $templateChallenge->media_type      = $originalChallenge->media_type;
-            $templateChallenge->media           = $originalChallenge->getRawOriginal('media');
-            $templateChallenge->status          = $originalChallenge->status;
-            $templateChallenge->source_link     = $originalChallenge->source_link;
-            $templateChallenge->agreement       = $originalChallenge->agreement;
+            $templateChallenge->category_id = $originalChallenge->category_id;
+            $templateChallenge->duration_id = $originalChallenge->duration_id;
+            $templateChallenge->level_id = $originalChallenge->level_id;
+            $templateChallenge->description_type = $originalChallenge->description_type;
+            $templateChallenge->description = $originalChallenge->description;
+            $templateChallenge->privacy = $originalChallenge->privacy;
+            $templateChallenge->media_type = $originalChallenge->media_type;
+            $templateChallenge->media = $originalChallenge->getRawOriginal('media');
+            $templateChallenge->status = $originalChallenge->status;
+            $templateChallenge->source_link = $originalChallenge->source_link;
+            $templateChallenge->agreement = $originalChallenge->agreement;
             $templateChallenge->is_notification_enabled = $originalChallenge->is_notification_enabled;
             $templateChallenge->project_privacy = $originalChallenge->project_privacy;
-            $templateChallenge->is_open         = $originalChallenge->is_open;
+            $templateChallenge->is_open = $originalChallenge->is_open;
             $templateChallenge->is_auto_created = $originalChallenge->is_auto_created;
             $templateChallenge->save();
+
             return $templateChallenge;
-        }catch(\Exception $e){
+        } catch(\Exception $e) {
             return false;
         }
     }
-
 
     public static function addChallengeTemplateComponentAssociation($challengeId, $templateChallengeId)
     {

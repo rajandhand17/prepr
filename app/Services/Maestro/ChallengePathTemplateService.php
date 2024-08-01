@@ -5,9 +5,7 @@ namespace App\Services\Maestro;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
 use App\Models\ChallengePathTemplate;
-use App\Models\Organization;
 use Exception;
-use HiFolks\RandoPhp\Randomize;
 
 class ChallengePathTemplateService
 {
@@ -43,4 +41,3 @@ class ChallengePathTemplateService
         }
     }
 }
-

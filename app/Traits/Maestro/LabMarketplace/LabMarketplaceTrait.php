@@ -3,15 +3,16 @@
 namespace App\Traits\Maestro\LabMarketplace;
 
 use App\Helpers\UtilityHelper;
-use App\Services\Maestro\LabMarketplaceService;
-use App\Services\Maestro\LabService;
+use App\Services\Maestro\LabMarketplaceAchievementsService;
 use App\Services\Maestro\LabMarketplaceAddressService;
+use App\Services\Maestro\LabMarketplaceComponentAssociationService;
+use App\Services\Maestro\LabMarketplaceExternalLinksService;
+use App\Services\Maestro\LabMarketplaceService;
 use App\Services\Maestro\LabMarketplaceSkillsGroupStackService;
 use App\Services\Maestro\LabMarketplaceTagsGroupsService;
-use App\Services\Maestro\LabMarketplaceExternalLinksService;
-use App\Services\Maestro\LabMarketplaceAchievementsService;
-use App\Services\Maestro\LabMarketplaceComponentAssociationService;
+use App\Services\Maestro\LabService;
 use Illuminate\Support\Facades\DB;
+
 trait LabMarketplaceTrait
 {
     private function getLabMarketplace()
@@ -59,7 +60,7 @@ trait LabMarketplaceTrait
     {
         try {
             return LabService::getLabBasedOnSlug($slug);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -68,14 +69,15 @@ trait LabMarketplaceTrait
     {
         try {
             $addLabMarketplace = DB::transaction(function () use ($slug, $labId) {
-                $addLabToMarketplace                = LabMarketplaceService::addLabToMarketplace($slug);
-                $addLabMarketplaceAddress           = LabMarketplaceAddressService::addLabMarketplaceAddress($addLabToMarketplace->id, $labId);
+                $addLabToMarketplace = LabMarketplaceService::addLabToMarketplace($slug);
+                $addLabMarketplaceAddress = LabMarketplaceAddressService::addLabMarketplaceAddress($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceSkillAssociations = LabMarketplaceSkillsGroupStackService::addLabMarketplaceSkillsGroupsStack($addLabToMarketplace->id, $labId);
-                $addLabMarketplaceTagAssociations   = LabMarketplaceTagsGroupsService::addLabMarketplaceTagsGroup($addLabToMarketplace->id, $labId);
-                $addLabMarketplaceExternalLinks     = LabMarketplaceExternalLinksService::addLabMarketplaceExternalLinks($addLabToMarketplace->id, $labId);
-                $addLabMarketplaceAchievement       = LabMarketplaceAchievementsService::addLabMarketplaceAchievements($addLabToMarketplace->id, $labId);
-                $addLabMarketplaceAssociations      = LabMarketplaceComponentAssociationService::addLabMarketplaceComponentAssociation($addLabToMarketplace->id, $labId);
-                $updateLab                          = LabService::updatePreBuilt($labId, '1');
+                $addLabMarketplaceTagAssociations = LabMarketplaceTagsGroupsService::addLabMarketplaceTagsGroup($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceExternalLinks = LabMarketplaceExternalLinksService::addLabMarketplaceExternalLinks($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceAchievement = LabMarketplaceAchievementsService::addLabMarketplaceAchievements($addLabToMarketplace->id, $labId);
+                $addLabMarketplaceAssociations = LabMarketplaceComponentAssociationService::addLabMarketplaceComponentAssociation($addLabToMarketplace->id, $labId);
+                $updateLab = LabService::updatePreBuilt($labId, '1');
+
                 return[
                     'labMarketplace'                            => $addLabToMarketplace,
                     'addLabMarketplaceAddress'                  => $addLabMarketplaceAddress,
@@ -96,6 +98,7 @@ trait LabMarketplaceTrait
                 $addLabMarketplace['addLabMarketplaceAssociations'] &&
                 $addLabMarketplace['updateLab']) {
                 DB::commit();
+
                 return $addLabMarketplace['labMarketplace'];
             }
             DB::rollback();

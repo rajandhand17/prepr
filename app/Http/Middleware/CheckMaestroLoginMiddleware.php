@@ -20,7 +20,7 @@ class CheckMaestroLoginMiddleware
     {
         if (Auth::check()) {
         //    if (Auth::user()->hasRole('super_admin')) {
-                return $next($request);
+            return $next($request);
 //            } else {
 //                auth()->logout();
 //

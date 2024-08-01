@@ -2,7 +2,6 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeTemplateSkillsGroupsStack;
 use Exception;

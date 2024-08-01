@@ -3,24 +3,18 @@
 namespace App\Traits\Maestro\ChallengeTemplate;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ChallengeTemplate;
-use App\Services\Maestro\ChallengeAchievementService;
-use App\Services\Maestro\ChallengeRequirementService;
 use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\ChallengeSkillsGroupsStackService;
-use App\Services\Maestro\ChallengeTemplateService;
-use App\Services\Maestro\ChallengeTimelineService;
-use App\Services\Maestro\ComponentAssociationService;
 use App\Services\Maestro\ChallengeTemplateAchievementService;
-use App\Services\Maestro\ChallengeTemplateSkillsGroupsStackService;
-use App\Services\Maestro\ChallengeTemplateSponsorService;
-use App\Services\Maestro\ChallengeTemplateRequirementService;
-use App\Services\Maestro\ChallengeTemplateAssessmentService;
 use App\Services\Maestro\ChallengeTemplateAssessmentCriteriaService;
-use App\Services\Maestro\ChallengeTemplateProjectTemplateService;
-use App\Services\Maestro\ChallengeTemplateTimelinesService;
+use App\Services\Maestro\ChallengeTemplateAssessmentService;
 use App\Services\Maestro\ChallengeTemplateCustomTimelinesService;
 use App\Services\Maestro\ChallengeTemplateExternalLinkService;
+use App\Services\Maestro\ChallengeTemplateProjectTemplateService;
+use App\Services\Maestro\ChallengeTemplateRequirementService;
+use App\Services\Maestro\ChallengeTemplateService;
+use App\Services\Maestro\ChallengeTemplateSkillsGroupsStackService;
+use App\Services\Maestro\ChallengeTemplateSponsorService;
+use App\Services\Maestro\ChallengeTemplateTimelinesService;
 use Illuminate\Support\Facades\DB;
 
 trait ChallengeTemplateTrait
@@ -93,7 +87,7 @@ trait ChallengeTemplateTrait
         try {
             $createChallengeTemplate = DB::transaction(function () use ($challengeId) {
                 $addChallengeTemplate = ChallengeTemplateService::createChallengeTemplate($challengeId);
-                $challengeTemplateParticipationAchievement =ChallengeTemplateAchievementService::addChallengeTemplateAchievement($challengeId, $addChallengeTemplate->id);
+                $challengeTemplateParticipationAchievement = ChallengeTemplateAchievementService::addChallengeTemplateAchievement($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateSkills = ChallengeTemplateSkillsGroupsStackService::addChallengeTemplateSkills($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateSponsor = ChallengeTemplateSponsorService::addChallengeTemplateSponsor($challengeId, $addChallengeTemplate->id);
                 $addChallengeTemplateRequirement = ChallengeTemplateRequirementService::addChallengeTemplateRequirement($challengeId, $addChallengeTemplate->id);
