@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Maestro\LabMarketplace;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Manage\LabMarketplace\LabMarketplaceResource;
 use App\Models\LabMarketplace;
 use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\LabMarketplaceService;
@@ -90,6 +92,41 @@ class LabMarketplaceController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    public function clone($slug)
+    {
+        try {
+            $checkLabExistsOrNot = $this->getLabBasedOnSlug($slug);
+            if (!$checkLabExistsOrNot) {
+                return $this->sendError(__('responses.lab_not_found'), 404);
+            }
+
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            if ($checkLabExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
+            }
+
+            if ($checkLabExistsOrNot->is_accessible == '0') {
+                return $this->sendError(__('responses.lab_not_accessible'), 403);
+            }
+            if($checkLabExistsOrNot->is_pre_built=='1'){
+                return $this->sendError(__('responses.lab_already_cloned'), 422);
+            }
+            $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
+            if ($labMarketplace) {
+                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_stored_success'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_marketplace_stored_failed'), 400);
+        }catch (\Exception $e){
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

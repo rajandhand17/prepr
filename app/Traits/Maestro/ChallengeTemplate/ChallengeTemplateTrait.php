@@ -88,7 +88,7 @@ trait ChallengeTemplateTrait
         }
     }
 
-    private function createChallengeTemplate($challengeId)
+    public function createChallengeTemplate($challengeId)
     {
         try {
             $createChallengeTemplate = DB::transaction(function () use ($challengeId) {

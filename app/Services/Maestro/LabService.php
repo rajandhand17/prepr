@@ -289,4 +289,26 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabBasedOnSlug($slug)
+    {
+        try {
+            return Lab::where('slug',$slug)->first();
+        }catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function updatePreBuilt($id, $is_pre_built)
+    {
+        try {
+            $lab = Lab::find($id);
+            $lab->is_pre_built = $is_pre_built;
+            $lab->save();
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }

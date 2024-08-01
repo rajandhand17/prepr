@@ -21,6 +21,17 @@ class ChallengeTemplateService
         }
     }
 
+    public static function getCheckChallengeUuid($uuid)
+    {
+        try {
+            return ChallengeTemplate::where('uuid', $uuid)->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getChallengeTemplateBasedOnId($id)
     {
         try {
