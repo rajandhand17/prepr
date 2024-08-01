@@ -156,7 +156,7 @@ trait OrganizationTrait
             if($message){
                 return $message;
             }
-            return true;
+            return false;
         }  catch (Exception $e) {
             return false;
         }
