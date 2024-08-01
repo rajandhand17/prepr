@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\ActivityAwards;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\SkillsActivityAward;
 use App\Services\Maestro\LanguageService;
@@ -59,6 +60,7 @@ class SkillsActivityAwardsController extends Controller
 
             return view('maestro.activity-awards.skills-awards.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -76,6 +78,7 @@ class SkillsActivityAwardsController extends Controller
 
             return view('maestro.activity-awards.skills-awards.create', compact('selectedSkills', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -96,6 +99,7 @@ class SkillsActivityAwardsController extends Controller
 
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -128,6 +132,7 @@ class SkillsActivityAwardsController extends Controller
 
             return view('maestro.activity-awards.skills-awards.edit', compact('award', 'selectedSkills', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -149,6 +154,7 @@ class SkillsActivityAwardsController extends Controller
 
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -168,6 +174,7 @@ class SkillsActivityAwardsController extends Controller
             }
             return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

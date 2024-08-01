@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\EmailTemplate;
 
+use App\Helpers\Maestro\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\EmailTemplate;
 use App\Services\Maestro\LanguageService;
@@ -75,6 +76,7 @@ class EmailTemplateController extends Controller
 
             return view('maestro.email-template.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
@@ -93,6 +95,7 @@ class EmailTemplateController extends Controller
 
             return view('maestro.email-template.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -109,7 +112,8 @@ class EmailTemplateController extends Controller
 
             return view('maestro.email-template.edit', compact('template', 'languages'));
         } catch (Exception $e) {
-            return redirect()->back()->with(['error' => $e->getMessage()]);
+            UtilityHelper::logError($e);
+            return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
 
@@ -128,6 +132,7 @@ class EmailTemplateController extends Controller
 
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -147,6 +152,7 @@ class EmailTemplateController extends Controller
 
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -164,6 +170,7 @@ class EmailTemplateController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Email Template deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

@@ -88,6 +88,7 @@ class SkillGroupController extends Controller
 
             return view('maestro.skill-group.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -103,6 +104,7 @@ class SkillGroupController extends Controller
 
             return view('maestro.skill-group.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -119,6 +121,7 @@ class SkillGroupController extends Controller
 
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -141,6 +144,7 @@ class SkillGroupController extends Controller
 
             return view('maestro.skill-group.view', compact('skillgroup', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -158,6 +162,7 @@ class SkillGroupController extends Controller
 
             return view('maestro.skill-group.edit', compact('selectedSkills', 'languages', 'data', 'selectedStacks'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -174,6 +179,7 @@ class SkillGroupController extends Controller
 
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -188,6 +194,7 @@ class SkillGroupController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

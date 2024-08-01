@@ -54,10 +54,8 @@ class ExploreController extends Controller
 
             return view('maestro.explore.index', compact('data'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            UtilityHelper::logError($e);
+            return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
 
@@ -74,7 +72,8 @@ class ExploreController extends Controller
 
             return view('maestro.explore.edit', compact('component', 'roles', 'selected_role'));
         } catch (Exception $e) {
-            return redirect()->back()->with(['error' => $e->getMessage()]);
+            UtilityHelper::logError($e);
+            return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
 
@@ -93,6 +92,7 @@ class ExploreController extends Controller
 
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('explore.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -110,6 +110,7 @@ class ExploreController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

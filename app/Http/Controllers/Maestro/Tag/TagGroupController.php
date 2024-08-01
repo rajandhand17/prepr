@@ -70,7 +70,7 @@ class TagGroupController extends Controller
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             return view('maestro.tags.tag-group.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -87,6 +87,7 @@ class TagGroupController extends Controller
 
             return view('maestro.tags.tag-group.create', compact('languages', 'tags', 'selectedTags'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -103,7 +104,7 @@ class TagGroupController extends Controller
 
             return redirect()->route('tag-group.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
             return redirect()->route('tag-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -123,6 +124,7 @@ class TagGroupController extends Controller
 
             return view('maestro.tags.tag-group.view', compact('taggroup', 'languages', 'selectedTags'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('tag-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -143,6 +145,7 @@ class TagGroupController extends Controller
 
             return view('maestro.tags.tag-group.edit', compact('tags', 'selectedTags', 'languages', 'data'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             redirect()->route('taggroup.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -159,7 +162,7 @@ class TagGroupController extends Controller
 
             return redirect()->route('tag-group.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
             return redirect()->route('tag-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -174,6 +177,7 @@ class TagGroupController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
