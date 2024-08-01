@@ -33,8 +33,8 @@
                       @if($languages->count() > 0)
                         @foreach($languages as $single)
                           @php
-                            $titleColumName = \App\Helpers\Maestro\UtilityHelper::getColumName($single->iso, 'title');
-                            $titleLableName = \App\Helpers\Maestro\UtilityHelper::getLabelName($single->name, 'stage Name');
+                            $titleColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'title');
+                            $titleLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'stage Name');
                           @endphp
                           <div class="col-md-6">
                             <div class="form-group">

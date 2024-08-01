@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectVertical;
 use App\Services\Maestro\LanguageService;

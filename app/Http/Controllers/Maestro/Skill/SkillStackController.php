@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\skill;
 
-use App\Helpers\Maestro\UtilityHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Skill;
 use App\Services\Maestro\LanguageService;
