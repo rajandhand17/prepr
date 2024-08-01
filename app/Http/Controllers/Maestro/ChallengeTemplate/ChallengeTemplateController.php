@@ -121,7 +121,7 @@ class ChallengeTemplateController extends Controller
         try {
             $checkChallengeBasedOnSlug = $this->getChallengeBasedOnSlug($slug);
             if (!$checkChallengeBasedOnSlug) {
-                return $this->sendError(__('responses.challenge_not_found'), 403);
+                return response()->json(['success' =>'false', 'message'=>'This challenge does not exists in the database.']);
             }
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
@@ -140,6 +140,7 @@ class ChallengeTemplateController extends Controller
             }
             return response()->json(['status' => 'fail', 'message' => 'Oops! The clonning Challenge has failed.']);
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

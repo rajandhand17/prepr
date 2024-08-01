@@ -101,31 +101,30 @@ class LabMarketplaceController extends Controller
         try {
             $checkLabExistsOrNot = $this->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
-                return $this->sendError(__('responses.lab_not_found'), 404);
+                return response()->json(['success' =>'false', 'message'=>'This lab does not exists in the database.']);
             }
-
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                return response()->json(['success' =>'false', 'message'=>'This organization does not exists in the database.']);
             }
 
             if ($checkLabExistsOrNot->organization_id != $organization->id) {
-                return $this->sendError(__('responses.lab_switcher_error'), 403);
+                return response()->json(['success' =>'false', 'message'=>"The Lab you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Lab."]);
             }
 
             if ($checkLabExistsOrNot->is_accessible == '0') {
-                return $this->sendError(__('responses.lab_not_accessible'), 403);
+                return response()->json(['success' =>'false', 'message'=>"Sorry, this Lab is not accessible with your existing plan."]);
             }
             if($checkLabExistsOrNot->is_pre_built=='1'){
-                return $this->sendError(__('responses.lab_already_cloned'), 422);
+                return response()->json(['success' =>'false', 'message'=>"This Lab already cloned in Lab Marketplace"]);
             }
             $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
             if ($labMarketplace) {
-                return $this->sendResponse(LabMarketplaceResource::make($labMarketplace), __('responses.lab_marketplace_stored_success'), 200);
+                return response()->json(['success' =>'true', 'message'=>"This Lab has cloned in Lab Marketplace successfully"]);
             }
+            return response()->json(['success' =>'false', 'message'=>"This Lab has failed to clone"]);
 
-            return $this->sendError(__('responses.lab_marketplace_stored_failed'), 400);
         }catch (\Exception $e){
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }

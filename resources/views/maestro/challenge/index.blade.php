@@ -176,7 +176,7 @@
                 }else {
                     Swal.fire(
                         'Canceled!',
-                        'You are safe , Record is not deleted!',
+                        'Challenge is not cloned!',
                         'error'
                     );
                 }

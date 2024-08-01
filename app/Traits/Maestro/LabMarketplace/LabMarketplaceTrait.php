@@ -11,7 +11,7 @@ use App\Services\Maestro\LabMarketplaceTagsGroupsService;
 use App\Services\Maestro\LabMarketplaceExternalLinksService;
 use App\Services\Maestro\LabMarketplaceAchievementsService;
 use App\Services\Maestro\LabMarketplaceComponentAssociationService;
-
+use Illuminate\Support\Facades\DB;
 trait LabMarketplaceTrait
 {
     private function getLabMarketplace()
@@ -76,7 +76,6 @@ trait LabMarketplaceTrait
                 $addLabMarketplaceAchievement       = LabMarketplaceAchievementsService::addLabMarketplaceAchievements($addLabToMarketplace->id, $labId);
                 $addLabMarketplaceAssociations      = LabMarketplaceComponentAssociationService::addLabMarketplaceComponentAssociation($addLabToMarketplace->id, $labId);
                 $updateLab                          = LabService::updatePreBuilt($labId, '1');
-
                 return[
                     'labMarketplace'                            => $addLabToMarketplace,
                     'addLabMarketplaceAddress'                  => $addLabMarketplaceAddress,
@@ -96,9 +95,7 @@ trait LabMarketplaceTrait
                 $addLabMarketplace['addLabMarketplaceAchievement'] &&
                 $addLabMarketplace['addLabMarketplaceAssociations'] &&
                 $addLabMarketplace['updateLab']) {
-                self::addLabRedeemData($labId, $addLabMarketplace['labMarketplace']->organization_id, $addLabMarketplace['labMarketplace']->id);
                 DB::commit();
-
                 return $addLabMarketplace['labMarketplace'];
             }
             DB::rollback();
