@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Repositories\Api\Public\ChallengePath\ChallengePathRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -53,8 +54,13 @@ class ChallengePathController extends AppBaseController
                     return $this->sendError(__('responses.challenge_path_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackChallengePathUserProgress($challengePath, $userId);
+
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.challenge_paths');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($challengePath->id, $userId, $moduleType);
                 }
 
                 return $this->sendResponse(ChallengePathResource::make($challengePath), __('responses.found_challenge_path_view'));

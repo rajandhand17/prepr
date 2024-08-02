@@ -9,6 +9,7 @@ use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\Challenge\ChallengeProjectRequirementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Repositories\Api\Public\Challenge\ChallengeRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -55,8 +56,18 @@ class ChallengeController extends AppBaseController
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackChallengeUserProgress($challenge, $userId);
+
+                    // For last visited activity tracking
+                    $joined_status = $challenge->joined();
+                    if ($joined_status != 'NA' && $joined_status != null) {
+                        if ($joined_status->invite_status == '1') {
+                            $moduleType = config('constants.module_type.challenges');
+                            LastVisitedActivityModuleService::lastVisitedActivityModule($challenge->id, $userId, $moduleType);
+                        }
+                    }
                 }
 
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_view'));

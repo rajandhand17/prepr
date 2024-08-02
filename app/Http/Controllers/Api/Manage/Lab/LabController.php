@@ -15,6 +15,7 @@ use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -76,10 +77,21 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
+
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
 
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
+
+                // For last visited activity tracking
+                $joined_status = $lab->joined();
+                if ($joined_status != 'NA' && $joined_status != null) {
+                    if ($joined_status->invite_status == '1') {
+                        $moduleType = config('constants.module_type.labs');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($lab->id, $userId, $moduleType);
+                    }
+                }
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
