@@ -73,6 +73,7 @@ class LabMarketplaceController extends Controller
             return view('maestro.lab-marketplace.index', compact('html'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -93,6 +94,7 @@ class LabMarketplaceController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -124,6 +126,7 @@ class LabMarketplaceController extends Controller
             return response()->json(['success' =>'false', 'message'=>'This Lab has failed to clone']);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
