@@ -18,6 +18,7 @@ class SkillGroupService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -43,6 +44,7 @@ class SkillGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +59,7 @@ class SkillGroupService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -89,6 +92,7 @@ class SkillGroupService
 
             return redirect()->with('error', 'Enter Skill Groups');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -98,6 +102,7 @@ class SkillGroupService
         try {
             return SkillGroup::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

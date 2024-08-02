@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\SkillsActivityAward;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\SkillsActivityAwardService;
 use Exception;
 
@@ -16,6 +17,7 @@ trait SkillsActivityAwardTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -29,6 +31,7 @@ trait SkillsActivityAwardTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +45,7 @@ trait SkillsActivityAwardTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -56,6 +60,7 @@ trait SkillsActivityAwardTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -2,7 +2,9 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationAddress;
+use Exception;
 
 class OrganizationAddressService
 {
@@ -18,7 +20,8 @@ class OrganizationAddressService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -33,7 +36,8 @@ class OrganizationAddressService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -48,7 +52,8 @@ class OrganizationAddressService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -67,7 +72,8 @@ class OrganizationAddressService
             $orgAdreess = OrganizationAddress::create($org_address);
 
             return  true;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

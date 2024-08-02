@@ -2,7 +2,9 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationMember;
+use Exception;
 
 class OrganizationMemberService
 {
@@ -40,7 +42,8 @@ class OrganizationMemberService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -55,7 +58,8 @@ class OrganizationMemberService
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -83,7 +87,8 @@ class OrganizationMemberService
             }
 
             return $people;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -94,7 +99,8 @@ class OrganizationMemberService
             $people = OrganizationMember::where('organization_id', $orgId)->get();
 
             return $people;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

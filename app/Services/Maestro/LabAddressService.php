@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabAddress;
 
 class LabAddressService
@@ -17,6 +18,7 @@ class LabAddressService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -34,6 +36,7 @@ class LabAddressService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -49,6 +52,7 @@ class LabAddressService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -66,7 +70,8 @@ class LabAddressService
             $labaddress->save();
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

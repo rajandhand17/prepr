@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Skill;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\SkillService;
 use Exception;
 
@@ -16,6 +17,7 @@ trait SkillTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -25,6 +27,7 @@ trait SkillTrait
         try {
             return SkillService::getSkillById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -38,6 +41,7 @@ trait SkillTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -51,6 +55,7 @@ trait SkillTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -65,6 +70,7 @@ trait SkillTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -79,6 +85,7 @@ trait SkillTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

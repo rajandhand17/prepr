@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Explore;
 use Exception;
 use Schema;
@@ -33,6 +34,7 @@ class ExploreService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -48,6 +50,7 @@ class ExploreService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -57,6 +60,7 @@ class ExploreService
         try {
             return Explore::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -83,6 +87,7 @@ class ExploreService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
