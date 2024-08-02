@@ -121,7 +121,7 @@ class OrganizationController extends Controller
     {
         try {
             $this->construct();
-            $data = Organization::find($id);
+            $data = $this->getOrganizationById($id);
             $org_members = OrganizationMemberService::getOrganizationMembersById($id);
             $orgSocialLink = OrganizationSocialLinkService::getOrganizationSocialLink($id);
             $social_name = SocialLinkService::getSocialLinkList();
@@ -170,13 +170,7 @@ class OrganizationController extends Controller
     public function verifyingOrgs(Request $request)
     {
         try {
-            if ($request->org_v == '0') {
-                Organization::where('id', $request->org_id)->update(['is_verified' => '1']);
-                $message = 'Organization has been successfully verified.';
-            } else {
-                Organization::where('id', $request->org_id)->update(['is_verified' => '0']);
-                $message = 'Organization verification has been removed.';
-            }
+           $message= $this->verifyOrg($request);
 
             return response()->json(['status' => 'success', 'message' => $message], 200);
         } catch (Exception $e) {

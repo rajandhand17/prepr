@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -52,14 +53,19 @@ class LabProgramController extends AppBaseController
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
+
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.lab_programs');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($labProgram->id, $userId, $moduleType);
                 }
 
-                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_list'));
+                return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
 
-            return $this->sendError(__('responses.not_found_lab_program_list'), 404);
+            return $this->sendError(__('responses.not_found_lab_program_view'), 404);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

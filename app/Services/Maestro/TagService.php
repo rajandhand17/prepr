@@ -45,7 +45,7 @@ class TagService
             $tag->updated_at = date('Y-m-d H:i:s');
             $tag->save();
 
-            return redirect()->route('tags.index')->with('success', 'Tag update successfully');
+            return true;
         } catch (Exception $e) {
             return false;
         }
@@ -100,7 +100,7 @@ class TagService
             $tag->updated_at = date('Y-m-d H:i:s');
             $tag->save();
 
-            return redirect()->route('tags.index')->with('success', 'Tag added successfully');
+            return true;
         } catch (Exception $e) {
             return false;
         }

@@ -12,6 +12,7 @@ use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -73,8 +74,13 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.lab_programs');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($labProgram->id, $userId, $moduleType);
 
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }

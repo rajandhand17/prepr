@@ -52,7 +52,7 @@ class TrophyAwardsController extends Controller
                         return "<img src ='".asset($trophy_awards->image)."' >";
                     })
                     ->addColumn('action', static function (TrophyAwards $trophy_awards) {
-                        return '<a href="'.route('trophyawards.edit', $trophy_awards->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy_awards->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteTrophyAward(\''.route('trophyawards.destroy', $trophy_awards->id).'\')"> <i class="fas fa-trash"></i></a>';
+                        return '<a href="'.route('trophy-awards.edit', $trophy_awards->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy_awards->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteTrophyAward(\''.route('trophy-awards.destroy', $trophy_awards->id).'\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['action', 'DT_Row_Index'])
                     ->make(true);
@@ -104,12 +104,12 @@ class TrophyAwardsController extends Controller
     {
         try {
             if ($this->createTrophyAwards($request)) {
-                return redirect()->route('trophyawards.index')->with('success', 'Trophy Awards created successfully');
+                return redirect()->route('trophy-awards.index')->with('success', 'Trophy Awards created successfully');
             }
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -129,7 +129,7 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.edit', compact('awardedTrophies', 'users', 'status', 'awardedMembers'));
         } catch (Exception $e) {
-            return redirect()->route('trophyawards.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('trophy-awards.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -143,12 +143,12 @@ class TrophyAwardsController extends Controller
     {
         try {
             if ($this->updateTrophyAwardsById($id, $request)) {
-                return redirect()->route('trophyawards.index')->with('success', 'Trophy Award Updated successfully');
+                return redirect()->route('trophy-awards.index')->with('success', 'Trophy Award Updated successfully');
             }
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
 

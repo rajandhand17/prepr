@@ -44,7 +44,7 @@ class SkillsActivityAwardsController extends Controller
                         return "<img src ='".asset($award->image)."' width='60' ".$onerror.'>';
                     })->rawColumns(['image', 'action'])
                     ->addColumn('action', static function (SkillsActivityAward $award) {
-                        return '<a href="'.route('skillsaward.edit', $award->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$award->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteSkillsAward(\''.route('skillsaward.destroy', $award->id).'\')"> <i class="fas fa-trash"></i></a>';
+                        return '<a href="'.route('skills-award.edit', $award->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$award->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteSkillsAward(\''.route('skills-award.destroy', $award->id).'\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->make(true);
             }
@@ -57,12 +57,9 @@ class SkillsActivityAwardsController extends Controller
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false],
             ]);
 
-            return view('maestro.activityawards.skillsAwards.index', compact('html'));
+            return view('maestro.activity-awards.skills-awards.index', compact('html'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -77,12 +74,9 @@ class SkillsActivityAwardsController extends Controller
             $selectedSkills = [];
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.activityawards.skillsAwards.create', compact('selectedSkills', 'languages'));
+            return view('maestro.activity-awards.skills-awards.create', compact('selectedSkills', 'languages'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -97,12 +91,12 @@ class SkillsActivityAwardsController extends Controller
     {
         try {
             if ($this->createSkillsActivityAward($request)) {
-                return redirect()->route('skillsaward.index')->with('success', 'Activity Award has been created successfully');
+                return redirect()->route('skills-award.index')->with('success', 'Activity Award has been created successfully');
             }
 
-            return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -132,12 +126,9 @@ class SkillsActivityAwardsController extends Controller
             $selectedSkills = SkillService::getSkillBasedOnIds(json_decode($award->skill, true));
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.activityAwards.skillsAwards.edit', compact('award', 'selectedSkills', 'languages'));
+            return view('maestro.activity-awards.skills-awards.edit', compact('award', 'selectedSkills', 'languages'));
         } catch (Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-                'status'  => 'error',
-            ]);
+            return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -153,12 +144,12 @@ class SkillsActivityAwardsController extends Controller
     {
         try {
             if ($this->updateSkillsActivityAwardById($id, $request)) {
-                return redirect()->route('skillsaward.index')->with('success', 'Activity Award has been Updated successfully');
+                return redirect()->route('skills-award.index')->with('success', 'Activity Award has been Updated successfully');
             }
 
-            return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('skillsaward.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -175,6 +166,7 @@ class SkillsActivityAwardsController extends Controller
             if ($this->deleteSkillsActivityAwardById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
+            return redirect()->route('skills-award.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }

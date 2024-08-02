@@ -1353,5 +1353,14 @@
     "responses.user_upcomming_deadline_retrieved": "User upcoming deadline retrieved successfully.",
     "responses.not_user_upcomming_deadline_retrieved": "Failed to retrieve user's upcoming deadlines.",
     "responses.inbox_friends_listing_retrieved": "Failed to retireved user related data.",
-    "responses.friends_listing_retrieved": "You have successfully retrieved the friends listing."
+    "responses.friends_listing_retrieved": "You have successfully retrieved the friends listing.",
+    "responses.last_visited_not_found": "Last visited module not found",
+    "responses.last_visited_lab": "Your last visited Lab",
+    "responses.last_visited_lab_program": "Your last visited Lab Program",
+    "responses.last_visited_challenge": "Your last visited Challenge",
+    "responses.last_visited_challenge_path": "Your last visited Challenge Path",
+    "responses.last_visited_resource_module": "Your last visited Resource Module",
+    "responses.last_visited_resource_collection": "Your last visited Resource Collection",
+    "responses.last_visited_resource_group": "Your last visited Resource Group",
+    "responses.last_visited_project": "Your last visited Project"
 }
