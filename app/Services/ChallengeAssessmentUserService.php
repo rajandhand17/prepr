@@ -121,6 +121,7 @@ class ChallengeAssessmentUserService
             }
 
             return [
+                'assessment_type'               => $projectData->getProjectAssessment->assessment_type,
                 'assessment_attachments'        => $assessment_attachment,
                 'assessment_status'             => $assessment_status,
                 'assessment_over_all_comment'   => $assessment_over_all_comment,
