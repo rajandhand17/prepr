@@ -5,5 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {
     Route::resource('lab-marketplace', LabMarketplaceController::class);
-    Route::post('/lab-template/{slug}/clone', [LabMarketplaceController::class, 'clone']);
+    Route::post('/lab-template/{slug}/clone', [LabMarketplaceController::class, 'clone'])->name('lab-template.clone');
 });

@@ -128,7 +128,7 @@
             });
         }
 
-        function ChallengeToChallengeTemplate(slug) {
+        function ChallengeToChallengeTemplate(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -141,7 +141,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "/challenge-template/".slug."/clone",
+                        url: url,//"/challenge-template/".slug."/clone",
                         type: 'create',
                         headers: {
                             'X-CSRF-TOKEN': token

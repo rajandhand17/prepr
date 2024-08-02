@@ -25,6 +25,7 @@ trait LabMarketplaceTrait
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +41,7 @@ trait LabMarketplaceTrait
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -52,6 +54,7 @@ trait LabMarketplaceTrait
                 return $labMarketplace;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -61,6 +64,7 @@ trait LabMarketplaceTrait
         try {
             return LabService::getLabBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

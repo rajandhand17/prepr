@@ -5,5 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web']], function () {
     Route::resource('challenge-template', ChallengeTemplateController::class);
-    Route::post('/challenge-template/{slug}/clone', [ChallengeTemplateController::class, 'clone']);
+    Route::post('/challenge-template/{slug}/clone', [ChallengeTemplateController::class, 'clone'])->name('challenge-template.clone');
 });

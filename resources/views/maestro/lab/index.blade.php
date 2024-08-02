@@ -109,7 +109,7 @@
         }, 200);
 
 
-        function ChallengeToLabTemplate(slug) {
+        function ChallengeToLabTemplate(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -122,7 +122,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "/maestro/lab-template/" + slug + "/clone",
+                        url: url,
                         type: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': token

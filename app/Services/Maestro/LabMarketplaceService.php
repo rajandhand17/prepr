@@ -15,6 +15,7 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('language', \Session::get('globalLocale') ? \Session::get('globalLocale') : 'en')->orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -24,6 +25,7 @@ class LabMarketplaceService
         try {
             return LabMarketplace::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +44,7 @@ class LabMarketplaceService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

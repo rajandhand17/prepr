@@ -72,6 +72,7 @@ class LabMarketplaceController extends Controller
 
             return view('maestro.labMarketplace.index', compact('html'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -91,6 +92,7 @@ class LabMarketplaceController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -108,10 +110,6 @@ class LabMarketplaceController extends Controller
                 return response()->json(['success' =>'false', 'message'=>'This organization does not exists in the database.']);
             }
 
-            if ($checkLabExistsOrNot->organization_id != $organization->id) {
-                return response()->json(['success' =>'false', 'message'=>"The Lab you are looking for doesn't exist in your currently selected Organization. Please change the Organization in the switcher toggle in the upper left-hand corner of the page to access this Lab."]);
-            }
-
             if ($checkLabExistsOrNot->is_accessible == '0') {
                 return response()->json(['success' =>'false', 'message'=>'Sorry, this Lab is not accessible with your existing plan.']);
             }
@@ -125,6 +123,7 @@ class LabMarketplaceController extends Controller
 
             return response()->json(['success' =>'false', 'message'=>'This Lab has failed to clone']);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
