@@ -18,6 +18,7 @@ trait SkillStackTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -28,6 +29,7 @@ trait SkillStackTrait
             return SkillStackService::getSkillStackById($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +44,7 @@ trait SkillStackTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +59,7 @@ trait SkillStackTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +75,7 @@ trait SkillStackTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +91,7 @@ trait SkillStackTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

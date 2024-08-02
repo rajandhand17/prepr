@@ -19,6 +19,7 @@ class CategoryService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +35,7 @@ class CategoryService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -55,6 +57,7 @@ class CategoryService
             return $components;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +68,7 @@ class CategoryService
             return Category::where('id', $id)->where('parent_id', '0')->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +107,7 @@ class CategoryService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +118,7 @@ class CategoryService
             return Category::findOrFail($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +129,7 @@ class CategoryService
             return $category->delete();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -133,6 +140,7 @@ class CategoryService
             return Category::where('parent_id', $id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -143,6 +151,7 @@ class CategoryService
             return Category::where(['parent_id' => '0'])->orderBy('id', 'DESC');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -153,6 +162,7 @@ class CategoryService
             return Category::where('parent_id', $parent_id)->count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +173,7 @@ class CategoryService
             return Category::Where('components', 'like', '%'.$type.'%')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -173,6 +184,7 @@ class CategoryService
             return Category::where(['id' => $category_id])->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +220,7 @@ class CategoryService
             return response()->json($jsonData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,8 +2,8 @@
 
 namespace App\Traits\Maestro\RoleAndPermission;
 
-use App\Services\Maestro\RoleAndPermissionService;
 use App\Helpers\UtilityHelper;
+use App\Services\Maestro\RoleAndPermissionService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +32,7 @@ trait RoleAndPermissionTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +48,7 @@ trait RoleAndPermissionTrait
             return [];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return [];
         }
     }
@@ -62,6 +64,7 @@ trait RoleAndPermissionTrait
             return [];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return [];
         }
     }
@@ -77,6 +80,7 @@ trait RoleAndPermissionTrait
             return [];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return [];
         }
     }
@@ -104,6 +108,7 @@ trait RoleAndPermissionTrait
             return [];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return [];
         }
     }
@@ -119,6 +124,7 @@ trait RoleAndPermissionTrait
             return [];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return [];
         }
     }

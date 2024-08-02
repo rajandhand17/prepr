@@ -28,6 +28,7 @@ class LabService
             return $lab_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +50,7 @@ class LabService
             return ['category' => $category ?? [], 'organization' => $organization, 'skills' => $skills, 'skillIds' => $skillIds, 'user' => $user, 'level' => $level, 'duration' => $duration, 'resourceModules' => $resourceModules, 'moduleIds' => $moduleIds];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +101,7 @@ class LabService
             return $lab;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -115,6 +118,7 @@ class LabService
             return $cloneLab;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +143,7 @@ class LabService
             return response()->json($json_result);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -151,6 +156,7 @@ class LabService
             return $lab;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -161,6 +167,7 @@ class LabService
             return Lab::count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -208,6 +215,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -223,6 +231,7 @@ class LabService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -238,6 +247,7 @@ class LabService
             return $lab->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -262,6 +272,7 @@ class LabService
             return response()->json($json_result);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -289,6 +300,7 @@ class LabService
             return response()->json($json_result);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -299,6 +311,7 @@ class LabService
             return Lab::select('title', 'id')->whereIn('id', $labId)->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

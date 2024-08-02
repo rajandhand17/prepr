@@ -16,6 +16,7 @@ class ChallengeService
             return Challenge::count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -26,6 +27,7 @@ class ChallengeService
             return Challenge::select('id', 'title', 'user_id', 'status', 'is_open')->where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +43,7 @@ class ChallengeService
             return $achievementImage;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +66,7 @@ class ChallengeService
             return ['category' => $category ?? [], 'organization' => $organization ?? [], 'skills' => $skills ?? [], 'skillIds' => $skillIds ?? [], 'user' => $user ?? [], 'level' => $level ?? [], 'associatedLabs' => $labs ?? [],  'duration' => $duration ?? [], 'labIds' => $labIds ?? [], 'moduleIds' => $moduleIds ?? [], 'resourceModules' => $resourceModules ?? []];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,6 +101,7 @@ class ChallengeService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +117,7 @@ class ChallengeService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +133,7 @@ class ChallengeService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -165,6 +172,7 @@ class ChallengeService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +197,7 @@ class ChallengeService
             return response()->json($json_result);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -228,6 +237,7 @@ class ChallengeService
             return false;
         }
     }
+
     public static function getProjectLanguageByChallengeId($id)
     {
         try {
@@ -235,9 +245,11 @@ class ChallengeService
             if ($challenge) {
                 return $challenge->language;
             }
+
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -25,6 +25,7 @@ class OrganizationSocialLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +44,7 @@ class OrganizationSocialLinkService
             return $orgSocialLink;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +65,7 @@ class OrganizationSocialLinkService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -77,6 +80,7 @@ class OrganizationSocialLinkService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ChallengeAchievementService;
 use App\Services\Maestro\ChallengeAssessmentCriteriaService;
 use App\Services\Maestro\ChallengeAssessmentService;
@@ -10,7 +11,6 @@ use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeSkillsGroupsStackService;
 use App\Services\Maestro\ChallengeTimelineService;
 use App\Services\Maestro\ComponentAssociationService;
-use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +27,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +43,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +59,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +75,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +129,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +140,7 @@ trait ChallengeTrait
             return ChallengeService::getChallengeById($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -172,6 +178,7 @@ trait ChallengeTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -19,6 +19,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +50,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +66,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -78,6 +82,7 @@ trait ExploreTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

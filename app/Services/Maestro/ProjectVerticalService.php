@@ -14,6 +14,7 @@ class ProjectVerticalService
             return ProjectVertical::query()->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +42,7 @@ class ProjectVerticalService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +53,7 @@ class ProjectVerticalService
             return ProjectVertical::findOrFail($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +64,7 @@ class ProjectVerticalService
             return $projectVertical->delete();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +75,7 @@ class ProjectVerticalService
             return ProjectVertical::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

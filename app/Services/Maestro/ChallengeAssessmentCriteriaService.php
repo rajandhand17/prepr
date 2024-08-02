@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\ChallengeAssessmentCriteria;
 use App\Helpers\UtilityHelper;
+use App\Models\ChallengeAssessmentCriteria;
 use Exception;
 
 class ChallengeAssessmentCriteriaService
@@ -19,6 +19,7 @@ class ChallengeAssessmentCriteriaService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -59,6 +60,7 @@ class ChallengeAssessmentCriteriaService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

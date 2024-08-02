@@ -75,6 +75,7 @@ class TagController extends Controller
             return view('maestro.tags.tag.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -91,6 +92,7 @@ class TagController extends Controller
             return view('maestro.tags.tag.create', compact('languages', 'category'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -108,6 +110,7 @@ class TagController extends Controller
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -127,6 +130,7 @@ class TagController extends Controller
             return view('maestro.tags.tag.view', compact('tag', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -145,6 +149,7 @@ class TagController extends Controller
             return view('maestro.tags.tag.edit', compact('data', 'languages', 'category', 'tag_image'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -162,6 +167,7 @@ class TagController extends Controller
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('tags.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -177,6 +183,7 @@ class TagController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

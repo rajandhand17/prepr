@@ -2,8 +2,8 @@
 
 namespace App\Traits\Maestro\SocialLink;
 
-use App\Services\Maestro\SocialLinkService;
 use App\Helpers\UtilityHelper;
+use App\Services\Maestro\SocialLinkService;
 use Exception;
 
 trait SocialLinkTrait
@@ -19,6 +19,7 @@ trait SocialLinkTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -33,6 +34,7 @@ trait SocialLinkTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -47,6 +49,7 @@ trait SocialLinkTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +60,7 @@ trait SocialLinkTrait
             return SocialLinkService::getSocialLinkById($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +75,7 @@ trait SocialLinkTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

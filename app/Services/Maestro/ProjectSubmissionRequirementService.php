@@ -14,6 +14,7 @@ class ProjectSubmissionRequirementService
             return ProjectSubmissionRequirement::query()->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -41,6 +42,7 @@ class ProjectSubmissionRequirementService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +53,7 @@ class ProjectSubmissionRequirementService
             return ProjectSubmissionRequirement::findOrFail($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +64,7 @@ class ProjectSubmissionRequirementService
             return $submissionRequirement->delete();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

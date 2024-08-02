@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Maestro\Dashboard;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Traits\Maestro\Dashboard\DashboardTrait;
-use App\Helpers\UtilityHelper;
 use Exception;
 
 class DashboardController extends Controller
@@ -28,6 +28,7 @@ class DashboardController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('dashboard.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

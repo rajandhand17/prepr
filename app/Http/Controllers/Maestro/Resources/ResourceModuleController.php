@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\Resources;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ResourceModule;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\OrganizationService;
 use App\Services\Maestro\UserService;
 use App\Traits\Maestro\Resource\ResourceModuleTrait;
-use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -79,6 +79,7 @@ class ResourceModuleController extends Controller
             return view('maestro.resource-module.index', compact('html'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -94,6 +95,7 @@ class ResourceModuleController extends Controller
             return view('maestro.resource-module.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -107,6 +109,7 @@ class ResourceModuleController extends Controller
             return view('maestro.resource-module.show');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -124,6 +127,7 @@ class ResourceModuleController extends Controller
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -145,6 +149,7 @@ class ResourceModuleController extends Controller
             return view('maestro.resource-module.edit', compact('languages', 'resourceModule', 'user', 'organization'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -162,6 +167,7 @@ class ResourceModuleController extends Controller
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -177,6 +183,7 @@ class ResourceModuleController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

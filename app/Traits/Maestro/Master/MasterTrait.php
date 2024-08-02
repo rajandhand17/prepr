@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Master;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\DurationService;
@@ -12,7 +13,6 @@ use App\Services\Maestro\RankService;
 use App\Services\Maestro\ResourceModuleService;
 use App\Services\Maestro\SkillService;
 use App\Services\Maestro\UserService;
-use App\Helpers\UtilityHelper;
 use Exception;
 
 trait MasterTrait
@@ -28,6 +28,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +44,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +60,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -73,6 +76,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -88,6 +92,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +108,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +124,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -133,6 +140,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -148,6 +156,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +172,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -178,6 +188,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -193,6 +204,7 @@ trait MasterTrait
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

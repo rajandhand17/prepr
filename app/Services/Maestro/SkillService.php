@@ -19,6 +19,7 @@ class SkillService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +47,7 @@ class SkillService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +63,7 @@ class SkillService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +86,7 @@ class SkillService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +97,7 @@ class SkillService
             return Skill::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +117,7 @@ class SkillService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +144,7 @@ class SkillService
             return response()->json($jsonSkills);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,6 +165,7 @@ class SkillService
             return $selectedSkills_names;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -168,6 +176,7 @@ class SkillService
             return Skill::whereIn('id', $skillIds)->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -207,6 +216,7 @@ class SkillService
             return response()->json($jsonSkills);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -77,6 +77,7 @@ class EmailTemplateController extends Controller
             return view('maestro.email-template.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json([
                 'status'  => 'error',
                 'message' => $e->getMessage(),
@@ -96,6 +97,7 @@ class EmailTemplateController extends Controller
             return view('maestro.email-template.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -113,6 +115,7 @@ class EmailTemplateController extends Controller
             return view('maestro.email-template.edit', compact('template', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
@@ -133,6 +136,7 @@ class EmailTemplateController extends Controller
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -153,6 +157,7 @@ class EmailTemplateController extends Controller
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -171,6 +176,7 @@ class EmailTemplateController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
