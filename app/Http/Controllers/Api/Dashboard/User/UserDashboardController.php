@@ -10,9 +10,21 @@ use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
+use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Http\Resources\Public\Lab\LabResource;
+use App\Http\Resources\Public\LabProgram\LabProgramResource;
+use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Dashboard\User\UserDashboardRepository;
+use App\Services\ProjectService;
+use App\Services\Public\ChallengePathService;
+use App\Services\Public\ChallengeService;
+use App\Services\Public\LabProgramService;
+use App\Services\Public\LabService;
+use App\Services\Public\ResourceCollectionService;
+use App\Services\Public\ResourceGroupService;
+use App\Services\Public\ResourceModuleService;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -346,6 +358,74 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.inbox_friends_listing_retrieved'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getLastVisitedModule()
+    {
+        try {
+            $userData = auth()->user();
+            // Fetch lasted visited component
+            $fetchLastVisited = $this->userDashboardRepository->fetchLastVisited($userData);
+            if ($fetchLastVisited != false) {
+                // Based on module type fetch component data
+                switch ($fetchLastVisited->module_type) {
+                    case '0':
+                        $fetchComponentData = LabService::getLabBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(LabResource::make($fetchComponentData), __('responses.last_visited_lab'), 200);
+                        }
+                        break;
+                    case '1':
+                        $fetchComponentData = LabProgramService::getLabProgramBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(LabProgramResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
+                        }
+                        break;
+                    case '2':
+                        $fetchComponentData = ChallengeService::getChallengeBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(LabProgramResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
+                        }
+                        break;
+                    case '3':
+                        $fetchComponentData = ChallengePathService::getChallengePathBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(ChallengePathResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
+                        }
+                        break;
+                    case '4':
+                        $fetchComponentData = ResourceModuleService::getResourceModuleBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(ResourceModuleResource::make($fetchComponentData), __('responses.last_visited_resource_module'), 200);
+                        }
+                        break;
+                    case '5':
+                        $fetchComponentData = ResourceCollectionService::getResourceCollectionBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(ResourceCollectionResource::make($fetchComponentData), __('responses.last_visited_resource_collection'), 200);
+                        }
+                        break;
+                    case '6':
+                        $fetchComponentData = ResourceGroupService::getResourceGroupBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(ResourceGroupResource::make($fetchComponentData), __('responses.last_visited_resource_group'), 200);
+                        }
+                        break;
+                    case '7':
+                        $fetchComponentData = ProjectService::getProjectBasedOnId($fetchLastVisited->module_id);
+                        if ($fetchComponentData) {
+                            return $this->sendResponse(ProjectResource::make($fetchComponentData), __('responses.last_visited_project'), 200);
+                        }
+                        break;
+                }
+            }
+
+            return $this->sendError(__('responses.last_visited_not_found'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
