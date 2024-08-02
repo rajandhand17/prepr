@@ -10,6 +10,7 @@ return [
     'on_boarding_limit'                  => '5',
     'dropdown_listing_limit'             => '20',
     'explore_page_limit_max'             => '12',
+    'dashboard_page_limit_max'           => '3',
     'explore_page_limit_min'             => '6',
     'jobs_details_par_module_limit'      => '3',
     'skills_par_module_limit'            => '5',

@@ -17,6 +17,7 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -80,7 +81,12 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 $userId = auth()->user()->id;
+                // For user progress tracking
                 TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_modules');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
@@ -376,13 +382,20 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             // checks creation limits of the Resource Module
-            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
             if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
                 if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
                     return $this->sendError(__('responses.reached_resource_module_limit'), 400);
                 }
             }
+
             $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
             if ($createResourceModuleUsingAIPreview) {
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
