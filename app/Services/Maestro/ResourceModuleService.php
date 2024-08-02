@@ -4,9 +4,9 @@ namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use HiFolks\RandoPhp\Randomize;
 use App\Models\ResourceModule;
 use Exception;
-use HiFolks\RandoPhp\Randomize;
 
 class ResourceModuleService
 {
