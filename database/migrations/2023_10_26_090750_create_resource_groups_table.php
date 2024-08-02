@@ -30,7 +30,6 @@ return new class() extends Migration {
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('level')->references('id')->on('levels')->onDelete('cascade');
             $table->foreign('duration')->references('id')->on('durations')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
