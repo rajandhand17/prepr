@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeTemplateSkillsGroupsStack;
 use Exception;
@@ -22,6 +23,7 @@ class ChallengeTemplateSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
