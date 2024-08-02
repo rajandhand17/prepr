@@ -54,7 +54,7 @@ class LabProgramResource extends JsonResource
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
             $hosted_by = [
-                'uuid'        => $this->organization->uuid,
+                'uuid'        => $this->getOrganization->uuid,
                 'title'       => $this->getOrganization->title,
                 'image'       => $this->getOrganization->image,
                 'description' => $this->getOrganization->description,

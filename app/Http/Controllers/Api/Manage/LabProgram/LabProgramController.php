@@ -52,6 +52,7 @@ class LabProgramController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_lab_program_list'), 400);
         } catch(\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
