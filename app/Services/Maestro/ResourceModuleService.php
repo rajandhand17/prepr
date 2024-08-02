@@ -15,6 +15,8 @@ class ResourceModuleService
         try {
             return ResourceModule::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +50,8 @@ class ResourceModuleService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +66,8 @@ class ResourceModuleService
 
             return $coverImage;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -76,6 +82,8 @@ class ResourceModuleService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +98,8 @@ class ResourceModuleService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -99,6 +109,8 @@ class ResourceModuleService
         try {
             return ResourceModule::whereIn('id', $moduleIds)->pluck('title', 'id');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +141,8 @@ class ResourceModuleService
 
             return response()->json($jsonTags);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

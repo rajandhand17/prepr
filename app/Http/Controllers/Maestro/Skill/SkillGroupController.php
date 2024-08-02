@@ -89,6 +89,7 @@ class SkillGroupController extends Controller
             return view('maestro.skill-group.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -105,6 +106,7 @@ class SkillGroupController extends Controller
             return view('maestro.skill-group.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -122,6 +124,7 @@ class SkillGroupController extends Controller
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -145,6 +148,7 @@ class SkillGroupController extends Controller
             return view('maestro.skill-group.view', compact('skillgroup', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -180,6 +184,7 @@ class SkillGroupController extends Controller
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('skill-group.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -195,6 +200,7 @@ class SkillGroupController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

@@ -14,6 +14,8 @@ class ChallengeTemplateService
         try {
             return ChallengeTemplate::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

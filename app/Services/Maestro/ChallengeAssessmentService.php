@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAssessment;
 use Exception;
 
@@ -18,6 +19,8 @@ class ChallengeAssessmentService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +66,8 @@ class ChallengeAssessmentService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -65,6 +65,8 @@ class RanksController extends Controller
 
             return view('maestro.rank.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -79,6 +81,8 @@ class RanksController extends Controller
 
             return view('maestro.rank.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -95,6 +99,8 @@ class RanksController extends Controller
 
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -110,6 +116,8 @@ class RanksController extends Controller
 
             return view('maestro.rank.edit', compact('rank', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -126,6 +134,8 @@ class RanksController extends Controller
 
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('ranks.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -143,6 +153,8 @@ class RanksController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Rank deleted successfully.']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

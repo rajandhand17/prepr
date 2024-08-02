@@ -14,6 +14,8 @@ class PreBuiltAchievementService
         try {
             return PreBuiltAchievement::query()->latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +53,8 @@ class PreBuiltAchievementService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +64,8 @@ class PreBuiltAchievementService
         try {
             return PreBuiltAchievement::findOrFail($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -69,6 +75,8 @@ class PreBuiltAchievementService
         try {
             return $achievement->delete();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,6 +106,8 @@ class PreBuiltAchievementService
 
             return $component_type;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +122,8 @@ class PreBuiltAchievementService
 
             return $achievementImage;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +147,8 @@ class PreBuiltAchievementService
 
             return $achievement_type;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

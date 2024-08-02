@@ -30,4 +30,5 @@ return [
     'skill_activity_award'       => 'uploads/skill_activity_award/',
     'people'                     => 'uploads/people/',
     'awarded_trophy'             => 'uploads/awarded_trophy/',
+    'social_link_icon'           => 'uploads/social_link_icon/',
 ];

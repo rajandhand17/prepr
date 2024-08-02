@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ChallengeAchievementService;
 use App\Services\Maestro\ChallengeAssessmentCriteriaService;
 use App\Services\Maestro\ChallengeAssessmentService;
@@ -25,6 +26,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,6 +42,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +58,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +74,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +112,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -118,6 +128,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +139,8 @@ trait ChallengeTrait
         try {
             return ChallengeService::getChallengeById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -163,6 +177,8 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -189,6 +205,7 @@ trait ChallengeTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;

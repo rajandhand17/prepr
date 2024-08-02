@@ -51,4 +51,6 @@ interface UserDashboardInterface
     public function userDashboardInboxList($userData);
 
     public function userDashboardFriendList($userData);
+
+    public function fetchLastVisited($userData);
 }

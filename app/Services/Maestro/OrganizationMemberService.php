@@ -45,6 +45,7 @@ class OrganizationMemberService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +62,7 @@ class OrganizationMemberService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +92,7 @@ class OrganizationMemberService
             return $people;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -102,6 +105,7 @@ class OrganizationMemberService
             return $people;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

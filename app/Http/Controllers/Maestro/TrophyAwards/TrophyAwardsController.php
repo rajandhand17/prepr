@@ -72,6 +72,7 @@ class TrophyAwardsController extends Controller
             return view('maestro.trophy.index', compact('html'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -94,6 +95,7 @@ class TrophyAwardsController extends Controller
             return view('maestro.trophy.create', compact('status', 'users', 'awardedMembers'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -113,6 +115,7 @@ class TrophyAwardsController extends Controller
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -134,6 +137,7 @@ class TrophyAwardsController extends Controller
             return view('maestro.trophy.edit', compact('awardedTrophies', 'users', 'status', 'awardedMembers'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -154,6 +158,7 @@ class TrophyAwardsController extends Controller
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -172,6 +177,7 @@ class TrophyAwardsController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Project;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\LabService;
@@ -26,6 +27,8 @@ trait ProjectTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,6 +42,8 @@ trait ProjectTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +57,8 @@ trait ProjectTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +68,8 @@ trait ProjectTrait
         try {
             return ProjectService::getProjectById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +83,8 @@ trait ProjectTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,6 +112,8 @@ trait ProjectTrait
 
             return $responseData;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

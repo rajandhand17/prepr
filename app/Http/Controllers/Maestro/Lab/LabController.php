@@ -85,6 +85,7 @@ class LabController extends Controller
             return view('maestro.lab.index', compact('html'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -101,6 +102,7 @@ class LabController extends Controller
             return view('maestro.lab.create', compact('languages', 'social_name'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -126,6 +128,7 @@ class LabController extends Controller
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -139,6 +142,7 @@ class LabController extends Controller
             return view('maestro.lab.view', compact('lab'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -158,6 +162,7 @@ class LabController extends Controller
             return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -175,6 +180,7 @@ class LabController extends Controller
             return redirect()->route('lab.index')->withErrors(['error' => 'Something went wrong']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -190,6 +196,7 @@ class LabController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

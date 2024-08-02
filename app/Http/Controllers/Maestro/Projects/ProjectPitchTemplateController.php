@@ -46,7 +46,7 @@ class ProjectPitchTemplateController extends Controller
         array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
         $html = $builder->columns($tableColumns);
 
-        return view('maestro.projects.pitchtemplate.index', compact('html'));
+        return view('maestro.projects.pitch-template.index', compact('html'));
     }
 
     /**
@@ -57,8 +57,10 @@ class ProjectPitchTemplateController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.projects.pitchtemplate.create', compact('languages'));
+            return view('maestro.projects.pitch-template.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -75,6 +77,8 @@ class ProjectPitchTemplateController extends Controller
 
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -90,8 +94,10 @@ class ProjectPitchTemplateController extends Controller
             $pitchTask = ChallengeTaskService::getChallengeTaskById($id);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.projects.pitchtemplate.edit', compact('languages', 'pitchTemplate', 'pitchSection', 'pitchTask'));
+            return view('maestro.projects.pitch-template.edit', compact('languages', 'pitchTemplate', 'pitchSection', 'pitchTask'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -108,6 +114,8 @@ class ProjectPitchTemplateController extends Controller
 
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -125,6 +133,8 @@ class ProjectPitchTemplateController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Pitch Template deleted successfully.']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

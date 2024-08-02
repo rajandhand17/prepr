@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTimelines;
 use Carbon\Carbon;
 use Exception;
@@ -28,6 +29,8 @@ class ChallengeTimelineService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -37,6 +40,8 @@ class ChallengeTimelineService
         try {
             return ChallengeTimelines::where('challenge_id', $challenge->id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

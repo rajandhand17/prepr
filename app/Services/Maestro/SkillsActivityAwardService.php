@@ -51,6 +51,7 @@ class SkillsActivityAwardService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +68,7 @@ class SkillsActivityAwardService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +108,7 @@ class SkillsActivityAwardService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +119,7 @@ class SkillsActivityAwardService
             return SkillsActivityAward::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

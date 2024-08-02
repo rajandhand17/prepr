@@ -101,6 +101,7 @@ class TrophyAwardsService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -117,6 +118,7 @@ class TrophyAwardsService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -199,6 +201,7 @@ class TrophyAwardsService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -209,6 +212,7 @@ class TrophyAwardsService
             return TrophyAwards::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -219,6 +223,7 @@ class TrophyAwardsService
             return TrophyAwards::find($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

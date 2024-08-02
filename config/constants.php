@@ -534,6 +534,7 @@ return [
         'resource_modules'        => '4',
         'resource_collections'    => '5',
         'resource_group'          => '6',
+        'projects'                => '7',
     ],
 
     'assessment_type' => [
