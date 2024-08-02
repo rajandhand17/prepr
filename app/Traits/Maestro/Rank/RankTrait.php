@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Rank;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\RankService;
 use Exception;
 
@@ -17,6 +18,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +33,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +49,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +64,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

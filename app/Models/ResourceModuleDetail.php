@@ -26,4 +26,9 @@ class ResourceModuleDetail extends Model
     {
         return config('site-settings.aws_url').$value;
     }
+
+    public function social_link()
+    {
+        return $this->belongsTo(SocialLink::class, 'social_link_id', 'id');
+    }
 }

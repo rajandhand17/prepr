@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Project;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ChallengePitchService;
 use App\Services\Maestro\ChallengeTaskService;
 use App\Services\Maestro\ProjectPitchTemplateService;
@@ -20,6 +21,8 @@ trait ProjectPitchTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +37,8 @@ trait ProjectPitchTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -62,6 +67,7 @@ trait ProjectPitchTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollBack();
 
             return false;
@@ -77,6 +83,8 @@ trait ProjectPitchTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

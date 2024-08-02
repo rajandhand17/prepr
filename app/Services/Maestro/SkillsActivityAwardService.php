@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\SkillsActivityAward;
 use Exception;
 use Illuminate\Support\Facades\Redirect;
@@ -48,6 +49,8 @@ class SkillsActivityAwardService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +66,8 @@ class SkillsActivityAwardService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,6 +106,8 @@ class SkillsActivityAwardService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +117,8 @@ class SkillsActivityAwardService
         try {
             return SkillsActivityAward::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

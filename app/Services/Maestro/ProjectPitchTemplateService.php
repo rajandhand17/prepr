@@ -16,6 +16,8 @@ class ProjectPitchTemplateService
         try {
             return PitchTemplate::findOrFail($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -25,6 +27,8 @@ class ProjectPitchTemplateService
         try {
             return PitchTemplate::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -46,6 +50,8 @@ class ProjectPitchTemplateService
                 return $pitchTemplate;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -55,6 +61,8 @@ class ProjectPitchTemplateService
         try {
             return ChallengePitch::where('template_id', $id)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +72,8 @@ class ProjectPitchTemplateService
         try {
             return ChallengeTask::where('template_id', $id)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -116,6 +126,8 @@ class ProjectPitchTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -168,6 +180,8 @@ class ProjectPitchTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -177,6 +191,8 @@ class ProjectPitchTemplateService
         try {
             return $pitchTemplate->delete();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

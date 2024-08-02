@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Maestro\ActivityAwards;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\CommunityTrophy;
-use App\Models\User;
 use App\Services\Maestro\LanguageService;
 use App\Services\Maestro\UserService;
 use App\Traits\Maestro\CommunityTrophy\CommunityTrophyTrait;
@@ -75,6 +74,8 @@ class CommunityTrophyController extends Controller
 
             return view('maestro.activity-awards.community-trophy.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -91,6 +92,8 @@ class CommunityTrophyController extends Controller
 
             return view('maestro.trophy.show', compact('user'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -107,6 +110,8 @@ class CommunityTrophyController extends Controller
 
             return view('maestro.activity-awards.community-trophy.create', compact('status', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -125,6 +130,8 @@ class CommunityTrophyController extends Controller
 
             return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -142,6 +149,8 @@ class CommunityTrophyController extends Controller
 
             return view('maestro.activity-awards.community-trophy.edit', compact('trophy', 'languages', 'status'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -160,6 +169,8 @@ class CommunityTrophyController extends Controller
 
             return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('community-trophy.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -176,6 +187,8 @@ class CommunityTrophyController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

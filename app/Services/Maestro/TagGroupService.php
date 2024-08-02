@@ -18,6 +18,8 @@ class TagGroupService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +46,8 @@ class TagGroupService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +62,8 @@ class TagGroupService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -88,6 +94,8 @@ class TagGroupService
 
             return redirect()->with('error', 'Enter Tag Group');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,6 +105,8 @@ class TagGroupService
         try {
             return TagGroup::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

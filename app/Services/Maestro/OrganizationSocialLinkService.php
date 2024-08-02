@@ -2,8 +2,10 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationSocialLink;
 use App\Models\SocialLink;
+use Exception;
 
 class OrganizationSocialLinkService
 {
@@ -21,7 +23,9 @@ class OrganizationSocialLinkService
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -38,7 +42,9 @@ class OrganizationSocialLinkService
             }
 
             return $orgSocialLink;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,7 +63,9 @@ class OrganizationSocialLinkService
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -70,7 +78,9 @@ class OrganizationSocialLinkService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

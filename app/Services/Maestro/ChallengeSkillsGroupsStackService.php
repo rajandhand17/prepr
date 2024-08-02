@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSkillsGroupsStack;
 use Exception;
 
@@ -26,6 +27,8 @@ class ChallengeSkillsGroupsStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -35,6 +38,8 @@ class ChallengeSkillsGroupsStackService
         try {
             return ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'type' => '0'])->pluck('foreign_id');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

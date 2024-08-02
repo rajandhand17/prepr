@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Resources;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ResourceModule;
 use App\Services\Maestro\LanguageService;
@@ -75,8 +76,10 @@ class ResourceModuleController extends Controller
                 'order' => [[1, 'asc']],
             ]);
 
-            return view('maestro.resourceModule.index', compact('html'));
+            return view('maestro.resource-module.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -89,8 +92,10 @@ class ResourceModuleController extends Controller
         try {
             $languages = LanguageService::getLanguages();
 
-            return view('maestro.resourceModule.create', compact('languages'));
+            return view('maestro.resource-module.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -101,8 +106,10 @@ class ResourceModuleController extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            return view('maestro.resourceModule.show');
+            return view('maestro.resource-module.show');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -119,6 +126,8 @@ class ResourceModuleController extends Controller
 
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -137,8 +146,10 @@ class ResourceModuleController extends Controller
             $user = UserService::getUser('edit', $resourceModule->user_id);
             $organization = OrganizationService::getOrganization($resourceModule->organization_id);
 
-            return view('maestro.resourceModule.edit', compact('languages', 'resourceModule', 'user', 'organization'));
+            return view('maestro.resource-module.edit', compact('languages', 'resourceModule', 'user', 'organization'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -155,6 +166,8 @@ class ResourceModuleController extends Controller
 
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('resource-module.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -169,6 +182,8 @@ class ResourceModuleController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Resource Module deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

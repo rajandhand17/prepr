@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabExternalLinks;
 use App\Models\SocialLink;
 
@@ -19,7 +20,9 @@ class LabExternalLinksService
             });
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,7 +43,9 @@ class LabExternalLinksService
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,7 +69,9 @@ class LabExternalLinksService
             }
 
             return [];
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,7 +92,9 @@ class LabExternalLinksService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -98,7 +107,9 @@ class LabExternalLinksService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

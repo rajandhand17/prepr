@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Maestro\Lab;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Lab;
 use App\Services\Maestro\LanguageService;
@@ -86,6 +87,8 @@ class LabController extends Controller
 
             return view('maestro.lab.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -101,6 +104,8 @@ class LabController extends Controller
 
             return view('maestro.lab.create', compact('languages', 'social_name'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -125,6 +130,8 @@ class LabController extends Controller
 
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -137,6 +144,8 @@ class LabController extends Controller
         try {
             return view('maestro.lab.view', compact('lab'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -155,6 +164,8 @@ class LabController extends Controller
 
             return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -171,6 +182,8 @@ class LabController extends Controller
 
             return redirect()->route('lab.index')->withErrors(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('lab.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -185,6 +198,8 @@ class LabController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

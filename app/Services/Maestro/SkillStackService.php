@@ -18,6 +18,8 @@ class SkillStackService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +45,8 @@ class SkillStackService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +61,8 @@ class SkillStackService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,6 +93,8 @@ class SkillStackService
 
             return redirect()->with('error', 'Enter Skill Stacks');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -96,6 +104,8 @@ class SkillStackService
         try {
             return SkillStack::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,7 +123,9 @@ class SkillStackService
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -139,6 +151,8 @@ class SkillStackService
 
             return response()->json($jsonSkills);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

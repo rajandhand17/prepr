@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\TrophyAwards;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\TrophyAwards;
 use App\Models\User;
@@ -70,6 +71,8 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -91,6 +94,8 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.create', compact('status', 'users', 'awardedMembers'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -109,6 +114,8 @@ class TrophyAwardsController extends Controller
 
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -129,6 +136,8 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.edit', compact('awardedTrophies', 'users', 'status', 'awardedMembers'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -148,6 +157,8 @@ class TrophyAwardsController extends Controller
 
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -165,6 +176,8 @@ class TrophyAwardsController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }

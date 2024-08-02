@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Resource;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ResourceModuleService;
 use Exception;
 
@@ -17,6 +18,8 @@ trait ResourceModuleTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +33,8 @@ trait ResourceModuleTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +48,8 @@ trait ResourceModuleTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +59,8 @@ trait ResourceModuleTrait
         try {
             return ResourceModuleService::getResourceModuleById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

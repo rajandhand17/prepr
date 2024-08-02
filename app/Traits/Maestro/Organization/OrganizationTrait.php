@@ -81,6 +81,8 @@ trait OrganizationTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -118,6 +120,8 @@ trait OrganizationTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -132,6 +136,8 @@ trait OrganizationTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -146,18 +152,22 @@ trait OrganizationTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    private function verifyOrg($request){
-        try{
+    private function verifyOrg($request)
+    {
+        try {
             $message = OrganizationService::verifyOrg($request);
-            if($message){
+            if ($message) {
                 return $message;
             }
+
             return false;
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -172,8 +182,9 @@ trait OrganizationTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }

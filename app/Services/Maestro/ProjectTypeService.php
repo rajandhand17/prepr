@@ -13,6 +13,8 @@ class ProjectTypeService
         try {
             return ProjectType::query()->latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,6 +41,8 @@ class ProjectTypeService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +52,8 @@ class ProjectTypeService
         try {
             return ProjectType::findOrFail($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -57,6 +63,8 @@ class ProjectTypeService
         try {
             return $projectType->delete();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +74,8 @@ class ProjectTypeService
         try {
             return ProjectType::where('status', '1')->pluck('title', 'id')->prepend('Please Select', '');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

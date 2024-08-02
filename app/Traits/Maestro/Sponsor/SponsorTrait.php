@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\Sponsor;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\HostService;
 use Exception;
 
@@ -17,6 +18,8 @@ trait SponsorTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +33,8 @@ trait SponsorTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +48,8 @@ trait SponsorTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +59,8 @@ trait SponsorTrait
         try {
             return HostService::getSponsorById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +74,8 @@ trait SponsorTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

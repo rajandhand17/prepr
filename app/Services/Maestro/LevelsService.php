@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Levels;
 use Exception;
 
@@ -12,6 +13,8 @@ class LevelsService
         try {
             return Levels::where(['id' => $level_id])->pluck('title', 'id');
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +53,8 @@ class LevelsService
 
             return response()->json($jsonLevels);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
