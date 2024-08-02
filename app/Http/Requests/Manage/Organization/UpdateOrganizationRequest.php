@@ -34,8 +34,8 @@ class UpdateOrganizationRequest extends FormRequest
         $base_rules = [
             'title'                                 => 'required|max:255|unique:organizations,title,'.$organization->id,
             'description'                           => 'required',
-            'profile_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'cover_image'                           => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
+            'profile_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
+            'cover_image'                           => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'                              => 'required|numeric|exists:categories,id',
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
             'website'                               => 'required|url',
