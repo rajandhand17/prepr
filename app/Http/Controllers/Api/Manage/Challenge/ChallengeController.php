@@ -99,7 +99,7 @@ class ChallengeController extends AppBaseController
                 }
             }
 
-            $uploaded_achievement_image = config('site-settings.default_challenge_achievement_image');
+            $uploaded_achievement_image = null;
             if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
                 $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
                 if (!$upload_achievement_image) {
