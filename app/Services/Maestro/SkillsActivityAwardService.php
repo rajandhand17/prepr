@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\SkillsActivityAward;
 use Exception;
@@ -24,7 +25,7 @@ class SkillsActivityAwardService
             ];
             $image = '';
             if ($request->image) {
-                $image = $request->image->store('uploads/trophy', 's3');
+                $image  = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {
@@ -84,7 +85,7 @@ class SkillsActivityAwardService
             ];
             $image = '';
             if ($request->image) {
-                $image = $request->image->store('uploads/trophy', 's3');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {

@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\TrophyAwards;
 use App\Models\User;
@@ -33,7 +34,7 @@ class TrophyAwardsService
             ];
             $image = '';
             if ($request->hasFile('image')) {
-                $image = $request->image->store('uploads/awardedTrophy', 's3');
+                $image = FileUploadHelper::uploadImageToS3($request->image , 'awarded_trophy');
             }
 
             $validation = Validator::make($request->all(), $validation_array);
@@ -144,7 +145,7 @@ class TrophyAwardsService
 
             $image = '';
             if ($request->hasFile('image')) {
-                $image = $request->image->store('uploads/awardedTrophy', 's3');
+                $image = FileUploadHelper::uploadImageToS3($request->image , 'awarded_trophy');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {

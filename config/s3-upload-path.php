@@ -24,5 +24,11 @@ return [
     'challenge_assessment'       => 'uploads/challenge/assessment/',
     'challenge_incentives'       => 'uploads/trophy/',
     'rank_trophy'                => 'uploads/ranks/',
+    'tags'                       => 'uploads/tags/',
+    'community_trophy'           => 'uploads/community_trophy/',
+    'explore'                    => 'uploads/explore/',
+    'skill_activity_award'       => 'uploads/skill_activity_award/',
+    'people'                     => 'uploads/people/',
+    'awarded_trophy'             => 'uploads/awarded_trophy/',
     'social_link_icon'           => 'uploads/social_link_icon/',
 ];
