@@ -6,8 +6,8 @@ use App\Services\Manage\ResourceGroupService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use League\Container\Exception\NotFoundException;
 use Illuminate\Validation\Rule;
+use League\Container\Exception\NotFoundException;
 
 class UpdateResourceGroupRequest extends FormRequest
 {
