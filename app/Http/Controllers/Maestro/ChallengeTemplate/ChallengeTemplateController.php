@@ -95,7 +95,7 @@ class ChallengeTemplateController extends Controller
                 ['data' => 'action', 'name' => 'action', 'title' => 'ACTION', 'width' => '10%'],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.challengeTemplate.index', compact('html'));
+            return view('maestro.challenge-template.index', compact('html'));
         } catch (\Exception $e) {
             return false;
         }

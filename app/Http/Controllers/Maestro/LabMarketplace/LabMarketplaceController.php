@@ -70,7 +70,7 @@ class LabMarketplaceController extends Controller
                 ['data' => 'action', 'name' => 'action', 'title' => 'Action', 'width' => '10%'],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.labMarketplace.index', compact('html'));
+            return view('maestro.lab-marketplace.index', compact('html'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
