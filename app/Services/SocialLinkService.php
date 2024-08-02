@@ -31,13 +31,4 @@ class SocialLinkService
             return false;
         }
     }
-
-    public static function getSocialLinkBasedOnId($id)
-    {
-        try {
-            return SocialLink::where('id', $id)->first();
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
 }

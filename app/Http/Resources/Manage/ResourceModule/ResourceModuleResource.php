@@ -38,14 +38,12 @@ class ResourceModuleResource extends JsonResource
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
-                $socialLinks = SocialLinkService::getSocialLinkBasedOnId($index->social_link_id);
-
                 return [
                     'id'               => $index->id,
                     'title'            => $index->title,
                     'path'             => $index->getRawOriginal('path'),
                     'social_link_id'   => $index->social_link_id,
-                    'social_link_title'=> $socialLinks->title,
+                    'social_link_title'=> $index->social_link->title,
                     'type'             => 'url',
                 ];
             })->all();
