@@ -24,6 +24,9 @@ class Host extends Model
 
     public function getImageAttribute($value)
     {
-        return config('site-settings.aws_url').$value;
+        if ($value) {
+            return config('site-settings.aws_url') . $value;
+        }
+        return null;
     }
 }
