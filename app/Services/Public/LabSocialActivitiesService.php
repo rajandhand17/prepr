@@ -151,4 +151,17 @@ class LabSocialActivitiesService
             return false;
         }
     }
+
+    public function labFavouriteIds($userData)
+    {
+        try {
+            $labFavouriteIds = LabSocialActivity::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('lab_id');
+
+            return $labFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

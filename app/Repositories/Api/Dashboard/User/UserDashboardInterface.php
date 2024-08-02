@@ -4,13 +4,53 @@ namespace App\Repositories\Api\Dashboard\User;
 
 interface UserDashboardInterface
 {
-    public function getLabList($request);
+    public function challengeRequestIds($userData, $inviteStatus);
 
-    public function getChallengeList($request);
+    public function challengeFavouriteIds($userData);
 
-    public function getMyProjectIds($userId);
+    public function getChallengeList($challengeIds);
 
-    public function getAssessedProjectIds($userData);
+    public function labRequestIds($userData, $inviteStatus);
 
-    public function getProjectList($getProjectIds, $request);
+    public function labFavouriteIds($userData);
+
+    public function getLabList($labIds);
+
+    public function myProjectDashboardRequestIds($userData, $inviteStatus);
+
+    public function invitesProjectDashboardRequestIds($userData, $inviteStatus);
+
+    public function projectFavouriteIds($userData);
+
+    public function getDashboardProjectList($projectIds);
+
+    public function myResourceModuleIds($userData);
+
+    public function resourceModuleFavouriteIds($userData);
+
+    public function getResourceModuleDashboardList($resourceModuleIds);
+
+    public function getMyLatestAchievement($userData);
+
+    public function fetchUserSkills($userData);
+
+    public function fetchRecommendedChallenges($fetchUserSkills, $userData);
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData);
+
+    public function fetchRecommendedResourceModules($fetchUserSkills, $userData);
+
+    public function fetchMyChallengeProgress($userData);
+
+    public function fetchMyLabProgress($userData);
+
+    public function fetchMyResourceModuleProgress($userData);
+
+    public function fetchUpComingDeadlineChallenges($challengeIds, $userData);
+
+    public function userDashboardInboxList($userData);
+
+    public function userDashboardFriendList($userData);
+
+    public function fetchLastVisited($userData);
 }

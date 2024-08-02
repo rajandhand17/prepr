@@ -116,4 +116,17 @@ class ResourceModuleSocialActivitiesService
             return false;
         }
     }
+
+    public function resourceModuleFavouriteIds($userData)
+    {
+        try {
+            $resourceModuleFavouriteIds = ResourceModuleSocialActivities::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('resource_module_id');
+
+            return $resourceModuleFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

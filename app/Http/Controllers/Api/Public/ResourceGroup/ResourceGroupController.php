@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceGroup\AddRatingRequest;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Public\ResourceGroup\ResourceGroupRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -53,8 +54,13 @@ class ResourceGroupController extends AppBaseController
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
+
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.resource_group');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceGroupExistsOrNot->id, $userId, $moduleType);
                 }
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));

@@ -11,6 +11,7 @@ use App\Models\ProjectMemberManagement;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -34,6 +35,19 @@ class ProjectService
         try {
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
             $project_list = self::filterProjectList($project_list, $request);
+
+            return $project_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getDashboardProjectList($getProjectIds)
+    {
+        try {
+            $project_list = Project::whereIn('projects.id', $getProjectIds);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
@@ -781,6 +795,58 @@ class ProjectService
             $getUserProject = Project::where(['user_id' => $userId, 'challenge_id' => $challengeId])->first();
 
             return $getUserProject;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchCompletedChallenges($challengeIds, $userData)
+    {
+        try {
+            $fetchCompletedChallenges = Project::whereIn('challenge_id', $challengeIds)->where(['user_id' => $userData->id, 'is_submitted' => '1'])->count();
+
+            return $fetchCompletedChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchInProgressChallenges($challengeIds, $userData)
+    {
+        $fetchInProgressChallenges = self::fetchChallenges($challengeIds, $userData, 'in_progress');
+
+        return $fetchInProgressChallenges;
+    }
+
+    public static function fetchDeadlineMissedChallenges($challengeIds, $userData)
+    {
+        $fetchDeadlineMissedChallenges = self::fetchChallenges($challengeIds, $userData, 'deadline_missed');
+
+        return $fetchDeadlineMissedChallenges;
+    }
+
+    public static function fetchChallenges($challengeIds, $userData, $type)
+    {
+        try {
+            $countChallenges = 0;
+            $projects = Project::whereIn('challenge_id', $challengeIds)->where(['user_id' => $userData->id, 'is_submitted' => '0'])->get();
+
+            if ($projects->isNotEmpty()) {
+                foreach ($projects as $project) {
+                    $templateData = $project->getProjectTemplate->template_id == '0' ? $project->getProjectIdBasedTemplate ?? $project->getProjectTemplate : $project->getProjectTemplate;
+                    $challengeDetail = ChallengeService::getChallengeDetailedBasedOnChallenges($project->challenge_id, $project->created_at, $templateData);
+                    $challengeDueDate = Carbon::parse($challengeDetail['due_date']);
+                    if (($type == 'in_progress' && $challengeDueDate->greaterThanOrEqualTo(now())) || ($type == 'deadline_missed' && $challengeDueDate->lessThanOrEqualTo(now()))) {
+                        $countChallenges++;
+                    }
+                }
+            }
+
+            return $countChallenges;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

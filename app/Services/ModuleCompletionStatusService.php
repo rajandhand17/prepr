@@ -152,4 +152,43 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchResourceModuleIdsBasedOnProgress($userData)
+    {
+        try {
+            $fetchResourceModuleIdsBasedOnProgress = ModuleCompletionStatus::where(['user_id' => $userData->id, 'module_type' => '4'])->where('percentage', '<>', 0)->pluck('module_id');
+
+            return $fetchResourceModuleIdsBasedOnProgress->unique();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchUserLabProgressBasedOnLabids($labIds, $userData)
+    {
+        try {
+            $fetchUserLabProgressBasedOnLabids = ModuleCompletionStatus::whereIn('module_id', $labIds)->where(['module_type' => '0', 'user_id' => $userData->id])->get();
+
+            return $fetchUserLabProgressBasedOnLabids;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceModuleBasedOnUserId($userData)
+    {
+        try {
+            $fetchResourceModuleBasedOnUserId = ModuleCompletionStatus::where(['module_type' => '4', 'user_id' => $userData->id])->get();
+
+            return $fetchResourceModuleBasedOnUserId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

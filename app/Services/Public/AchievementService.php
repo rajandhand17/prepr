@@ -223,4 +223,20 @@ class AchievementService
             return false;
         }
     }
+
+    public function getMyLatestAchievement($userData)
+    {
+        try {
+            $getMyLatestAchievement = UserAchievement::where('user_id', $userData->id)->latest()->first();
+            if ($getMyLatestAchievement) {
+                return $getMyLatestAchievement;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

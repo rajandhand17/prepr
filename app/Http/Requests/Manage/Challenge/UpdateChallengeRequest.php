@@ -61,8 +61,8 @@ class UpdateChallengeRequest extends FormRequest
             'category_id'                           => 'nullable|exists:categories,id',
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|exists:job_titles,id',
-            'external_links'                        => 'array|required_if:request_type,publish',
-            'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
+            'external_links'                        => 'array',
+            'external_link_ids'                     => 'array|exists:social_links,id',
             'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
@@ -240,7 +240,7 @@ class UpdateChallengeRequest extends FormRequest
         // For challenge flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,month';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,months';
             $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
@@ -252,7 +252,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'nullable|array';
             $base_rules['custom_timelines_title.*'] = 'string';
             $base_rules['custom_timelines_number'] = 'nullable|array';
-            $base_rules['custom_timelines_number.*'] = 'integer';
+            $base_rules['custom_timelines_number.*'] = 'integer|max:100';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
             $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
@@ -266,7 +266,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_announcement_type'] = 'nullable|array';
             $base_rules['custom_announcement_type.*'] = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
             $base_rules['custom_announcement_number'] = 'nullable|array';
-            $base_rules['custom_announcement_number.*'] = 'integer';
+            $base_rules['custom_announcement_number.*'] = 'integer|max:100';
             $base_rules['custom_announcement_duration'] = 'nullable|array';
             $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
             $base_rules['custom_announcement_description'] = 'nullable|array';
