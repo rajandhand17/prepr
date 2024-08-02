@@ -56,6 +56,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -70,6 +71,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -86,6 +88,7 @@ class ProjectStageController extends Controller
 
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -101,6 +104,7 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.edit', compact('projectStage', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -117,6 +121,7 @@ class ProjectStageController extends Controller
 
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -134,6 +139,7 @@ class ProjectStageController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Project Stage deleted successfully.']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

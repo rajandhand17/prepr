@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\RoleAndPermission;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Traits\Maestro\RoleAndPermission\RoleAndPermissionTrait;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -55,8 +56,9 @@ class RoleAndPermissionController extends Controller
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
             ])->parameters(['pageLength' => 10]);
 
-            return view('maestro.roleAndPermission.role-and-permission-list', compact('html'));
+            return view('maestro.role-and-permission.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('role.index')->withErrors(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -69,8 +71,9 @@ class RoleAndPermissionController extends Controller
         try {
             $permissions = $this->getPermissions();
 
-            return view('maestro.roleAndPermission.role-and-permission-create', compact('permissions'));
+            return view('maestro.role-and-permission.create', compact('permissions'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -87,6 +90,7 @@ class RoleAndPermissionController extends Controller
 
             return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -101,8 +105,9 @@ class RoleAndPermissionController extends Controller
             $permissions = $this->getPermissions();
             $role_permission = $this->getPermissionBYRoleId($id);
 
-            return view('maestro.roleAndPermission.role-and-permission-edit', compact('role', 'role_permission', 'permissions'));
+            return view('maestro.role-and-permission.edit', compact('role', 'role_permission', 'permissions'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -119,6 +124,7 @@ class RoleAndPermissionController extends Controller
 
             return redirect()->route('role.index')->with('error', 'Oops! Something went wrong. Please try again later.');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('role.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

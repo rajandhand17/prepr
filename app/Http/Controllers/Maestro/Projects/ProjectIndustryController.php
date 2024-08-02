@@ -56,6 +56,7 @@ class ProjectIndustryController extends Controller
 
             return view('maestro.projects.industry.index', compact('html', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -70,6 +71,7 @@ class ProjectIndustryController extends Controller
 
             return view('maestro.projects.industry.create', compact('languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -86,6 +88,7 @@ class ProjectIndustryController extends Controller
 
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -101,6 +104,7 @@ class ProjectIndustryController extends Controller
 
             return view('maestro.projects.industry.edit', compact('projectIndustry', 'languages'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -117,6 +121,7 @@ class ProjectIndustryController extends Controller
 
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('projects-industry.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -134,6 +139,7 @@ class ProjectIndustryController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Project Industry deleted successfully.']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

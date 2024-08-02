@@ -4,6 +4,7 @@ namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
 use App\Models\ChallengeAchievement;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 class ChallengeAchievementService
@@ -35,6 +36,7 @@ class ChallengeAchievementService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -44,6 +46,7 @@ class ChallengeAchievementService
         try {
             return ChallengeAchievement::where('challenge_id', $challenge->id)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

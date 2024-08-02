@@ -14,6 +14,7 @@ class RankService
         try {
             return Rank::query()->latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -47,6 +48,7 @@ class RankService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -56,6 +58,7 @@ class RankService
         try {
             return Rank::findOrFail($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -65,6 +68,7 @@ class RankService
         try {
             return $rank->delete();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -79,6 +83,7 @@ class RankService
 
             return $coverImage;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -117,6 +122,7 @@ class RankService
 
             return response()->json($jsonData);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

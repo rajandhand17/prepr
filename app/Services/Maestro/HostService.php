@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\Host;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 class HostService
@@ -12,6 +13,7 @@ class HostService
         try {
             return Host::latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -26,6 +28,7 @@ class HostService
 
             return Host::create(['title' => $request->title, 'link' => $request->link, 'image' => $sponsorImage, 'status' => $request->status]);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +43,7 @@ class HostService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -54,6 +58,7 @@ class HostService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -78,6 +83,7 @@ class HostService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

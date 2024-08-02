@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Maestro\SocialLink;
 use App\Http\Controllers\Controller;
 use App\Models\SocialLink;
 use App\Traits\Maestro\SocialLink\SocialLinkTrait;
+use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -50,8 +51,9 @@ class SocialLinkController extends Controller
                 'order' => [[1, 'asc']],
             ]);
 
-            return view('maestro.sociallink.index', compact('html'));
+            return view('maestro.social-link.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -62,8 +64,9 @@ class SocialLinkController extends Controller
     public function create()
     {
         try {
-            return view('maestro.sociallink.create');
+            return view('maestro.social-link.create');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -80,6 +83,7 @@ class SocialLinkController extends Controller
 
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -95,8 +99,9 @@ class SocialLinkController extends Controller
                 return redirect()->route('social-links.index')->with(['error' => 'SocialLink not found.']);
             }
 
-            return view('maestro.sociallink.edit', compact('socialLink'));
+            return view('maestro.social-link.edit', compact('socialLink'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -113,6 +118,7 @@ class SocialLinkController extends Controller
 
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -127,6 +133,7 @@ class SocialLinkController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'SocialLink deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

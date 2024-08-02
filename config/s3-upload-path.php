@@ -24,4 +24,5 @@ return [
     'challenge_assessment'       => 'uploads/challenge/assessment/',
     'challenge_incentives'       => 'uploads/trophy/',
     'rank_trophy'                => 'uploads/ranks/',
+    'social_link_icon'           => 'uploads/social_link_icon/',
 ];

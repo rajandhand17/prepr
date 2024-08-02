@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\ChallengePitch;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 class ChallengePitchService
@@ -12,6 +13,7 @@ class ChallengePitchService
         try {
             return ChallengePitch::where('template_id', $id)->get();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -33,6 +35,7 @@ class ChallengePitchService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Services\Maestro;
 
 use App\Models\Duration;
+use App\Helpers\UtilityHelper;
 use Exception;
 
 class DurationService
@@ -50,6 +51,7 @@ class DurationService
 
             return response()->json($jsonDurations);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
