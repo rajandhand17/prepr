@@ -140,8 +140,6 @@ class ChallengeTemplateController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! The clonning Challenge has failed.']);
         } catch (\Exception $e) {
-            dd($e);
-
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
