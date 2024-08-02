@@ -7,7 +7,6 @@ use App\Services\Manage\ResourceModuleTypeModesService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\SocialLinkService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceModuleResource extends JsonResource
