@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\EmailTemplate;
 use Exception;
 use Illuminate\Support\Facades\Validator;
@@ -34,6 +35,7 @@ class EmailTemplateService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -49,6 +51,7 @@ class EmailTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -77,6 +80,7 @@ class EmailTemplateService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -86,6 +90,7 @@ class EmailTemplateService
         try {
             return EmailTemplate::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -101,6 +106,7 @@ class EmailTemplateService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

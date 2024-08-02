@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\SocialLink;
 use Exception;
 
@@ -12,6 +13,7 @@ class SocialLinkService
         try {
             return SocialLink::latest();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -26,6 +28,7 @@ class SocialLinkService
 
             return SocialLink::create(['title' => $request->title, 'link' => $request->link, 'icon' => $socialLinkImage]);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -40,6 +43,7 @@ class SocialLinkService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -54,6 +58,7 @@ class SocialLinkService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -76,6 +81,7 @@ class SocialLinkService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

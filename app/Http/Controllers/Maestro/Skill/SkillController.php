@@ -60,7 +60,8 @@ class SkillController extends Controller
             $html = $builder->columns($tableColumns);
 
             return view('maestro.skills.index', compact('html', 'languages'));
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -74,7 +75,8 @@ class SkillController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.skills.create', compact('languages'));
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -90,7 +92,8 @@ class SkillController extends Controller
             }
 
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('users.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -108,7 +111,8 @@ class SkillController extends Controller
             }
 
             return view('maestro.skills.view', compact('skill', 'languages'));
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -123,7 +127,8 @@ class SkillController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.skills.edit', compact('data', 'languages'));
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -139,7 +144,8 @@ class SkillController extends Controller
             }
 
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong']);
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('skills.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -153,7 +159,8 @@ class SkillController extends Controller
             if ($this->deleteSkillById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
@@ -167,7 +174,8 @@ class SkillController extends Controller
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.', 'result' => [], 'more' => false, 'total_count' => 0]);
         }
     }

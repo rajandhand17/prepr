@@ -68,6 +68,7 @@ class OrganizationController extends Controller
 
             return view('maestro.organization.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -85,6 +86,7 @@ class OrganizationController extends Controller
 
             return view('maestro.organization.create', compact('data', 'languages', 'social_name'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -102,6 +104,7 @@ class OrganizationController extends Controller
 
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -130,7 +133,8 @@ class OrganizationController extends Controller
             $languages = LanguageService::getLanguages();
 
             return view('maestro.organization.edit', compact('data', 'orgSocialLink', 'languages', 'org_address', 'org_members', 'social_name', 'orgAssociatedItems'));
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
@@ -147,7 +151,8 @@ class OrganizationController extends Controller
             }
 
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong']);
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->route('organization.index')->with(['error' => 'Something went wrong.']);
         }
     }
@@ -162,7 +167,8 @@ class OrganizationController extends Controller
             if ($this->deleteOrganizationById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Organization deleted successfully']);
             }
-        } catch (Exception $e) {
+         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }
     }
@@ -174,9 +180,8 @@ class OrganizationController extends Controller
 
             return response()->json(['status' => 'success', 'message' => $message], 200);
         } catch (Exception $e) {
-            $message = __('notification.notification_sww');
-
-            return response()->json(['status' => 'error', 'message' => $message], 500);
+            UtilityHelper::logError($e);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong'], 500);
         }
     }
 }

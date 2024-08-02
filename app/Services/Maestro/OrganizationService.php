@@ -21,6 +21,7 @@ class OrganizationService
             }
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -56,6 +57,7 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -70,6 +72,7 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -109,6 +112,7 @@ class OrganizationService
 
             return $organization;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -118,6 +122,7 @@ class OrganizationService
         try {
             return Organization::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -132,6 +137,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -168,6 +174,7 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -182,6 +189,7 @@ class OrganizationService
 
             return $organization->pluck('title', 'id');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -194,6 +202,7 @@ class OrganizationService
 
             return ['user' => $user, 'category' => $category];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -208,6 +217,7 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -233,6 +243,7 @@ class OrganizationService
 
             return response()->json($finalResult);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
                 return false;
             }
         }
@@ -253,6 +264,7 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

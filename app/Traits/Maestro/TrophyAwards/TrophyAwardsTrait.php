@@ -2,6 +2,7 @@
 
 namespace App\Traits\Maestro\TrophyAwards;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Maestro\TrophyAwardsService;
 use Exception;
 
@@ -16,6 +17,7 @@ trait TrophyAwardsTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -29,6 +31,7 @@ trait TrophyAwardsTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -42,6 +45,7 @@ trait TrophyAwardsTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -56,6 +60,7 @@ trait TrophyAwardsTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -70,6 +75,7 @@ trait TrophyAwardsTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

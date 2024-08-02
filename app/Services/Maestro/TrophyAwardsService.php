@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\TrophyAwards;
 use App\Models\User;
 use Exception;
@@ -55,7 +56,7 @@ class TrophyAwardsService
                 // BadgeDetail::where('award_id', $id)->where('award_type', 'trophy')->delete();
 
                 $badgeData = [
-                    'issuer'   => \Auth::user()->id,
+                    'issuer'   => Auth::user()->id,
                     'criteria' => $request->criteria,
                     'award_id' => $id,
                     'badge'    => $request->badge_type,
@@ -98,6 +99,7 @@ class TrophyAwardsService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -113,6 +115,7 @@ class TrophyAwardsService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -194,6 +197,7 @@ class TrophyAwardsService
                 return true;
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -203,6 +207,7 @@ class TrophyAwardsService
         try {
             return TrophyAwards::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -212,6 +217,7 @@ class TrophyAwardsService
         try {
             return TrophyAwards::find($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

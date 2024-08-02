@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\EmailLog;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\EmailLog;
 use App\Services\Maestro\LanguageService;
@@ -82,10 +83,8 @@ class EmailLogController extends Controller
 
             return view('maestro.email-log.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => $e->getMessage(),
-            ]);
+            UtilityHelper::logError($e);
+            return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
 }
