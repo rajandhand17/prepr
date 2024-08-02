@@ -36,6 +36,7 @@ class ResourceCollectionResource extends JsonResource
 
         if ($this->organization_id) {
             $hosted_by = [
+                'uuid'        => $this->organization->uuid,
                 'title'       => $this->getOrganization->title,
                 'image'       => $this->getOrganization->cover_image,
                 'description' => $this->getOrganization->description,
@@ -179,7 +180,7 @@ class ResourceCollectionResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
-            'hosted_by'                     => $this->hosted_by,
+            'hosted_by'                     => $hosted_by,
             'description'                   => $this->description,
             'media_type'                    => $this->media_type == '0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,

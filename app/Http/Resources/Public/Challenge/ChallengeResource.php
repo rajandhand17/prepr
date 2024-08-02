@@ -65,6 +65,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->organization_id) {
             $hosted_by = [
+                'uuid'        => $this->organization->uuid,
                 'title'       => $this->organization->title,
                 'image'       => $this->organization->image,
                 'description' => $this->organization->description,

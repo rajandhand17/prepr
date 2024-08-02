@@ -35,6 +35,7 @@ class ResourceGroupResource extends JsonResource
 
         if ($this->organization_id) {
             $hosted_by = [
+                'uuid'        => $this->getOrganization->uuid,
                 'title'       => $this->getOrganization->title,
                 'image'       => $this->getOrganization->cover_image,
                 'description' => $this->getOrganization->description,

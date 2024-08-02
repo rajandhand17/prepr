@@ -39,6 +39,7 @@ class ResourceModuleResource extends JsonResource
 
         if ($this->organization_id) {
             $hosted_by = [
+                'uuid'        => $this->getOrganization->uuid,
                 'title'       => $this->organization->title,
                 'image'       => $this->organization->cover_image,
                 'description' => $this->organization->description,
@@ -267,6 +268,7 @@ class ResourceModuleResource extends JsonResource
             'organization'          => $this->organization != null ? $this->organization->title : null,
             'duration'              => $duration,
             'duration_id'           => $duration_id,
+            'hosted_by'             => $hosted_by,
             'level'                 => $level,
             'level_id'              => $level_id,
             'slug'                  => $this->slug,
