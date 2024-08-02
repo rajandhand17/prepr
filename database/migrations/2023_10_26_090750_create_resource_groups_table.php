@@ -16,7 +16,6 @@ return new class() extends Migration {
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('category_id');
             $table->string('title');
             $table->string('slug');
             $table->longText('description')->nullable();
