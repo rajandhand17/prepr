@@ -53,7 +53,7 @@ class CommunityTrophyService
                 ];
 
                 // BadgeDetail::create($badgeData);
-                return redirect()->route('communitytrophy.index')->with('success', 'Community Medal updated successfully');
+                return true;
             }
         } catch (Exception $e) {
             return false;
@@ -115,7 +115,7 @@ class CommunityTrophyService
                 ];
 
                 //BadgeDetail::create($badgeData);
-                return redirect()->route('communitytrophy.index')->with('success', 'Community Medal has created successfully');
+                return true;
             }
         } catch (Exception $e) {
             return false;

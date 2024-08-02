@@ -51,8 +51,8 @@ class EmailTemplateController extends Controller
             if (request()->ajax()) {
                 return DataTables::eloquent($templates)
                     ->addColumn('action', static function (EmailTemplate $template) {
-                        return '<a href="'.route('emailTemplates.edit', $template->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$template->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteEmailTemplate
-                        (\''.route('emailTemplates.destroy', $template->id).'\')"> <i class="fas fa-trash"></i></a>';
+                        return '<a href="'.route('email-templates.edit', $template->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$template->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteEmailTemplate
+                        (\''.route('email-templates.destroy', $template->id).'\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->editColumn('content', static function (EmailTemplate $template) {
                         // return Html::decode($template->content);
@@ -73,7 +73,7 @@ class EmailTemplateController extends Controller
             ]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.emailTemplate.index', compact('html', 'languages'));
+            return view('maestro.email-template.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return response()->json([
                 'status'  => 'error',
@@ -91,7 +91,7 @@ class EmailTemplateController extends Controller
         try {
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.emailTemplate.create', compact('languages'));
+            return view('maestro.email-template.create', compact('languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
@@ -107,7 +107,7 @@ class EmailTemplateController extends Controller
             $template = $this->getEmailTemplatesById($id);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.emailTemplate.edit', compact('template', 'languages'));
+            return view('maestro.email-template.edit', compact('template', 'languages'));
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
@@ -123,12 +123,12 @@ class EmailTemplateController extends Controller
         try {
             $this->construct();
             if ($this->createEmailTemplate($request)) {
-                return redirect()->route('emailTemplates.index')->with('success', 'Template has created successfully');
+                return redirect()->route('email-templates.index')->with('success', 'Template has created successfully');
             }
 
-            return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -142,12 +142,12 @@ class EmailTemplateController extends Controller
         try {
             $this->construct();
             if ($this->updateEmailTemplateById($id, $request)) {
-                return redirect()->route('emailTemplates.index')->with('success', 'Email Template has Updated successfully');
+                return redirect()->route('email-templates.index')->with('success', 'Email Template has Updated successfully');
             }
 
-            return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            return redirect()->route('emailTemplates.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('email-templates.index')->with(['error' => 'Something went wrong.']);
         }
     }
 

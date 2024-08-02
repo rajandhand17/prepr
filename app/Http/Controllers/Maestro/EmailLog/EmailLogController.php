@@ -80,7 +80,7 @@ class EmailLogController extends Controller
             ]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.emaillog.index', compact('html', 'languages'));
+            return view('maestro.email-log.index', compact('html', 'languages'));
         } catch (Exception $e) {
             return response()->json([
                 'status'  => 'error',

@@ -1,17 +1,16 @@
 @extends('maestro.layouts.default')
-@section('title', 'Regular Awards')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Regular Awards</h1>
+                <h1 class="m-0">Emai Templates</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Regular Awards</li>
+                    <li class="breadcrumb-item active">Emai Template</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,15 +29,14 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('communitytrophy.create')}}" role="menuitem">Create Regular Award</a>
+                            href="{{route('email-templates.create')}}" role="menuitem">Create Emai Template</a>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body">
                         <table class="table table-bordered data-table">
-                            {!! $html->table([],true) !!}
+                            {!! $html->table() !!}
                         </table>
                     </div>
-                    <!-- /.card-body -->
+               
                 </div>
                 <!-- /.card -->
             </div>
@@ -52,22 +50,13 @@
 @stop
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 @section('scripts')
-    
     {!! $html->scripts() !!}
-    
-    <script>
-        @if(Session::has('success'))
-            toastr.success("{{ Session::get('success') }}");
-        @endif
 
-        @if(Session::has('error'))
-            toastr.error("{{ Session::get('error') }}");
-        @endif
-    </script>
-
-    <script>
-        function deleteCommunityAward(url) {
+    <script type="text/javascript">
+        /* Delete Organisation Function */
+        function deleteEmailTemplate(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
@@ -99,7 +88,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while deleting the user.',
+                                'An error occurred while deleting the Email Template.',
                                 'error'
                             );
                         }
@@ -113,5 +102,19 @@
                 }
             });
         }
+
+        setTimeout(function () {
+            $('#dataTableBuilder_length').addClass('pull-left');
+            $('#dataTableBuilder_info').addClass('pull-left');
+        }, 200);
+
+        
+        @if(Session::has('success'))
+              toastr.success("{{ Session::get('success') }}");
+                @endif
+
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
     </script>
 @endsection

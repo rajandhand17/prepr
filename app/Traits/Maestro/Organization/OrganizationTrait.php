@@ -149,4 +149,31 @@ trait OrganizationTrait
             return false;
         }
     }
+
+    private function verifyOrg($request){
+        try{
+            $message = OrganizationService::verifyOrg($request);
+            if($message){
+                return $message;
+            }
+            return false;
+        }  catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getOrganizationById($id)
+    {
+        try {
+            $org = OrganizationService::getOrgById($id);
+            if ($org) {
+                return $org;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
 }

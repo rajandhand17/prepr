@@ -18,6 +18,7 @@ use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\LastVisitedActivityModuleService;
 use App\Services\Manage\ChallengeService;
 use Carbon\Carbon;
 use Exception;
@@ -233,6 +234,13 @@ class ProjectController extends AppBaseController
         try {
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
+                $userId = auth()->user()->id;
+                if ($userId == $project->user_id) {
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.projects');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                }
+
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
             }
 

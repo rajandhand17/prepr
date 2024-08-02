@@ -27,7 +27,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                {!!Form::model($awardedTrophies,array('method'=>'PUT','files'=>true,'route'=>array('trophyawards.update',$awardedTrophies->id)))!!}
+                {!!Form::model($awardedTrophies,array('method'=>'PUT','files'=>true,'route'=>array('trophy-awards.update',$awardedTrophies->id)))!!}
                    
                 @include('maestro.trophy.form')
                     <div class="form-actions mt-10">

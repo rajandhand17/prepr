@@ -11,6 +11,7 @@ use App\Models\AirmeetEvent;
 use App\Models\User;
 use App\Repositories\Api\Public\AirmeetEvent\AirmeetEventRepository;
 use App\Repositories\Api\Public\Lab\LabRepository;
+use App\Services\LastVisitedActivityModuleService;
 use App\Services\Public\ChallengeService;
 use Illuminate\Http\Request;
 use stdClass;
@@ -62,8 +63,18 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
+
+                    // For last visited activity tracking
+                    $joined_status = $lab->joined();
+                    if ($joined_status != 'NA' && $joined_status != null) {
+                        if ($joined_status->invite_status == '1') {
+                            $moduleType = config('constants.module_type.labs');
+                            LastVisitedActivityModuleService::lastVisitedActivityModule($lab->id, $userId, $moduleType);
+                        }
+                    }
                 }
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));

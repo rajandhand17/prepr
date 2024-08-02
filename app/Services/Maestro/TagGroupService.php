@@ -28,7 +28,7 @@ class TagGroupService
             $input = $request->all();
             $tagGroup = TagGroup::find($id);
             if ($request->title !== $tagGroup->title && TagGroup::where('title', $request->title)->count() > 0) {
-                return redirect()->route('taggroup.index')->with(['error' => 'Tag Group title already exists']);
+                return redirect()->route('tag-group.index')->with(['error' => 'Tag Group title already exists']);
             }
             $languages = LanguageService::getAllActiveLanguages();
 
@@ -69,7 +69,7 @@ class TagGroupService
                 $input = $request->all();
 
                 if (TagGroup::where('title', $request->title)->count() > 0) {
-                    return redirect()->route('taggroup.index')->with(['error' => 'Tag Group title already exists']);
+                    return redirect()->route('tag-group.index')->with(['error' => 'Tag Group title already exists']);
                 }
                 $tagGroup = new TagGroup();
                 $languages = LanguageService::getAllActiveLanguages();
@@ -83,12 +83,12 @@ class TagGroupService
                 $tagGroup->tags = $request->tags;
                 $tagGroup->save();
 
-                return redirect()->route('taggroup.index')->with('success', 'Tag Group added successfully');
+                return true;
             }
 
             return redirect()->with('error', 'Enter Tag Group');
         } catch (Exception $e) {
-            return redirect()->route('taggroup.index')->with(['error' => $e->getMessage()]);
+            return false;
         }
     }
 
