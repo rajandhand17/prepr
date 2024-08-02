@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use League\Container\Exception\NotFoundException;
+use Illuminate\Validation\Rule;
 
 class UpdateResourceGroupRequest extends FormRequest
 {
@@ -32,22 +33,62 @@ class UpdateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|max:255|unique:resource_groups,title,'.$resourceGroupService->id,
             'description'              => 'required',
-            'category_id'              => 'required|exists:categories,id',
+            'category_id'              => [
+                'required',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'privacy'                  => 'required|in:yes,no',
             'media_type'               => 'in:image,embedded',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
-            'resource_ids.*'           => 'exists:resource_modules,uuid',
+            'resource_ids.*'           => [
+                'required',
+                Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'resource_collection_ids'  => 'array',
-            'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
+            'resource_collection_ids.*'=> [
+                'required',
+                Rule::exists('resource_collections', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skills'                   => 'required|array',
-            'skills.*'                 => 'numeric|exists:skills,id',
-            'level'                    => 'required|exists:levels,id',
-            'duration'                 => 'required|exists:durations,id',
+            'skills.*'                 => [
+                'numeric',
+                Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
+            'level'                    => [
+                'required',
+                Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
+            'duration'                 => [
+                'required',
+                Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skill_groups'             => 'array',
-            'skill_groups.*'           => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'           => [
+                'numeric',
+                Rule::exists('skill_groups', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skill_stacks'             => 'array',
-            'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'skill_stacks.*'           => [
+                'numeric',
+                Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'type'                     => 'required|in:assess,onboard,engage,grow',
             'mode'                     => 'required|in:team,individual',
         ];
