@@ -19,6 +19,7 @@ class TagService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +50,7 @@ class TagService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -64,6 +66,7 @@ class TagService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -74,6 +77,7 @@ class TagService
             return Tag::orderBy('id', 'desc')->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +111,7 @@ class TagService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,6 +132,7 @@ class TagService
             return $selectedTags;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

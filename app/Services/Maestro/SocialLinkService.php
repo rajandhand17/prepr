@@ -2,10 +2,10 @@
 
 namespace App\Services\Maestro;
 
-use App\Helpers\UtilityHelper;
-use App\Models\SocialLink;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\SocialLink;
 use Exception;
 
 class SocialLinkService
@@ -16,6 +16,7 @@ class SocialLinkService
             return SocialLink::latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -27,9 +28,11 @@ class SocialLinkService
             if ($request->file('icon')) {
                 $socialLinkImage = FileUploadHelper::uploadImageToS3($request->file('icon'), 'social_link_icon');
             }
+
             return SocialLink::create(['title' => $request->title, 'icon' => $socialLinkImage]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -45,6 +48,7 @@ class SocialLinkService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +64,7 @@ class SocialLinkService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +88,7 @@ class SocialLinkService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

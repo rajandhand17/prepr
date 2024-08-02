@@ -36,6 +36,7 @@ class EmailTemplateService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,6 +53,7 @@ class EmailTemplateService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +83,7 @@ class EmailTemplateService
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -91,6 +94,7 @@ class EmailTemplateService
             return EmailTemplate::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -107,6 +111,7 @@ class EmailTemplateService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

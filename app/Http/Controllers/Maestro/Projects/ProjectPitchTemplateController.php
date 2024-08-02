@@ -60,6 +60,7 @@ class ProjectPitchTemplateController extends Controller
             return view('maestro.projects.pitch-template.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -77,6 +78,7 @@ class ProjectPitchTemplateController extends Controller
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -95,6 +97,7 @@ class ProjectPitchTemplateController extends Controller
             return view('maestro.projects.pitch-template.edit', compact('languages', 'pitchTemplate', 'pitchSection', 'pitchTask'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -112,6 +115,7 @@ class ProjectPitchTemplateController extends Controller
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-pitch-template.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -130,6 +134,7 @@ class ProjectPitchTemplateController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

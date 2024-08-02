@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\Challenges;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Challenge;
 use App\Services\Maestro\ChallengeAssessmentCriteriaService;
@@ -12,7 +13,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-use App\Helpers\UtilityHelper;
 
 class ChallengeController extends Controller
 {
@@ -83,6 +83,7 @@ class ChallengeController extends Controller
             return view('maestro.challenge.index', compact('html'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -98,6 +99,7 @@ class ChallengeController extends Controller
             return view('maestro.challenge.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -115,6 +117,7 @@ class ChallengeController extends Controller
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -137,6 +140,7 @@ class ChallengeController extends Controller
             return view('maestro.challenge.edit', compact('languages', 'challenge', 'challengeAssociatedItems', 'incentives', 'timeLines'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -154,6 +158,7 @@ class ChallengeController extends Controller
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -169,6 +174,7 @@ class ChallengeController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -189,6 +195,7 @@ class ChallengeController extends Controller
             return view('maestro.challenge.assessment', compact('assessment', 'challenge', 'criteria'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -203,6 +210,7 @@ class ChallengeController extends Controller
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Oops! Something went wrong. Please try again later. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('challenge.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

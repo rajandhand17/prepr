@@ -4,9 +4,9 @@ namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use HiFolks\RandoPhp\Randomize;
 use App\Models\ResourceModule;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 
 class ResourceModuleService
 {
@@ -16,6 +16,7 @@ class ResourceModuleService
             return ResourceModule::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -50,6 +51,7 @@ class ResourceModuleService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -65,6 +67,7 @@ class ResourceModuleService
             return $coverImage;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -80,6 +83,7 @@ class ResourceModuleService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +99,7 @@ class ResourceModuleService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -105,6 +110,7 @@ class ResourceModuleService
             return ResourceModule::whereIn('id', $moduleIds)->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -136,6 +142,7 @@ class ResourceModuleService
             return response()->json($jsonTags);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

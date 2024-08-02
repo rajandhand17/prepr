@@ -73,6 +73,7 @@ class PreBuiltAchievementController extends Controller
             return view('maestro.pre-built-achievement.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -88,6 +89,7 @@ class PreBuiltAchievementController extends Controller
             return view('maestro.pre-built-achievement.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -105,6 +107,7 @@ class PreBuiltAchievementController extends Controller
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -121,6 +124,7 @@ class PreBuiltAchievementController extends Controller
             return view('maestro.pre-built-achievement.edit', compact('achievement', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -138,6 +142,7 @@ class PreBuiltAchievementController extends Controller
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -156,6 +161,7 @@ class PreBuiltAchievementController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

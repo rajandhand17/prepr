@@ -57,6 +57,7 @@ class ProjectTypeController extends Controller
             return view('maestro.projects.type.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -72,6 +73,7 @@ class ProjectTypeController extends Controller
             return view('maestro.projects.type.create', compact('languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -89,6 +91,7 @@ class ProjectTypeController extends Controller
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -105,6 +108,7 @@ class ProjectTypeController extends Controller
             return view('maestro.projects.type.edit', compact('projectType', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -122,6 +126,7 @@ class ProjectTypeController extends Controller
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('projects-type.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -140,6 +145,7 @@ class ProjectTypeController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

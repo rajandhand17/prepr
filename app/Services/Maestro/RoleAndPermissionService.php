@@ -2,9 +2,9 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Helpers\UtilityHelper;
 use Exception;
 
 class RoleAndPermissionService
@@ -21,6 +21,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -36,6 +37,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -51,6 +53,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,6 +69,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -76,6 +80,7 @@ class RoleAndPermissionService
             return Role::query();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -94,6 +99,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +110,7 @@ class RoleAndPermissionService
             return Role::get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -120,6 +127,7 @@ class RoleAndPermissionService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

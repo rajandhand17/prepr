@@ -57,6 +57,7 @@ class CategoriesController extends Controller
             return view('maestro.categories.index', compact('html', 'module_name'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -73,6 +74,7 @@ class CategoriesController extends Controller
             return view('maestro.categories.create', compact('languages', 'category_list'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('category.index')->withErrors(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -94,6 +96,7 @@ class CategoriesController extends Controller
             return redirect()->route('category.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('category.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -113,6 +116,7 @@ class CategoriesController extends Controller
             return view('maestro.categories.edit', compact('parentCategory', 'category', 'components', 'category_list', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('category.index')->withErrors(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -134,6 +138,7 @@ class CategoriesController extends Controller
             return redirect()->route('category.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('category.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -161,6 +166,7 @@ class CategoriesController extends Controller
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Record deleted successfully.']);
         }
     }
@@ -199,6 +205,7 @@ class CategoriesController extends Controller
             return view('maestro.categories.sub-category-index', compact('html', 'module_name'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return response()->json([
                 'status'  => 'error',
                 'message' => 'Oops! Something went wrong. Please try again later.',

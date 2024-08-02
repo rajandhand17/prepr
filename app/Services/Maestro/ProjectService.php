@@ -15,6 +15,7 @@ class ProjectService
             return Project::count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -25,6 +26,7 @@ class ProjectService
             return Project::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -61,6 +63,7 @@ class ProjectService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +74,7 @@ class ProjectService
             return ChallengeService::getProjectLanguageByChallengeId($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -86,6 +90,7 @@ class ProjectService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -101,6 +106,7 @@ class ProjectService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -137,6 +143,7 @@ class ProjectService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -13,18 +13,22 @@ use HiFolks\RandoPhp\Randomize;
 
 class OrganizationService
 {
-    public static function getOrgById($id){
+    public static function getOrgById($id)
+    {
         try {
             $organization = Organization::find($id);
             if ($organization) {
                 return $organization;
             }
+
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public static function updateOrganizationById($request, $id)
     {
         try {
@@ -58,6 +62,7 @@ class OrganizationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -73,6 +78,7 @@ class OrganizationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -113,6 +119,7 @@ class OrganizationService
             return $organization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +130,7 @@ class OrganizationService
             return Organization::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +146,7 @@ class OrganizationService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,6 +184,7 @@ class OrganizationService
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -190,6 +200,7 @@ class OrganizationService
             return $organization->pluck('title', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -203,6 +214,7 @@ class OrganizationService
             return ['user' => $user, 'category' => $category];
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -218,6 +230,7 @@ class OrganizationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -244,9 +257,10 @@ class OrganizationService
             return response()->json($finalResult);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-                return false;
-            }
+
+            return false;
         }
+    }
 
     public static function verifyOrg($request)
     {
@@ -265,8 +279,8 @@ class OrganizationService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }

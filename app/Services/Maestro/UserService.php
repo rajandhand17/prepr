@@ -2,8 +2,8 @@
 
 namespace App\Services\Maestro;
 
-use App\Models\User;
 use App\Helpers\UtilityHelper;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,6 +15,7 @@ class UserService
             return User::count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -30,6 +31,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +62,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -75,6 +78,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -90,6 +94,7 @@ class UserService
             return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -100,6 +105,7 @@ class UserService
             return User::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +116,7 @@ class UserService
             return User::count();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +132,7 @@ class UserService
             return $user->pluck('username', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -135,6 +143,7 @@ class UserService
             return User::where(['id' => $user_id])->pluck('username', 'id');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -161,6 +170,7 @@ class UserService
             return response()->json($finalResult);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -187,6 +197,7 @@ class UserService
             return response()->json($finalResult);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

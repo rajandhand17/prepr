@@ -84,6 +84,7 @@ class EmailLogController extends Controller
             return view('maestro.email-log.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => 'Something went wrong']);
         }
     }
