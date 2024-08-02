@@ -322,6 +322,7 @@ class LabService
             return Lab::where('slug', $slug)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -336,6 +337,7 @@ class LabService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
