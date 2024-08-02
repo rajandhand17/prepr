@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Tag;
 use Exception;
@@ -37,7 +38,7 @@ class TagService
                 $tag->$columName1 = $request->$columName1;
                 $tag_image = '';
                 if ($request->file($columName2)) {
-                    $tag_image = $request->file($columName2)->store('uploads/tag', 's3');
+                    $tag_image = FileUploadHelper::uploadImageToS3($request->file($columName2), 'tags');
                     $tag->$columName2 = $tag_image;
                 }
             }
@@ -94,7 +95,7 @@ class TagService
 
                 $tag_image = '';
                 if ($request->file($columName2)) {
-                    $tag_image = $request->file($columName2)->store('uploads/tag', 's3');
+                    $tag_image = FileUploadHelper::uploadImageToS3($request->file($columName2), 'tags');
                 }
                 $tag->$columName2 = $tag_image;
             }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\ComponentAssociation;
@@ -176,7 +177,7 @@ class LabService
 
                 $input = $request->except('cover_image', 'people_name', 'user_name', 'user_role', 'org_social', 'social_url');
                 if ($request->file('cover_image')) {
-                    $cover_image = $request->file('cover_image')->store('uploads/lab', 's3');
+                    $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image') , 'lab');
                     $lab->cover_image = $cover_image ? $cover_image : 'NULL';
                     $lab->save();
                 }

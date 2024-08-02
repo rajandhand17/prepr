@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Models\CommunityTrophy;
 use Exception;
 use Illuminate\Support\Facades\Schema;
@@ -24,7 +25,7 @@ class CommunityTrophyService
             ];
             $image = '';
             if ($request->image) {
-                $image = $request->image->store('uploads/trophy', 's3');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'community_trophy');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {
@@ -89,7 +90,7 @@ class CommunityTrophyService
 
             $image = '';
             if ($request->image) {
-                $image = $request->image->store('uploads/trophy', 's3');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'community_trophy');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {

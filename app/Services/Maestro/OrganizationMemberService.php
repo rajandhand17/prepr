@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\OrganizationMember;
 use Exception;
@@ -71,7 +72,7 @@ class OrganizationMemberService
                 foreach ($request->people_name as $key => $value) {
                     $image = '';
                     if (isset($request->image[$key])) {
-                        $image = $request->image[$key]->store('uploads/people', 's3');
+                        $image  = FileUploadHelper::uploadImageToS3($request->image[$key], 'people');
                     } else {
                         $image = '';
                     }
