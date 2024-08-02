@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
-
 class CreateResourceGroupRequest extends FormRequest
 {
     /**
@@ -40,7 +39,7 @@ class CreateResourceGroupRequest extends FormRequest
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
-            'resource_ids.*'           =>  [
+            'resource_ids.*'           => [
                 'required',
                 Rule::exists('resource_modules', 'uuid')->where(function ($query) {
                     $query->whereNull('deleted_at');
@@ -60,7 +59,7 @@ class CreateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'level'                    =>  [
+            'level'                    => [
                 'required',
                 Rule::exists('levels', 'id')->where(function ($query) {
                     $query->whereNull('deleted_at');
