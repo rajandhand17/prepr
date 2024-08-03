@@ -65,7 +65,7 @@ class ResourceGroupService
                     $media_type = config('constants.resource_media_type.embedded');
                     break;
                 default:
-                    $media_type = null;
+                    $media_type = config('constants.resource_media_type.image');
             }
             switch ($request->privacy) {
                 case 'no':
