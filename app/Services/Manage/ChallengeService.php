@@ -991,4 +991,17 @@ class ChallengeService
             return false;
         }
     }
+
+    public function fetchChallengeReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchChallenges = Challenge::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

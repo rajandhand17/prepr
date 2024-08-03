@@ -1362,5 +1362,11 @@
     "responses.last_visited_resource_module": "Your last visited Resource Module",
     "responses.last_visited_resource_collection": "Your last visited Resource Collection",
     "responses.last_visited_resource_group": "Your last visited Resource Group",
-    "responses.last_visited_project": "Your last visited Project"
+    "responses.last_visited_project": "Your last visited Project",
+    "responses.failed_to_retrieve_report": "Failed to retieve the report",
+    "responses.retrieve_challenge_report": "Challenge report retrieved successfully.",
+    "responses.retrieve_resource_report": "Resources report retrieved successfully.",
+    "responses.retrieve_project_report": "Project report retrieved successfully.",
+    "responses.retrieve_lab_report": "Lab report retrieved successfully."
+
 }

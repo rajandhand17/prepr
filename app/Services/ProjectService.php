@@ -853,4 +853,17 @@ class ProjectService
             return false;
         }
     }
+
+    public function fetchProjectBasedOnChallengeIds($challengeIds)
+    {
+        try {
+            $fetchProjectBasedOnChallengeIds = Project::whereIn('challenge_id', $challengeIds)->get();
+
+            return $fetchProjectBasedOnChallengeIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -577,4 +577,17 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function fetchResourceModuleReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceModule = ResourceModule::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceModule;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

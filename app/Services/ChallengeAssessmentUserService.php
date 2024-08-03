@@ -166,4 +166,17 @@ class ChallengeAssessmentUserService
             return false;
         }
     }
+
+    public function totalAssessedProjectsBasedOnProjectIds($projectIds)
+    {
+        try {
+            $totalAssessedProjectsBasedOnProjectIds = ChallengeAssessmentUser::whereIn('project_id', $projectIds)->where('status', '1')->pluck('project_id');
+
+            return $totalAssessedProjectsBasedOnProjectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
