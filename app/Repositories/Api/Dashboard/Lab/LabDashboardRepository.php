@@ -54,6 +54,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $totalActiveMembersCountBasedOnChallengeIds = $this->memberManagementService->totalActiveMembersCountBasedOnModuleIds($fetchChallenges->pluck('id'), $moduleType)->count();
 
             $fetchChallengeReportBasedOnOrganization = ['totalChallenges' => $totalChallengesCount, 'totalActiveChallenges' => $totalActiveChallengesCount, 'totalCloseChallenges' => $totalCloseChallengesCount, 'totalCompletedChallenges' => $totalCompletedChallengesCount, 'totalActiveMembers' => $totalActiveMembersCountBasedOnChallengeIds];
+
             return $fetchChallengeReportBasedOnOrganization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -72,6 +73,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $totalLabProgramsCount = $this->labProgramService->fetchLabProgramReportBasedOnOrganization($organizationId);
 
             $fetchLabReportBasedOnOrganization = ['totalLabs' => $totalLabsCount, 'totalLabPrograms' => $totalLabProgramsCount->count(), 'totalActiveMembers' => $totalActiveMembersCountBasedOnLabIds];
+
             return $fetchLabReportBasedOnOrganization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -90,6 +92,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $fetchResourceGroupBasedOnOrganizationId = $this->resourceGroupService->fetchResourceGroupReportBasedOnOrganization($organizationId);
 
             $fetchResourceReportBasedOnOrganization = ['totalResourceModule' => $fetchResourceModuleBasedOnOrganizationId->count(), 'totalResourceCollection' => $fetchResourceCollectionBasedOnOrganizationId->count(), 'totalResourceGroup' => $fetchResourceGroupBasedOnOrganizationId->count(), 'totalViewers' => $totalViewersCountBasedOnResourceModuleIds];
+
             return $fetchResourceReportBasedOnOrganization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -109,6 +112,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $totalNonAssessedProjectsBasedOnProjectIds = $totalSubmittedProjects - $totalAssessedProjectsBasedOnProjectIds;
 
             $fetchProjectReportBasedOnOrganization = ['totalInProgressProjects' => $totalInProgressProjects, 'totalSubmittedProjects' => $totalSubmittedProjects, 'totalAssessedProjects' => $totalAssessedProjectsBasedOnProjectIds, 'totalNonAssessedProjects' => $totalNonAssessedProjectsBasedOnProjectIds];
+
             return $fetchProjectReportBasedOnOrganization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
