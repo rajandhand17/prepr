@@ -120,24 +120,25 @@ class ChallengeAssessmentUserService
                 $assessment_over_all_comment = $assessmentComment[0];
             }
 
-           $assessment = $projectData->getProjectAssessment->assessment_type;
-           switch ($assessment) {
-                case "3":
-                    $assessment = "ai";
+            $assessment = $projectData->getProjectAssessment->assessment_type;
+            switch ($assessment) {
+                case '3':
+                    $assessment = 'ai';
                     break;
 
-                case "2":
-                    $assessment = "closed";
+                case '2':
+                    $assessment = 'closed';
                     break;
-                
-                case "1":
-                    $assessment = "open";
+
+                case '1':
+                    $assessment = 'open';
                     break;
-        
+
                 default:
-                    $assessment = "none";
+                    $assessment = 'none';
                     break;
             }
+
             return [
                 'assessment_type'               => $assessment,
                 'assessment_attachments'        => $assessment_attachment,
