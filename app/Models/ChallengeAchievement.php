@@ -23,6 +23,6 @@ class ChallengeAchievement extends Model
 
     public function getAchievementImageAttribute($value)
     {
-        return config('site-settings.aws_url').$value;
+        return !empty($value) ? config('site-settings.aws_url').$value : null;
     }
 }
