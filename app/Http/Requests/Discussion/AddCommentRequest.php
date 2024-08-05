@@ -26,7 +26,8 @@ class AddCommentRequest extends FormRequest
         $base_rules = [
             'comment'        => 'required|string',
             'comment_id'     => 'exists:discussions,id',
-            'attachments'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
+            'attachment'    => 'array|max:5',
+            'attachment.*'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
         ];
 
         return $base_rules;
