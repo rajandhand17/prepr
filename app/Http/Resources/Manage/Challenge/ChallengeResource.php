@@ -4,6 +4,7 @@ namespace App\Http\Resources\Manage\Challenge;
 
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
@@ -63,15 +64,6 @@ class ChallengeResource extends JsonResource
         $resource_groups = [];
         $hosted_by = [];
 
-        if ($this->organization_id) {
-            $hosted_by = [
-                'uuid'        => $this->organization->uuid,
-                'title'       => $this->organization->title,
-                'image'       => $this->organization->image,
-                'description' => $this->organization->description,
-                'slug'        => $this->organization->slug,
-            ];
-        }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
             $category_id = $this->getCategory->id;
@@ -371,7 +363,7 @@ class ChallengeResource extends JsonResource
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                   => $this->organization->uuid,
             'organization'                      => $this->organization->title,
-            'hosted_by'                         => $hosted_by,
+            'hosted_by'                         => OrganizationHostResource::make($this->organization),
             'category_id'                       => $category_id,
             'category'                          => $category,
             'duration'                          => $duration,

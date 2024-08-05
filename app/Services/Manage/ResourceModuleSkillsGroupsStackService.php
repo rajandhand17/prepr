@@ -194,16 +194,6 @@ class ResourceModuleSkillsGroupsStackService
         }
     }
 
-    /**
-     * Get recommended resource module IDs based on the given resource module ID.
-     *
-     * This function retrieves a list of recommended resource module IDs that are
-     * associated with the same skills as the specified resource module ID.
-     *
-     * @param int $resourceModuleId The ID of the resource module for which to find recommendations.
-     *
-     * @return \Illuminate\Support\Collection|bool A collection of recommended resource module IDs or false on failure.
-     */
     public static function getRecommendedResourceModule($resourceModuleId)
     {
         try {
@@ -230,4 +220,5 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
 }

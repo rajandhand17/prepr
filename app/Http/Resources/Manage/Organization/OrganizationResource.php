@@ -66,7 +66,7 @@ class OrganizationResource extends JsonResource
             'organization_type'             => OrganizationTypeModeResource::collection($this->organizationType),
             'member_since'                  => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'          => OrganizationAddressResource::collection($this->address),
-            'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),
+            'organization_members'          => OrganizationHostResource::collection($this->organizationMembers),
             'organization_people'           => MemberManagementResource::collection($this->members),
             'organization_limits'           => OrganizationChargebeeLimitResource::make($this),
             'liked'                         => $this->liked(),

@@ -447,6 +447,19 @@ class ResourceModuleService
         }
     }
 
+    public static function getResourceModuleGetBasedId($id)
+    {
+        try {
+            $resourceModuleIds = ResourceModule::whereIn('id', $id)->pluck('id')->all();
+            if ($resourceModuleIds != null) {
+                return $resourceModuleIds;
+            }
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
     public static function getListName($request, $organization)
     {
         try {
