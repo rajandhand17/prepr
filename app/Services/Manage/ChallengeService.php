@@ -1004,4 +1004,42 @@ class ChallengeService
             return false;
         }
     }
+
+
+    public function fetchManagersUpComingDeadlineChallenges($challengeData)
+    {
+        try {
+            $restrictedDeadlineCollection = collect();
+            if ($challengeData->isNotEmpty()) {
+                foreach ($challengeData as $challenge) {
+                    if ($challenge->challenge_timelines) {
+                        if ($challenge->challenge_timelines->timeline_type == '1') {
+                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                                // For restricted challenge
+                                $restrictedDeadline = [
+                                    'id'       => $challenge->uuid,
+                                    'title'    => $challenge->title,
+                                    'slug'     => $challenge->slug,
+                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                ];
+                                $restrictedDeadlineCollection->push($restrictedDeadline);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!empty($restrictedDeadlineCollection)) {
+                $restrictedDeadlineCollection = $restrictedDeadlineCollection->sortBy(function ($challenge) {
+                    return strtotime($challenge['deadline']);
+                });
+            }
+
+            return $restrictedDeadlineCollection->take(5);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

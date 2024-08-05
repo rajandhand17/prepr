@@ -13,4 +13,8 @@ interface LabDashboardInterface
     public function fetchProjectReportBasedOnOrganization($organizationId);
 
     public function checkOrganizationPlan($organizationData);
+
+    public function fetchChallengesBasedOnOrganizationId($organizationId);
+
+    public function fetchManagersUpComingDeadlineChallenges($challengeData);
 }

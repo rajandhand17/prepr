@@ -1369,5 +1369,7 @@
     "responses.retrieve_project_report": "Project report retrieved successfully.",
     "responses.retrieve_lab_report": "Lab report retrieved successfully.",
     "responses.organization_subscription_retrieved": "Organization subscription details retrieved.",
-    "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later."
+    "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later.",
+    "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
+    "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines."
 }

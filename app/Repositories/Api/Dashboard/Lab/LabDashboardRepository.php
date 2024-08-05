@@ -134,4 +134,26 @@ class LabDashboardRepository implements LabDashboardInterface
             return false;
         }
     }
+
+    public function fetchChallengesBasedOnOrganizationId($organizationId)
+    {
+        try {
+            return $this->challengeService->fetchChallengeReportBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchManagersUpComingDeadlineChallenges($challengeData)
+    {
+        try {
+            return $this->challengeService->fetchManagersUpComingDeadlineChallenges($challengeData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

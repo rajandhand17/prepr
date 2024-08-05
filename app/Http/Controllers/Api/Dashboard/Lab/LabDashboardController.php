@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Dashboard\UpComingDeadlineResource;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Repositories\Api\Dashboard\Lab\LabDashboardRepository;
 use Exception;
@@ -79,6 +80,30 @@ class LabDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.organization_subscription_not_retrieved'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getUpComingChallengeDeadlines()
+    {
+        try {
+            // Fetch user's preferred organization
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $fetchChallengesBasedOnOrganizationId = $this->labDashboardRepository->fetchChallengesBasedOnOrganizationId($organization->id);
+            $fetchManagersUpComingDeadlineChallenges = $this->labDashboardRepository->fetchManagersUpComingDeadlineChallenges($fetchChallengesBasedOnOrganizationId);
+            if (!empty($fetchManagersUpComingDeadlineChallenges)) {
+                return $this->sendResponse(UpComingDeadlineResource::collection($fetchManagersUpComingDeadlineChallenges), __('responses.manager_upcomming_deadline_retrieved'), 200);
+            }
+
+            return $this->sendError(__('responses.not_manager_upcomming_deadline_retrieved'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
