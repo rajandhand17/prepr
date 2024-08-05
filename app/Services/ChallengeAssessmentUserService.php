@@ -120,20 +120,16 @@ class ChallengeAssessmentUserService
                 $assessment_over_all_comment = $assessmentComment[0];
             }
 
-            $assessment = $projectData->getProjectAssessment->assessment_type;
-            switch ($assessment) {
+            switch ($projectData->getProjectAssessment->assessment_type) {
                 case '3':
                     $assessment = 'ai';
                     break;
-
                 case '2':
                     $assessment = 'closed';
                     break;
-
                 case '1':
                     $assessment = 'open';
                     break;
-
                 default:
                     $assessment = 'none';
                     break;
