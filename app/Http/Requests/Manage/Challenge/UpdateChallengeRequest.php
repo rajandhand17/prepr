@@ -28,7 +28,7 @@ class UpdateChallengeRequest extends FormRequest
     {
         $challenge = ChallengeService::getChallengeBasedOnSlug(request()->route('slug'));
         if (!$challenge) {
-            throw new NotFoundHttpException();
+            return [];
         }
 
         $base_rules = [
