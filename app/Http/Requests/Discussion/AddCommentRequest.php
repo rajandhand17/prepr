@@ -24,9 +24,9 @@ class AddCommentRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'comment'        => 'required|string',
-            'comment_id'     => 'exists:discussions,id',
-            'attachment'    => 'array|max:5',
+            'comment'         => 'required|string',
+            'comment_id'      => 'exists:discussions,id',
+            'attachment'      => 'array|max:5',
             'attachment.*'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
         ];
 

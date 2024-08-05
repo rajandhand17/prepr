@@ -61,7 +61,6 @@ class DiscussionService
             $file_upload = $request->file('attachment');
 
             if (isset($file_upload) && !empty($file_upload)) {
-
                 foreach ($file_upload as $discussion_attachment) {
                     if (false !== mb_strpos($discussion_attachment->getMimeType(), 'image')) {
                         $file_type = config('constants.file_type.image');
