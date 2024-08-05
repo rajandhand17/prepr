@@ -54,7 +54,7 @@ class Discussion extends Model
         $aws_url = config('site-settings.aws_url');
 
         return array_map(function ($attachment) use ($aws_url) {
-            return $aws_url . $attachment;
+            return $aws_url.$attachment;
         }, json_decode($attachments));
     }
 }
