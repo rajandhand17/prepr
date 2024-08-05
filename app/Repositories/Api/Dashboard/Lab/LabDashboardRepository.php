@@ -8,6 +8,7 @@ use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
@@ -27,8 +28,9 @@ class LabDashboardRepository implements LabDashboardInterface
     private $moduleCompletionStatusService;
     private $projectService;
     private $challengeAssessmentUserService;
+    private $organizationService;
 
-    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService)
+    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService, OrganizationService $organizationService)
     {
         $this->memberManagementService = $memberManagementService;
         $this->challengeService = $challengeService;
@@ -40,6 +42,7 @@ class LabDashboardRepository implements LabDashboardInterface
         $this->moduleCompletionStatusService = $moduleCompletionStatusService;
         $this->projectService = $projectService;
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
+        $this->organizationService = $organizationService;
     }
 
     public function fetchChallengeReportBasedOnOrganization($organizationId)
@@ -114,6 +117,17 @@ class LabDashboardRepository implements LabDashboardInterface
             $fetchProjectReportBasedOnOrganization = ['totalInProgressProjects' => $totalInProgressProjects, 'totalSubmittedProjects' => $totalSubmittedProjects, 'totalAssessedProjects' => $totalAssessedProjectsBasedOnProjectIds, 'totalNonAssessedProjects' => $totalNonAssessedProjectsBasedOnProjectIds];
 
             return $fetchProjectReportBasedOnOrganization;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function checkOrganizationPlan($organizationData)
+    {
+        try {
+            return $this->organizationService->planData($organizationData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

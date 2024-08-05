@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Repositories\Api\Dashboard\Lab\LabDashboardRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ class LabDashboardController extends AppBaseController
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
+            // Fetch user's preferred organization
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
@@ -45,7 +47,7 @@ class LabDashboardController extends AppBaseController
                     $message = __('responses.retrieve_resource_report');
                     break;
                 case 'projects':
-                    $fetchReport = $this->labDashboardRepository->fetchProjectReportBasedOnOrganization($organization->id);
+                    $fetchReport = $this->labDashboardRepository->fetchProjectReportBasedOnOrganization($organization);
                     $message = __('responses.retrieve_project_report');
                     break;
             }
@@ -54,6 +56,29 @@ class LabDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.failed_to_retrieve_report'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function subscriptionDetails()
+    {
+        try {
+            // Fetch user's preferred organization
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkOrganizationPlan = $this->labDashboardRepository->checkOrganizationPlan($organization->id);
+            if ($checkOrganizationPlan != false) {
+                return $this->sendResponse(OrganizationChargebeeLimitResource::make($organization), __('responses.organization_subscription_retrieved'));
+            }
+
+            return $this->sendError(__('responses.organization_subscription_not_retrieved'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

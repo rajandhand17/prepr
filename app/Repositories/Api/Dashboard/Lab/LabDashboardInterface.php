@@ -11,4 +11,6 @@ interface LabDashboardInterface
     public function fetchResourceReportBasedOnOrganization($organizationId);
 
     public function fetchProjectReportBasedOnOrganization($organizationId);
+
+    public function checkOrganizationPlan($organizationData);
 }

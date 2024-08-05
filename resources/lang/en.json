@@ -1367,6 +1367,7 @@
     "responses.retrieve_challenge_report": "Challenge report retrieved successfully.",
     "responses.retrieve_resource_report": "Resources report retrieved successfully.",
     "responses.retrieve_project_report": "Project report retrieved successfully.",
-    "responses.retrieve_lab_report": "Lab report retrieved successfully."
-
+    "responses.retrieve_lab_report": "Lab report retrieved successfully.",
+    "responses.organization_subscription_retrieved": "Organization subscription details retrieved.",
+    "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later."
 }
