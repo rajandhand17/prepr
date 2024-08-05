@@ -1005,7 +1005,6 @@ class ChallengeService
         }
     }
 
-
     public function fetchManagersUpComingDeadlineChallenges($challengeData)
     {
         try {
