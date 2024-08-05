@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
-use App\Console\Commands\OldDataMigration\ResourceModule;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\TrackUserProgressHelper;
@@ -490,6 +489,7 @@ class ResourceModuleController extends AppBaseController
      * and retrieves related resource modules if available.
      *
      * @param string $slug The slug of the resource module to find related resources for.
+     *
      * @return \Illuminate\Http\JsonResponse A JSON response containing related resources or error messages.
      */
     public function getRelatedResources($slug): \Illuminate\Http\JsonResponse
@@ -514,8 +514,8 @@ class ResourceModuleController extends AppBaseController
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 }

@@ -566,10 +566,11 @@ class ResourceModuleService
     {
         try {
             // Retrieve resource modules with the given IDs using findMany for primary keys
-            $resourceModules= ResourceModule::findMany($resourceModuleIds);
+            $resourceModules = ResourceModule::findMany($resourceModuleIds);
+
             // Limit the results to a maximum of 3
             return $resourceModules->slice(0, 3); // Use slice to get the first 3 items
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
     }

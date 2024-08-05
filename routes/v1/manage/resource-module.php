@@ -26,5 +26,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
 
     /** Get related resources output would be max 3 **/
     Route::get('/{slug}/get-related', [ResourceModuleController::class, 'getRelatedResources'])->middleware('permission:view_resource_module');
-
 });

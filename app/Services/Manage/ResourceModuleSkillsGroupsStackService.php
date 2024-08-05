@@ -193,6 +193,7 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
     /**
      * Get recommended resource module IDs based on the given resource module ID.
      *
@@ -200,16 +201,16 @@ class ResourceModuleSkillsGroupsStackService
      * associated with the same skills as the specified resource module ID.
      *
      * @param int $resourceModuleId The ID of the resource module for which to find recommendations.
+     *
      * @return \Illuminate\Support\Collection|bool A collection of recommended resource module IDs or false on failure.
      */
-
     public static function getRecommendedResourceModule($resourceModuleId)
     {
         try {
             // Get unique foreign IDs related to the given resource module ID
             $skills = ResourceModuleSkillsGroupsStack::where([
                 ['type', '=', '0'],
-                ['resource_module_id', '=', $resourceModuleId]
+                ['resource_module_id', '=', $resourceModuleId],
             ])
                 ->pluck('foreign_id')
                 ->unique();
@@ -225,8 +226,8 @@ class ResourceModuleSkillsGroupsStackService
             return $resourceModuleIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }

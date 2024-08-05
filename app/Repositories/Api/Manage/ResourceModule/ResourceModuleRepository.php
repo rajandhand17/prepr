@@ -348,8 +348,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         } catch (\Exception $e) {
             // Log the error for debugging purposes
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }
