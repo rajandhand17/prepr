@@ -8,7 +8,6 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResou
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
-use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
