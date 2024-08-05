@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
+use App\Console\Commands\OldDataMigration\ResourceModule;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\TrackUserProgressHelper;
@@ -481,4 +482,40 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    /**
+     * Get related resources for a given resource module slug.
+     *
+     * This function checks if the resource module exists based on the provided slug
+     * and retrieves related resource modules if available.
+     *
+     * @param string $slug The slug of the resource module to find related resources for.
+     * @return \Illuminate\Http\JsonResponse A JSON response containing related resources or error messages.
+     */
+    public function getRelatedResources($slug): \Illuminate\Http\JsonResponse
+    {
+        try {
+            // Check if the resource module with the given slug exists
+            $resourceModule = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$resourceModule) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            // Get related resource modules
+            $relatedResources = $this->resourceModuleRepository->getRelatedResources($resourceModule->id);
+            // Determine response based on whether related resources were found
+            $responseMessage = $relatedResources->isEmpty()
+                ? __('responses.related_resource_not_found')
+                : __('responses.related_resource_found');
+            $responseData = $relatedResources->isEmpty()
+                ? []
+                : ResourceModuleResource::collection($relatedResources);
+
+            return $this->sendResponse($responseData, $responseMessage);
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            UtilityHelper::logError($e);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
 }

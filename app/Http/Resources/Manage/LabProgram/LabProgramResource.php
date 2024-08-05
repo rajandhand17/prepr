@@ -40,6 +40,7 @@ class LabProgramResource extends JsonResource
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
+
                     $labData = LabService::getLabBasedOnId($association->lab_id);
                     if ($labData) {
                         $componentAssociation[$association->lab_id] = $labData;

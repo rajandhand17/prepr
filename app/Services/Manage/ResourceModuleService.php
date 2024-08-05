@@ -447,22 +447,6 @@ class ResourceModuleService
         }
     }
 
-    public static function getResourceModuleGetBasedId($id)
-    {
-        try {
-            $resourceModuleIds = ResourceModule::whereIn('id', $id)->pluck('id')->all();
-            if ($resourceModuleIds != null) {
-                return $resourceModuleIds;
-            }
-
-            return false;
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function getListName($request, $organization)
     {
         try {
@@ -574,6 +558,18 @@ class ResourceModuleService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public static function getRelatedResources($resourceModuleIds)
+    {
+        try {
+            // Retrieve resource modules with the given IDs using findMany for primary keys
+            $resourceModules= ResourceModule::findMany($resourceModuleIds);
+            // Limit the results to a maximum of 3
+            return $resourceModules->slice(0, 3); // Use slice to get the first 3 items
+        }catch (Exception $e) {
             return false;
         }
     }

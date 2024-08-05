@@ -153,22 +153,6 @@ class ResourceModuleSkillsGroupsStackService
         }
     }
 
-    public static function getSkillsBasedOnResourceModule($resourceModuleId)
-    {
-        try {
-            $data = ResourceModuleSkillsGroupsStack::where('type', '0')
-                ->where('resource_module_id', $resourceModuleId)
-                ->pluck('foreign_id')
-                ->unique();
-
-            return $data;
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function cloneResourceModuleSkillsGroupsStack($originalResourceModuleAssociation, $clonedResourceModuleId)
     {
         try {
@@ -209,4 +193,40 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+    /**
+     * Get recommended resource module IDs based on the given resource module ID.
+     *
+     * This function retrieves a list of recommended resource module IDs that are
+     * associated with the same skills as the specified resource module ID.
+     *
+     * @param int $resourceModuleId The ID of the resource module for which to find recommendations.
+     * @return \Illuminate\Support\Collection|bool A collection of recommended resource module IDs or false on failure.
+     */
+
+    public static function getRecommendedResourceModule($resourceModuleId)
+    {
+        try {
+            // Get unique foreign IDs related to the given resource module ID
+            $skills = ResourceModuleSkillsGroupsStack::where([
+                ['type', '=', '0'],
+                ['resource_module_id', '=', $resourceModuleId]
+            ])
+                ->pluck('foreign_id')
+                ->unique();
+
+            // Retrieve resource module IDs based on the unique foreign IDs
+            $resourceModuleIds = $skills->isNotEmpty()
+                ? ResourceModuleSkillsGroupsStack::where('type', '0')
+                    ->whereIn('foreign_id', $skills)
+                    ->where('resource_module_id', '<>', $resourceModuleId)
+                    ->pluck('resource_module_id')
+                : collect(); // Return an empty collection if no skills found
+
+            return $resourceModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
 }
