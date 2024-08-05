@@ -62,6 +62,7 @@ class LabResource extends JsonResource
         }
         if ($this->organization_id) {
             $host_by = [
+                'uuid'        => $this->organization->uuid,
                 'title'       => $this->organization->title,
                 'image'       => $this->organization->image,
                 'description' => $this->organization->description,
