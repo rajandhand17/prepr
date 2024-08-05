@@ -74,9 +74,9 @@ class UpdateChallengeRequest extends FormRequest
             'min_experience'                        => 'required_if:complete_experience,yes|numeric',
             'agreement'                             => 'required_if:request_type,publish',
             'achievement_image'                     => 'mimes:jpeg,jpg,png,webp|max:1024',
-            'achievement_name'                      => 'required_if:request_type,publish|',
-            'achievement_prize'                     => 'required_if:request_type,publish|numeric',
-            'achievement_points'                    => 'required_if:request_type,publish|numeric',
+            'achievement_name'                      => 'nullable',
+            'achievement_prize'                     => 'nullable|numeric',
+            'achievement_points'                    => 'nullable|numeric',
             'winner_achievement_participation'      => 'required_if:request_type,publish|array',
             'winner_achievement_participation.*'    => 'in:yes,no',
             'winner_achievement_image'              => 'nullable|array',
@@ -122,8 +122,8 @@ class UpdateChallengeRequest extends FormRequest
                     function ($attribute, $value, $fail) {
                         if ($value && $value->isValid()) {
                             $image = getimagesize($value);
-                            if ($image[0] < 625 || $image[1] < 325) {
-                                $fail(''.$attribute.' must be at least 625x325 pixels.');
+                            if ($image[0] < 625 || $image[1] < 355) {
+                                $fail(''.$attribute.' must be at least 625x355 pixels.');
                             }
                         }
                     },

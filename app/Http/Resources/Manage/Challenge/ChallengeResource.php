@@ -8,6 +8,7 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResou
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
+use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
@@ -207,7 +208,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts);
         }
 
         if ($this->challenge_assessment_criteria) {
