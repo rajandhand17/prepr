@@ -34,9 +34,9 @@ class FileUploadRequest extends FormRequest
     public function messages()
     {
         return [
-            'file.required'             => __('responses.required_field'),
-            'file.max'                  => __('responses.mimes_file_max'),
-            'file.mimes'                => __('responses.files_mimes_image'),
+            'file_upload.required'             => __('responses.required_field'),
+            'file_upload.max'                  => __('responses.mimes_file_max'),
+            'file_upload.mimes'                => __('responses.files_mimes_image'),
         ];
     }
 
