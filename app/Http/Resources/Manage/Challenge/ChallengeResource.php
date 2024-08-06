@@ -24,6 +24,7 @@ use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\UserService;
+use App\Http\Resources\Master\HostResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChallengeResource extends JsonResource

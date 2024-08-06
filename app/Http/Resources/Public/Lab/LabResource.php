@@ -54,21 +54,11 @@ class LabResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
-        $host_by = [];
         $module_progress = null;
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
-        }
-        if ($this->organization_id) {
-            $host_by = [
-                'uuid'        => $this->organization->uuid,
-                'title'       => $this->organization->title,
-                'image'       => $this->organization->image,
-                'description' => $this->organization->description,
-                'slug'        => $this->organization->slug,
-            ];
         }
         if ($this->durations) {
             $duration = $this->durations->title;
