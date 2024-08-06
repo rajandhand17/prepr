@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceGroup;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
@@ -31,17 +32,7 @@ class ResourceGroupResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
-        $hosted_by = [];
 
-        if ($this->organization_id) {
-            $hosted_by = [
-                'uuid'        => $this->getOrganization->uuid,
-                'title'       => $this->getOrganization->title,
-                'image'       => $this->getOrganization->cover_image,
-                'description' => $this->getOrganization->description,
-                'slug'        => $this->getOrganization->slug,
-            ];
-        }
 
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
@@ -140,7 +131,7 @@ class ResourceGroupResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
-            'hosted_by'                     => $hosted_by,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,

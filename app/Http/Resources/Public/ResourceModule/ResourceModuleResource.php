@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceModule;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\Scorm\ScormResource;
 use App\Services\Public\ResourceModuleDetailService;
 use App\Services\SkillGroupService;
@@ -35,17 +36,6 @@ class ResourceModuleResource extends JsonResource
         $is_global = null;
         $embedded_media = null;
         $module_progress = null;
-        $hosted_by = [];
-
-        if ($this->organization_id) {
-            $hosted_by = [
-                'uuid'        => $this->organization->uuid,
-                'title'       => $this->organization->title,
-                'image'       => $this->organization->cover_image,
-                'description' => $this->organization->description,
-                'slug'        => $this->organization->slug,
-            ];
-        }
 
         if ($this->urls) {
             $links = $this->urls->map(function ($index) {
@@ -268,7 +258,7 @@ class ResourceModuleResource extends JsonResource
             'organization'          => $this->organization != null ? $this->organization->title : null,
             'duration'              => $duration,
             'duration_id'           => $duration_id,
-            'hosted_by'             => $hosted_by,
+            'hosted_by'             => OrganizationHostResource::make($this->organization),
             'level'                 => $level,
             'level_id'              => $level_id,
             'slug'                  => $this->slug,

@@ -62,7 +62,6 @@ class ChallengeResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
-        $hosted_by = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
