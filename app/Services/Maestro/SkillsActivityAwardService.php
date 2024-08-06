@@ -25,7 +25,7 @@ class SkillsActivityAwardService
             ];
             $image = '';
             if ($request->image) {
-                $image  = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {

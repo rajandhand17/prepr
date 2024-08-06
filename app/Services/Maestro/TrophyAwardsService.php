@@ -34,7 +34,7 @@ class TrophyAwardsService
             ];
             $image = '';
             if ($request->hasFile('image')) {
-                $image = FileUploadHelper::uploadImageToS3($request->image , 'awarded_trophy');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'awarded_trophy');
             }
 
             $validation = Validator::make($request->all(), $validation_array);
@@ -145,7 +145,7 @@ class TrophyAwardsService
 
             $image = '';
             if ($request->hasFile('image')) {
-                $image = FileUploadHelper::uploadImageToS3($request->image , 'awarded_trophy');
+                $image = FileUploadHelper::uploadImageToS3($request->image, 'awarded_trophy');
             }
             $validation = Validator::make($request->all(), $validation_array);
             if ($validation->fails()) {

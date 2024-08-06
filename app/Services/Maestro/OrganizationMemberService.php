@@ -74,7 +74,7 @@ class OrganizationMemberService
                 foreach ($request->people_name as $key => $value) {
                     $image = '';
                     if (isset($request->image[$key])) {
-                        $image  = FileUploadHelper::uploadImageToS3($request->image[$key], 'people');
+                        $image = FileUploadHelper::uploadImageToS3($request->image[$key], 'people');
                     } else {
                         $image = '';
                     }
