@@ -35,4 +35,10 @@ interface LabDashboardInterface
     public function fetchRecommendedLabs($fetchUserSkills, $userData);
 
     public function fetchRecommendedResourceModules($fetchUserSkills, $userData);
+
+    public function getChallengeList($request, $organization);
+
+    public function getLabList($request, $organization);
+
+    public function getResourceModuleList($request, $organization);
 }

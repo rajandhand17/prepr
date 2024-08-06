@@ -273,4 +273,37 @@ class LabDashboardRepository implements LabDashboardInterface
             return false;
         }
     }
+
+    public function getChallengeList($request, $organization)
+    {
+        try {
+            return $this->challengeService->getChallengeList($request, $organization);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getLabList($request, $organization)
+    {
+        try {
+            return $this->labService->getLabList($request, $organization);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getResourceModuleList($request, $organization)
+    {
+        try {
+            return  $this->resourceModuleService->getResourceModuleList($request, $organization);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

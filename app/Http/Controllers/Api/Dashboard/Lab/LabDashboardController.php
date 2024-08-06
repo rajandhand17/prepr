@@ -236,4 +236,97 @@ class LabDashboardController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getMyChallenges(Request $request)
+    {
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $challengeList = $this->labDashboardRepository->getChallengeList($request, $organization);
+            if ($challengeList) {
+                $response = [
+                    'total_count'  => $challengeList->total(),
+                    'per_page'     => $challengeList->perPage(),
+                    'count'        => $challengeList->count(),
+                    'current_page' => $challengeList->currentPage(),
+                    'total_pages'  => $challengeList->lastPage(),
+                    'list'         => ChallengeResource::collection($challengeList),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_challenges_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_challenges_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyLabs(Request $request)
+    {
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $labList = $this->labDashboardRepository->getLabList($request, $organization);
+            if ($labList) {
+                $response = [
+                    'total_count'  => $labList->total(),
+                    'per_page'     => $labList->perPage(),
+                    'count'        => $labList->count(),
+                    'current_page' => $labList->currentPage(),
+                    'total_pages'  => $labList->lastPage(),
+                    'list'         => LabResource::collection($labList),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_labs_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_labs_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getMyResourceModule(Request $request)
+    {
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $resourceModuleList = $this->labDashboardRepository->getResourceModuleList($request, $organization);
+            if ($resourceModuleList) {
+                $response = [
+                    'total_count'  => $resourceModuleList->total(),
+                    'per_page'     => $resourceModuleList->perPage(),
+                    'count'        => $resourceModuleList->count(),
+                    'current_page' => $resourceModuleList->currentPage(),
+                    'total_pages'  => $resourceModuleList->lastPage(),
+                    'list'         => ResourceModuleResource::collection($resourceModuleList),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_resource_module_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_module_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

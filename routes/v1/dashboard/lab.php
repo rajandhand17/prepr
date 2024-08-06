@@ -10,4 +10,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/get-projects-list', [LabDashboardController::class, 'getProjectsList']);
     Route::get('/inbox-friend-request', [LabDashboardController::class, 'getInboxFriendRequests']);
     Route::get('/my-recommendations', [LabDashboardController::class, 'getMyRecommendations']);
+    Route::get('/my-challenges', [LabDashboardController::class, 'getMyChallenges']);
+    Route::get('/my-labs', [LabDashboardController::class, 'getMyLabs']);
+    Route::get('/my-resource-module', [LabDashboardController::class, 'getMyResourceModule']);
 });
