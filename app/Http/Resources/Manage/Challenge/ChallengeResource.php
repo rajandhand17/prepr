@@ -9,6 +9,7 @@ use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResou
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
+use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
@@ -24,7 +25,6 @@ use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\UserService;
-use App\Http\Resources\Master\HostResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChallengeResource extends JsonResource
