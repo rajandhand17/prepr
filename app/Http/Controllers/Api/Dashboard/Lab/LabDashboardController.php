@@ -4,8 +4,13 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
+use App\Http\Resources\Manage\Challenge\ChallengeResource;
+use App\Http\Resources\Manage\Lab\LabResource;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
+use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
+use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Dashboard\Lab\LabDashboardRepository;
 use Exception;
@@ -150,6 +155,82 @@ class LabDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getInboxFriendRequests(Request $request)
+    {
+        try {
+            // Check valid request or not for inbox and friend request
+            if (!in_array($request->type, ['inbox', 'friend'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            // User's chat and friends pending request
+            $userData = auth()->user();
+            switch ($request->type) {
+                case 'inbox':
+                    $dashboardInboxList = $this->labDashboardRepository->dashboardInboxList($userData);
+                    if ($dashboardInboxList != false) {
+                        return $this->sendResponse(ConversationResource::collection($dashboardInboxList), __('responses.list_conversation'), 200);
+                    }
+                    break;
+                case 'friend':
+                    $dashboardFriendList = $this->labDashboardRepository->dashboardFriendList($userData);
+                    if ($dashboardFriendList != false) {
+                        return $this->sendResponse(FriendsResource::collection($dashboardFriendList), __('responses.friends_listing_retrieved'));
+                    }
+                    break;
+            }
+
+            return $this->sendError(__('responses.inbox_friends_listing_retrieved'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+
+    public function getMyRecommendations(Request $request)
+    {
+        try {
+            // Check valid request or not for my recommendations request
+            if (!in_array($request->type, ['challenges', 'labs', 'resource_modules'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $userData = auth()->user();
+
+            // Fetch User Skills.
+            $fetchUserSkills = $this->labDashboardRepository->fetchUserSkills($userData);
+            if ($fetchUserSkills == false) {
+                return $this->sendError(__('responses.user_skills_not_found'));
+            }
+
+            switch ($request->type) {
+                case 'challenges':
+                    $fetchRecommendedChallenges = $this->labDashboardRepository->fetchRecommendedChallenges($fetchUserSkills, $userData);
+
+                    return $this->sendResponse(ChallengeResource::collection($fetchRecommendedChallenges), __('responses.challenge_recommended_found'), 200);
+                    break;
+                case 'labs':
+                    $fetchRecommendedLabs = $this->labDashboardRepository->fetchRecommendedLabs($fetchUserSkills, $userData);
+
+                    return $this->sendResponse(LabResource::collection($fetchRecommendedLabs), __('responses.lab_recommended_found'), 200);
+                    break;
+                case 'resource_modules':
+                    $fetchRecommendedResourceModules = $this->labDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
+
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    break;
+            }
+
+            return $this->sendError(__('responses.failed_to_find_recommended_data'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

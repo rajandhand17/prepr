@@ -8,4 +8,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/subscription-details', [LabDashboardController::class, 'subscriptionDetails']);
     Route::get('/upcoming-challenge-deadlines', [LabDashboardController::class, 'getUpComingChallengeDeadlines']);
     Route::get('/get-projects-list', [LabDashboardController::class, 'getProjectsList']);
+    Route::get('/inbox-friend-request', [LabDashboardController::class, 'getInboxFriendRequests']);
+    Route::get('/my-recommendations', [LabDashboardController::class, 'getMyRecommendations']);
 });

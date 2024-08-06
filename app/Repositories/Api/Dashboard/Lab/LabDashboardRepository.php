@@ -4,6 +4,8 @@ namespace App\Repositories\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\Chat\ConversationService;
+use App\Services\FriendService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
@@ -14,6 +16,10 @@ use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
+use App\Services\Public\ChallengeService as PublicChallengeService;
+use App\Services\Public\LabService as PublicLabService;
+use App\Services\Public\ResourceModuleService as PublicResourceModuleService;
+use App\Services\UserSkillsService;
 use Exception;
 
 class LabDashboardRepository implements LabDashboardInterface
@@ -29,8 +35,14 @@ class LabDashboardRepository implements LabDashboardInterface
     private $projectService;
     private $challengeAssessmentUserService;
     private $organizationService;
+    private $conversationService;
+    private $friendService;
+    private $userSkillsService;
+    private $publicChallengeService;
+    private $publicLabService;
+    private $publicResourceModuleService;
 
-    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService, OrganizationService $organizationService)
+    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService, OrganizationService $organizationService, ConversationService $conversationService, FriendService $friendService, UserSkillsService $userSkillsService, PublicChallengeService $publicChallengeService, PublicLabService $publicLabService, PublicResourceModuleService $publicResourceModuleService)
     {
         $this->memberManagementService = $memberManagementService;
         $this->challengeService = $challengeService;
@@ -43,6 +55,12 @@ class LabDashboardRepository implements LabDashboardInterface
         $this->projectService = $projectService;
         $this->challengeAssessmentUserService = $challengeAssessmentUserService;
         $this->organizationService = $organizationService;
+        $this->conversationService = $conversationService;
+        $this->friendService = $friendService;
+        $this->userSkillsService = $userSkillsService;
+        $this->publicChallengeService = $publicChallengeService;
+        $this->publicLabService = $publicLabService;
+        $this->publicResourceModuleService = $publicResourceModuleService;
     }
 
     public function fetchChallengeReportBasedOnOrganization($organizationId)
@@ -183,6 +201,73 @@ class LabDashboardRepository implements LabDashboardInterface
     {
         try {
             return $this->projectService->getDashboardProjectList($projectIds);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function dashboardInboxList($userData)
+    {
+        try {
+            return $this->conversationService->dashboardInboxList($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function dashboardFriendList($userData)
+    {
+        try {
+            return $this->friendService->dashboardFriendList($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+
+    public function fetchUserSkills($userData)
+    {
+        try {
+            return $this->userSkillsService->fetchUserSkills($userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedChallenges($fetchUserSkills, $userData)
+    {
+        try {
+            return $this->publicChallengeService->fetchRecommendedChallenges($fetchUserSkills, $userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData)
+    {
+        try {
+            return $this->publicLabService->fetchRecommendedLabs($fetchUserSkills, $userData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedResourceModules($fetchUserSkills, $userData)
+    {
+        try {
+            return $this->publicResourceModuleService->fetchRecommendedResourceModules($fetchUserSkills, $userData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
