@@ -24,7 +24,7 @@ class FileUploadRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'file_upload' => 'array',
+            'file_upload'   => 'array',
             'file_upload.*' => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:153600',
         ];
 
