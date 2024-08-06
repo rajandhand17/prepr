@@ -220,7 +220,7 @@ class LabService
             $lab->title = $request->title;
             $lab->description = $request->description;
             $lab->privacy = $privacy;
-            $lab->media_type = 'image';
+            $lab->media_type = $request->media_type;
             $lab->media = $upload_cover_image;
             $lab->status = $status;
             $lab->total_share = 0;
@@ -345,7 +345,7 @@ class LabService
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
                 $lab->type = $type;
                 $lab->privacy = $privacy;
-                $lab->media_type = 'image';
+                $lab->media_type = $request->media_type;
                 $lab->media = ($upload_cover_image != null) ? $upload_cover_image : $lab->cover_image;
                 $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
                 $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0') : $lab->is_resource_sequential;

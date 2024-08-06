@@ -580,4 +580,12 @@ return [
         'embedded' => '1',
         'video'    => '2',
     ],
+    'lab_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
 ];

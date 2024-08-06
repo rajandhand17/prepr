@@ -115,33 +115,16 @@ class LabResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        $type = 'na';
-
-        switch ($this->type) {
-            case '0':
-                $type = 'assess';
+        $mode = null;
+        switch ($this->labMode->value) {
+            case '4':
+                $mode = 'team';
                 break;
-            case '1':
-                $type = 'onboard';
-                break;
-            case '2':
-                $type = 'engage';
-                break;
-            case '3':
-                $type = 'grow';
+            case '5':
+                $mode = 'individual';
                 break;
             default:
-                $type = 'na';
+                $mode = null;
                 break;
         }
 
@@ -239,8 +222,11 @@ class LabResource extends JsonResource
 
         return [
             'id'                               => $this->uuid,
-            'type'                             => $type,
             'language'                         => $this->language,
+            'type'                             => LabTypeResource::make($this->labType()),
+            'mode'                             => $mode,
+            'media_type'                       => $this->media_type,
+            'media'                            => $media,
             'is_pre_build'                     => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'user'                             => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                  => $this->organization->uuid,
@@ -256,8 +242,6 @@ class LabResource extends JsonResource
             'description'                      => $this->description,
             'resource_collection'              => $resource_collections,
             'privacy'                          => ($this->privacy == '1') ? 'yes' : 'no',
-            'media_type'                       => $this->media_type,
-            'media'                            => $media,
             'status'                           => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                     => $this->members()->count(),
             'total_share'                      => $this->shares()->count(),
@@ -277,8 +261,6 @@ class LabResource extends JsonResource
             'skills'                           => $skills,
             'skill_groups'                     => $skill_groups,
             'skill_stacks'                     => $skill_stacks,
-            'tags'                             => $tags,
-            'tag_groups'                       => $tag_groups,
             'likes'                            => $this->likes()->count(),
             'shares'                           => $this->shares()->count(),
             'lab_program_count'                => count($lab_programs),

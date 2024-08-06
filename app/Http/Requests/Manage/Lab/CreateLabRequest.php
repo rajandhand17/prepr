@@ -29,7 +29,10 @@ class CreateLabRequest extends FormRequest
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         $base_rules = [
             'request_type'             => 'required|in:draft,publish,archive',
-            'type'                     => 'required|in:assess,onboard,engage,grow,na',
+            'media_type'               => 'in:image,embedded',
+            'type'                     => 'required|array',
+            'type.*'                   => 'in:assess,onboard,engage,grow',
+            'mode'                     => 'required|in:team,individual',
             'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1536',
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
@@ -48,10 +51,6 @@ class CreateLabRequest extends FormRequest
             'skill_groups.*'           => 'numeric|exists:skill_groups,id',
             'skill_stacks'             => 'nullable|array',
             'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
-            'tags'                     => 'required_if:request_type,publish|nullable|array',
-            'tags.*'                   => 'numeric',
-            'tag_groups'               => 'nullable|array',
-            'tag_groups.*'             => 'numeric|exists:tag_groups,id',
             'is_notification_enabled'  => 'in:yes,no',
             'is_achievement_enabled'   => 'in:yes,no',
             'is_sequential'            => 'in:yes,no',
@@ -63,6 +62,49 @@ class CreateLabRequest extends FormRequest
             'integrate_campus_connect' => 'in:both,job,story,no',
             'is_live_event_enabled'    => 'nullable|in:yes,no',
         ];
+        if ($this->has('media_type') && $this->input('media_type') == 'image') {
+            $base_rules['cover_image'] = [
+                'mimes:jpeg,jpg,png,webp',
+                'max:153600',
+                'required',
+            ];
+        }
+        if ($this->has('cover_image')) {
+            $base_rules['media_type'] = [
+                'required',
+            ];
+        }
+        if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+
+            $cover_embedded = $this->input('cover_image');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['cover_image'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
+        }
 
         /*** CAMPUS CONNECT JOB RULE */
         if (in_array($this->get('integrate_campus_connect'), ['both', 'job'])) {
@@ -181,11 +223,15 @@ class CreateLabRequest extends FormRequest
     public function messages()
     {
         return [
-            'cover_image.max'                                  => __('responses.max_image_1_5_mb'),
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
             'type.required'                                    => __('responses.type_required'),
             'type.in'                                          => __('responses.type_in'),
+            'mode.required'                                    => __('responses.mode_required'),
+            'mode.in'                                          => __('responses.resource_mode_in'),
+            'cover_image.mimes'                                => __('responses.cover_image_type'),
+            'cover_image.max'                                  => __('responses.cover_image_max'),
+            'media_type.in'                                    => __('responses.choose_image_embedded'),
             'privacy.in'                                       => __('responses.choose_yes_no'),
             'privacy.required_if'                              => __('responses.privacy_required'),
             'latitude.required_if'                             => __('responses.latitude_required'),
@@ -200,8 +246,6 @@ class CreateLabRequest extends FormRequest
             'category_id.exists'                               => __('responses.category_not_found'),
             'skills.required'                                  => __('responses.skills_required'),
             'skills.required_if'                               => __('responses.skill_not_found'),
-            'tags.required'                                    => __('responses.tags_required'),
-            'tags.numeric'                                     => __('responses.tags_numeric'),
             'achievement_name.required'                        => __('responses.achievement_name_required'),
             'achievement_points.required'                      => __('responses.achievement_points_required'),
             'achievement_image.required'                       => __('responses.achievement_image_required'),
@@ -213,9 +257,6 @@ class CreateLabRequest extends FormRequest
             'skill_groups.*.array'                             => __('responses.skill_groups_array'),
             'skill_stacks.*.array'                             => __('responses.skill_stacks_array'),
             'skill_stacks.*.exists'                            => __('responses.skill_stack_not_found'),
-            'tag_groups.*.exists'                              => __('responses.tag_groups_not_found'),
-            'tag_groups.*.array'                               => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'                             => __('responses.tag_groups_numeric'),
             'is_notification_enabled.in'                       => __('responses.choose_yes_no'),
             'is_achievement_enabled.in'                        => __('responses.choose_yes_no'),
             'is_sequential.in'                                 => __('responses.choose_yes_no'),

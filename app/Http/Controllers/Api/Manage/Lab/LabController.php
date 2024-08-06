@@ -122,15 +122,19 @@ class LabController extends AppBaseController
                 }
             }
             $upload_cover_image = config('site-settings.default_lab_cover_image');
-            $upload_achievement_image = null;
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
 
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
                 $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
                 if (!$uploaded_achievement_image) {
@@ -173,15 +177,18 @@ class LabController extends AppBaseController
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
-            $upload_achievement_image = null;
-
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if ($uploaded_cover_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
                 $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
                 if ($uploaded_achievement_image == false) {
