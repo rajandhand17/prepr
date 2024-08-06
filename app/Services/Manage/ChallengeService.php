@@ -176,7 +176,7 @@ class ChallengeService
     {
         try {
             $status = config('constants.challenge_status.draft');
-            if ($request->is_ai_created) {
+            if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                 $status = config('constants.challenge_status.publish');
             } else {
                 switch ($request->request_type) {
@@ -318,7 +318,7 @@ class ChallengeService
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
             $challenge->source_link = $request->source_link ?? null;
-            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : null;
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
@@ -358,7 +358,7 @@ class ChallengeService
                 }
 
                 $status = $challenge->status;
-                if ($request->is_ai_created) {
+                if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                     $status = config('constants.challenge_status.publish');
                 } else {
                     switch ($request->request_type) {

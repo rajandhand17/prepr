@@ -45,4 +45,16 @@ class Discussion extends Model
     {
         return $this->hasMany(DiscussionSocialActivity::class, 'comment_id', 'id')->where('like_dislikes', '2');
     }
+
+    public function getAttachmentAttribute($attachments): array
+    {
+        if (empty($attachments)) {
+            return [];
+        }
+        $aws_url = config('site-settings.aws_url');
+
+        return array_map(function ($attachment) use ($aws_url) {
+            return $aws_url.$attachment;
+        }, json_decode($attachments));
+    }
 }
