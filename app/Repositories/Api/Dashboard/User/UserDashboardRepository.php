@@ -299,10 +299,10 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function userDashboardInboxList($userData)
+    public function dashboardInboxList($userData)
     {
         try {
-            return $this->conversationService->userDashboardInboxList($userData);
+            return $this->conversationService->dashboardInboxList($userData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

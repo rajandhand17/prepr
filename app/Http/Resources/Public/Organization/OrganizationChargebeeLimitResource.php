@@ -99,7 +99,7 @@ class OrganizationChargebeeLimitResource extends JsonResource
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $this->lab_programs_count->count(),
                 'pre_build_lab_limit'           => $preBuildLab,
-                'pre_build_lab_count'           => $this->preBuiltLabs_count->count(),
+                'pre_build_lab_count'           => $this->pre_built_labs_count->count(),
                 'challenge_limit'               => $challengeLimit,
                 'challenge_count'               => $this->challenges_count->count(),
                 'challenge_path_limit'          => $challengePathLimit,

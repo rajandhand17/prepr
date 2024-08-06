@@ -191,4 +191,17 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public function totalViewersCountBasedOnResourceModuleIds($resouceModuleIds)
+    {
+        try {
+            $totalViewersCountBasedOnResourceModuleIds = ModuleCompletionStatus::whereIn('module_id', $resouceModuleIds)->where('module_type', '4')->count();
+
+            return $totalViewersCountBasedOnResourceModuleIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

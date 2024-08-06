@@ -106,16 +106,6 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
-                    $query->select('challenge_tags_groups.challenge_id')
-                        ->from('challenge_tags_groups')
-                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
-                        ->where('challenge_tags_groups.type', '0')
-                        ->whereNull('challenge_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenges.uuid');
-            }
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
@@ -985,6 +975,56 @@ class ChallengeService
             $challengeData->save();
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchChallenges = Challenge::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchManagersUpComingDeadlineChallenges($challengeData)
+    {
+        try {
+            $restrictedDeadlineCollection = collect();
+            if ($challengeData->isNotEmpty()) {
+                foreach ($challengeData as $challenge) {
+                    if ($challenge->challenge_timelines) {
+                        if ($challenge->challenge_timelines->timeline_type == '1') {
+                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                                // For restricted challenge
+                                $restrictedDeadline = [
+                                    'id'       => $challenge->uuid,
+                                    'title'    => $challenge->title,
+                                    'slug'     => $challenge->slug,
+                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                ];
+                                $restrictedDeadlineCollection->push($restrictedDeadline);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!empty($restrictedDeadlineCollection)) {
+                $restrictedDeadlineCollection = $restrictedDeadlineCollection->sortBy(function ($challenge) {
+                    return strtotime($challenge['deadline']);
+                });
+            }
+
+            return $restrictedDeadlineCollection->take(5);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
