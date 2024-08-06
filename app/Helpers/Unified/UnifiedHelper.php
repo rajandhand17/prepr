@@ -22,7 +22,6 @@ class UnifiedHelper extends UnifiedBaseHelper
                     'summary'    => 'true',
                     'active'     => 'true',
                     'categories' => $categories,
-                    'env'        => config('unified.env'),
                 ]
             );
         } catch (\Exception $exception) {
