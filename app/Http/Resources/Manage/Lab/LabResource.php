@@ -7,6 +7,7 @@ use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
@@ -81,7 +82,6 @@ class LabResource extends JsonResource
                 'country'   => $this->address->country,
             ];
         }
-
         if ($this->achievement) {
             $achievement_conditions = [];
             foreach ($this->achievement->achievement_condition as $achievement_condition) {
@@ -245,6 +245,7 @@ class LabResource extends JsonResource
             'user'                             => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                  => $this->organization->uuid,
             'organization'                     => $this->organization->title,
+            'hosted_by'                        => OrganizationHostResource::make($this->organization),
             'category_id'                      => $category_id,
             'category'                         => $category,
             'duration'                         => $duration,

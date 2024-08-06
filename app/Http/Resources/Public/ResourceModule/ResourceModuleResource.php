@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceModule;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\Scorm\ScormResource;
 use App\Services\Public\ResourceModuleDetailService;
 use App\Services\SkillGroupService;
@@ -257,6 +258,7 @@ class ResourceModuleResource extends JsonResource
             'organization'          => $this->organization != null ? $this->organization->title : null,
             'duration'              => $duration,
             'duration_id'           => $duration_id,
+            'hosted_by'             => OrganizationHostResource::make($this->organization),
             'level'                 => $level,
             'level_id'              => $level_id,
             'slug'                  => $this->slug,

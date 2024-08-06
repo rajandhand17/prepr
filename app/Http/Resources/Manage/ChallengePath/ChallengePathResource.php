@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\ChallengePath;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -36,7 +37,6 @@ class ChallengePathResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->challenge_id) {
@@ -130,6 +130,7 @@ class ChallengePathResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'description'                   => $this->description,
             'challenges'                    => $componentAssociation,
             'user_id'                       => $this->user_id,
