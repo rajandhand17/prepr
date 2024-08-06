@@ -395,7 +395,7 @@ class ChallengeResource extends JsonResource
             'participation_achievement'         => $achievement,
             'incentive_achievement'             => $incentive_achievement,
             'challenge_requirements'            => $challenge_requirements,
-            'host_id'                           => $hosts,
+            'sponsors'                          => HostResource::collection($hosts),
             'challenge_assessment_criteria'     => $challenge_assessment_criteria,
             'challenge_assessment'              => $challenge_assessment,
             'challenge_timelines'               => $challenge_timelines,
