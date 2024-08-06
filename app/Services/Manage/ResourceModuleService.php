@@ -454,12 +454,15 @@ class ResourceModuleService
             if ($resourceModuleIds != null) {
                 return $resourceModuleIds;
             }
+
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public static function getListName($request, $organization)
     {
         try {

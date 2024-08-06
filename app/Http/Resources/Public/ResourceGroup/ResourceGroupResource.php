@@ -33,7 +33,6 @@ class ResourceGroupResource extends JsonResource
         $organization_id = null;
         $module_progress = null;
 
-
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
             $duration_id = $this->getDuration->id;
