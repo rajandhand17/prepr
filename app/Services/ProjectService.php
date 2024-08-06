@@ -47,7 +47,7 @@ class ProjectService
     public function getDashboardProjectList($getProjectIds)
     {
         try {
-            $project_list = Project::whereIn('projects.id', $getProjectIds);
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
 
             return $project_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
@@ -860,6 +860,19 @@ class ProjectService
             $fetchProjectBasedOnChallengeIds = Project::whereIn('challenge_id', $challengeIds)->get();
 
             return $fetchProjectBasedOnChallengeIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchSubmittedProjectids($challengeIds)
+    {
+        try {
+            $fetchSubmittedProjectids = Project::whereIn('challenge_id', $challengeIds)->where('is_submitted', '1')->pluck('id');
+
+            return $fetchSubmittedProjectids;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

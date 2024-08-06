@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
+use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Dashboard\Lab\LabDashboardRepository;
 use Exception;
 use Illuminate\Http\Request;
@@ -104,6 +105,51 @@ class LabDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_manager_upcomming_deadline_retrieved'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getProjectsList(Request $request)
+    {
+        try {
+            if (!in_array($request->type, ['assessment', 'submissions'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $fetchChallengesBasedOnOrganizationId = $this->labDashboardRepository->fetchChallengesBasedOnOrganizationId($organization->id);
+            switch ($request->type) {
+                case 'assessment':
+                    $fetchProjectids = $this->labDashboardRepository->fetchAssessmentProjectids($fetchChallengesBasedOnOrganizationId->pluck('id'), $userData);
+                    break;
+                case 'submissions':
+                    $fetchProjectids = $this->labDashboardRepository->fetchSubmittedProjectids($fetchChallengesBasedOnOrganizationId->pluck('id'));
+                    break;
+            }
+
+            $fetchProjectList = $this->labDashboardRepository->fetchProjectList($fetchProjectids);
+            if ($fetchProjectList != false) {
+                $response = [
+                    'total_count'  => $fetchProjectList->total(),
+                    'per_page'     => $fetchProjectList->perPage(),
+                    'count'        => $fetchProjectList->count(),
+                    'current_page' => $fetchProjectList->currentPage(),
+                    'total_pages'  => $fetchProjectList->lastPage(),
+                    'list'         => ProjectResource::collection($fetchProjectList),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

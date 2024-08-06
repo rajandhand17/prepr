@@ -106,16 +106,6 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
-                    $query->select('challenge_tags_groups.challenge_id')
-                        ->from('challenge_tags_groups')
-                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
-                        ->where('challenge_tags_groups.type', '0')
-                        ->whereNull('challenge_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenges.uuid');
-            }
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
