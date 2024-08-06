@@ -230,7 +230,6 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-
     public function fetchUserSkills($userData)
     {
         try {

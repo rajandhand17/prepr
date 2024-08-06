@@ -195,7 +195,6 @@ class LabDashboardController extends AppBaseController
         }
     }
 
-
     public function getMyRecommendations(Request $request)
     {
         try {
