@@ -365,18 +365,27 @@ class ChallengeRepository implements ChallengeInterface
                     $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
                 }
                 $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
-                $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
                 $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
                 $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
-                $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
-                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
-                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
-                $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
                 $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
                 $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
                 $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
                 $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
+
+                $updateChallengeAchievement         = true;
+                $updateChallengeRequirement         = true;
+                $updateChallengeAssessment          = true;
+                $updateChallengeAssessmentCriteria  = true;
+                $updateChallengeProjectTemplate     = true;
+
+                if (!Challenge::query()->whereHas('submitted_projects')->where('slug', $slug)->exists()) {
+                    $updateChallengeAchievement         = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
+                    $updateChallengeRequirement         = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
+                    $updateChallengeAssessment          = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
+                    $updateChallengeAssessmentCriteria  = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
+                    $updateChallengeProjectTemplate     = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
+                }
 
                 $campusConnectOpportunity = true;
                 $campusConnectStory = true;

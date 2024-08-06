@@ -340,7 +340,9 @@ class ChallengeService
     public static function updateChallenge($slug, $request, $update_cover_image, $organizationId)
     {
         try {
-            $challenge = Challenge::where('slug', $slug)->first();
+            $challenge = Challenge::with('submitted_projects')->where('slug', $slug)->first();
+            $has_submitted_projects = $challenge->submitted_projects()->exists();
+
             if ($challenge !== null) {
                 $privacy = $challenge->privacy;
                 if ($request->has('privacy')) {
@@ -475,15 +477,15 @@ class ChallengeService
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
-                $challenge->title = ($request->has('title')) ? $request->title : $challenge->title;
+                $challenge->title = ($request->has('title')) && !$has_submitted_projects ? $request->title : $challenge->title;
                 $challenge->description_type = $description_type;
-                $challenge->description = ($description_type == '0') ? ($request->description ?? $challenge->description) : null;
+                $challenge->description = ($description_type == '0') ? (!$has_submitted_projects ? $request->description : $challenge->description) : null;
                 $challenge->privacy = $privacy;
                 $challenge->media_type = $media_type;
                 $challenge->media = ($update_cover_image != null) ? $update_cover_image : $challenge->cover_image;
                 $challenge->status = $status;
                 $challenge->source_link = ($request->has('source_link') ? $request->source_link : $challenge->source_link);
-                $challenge->agreement = ($request->has('agreement')) ? $request->agreement : $challenge->agreement;
+                $challenge->agreement = ($request->has('agreement') && !$has_submitted_projects) ? $request->agreement : $challenge->agreement;
                 $challenge->is_notification_enabled = $is_notification_enabled;
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
