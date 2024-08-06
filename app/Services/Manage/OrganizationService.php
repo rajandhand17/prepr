@@ -604,6 +604,22 @@ class OrganizationService
         }
     }
 
+    public function allPlansData()
+    {
+        try {
+            $checkLocalEntry = ChargebeeHelper::getAllPlanDetailsAndLimits();
+            if ($checkLocalEntry) {
+                return $checkLocalEntry;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return true;
+        }
+    }
+
     public function organizationOnboarding($organizationId, $request)
     {
         try {

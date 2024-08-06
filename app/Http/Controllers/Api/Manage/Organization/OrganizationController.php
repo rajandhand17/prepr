@@ -712,6 +712,24 @@ class OrganizationController extends AppBaseController
         }
     }
 
+    public function plansDetail()
+    {
+        try {
+
+            $planData = $this->organizationRepository->allPlansData();
+            if ($planData) {
+                return $this->sendResponse($planData, __('responses.plan_details_retrived'));
+            }
+
+            return $this->sendError(__('responses.plan_not_retrived'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+
     public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
     {
         try {
