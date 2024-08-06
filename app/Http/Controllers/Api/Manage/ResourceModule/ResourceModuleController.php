@@ -482,17 +482,7 @@ class ResourceModuleController extends AppBaseController
         }
     }
 
-    /**
-     * Get related resources for a given resource module slug.
-     *
-     * This function checks if the resource module exists based on the provided slug
-     * and retrieves related resource modules if available.
-     *
-     * @param string $slug The slug of the resource module to find related resources for.
-     *
-     * @return \Illuminate\Http\JsonResponse A JSON response containing related resources or error messages.
-     */
-    public function getRelatedResources($slug): \Illuminate\Http\JsonResponse
+    public function getRelatedResources($slug)
     {
         try {
             // Check if the resource module with the given slug exists
