@@ -477,7 +477,7 @@ class ChallengeService
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
-                $challenge->title = ($request->has('title')) && !$has_submitted_projects ? $request->title : $challenge->title;
+                $challenge->title = $request->has('title') && !$has_submitted_projects ? $request->title : $challenge->title;
                 $challenge->description_type = $description_type;
                 $challenge->description = ($description_type == '0') ? (!$has_submitted_projects ? $request->description : $challenge->description) : null;
                 $challenge->privacy = $privacy;
