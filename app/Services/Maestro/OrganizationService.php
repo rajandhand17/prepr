@@ -39,13 +39,13 @@ class OrganizationService
                 $profile_image = '';
                 $cover_image = '';
                 if ($request->file('profile_image')) {
-                    $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image') , 'organization');
+                    $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image'), 'organization');
                     $organization->profile_image = $profile_image ? $profile_image : 'NULL';
                     $organization->save();
                 }
                 $input = $request->except('cover_image', 'people_name', 'user_name', 'user_role', 'org_social', 'social_url');
                 if ($request->file('cover_image')) {
-                    $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image') , 'organization');
+                    $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'organization');
                     $organization->cover_image = $cover_image ? $cover_image : 'NULL';
                     $organization->save();
                 }
@@ -90,11 +90,11 @@ class OrganizationService
             $profile_image = '';
             $cover_image = '';
             if ($request->file('profile_image')) {
-                $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image') , 'organization');
+                $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image'), 'organization');
             }
 
             if ($request->file('cover_image')) {
-                $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image') , 'organization');
+                $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'organization');
             }
             $model = new Organization();
             //$vanityUpdatedSlug = $this->removeHttp($request->vanity_link);
