@@ -176,7 +176,7 @@ class ChallengeService
     {
         try {
             $status = config('constants.challenge_status.draft');
-            if ($request->is_ai_created) {
+            if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                 $status = config('constants.challenge_status.publish');
             } else {
                 switch ($request->request_type) {
@@ -358,7 +358,7 @@ class ChallengeService
                 }
 
                 $status = $challenge->status;
-                if ($request->is_ai_created) {
+                if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                     $status = config('constants.challenge_status.publish');
                 } else {
                     switch ($request->request_type) {
