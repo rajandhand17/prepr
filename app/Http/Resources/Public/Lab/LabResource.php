@@ -7,6 +7,7 @@ use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
@@ -265,7 +266,7 @@ class LabResource extends JsonResource
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
-            'hosted_by'                     => $host_by,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
             'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
