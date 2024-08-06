@@ -476,8 +476,9 @@ class ChallengeRepository implements ChallengeInterface
             DB::beginTransaction();
             $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
-            $challenge_data->skills = $challenge_data->skills->pluck('foreign_id');
-            $challenge_data->tags = $challenge_data->tags->pluck('foreign_id');
+            $challenge_data->skills = $challenge_data->skills?->pluck('foreign_id');
+            $challenge_data->tags = $challenge_data->tags?->pluck('foreign_id');
+
             if ($deleteChallenge == false) {
                 DB::rollBack();
 
