@@ -110,10 +110,9 @@ class ExploreController extends AppBaseController
             if ($getProjectIds) {
                 $project = $this->teamMatchingRepository->getProjectList($getProjectIds, $request)->take(6);
 
-                return $this->sendResponse(TeamMatchingListResource::collection($project), __('responses.teams_list'));
+                return $this->sendResponse(TeamMatchingListResource::collection($project), __('responses.team_matching_list_successfully'));
             }
-
-            // return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
+             return $this->sendResponse([],__('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
