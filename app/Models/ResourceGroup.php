@@ -41,6 +41,10 @@ class ResourceGroup extends Model
 
     public function getMediaAttribute($value)
     {
+        if ($this->media_type == '1') {
+            return $value;
+        }
+
         return config('site-settings.aws_url').$value;
     }
 
