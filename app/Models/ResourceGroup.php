@@ -172,4 +172,9 @@ class ResourceGroup extends Model
 
         return 'N/A';
     }
+
+    public function getCategory()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 }
