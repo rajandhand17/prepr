@@ -121,7 +121,7 @@ class UpdateChallengeRequest extends FormRequest
                     function ($attribute, $value, $fail) {
                         if ($value && $value->isValid()) {
                             $image = getimagesize($value);
-                            if ($image[0] < 625 || $image[1] < 355) {
+                            if ($image && ($image[0] < 625 || $image[1] < 355)) {
                                 $fail(''.$attribute.' must be at least 625x355 pixels.');
                             }
                         }
