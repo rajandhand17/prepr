@@ -565,8 +565,8 @@ return [
 
     'module_completion_statuses_types'=> [
         'resource_module'     => '4',
-        'resource_group'      => '5',
-        'resource_collection' => '6',
+        'resource_collection' => '5',
+        'resource_group'      => '6',
     ],
 
     'status_module_completion'=> [

@@ -449,4 +449,32 @@ class ChallengeService
             return false;
         }
     }
+
+    public function getComponentBasedChallengeList($request, $organizationId)
+    {
+        try {
+            $challenge_list = Challenge::where(['challenges.organization_id' => $organizationId, 'challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeAssociation($request, $fetchChallengeAssociation)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $fetchChallengeAssociation)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
