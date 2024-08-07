@@ -149,4 +149,18 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function fetchChallengePathAssociation($request, $fetchChallengePathIdsAssociatedLabId)
+    {
+        try {
+            $challengePathList = ChallengePath::whereIn('id', $fetchChallengePathIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
