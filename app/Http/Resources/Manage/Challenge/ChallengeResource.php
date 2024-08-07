@@ -4,10 +4,12 @@ namespace App\Http\Resources\Manage\Challenge;
 
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
+use App\Http\Resources\Master\HostResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
@@ -197,7 +199,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->hosts) {
             $associatedHosts = $this->hosts->pluck('host_id');
-            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts)->pluck('title', 'id');
+            $hosts = ChallengeSponsorService::getHostBasedOnIds($associatedHosts);
         }
 
         if ($this->challenge_assessment_criteria) {
@@ -361,6 +363,7 @@ class ChallengeResource extends JsonResource
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                   => $this->organization->uuid,
             'organization'                      => $this->organization->title,
+            'hosted_by'                         => OrganizationHostResource::make($this->organization),
             'category_id'                       => $category_id,
             'category'                          => $category,
             'duration'                          => $duration,
@@ -392,7 +395,7 @@ class ChallengeResource extends JsonResource
             'participation_achievement'         => $achievement,
             'incentive_achievement'             => $incentive_achievement,
             'challenge_requirements'            => $challenge_requirements,
-            'host_id'                           => $hosts,
+            'sponsors'                          => HostResource::collection($hosts),
             'challenge_assessment_criteria'     => $challenge_assessment_criteria,
             'challenge_assessment'              => $challenge_assessment,
             'challenge_timelines'               => $challenge_timelines,

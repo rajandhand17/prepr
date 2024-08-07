@@ -657,4 +657,17 @@ class LabService
             return false;
         }
     }
+
+    public function fetchLabReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchLabs = Lab::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchLabs;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

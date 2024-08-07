@@ -344,15 +344,15 @@ class UserDashboardController extends AppBaseController
             $userData = auth()->user();
             switch ($request->type) {
                 case 'inbox':
-                    $userDashboardInboxList = $this->userDashboardRepository->userDashboardInboxList($userData);
-                    if ($userDashboardInboxList != false) {
-                        return $this->sendResponse(ConversationResource::collection($userDashboardInboxList), __('responses.list_conversation'), 200);
+                    $dashboardInboxList = $this->userDashboardRepository->dashboardInboxList($userData);
+                    if ($dashboardInboxList != false) {
+                        return $this->sendResponse(ConversationResource::collection($dashboardInboxList), __('responses.list_conversation'), 200);
                     }
                     break;
                 case 'friend':
-                    $userDashboardFriendList = $this->userDashboardRepository->userDashboardFriendList($userData);
-                    if ($userDashboardFriendList != false) {
-                        return $this->sendResponse(FriendsResource::collection($userDashboardFriendList), __('responses.friends_listing_retrieved'));
+                    $dashboardFriendList = $this->userDashboardRepository->dashboardFriendList($userData);
+                    if ($dashboardFriendList != false) {
+                        return $this->sendResponse(FriendsResource::collection($dashboardFriendList), __('responses.friends_listing_retrieved'));
                     }
                     break;
             }

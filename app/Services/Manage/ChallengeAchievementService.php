@@ -32,18 +32,18 @@ class ChallengeAchievementService
             $challengeAchievement = new ChallengeAchievement();
             $challengeAchievement->challenge_id = $challenge;
             $challengeAchievement->achievement_type = '0';
-            $challengeAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : 'Participant';
-            $challengeAchievement->achievement_prize = ($request->has('achievement_prize')) ? $request->achievement_prize : 'Points';
-            $challengeAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : 100;
+            $challengeAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : null;
+            $challengeAchievement->achievement_prize = ($request->has('achievement_prize')) ? $request->achievement_prize : null;
+            $challengeAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : null;
             $challengeAchievement->achievement_image = $upload_achievement_image;
             $challengeAchievement->save();
 
-            if ($request->has('winner_achievement_participation') && $request->winner_achievement_participation != 'no') {
+            if ($request->has('winner_achievement_participation') && $request->winner_achievement_participation[0] != 'no') {
                 foreach ($request->winner_achievement_participation as $key => $value) {
                     $upload_incentive_achievement_image = isset($request->winner_achievement_image[$key]) ? self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]) : config('site-settings.default_challenge_achievement_image');
-                    $incentive_achievement_name = isset($request->winner_achievement_name[$key]) ? $request->winner_achievement_name[$key] : 'Incentive';
-                    $incentive_achievement_prize = isset($request->winner_achievement_prize[$key]) ? $request->winner_achievement_prize[$key] : 'Points';
-                    $incentive_achievement_points = isset($request->winner_achievement_point[$key]) ? $request->winner_achievement_point[$key] : 100;
+                    $incentive_achievement_name = isset($request->winner_achievement_name[$key]) ? $request->winner_achievement_name[$key] : null;
+                    $incentive_achievement_prize = isset($request->winner_achievement_prize[$key]) ? $request->winner_achievement_prize[$key] : null;
+                    $incentive_achievement_points = isset($request->winner_achievement_point[$key]) ? $request->winner_achievement_point[$key] : null;
 
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;

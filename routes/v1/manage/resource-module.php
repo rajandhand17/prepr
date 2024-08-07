@@ -23,4 +23,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     /** UPLOAD SCORM FILE IN RESOURCE MODULE */
     Route::post('/scorm/upload/{slug}', [ResourceModuleScormController::class, 'upload']);
     Route::delete('/scorm/{slug}', [ResourceModuleScormController::class, 'deleteScorm']);
+
+    /** Get related resources output would be max 3 **/
+    Route::get('/{slug}/get-related', [ResourceModuleController::class, 'getRelatedResources'])->middleware('permission:view_resource_module');
 });
