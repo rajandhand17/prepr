@@ -109,30 +109,35 @@ class LabService
             return false;
         }
     }
+
     public static function getLabBaseOnSource($source)
     {
         try {
-            $createdByYouLabIds = collect([]);$onboardingLabIds = collect([]); $clonedByYouLabIds = collect([]); $createdByOrgLabIds = collect([]);
-            if(in_array('created_by_you',$source)){
+            $createdByYouLabIds = collect([]);
+            $onboardingLabIds = collect([]);
+            $clonedByYouLabIds = collect([]);
+            $createdByOrgLabIds = collect([]);
+            if (in_array('created_by_you', $source)) {
                 $createdByYouLabIds = Lab::where(['user_id' => auth('api')->user()->id])->pluck('id');
             }
-            if(in_array('onboarding_challenges',$source)){
+            if (in_array('onboarding_challenges', $source)) {
                 $onboardingLabIds = Lab::where(['is_auto_created' => '1'])->pluck('id');
             }
-            if(in_array('cloned_by_you',$source)){
+            if (in_array('cloned_by_you', $source)) {
                 $clonedByYouLabIds = Lab::where(['is_pre_built' => '1'])->pluck('id');
             }
-            if(in_array('created_by_organizations',$source)){
+            if (in_array('created_by_organizations', $source)) {
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 $createdByOrgLabIds = Lab::where(['organization_id' => $organization->id])->pluck('id');
             }
 
-            $labsCollection = new Collection;
+            $labsCollection = new Collection();
             $labsCollection = $labsCollection->concat($createdByYouLabIds);
             $labsCollection = $labsCollection->concat($onboardingLabIds);
             $labsCollection = $labsCollection->concat($clonedByYouLabIds);
             $labsCollection = $labsCollection->concat($createdByOrgLabIds);
+
             return $labsCollection;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -155,15 +160,16 @@ class LabService
     public static function getSourceByLabId($labId)
     {
         try {
-            if(Lab::where(['id' => $labId,'user_id' => auth('api')->user()->id])->exists()) {
+            if (Lab::where(['id' => $labId, 'user_id' => auth('api')->user()->id])->exists()) {
                 $source = 'created_by_you';
-            } else if (Lab::where(['id' => $labId,'is_auto_created' => '1'])->exists()) {
+            } elseif (Lab::where(['id' => $labId, 'is_auto_created' => '1'])->exists()) {
                 $source = 'onboarding_challenges';
-            } else if (Lab::where(['id' => $labId,'is_pre_built' => '1','user_id' => auth('api')->user()->id])->exists()) {
+            } elseif (Lab::where(['id' => $labId, 'is_pre_built' => '1', 'user_id' => auth('api')->user()->id])->exists()) {
                 $source = 'cloned_by_you';
             } else {
                 $source = 'created_by_organizations';
             }
+
             return $source;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

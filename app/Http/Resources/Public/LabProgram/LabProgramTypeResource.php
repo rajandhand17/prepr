@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Public\LabProgram;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 
 class LabProgramTypeResource extends JsonResource
 {
@@ -18,15 +17,16 @@ class LabProgramTypeResource extends JsonResource
     {
         $typeArrayData = [];
         if (!empty($this->all())) {
-            $labProgramTypes = collect(['0'=>'assess','1'=>'onboard','2'=>'engage','3'=>'grow']);
+            $labProgramTypes = collect(['0'=>'assess', '1'=>'onboard', '2'=>'engage', '3'=>'grow']);
             foreach ($this->all() as $labProgramType) {
                 if ($labProgramTypes->has($labProgramType)) {
-                    $typeArray['id']    = $labProgramType;
+                    $typeArray['id'] = $labProgramType;
                     $typeArray['title'] = $labProgramTypes->get($labProgramType);
-                    $typeArrayData[]    = $typeArray;
+                    $typeArrayData[] = $typeArray;
                 }
             }
         }
+
         return $typeArrayData;
     }
 }

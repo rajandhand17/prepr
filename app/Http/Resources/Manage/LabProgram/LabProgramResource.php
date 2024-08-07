@@ -4,6 +4,7 @@ namespace App\Http\Resources\Manage\LabProgram;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
+use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -11,7 +12,6 @@ use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
-use App\Services\Manage\LabProgramService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -128,7 +128,7 @@ class LabProgramResource extends JsonResource
         }
 
         $mode = null;
-        if($this->labProgramMode){
+        if ($this->labProgramMode) {
             switch ($this->labProgramMode->value) {
                 case '4':
                     $mode = 'team';
@@ -142,10 +142,10 @@ class LabProgramResource extends JsonResource
         $created_by = [];
         if (!empty($this->user_id)) {
             $userDetails = UserService::getUserById($this->user_id);
-            $created_by['uuid']     = $userDetails->uuid;
-            $created_by['full_name']= $userDetails->full_name;
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
             $created_by['username'] = $userDetails->username;
-            $created_by['email']    = $userDetails->email;
+            $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
 
@@ -156,7 +156,7 @@ class LabProgramResource extends JsonResource
             'type'                          => LabProgramTypeResource::make($this->labProgramType()),
             'mode'                          => $mode,
             'created_by'                    => $created_by,
-            'source'                        => LabProgramService::getSourceByLabProgramId($this->id) ,
+            'source'                        => LabProgramService::getSourceByLabProgramId($this->id),
             'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'slug'                          => $this->slug,
             'description'                   => $this->description,
