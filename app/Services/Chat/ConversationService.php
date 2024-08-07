@@ -436,7 +436,7 @@ class ConversationService
         }
     }
 
-    public function userDashboardInboxList($userData)
+    public function dashboardInboxList($userData)
     {
         try {
             $conversation = Conversation::whereHas('users', function ($query) use ($userData) {

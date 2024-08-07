@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceGroup;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
@@ -135,6 +136,7 @@ class ResourceGroupResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,

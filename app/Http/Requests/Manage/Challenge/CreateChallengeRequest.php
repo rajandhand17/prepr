@@ -105,7 +105,7 @@ class CreateChallengeRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if ($value && $value->isValid()) {
                         $image = getimagesize($value);
-                        if ($image[0] < 625 || $image[1] < 355) {
+                        if ($image && ($image[0] < 625 || $image[1] < 355)) {
                             $fail(''.$attribute.' must be at least 625x355 pixels.');
                         }
                     }
@@ -251,7 +251,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_announcement_number'] = 'nullable|array';
             $base_rules['custom_announcement_number.*'] = 'integer|max:100';
             $base_rules['custom_announcement_duration'] = 'nullable|array';
-            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
+            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
             $base_rules['custom_announcement_description'] = 'nullable|array';
             $base_rules['custom_announcement_description.*'] = 'string';
         }

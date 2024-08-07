@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Career;
+namespace App\Http\Requests\Project;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class AddMultipleJobsRequest extends FormRequest
+class FileUploadRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +23,20 @@ class AddMultipleJobsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'job_ids'  => 'required|array',
-            'job_ids.*'=> 'integer|exists:job_titles,id',
+        $base_rules = [
+            'file_upload'   => 'array',
+            'file_upload.*' => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:153600',
         ];
+
+        return $base_rules;
     }
 
     public function messages()
     {
         return [
-            'job_ids.required'      => __('responses.job_id_required'),
-            'job_ids.exists'        => __('responses.job_id_exists'),
+            'file_upload.required'             => __('responses.required_field'),
+            'file_upload.max'                  => __('responses.mimes_file_max'),
+            'file_upload.mimes'                => __('responses.files_mimes_image'),
         ];
     }
 
