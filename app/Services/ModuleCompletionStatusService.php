@@ -153,23 +153,6 @@ class ModuleCompletionStatusService
         }
     }
 
-    public static function getResourceCollectionProgressBasedOnModuleID($moduleId)
-    {
-        try {
-            $checkResourceCollectionStatus = ModuleCompletionStatus::where([
-                'module_type'   => '5',
-                'module_id'     => $moduleId,
-                'user_id'       => auth()->user()->id,
-            ])->first();
-
-            return $checkResourceCollectionStatus;
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function fetchResourceModuleIdsBasedOnProgress($userData)
     {
         try {
