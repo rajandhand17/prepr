@@ -1364,5 +1364,14 @@
     "responses.last_visited_resource_group": "Your last visited Resource Group",
     "responses.last_visited_project": "Your last visited Project",
     "responses.related_resource_not_found": "You have failed to retrieved Related Resources",
-    "responses.related_resource_found": "You have successfully retrieved Related Resources"
+    "responses.related_resource_found": "You have successfully retrieved Related Resources",
+    "responses.failed_to_retrieve_report": "Failed to retieve the report",
+    "responses.retrieve_challenge_report": "Challenge report retrieved successfully.",
+    "responses.retrieve_resource_report": "Resources report retrieved successfully.",
+    "responses.retrieve_project_report": "Project report retrieved successfully.",
+    "responses.retrieve_lab_report": "Lab report retrieved successfully.",
+    "responses.organization_subscription_retrieved": "Organization subscription details retrieved.",
+    "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later.",
+    "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
+    "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines."
 }
