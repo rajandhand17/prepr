@@ -1226,7 +1226,6 @@ class ComponentAssociationService
         }
     }
 
-
     public function fetchChallengeIdsAssociatedChallengePathId($challengePathId)
     {
         try {
