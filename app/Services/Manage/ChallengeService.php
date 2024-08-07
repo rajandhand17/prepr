@@ -150,8 +150,7 @@ class ChallengeService
                 });
             }
 
-            if ($request->has('source') && !empty($request->source)){
-
+            if ($request->has('source') && !empty($request->source)) {
                 switch ($request->source) {
                     case 'onboarding_challenges':
                         $challenge_list = $challenge_list->where('is_auto_created', 1);
