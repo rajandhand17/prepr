@@ -24,6 +24,7 @@ use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
 use App\Services\UserService;
+use App\Services\Manage\LabService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -116,16 +117,15 @@ class LabResource extends JsonResource
         }
 
         $mode = null;
-        switch ($this->labMode->value) {
-            case '4':
-                $mode = 'team';
-                break;
-            case '5':
-                $mode = 'individual';
-                break;
-            default:
-                $mode = null;
-                break;
+        if($this->labMode){
+            switch ($this->labMode->value) {
+                case '4':
+                    $mode = 'team';
+                    break;
+                case '5':
+                    $mode = 'individual';
+                    break;
+            }
         }
 
         switch ($this->media_type) {
@@ -219,6 +219,15 @@ class LabResource extends JsonResource
                 'percentage'    => $this->lab_completion_status->percentage,
             ];
         }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid']     = $userDetails->uuid;
+            $created_by['full_name']= $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email']    = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
 
         return [
             'id'                               => $this->uuid,
@@ -227,6 +236,9 @@ class LabResource extends JsonResource
             'mode'                             => $mode,
             'media_type'                       => $this->media_type,
             'media'                            => $media,
+            'created_by'                       => $created_by,
+            'source'                           => LabService::getSourceByLabId($this->id) ,
+            'requirements'                     => $achievement ? $achievement['achievement_condition'] : [],
             'is_pre_build'                     => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'user'                             => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                  => $this->organization->uuid,

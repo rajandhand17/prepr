@@ -4,6 +4,8 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\LabTypeModes;
+use Illuminate\Database\Eloquent\Collection;
+use Exception;
 
 class LabTypeModesService
 {
@@ -39,95 +41,38 @@ class LabTypeModesService
                 ]);
             }
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;
         }
     }
-
-    // public function updateResourceModuleTypeModes($request, $labId)
-    // {
-    //     try {
-    //         if ($request->has('type') && !empty($request->type)) {
-    //             $value = config('constants.lab_types.'.$request->type);
-    //             $lab = LabTypeModes::updateOrCreate([
-    //                 'lab_id' => $labId,
-    //                 'type_mode'          => config('constants.lab_mode.type'),
-    //             ], [
-    //                 'value'              => $value,
-    //             ]);
-    //         }
-    //         if ($request->has('mode')) {
-    //             $value = config('constants.resource_mode_type.'.$request->mode);
-    //             $lab = LabTypeModes::updateOrCreate([
-    //                 'lab_id' => $labId,
-    //                 'type_mode'          => config('constants.lab_mode.mode'),
-    //             ], [
-    //                 'value'              => $value,
-    //             ]);
-    //         }
-
-    //         return true;
-    //     } catch (\Exception $e) {
-    //         UtilityHelper::logError($e);
-
-    //         return false;
-    //     }
-    // }
-
-    public static function getResourceModuleBasedOnType($type)
+    public static function getLabType($labType)
     {
         try {
-            // Type 0 belongs to type and type 1 belongs to mode
-            return LabTypeModes::where(['type_mode'=>config('constants.lab_mode.type'), 'value'=>config('constants.lab_types.'.$type)])->get();
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    public static function cloneResourceModuleTypeModes($originalResourceModuleAssociation, $clonedResourceModuleId)
-    {
-        try {
-            if ($originalResourceModuleAssociation) {
-                $cloneResourceModuleSKills = $originalResourceModuleAssociation->replicate();
-                $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
-                $cloneResourceModuleSKills->save();
+            $assessLabIds = collect([]);$onboardLabIds = collect([]); $engageLabIds = collect([]); $growLabIds = collect([]);
+            if(in_array('assess',$labType)){
+                $assessLabIds = collect(config('constants.lab_type.assess'));
+            } 
+            if(in_array('onboard',$labType)){
+                $onboardLabIds = collect(config('constants.lab_type.onboard'));
+            } 
+            if(in_array('engage',$labType)){
+                $engageLabIds = collect(config('constants.lab_type.engage'));
+            } 
+            if(in_array('grow',$labType)){
+                $growLabIds = collect(config('constants.lab_type.grow'));
             }
-
-            return true;
-        } catch (\Exception $e) {
+            $labsCollection = new Collection;
+            $labsCollection = $labsCollection->concat($assessLabIds);
+            $labsCollection = $labsCollection->concat($onboardLabIds);
+            $labsCollection = $labsCollection->concat($engageLabIds);
+            $labsCollection = $labsCollection->concat($growLabIds);
+            return LabTypeModes::where(['type_mode' => '0'])->whereIn('value',$labsCollection)->pluck('lab_id');
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;
         }
     }
-
-    // public static function getResourceModuleType($labId)
-    // {
-    //     try {
-    //         return LabTypeModes::where([
-    //             'type_mode'          => config('constants.lab_mode.type'),
-    //             'lab_id' => $labId])->first();
-    //     } catch (\Exception $e) {
-    //         UtilityHelper::logError($e);
-
-    //         return false;
-    //     }
-    // }
-
-    // public static function getResourceModuleMode($labId)
-    // {
-    //     try {
-    //         return LabTypeModes::where([
-    //             'type_mode'          => config('constants.lab_mode.mode'),
-    //             'lab_id' => $labId])->first();
-    //     } catch (\Exception $e) {
-    //         UtilityHelper::logError($e);
-
-    //         return false;
-    //     }
-    // }
 }
