@@ -135,4 +135,18 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function getComponentBasedChallengePathList($request, $organizationId)
+    {
+        try {
+            $challengePathList = ChallengePath::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
