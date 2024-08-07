@@ -168,4 +168,18 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public function getComponentBasedResourceCollectionList($request, $organizationId)
+    {
+        try {
+            $resourceCollectionList = ResourceCollection::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
+
+            return $resourceCollectionList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

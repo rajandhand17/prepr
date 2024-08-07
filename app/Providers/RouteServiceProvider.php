@@ -45,6 +45,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapChatRoutes();
             $this->mapProjectRoutes();
             $this->mapProjectMemberManagementRoutes();
+            $this->mapComponentAssociation();
             $this->mapDashboardRoutes();
             $this->mapTeamMatchingRoutes();
             $this->mapGO1Routes();
@@ -126,6 +127,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapProjectMemberManagementRoutes()
     {
         Route::prefix('api/v1/member-management/project/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
+    }
+
+    protected function mapComponentAssociation()
+    {
+        Route::prefix('api/v1/component-association/')->middleware('api')->group(base_path('routes/v1/component-association.php'));
     }
 
     protected function mapManageRoutes()

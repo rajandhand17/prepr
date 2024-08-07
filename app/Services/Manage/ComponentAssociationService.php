@@ -1186,4 +1186,43 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public function fetchChallengeIdsAssociatedLabId($componentId)
+    {
+        try {
+            $fetchChallengePathIdsBasedOnLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengePathIdsBasedOnLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleIdsAssociatedLabId($labId)
+    {
+        try {
+            $fetchResourceModulePathIdsBasedOnLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModulePathIdsBasedOnLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabIdsAssociatedLabProgramId($labProgramId)
+    {
+        try {
+            $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('lab_program_id', $labProgramId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedLabProgramId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
