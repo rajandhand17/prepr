@@ -392,6 +392,7 @@
     "responses.found_not_challenge_detail": "The Challenge has been not successfully retrieved",
     "responses.challenge_not_found": "The Challenge(s) which you are looking doesn't exist in our system.",
     "responses.challenge_delete": "The challenge has been deleted successfully!",
+    "responses.challenge_not_delete_project_exists": "Sorry! You can't delete this challenge as it has submitted projects.",
     "responses.challenge_not_delete": "The challenge was not deleted!",
     "responses.challenge_delete_access_denied": "Sorry! You are not allowed to delete this challenge.",
     "responses.custom_timelines_title_required": "This Custom timeline title field is required",
