@@ -152,6 +152,7 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
     public static function getResourceCollectionProgressBasedOnModuleID($moduleId)
     {
         try {
@@ -162,11 +163,13 @@ class ModuleCompletionStatusService
             ])->first();
 
             return $checkResourceCollectionStatus;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public static function fetchResourceModuleIdsBasedOnProgress($userData)
     {
         try {
