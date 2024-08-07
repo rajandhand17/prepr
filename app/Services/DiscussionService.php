@@ -46,6 +46,11 @@ class DiscussionService
                     ->orderByDesc('dislikes_count');
             }
 
+            if ($sortBy == 'most_replies') {
+                $getComments = $getComments->withCount('comments_reply')->orderBy('comments_reply_count', 'DESC');
+
+            }
+
             return $getComments;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
