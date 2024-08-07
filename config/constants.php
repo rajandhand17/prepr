@@ -588,4 +588,19 @@ return [
         'team'       => '4',
         'individual' => '5',
     ],
+    'lab_program_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_program_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
+    ],
 ];

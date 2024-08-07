@@ -141,4 +141,12 @@ class LabProgram extends Model
 
         return 'N/A';
     }
+    public function labProgramType()
+    {
+        return $this->hasMany(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode','0')->pluck('value');
+    }
+    public function labProgramMode()
+    {
+        return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode','1');
+    }
 }

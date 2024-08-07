@@ -8,6 +8,7 @@ use App\Models\LabProgram;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Collection;
 
 class LabProgramService
 {
@@ -102,6 +103,15 @@ class LabProgramService
                 $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('type') && !empty($request->type)) {
+                $typeFilterIds = LabProgramTypeModesService::getLabProgramType($request->type);
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', $typeFilterIds);
+            }
+            if ($request->has('source') && !empty($request->source)) {
+                $sourceLabIds = self::getLabProgramBaseOnSource($request->source);
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', $sourceLabIds);
+            }
+
             return $labProgramList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -110,6 +120,49 @@ class LabProgramService
         }
     }
 
+    public static function getLabProgramBaseOnSource($source)
+    {
+        try {
+            $createdByYouLabIds = collect([]);$onboardingLabIds = collect([]); $clonedByYouLabIds = collect([]); $createdByOrgLabIds = collect([]);
+            if(in_array('created_by_you',$source)){
+                $createdByYouLabIds = LabProgram::where(['user_id' => auth('api')->user()->id])->pluck('id');
+            }
+            if(in_array('onboarding_challenge',$source)){
+                $onboardingLabIds = LabProgram::where(['is_auto_created' => '1'])->pluck('id');
+            }
+            if(in_array('created_by_organizations',$source)){
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                $createdByOrgLabIds = LabProgram::where(['organization_id' => $organization->id])->pluck('id');
+            }
+            $labsCollection = new Collection;
+            $labsCollection = $labsCollection->concat($createdByYouLabIds);
+            $labsCollection = $labsCollection->concat($onboardingLabIds);
+            $labsCollection = $labsCollection->concat($clonedByYouLabIds);
+            $labsCollection = $labsCollection->concat($createdByOrgLabIds);
+            return $labsCollection;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+    
+    public static function getSourceByLabProgramId($labProgramId)
+    {
+        try {
+            if(LabProgram::where(['id' => $labProgramId,'user_id' => auth('api')->user()->id])->exists()) {
+                $source = 'created_by_you';
+            } else if (LabProgram::where(['id' => $labProgramId,'is_auto_created' => '1'])->exists()) {
+                $source = 'onboarding_challenge';
+            } else {
+                $source = 'created_by_organizations';
+            }
+            return $source;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
     public static function getLabProgramBasedOnSlug($slug)
     {
         try {
