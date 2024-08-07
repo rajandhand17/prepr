@@ -37,7 +37,7 @@ class ComponentAssociationController extends AppBaseController
 
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
 
             $response = [];
@@ -114,9 +114,9 @@ class ComponentAssociationController extends AppBaseController
                             break;
                     }
                     break;
-                }
+            }
 
-                return $this->sendResponse($response, $message, 200);
+            return $this->sendResponse($response, $message, 200);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

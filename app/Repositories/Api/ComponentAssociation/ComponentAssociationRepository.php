@@ -125,7 +125,6 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         }
     }
 
-
     public function fetchResourceModuleLabAssociation($request, $labId)
     {
         try {
