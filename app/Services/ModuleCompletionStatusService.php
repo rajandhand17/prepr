@@ -152,7 +152,6 @@ class ModuleCompletionStatusService
             return false;
         }
     }
-
     public static function fetchResourceModuleIdsBasedOnProgress($userData)
     {
         try {
