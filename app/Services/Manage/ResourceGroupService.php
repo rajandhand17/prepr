@@ -430,4 +430,17 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function fetchResourceGroupReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceGroup = ResourceGroup::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceGroup;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

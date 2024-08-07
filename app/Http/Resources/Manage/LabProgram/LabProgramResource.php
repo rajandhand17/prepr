@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\LabProgram;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -36,7 +37,6 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
@@ -129,6 +129,7 @@ class LabProgramResource extends JsonResource
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'title'                         => $this->title,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'slug'                          => $this->slug,
             'description'                   => $this->description,
             'labs'                          => $componentAssociation,

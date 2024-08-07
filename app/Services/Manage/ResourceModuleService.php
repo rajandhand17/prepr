@@ -577,4 +577,30 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public static function getRelatedResources($resourceModuleIds)
+    {
+        try {
+            // Retrieve resource modules with the given IDs using findMany for primary keys
+            $resourceModules = ResourceModule::findMany($resourceModuleIds);
+
+            // Limit the results to a maximum of 3
+            return $resourceModules->slice(0, 3); // Use slice to get the first 3 items
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceModule = ResourceModule::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceModule;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

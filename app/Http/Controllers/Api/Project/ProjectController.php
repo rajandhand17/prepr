@@ -9,6 +9,7 @@ use App\Http\Requests\Project\AddLinksProjectRequest;
 use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
 use App\Http\Requests\Project\DeleteProjectMediaRequest;
+use App\Http\Requests\Project\FileUploadRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
@@ -207,7 +208,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function fileUpload($slug, Request $request)
+    public function fileUpload($slug, FileUploadRequest $request)
     {
         try {
             $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);

@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Explore;
 use Exception;
@@ -23,7 +24,7 @@ class ExploreService
             if (!empty($insertArray)) {
                 Explore::where('id', $id)->update($insertArray);
                 if ($request->media) {
-                    $cover_Image = $request->file('media')->store('uploads/explore', 's3');
+                    $cover_Image = FileUploadHelper::uploadImageToS3($request->file('media'), 'explore');
                     $exploreData->media = $cover_Image ? $cover_Image : 'NULL';
                 }
                 if ($request->roles) {

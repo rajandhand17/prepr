@@ -5,6 +5,7 @@ namespace App\Http\Resources\Public\Challenge;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
@@ -361,6 +362,7 @@ class ChallengeResource extends JsonResource
             'organization'                      => $this->organization->title,
             'category_id'                       => $category_id,
             'category'                          => $category,
+            'hosted_by'                         => OrganizationHostResource::make($this->organization),
             'duration'                          => $duration,
             'duration_id'                       => $duration_id,
             'level'                             => $level,
