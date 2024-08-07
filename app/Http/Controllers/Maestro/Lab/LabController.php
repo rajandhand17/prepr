@@ -53,6 +53,9 @@ class LabController extends Controller
                         $html .= '<a href="" class="mr-25 showUser" data-id="'.$lab->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="'.route('lab.edit', ['lab' => $lab->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$lab->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="javascript:void(0)" onclick="deleteLab(\''.route('lab.destroy', ['lab' => $lab->id]).'\')"> <i class="fas fa-trash"></i></a>';
+                        if ($lab->is_pre_built == '0') {
+                            $html .= '<a href="javascript:void(0)" onclick="ChallengeToLabTemplate(\''.route('lab-template.clone', ['slug' =>$lab->slug]).'\')"> <i class="fas fa-clone"></i></a>';
+                        }
 
                         return $html;
                     })

@@ -24,7 +24,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::select('id', 'title', 'user_id', 'status', 'is_open')->where('language', LanguageService::getCurrentLanguage())->latest();
+            return Challenge::where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -247,6 +247,21 @@ class ChallengeService
             }
 
             return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function updatePreBuilt($challengeId, $is_pre_built)
+    {
+        try {
+            $challengeUpdate = Challenge::find($challengeId);
+            $challengeUpdate->is_pre_built = $is_pre_built;
+            $challengeUpdate->save();
+
+            return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

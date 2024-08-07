@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maestro\ChallengeTemplate;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Manage\ChallengeTemplate\ChallengeTemplateResource;
 use App\Models\ChallengeTemplate;
 use App\Services\Maestro\ChallengeService;
 use App\Services\Maestro\ChallengeTemplateService;
@@ -96,7 +95,7 @@ class ChallengeTemplateController extends Controller
                 ['data' => 'action', 'name' => 'action', 'title' => 'ACTION', 'width' => '10%'],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.challengeTemplate.index', compact('html'));
+            return view('maestro.challenge-template.index', compact('html'));
         } catch (\Exception $e) {
             return false;
         }
@@ -116,36 +115,30 @@ class ChallengeTemplateController extends Controller
         }
     }
 
-    public function addChallengeToTemplate($slug)
+    public function clone($slug)
     {
         try {
-            $checkComponentBasedOnSlug = $this->getChallengeBasedOnSlug($slug);
-            if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(__('responses.challenge_not_found'), 403);
+            $checkChallengeBasedOnSlug = $this->getChallengeBasedOnSlug($slug);
+            if (!$checkChallengeBasedOnSlug) {
+                return response()->json(['success' =>'false', 'message'=>'This challenge does not exists in the database.']);
             }
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+                return response()->json(['status' => 'fail', 'message' => 'Preferred Organization not found']);
             }
-            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
-                return $this->sendError(__('responses.challenge_switcher_error'), 403);
+            if ($checkChallengeBasedOnSlug->is_accessible == '0') {
+                return response()->json(['status' => 'fail', 'message' => 'Sorry, this Challenge is not accessible with your existing plan.']);
             }
-            if ($checkComponentBasedOnSlug->is_accessible == '0') {
-                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            if ($checkChallengeBasedOnSlug->is_pre_built == '1') {
+                return response()->json(['status' => 'fail', 'message' => 'This Challenge already cloned in Challenge Template']);
             }
-
-            $checkChallengeTemplate = $this->challengeTemplateRepository->getCheckChallengeUuid($checkComponentBasedOnSlug->uuid);
-            if ($checkChallengeTemplate) {
-                return $this->sendError(__('responses.challenge_already_cloned'), 422);
-            }
-
-            $addChallengeTemplate = $this->challengeTemplateRepository->addChallengeToTemplate($checkComponentBasedOnSlug->id);
+            $addChallengeTemplate = $this->createChallengeTemplate($checkChallengeBasedOnSlug->id);
             if ($addChallengeTemplate != false) {
-                return $this->sendResponse(ChallengeTemplateResource::make($addChallengeTemplate), __('responses.challenge_add_template_success'), 200);
+                return response()->json(['status' => 'success', 'message' => 'Challenge cloned successfully']);
             }
 
-            return $this->sendError(__('responses.challenge_clone_failed'), 400);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! The clonning Challenge has failed.']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }

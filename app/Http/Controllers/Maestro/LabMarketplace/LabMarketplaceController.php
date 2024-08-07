@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\LabMarketplace;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LabMarketplace;
 use App\Services\Maestro\CategoryService;
@@ -69,8 +70,10 @@ class LabMarketplaceController extends Controller
                 ['data' => 'action', 'name' => 'action', 'title' => 'Action', 'width' => '10%'],
             ])->parameters(['order' => [0, 'desc']]);
 
-            return view('maestro.labMarketplace.index', compact('html'));
+            return view('maestro.lab-marketplace.index', compact('html'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -90,6 +93,40 @@ class LabMarketplaceController extends Controller
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    public function clone($slug)
+    {
+        try {
+            $checkLabExistsOrNot = $this->getLabBasedOnSlug($slug);
+            if (!$checkLabExistsOrNot) {
+                return response()->json(['success' =>'false', 'message'=>'This lab does not exists in the database.']);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return response()->json(['success' =>'false', 'message'=>'This organization does not exists in the database.']);
+            }
+
+            if ($checkLabExistsOrNot->is_accessible == '0') {
+                return response()->json(['success' =>'false', 'message'=>'Sorry, this Lab is not accessible with your existing plan.']);
+            }
+            if ($checkLabExistsOrNot->is_pre_built == '1') {
+                return response()->json(['success' =>'false', 'message'=>'This Lab already cloned in Lab Marketplace']);
+            }
+            $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
+            if ($labMarketplace) {
+                return response()->json(['success' =>'true', 'message'=>'This Lab has cloned in Lab Marketplace successfully']);
+            }
+
+            return response()->json(['success' =>'false', 'message'=>'This Lab has failed to clone']);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

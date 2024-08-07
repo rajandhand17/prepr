@@ -36,7 +36,7 @@
                             {!! $html->table() !!}
                         </table>
                     </div>
-               
+
                 </div>
                 <!-- /.card -->
             </div>
@@ -109,5 +109,59 @@
         }, 200);
 
 
+        function ChallengeToLabTemplate(url) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to made template for this lab!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function (result) {
+                            if(result.status == 'success'){
+                                Swal.fire(
+                                    'Created!',
+                                    result.message,
+                                    'success'
+                                );
+                            } else if(result.status == 'fail'){
+                                Swal.fire(
+                                    'Error!',
+                                    result.message,
+                                    'fail'
+                                );
+                            }
+                            setTimeout(
+                                function () {
+                                    window.location.reload(true);
+                                }, 1500);
+                        },
+                        error: function (error) {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while creating the Challenge Template.',
+                                'error'
+                            );
+                        }
+                    });
+                }else {
+                    Swal.fire(
+                        'Canceled!',
+                        'Challenge is not cloned!',
+                        'error'
+                    );
+                }
+            });
+        }
     </script>
 @endsection
