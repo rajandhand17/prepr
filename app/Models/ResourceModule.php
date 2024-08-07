@@ -60,7 +60,9 @@ class ResourceModule extends Model
         if ($this->is_go1) {
             return data_get($this->go1_metadata, 'image');
         }
-
+        if($this->media_type=='1'){
+            return $value;
+        }
         return config('site-settings.aws_url').$value;
     }
 
