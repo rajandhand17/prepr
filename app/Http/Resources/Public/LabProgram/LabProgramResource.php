@@ -131,7 +131,7 @@ class LabProgramResource extends JsonResource
         }
 
         $mode = null;
-        if($this->labProgramMode){
+        if ($this->labProgramMode) {
             switch ($this->labProgramMode->value) {
                 case '4':
                     $mode = 'team';
@@ -145,10 +145,10 @@ class LabProgramResource extends JsonResource
         $created_by = [];
         if (!empty($this->user_id)) {
             $userDetails = UserService::getUserById($this->user_id);
-            $created_by['uuid']     = $userDetails->uuid;
-            $created_by['full_name']= $userDetails->full_name;
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
             $created_by['username'] = $userDetails->username;
-            $created_by['email']    = $userDetails->email;
+            $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
 

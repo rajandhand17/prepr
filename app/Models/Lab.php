@@ -170,14 +170,17 @@ class Lab extends Model
     {
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
+
     public function labType()
     {
-        return $this->hasMany(LabTypeModes::class, 'lab_id', 'id')->where('type_mode','0')->pluck('value');
+        return $this->hasMany(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '0')->pluck('value');
     }
+
     public function labMode()
     {
-        return $this->hasOne(LabTypeModes::class, 'lab_id', 'id')->where('type_mode','1');
+        return $this->hasOne(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '1');
     }
+
     /**
      * @return MorphOne
      */

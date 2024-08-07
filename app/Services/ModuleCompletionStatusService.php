@@ -204,6 +204,7 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
     public static function fetchModuleIdBasedProgress($moduleId, $moduleType, $userId)
     {
         try {
