@@ -182,4 +182,18 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public function fetchResourceCollectionAssociation($request, $fetchResourceCollectionAssociation)
+    {
+        try {
+            $resourceCollectionList = ResourceCollection::whereIn('id', $fetchResourceCollectionAssociation)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
+
+            return $resourceCollectionList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

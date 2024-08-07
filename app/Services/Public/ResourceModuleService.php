@@ -281,10 +281,10 @@ class ResourceModuleService
         }
     }
 
-    public function fetchResourceModuleLabAssociation($request, $fetchResourceModuleIdsAssociatedLabId)
+    public function fetchResourceModuleAssociation($request, $fetchResourceModuleAssociation)
     {
         try {
-            $resourceModule = ResourceModule::whereIn('id', $fetchResourceModuleIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceModule = ResourceModule::whereIn('id', $fetchResourceModuleAssociation)->where(['status' => '1', 'is_accessible' => '1']);
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.association_pagination_per_page'));
