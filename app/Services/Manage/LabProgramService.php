@@ -218,7 +218,7 @@ class LabProgramService
             $labProgram->duration_id = $request->duration_id;
             $labProgram->level_id = $request->level_id;
             $labProgram->user_id = auth()->user()->id;
-            $labProgram->media_type = 'image';
+            $labProgram->media_type = $request->media_type;
             $labProgram->media = $upload_media;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
@@ -329,6 +329,7 @@ class LabProgramService
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
             $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
             $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media;
+            $labProgram->media_type = $request->media_type;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';

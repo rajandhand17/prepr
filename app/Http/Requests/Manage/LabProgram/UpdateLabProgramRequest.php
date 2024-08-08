@@ -54,33 +54,45 @@ class UpdateLabProgramRequest extends FormRequest
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
         }
 
+        // Lab Program cover image validation
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
-            $base_rules['media'] = [
-                'mimes:jpeg,jpg,png,webp',
-                'max:153600',
-                'required',
-            ];
+            if ($labProgram->media != null && $labProgram->getRawOriginal('media') == 'default_images/lab-program.webp') {
+                $base_rules['media'] = [
+                    'required',
+                    'mimes:jpeg,jpg,png,webp',
+                    'max:5120',
+                    function ($attribute, $value, $fail) {
+                        if ($value && $value->isValid()) {
+                            $image = getimagesize($value);
+                            if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                                $fail(''.$attribute.' must be at least 625x355 pixels.');
+                            }
+                        }
+                    },
+                ];
+            }
         }
-        if ($this->has('media')) {
-            $base_rules['media_type'] = [
-                'required',
-            ];
-        }
-        if ($this->has('media') && $this->input('media') == 'embedded') {
+
+        if ($this->has('media_type') && $this->input('media_type') == 'embedded') {
             $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
             $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
             $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+
             $cover_embedded = $this->input('media');
             $isValid = 0;
+
             // Check for YouTube iframe
             preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
             $isValid += count($matchesYoutube[0]);
+
             // Check for YouTube no-cookie iframe
             preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
             $isValid += count($matchesNoCookieYoutube[0]);
+
             // Check for Vimeo iframe
             preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
             $isValid += count($matchesVimeo[0]);
+
             $base_rules['media'] = [
                 'required',
                 function ($attribute, $value, $fail) use ($isValid) {

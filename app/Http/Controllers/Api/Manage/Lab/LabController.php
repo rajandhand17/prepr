@@ -124,9 +124,11 @@ class LabController extends AppBaseController
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             if ($request->cover_image !== null) {
                 if ($request->media_type == 'image') {
-                    $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                    if (!$uploaded_cover_image) {
-                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
                     }
                 } elseif ($request->media_type == 'embedded') {
                     $uploaded_cover_image = $request->cover_image;
@@ -179,9 +181,11 @@ class LabController extends AppBaseController
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
             if ($request->cover_image !== null) {
                 if ($request->media_type == 'image') {
-                    $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                    if (!$uploaded_cover_image) {
-                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
                     }
                 } elseif ($request->media_type == 'embedded') {
                     $uploaded_cover_image = $request->cover_image;
@@ -190,11 +194,13 @@ class LabController extends AppBaseController
             }
             $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($uploaded_achievement_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if ($uploaded_achievement_image == false) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organization);
             if ($updateLab != false) {

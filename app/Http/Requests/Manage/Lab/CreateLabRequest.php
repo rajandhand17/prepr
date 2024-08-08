@@ -33,7 +33,6 @@ class CreateLabRequest extends FormRequest
             'type'                     => 'required|array',
             'type.*'                   => 'in:assess,onboard,engage,grow',
             'mode'                     => 'required|in:team,individual',
-            'cover_image'              => 'nullable|mimes:jpeg,jpg,png,webp|max:1536',
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
             'category_id'              => 'required|exists:categories,id',
@@ -62,19 +61,25 @@ class CreateLabRequest extends FormRequest
             'integrate_campus_connect' => 'in:both,job,story,no',
             'is_live_event_enabled'    => 'nullable|in:yes,no',
         ];
+
+        // Lab cover image validation
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
+                'required',
                 'mimes:jpeg,jpg,png,webp',
-                'max:153600',
-                'required',
+                'max:5120',
+                function ($attribute, $value, $fail) {
+                    if ($value && $value->isValid()) {
+                        $image = getimagesize($value);
+                        if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                            $fail(''.$attribute.' must be at least 625x355 pixels.');
+                        }
+                    }
+                },
             ];
         }
-        if ($this->has('cover_image')) {
-            $base_rules['media_type'] = [
-                'required',
-            ];
-        }
-        if ($this->has('cover_image') && $this->input('cover_image') == 'embedded') {
+
+        if ($this->has('media_type') && $this->input('media_type') == 'embedded') {
             $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
             $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
             $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
