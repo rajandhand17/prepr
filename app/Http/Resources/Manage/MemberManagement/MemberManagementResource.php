@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\MemberManagement;
 
 use App\Helpers\UtilityHelper;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -37,21 +38,55 @@ class MemberManagementResource extends JsonResource
         $auto_invite = ($this->auto_invite == '0') ? 'No' : 'Yes';
         $email_status = ($this->email_status == '0') ? 'Scheduled' : (($this->email_status == '1') ? 'Sent' : (($this->email_status == '2') ? 'Failed' : 'NA'));
 
+        $module_progress = [];
+        if ($request->component == 'lab') {
+            $moduleId = $this->module_id;
+            $moduleType = '0';
+            $userData = UserService::getUserByEmail($this->email);
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($userData) {
+                $moduleProgress = ModuleCompletionStatusService::fetchModuleIdBasedProgress($moduleId, $moduleType, $userData->id);
+                if ($moduleProgress) {
+                    switch ($moduleProgress->status) {
+                        case '0':
+                            $module_status = 'not_started';
+                            break;
+                        case '1':
+                            $module_status = 'in_progress';
+                            break;
+                        case '2':
+                            $module_status = 'completed';
+                            break;
+                    }
+
+                    $module_progress = [
+                        'status'        => $module_status,
+                        'percentage'    => $moduleProgress->percentage,
+                    ];
+                }
+            }
+        }
+
         return [
-            'id'            => $this->uuid,
-            'type'          => $type,
-            'invite_type'   => $invite_type,
-            'name'          => $this->invitee_name,
-            'email'         => $this->email,
-            'username'      => $username,
-            'invited_by'    => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
-            'role'          => $this->role,
-            'invite_status' => $invite_status,
-            'auto_invite'   => $auto_invite,
-            'email_status'  => $email_status,
-            'subject'       => $this->subject_line,
-            'email_content' => $this->email_body,
-            'joined_at'     => !empty($this->created_at) ? UtilityHelper::formatDateTime($this->created_at) : null,
+            'id'              => $this->uuid,
+            'type'            => $type,
+            'invite_type'     => $invite_type,
+            'name'            => $this->invitee_name,
+            'email'           => $this->email,
+            'username'        => $username,
+            'invited_by'      => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
+            'role'            => $this->role,
+            'invite_status'   => $invite_status,
+            'module_progress' => $module_progress,
+            'auto_invite'     => $auto_invite,
+            'email_status'    => $email_status,
+            'subject'         => $this->subject_line,
+            'email_content'   => $this->email_body,
+            'joined_at'       => !empty($this->created_at) ? UtilityHelper::formatDateTime($this->created_at) : null,
         ];
     }
 }
