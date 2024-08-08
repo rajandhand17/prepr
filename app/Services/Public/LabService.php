@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\Manage\LabTypeModesService;
 use App\Services\ModuleCompletionStatusService;
 use Carbon\Carbon;
 
@@ -139,6 +140,11 @@ class LabService
                         }
                     }
                 }
+            }
+
+            if ($request->has('type') && !empty($request->type)) {
+                $typeBaseLabIds = LabTypeModesService::getLabType($request->type);
+                $lab_list = $lab_list->whereIn('labs.id', $typeBaseLabIds);
             }
 
             return $lab_list;
@@ -392,6 +398,34 @@ class LabService
             $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressLabsCount' => $inProgressLabsCount, 'notStartedLabsCount' => $notStartedLabsCount];
 
             return $fetchMyLabProgress;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedLabList($request, $organizationId)
+    {
+        try {
+            $lab_list = Lab::where(['labs.organization_id' => $organizationId, 'labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabAssociation($request, $fetchLabAssociation)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $fetchLabAssociation)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

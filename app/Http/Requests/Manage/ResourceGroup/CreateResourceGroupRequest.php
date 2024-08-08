@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ResourceGroup;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateResourceGroupRequest extends FormRequest
 {
@@ -26,23 +27,64 @@ class CreateResourceGroupRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|unique:resource_groups,title',
             'description'              => 'required',
+            'category_id'              => [
+                'required',
+                Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'type'                     => 'required|in:assess,onboard,engage,grow',
             'mode'                     => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
-            'resource_ids.*'           => 'exists:resource_modules,uuid',
+            'resource_ids.*'           => [
+                'required',
+                Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'resource_collection_ids'  => 'required|array',
-            'resource_collection_ids.*'=> 'exists:resource_collections,uuid',
+            'resource_collection_ids.*'=> [
+                'required',
+                Rule::exists('resource_collections', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skills'                   => 'required|array',
-            'skills.*'                 => 'numeric|exists:skills,id',
-            'level'                    => 'required|exists:levels,id',
-            'duration'                 => 'required|exists:durations,id',
+            'skills.*'                 => [
+                'numeric',
+                Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
+            'level'                    => [
+                'required',
+                Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
+            'duration'                 => [
+                'required',
+                Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skill_groups'             => 'array',
-            'skill_groups.*'           => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'           => [
+                'numeric',
+                Rule::exists('skill_groups', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
             'skill_stacks'             => 'array',
-            'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'skill_stacks.*'           => [
+                'numeric',
+                Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            ],
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
@@ -105,6 +147,8 @@ class CreateResourceGroupRequest extends FormRequest
         return [
             'title.required'                 => __('responses.title_required'),
             'title.unique'                   => __('responses.title_unique'),
+            'category_id.required'           => __('responses.category_id_required'),
+            'category_id.exists'             => __('responses.category_not_found'),
             'description.required'           => __('responses.description_required'),
             'privacy.required'               => __('responses.privacy_required'),
             'privacy.in'                     => __('responses.choose_yes_no'),
