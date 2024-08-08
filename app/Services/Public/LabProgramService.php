@@ -99,6 +99,7 @@ class LabProgramService
                 $typeFilterIds = LabProgramTypeModesService::getLabProgramType($request->type);
                 $labProgramList = $labProgramList->whereIn('lab_programs.id', $typeFilterIds);
             }
+
             return $labProgramList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

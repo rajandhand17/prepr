@@ -91,6 +91,7 @@ class LabProgramRepository implements LabProgramInterface
                     $labProgramAchievement = $this->labProgramAchievementService->createLabProgramAchievement($request, $createdLabProgram->id, $upload_achievement_image);
                 }
                 $componentAssociation = $this->componentAssociationService->labProgramAssociation($request, $createdLabProgram);
+
                 return [
                     'createLabProgram'           => $createdLabProgram,
                     'labProgramSkillsGroupsStack'=> $labProgramSkillsGroupsStack,
@@ -126,11 +127,11 @@ class LabProgramRepository implements LabProgramInterface
                 }
                 $labProgramSkillsGroupsStack = $this->labProgramSkillsGroupsStackService->updateLabProgramSkillsGroupsStack($request, $updateLabProgram->id);
                 $componentAssociation = $this->componentAssociationService->updateLabProgramAssociation($request, $updateLabProgram->id);
-        
+
                 return [
-                    'updateLabProgram'           => $updateLabProgram,
-                    'labProgramSkillsGroupsStack'=> $labProgramSkillsGroupsStack,
-                    'componentAssociation'       => $componentAssociation,
+                    'updateLabProgram'            => $updateLabProgram,
+                    'labProgramSkillsGroupsStack' => $labProgramSkillsGroupsStack,
+                    'componentAssociation'        => $componentAssociation,
                     'labProgramTypeModesUpdate'   => $labProgramTypeModesUpdate,
                 ];
             });
