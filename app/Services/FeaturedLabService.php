@@ -18,10 +18,11 @@ class FeaturedLabService
         }
     }
 
-    public static function getFeaturedLabBasedOnLabId($id){
+    public static function getFeaturedLabBasedOnLabId($id)
+    {
         try {
             return FeaturedLab::where('lab_id', $id)->first();
-        }catch(\Exception $e) {
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -29,16 +30,19 @@ class FeaturedLabService
     public static function createFeaturedLab($lab)
     {
         try {
-            $featuredLab=FeaturedLab::where('lab_id',$lab->id)->first();
-            if(!$featuredLab){
+            $featuredLab = FeaturedLab::where('lab_id', $lab->id)->first();
+            if (!$featuredLab) {
                 $featuredLab = new FeaturedLab();
-                $featuredLab->lab_id=$lab->id;
+                $featuredLab->lab_id = $lab->id;
                 $featuredLab->save();
+
                 return true;
             }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

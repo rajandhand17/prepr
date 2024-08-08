@@ -375,16 +375,17 @@ class LabController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_exists'), 404);
             }
-            $checkLabIsFeaturedOrNot=$this->labRepository->getFeaturedLabBasedOnId($checkComponentBasedOnSlug->id);
-            if ($checkLabIsFeaturedOrNot){
-                return $this->sendError(__('responses.already_featured_lab'),400);
+            $checkLabIsFeaturedOrNot = $this->labRepository->getFeaturedLabBasedOnId($checkComponentBasedOnSlug->id);
+            if ($checkLabIsFeaturedOrNot) {
+                return $this->sendError(__('responses.already_featured_lab'), 400);
             }
-            $createFeaturedLab=$this->labRepository->createFeaturedLab($checkComponentBasedOnSlug);
-            if ($createFeaturedLab){
+            $createFeaturedLab = $this->labRepository->createFeaturedLab($checkComponentBasedOnSlug);
+            if ($createFeaturedLab) {
                 return $this->sendResponse([], __('responses.feature_lab_created_successfully'), 200);
             }
+
             return $this->sendError(__('responses.feature_lab_created_failed'), 400);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

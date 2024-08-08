@@ -409,11 +409,12 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function getFeaturedLabBasedOnId($id)
     {
         try {
             return $this->featuredLabService->getFeaturedLabBasedOnLabId($id);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -422,9 +423,10 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->featuredLabService->createFeaturedLab($lab);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
+
             return false;
         }
     }
