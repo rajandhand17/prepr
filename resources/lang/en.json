@@ -690,6 +690,7 @@
     "responses.degree_required": "The Degree field is required",
     "responses.start_date_required": "The Start date field is required",
     "responses.before_or_equal": "The Date should be current or before the current date",
+    "responses.after_or_equal": "The end date must be later than the start date. Please adjust the dates accordingly.",
     "responses.end_date_required": "The Start date field is required",
     "responses.add_user_patent_created": "Your patent details have been updated successfully.",
     "responses.add_user_patent_failed": "Oops! The Creating of a Patent Failed.",
