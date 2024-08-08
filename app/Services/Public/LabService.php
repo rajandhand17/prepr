@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\Manage\LabTypeModesService;
 use App\Services\ModuleCompletionStatusService;
 use Carbon\Carbon;
 
@@ -139,6 +140,11 @@ class LabService
                         }
                     }
                 }
+            }
+
+            if ($request->has('type') && !empty($request->type)) {
+                $typeBaseLabIds = LabTypeModesService::getLabType($request->type);
+                $lab_list = $lab_list->whereIn('labs.id', $typeBaseLabIds);
             }
 
             return $lab_list;
