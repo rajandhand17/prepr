@@ -111,7 +111,6 @@ class LabProgramController extends AppBaseController
             }
 
             $upload_media = config('site-settings.default_lab_program_profile_image');
-            if ($request->media !== null) {
                 if ($request->media_type == 'image') {
                     if ($request->hasFile('media') && $request->file('media')->isValid()) {
                         $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
@@ -123,7 +122,6 @@ class LabProgramController extends AppBaseController
                 } elseif ($request->media_type == 'embedded') {
                     $upload_media = $request->media;
                 }
-            }
             $upload_achievement_image = config('site-settings.default_lab_program_profile_image');
             if ($request->achievement_image !== null) {
                 if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
@@ -166,16 +164,16 @@ class LabProgramController extends AppBaseController
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
-            if ($request->media !== null) {
-                if ($request->media_type == 'image') {
+            if ($request->media_type == 'image') {
+                if ($request->hasFile('media') && $request->file('media')->isValid()) {
                     $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
                     if (!$uploaded_media) {
                         return $this->sendError(__('responses.image_upload_failed'), 400);
                     }
                     $upload_media = $uploaded_media;
-                } elseif ($request->media_type == 'embedded') {
-                    $upload_media = $request->media;
                 }
+            } elseif ($request->media_type == 'embedded') {
+                $upload_media = $request->media;
             }
             $upload_achievement_image = null;
             if ($request->achievement_image !== null) {
