@@ -43,12 +43,68 @@ class UpdateLabProgramRequest extends FormRequest
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
-
+            'type'                    => 'required|array',
+            'type.*'                  => 'in:assess,onboard,engage,grow',
+            'mode'                    => 'required|in:team,individual',
+            'media_type'              => 'in:image,embedded',
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+        }
+
+        // Lab Program cover image validation
+        if ($this->has('media_type') && $this->input('media_type') == 'image') {
+            if ($labProgram->media != null && $labProgram->getRawOriginal('media') == 'default_images/lab-program.webp') {
+                if ($this->hasFile('media') && $this->file('media')->isValid()) {
+                    $base_rules['media'] = [
+                        'required',
+                        'mimes:jpeg,jpg,png,webp',
+                        'max:5120',
+                        function ($attribute, $value, $fail) {
+                            if ($value && $value->isValid()) {
+                                $image = getimagesize($value);
+                                if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                                    $fail(''.$attribute.' must be at least 625x355 pixels.');
+                                }
+                            }
+                        },
+                    ];
+                }
+            }
+        }
+
+        if ($this->has('media_type') && $this->input('media_type') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+
+            $cover_embedded = $this->input('media');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['media'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
         }
 
         return $base_rules;
@@ -87,6 +143,11 @@ class UpdateLabProgramRequest extends FormRequest
             'achievement_image.required'     => __('responses.achievement_image_required'),
             'achievement_image.mimes'        => __('responses.mimes_image'),
             'achievement_image.max'          => __('responses.mimes_image_max'),
+            'type.required'                  => __('responses.type_required'),
+            'type.in'                        => __('responses.type_in'),
+            'mode.required'                  => __('responses.mode_required'),
+            'mode.in'                        => __('responses.resource_mode_in'),
+            'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }
 }

@@ -140,7 +140,7 @@ class ChallengeService
             }
 
             if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
-                $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
+                $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->whereHas('submitted_projects', function ($query) {
                     $query->where('is_submitted', '1');
                 });
             }
@@ -444,6 +444,48 @@ class ChallengeService
 
             return $userDeadlineChallenges->take(5);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedChallengeList($request, $organizationId)
+    {
+        try {
+            $challenge_list = Challenge::where(['challenges.organization_id' => $organizationId, 'challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeAssociation($request, $fetchChallengeAssociation)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $fetchChallengeAssociation)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedChallenges($challengeIds)
+    {
+        try {
+            // Retrieve challenge with the given IDs using findMany for primary keys and limiting by 2 values
+            $challenges = Challenge::findMany($challengeIds)->slice(0, 2);
+
+            return $challenges;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

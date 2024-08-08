@@ -481,4 +481,15 @@ class ChallengePathService
             return false;
         }
     }
+
+    public static function getChallengePathBasedOnSlug($slug)
+    {
+        try {
+            return ChallengePath::where(['slug' => $slug, 'is_accessible' => '1'])->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -183,4 +183,31 @@ class ResourceCollectionSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getRecommendedResourceCollection($resourceCollectionId)
+    {
+        try {
+            // Get unique foreign IDs related to the given resource collection ID
+            $skills = ResourceCollectionSkillsGroupsStack::where([
+                ['type', '=', '0'],
+                ['resource_collection_id', '=', $resourceCollectionId],
+            ])
+                ->pluck('foreign_id')
+                ->unique();
+
+            // Retrieve resource collection IDs based on the unique foreign IDs
+            $resourceCollectionIds = $skills->isNotEmpty()
+                ? ResourceCollectionSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)
+                ->where('resource_collection_id', '<>', $resourceCollectionId)
+                ->pluck('resource_collection_id')
+                : collect(); // Return an empty collection if no skills found
+
+            return $resourceCollectionIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

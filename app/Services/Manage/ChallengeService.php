@@ -138,6 +138,38 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
+                });
+            }
+
+            if ($request->has('template_status') && !empty($request->template_status) && is_array($request->template_status)) {
+                $challenge_list = $challenge_list->whereIn('challenges.uuid', function ($query) use ($request) {
+                    $query->select('challenge_templates.uuid')->from('challenge_templates')->whereIn('status', $request->template_status);
+                });
+            }
+
+            if ($request->has('source') && !empty($request->source)) {
+                switch ($request->source) {
+                    case 'onboarding_challenges':
+                        $challenge_list = $challenge_list->where('is_auto_created', 1);
+                        break;
+
+                    case 'created_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id);
+                        break;
+
+                    case 'created_by_organizations':
+                        $challenge_list = $challenge_list->where('organization_id', auth()->user()->preferred_organization);
+                        break;
+
+                    case 'cloned_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', 1);
+                        break;
+                }
+            }
+
             return $challenge_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -330,7 +362,9 @@ class ChallengeService
     public static function updateChallenge($slug, $request, $update_cover_image, $organizationId)
     {
         try {
-            $challenge = Challenge::where('slug', $slug)->first();
+            $challenge = Challenge::with('submitted_projects')->where('slug', $slug)->first();
+            $has_submitted_projects = $challenge->submitted_projects()->exists();
+
             if ($challenge !== null) {
                 $privacy = $challenge->privacy;
                 if ($request->has('privacy')) {
@@ -465,15 +499,15 @@ class ChallengeService
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
-                $challenge->title = ($request->has('title')) ? $request->title : $challenge->title;
+                $challenge->title = $request->has('title') && !$has_submitted_projects ? $request->title : $challenge->title;
                 $challenge->description_type = $description_type;
-                $challenge->description = ($description_type == '0') ? ($request->description ?? $challenge->description) : null;
+                $challenge->description = ($description_type == '0') ? (!$has_submitted_projects ? $request->description : $challenge->description) : null;
                 $challenge->privacy = $privacy;
                 $challenge->media_type = $media_type;
                 $challenge->media = ($update_cover_image != null) ? $update_cover_image : $challenge->cover_image;
                 $challenge->status = $status;
                 $challenge->source_link = ($request->has('source_link') ? $request->source_link : $challenge->source_link);
-                $challenge->agreement = ($request->has('agreement')) ? $request->agreement : $challenge->agreement;
+                $challenge->agreement = ($request->has('agreement') && !$has_submitted_projects) ? $request->agreement : $challenge->agreement;
                 $challenge->is_notification_enabled = $is_notification_enabled;
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
