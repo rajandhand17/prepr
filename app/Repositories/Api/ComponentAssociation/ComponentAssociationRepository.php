@@ -490,4 +490,72 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
             return false;
         }
     }
+
+    public function fetchRelatedChallengePaths($challengePathId)
+    {
+        try {
+            $challengePaths = collect();
+            $challengePathIds = $this->challengePathSkillsGroupsStackService->getRecommendedChallengePath($challengePathId);
+            if ($challengePathIds) {
+                $challengePaths = $this->challengePathService->getRelatedChallengePaths($challengePathIds);
+            }
+
+            return $challengePaths;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceModules($resourceModuleId)
+    {
+        try {
+            $resourceModules = collect();
+            $resourceModuleIds = $this->resourceModuleSkillsGroupsStackService->getRecommendedResourceModule($resourceModuleId);
+            if ($resourceModuleIds) {
+                $resourceModules = $this->resourceModuleService->getRelatedResourceModules($resourceModuleIds);
+            }
+
+            return $resourceModules;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceCollections($resourceCollectionId)
+    {
+        try {
+            $resourceCollections = collect();
+            $resourceCollectionIds = $this->resourceCollectionSkillsGroupsStackService->getRecommendedResourceCollection($resourceCollectionId);
+            if ($resourceCollectionIds) {
+                $resourceCollections = $this->resourceCollectionService->getRelatedResourceCollections($resourceCollectionIds);
+            }
+
+            return $resourceCollections;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceGroups($resourceGroupId)
+    {
+        try {
+            $resourceGroups = collect();
+            $resourceGroupIds = $this->resourceGroupSkillsGroupsStackService->getRecommendedResourceGroup($resourceGroupId);
+            if ($resourceGroupIds) {
+                $resourceGroups = $this->resourceGroupService->getRelatedResourceGroups($resourceGroupIds);
+            }
+
+            return $resourceGroups;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
