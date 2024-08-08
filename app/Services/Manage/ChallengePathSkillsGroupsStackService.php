@@ -149,7 +149,6 @@ class ChallengePathSkillsGroupsStackService
         }
     }
 
-
     public function getRecommendedChallengePath($challengePathId)
     {
         try {
