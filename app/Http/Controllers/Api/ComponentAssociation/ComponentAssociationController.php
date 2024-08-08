@@ -798,6 +798,38 @@ class ComponentAssociationController extends AppBaseController
                         $message = __('responses.challenge_related_found');
                     }
                     break;
+
+                case 'challenge-path':
+                    $fetchRelatedChallengePaths = $this->componentAssociationRepository->fetchRelatedChallengePaths($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedChallengePaths->isNotEmpty()) {
+                        $response = ChallengePathResource::collection($fetchRelatedChallengePaths);
+                        $message = __('responses.challenge_path_related_found');
+                    }
+                    break;
+
+                case 'resource-module':
+                    $fetchRelatedResourceModules = $this->componentAssociationRepository->fetchRelatedResourceModules($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedResourceModules->isNotEmpty()) {
+                        $response = ResourceModuleResource::collection($fetchRelatedResourceModules);
+                        $message = __('responses.resource_module_related_found');
+                    }
+                    break;
+
+                case 'resource-collection':
+                    $fetchRelatedResourceCollections = $this->componentAssociationRepository->fetchRelatedResourceCollections($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedResourceCollections->isNotEmpty()) {
+                        $response = ResourceCollectionResource::collection($fetchRelatedResourceCollections);
+                        $message = __('responses.resource_collection_related_found');
+                    }
+                    break;
+
+                case 'resource-group':
+                    $fetchRelatedResourceGroups = $this->componentAssociationRepository->fetchRelatedResourceGroups($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedResourceGroups->isNotEmpty()) {
+                        $response = ResourceGroupResource::collection($fetchRelatedResourceGroups);
+                        $message = __('responses.resource_group_related_found');
+                    }
+                    break;
             }
 
             return $this->sendResponse($response, $message, 200);

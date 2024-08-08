@@ -213,4 +213,18 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function getRelatedResourceGroups($resourceGroupIds)
+    {
+        try {
+            // Retrieve resource group with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceGroups = ResourceGroup::findMany($resourceGroupIds)->slice(0, 2);
+
+            return $resourceGroups;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

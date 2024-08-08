@@ -294,4 +294,18 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function getRelatedResourceModules($resourceModuleIds)
+    {
+        try {
+            // Retrieve resource module with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceModules = ResourceModule::findMany($resourceModuleIds)->slice(0, 2);
+
+            return $resourceModules;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

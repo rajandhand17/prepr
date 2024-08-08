@@ -53,4 +53,18 @@ interface ComponentAssociationInterface
     public function fetchResourceGroupLabAssociation($request, $labId);
 
     public function fetchResourceGroupsBasedOnChallengeId($request, $challengeId);
+
+    public function fetchRelatedLabs($labId);
+
+    public function fetchRelatedLabPrograms($labProgramId);
+
+    public function fetchRelatedChallenges($challengeId);
+
+    public function fetchRelatedChallengePaths($challengePathId);
+
+    public function fetchRelatedResourceModules($resourceModuleId);
+
+    public function fetchRelatedResourceCollections($resourceCollectionId);
+
+    public function fetchRelatedResourceGroups($resourceGroupId);
 }
