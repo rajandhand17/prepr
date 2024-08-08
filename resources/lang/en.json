@@ -1374,5 +1374,6 @@
     "responses.organization_subscription_retrieved": "Organization subscription details retrieved.",
     "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later.",
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
-    "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines."
+    "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
+    "responses.no_association_found": "No component association data found."
 }
