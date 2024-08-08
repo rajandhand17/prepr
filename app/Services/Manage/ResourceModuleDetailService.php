@@ -132,7 +132,8 @@ class ResourceModuleDetailService
         try {
             foreach ($request->links as  $value) {
                 $type = config('constants.resource_module_type.url');
-                $checkExistsResourceModules = self::checkDuplicateLinks($request, $resource_module_id);
+                $checkExistsResourceModules = self::checkDuplicateLinks($value['path'],$value['social_link_id'], $resource_module_id);
+
                 if (!$checkExistsResourceModules) {
                     $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
                     if (!$resourceModuleDetailed) {
@@ -140,7 +141,6 @@ class ResourceModuleDetailService
                     }
                 }
             }
-
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -149,18 +149,10 @@ class ResourceModuleDetailService
         }
     }
 
-    public function checkDuplicateLinks($request, $resource_module_id)
+    public function checkDuplicateLinks($path,$social_link_id, $resource_module_id)
     {
         try {
-            $duplicatedValues = [];
-            foreach ($request->links as  $value) {
-                $resourceModuleDetailed = ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$value['path'], 'social_link_id'=>$value['social_link_id']])->first();
-                if ($resourceModuleDetailed) {
-                    $duplicatedValues = $resourceModuleDetailed;
-                }
-            }
-
-            return $duplicatedValues;
+            return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$path, 'social_link_id'=>$social_link_id])->first();
         } catch (\Exception $e) {
             return false;
         }
