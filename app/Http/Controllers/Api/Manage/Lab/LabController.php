@@ -138,11 +138,13 @@ class LabController extends AppBaseController
 
             $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if (!$uploaded_achievement_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
 
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image, $organization);
