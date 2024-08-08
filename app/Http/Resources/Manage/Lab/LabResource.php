@@ -236,7 +236,6 @@ class LabResource extends JsonResource
             'media'                            => $media,
             'created_by'                       => $created_by,
             'source'                           => LabService::getSourceByLabId($this->id),
-            'requirements'                     => $achievement ? $achievement['achievement_condition'] : [],
             'is_pre_build'                     => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'user'                             => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                  => $this->organization->uuid,

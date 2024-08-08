@@ -239,7 +239,6 @@ class LabResource extends JsonResource
             'id'                            => $this->uuid,
             'type'                          => LabTypeResource::make($this->labType()),
             'created_by'                    => $created_by,
-            'requirements'                  => $achievement ? $achievement['achievement_condition'] : [],
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,

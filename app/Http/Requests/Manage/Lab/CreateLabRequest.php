@@ -64,19 +64,21 @@ class CreateLabRequest extends FormRequest
 
         // Lab cover image validation
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
-            $base_rules['cover_image'] = [
-                'required',
-                'mimes:jpeg,jpg,png,webp',
-                'max:5120',
-                function ($attribute, $value, $fail) {
-                    if ($value && $value->isValid()) {
-                        $image = getimagesize($value);
-                        if ($image && ($image[0] < 625 || $image[1] < 355)) {
-                            $fail(''.$attribute.' must be at least 625x355 pixels.');
+            if ($this->hasFile('cover_image') && $this->file('cover_image')->isValid()) {
+                $base_rules['cover_image'] = [
+                    'required',
+                    'mimes:jpeg,jpg,png,webp',
+                    'max:5120',
+                    function ($attribute, $value, $fail) {
+                        if ($value && $value->isValid()) {
+                            $image = getimagesize($value);
+                            if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                                $fail(''.$attribute.' must be at least 625x355 pixels.');
+                            }
                         }
-                    }
-                },
-            ];
+                    },
+                ];
+            }
         }
 
         if ($this->has('media_type') && $this->input('media_type') == 'embedded') {
