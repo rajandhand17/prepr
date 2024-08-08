@@ -117,7 +117,6 @@ class LabRepository implements LabInterface
                 $createLab = $this->labService->createLab($request, $upload_profile_image, $organizationData->id);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
-                $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createLab);
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createLab);
                 $labTypeModes = $this->labTypeModesService->labTypeModes($request, $createLab->id);
                 if ($request->is_achievement_enabled == 'yes') {
@@ -162,7 +161,6 @@ class LabRepository implements LabInterface
                     'createdLab'                  => $createLab,
                     'createdLabAddress'           => $createdLabAddress,
                     'createdLabSkillAssociations' => $createdLabSkillAssociations,
-                    'createdLabTagAssociations'   => $createdLabTagAssociations,
                     'createdLabExternalLinks'     => $createdLabExternalLinks,
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
@@ -176,7 +174,6 @@ class LabRepository implements LabInterface
                 $createdLab['createdLab'] &&
                 $createdLab['createdLabAddress'] &&
                 $createdLab['createdLabSkillAssociations'] &&
-                $createdLab['createdLabTagAssociations'] &&
                 $createdLab['createdLabExternalLinks'] &&
                 $createdLab['createdLabAchievement'] &&
                 $createdLab['createdLabAssociations'] &&
@@ -218,7 +215,6 @@ class LabRepository implements LabInterface
                 $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image, $organizationData);
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updateLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updateLab->id);
-                $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updateLab->id);
 
                 $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updateLab->id);
                 $labTypeModes = $this->labTypeModesService->labTypeModes($request, $updateLab->id);
@@ -264,7 +260,6 @@ class LabRepository implements LabInterface
                     'updatedLab'                  => $updateLab,
                     'updatedLabAddress'           => $updatedLabAddress,
                     'updatedLabSkillAssociations' => $updatedLabSkillAssociations,
-                    'updatedLabTagAssociations'   => $updatedLabTagAssociations,
                     'updatedLabExternalLinks'     => $updatedLabExternalLinks,
                     'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
                     'updatedLabAssociations'      => $updatedLabAssociations,
@@ -278,7 +273,6 @@ class LabRepository implements LabInterface
                 $updatedLab['updatedLab'] &&
                 $updatedLab['updatedLabAddress'] &&
                 $updatedLab['updatedLabSkillAssociations'] &&
-                $updatedLab['updatedLabTagAssociations'] &&
                 $updatedLab['updatedLabExternalLinks'] &&
                 $updatedLab['updatedLabAchievement'] &&
                 $updatedLab['updatedLabAssociations'] &&
