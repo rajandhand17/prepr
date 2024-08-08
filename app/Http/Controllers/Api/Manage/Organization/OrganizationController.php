@@ -715,7 +715,6 @@ class OrganizationController extends AppBaseController
     public function plansDetail()
     {
         try {
-
             $planData = $this->organizationRepository->allPlansData();
             if ($planData) {
                 return $this->sendResponse($planData, __('responses.plan_details_retrived'));
@@ -728,7 +727,6 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
-
 
     public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
     {
