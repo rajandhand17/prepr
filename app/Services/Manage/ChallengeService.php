@@ -138,6 +138,38 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
+                });
+            }
+
+            if ($request->has('template_status') && !empty($request->template_status) && is_array($request->template_status)) {
+                $challenge_list = $challenge_list->whereIn('challenges.uuid', function ($query) use ($request) {
+                    $query->select('challenge_templates.uuid')->from('challenge_templates')->whereIn('status', $request->template_status);
+                });
+            }
+
+            if ($request->has('source') && !empty($request->source)) {
+                switch ($request->source) {
+                    case 'onboarding_challenges':
+                        $challenge_list = $challenge_list->where('is_auto_created', 1);
+                        break;
+
+                    case 'created_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id);
+                        break;
+
+                    case 'created_by_organizations':
+                        $challenge_list = $challenge_list->where('organization_id', auth()->user()->preferred_organization);
+                        break;
+
+                    case 'cloned_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', 1);
+                        break;
+                }
+            }
+
             return $challenge_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
