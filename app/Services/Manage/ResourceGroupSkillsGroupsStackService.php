@@ -182,7 +182,6 @@ class ResourceGroupSkillsGroupsStackService
         }
     }
 
-
     public static function getRecommendedResourceGroup($resourceGroupId)
     {
         try {
