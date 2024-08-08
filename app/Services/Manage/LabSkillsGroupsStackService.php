@@ -199,4 +199,22 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
+
+    public function getRecommendedLab($labId)
+    {
+        try {
+            $labIds = collect();
+            // Get unique foreign IDs related to the given lab ID
+            $skillsArray = LabSkillsGroupsStack::where(['type' => '0', 'lab_id' => $labId])->pluck('foreign_id')->unique();
+            if ($skillsArray->isNotEmpty()) {
+                $labIds = LabSkillsGroupsStack::where('type', '0')->whereIn('foreign_id', $skillsArray)->where('lab_id', '<>', $labId)->pluck('lab_id');
+            }
+
+            return $labIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

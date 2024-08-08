@@ -477,4 +477,19 @@ class ChallengeService
             return false;
         }
     }
+
+
+    public function getRelatedChallenges($challengeIds)
+    {
+        try {
+            // Retrieve challenge with the given IDs using findMany for primary keys and limiting by 2 values
+            $challenges = Challenge::findMany($challengeIds)->slice(0, 2);
+
+            return $challenges;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
