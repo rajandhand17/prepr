@@ -18,10 +18,9 @@ use App\Services\Manage\OrganizationService;
 use App\Services\UserService;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Customer;
+use ChargeBee\ChargeBee\Models\Entitlement;
 use ChargeBee\ChargeBee\Models\Item;
 use ChargeBee\ChargeBee\Models\Plan;
-use ChargeBee\ChargeBee\Models\Entitlement;
-use ChargeBee\ChargeBee\Models\Feature;
 use ChargeBee\ChargeBee\Models\Subscription;
 use ChargeBee\ChargeBee\Models\SubscriptionEntitlement;
 use Exception;
@@ -239,46 +238,46 @@ class ChargebeeHelper
         }
     }
 
-      // get plan details and their limits from the API.
-      public static function getAllPlanDetailsAndLimits()
-      {
-          try {
-              Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
-              $allPlans = Item::all(array(
-                  "type[is]" => "plan"
-                ));
-                $plansDetails = [];
-                foreach($allPlans as $entry){
-                    $item = $entry->item();
-                    $planDetails = [
-                        'id' => $item->id,
-                        'name' => $item->name,
-                        'description' => $item->description,
-                        'entitlements' => []
+    // get plan details and their limits from the API.
+    public static function getAllPlanDetailsAndLimits()
+    {
+        try {
+            Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            $allPlans = Item::all([
+                'type[is]' => 'plan',
+            ]);
+            $plansDetails = [];
+            foreach ($allPlans as $entry) {
+                $item = $entry->item();
+                $planDetails = [
+                    'id'           => $item->id,
+                    'name'         => $item->name,
+                    'description'  => $item->description,
+                    'entitlements' => [],
+                ];
+                // Fetch entitlements for the plan
+                $entitlements = Entitlement::all([
+                    'entity_id[is]' => $item->id,
+                ]);
+
+                foreach ($entitlements as $entitlementEntry) {
+                    $entitlement = $entitlementEntry->entitlement();
+                    $planDetails['entitlements'][] = [
+                        'id'         => $entitlement->id,
+                        'feature_id' => $entitlement->featureId,
+                        'value'      => $entitlement->value,
                     ];
-                    // Fetch entitlements for the plan
-                    $entitlements = Entitlement::all([
-                        "entity_id[is]" => $item->id
-                    ]);
-                    
-                    foreach ($entitlements as $entitlementEntry) {
-                        $entitlement = $entitlementEntry->entitlement();
-                        $planDetails['entitlements'][] = [
-                            'id' => $entitlement->id,
-                            'feature_id' => $entitlement->featureId,
-                            'value' => $entitlement->value
-                        ];
-                    }      
-                    $plansDetails[] = $planDetails;
-                
                 }
-                return $plansDetails;
-          } catch (Exception $e) {
-              UtilityHelper::logError($e);
-  
-              return false;
-          }
-      }
+                $plansDetails[] = $planDetails;
+            }
+
+            return $plansDetails;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 
     // below function is used to create the entries in the local db when new organization plans are registered
     public static function createChargebeePlanDetails($organizationId)
