@@ -481,4 +481,31 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getRelatedResources($slug)
+    {
+        try {
+            // Check if the resource module with the given slug exists
+            $resourceModule = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$resourceModule) {
+                return $this->sendError(__('responses.resource_module_slug_not_found'), 404);
+            }
+            // Get related resource modules
+            $relatedResources = $this->resourceModuleRepository->getRelatedResources($resourceModule->id);
+            // Determine response based on whether related resources were found
+            $responseMessage = $relatedResources->isEmpty()
+                ? __('responses.related_resource_not_found')
+                : __('responses.related_resource_found');
+            $responseData = $relatedResources->isEmpty()
+                ? []
+                : ResourceModuleResource::collection($relatedResources);
+
+            return $this->sendResponse($responseData, $responseMessage);
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }

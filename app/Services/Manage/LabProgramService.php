@@ -378,4 +378,17 @@ class LabProgramService
             return false;
         }
     }
+
+    public function fetchLabProgramReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchLabProgram = LabProgram::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchLabProgram;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

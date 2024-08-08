@@ -565,7 +565,7 @@ class OrganizationService
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $organizationData->lab_programs_count->count(),
                 'pre_build_lab_limit'           => $preBuildLab,
-                'pre_build_lab_count'           => $organizationData->preBuiltLabs_count->count(),
+                'pre_build_lab_count'           => $organizationData->pre_built_labs_count->count(),
                 'challenge_limit'               => $challengeLimit,
                 'challenge_count'               => $organizationData->challenges_count->count(),
                 'challenge_path_limit'          => $challengePathLimit,
