@@ -398,4 +398,32 @@ class LabService
             return false;
         }
     }
+
+    public function getComponentBasedLabList($request, $organizationId)
+    {
+        try {
+            $lab_list = Lab::where(['labs.organization_id' => $organizationId, 'labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabAssociation($request, $fetchLabAssociation)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $fetchLabAssociation)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
