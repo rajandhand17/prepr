@@ -148,4 +148,23 @@ class ChallengePathSkillsGroupsStackService
             return false;
         }
     }
+
+
+    public function getRecommendedChallengePath($challengePathId)
+    {
+        try {
+            $challengePathIds = collect();
+            // Get unique foreign IDs related to the given challenge path ID
+            $skillsArray = ChallengePathSkillGroupStack::where(['type' => '0', 'challenge_path_id' => $challengePathId])->pluck('foreign_id')->unique();
+            if ($skillsArray->isNotEmpty()) {
+                $challengePathIds = ChallengePathSkillGroupStack::where('type', '0')->whereIn('foreign_id', $skillsArray)->where('challenge_path_id', '<>', $challengePathId)->pluck('challenge_path_id');
+            }
+
+            return $challengePathIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

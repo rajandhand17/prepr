@@ -2,7 +2,7 @@
 
 return [
     'pagination_per_page'                => '15',
-    'association_pagination_per_page'    => '10',
+    'association_pagination_per_page'    => '6',
     'pagination_per_page_career'         => '3',
     'pagination_per_page_advance_search' => '12',
     'message_per_page'                   => '30',
