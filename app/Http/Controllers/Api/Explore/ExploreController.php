@@ -112,7 +112,8 @@ class ExploreController extends AppBaseController
 
                 return $this->sendResponse(TeamMatchingListResource::collection($project), __('responses.team_matching_list_successfully'));
             }
-             return $this->sendResponse([],__('responses.team_matching_list_successfully'));
+
+            return $this->sendResponse([], __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
