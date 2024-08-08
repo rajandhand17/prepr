@@ -61,7 +61,7 @@
     "responses.failed_registration": "Sorry! we were unable to register, please try later!",
     "responses.email_subject_forget_password": "Forget Password",
     "responses.email_subject_verified_successfully": "Verified Successfully",
-    "responses.otp_correct_required": "Please enter a valid OTP!",
+    "responses.otp_correct_required": "The OTP you entered is incorrect",
     "responses.account_not_verified": "Please verify your account to continue!",
     "responses.email_subject_reset_password": "Reset Password Successfull!",
     "responses.first_name_field_required": "This first name field is required",
