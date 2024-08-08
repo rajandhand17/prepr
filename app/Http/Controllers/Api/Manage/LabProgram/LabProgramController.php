@@ -111,17 +111,17 @@ class LabProgramController extends AppBaseController
             }
 
             $upload_media = config('site-settings.default_lab_program_profile_image');
-                if ($request->media_type == 'image') {
-                    if ($request->hasFile('media') && $request->file('media')->isValid()) {
-                        $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
-                        if (!$uploaded_media) {
-                            return $this->sendError(__('responses.image_upload_failed'), 400);
-                        }
-                        $upload_media = $uploaded_media;
+            if ($request->media_type == 'image') {
+                if ($request->hasFile('media') && $request->file('media')->isValid()) {
+                    $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
+                    if (!$uploaded_media) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
                     }
-                } elseif ($request->media_type == 'embedded') {
-                    $upload_media = $request->media;
+                    $upload_media = $uploaded_media;
                 }
+            } elseif ($request->media_type == 'embedded') {
+                $upload_media = $request->media;
+            }
             $upload_achievement_image = config('site-settings.default_lab_program_profile_image');
             if ($request->achievement_image !== null) {
                 if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
