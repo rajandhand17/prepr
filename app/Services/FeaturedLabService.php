@@ -29,10 +29,14 @@ class FeaturedLabService
     public static function createFeaturedLab($lab)
     {
         try {
-            $featuredLab = new FeaturedLab();
-            $featuredLab->lab_id=$lab->id;
-            $featuredLab->save();
-            return true;
+            $featuredLab=FeaturedLab::where('lab_id',$lab->id)->first();
+            if($featuredLab){
+                $featuredLab = new FeaturedLab();
+                $featuredLab->lab_id=$lab->id;
+                $featuredLab->save();
+                return true;
+            }
+            return false;
         }catch (\Exception $e) {
             UtilityHelper::logError($e);
             return false;
