@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\UtilityHelper;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -54,10 +55,12 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if ($this->shouldReport($e)) {
+            UtilityHelper::logError($e);
+        }
         if ($e instanceof NotFoundException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_not_found_404')), 404);
         }
-
         if ($e instanceof AuthenticationException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_access_denied_403')), 403);
         }

@@ -16,9 +16,9 @@ return [
     ],
 
     'discussion_module_type' => [
-        'lab'           => '0',
-        'challenge'     => '1',
-        'project'       => '2',
+        'lab'       => '0',
+        'challenge' => '1',
+        'project'   => '2',
     ],
 
     'member_management_type' => [
@@ -137,7 +137,11 @@ return [
     'challenge_status' => [
         'draft'   => '0',
         'publish' => '1',
-        'archive' => '2',
+    ],
+
+    'description_type' => [
+        'text'      => '0',
+        'scorm'     => '1',
     ],
 
     'resource_module_type' => [
@@ -250,6 +254,11 @@ return [
         'both'  => '2',
     ],
 
+    'challenge_flexible_announcement_by' => [
+        'email'        => '0',
+        'notification' => '1',
+    ],
+
     'challenge_announcement_send_status' => [
         'send'      => '0',
         'draft'     => '1',
@@ -308,24 +317,24 @@ return [
     ],
 
     'project_view_enabled' => [
-        'no'        => '0',
-        'yes'       => '1',
+        'no'  => '0',
+        'yes' => '1',
     ],
 
     'project_download_enabled' => [
-        'no'        => '0',
-        'yes'       => '1',
+        'no'  => '0',
+        'yes' => '1',
     ],
 
     'project_media_type' => [
-        'image'         => '0',
-        'embedded'      => '1',
-        'video'         => '2',
+        'image'    => '0',
+        'embedded' => '1',
+        'video'    => '2',
     ],
 
     'project_privacy' => [
-        'public'       => '0',
-        'private'      => '1',
+        'public'  => '0',
+        'private' => '1',
     ],
 
     'project_file_type' => [
@@ -394,63 +403,63 @@ return [
         '2' => 'announcement',
     ],
 
-    'purpose'=> [
-        'looking_teams'                  => '0',
-        'currently_mentor'               => '1',
-        'looking_employers'              => '2',
-        'currently_team'                 => '3',
-        'looking_teammates'              => '4',
-        'looking_employees'              => '5',
-        'looking_invest'                 => '6',
-        'looking_mentor'                 => '7',
-        'looking_for_investors'          => '8',
-        'looking_to_create_social_impact'=> '9',
-        'looking_to_learn'               => '10',
-        'looking_to_solve_problems'      => '11',
-        'looking_to_build_skills'        => '12',
+    'purpose' => [
+        'looking_teams'                   => '0',
+        'currently_mentor'                => '1',
+        'looking_employers'               => '2',
+        'currently_team'                  => '3',
+        'looking_teammates'               => '4',
+        'looking_employees'               => '5',
+        'looking_invest'                  => '6',
+        'looking_mentor'                  => '7',
+        'looking_for_investors'           => '8',
+        'looking_to_create_social_impact' => '9',
+        'looking_to_learn'                => '10',
+        'looking_to_solve_problems'       => '11',
+        'looking_to_build_skills'         => '12',
     ],
 
-    'user_types'=> [
-        'employee'                  => '0',
-        'investor'                  => '1',
-        'teacher'                   => '2',
-        'job_seeker'                => '3',
-        'student'                   => '4',
-        'recent_grad'               => '5',
-        'expert'                    => '6',
-        'employer'                  => '7',
-        'Recent Grad'               => '8',
-        'facilitator'               => '9',
-        'Job Seeker'                => '10',
-        'startup'                   => '11',
-        'learner'                   => '12',
-        'mentor'                    => '13',
-        'innovator'                 => '14',
-        'aspiring_entrepreneur'     => '15',
-        'evaluator'                 => '16',
-        'small'                     => '17',
-        'entrepreneur'              => '18',
-        'ngo'                       => '19',
-        'enterprise'                => '20',
-        'applicant'                 => '21',
-        'educational'               => '22',
-        'community'                 => '23',
-        'educator'                  => '24',
-        'government'                => '25',
-        'others'                    => '26',
+    'user_types' => [
+        'employee'              => '0',
+        'investor'              => '1',
+        'teacher'               => '2',
+        'job_seeker'            => '3',
+        'student'               => '4',
+        'recent_grad'           => '5',
+        'expert'                => '6',
+        'employer'              => '7',
+        'Recent Grad'           => '8',
+        'facilitator'           => '9',
+        'Job Seeker'            => '10',
+        'startup'               => '11',
+        'learner'               => '12',
+        'mentor'                => '13',
+        'innovator'             => '14',
+        'aspiring_entrepreneur' => '15',
+        'evaluator'             => '16',
+        'small'                 => '17',
+        'entrepreneur'          => '18',
+        'ngo'                   => '19',
+        'enterprise'            => '20',
+        'applicant'             => '21',
+        'educational'           => '22',
+        'community'             => '23',
+        'educator'              => '24',
+        'government'            => '25',
+        'others'                => '26',
     ],
 
     'project_member_management_invite_type' => [
-        'email'        => '0',
-        'network'      => '1',
-        'csv'          => '2',
+        'email'   => '0',
+        'network' => '1',
+        'csv'     => '2',
     ],
 
     'project_member_management_invite_status' => [
-        'invited'      => '0',
-        'accepted'     => '1',
-        'pending'      => '2',
-        'declined'     => '3',
+        'invited'  => '0',
+        'accepted' => '1',
+        'pending'  => '2',
+        'declined' => '3',
     ],
 
     'project_member_management_email_status' => [
@@ -461,12 +470,12 @@ return [
     ],
 
     'project_access_level' => [
-        'viewer'        => '0',
-        'editor'        => '1',
-        'team_leader'   => '2',
+        'viewer'      => '0',
+        'editor'      => '1',
+        'team_leader' => '2',
     ],
 
-    'recent_immigration'=> [
+    'recent_immigration' => [
         'yes' => '1',
         'no'  => '2',
     ],
@@ -477,7 +486,7 @@ return [
         'challenge'    => '2',
         'project'      => '3',
     ],
-    'campus_connect_status'  => [
+    'campus_connect_status' => [
         'job'   => '0',
         'story' => '1',
         'both'  => '2',
@@ -497,6 +506,13 @@ return [
         'no'    => '0',
         'yes'   => '1',
     ],
+    'sso_type' => [
+        'google'    => '1',
+        'linkedin'  => '2',
+        'microsoft' => '3',
+        'apple'     => '4',
+        'magnet'    => '5',
+    ],
 
     'visit_type_id' => [
         'document'              => '0',
@@ -508,5 +524,83 @@ return [
         'image'                 => '6',
         'scorm'                 => '7',
         'go1'                   => '8',
+    ],
+
+    'module_type' => [
+        'labs'                    => '0',
+        'lab_programs'            => '1',
+        'challenges'              => '2',
+        'challenge_paths'         => '3',
+        'resource_modules'        => '4',
+        'resource_collections'    => '5',
+        'resource_group'          => '6',
+        'projects'                => '7',
+    ],
+
+    'resource_types' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+    ],
+
+    'resource_types_key' => [
+        '0'       => 'assess',
+        '1'       => 'onboard',
+        '2'       => 'engage',
+        '3'       => 'grow',
+    ],
+    'resource_mode_type' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'resource_mode_type_key' => [
+        '4'       => 'team',
+        '5'       => 'individual',
+    ],
+    'resource_mode'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+
+    'module_completion_statuses_types'=> [
+        'resource_module'     => '4',
+        'resource_collection' => '5',
+        'resource_group'      => '6',
+    ],
+
+    'status_module_completion'=> [
+        'not_started' => '0',
+        'in_progress' => '1',
+        'completed'   => '2',
+    ],
+
+    'resource_media_type' => [
+        'image'    => '0',
+        'embedded' => '1',
+        'video'    => '2',
+    ],
+    'lab_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_program_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 ];

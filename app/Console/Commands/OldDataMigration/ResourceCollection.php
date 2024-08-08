@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\ResourceCollection as ResourceCollectionModule;
 use App\Models\ResourceCollectionTagsGroups;
@@ -68,7 +69,7 @@ class ResourceCollection extends Command
                     $resourceCollection->title = $singleResourceCollection->title;
                     $resourceCollection->slug = $singleResourceCollection->slug;
                     $resourceCollection->description = $singleResourceCollection->description;
-                    $resourceCollection->media_type = 'image';
+                    $resourceCollection->media_type = '0';  //0 for image and 1 for embedded
                     $resourceCollection->media = $singleResourceCollection->image;
                     $resourceCollection->level = '1';
                     $resourceCollection->duration = '1';
@@ -96,6 +97,7 @@ class ResourceCollection extends Command
 
             return;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e);
 

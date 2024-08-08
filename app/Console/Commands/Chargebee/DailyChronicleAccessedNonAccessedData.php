@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Chargebee;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
 use App\Models\ComponentAssociation;
@@ -13,6 +14,7 @@ use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
 use ChargeBee\ChargeBee\Environment;
 use ChargeBee\ChargeBee\Models\Subscription;
+use Countable;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -67,12 +69,15 @@ class DailyChronicleAccessedNonAccessedData extends Command
                             if (!empty($planDetails) && $planDetails['subscriptionDetail']->subscriptionItems[0]->itemPriceId != config('chargebee.chargebee_plan.unlimited_plan')) {
                                 $totalLimit = ChargebeeHelper::getTotalLimits($organizationId, $component);
                                 $createdComponentIds = ChargebeeHelper::getComponentUsage($organizationId, $component);
-                                if ($createdComponentIds->count() != 0 && $totalLimit != []) {
-                                    foreach ($createdComponentIds as $key => $createdComponentId) {
-                                        if ($key < $totalLimit) {
-                                            $componentIds['accessed'][] = $createdComponentId;
-                                        } else {
-                                            $componentIds['nonAccessed'][] = $createdComponentId;
+
+                                if (is_array($createdComponentIds) || $createdComponentIds instanceof Countable) {
+                                    if (!empty($createdComponentIds) && count($createdComponentIds) > 0 && $totalLimit != []) {
+                                        foreach ($createdComponentIds as $key => $createdComponentId) {
+                                            if ($key < $totalLimit) {
+                                                $componentIds['accessed'][] = $createdComponentId;
+                                            } else {
+                                                $componentIds['nonAccessed'][] = $createdComponentId;
+                                            }
                                         }
                                     }
                                 }
@@ -92,14 +97,14 @@ class DailyChronicleAccessedNonAccessedData extends Command
                     }
 
                     // disabling the data fetch from above accessed and non-accessed data.
-                    if ($component === 'labs') {
+                    if ($component == 'labs') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             Lab::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             Lab::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'preBuiltLabs') {
+                    } elseif ($component == 'preBuiltLabs') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             Lab::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                             $associatedChallenges = ComponentAssociation::whereIn('lab_id', $componentIds['nonAccessed'])->whereNotNull('challenge_id')->pluck('challenge_id');
@@ -114,42 +119,42 @@ class DailyChronicleAccessedNonAccessedData extends Command
                             Challenge::whereIn('id', $associatedChallenges)->update(['is_accessible' => '1']);
                             ChallengePath::whereIn('id', $associatedChallengePaths)->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'labPrograms') {
+                    } elseif ($component == 'labPrograms') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             LabProgram::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             LabProgram::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'challenges') {
+                    } elseif ($component == 'challenges') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             Challenge::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             Challenge::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'challengePaths') {
+                    } elseif ($component == 'challengePaths') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             ChallengePath::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             ChallengePath::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'resourceModules') {
+                    } elseif ($component == 'resourceModules') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             ResourceModule::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             ResourceModule::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'resourceCollections') {
+                    } elseif ($component == 'resourceCollections') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             ResourceCollection::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
                         if (!empty($componentIds) && array_key_exists('accessed', $componentIds)) {
                             ResourceCollection::whereIn('id', $componentIds['accessed'])->update(['is_accessible' => '1']);
                         }
-                    } elseif ($component === 'resourceGroups') {
+                    } elseif ($component == 'resourceGroups') {
                         if (!empty($componentIds) && array_key_exists('nonAccessed', $componentIds)) {
                             ResourceGroup::whereIn('id', $componentIds['nonAccessed'])->update(['is_accessible' => '0']);
                         }
@@ -164,6 +169,7 @@ class DailyChronicleAccessedNonAccessedData extends Command
 
             return 0;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
         }

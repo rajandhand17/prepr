@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ProjectSkill;
 use App\Models\Skill;
 use Exception;
@@ -35,6 +36,21 @@ class ProjectSkillsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectIdsBasedOnSkills($skillIds)
+    {
+        try {
+            $projectIds = ProjectSkill::whereIn('skill_id', $skillIds)->pluck('project_id');
+
+            return $projectIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

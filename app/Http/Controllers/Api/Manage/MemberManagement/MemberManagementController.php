@@ -13,6 +13,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\MemberManagement\ChangeRoleRequest;
 use App\Http\Requests\Manage\MemberManagement\CreateMemberManagementRequest;
 use App\Http\Requests\Manage\MemberManagement\DeleteMemberManagementRequest;
+use App\Http\Requests\Manage\MemberManagement\MemberManagementRequest;
 use App\Http\Resources\EmailTemplate\EmailTemplateResource;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Manage\Roles\RolesResource;
@@ -70,6 +71,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendResponse($response, __('responses.member_manager_found'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -93,6 +96,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.create_member_manger_failed'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -111,11 +116,13 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.member_manger_not_delete'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function acceptOrRejectLabJoinRequest(Request $request, $component, $slug, $action)
+    public function acceptOrRejectLabJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
@@ -134,6 +141,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.request_not_exist'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -143,6 +152,8 @@ class MemberManagementController extends AppBaseController
         try {
             return $this->memberManagementRepository->downloadSample();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -161,6 +172,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_role_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -175,6 +188,8 @@ class MemberManagementController extends AppBaseController
 
             return $this->sendError(__('responses.role_assigned_failed'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

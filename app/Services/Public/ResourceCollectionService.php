@@ -2,9 +2,9 @@
 
 namespace App\Services\Public;
 
-use App\Models\Duration;
-use App\Models\Levels;
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceCollection;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceCollectionService
 {
@@ -16,6 +16,8 @@ class ResourceCollectionService
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -24,7 +26,7 @@ class ResourceCollectionService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $resourceCollectionList = $resourceCollectionList->where('resource_collections.title', 'like', '%'.$request->search.'%');
+                $resourceCollectionList = $resourceCollectionList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
@@ -78,28 +80,13 @@ class ResourceCollectionService
                         ->distinct();
                 })->distinct('resource_collections.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.id', function ($query) use ($request) {
-                    $query->select('resource_collection_tags_groups.challenge_id')
-                        ->from('resource_collection_tags_groups')
-                        ->whereIn('resource_collection_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_collection_tags_groups.type', '0')
-                        ->whereNull('resource_collection_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_collections.uuid');
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('level', $request->level_id);
             }
-            if ($request->has('level') && !empty($request->level)) {
-                $level = Levels::where('levels.title', 'like', '%'.$request->level.'%')->pluck('id');
-                if ($level) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.level', $level);
-                }
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $resourceCollectionList = $resourceCollectionList->whereIn('duration', $request->duration_id);
             }
-            if ($request->has('duration') && $request->duration) {
-                $duration = Duration::whereIn('durations.title', 'like', '%'.$request->duration.'%')->pluck('id');
-                if ($duration) {
-                    $resourceCollectionList = $resourceCollectionList->whereIn('resource_collections.duration', $duration);
-                }
-            }
+
             if ($request->has('social_type') && !empty($request->social_type) && $request->social_type == 'liked') {
                 $getCollectionLikedList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('like');
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionLikedList->pluck('resource_collection_id'));
@@ -113,9 +100,38 @@ class ResourceCollectionService
                 $getCollectionFavouriteList = ResourceCollectionSocialActivitiesService::getResourceCollectionBasedOnActivity('share');
                 $resourceCollectionList = $resourceCollectionList->whereIn('id', $getCollectionFavouriteList->pluck('resource_collection_id'));
             }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceCollectionsRating = ResourceCollectionRatingService::getResourceCollectionBasedOnRating($request->rating);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $getResourceCollectionsRating->pluck('resource_collection_id'));
+            }
+
+            if ($request->has('type') && $request->type !== null) {
+                $resourceCollectionType = ResourceCollectionTypeModesService::getResourceCollectionBasedOnType($request->type);
+                $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionType->pluck('resource_collection_id'));
+            }
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceCollectionProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_collection');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceCollectionProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                if (!empty($resourceCollectionProgress)) {
+                    $resourceCollectionList = $resourceCollectionList->whereIn('id', $resourceCollectionProgress->pluck('module_id'));
+                }
+            }
 
             return $resourceCollectionList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +141,8 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -134,6 +152,61 @@ class ResourceCollectionService
         try {
             return ResourceCollection::where(['id' => $id, 'is_accessible' => '1'])->select('title', 'uuid', 'media', 'description', 'slug')->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceCollectionBasedOnArrayIds($ids)
+    {
+        try {
+            return ResourceCollection::whereIn('id', $ids)->where('is_accessible', '1')->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedResourceCollectionList($request, $organizationId)
+    {
+        try {
+            $resourceCollectionList = ResourceCollection::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
+
+            return $resourceCollectionList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceCollectionAssociation($request, $fetchResourceCollectionAssociation)
+    {
+        try {
+            $resourceCollectionList = ResourceCollection::whereIn('id', $fetchResourceCollectionAssociation)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
+
+            return $resourceCollectionList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedResourceCollections($resourceCollectionIds)
+    {
+        try {
+            // Retrieve resource collection with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceCollections = ResourceCollection::findMany($resourceCollectionIds)->slice(0, 2);
+
+            return $resourceCollections;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

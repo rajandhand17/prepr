@@ -3,6 +3,7 @@
 namespace App\Listeners\ResourceModule;
 
 use App\Events\ResourceModule\DeleteResourceModuleAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
@@ -29,6 +30,10 @@ class HandleDeleteResourceModuleAssociatedData
             if (!$deleteResourceModuleDetail) {
                 return false;
             }
+            $deleteResourceModuleDetailVisit = ResourceModuleDetailService::deleteResourceModuleDetailVisit($resourceModuleId);
+            if (!$deleteResourceModuleDetailVisit) {
+                return false;
+            }
             $deleteResourceModuleSkillsGroupsStack = ResourceModuleSkillsGroupsStackService::deleteResourceModuleSkillsGroupsStack($resourceModuleId);
             if (!$deleteResourceModuleSkillsGroupsStack) {
                 return false;
@@ -44,6 +49,8 @@ class HandleDeleteResourceModuleAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

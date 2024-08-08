@@ -4,6 +4,7 @@ namespace App\Listeners\Organization;
 
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateService;
@@ -16,6 +17,7 @@ use App\Services\Manage\OrganizationMemberService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
+use App\Services\UserService;
 
 class HandleDeleteOrganizationAssociatedData
 {
@@ -48,6 +50,10 @@ class HandleDeleteOrganizationAssociatedData
             }
             $organizationCustomization = OrganizationCustomizationService::organizationCustomization($organizationId);
             if (!$organizationCustomization) {
+                return false;
+            }
+            $organizationPreference = UserService::organizationPreferenceUpdate($organizationId);
+            if (!$organizationPreference) {
                 return false;
             }
             $organizationLab = LabService::deleteOrganizationLab($organizationId);
@@ -89,6 +95,8 @@ class HandleDeleteOrganizationAssociatedData
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

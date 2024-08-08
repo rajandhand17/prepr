@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Helpers\MagnetHelper;
+use App\Helpers\MixpanelHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Builder\UserBuilder;
+use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\OrganizationService;
+use App\Services\UserEducationService;
+use App\Services\UserExperienceService;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +32,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -57,6 +65,11 @@ class User extends Authenticatable
         'is_onboarding_completed',
         'go1_id',
         'go1_user_metadata',
+        'magnet_user_id',
+        'magnet_user_role',
+        'display_lab_mini_onboarding',
+        'display_challenge_mini_onboarding',
+        'display_organization_mini_onboarding',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -70,6 +83,11 @@ class User extends Authenticatable
 
     protected $casts = ['go1_user_metadata' => 'object'];
 
+    public function newEloquentBuilder($query): UserBuilder
+    {
+        return new UserBuilder($query);
+    }
+
     public function receivesBroadcastNotificationsOn(): string
     {
         return 'users.'.$this->id;
@@ -82,7 +100,7 @@ class User extends Authenticatable
 
     public function userPersonal()
     {
-        return $this->hasOne(UserPersonal::class);
+        return $this->hasOne(UserPersonal::class, 'user_id', 'id');
     }
 
     public function userSetting()
@@ -103,6 +121,11 @@ class User extends Authenticatable
     public function userAchievements()
     {
         return $this->hasMany(UserAchievement::class, 'user_id', 'id');
+    }
+
+    public function userFeaturedAchievements()
+    {
+        return $this->hasMany(UserAchievement::class, 'user_id', 'id')->where('is_featured', '1');
     }
 
     public function userFollow()
@@ -224,11 +247,13 @@ class User extends Authenticatable
             /**checking user exists or not */
             $user = User::where('email', $request->email)->first();
             if ($user->verified_user == 0) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
             if ($user->is_deactivated == 1) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'not_active', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -253,20 +278,28 @@ class User extends Authenticatable
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
                     $data = User::where('email', $request->email)->first();
-                    $response = ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
+                    // Mixpanel Tracking Code: login attempt (successful)
+                    MixpanelHelper::mixpanel_tracking(
+                        config('mixpanel.login_success'),
+                        'successful',
+                        $data,
+                        $request->ip()
+                    );
 
-                    return $response;
+                    return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    $response = ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
 
-                    return $response;
+                    return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
             return $response;
@@ -290,6 +323,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -354,6 +389,21 @@ class User extends Authenticatable
                         /**sending otp on registeres email */
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
+                        if ($request->register_type == 'organization') {
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.org_sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        } else {
+                            MixpanelHelper::mixpanel_tracking(
+                                config('mixpanel.sign_up'),
+                                $request,
+                                $user,
+                                $request->ip()
+                            );
+                        }
 
                         return $success;
                     }
@@ -369,6 +419,7 @@ class User extends Authenticatable
 
             return ['success' => false, 'message' => __('responses.failed_registration')];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return ['success' => false, 'message' => __('responses.send_error')];
@@ -386,6 +437,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -401,6 +454,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -416,6 +471,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -475,6 +532,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -516,6 +575,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -531,6 +592,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -559,6 +622,8 @@ class User extends Authenticatable
                 return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -597,6 +662,8 @@ class User extends Authenticatable
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -651,43 +718,167 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function magnetSsoLogin($magnetUserDetails)
+    public function generateUniqueUsername($baseUsername)
+    {
+        $username = $baseUsername;
+        $number = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername.$number;
+            $number++;
+        }
+
+        return $username;
+    }
+
+    public function createOrFindMagnetUser($magnetUserDetails)
     {
         try {
-            /**checking user exists or not */
-            $user = User::where('email', $magnetUserDetails['data']->email)->first();
-            if ($user) {
-                $ssoKey = '5';
+            $user = User::where('email', data_get($magnetUserDetails, 'email'))->first();
+            if (!$user) {
+                // register users
+                $baseUsername = explode('@', data_get($magnetUserDetails, 'email'))[0];
+                $uniqueUserName = $this->generateUniqueUsername($baseUsername);
 
-                if ($ssoKey === null) {
-                    $response = ['success' => false, 'message' => __('responses.invalid_sso_type'), 'code' => 4];
-
-                    return $response;
-                }
-                $token = $user->createToken(env('APP_NAME'))->accessToken;
-//                $checkSSODetails = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $ssoKey])->first();
-//                if ($checkSSODetails == null) {
-//                    $usersso = UserSSOLogin::create($user, $request);
-//                } else {
-//                    $usersso = UserSSOLogin::where(['user_id' => $user->id, 'sso_type' => $request->sso_type])->update(['sub' => $request->sub, 'access_token' => $request->access_token]);
-//                }
-                $response = ['success' => true, 'user' => $user, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
-
-                return $response;
-            } else {
-                $userData = [
-                    'user'         => $magnetUserDetails['data'],
-                    'access_token' => $magnetUserDetails['access_token'],
-                ];
-                $response = ['success' => false, 'message' => __('responses.user_not_found'), 'data' => $userData, 'code' => 5];
-
-                return $response;
+                return User::query()->create([
+                    'first_name'     => data_get($magnetUserDetails, 'first_name'),
+                    'last_name'      => data_get($magnetUserDetails, 'last_name'),
+                    'username'       => $uniqueUserName,
+                    'email'          => data_get($magnetUserDetails, 'email'),
+                    'phone_number'   => data_get($magnetUserDetails, 'phone_number'),
+                    'full_name'      => data_get($magnetUserDetails, 'first_name').' '.data_get($magnetUserDetails, 'last_name'),
+                    'magnet_user_id' => data_get($magnetUserDetails, 'user_id'),
+                    'verified_user'  => '1',
+                ]);
             }
+
+            return $user;
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
+    public function magnetSsoLogin($magnetUserDetails, $accessToken)
+    {
+        try {
+            DB::beginTransaction();
+            $user = $this->createOrFindMagnetUser($magnetUserDetails);
+
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => __('responses.unauthorized'),
+                ];
+            }
+
+            UserSSOLogin::query()->updateOrCreate([
+                'user_id'      => $user->id,
+                'sso_type'     => config('constants.sso_type.magnet'),
+                'access_token' => $accessToken,
+            ]);
+
+            if (!$user->magnet_user_id) {
+                $user->magnet_user_id = data_get($magnetUserDetails, 'user_id');
+                $user->save();
+            }
+
+            $roles = ['user'];
+            $magnetUserRoles = [data_get($magnetUserDetails, 'role')];
+            if (data_get($magnetUserDetails, 'user_types')) {
+                foreach (data_get($magnetUserDetails, 'user_types') as $userType) {
+                    $magnetUserRoles[] = data_get($userType, 'api_tag');
+                    $roles[] = match (data_get($userType, 'api_tag')) {
+                        'ORG_ADMIN', 'ORG_FULL_ADMIN', 'ORG_OWNER' => 'organization_owner',
+                        default => 'user',
+                    };
+                }
+            }
+            $user->magnet_user_role = implode(',', array_filter($magnetUserRoles));
+
+            if (data_get($magnetUserDetails, 'education')) {
+                $addEducationDetails = UserEducationService::addMagnetEducationDetails($user, data_get($magnetUserDetails, 'education'));
+                if (!$addEducationDetails) {
+                    DB::rollBack();
+
+                    return [
+                        'success' => false,
+                        'message' => __('responses.unauthorized'),
+                    ];
+                }
+            }
+
+            if (data_get($magnetUserDetails, 'employment')) {
+                $addEmploymentDetails = UserExperienceService::addMagnetUserExperience($user, data_get($magnetUserDetails, 'employment'));
+                if (!$addEmploymentDetails) {
+                    DB::rollBack();
+
+                    return [
+                        'success' => false,
+                        'message' => __('responses.unauthorized'),
+                    ];
+                }
+            }
+            // AUTO INVITE TO ORGANIZATION BASED ON MAGNET COMMUNITY ID
+            $lmsUserInfo = MagnetHelper::getLMSUserInfo($accessToken);
+            if (count($lmsUserInfo) > 0) {
+                $communitiesIds = array_filter(array_map(function ($item) {
+                    return data_get($item, 'affiliate_id');
+                }, $lmsUserInfo));
+
+                if (isset($communitiesIds[0])) {
+                    $user->preferred_organization = $communitiesIds[0];
+                }
+
+                $formattedUsers = collect([[
+                    'type'          => config('constants.member_management_type.invite'),
+                    'invite_status' => '1',
+                    'invite_type'   => config('constants.member_management_invite_type.email'),
+                    'invitee_name'  => data_get($user, 'full_name'),
+                    'invitee_email' => data_get($user, 'email'),
+                    'role'          => 'User',
+                ]]);
+                $organizations = OrganizationService::getOrganizationBasedOnCommunityIds($communitiesIds);
+                if ($organizations) {
+                    $organizations->map(function ($organization) use ($formattedUsers) {
+                        MemberManagementService::addMembers(
+                            $organization,
+                            'organization',
+                            (object) [
+                                'auto_invite'  => 'yes',
+                                'email_status' => 'sent',
+                                'subject_line' => 'Invitation to Learn Lab '.$organization->display_name,
+                                'email_body'   => 'Welcome to the '.$organization->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
+                            ],
+                            $formattedUsers
+                        );
+                    });
+                }
+            }
+
+            $user->attachRoles(array_unique($roles));
+            $user->save();
+            $token = $user->createToken(env('APP_NAME'))->accessToken;
+            DB::commit();
+
+            return [
+                'success' => true,
+                'user'    => $user,
+                'code'    => 3,
+                'token'   => $token,
+                'message' => __('responses.user_login_success'),
+            ];
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            DB::rollBack();
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -704,6 +895,8 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -716,5 +909,10 @@ class User extends Authenticatable
     public function presence()
     {
         return $this->hasOne(ConversationUserPresenceStatus::class, 'user_id', 'id');
+    }
+
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }

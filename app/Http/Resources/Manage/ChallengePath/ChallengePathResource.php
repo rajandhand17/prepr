@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\ChallengePath;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -36,7 +37,6 @@ class ChallengePathResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->challenge_id) {
@@ -101,11 +101,36 @@ class ChallengePathResource extends JsonResource
             ];
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->challenge_path_completion_status) {
+            switch ($this->challenge_path_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->challenge_path_completion_status->percentage,
+            ];
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'description'                   => $this->description,
             'challenges'                    => $componentAssociation,
             'user_id'                       => $this->user_id,
@@ -132,6 +157,7 @@ class ChallengePathResource extends JsonResource
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
             'liked'                         => $this->liked(),
             'member_count'                  => '0', //Static for temporary basis,
+            'module_progress'               => $module_progress,
             'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
         ];
     }

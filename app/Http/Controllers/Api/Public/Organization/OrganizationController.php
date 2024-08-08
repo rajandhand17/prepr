@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api\Public\Organization;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
+use App\Http\Resources\Public\Organization\OrganizationDetailResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
@@ -36,6 +37,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -50,6 +53,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -76,6 +81,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

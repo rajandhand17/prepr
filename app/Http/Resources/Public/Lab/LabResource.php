@@ -7,6 +7,7 @@ use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
@@ -22,6 +23,7 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -53,12 +55,12 @@ class LabResource extends JsonResource
         $resource_modules = [];
         $resource_collections = [];
         $resource_groups = [];
+        $module_progress = null;
 
         if ($this->getCategory) {
             $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
         }
-
         if ($this->durations) {
             $duration = $this->durations->title;
             $duration_id = $this->durations->id;
@@ -155,7 +157,7 @@ class LabResource extends JsonResource
                         }
                     }
                 }
-                if (count($lab_programs) < 5) {
+                if (count($challenges) < 5) {
                     if ($lab_association->challenge_id) {
                         $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
                         if ($getChallenge !== null) {
@@ -198,8 +200,45 @@ class LabResource extends JsonResource
             }
         }
 
+        if (auth('api')->check()) {
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->lab_completion_status) {
+                switch ($this->lab_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
+
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->lab_completion_status->percentage,
+                ];
+            }
+        }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
+
         return [
             'id'                            => $this->uuid,
+            'type'                          => LabTypeResource::make($this->labType()),
+            'created_by'                    => $created_by,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
@@ -208,6 +247,7 @@ class LabResource extends JsonResource
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
             'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
@@ -216,7 +256,7 @@ class LabResource extends JsonResource
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
-            'status'                        => $this->status,
+            'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                  => $this->members()->count(),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
@@ -231,6 +271,7 @@ class LabResource extends JsonResource
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favourite(),
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'module_progress'               => $module_progress,
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),

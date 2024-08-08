@@ -3,6 +3,7 @@
 namespace App\Listeners\ChallengeTemplate;
 
 use App\Events\ChallengeTemplate\DeleteChallengeTemplateAssociatedData;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeTemplateAchievementService;
 use App\Services\Manage\ChallengeTemplateAssessmentCriteriaService;
@@ -13,7 +14,6 @@ use App\Services\Manage\ChallengeTemplateProjectTemplateService;
 use App\Services\Manage\ChallengeTemplateRequirementService;
 use App\Services\Manage\ChallengeTemplateSkillsGroupsStackService;
 use App\Services\Manage\ChallengeTemplateSponsorService;
-use App\Services\Manage\ChallengeTemplateTagsGroupsService;
 use App\Services\Manage\ChallengeTemplateTimelinesService;
 use Exception;
 
@@ -41,11 +41,6 @@ class HandleDeleteChallengeTemplateAssociatedData
 
             $challengeTemplateSkillsGroupsStack = ChallengeTemplateSkillsGroupsStackService::deleteChallengeTemplateSkillsGroupsStacks($challengeTemplateId);
             if (!$challengeTemplateSkillsGroupsStack) {
-                return false;
-            }
-
-            $challengeTemplateTagsGroups = ChallengeTemplateTagsGroupsService::deleteChallengeTemplateTagsGroups($challengeTemplateId);
-            if (!$challengeTemplateTagsGroups) {
                 return false;
             }
 
@@ -96,6 +91,8 @@ class HandleDeleteChallengeTemplateAssociatedData
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

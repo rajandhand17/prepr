@@ -35,6 +35,7 @@ class UnifiedBaseHelper
 
             return $response;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
             if ($iteration === 1) {
                 return self::get($url, $params, $headers, $iteration + 1);
             }

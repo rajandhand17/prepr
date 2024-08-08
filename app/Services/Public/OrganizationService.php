@@ -2,7 +2,9 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Organization;
+use App\Services\Manage\ChargebeeSubscriptionService;
 use Exception;
 
 class OrganizationService
@@ -15,6 +17,8 @@ class OrganizationService
 
             return $organization_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -70,8 +74,35 @@ class OrganizationService
                 }
             }
 
+            if ($request->has('plan') && !empty($request->plan)) {
+                $getPlan = config('chargebee.chargebee_plan.'.$request->plan);
+                if ($getPlan) {
+                    $getOrganizationIds = ChargebeeSubscriptionService::getChargebeeBasedOnSubscription($request->plan);
+                    $organization_list = $organization_list->whereIn('organizations.id', $getOrganizationIds);
+                }
+            }
+
+            if ($request->has('total_employees') && !empty($request->total_employees)) {
+                switch ($request->total_employees) {
+                    case '1':
+                        $organization_list = $organization_list->whereBetween('total_employees', [0, 50]);
+                        break;
+                    case '2':
+                        $organization_list = $organization_list->whereBetween('total_employees', [51, 250]);
+                        break;
+                    case '3':
+                        $organization_list = $organization_list->whereBetween('total_employees', [251, 1000]);
+                        break;
+                    case '4':
+                        $organization_list = $organization_list->where('total_employees', '>=', 1000);
+                        break;
+                }
+            }
+
             return $organization_list;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +112,8 @@ class OrganizationService
         try {
             return Organization::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -95,6 +128,8 @@ class OrganizationService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -106,6 +141,8 @@ class OrganizationService
 
             return $organizations;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -123,6 +160,8 @@ class OrganizationService
 
             return $fetchOrganizations->paginate(config('site-settings.switcher_listing_limit'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\ResourceBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -36,6 +37,11 @@ class ResourceModule extends Model
         'is_accessible',
     ];
 
+    public function newEloquentBuilder($query): ResourceBuilder
+    {
+        return new ResourceBuilder($query);
+    }
+
     protected $casts = ['go1_metadata' => 'object'];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -54,6 +60,9 @@ class ResourceModule extends Model
         if ($this->is_go1) {
             return data_get($this->go1_metadata, 'image');
         }
+        if ($this->media_type == '1') {
+            return $value;
+        }
 
         return config('site-settings.aws_url').$value;
     }
@@ -61,6 +70,16 @@ class ResourceModule extends Model
     public function organization()
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills_group_stack()
+    {
+        return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id');
+    }
+
+    public function resource_module_type_modes()
+    {
+        return $this->hasOne(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
     }
 
     public function documents()
@@ -85,7 +104,7 @@ class ResourceModule extends Model
 
     public function urls()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id')->where('type', '=', '5');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id', 'type')->where('type', '=', '5');
     }
 
     public function images()
@@ -176,5 +195,14 @@ class ResourceModule extends Model
     public function scorm(): MorphOne
     {
         return $this->morphOne(Scorm::class, 'model')->latest();
+    }
+
+    public function resource_module_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '4']);
+        }
+
+        return 'N/A';
     }
 }

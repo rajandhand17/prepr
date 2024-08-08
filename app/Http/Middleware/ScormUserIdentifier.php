@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\UtilityHelper;
 use App\Services\Public\Scorm\ScormUserTokenService;
 use Closure;
 use Illuminate\Http\Request;
@@ -44,6 +45,8 @@ class ScormUserIdentifier
 
             return $scormService;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -51,7 +54,7 @@ class ScormUserIdentifier
     public function handleMiddlewareVerificationFail(Request $request)
     {
         if ($request->expectsJson()) {
-            return response()->json(['message' => __('response.unauthorized')], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['message' => __('responses.unauthorized')], Response::HTTP_UNAUTHORIZED);
         }
         abort(Response::HTTP_UNAUTHORIZED);
     }

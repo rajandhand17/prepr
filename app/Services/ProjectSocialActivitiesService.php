@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Models\ProjectSocialActivity;
 use Exception;
 
@@ -14,6 +17,8 @@ class ProjectSocialActivitiesService
 
             return $getInvitedProjectIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -63,6 +68,8 @@ class ProjectSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -83,6 +90,8 @@ class ProjectSocialActivitiesService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -97,12 +106,39 @@ class ProjectSocialActivitiesService
                 ], [
                     $column => $action,
                 ]);
+                if ($column == 'vote') {
+                    $project = ProjectService::getProjectBasedOnId($projectId);
+                    $vote_data = [
+                        'project_title'        => $project->title,
+                        'associated_challenge' => Challenge::where('id', $project->challenge_id)->first()->title,
+                    ];
+                    if ($action !== '0') {
+                        MixpanelHelper::mixpanel_tracking(config('mixpanel.vote_project'), $vote_data, auth()->user(), request()->ip());
+                    } else {
+                        MixpanelHelper::mixpanel_tracking(config('mixpanel.unvote_project'), $vote_data, auth()->user(), request()->ip());
+                    }
+                }
 
                 return true;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function projectFavouriteIds($userData)
+    {
+        try {
+            $projectFavouriteIds = ProjectSocialActivity::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('project_id');
+
+            return $projectFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

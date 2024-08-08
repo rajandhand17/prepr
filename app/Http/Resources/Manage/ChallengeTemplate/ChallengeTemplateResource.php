@@ -4,9 +4,11 @@ namespace App\Http\Resources\Manage\ChallengeTemplate;
 
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
+use App\Http\Resources\Manage\Scorm\ScormResource;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTemplateService;
@@ -20,8 +22,6 @@ use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -45,8 +45,6 @@ class ChallengeTemplateResource extends JsonResource
         $skills = null;
         $skill_groups = null;
         $skill_stacks = null;
-        $tags = null;
-        $tag_groups = null;
         $achievement = null;
         $incentive_achievement = null;
         $challenge_requirements = null;
@@ -93,16 +91,6 @@ class ChallengeTemplateResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->participation_achievement) {
@@ -224,21 +212,19 @@ class ChallengeTemplateResource extends JsonResource
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
                     'flexible_date_duration'        => $this->challenge_timelines->flexible_date_duration,
-                    'automatic_alert'               => $this->challenge_timelines->automatic_alert,
+                    'automatic_alert'               => $this->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                     'flexible_expire_deadline'      => $this->challenge_timelines->flexible_expire_deadline,
                 ];
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 $challenge_timelines = [
-                    'timeline_type'                         => 'restricted',
-                    'open_call_date'                        => $this->challenge_timelines->open_call_date,
-                    'open_call_date_description'            => $this->challenge_timelines->open_call_date_description,
-                    'last_call_date'                        => $this->challenge_timelines->last_call_date,
-                    'last_call_date_description'            => $this->challenge_timelines->last_call_date_description,
-                    'application_deadline_date'             => $this->challenge_timelines->application_deadline_date,
-                    'application_deadline_date_description' => $this->challenge_timelines->application_deadline_date_description,
-                    'submission_deadline_date'              => $this->challenge_timelines->submission_deadline_date,
-                    'submission_deadline_date_description'  => $this->challenge_timelines->submission_deadline_date_description,
-                    'challenge_duration'                    => $this->challenge_timelines->challenge_duration,
+                    'timeline_type'                             => 'restricted',
+                    'start_date'                                => $this->challenge_timelines->start_date,
+                    'start_date_description'                    => $this->challenge_timelines->start_date_description,
+                    'registration_deadline_date'                => $this->challenge_timelines->registration_deadline_date,
+                    'registration_deadline_date_description'    => $this->challenge_timelines->registration_deadline_date_description,
+                    'submission_deadline_date'                  => $this->challenge_timelines->submission_deadline_date,
+                    'submission_deadline_date_description'      => $this->challenge_timelines->submission_deadline_date_description,
+                    'challenge_duration'                        => $this->challenge_timelines->challenge_duration,
                 ];
             }
         }
@@ -247,7 +233,7 @@ class ChallengeTemplateResource extends JsonResource
             $challenge_custom_timelines = $this->challenge_custom_timelines->map(function ($item) {
                 return [
                     'custom_timelines_title'       => $item->custom_timelines_title,
-                    'custom_timelines_date'        => $item->custom_timelines_date,
+                    'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify,
@@ -315,6 +301,7 @@ class ChallengeTemplateResource extends JsonResource
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'               => $this->organization->uuid,
             'organization'                  => $this->organization->title,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,
@@ -323,7 +310,9 @@ class ChallengeTemplateResource extends JsonResource
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'title'                         => $this->title,
+            'description_type'              => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                   => $this->description,
+            'scorm'                         => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
@@ -337,8 +326,6 @@ class ChallengeTemplateResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'participation_achievement'     => $achievement,
             'incentive_achievement'         => $incentive_achievement,
             'challenge_requirements'        => $challenge_requirements,

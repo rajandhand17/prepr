@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\FileUploadHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\OrganizationMember;
 use DB;
 
@@ -30,6 +31,7 @@ class OrganizationMemberService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -59,6 +61,7 @@ class OrganizationMemberService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
 
             return false;
@@ -78,6 +81,8 @@ class OrganizationMemberService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

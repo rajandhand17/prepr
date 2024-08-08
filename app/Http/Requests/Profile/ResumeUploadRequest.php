@@ -35,8 +35,9 @@ class ResumeUploadRequest extends FormRequest
     {
         return [
             'file.required'                 => __('responses.required_field'),
-            'file.max'                      => __('responses.mimes_image_max'),
+            'file.max'                      => __('responses.mimes_file_max'),
             'file.mimeTypes'                => __('responses.files_mimes_image'),
+
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\Organization;
 
 use App\Helpers\UtilityHelper;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -26,6 +27,15 @@ class OrganizationResource extends JsonResource
             $category_id = null;
         }
 
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,
@@ -34,6 +44,7 @@ class OrganizationResource extends JsonResource
             'description'                  => $this->description,
             'cover_image'                  => $this->cover_image,
             'profile_image'                => $this->profile_image,
+            'custom_url'                   => $this->custom_url,
             'website'                      => $this->website,
             'about'                        => $this->about,
             'total_employees'              => $this->total_employees,
@@ -50,12 +61,15 @@ class OrganizationResource extends JsonResource
             'followed'                     => $this->followed(),
             'favourite'                    => $this->favourite(),
             'is_verified'                  => ($this->is_verified == '1' ? 'yes' : 'no'),
-            'is_onboarding_completed'      => ($this->is_onboarding_completed == 0) ? 'no' : 'yes',
+            'is_onboarding_completed'      => ($this->is_onboarding_completed == '0') ? 'no' : 'yes',
             'member_since'                 => UtilityHelper::formatDateTime($this->created_at),
+            'organization_type'            => OrganizationTypeModeResource::collection($this->organizationType),
+            'custom_login_register'        => OrganizationCustomizationResource::make($this->customization_login_register),
             'organization_address'         => OrganizationAddressResource::collection($this->address),
             'organization_members'         => OrganizationMemberResource::collection($this->organizationMembers),
             'organization_details'         => OrganizationChargebeeLimitResource::make($this),
             'external_links'               => OrganizationExternalLinkResource::collection($this->external_links),
+            'created_by'                   => $created_by,
         ];
     }
 }

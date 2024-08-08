@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Helpers\MagnetHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Auth\CheckEmailRequest;
 use App\Http\Requests\Auth\CheckPhoneRequest;
@@ -16,14 +18,14 @@ use App\Http\Requests\Auth\SSOLoginFormRequest;
 use App\Http\Requests\Auth\VerifyInviteCodeRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Requests\Auth\VerifyTwoFactorRequest;
+use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
+use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Auth\AuthRepository;
-use App\Traits\MagnetTrait;
 
 class AuthController extends AppBaseController
 {
-    use MagnetTrait;
     private AuthRepository $authRepository;
 
     public function __construct(AuthRepository $authRepository)
@@ -90,12 +92,12 @@ class AuthController extends AppBaseController
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
                 if ($login['code'] === 2) {
-                    $response = ['message'=>$login['message'], 'code'=>$login['code']];
+                    $response = ['message' => $login['message'], 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
-                    $response = ['token'=> LoginResource::make(json_decode(json_encode($login), false)), 'user'=> UserResource::make($login['user']), 'code'=>$login['code']];
+                    $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
@@ -105,7 +107,9 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -179,6 +183,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -334,6 +340,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -395,6 +403,8 @@ class AuthController extends AppBaseController
                 return $this->sendResponse([], __('responses.send_otp_success'), 200);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -455,7 +465,9 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -515,6 +527,8 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.unique_email'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -574,6 +588,8 @@ class AuthController extends AppBaseController
                 return $this->sendError(__('responses.already_registered_phone_number'), 403);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -644,6 +660,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -716,6 +734,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -777,7 +797,9 @@ class AuthController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 500);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -863,6 +885,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -935,6 +959,8 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -942,24 +968,29 @@ class AuthController extends AppBaseController
     public function magnetSsoLogin(MagnetSSOLoginFormRequest $request)
     {
         try {
-            $checkMagnetSSOUser = $this->handleMagnetResponse($request);
-            if ($checkMagnetSSOUser['status'] == 'error') {
-                return $this->sendError($checkMagnetSSOUser['message'], 402);
-            }
-            dd($checkMagnetSSOUser);
-            $ssorequest = $this->authRepository->magnetSsoLogin($checkMagnetSSOUser);
-
-            if ($ssorequest['success'] == true) {
-                $response = ['token' => LoginResource::make(json_decode(json_encode($ssorequest), false)), 'user' => UserResource::make($ssorequest['user']), 'code' => $ssorequest['code']];
-
-                return $this->sendResponse($response, $ssorequest['message'], 200);
-            }
-            if ($ssorequest['success'] == false) {
-                return $this->sendError($ssorequest['message'], 401);
+            $authorizationCode = $request->code;
+            $token = MagnetHelper::getTokenFromMagnet($authorizationCode);
+            if (!$token) {
+                return $this->sendError(__('responses.unauthorized'), 400);
             }
 
-            return $this->sendError(__('responses.send_error'), 500);
+            $magnetUser = MagnetHelper::getMagnetUser($token);
+
+            if (!$magnetUser) {
+                return $this->sendError(__('responses.magnet_unauthenticated'), 402);
+            }
+
+            $tokenResponse = $this->authRepository->magnetSsoLogin($magnetUser, $token);
+            if ($tokenResponse['success']) {
+                $response = ['token' => $tokenResponse['token'], 'user' => UserResource::make($tokenResponse['user']), 'code' => $tokenResponse['code']];
+
+                return $this->sendResponse($response, $tokenResponse['message'], 200);
+            }
+
+            return $this->sendError($tokenResponse['message'], 401);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -989,6 +1020,42 @@ class AuthController extends AppBaseController
 
             return $this->sendError(__('responses.email_field_required'), 402);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function updateFcmToken(UpdateFcmTokenFormRequest $request)
+    {
+        try {
+            $updateFCMToken = $this->authRepository->updateFcmToken($request);
+            if ($updateFCMToken) {
+                return $this->sendResponse($updateFCMToken, 'success');
+            }
+
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function organizationCustomLoginRegistration($custom_url)
+    {
+        try {
+            $checkOrganizationCustomizationData = UtilityHelper::checkComponentSlugExistOrNot('organization', $custom_url);
+            if ($checkOrganizationCustomizationData) {
+                if ($checkOrganizationCustomizationData->customization_login_register) {
+                    return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
+                }
+            }
+
+            return $this->sendError(__('responses.not_found_organization_customization'), 404);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

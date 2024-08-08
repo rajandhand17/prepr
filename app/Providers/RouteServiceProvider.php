@@ -45,10 +45,14 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapChatRoutes();
             $this->mapProjectRoutes();
             $this->mapProjectMemberManagementRoutes();
+            $this->mapComponentAssociation();
             $this->mapDashboardRoutes();
             $this->mapTeamMatchingRoutes();
             $this->mapGO1Routes();
             $this->mapLeaderboardRoutes();
+            $this->mapChannelApiRoutes();
+
+            $this->mapStartPageRoutes();
         });
     }
 
@@ -60,7 +64,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function configureRateLimiting()
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(300)->by($request->user()?->id ?: $request->ip());
         });
     }
 
@@ -110,6 +114,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/setting/')->middleware('api')->group(base_path('routes/v1/setting.php'));
     }
 
+    protected function mapStartPageRoutes()
+    {
+        Route::prefix('api/v1/start-page/')->middleware('api')->group(base_path('routes/v1/start-page.php'));
+    }
+
     protected function mapProjectRoutes()
     {
         Route::prefix('api/v1/project/')->middleware('api')->group(base_path('routes/v1/project.php'));
@@ -118,6 +127,11 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapProjectMemberManagementRoutes()
     {
         Route::prefix('api/v1/member-management/project/')->middleware('api')->group(base_path('routes/v1/project-member-management.php'));
+    }
+
+    protected function mapComponentAssociation()
+    {
+        Route::prefix('api/v1/component-association/')->middleware('api')->group(base_path('routes/v1/component-association.php'));
     }
 
     protected function mapManageRoutes()
@@ -152,6 +166,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/resource-group/')->middleware('api')->group(base_path('routes/v1/public/resource-group.php'));
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
+        Route::prefix('api/v1/public/advance-search/')->middleware('api')->group(base_path('routes/v1/public/advance-search.php'));
     }
 
     public function mapDashboardRoutes()
@@ -169,5 +184,10 @@ class RouteServiceProvider extends ServiceProvider
     public function mapGO1Routes()
     {
         Route::prefix('api/v1/go1')->middleware('api')->group(base_path('routes/v1/go1.php'));
+    }
+
+    public function mapChannelApiRoutes()
+    {
+        Route::prefix('api/v1/channel')->middleware('channel-api-auth')->group(base_path('routes/v1/manage/channel.php'));
     }
 }

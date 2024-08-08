@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Builder\LabProgramBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,6 +34,11 @@ class LabProgram extends Model
         'is_sequential',
         'is_accessible',
     ];
+
+    public function newEloquentBuilder($query): LabProgramBuilder
+    {
+        return new LabProgramBuilder($query);
+    }
 
     public function getMediaAttribute($value)
     {
@@ -120,5 +126,29 @@ class LabProgram extends Model
     public function shares()
     {
         return $this->hasMany(LabProgramSocialActivity::class, 'lab_program_id', 'id')->where('share', '1');
+    }
+
+    public function labs()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_program_id', 'id')->where('lab_id', '!=', null);
+    }
+
+    public function lab_program_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '1']);
+        }
+
+        return 'N/A';
+    }
+
+    public function labProgramType()
+    {
+        return $this->hasMany(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '0')->pluck('value');
+    }
+
+    public function labProgramMode()
+    {
+        return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '1');
     }
 }

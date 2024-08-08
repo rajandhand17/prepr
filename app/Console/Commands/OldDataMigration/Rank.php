@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\OldDataMigration;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Rank as Ranks;
 use DB;
 use Illuminate\Console\Command;
@@ -72,6 +73,7 @@ class Rank extends Command
             DB::rollback();
             $this->error('No ranks found.');
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e->getMessage());
 

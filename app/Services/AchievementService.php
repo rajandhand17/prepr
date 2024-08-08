@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
+use App\Notifications\AddWinnerAchievementNotification;
 use App\Services\Public\ChallengePathService;
 use Carbon\Carbon;
 use Exception;
@@ -40,11 +42,17 @@ class AchievementService
                     $userAchievement->promo_code = null;
                     $userAchievement->save();
                     $certificate_number++;
+                    $user = UserService::getUserById($projectMember);
+                    if ($user) {
+                        $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_participation_achievement')));
+                    }
                 }
             }
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -87,12 +95,18 @@ class AchievementService
                         $userAchievement->promo_code = null;
                         $userAchievement->save();
                         $certificate_number++;
+                        $user = UserService::getUserById($projectMember);
+                        if ($user) {
+                            $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_winner_achievement')));
+                        }
                     }
                 }
             }
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -127,8 +141,15 @@ class AchievementService
             $userAchievement->promo_code = null;
             $userAchievement->save();
 
+            $user = UserService::getUserById($userId);
+            if ($user) {
+                $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_challenge_path_achievement')));
+            }
+
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

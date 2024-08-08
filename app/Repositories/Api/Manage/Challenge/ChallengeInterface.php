@@ -12,21 +12,19 @@ interface ChallengeInterface
 
     public function uploadChallengeAssessment($attachment);
 
-    public function createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organizationData);
+    public function createChallenge($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData);
 
     public function createChallengeUsingAIPreview($request);
 
     public function createChallengeFromResourceUsingAIPreview($request);
 
-    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
 
     public function uploadChallengeParticipationAchievementImage($image);
 
     public function createChallengeSponsor($request, $challenge);
 
     public function createChallengeSkillsGroupsStack($request, $challenge);
-
-    public function createChallengeTagsGroups($request, $challenge);
 
     public function createChallengeRequirement($request, $challenge);
 
@@ -53,4 +51,6 @@ interface ChallengeInterface
     public function deleteChallengeAnnouncement($challengeAnnouncementId);
 
     public function getChallengeListName($request, $organization);
+
+    public function selectChallengeWinner($challengeData, $request);
 }

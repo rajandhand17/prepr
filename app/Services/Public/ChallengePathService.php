@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePath;
 use Exception;
 
@@ -15,6 +16,8 @@ class ChallengePathService
 
             return $challengePathList->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -23,7 +26,7 @@ class ChallengePathService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $challengePathList = $challengePathList->where('challenge_paths.title', 'like', '%'.$request->search.'%');
+                $challengePathList = $challengePathList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $challengePathList = $challengePathList->whereIn('challenge_paths.category_id', $request->category);
@@ -94,6 +97,8 @@ class ChallengePathService
 
             return $challengePathList;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -103,6 +108,8 @@ class ChallengePathService
         try {
             return ChallengePath::where('slug', $slug)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -112,6 +119,61 @@ class ChallengePathService
         try {
             return ChallengePath::where('id', $id)->first();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnArrayIds($ids)
+    {
+        try {
+            return ChallengePath::whereIn('id', $ids)->where('is_accessible', '1')->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedChallengePathList($request, $organizationId)
+    {
+        try {
+            $challengePathList = ChallengePath::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengePathAssociation($request, $fetchChallengePathIdsAssociatedLabId)
+    {
+        try {
+            $challengePathList = ChallengePath::whereIn('id', $fetchChallengePathIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedChallengePaths($challengePathIds)
+    {
+        try {
+            // Retrieve challenge path with the given IDs using findMany for primary keys and limiting by 2 values
+            $challengePaths = ChallengePath::findMany($challengePathIds)->slice(0, 2);
+
+            return $challengePaths;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

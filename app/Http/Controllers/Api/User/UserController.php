@@ -31,6 +31,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.found_user_list'), 404);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -40,6 +42,8 @@ class UserController extends AppBaseController
         try {
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -63,6 +67,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.found_organization_list'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -91,6 +97,8 @@ class UserController extends AppBaseController
 
             return $this->sendError(__('responses.selected_organization_not_found'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -100,15 +108,12 @@ class UserController extends AppBaseController
         try {
             if ($slug != null) {
                 $checkComponentSlugExistOrNot = UtilityHelper::checkComponentSlugExistOrNot('organization', $slug);
-                if ($checkComponentSlugExistOrNot->is_onboarding_completed == '1') {
-                    return $this->sendError(__('responses.already_organization_onboarding_completed'), 400);
-                }
                 $organizationOnboarding = $this->userRepository->organizationOnboarding($checkComponentSlugExistOrNot->id, $request);
                 if ($organizationOnboarding) {
-                    return $this->sendResponse(OrganizationDetailResource::make($checkComponentSlugExistOrNot), __('responses.organization_onboarding_completed'));
+                    $organizationType = $this->userRepository->storeOrganizationType($checkComponentSlugExistOrNot->id, $request);
                 }
 
-                return $this->sendError(__('responses.organization_onboarding_not_completed'), 404);
+                return $this->sendResponse(OrganizationDetailResource::make($organizationOnboarding), __('responses.organization_onboarding_completed'));
             } else {
                 $userData = auth()->user();
                 if ($userData->is_onboarding_completed == '1') {
@@ -120,6 +125,23 @@ class UserController extends AppBaseController
                     return $this->sendResponse(UserResource::make($userData), __('responses.user_onboarding_completed'));
                 }
             }
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function completeMiniOnBoarding($component)
+    {
+        try {
+            $checkComponentMiniBoard = $this->userRepository->checkComponentMiniOnBoard($component);
+            if ($checkComponentMiniBoard) {
+                return $this->sendError(__('responses.already_'.$component.'_mini_onboarding'), 400);
+            }
+            $miniBoard = $this->userRepository->completeMiniOnBoarding($component);
+
+            return $this->sendResponse(userResource::make($miniBoard), __('responses.'.$component.'_mini_onboarding'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }

@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\LanguageColumnHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSponsor;
 use App\Models\Host;
 use Exception;
@@ -23,6 +24,8 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,6 +52,8 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,7 +61,7 @@ class ChallengeSponsorService
     public static function getHostBasedOnIds($host_ids)
     {
         try {
-            $getHostsList = Host::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getHostsList = Host::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title', 'link', 'image', 'status', 'created_at')
             ->whereIn('id', $host_ids)->get();
             if ($getHostsList) {
                 return $getHostsList;
@@ -64,6 +69,8 @@ class ChallengeSponsorService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -81,6 +88,8 @@ class ChallengeSponsorService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

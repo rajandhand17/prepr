@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Models\UserPatent;
 
 class UserPatentService
@@ -22,9 +24,16 @@ class UserPatentService
                 ]);
                 $allPatents[] = $create;
             }
+            $profile_data = [
+                'type' => 'patent',
+                'info' => $input,
+            ];
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $allPatents;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +43,8 @@ class UserPatentService
         try {
             return UserPatent::where('id', $id)->delete();
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -43,6 +54,8 @@ class UserPatentService
         try {
             return UserPatent::where('id', $id)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

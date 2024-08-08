@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Manage\Challenge;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Challenge\CreateChallengeAnnouncementRequest;
@@ -18,6 +19,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,6 +60,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -80,41 +84,48 @@ class ChallengeController extends AppBaseController
                 }
             }
 
-            $upload_cover_image = config('site-settings.default_challenge_cover_image');
-            if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+            $uploaded_challenge_cover = config('site-settings.default_challenge_cover_image');
+            if ($request->has('cover_banner_type')) {
+                switch ($request->cover_banner_type) {
+                    case 'image':
+                        $uploaded_challenge_cover = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
+                        if (!$uploaded_challenge_cover) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                        break;
+                    case 'embedded':
+                        $uploaded_challenge_cover = $request->input('cover_embedded');
+                        break;
                 }
-                $upload_cover_image = $uploaded_cover_image;
             }
 
-            $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
-            if ($request->achievement_image !== null) {
-                $uploaded_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
+            $uploaded_achievement_image = null;
+            if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
+                if (!$upload_achievement_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
+                $uploaded_achievement_image = $upload_achievement_image;
             }
 
-            $upload_assessment_attachment = null;
-            if ($request->attachments !== null) {
-                $uploaded_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
-                if (!$uploaded_assessment_attachment) {
+            $uploaded_assessment_attachment = null;
+            if ($request->hasFile('attachments') && $request->file('attachments')->isValid()) {
+                $upload_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if (!$upload_assessment_attachment) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $upload_assessment_attachment = $uploaded_assessment_attachment;
+                $uploaded_assessment_attachment = $upload_assessment_attachment;
             }
 
-            $createChallenge = $this->challengeRepository->createChallenge($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
-
+            $createChallenge = $this->challengeRepository->createChallenge($request, $uploaded_challenge_cover, $uploaded_achievement_image, $uploaded_assessment_attachment, $organization);
             if ($createChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
             }
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -135,12 +146,26 @@ class ChallengeController extends AppBaseController
                 if ($challenge->is_accessible == '0') {
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
+                $userId = $userData->id;
+                // For user progress tracking
+                TrackUserProgressHelper::trackChallengeUserProgress($challenge, $userId);
+
+                // For last visited activity tracking
+                $joined_status = $challenge->joined();
+                if ($joined_status != 'NA' && $joined_status != null) {
+                    if ($joined_status->invite_status == '1') {
+                        $moduleType = config('constants.module_type.challenges');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($challenge->id, $userId, $moduleType);
+                    }
+                }
 
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
 
             return $this->sendError(__('responses.found_not_challenge_detail'), 404);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -163,40 +188,51 @@ class ChallengeController extends AppBaseController
             if ($checkComponentBasedOnSlug->is_accessible == '0') {
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
-            $update_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
-            $update_participation_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
-            $update_assessment_attachment = ($checkComponentBasedOnSlug->challenge_assessment !== null && is_array($checkComponentBasedOnSlug->challenge_assessment) && count($checkComponentBasedOnSlug->challenge_assessment) > 0) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments) : null;
-            if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
-                if ($uploaded_cover_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+
+            $uploaded_challenge_cover = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
+            if ($request->has('cover_banner_type')) {
+                switch ($request->cover_banner_type) {
+                    case 'image':
+                        if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                            $uploaded_challenge_cover = $this->challengeRepository->uploadChallengeCoverImage($request->cover_image);
+                            if (!$uploaded_challenge_cover) {
+                                return $this->sendError(__('responses.image_upload_failed'), 400);
+                            }
+                        }
+                        break;
+                    case 'embedded':
+                        $uploaded_challenge_cover = $request->input('cover_embedded');
+                        break;
                 }
-                $update_cover_image = $uploaded_cover_image;
             }
 
-            if ($request->achievement_image !== null) {
-                $updated_challenge_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
-                if ($updated_challenge_achievement_image == false) {
+            $uploaded_achievement_image = !empty($checkComponentBasedOnSlug->participation_achievement->achievement_image) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image) : null;
+            if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
+                if (!$upload_achievement_image) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $update_participation_achievement_image = $updated_challenge_achievement_image;
+                $uploaded_achievement_image = $upload_achievement_image;
             }
 
-            if ($request->attachments !== null) {
-                $updated_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
-                if ($updated_assessment_attachment == false) {
+            $uploaded_assessment_attachment = ($checkComponentBasedOnSlug->challenge_assessment !== null && is_array($checkComponentBasedOnSlug->challenge_assessment) && count($checkComponentBasedOnSlug->challenge_assessment) > 0) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->challenge_assessment[0]->attachments) : null;
+            if ($request->hasFile('attachments') && $request->file('attachments')->isValid()) {
+                $upload_assessment_attachment = $this->challengeRepository->uploadChallengeAssessment($request->attachments);
+                if (!$upload_assessment_attachment) {
                     return $this->sendError(__('responses.image_upload_failed'), 400);
                 }
-                $update_assessment_attachment = $updated_assessment_attachment;
+                $uploaded_assessment_attachment = $upload_assessment_attachment;
             }
 
-            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, organization);
+            $updateChallenge = $this->challengeRepository->updateChallenge($slug, $request, $uploaded_challenge_cover, $uploaded_achievement_image, $uploaded_assessment_attachment, $organization);
             if ($updateChallenge != false) {
                 return $this->sendResponse(ChallengeResource::make($updateChallenge), __('responses.challenge_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.challenge_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -208,6 +244,11 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            if ($checkComponentBasedOnSlug->submitted_projects()->exists()) {
+                return $this->sendError(__('responses.challenge_not_delete_project_exists'), 403);
+            }
+
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
@@ -226,6 +267,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -240,6 +283,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -254,11 +299,13 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse([], __('responses.challenge_name_available'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
-    public function fetchAssessment($slug)
+    public function fetchAssessment($slug, $type = null)
     {
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
@@ -292,15 +339,18 @@ class ChallengeController extends AppBaseController
                     ];
                 });
             }
+            $message = ($type != null) ? __('responses.update_challenge_assessment_detail') : __('responses.found_challenge_assessment_detail');
 
             if (!empty($getChallengeAssessment) || !empty($challenge_assessment_criteria)) {
-                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), __('responses.found_challenge_assessment_detail'), 200);
+                return $this->sendResponse(ChallengeAssessmentResource::make($checkComponentBasedOnSlug), $message, 200);
             }
 
             $emptyResponse = new stdClass();
 
             return $this->sendResponse($emptyResponse, __('responses.found_not_challenge_assessment_detail'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -338,11 +388,13 @@ class ChallengeController extends AppBaseController
 
             $updateChallengeAssessment = $this->challengeRepository->updateChallengeAssessment($checkComponentBasedOnSlug->id, $update_assessment_attachment, $request);
             if ($updateChallengeAssessment['updateChallengeAssessmentCriteria'] && $updateChallengeAssessment['updateChallengeAssessment']) {
-                return self::fetchAssessment($slug);
+                return self::fetchAssessment($slug, 'update');
             }
 
             return $this->sendError(__('responses.challenge_assessment_not_update'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -366,9 +418,9 @@ class ChallengeController extends AppBaseController
                 return $this->sendError(__('responses.challenge_not_accessible'), 403);
             }
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
-                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
+                $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($organization->id);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
@@ -381,6 +433,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_clone_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -411,21 +465,19 @@ class ChallengeController extends AppBaseController
                         'timeline_type'                 => 'flexible',
                         'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
                         'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
-                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                         'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
-                        'timeline_type'                         => 'restricted',
-                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
-                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
-                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
-                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
-                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
-                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
-                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
-                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
-                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                        'timeline_type'                          => 'restricted',
+                        'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
+                        'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
+                        'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
+                        'registration_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date_description,
+                        'submission_deadline_date'               => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'   => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                     => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
                     ];
                 }
             }
@@ -444,6 +496,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_failed'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -474,21 +528,19 @@ class ChallengeController extends AppBaseController
                         'timeline_type'                 => 'flexible',
                         'flexible_date_number'          => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_number,
                         'flexible_date_duration'        => $checkComponentBasedOnSlug->challenge_timelines->flexible_date_duration,
-                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert,
+                        'automatic_alert'               => $checkComponentBasedOnSlug->challenge_timelines->automatic_alert == '0' ? 'day' : 'week',
                         'flexible_expire_deadline'      => $checkComponentBasedOnSlug->challenge_timelines->flexible_expire_deadline,
                     ];
                 } elseif ($checkComponentBasedOnSlug->challenge_timelines->timeline_type == '1') {
                     $challenge_timelines = [
-                        'timeline_type'                         => 'restricted',
-                        'open_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->open_call_date,
-                        'open_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->open_call_date_description,
-                        'last_call_date'                        => $checkComponentBasedOnSlug->challenge_timelines->last_call_date,
-                        'last_call_date_description'            => $checkComponentBasedOnSlug->challenge_timelines->last_call_date_description,
-                        'application_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date,
-                        'application_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->application_deadline_date_description,
-                        'submission_deadline_date'              => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
-                        'submission_deadline_date_description'  => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
-                        'challenge_duration'                    => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
+                        'timeline_type'                          => 'restricted',
+                        'start_date'                             => $checkComponentBasedOnSlug->challenge_timelines->start_date,
+                        'start_date_description'                 => $checkComponentBasedOnSlug->challenge_timelines->start_date_description,
+                        'registration_deadline_date'             => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date,
+                        'registration_deadline_date_description' => $checkComponentBasedOnSlug->challenge_timelines->registration_deadline_date_description,
+                        'submission_deadline_date'               => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date,
+                        'submission_deadline_date_description'   => $checkComponentBasedOnSlug->challenge_timelines->submission_deadline_date_description,
+                        'challenge_duration'                     => $checkComponentBasedOnSlug->challenge_timelines->challenge_duration,
                     ];
                 }
             }
@@ -502,6 +554,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendResponse($response, __('responses.found_challenges_announcement'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -531,6 +585,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_announcement_not_delete'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -550,6 +606,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -558,13 +616,19 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
+
             $createChallengeUsingAIPreview = $this->challengeRepository->createChallengeUsingAIPreview($request);
 
             if ($createChallengeUsingAIPreview) {
@@ -573,6 +637,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -583,13 +648,19 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
+
             $createChallengeFromResourceUsingAIPreview = $this->challengeRepository->createChallengeFromResourceUsingAIPreview($request);
             if ($createChallengeFromResourceUsingAIPreview) {
                 return $this->sendResponse($createChallengeFromResourceUsingAIPreview, __('responses.challenges_previews_created_successfully'), 200);
@@ -597,6 +668,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeFromResourceUsingAIPreview has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeFromResourceUsingAIPreview in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -607,7 +679,12 @@ class ChallengeController extends AppBaseController
     {
         try {
             // checks creation limits of the Challenge
-            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'challenge');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $checkChallengeLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'challenge');
             if ($checkChallengeLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkChallengeCount = $this->challengeRepository->getChallengeCountBasedOnOrganization($checkChallengeLimit['organizationId']);
                 if ($checkChallengeLimit['fetchOrganizationPlanDetails'] <= $checkChallengeCount) {
@@ -619,7 +696,7 @@ class ChallengeController extends AppBaseController
             $upload_achievement_image = config('site-settings.default_challenge_achievement_image');
             $upload_assessment_attachment = config('site-settings.default_challenge_cover_image');
 
-            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment);
+            $createChallengeUsingAI = $this->challengeRepository->createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization);
 
             if ($createChallengeUsingAI) {
                 return $this->sendResponse(ChallengeResource::make($createChallengeUsingAI), __('responses.challenge_created_successfully'), 200);
@@ -627,6 +704,7 @@ class ChallengeController extends AppBaseController
                 throw new Exception('createChallengeUsingAI has no value!');
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createChallengeUsingAI in ChallengeController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
@@ -664,6 +742,8 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_winner_selected_not_successfully'), 400);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

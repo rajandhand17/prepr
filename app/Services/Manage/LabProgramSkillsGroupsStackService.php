@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\LabProgramsSkillsGroupsStack;
 
 class LabProgramSkillsGroupsStackService
@@ -124,6 +125,26 @@ class LabProgramSkillsGroupsStackService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRecommendedLabProgram($labProgramId)
+    {
+        try {
+            $labProgramIds = collect();
+            // Get unique foreign IDs related to the given lab program ID
+            $skillsArray = LabProgramsSkillsGroupsStack::where(['type' => '0', 'lab_program_id' => $labProgramId])->pluck('foreign_id')->unique();
+            if ($skillsArray->isNotEmpty()) {
+                $labProgramIds = LabProgramsSkillsGroupsStack::where('type', '0')->whereIn('foreign_id', $skillsArray)->where('lab_program_id', '<>', $labProgramId)->pluck('lab_program_id');
+            }
+
+            return $labProgramIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

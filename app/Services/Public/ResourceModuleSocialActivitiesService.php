@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleSocialActivities;
 
 class ResourceModuleSocialActivitiesService
@@ -22,6 +23,8 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -38,6 +41,8 @@ class ResourceModuleSocialActivitiesService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -79,6 +84,8 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -104,6 +111,21 @@ class ResourceModuleSocialActivitiesService
 
             return false;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function resourceModuleFavouriteIds($userData)
+    {
+        try {
+            $resourceModuleFavouriteIds = ResourceModuleSocialActivities::where(['user_id' => $userData->id, 'favourite' => '1'])->pluck('resource_module_id');
+
+            return $resourceModuleFavouriteIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

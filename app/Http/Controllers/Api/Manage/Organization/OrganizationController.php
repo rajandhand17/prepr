@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
+use App\Http\Requests\Manage\Organization\UpdateOrganizationCustomizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
@@ -85,6 +88,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -143,11 +148,15 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
+
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -334,14 +343,14 @@ class OrganizationController extends AppBaseController
             if ($request->profile_image !== null) {
                 $upload_profile_image = $this->organizationRepository->uploadOrganizationProfileImage($request);
                 if (!$upload_profile_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                    return $this->sendError(__('responses.image_upload_failed_profile_image'), 400);
                 }
                 $profile_image_path = $upload_profile_image;
             }
             if ($request->cover_image !== null) {
                 $upload_cover_image = $this->organizationRepository->uploadOrganizationCoverImage($request);
                 if (!$upload_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 500);
+                    return $this->sendError(__('responses.image_upload_failed_cover_image'), 500);
                 }
                 $cover_image_path = $upload_cover_image;
             }
@@ -357,9 +366,6 @@ class OrganizationController extends AppBaseController
                 if ($request->has('external_links') && !empty($request->external_links)) {
                     $this->organizationRepository->createOrganizationExternalLinks($request, $organization->id);
                 }
-                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
-                    $this->organizationRepository->createOrganizationCustomLoginRegistration($request, $organization);
-                }
                 $selectPlan = $this->organizationRepository->selectPlan($organization, $request);
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_stored_success'));
@@ -367,6 +373,8 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.organization_stored_failed'), 409);
             }
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -567,15 +575,14 @@ class OrganizationController extends AppBaseController
                 if ($request->has('external_links') && !empty($request->external_links)) {
                     $this->organizationRepository->updateOrganizationExternalLinks($request, $organization->id);
                 }
-                if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
-                    $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $organization);
-                }
 
                 return $this->sendResponse(OrganizationResource::make($organization), __('responses.organization_update_successfully'), 200);
             }
 
             return $this->sendError(__('responses.organization_not_update'), 409);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -634,13 +641,15 @@ class OrganizationController extends AppBaseController
             if (!auth()->user()->isAbleTo('delete_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_delete_access_denied'), 403);
             }
-            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization->id, $request->language);
+            $deleteOrganization = $this->organizationRepository->deleteOrganization($checkOrganization, $request);
             if ($deleteOrganization) {
                 return $this->sendResponse(null, __('responses.organization_delete'), 200);
             }
 
             return $this->sendError(__('responses.organization_not_delete'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -655,6 +664,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -674,6 +685,8 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_organization_list'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -693,6 +706,33 @@ class OrganizationController extends AppBaseController
 
             return $this->sendError(__('responses.plan_not_retrived'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
+    {
+        try {
+            $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if (!$checkOrganization) {
+                return $this->sendError(__('responses.organization_not_found'), 404);
+            }
+            if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
+                return $this->sendError(__('responses.organization_update_access_denied'), 403);
+            }
+            if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
+                $updateOrganizationCustomLoginRegistration = $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $checkOrganization);
+                if ($updateOrganizationCustomLoginRegistration) {
+                    return $this->sendResponse(OrganizationResource::make($checkOrganization), __('responses.organization_customization_update_successfully'), 200);
+                }
+            }
+
+            return $this->sendError(__('responses.organization_customization_not_update'), 409);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

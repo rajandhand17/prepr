@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\MixpanelHelper;
+use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
@@ -10,6 +12,7 @@ use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
@@ -40,9 +43,13 @@ class ResourceCollectionController extends AppBaseController
 
             $upload_cover_image = config('site-settings.default_resource_collection_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -53,6 +60,39 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_stored_failed'), 403);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function cloneResourceCollection($slug)
+    {
+        try {
+            // Checking resource collection based on slug exists or not
+            $getResourceCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
+            if (!$getResourceCollection) {
+                return $this->sendError(__('responses.selected_resource_collection_not_found'), 404);
+            }
+            // Fetching resource collection is belongs to current users or not
+            if ($getResourceCollection->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'), 403);
+            }
+            // Fetching Resource Collections Based on title and resource current users
+            $getResourceCollectionBasedOnTitle = $this->resourceCollectionRepository->getResourceCollectionBasedOnTitle($getResourceCollection->title);
+            if ($getResourceCollectionBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_collection_already_exists'));
+            }
+            // Cloning resource collections
+            $cloneResourceCollection = $this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
+            if ($cloneResourceCollection) {
+                return $this->sendResponse(ResourceCollectionResource::make($cloneResourceCollection), __('responses.clone_resource_collection_successfully'));
+            }
+
+            return $this->sendError(__('responses.clone_responses_failed'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -67,6 +107,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_slug_available'), 200);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -81,6 +123,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.resource_collection_name_available'), 200);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -90,6 +134,7 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {
@@ -101,12 +146,20 @@ class ResourceCollectionController extends AppBaseController
                 if ($checkResourceCollectionExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
+                // For user progress tracking
+                TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userData->id);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_collections');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceCollectionExistsOrNot->id, $userData->id, $moduleType);
 
                 return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -131,9 +184,13 @@ class ResourceCollectionController extends AppBaseController
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceCollectionExistsOrNot->media);
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceCollectionRepository->uploadResourceCollectionCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -144,33 +201,40 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
     public function index(Request $request)
     {
-        $userData = auth()->user();
-        $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-        if (!$organization) {
-            return $this->sendError(__('responses.selected_organization_not_found'), 404);
+        try {
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
+            if ($resourceCollection) {
+                $response = [
+                    'total_count'  => $resourceCollection->total(),
+                    'per_page'     => $resourceCollection->perPage(),
+                    'count'        => $resourceCollection->count(),
+                    'current_page' => $resourceCollection->currentPage(),
+                    'total_pages'  => $resourceCollection->lastPage(),
+                    'list'         => ResourceCollectionResource::collection($resourceCollection),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_resource_collection_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'));
         }
-        $resourceCollection = $this->resourceCollectionRepository->getResourceCollectionList($request, $organization);
-
-        if ($resourceCollection) {
-            $response = [
-                'total_count'  => $resourceCollection->total(),
-                'per_page'     => $resourceCollection->perPage(),
-                'count'        => $resourceCollection->count(),
-                'current_page' => $resourceCollection->currentPage(),
-                'total_pages'  => $resourceCollection->lastPage(),
-                'list'         => ResourceCollectionResource::collection($resourceCollection),
-            ];
-
-            return $this->sendResponse($response, __('responses.found_resource_collection_list'));
-        }
-
-        return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
     }
 
     public function delete($slug)
@@ -198,6 +262,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.resource_collection_not_delete'), 404);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -218,6 +284,8 @@ class ResourceCollectionController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 400);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

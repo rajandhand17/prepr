@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengePathTagGroup;
 use App\Models\ChallengePathTemplateTagsGroups;
 use Exception;
@@ -22,6 +23,8 @@ class ChallengePathTemplateTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ class ChallengePathTemplateTagsGroupsService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

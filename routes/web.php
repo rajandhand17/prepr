@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Manage\ChannelApi\ChannelApiController;
 use App\Http\Controllers\Web\Scorm\ScormPlayerController;
 use App\Http\Controllers\Web\Scorm\ScormProxyController;
 use Illuminate\Support\Facades\Artisan;
@@ -41,3 +42,6 @@ Route::get('scorm/{url}', [ScormProxyController::class, 'scormFileLink'])->name(
 
 /** SCORM PLAYER */
 Route::get('/scorm-player/{scorm_uuid}', ScormPlayerController::class)->middleware(['scorm.userIdentifier', 'language']);
+
+/** MAGNET SSO */
+Route::get('/magnet/sso', [ChannelApiController::class, 'sso'])->name('sso');

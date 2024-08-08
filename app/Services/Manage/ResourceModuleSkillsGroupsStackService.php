@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleSkillsGroupsStack;
 
 class ResourceModuleSkillsGroupsStackService
@@ -114,6 +115,8 @@ class ResourceModuleSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -125,6 +128,8 @@ class ResourceModuleSkillsGroupsStackService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -142,6 +147,76 @@ class ResourceModuleSkillsGroupsStackService
 
             return $resourceSkillIds;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function cloneResourceModuleSkillsGroupsStack($originalResourceModuleAssociation, $clonedResourceModuleId)
+    {
+        try {
+            $originalResourceModuleAssociation->each(function ($resource_module_skill_group) use ($clonedResourceModuleId) {
+                if ($resource_module_skill_group) {
+                    $cloneResourceModuleSKills = $resource_module_skill_group->replicate();
+                    $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
+                    $cloneResourceModuleSKills->save();
+                }
+            });
+
+            return true;
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleIdBasesOnSKillsId($usersSkills)
+    {
+        try {
+            if (count($usersSkills) > 0) {
+                $getSkills = ResourceModuleSkillsGroupsStack::where('type', 0)
+                ->whereIn('foreign_id', $usersSkills)
+                    ->pluck('foreign_id');
+            } else {
+                $getSkills = ResourceModuleSkillsGroupsStack::where('type', 0)->pluck('foreign_id');
+                if (count($getSkills) > 0) {
+                    $getSkills = $getSkills->random();
+                }
+            }
+
+            return $getSkills;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getRecommendedResourceModule($resourceModuleId)
+    {
+        try {
+            // Get unique foreign IDs related to the given resource module ID
+            $skills = ResourceModuleSkillsGroupsStack::where([
+                ['type', '=', '0'],
+                ['resource_module_id', '=', $resourceModuleId],
+            ])
+                ->pluck('foreign_id')
+                ->unique();
+
+            // Retrieve resource module IDs based on the unique foreign IDs
+            $resourceModuleIds = $skills->isNotEmpty()
+                ? ResourceModuleSkillsGroupsStack::where('type', '0')
+                    ->whereIn('foreign_id', $skills)
+                    ->where('resource_module_id', '<>', $resourceModuleId)
+                    ->pluck('resource_module_id')
+                : collect(); // Return an empty collection if no skills found
+
+            return $resourceModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

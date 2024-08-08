@@ -2,6 +2,7 @@
 
 namespace App\Services\Public;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleRating;
 
 class ResourceModuleRatingService
@@ -18,6 +19,21 @@ class ResourceModuleRatingService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleBasedOnRating($rating)
+    {
+        try {
+            $resourceModuleRating = ResourceModuleRating::where('rating', $rating)->get();
+
+            return $resourceModuleRating;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

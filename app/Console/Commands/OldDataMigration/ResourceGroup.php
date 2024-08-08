@@ -93,7 +93,7 @@ class ResourceGroup extends Command
                     $newResourceGroup->title = $singleResourceGroup->title;
                     $newResourceGroup->slug = $slug;
                     $newResourceGroup->description = $singleResourceGroup->description;
-                    $newResourceGroup->media_type = 'image';
+                    $newResourceGroup->media_type = '0';  //0 for image and 1 for embedded
                     $newResourceGroup->media = $singleResourceGroup->group_image;
                     $newResourceGroup->level = '1';
                     $newResourceGroup->duration = '1';
@@ -118,6 +118,7 @@ class ResourceGroup extends Command
 
             return;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
             DB::rollback();
             $this->error($e);
 

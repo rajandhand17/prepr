@@ -20,6 +20,26 @@ use App\Listeners\Project\HandleDeleteProjectAssociatedData;
 use App\Listeners\ResourceCollection\HandleDeleteResourceCollectionAssociatedData;
 use App\Listeners\ResourceGroup\HandleDeleteResourceGroupAssociatedData;
 use App\Listeners\ResourceModule\HandleDeleteResourceModuleAssociatedData;
+use App\Models\Challenge;
+use App\Models\ChallengePath;
+use App\Models\ChallengeTemplate;
+use App\Models\Lab;
+use App\Models\LabMarketplace;
+use App\Models\LabProgram;
+use App\Models\Project;
+use App\Models\ResourceCollection;
+use App\Models\ResourceGroup;
+use App\Models\ResourceModule;
+use App\Observers\ChallengeObserver;
+use App\Observers\ChallengePathObserver;
+use App\Observers\ChallengeTemplateObserver;
+use App\Observers\LabMarketPlaceObserver;
+use App\Observers\LabObserver;
+use App\Observers\LabProgramObserver;
+use App\Observers\ProjectObserver;
+use App\Observers\ResourceCollectionObserver;
+use App\Observers\ResourceGroupObserver;
+use App\Observers\ResourceModuleObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -59,7 +79,7 @@ class EventServiceProvider extends ServiceProvider
         DeleteProjectAssociatedData::class => [
             HandleDeleteProjectAssociatedData::class,
         ],
-        DeleteOrganizationAssociatedData::class=> [
+        DeleteOrganizationAssociatedData::class => [
             HandleDeleteOrganizationAssociatedData::class,
         ],
     ];
@@ -78,5 +98,19 @@ class EventServiceProvider extends ServiceProvider
     public function shouldDiscoverEvents()
     {
         return false;
+    }
+
+    public function boot(): void
+    {
+        Challenge::observe(ChallengeObserver::class);
+        ChallengePath::observe(ChallengePathObserver::class);
+        ChallengeTemplate::observe(ChallengeTemplateObserver::class);
+        Lab::observe(LabObserver::class);
+        LabMarketplace::observe(LabMarketPlaceObserver::class);
+        LabProgram::observe(LabProgramObserver::class);
+        Project::observe(ProjectObserver::class);
+        ResourceGroup::observe(ResourceGroupObserver::class);
+        ResourceCollection::observe(ResourceCollectionObserver::class);
+        ResourceModule::observe(ResourceModuleObserver::class);
     }
 }

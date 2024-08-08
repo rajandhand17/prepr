@@ -2,12 +2,15 @@
 
 namespace App\Repositories\Api\Manage\ResourceModule;
 
+use App\Helpers\MixpanelHelper;
+use App\Helpers\UtilityHelper;
 use App\Services\Manage\AIService;
 use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
+use App\Services\Manage\ResourceModuleTypeModesService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,15 +25,18 @@ class ResourceModuleRepository implements ResourceModuleInterface
     protected $resourceModuleRatingService;
 
     protected $resourceModuleTagsGroupsService;
+
+    protected $resourceModuleTypeModesService;
     private $aiService;
 
-    public function __construct(ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
+    public function __construct(ResourceModuleTypeModesService $resourceModuleTypeModesService, ResourceModuleService $resourceModuleService, ResourceModuleDetailService $resourceModuleDetailsService, ResourceModuleSkillsGroupsStackService $resouceModuleSkillsGroupStackService, ResourceModuleRatingService $resourceModuleRatingService, ResourceModuleTagsGroupsService $resourceModuleTagsGroupsService, AIService $aiService)
     {
         $this->resourceModuleService = $resourceModuleService;
         $this->resourceModuleDetailsService = $resourceModuleDetailsService;
         $this->resouceModuleSkillsGroupStackService = $resouceModuleSkillsGroupStackService;
         $this->resourceModuleTagsGroupsService = $resourceModuleTagsGroupsService;
         $this->resourceModuleRatingService = $resourceModuleRatingService;
+        $this->resourceModuleTypeModesService = $resourceModuleTypeModesService;
         $this->aiService = $aiService;
     }
 
@@ -39,6 +45,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleService->getResourceModuleCountBasedOnOrganization($organizationId);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -48,6 +56,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return  $this->resourceModuleService->getResourceModuleList($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,15 +68,20 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $createLabProgram = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
                 $createResourceModule = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModule->id);
-                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->createResourceModuleTagsGroups($request, $createResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->createResourceModuleTypeModes($request, $createResourceModule->id);
 
                 return [
                     'createResourceModule'                  => $createResourceModule,
                     'resourceModuleSkillsGroupStackService' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService'       => $resourceModuleTagsGroupsService,
+                    'resourceModuleTypeModesService'        => $resourceModuleTypeModesService,
                 ];
             });
-            if ($createLabProgram['createResourceModule'] && $createLabProgram['resourceModuleSkillsGroupStackService'] && $createLabProgram['resourceModuleTagsGroupsService']) {
+            $request->organization_id = $organizationId;
+            if ($createLabProgram['createResourceModule'] &&
+                $createLabProgram['resourceModuleSkillsGroupStackService'] &&
+                $createLabProgram['resourceModuleTypeModesService']
+            ) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 
                 return $createLabProgram['createResourceModule'];
@@ -75,15 +90,17 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public function createResourceModuleUsingAI($request, $upload_cover_image)
+    public function createResourceModuleUsingAI($request, $upload_cover_image, $organizationId)
     {
         try {
-            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image) {
-                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image);
+            $createdResourceModule = DB::transaction(function () use ($request, $upload_cover_image, $organizationId) {
+                $createResourceModuleUsingAI = $this->resourceModuleService->createResourceModule($request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->createResourceModuleSkillsGroupsStack($request, $createResourceModuleUsingAI->id);
 
                 return [
@@ -94,6 +111,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createdResourceModule['createResourceModuleUsingAI'];
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleRepository.php: '.$e->getMessage());
 
             return false;
@@ -107,6 +125,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createResourceModuleUsingAI;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             Log::error('Error in createResourceModuleDetailsAI in ResourceModuleRepository.php: '.$e->getMessage());
 
             return false;
@@ -120,6 +139,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return $createResourceModuleUsingAIPreview;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -129,6 +150,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleService->uploadResourceModuleCoverImage($cover_image);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -138,6 +161,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getResourceModuleBasedOnTitle($title)
+    {
+        try {
+            return $this->resourceModuleService->getResourceModuleBasedOnTitle($title);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -146,16 +182,21 @@ class ResourceModuleRepository implements ResourceModuleInterface
     {
         try {
             DB::beginTransaction();
+            $getResouceModule = $this->resourceModuleService->getResourceModuleBasedOnSlug($slug);
+            $getResouceModule->skills = $getResouceModule->skills->pluck('foreign_id')->unique();
             $deleteResourceModule = $this->resourceModuleService->deleteResourceModule($resource_module_id);
             if ($deleteResourceModule == false) {
                 DB::rollBack();
 
                 return false;
             }
+            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_resource'), $getResouceModule, auth()->user(), request()->ip());
             DB::commit();
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -165,6 +206,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleService->checkName($title);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -175,15 +218,19 @@ class ResourceModuleRepository implements ResourceModuleInterface
             $updateResourceModule = DB::transaction(function () use ($slug, $request, $upload_cover_image, $organizationId) {
                 $updateResourceModule = $this->resourceModuleService->updateResourceModule($slug, $request, $upload_cover_image, $organizationId);
                 $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->updateResourceModuleSkillsGroupsStack($request, $updateResourceModule->id);
-                $resourceModuleTagsGroupsService = $this->resourceModuleTagsGroupsService->updateResourceModuleTagsGroups($request, $updateResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->updateResourceModuleTypeModes($request, $updateResourceModule->id);
 
                 return [
                     'updateResourceModule'            => $updateResourceModule,
                     'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
-                    'resourceModuleTagsGroupsService' => $resourceModuleTagsGroupsService,
+                    'resourceModuleTypeModesService'  => $resourceModuleTypeModesService,
                 ];
             });
-            if ($updateResourceModule['updateResourceModule'] && $updateResourceModule['resourceModuleSkillsGroupsStack'] && $updateResourceModule['resourceModuleTagsGroupsService']) {
+            $request->organization_id = $organizationId;
+            if ($updateResourceModule['updateResourceModule'] &&
+                $updateResourceModule['resourceModuleSkillsGroupsStack'] &&
+                $updateResourceModule['resourceModuleTypeModesService']) {
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
                 DB::commit();
 
                 return $updateResourceModule['updateResourceModule'];
@@ -192,6 +239,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -201,6 +250,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailsService->fileUpload($request, $resource_module_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -210,6 +261,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailsService->deleteResourceModuleMedia($request, $resource_module_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -219,6 +272,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailsService->addLinks($request, $resource_module_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -228,6 +283,8 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return $this->resourceModuleDetailsService->addEmbeddedMedia($request, $resource_module_id);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -237,6 +294,40 @@ class ResourceModuleRepository implements ResourceModuleInterface
         try {
             return  $this->resourceModuleService->getListName($request, $organization);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceModule($resourceModuleId)
+    {
+        try {
+            $getResourceModule = $this->resourceModuleService->getResourcesWithRelations($resourceModuleId);
+            $cloneResourceModule = DB::transaction(function () use ($getResourceModule) {
+                $cloneResourceModule = $this->resourceModuleService->cloneResourceModule($getResourceModule);
+                $resourceModuleSkillsGroupStackService = $this->resouceModuleSkillsGroupStackService->cloneResourceModuleSkillsGroupsStack($getResourceModule->skills_group_stack, $cloneResourceModule->id);
+                $resourceModuleTypeModesService = $this->resourceModuleTypeModesService->cloneResourceModuleTypeModes($getResourceModule->resource_module_type_modes, $cloneResourceModule->id);
+
+                return [
+                    'cloneResourceModule'             => $cloneResourceModule,
+                    'resourceModuleSkillsGroupsStack' => $resourceModuleSkillsGroupStackService,
+                    'resourceModuleTypeModesService'  => $resourceModuleTypeModesService,
+                ];
+            });
+            if ($cloneResourceModule['cloneResourceModule'] &&
+                $cloneResourceModule['resourceModuleSkillsGroupsStack'] &&
+                $cloneResourceModule['resourceModuleTypeModesService']) {
+                DB::commit();
+
+                return $cloneResourceModule['cloneResourceModule'];
+            }
+            DB::rollback();
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

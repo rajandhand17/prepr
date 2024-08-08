@@ -8,6 +8,7 @@ use App\Models\LabProgram;
 use App\Services\Public\LabProgramSocialActivitiesService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Collection;
 
 class LabProgramService
 {
@@ -18,6 +19,8 @@ class LabProgramService
 
             return $labProgram_count;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,7 +37,8 @@ class LabProgramService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                //$labProgramList = $labProgramList->where('lab_programs.title', 'like', '%'.$request->search.'%');
+                $labProgramList = $labProgramList->whereSearchFilter($request->search ?? '');
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
                 $labProgramList = $labProgramList->whereIn('lab_programs.category_id', $request->category);
@@ -99,8 +103,70 @@ class LabProgramService
                 $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('type') && !empty($request->type)) {
+                $typeFilterIds = LabProgramTypeModesService::getLabProgramType($request->type);
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', $typeFilterIds);
+            }
+            if ($request->has('source') && !empty($request->source)) {
+                $sourceLabIds = self::getLabProgramBaseOnSource($request->source);
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', $sourceLabIds);
+            }
+
             return $labProgramList;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getLabProgramBaseOnSource($source)
+    {
+        try {
+            $createdByYouLabIds = collect([]);
+            $onboardingLabIds = collect([]);
+            $clonedByYouLabIds = collect([]);
+            $createdByOrgLabIds = collect([]);
+            if (in_array('created_by_you', $source)) {
+                $createdByYouLabIds = LabProgram::where(['user_id' => auth('api')->user()->id])->pluck('id');
+            }
+            if (in_array('onboarding_challenge', $source)) {
+                $onboardingLabIds = LabProgram::where(['is_auto_created' => '1'])->pluck('id');
+            }
+            if (in_array('created_by_organizations', $source)) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                $createdByOrgLabIds = LabProgram::where(['organization_id' => $organization->id])->pluck('id');
+            }
+            $labsCollection = new Collection();
+            $labsCollection = $labsCollection->concat($createdByYouLabIds);
+            $labsCollection = $labsCollection->concat($onboardingLabIds);
+            $labsCollection = $labsCollection->concat($clonedByYouLabIds);
+            $labsCollection = $labsCollection->concat($createdByOrgLabIds);
+
+            return $labsCollection;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getSourceByLabProgramId($labProgramId)
+    {
+        try {
+            if (LabProgram::where(['id' => $labProgramId, 'user_id' => auth('api')->user()->id])->exists()) {
+                $source = 'created_by_you';
+            } elseif (LabProgram::where(['id' => $labProgramId, 'is_auto_created' => '1'])->exists()) {
+                $source = 'onboarding_challenge';
+            } else {
+                $source = 'created_by_organizations';
+            }
+
+            return $source;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -110,6 +176,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -158,7 +226,7 @@ class LabProgramService
             $labProgram->duration_id = $request->duration_id;
             $labProgram->level_id = $request->level_id;
             $labProgram->user_id = auth()->user()->id;
-            $labProgram->media_type = 'image';
+            $labProgram->media_type = $request->media_type;
             $labProgram->media = $upload_media;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
@@ -169,6 +237,8 @@ class LabProgramService
 
             return $labProgram;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -183,6 +253,8 @@ class LabProgramService
 
             return $upload_lab_cover_image;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -192,6 +264,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -201,6 +275,8 @@ class LabProgramService
         try {
             return LabProgram::where('slug', $slug)->delete();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -215,6 +291,8 @@ class LabProgramService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -259,6 +337,7 @@ class LabProgramService
             $labProgram->duration_id = ($request->has('duration_id')) ? $request->duration_id : $labProgram->duration_id;
             $labProgram->level_id = ($request->has('level_id')) ? $request->level_id : $labProgram->level_id;
             $labProgram->media = ($upload_media) ? $upload_media : $labProgram->media;
+            $labProgram->media_type = $request->media_type;
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
@@ -268,6 +347,8 @@ class LabProgramService
 
             return $labProgram;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -281,6 +362,8 @@ class LabProgramService
 
             return $labProgramList->limit($limit)->get();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -290,6 +373,8 @@ class LabProgramService
         try {
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where('UUID', $uUID)->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -299,6 +384,8 @@ class LabProgramService
         try {
             return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -313,6 +400,8 @@ class LabProgramService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -332,6 +421,35 @@ class LabProgramService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getLabProgramTitleBasedOnUUIDArray($uuid)
+    {
+        try {
+            $labProgram = LabProgram::whereIn('uuid', $uuid)->pluck('title')->all();
+            if ($labProgram != null) {
+                return $labProgram;
+            }
+
+            return false;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public function fetchLabProgramReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchLabProgram = LabProgram::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchLabProgram;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

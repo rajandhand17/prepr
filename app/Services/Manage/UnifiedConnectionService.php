@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Lab;
 use App\Models\Organization;
+use App\Models\Role;
 use App\Models\UnifiedConnection;
 use App\Models\User;
 use HiFolks\RandoPhp\Randomize;
@@ -84,6 +85,8 @@ class UnifiedConnectionService
 
             return $formatted->toArray();
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -121,6 +124,8 @@ class UnifiedConnectionService
 
             return $connection ?: false;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -173,6 +178,8 @@ class UnifiedConnectionService
                 ['connection_id' => $connectionId]
             );
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }
@@ -211,16 +218,19 @@ class UnifiedConnectionService
                 return false;
             }
 
+            $roles = Role::query()->get()->keyBy('display_name')->map(function ($data) {
+                return $data->name;
+            })->toArray();
             /**
              * FORMATTED MEMBER LIST.
              */
-            $formattedMembersList = collect(data_get($data, 'members', []))->map(function ($member) use ($usageType) {
+            $formattedMembersList = collect(data_get($data, 'members', []))->map(function ($member) use ($usageType, $roles) {
                 return [
                     'type'          => config('constants.member_management_type.invite'),
                     'invite_type'   => config('constants.member_management_invite_type.unified'),
                     'invitee_name'  => data_get($member, 'name'),
                     'invitee_email' => data_get($member, 'email'),
-                    'role'          => $usageType !== 'organization_member_invite' ? 'User' : data_get($member, 'role'),
+                    'role'          => $usageType !== 'organization_member_invite' ? 'user' : data_get($roles, data_get($member, 'role', 'User')),
                 ];
             });
 
@@ -242,6 +252,8 @@ class UnifiedConnectionService
 
             return $inviteMember;
         } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
             return false;
         }
     }

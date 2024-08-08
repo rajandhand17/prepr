@@ -28,12 +28,50 @@ class CreateProjectRequest extends FormRequest
             'description'               => 'required',
             'is_view_enabled'           => 'required|in:yes,no',
             'is_download_enabled'       => 'required|in:yes,no',
-            'media_type'                => 'required|in:image,embedded',
+            'media_type'                => 'in:image,embedded,none',
             'privacy'                   => 'required|in:public,private',
-            'cover_media'               => 'nullable|mimes:jpeg,jpg,png,webp|max:1024',
             'challenge_id'              => 'required|exists:challenges,uuid',
             'lab_id'                    => 'nullable|exists:labs,uuid',
         ];
+
+        if ($this->has('media_type') && $this->input('media_type') == 'image') {
+            $base_rules['cover_media'] = [
+                'mimes:jpeg,jpg,png,webp',
+                'max:5120',
+            ];
+        }
+
+        if ($this->has('media_type') && $this->input('media_type') == 'embedded') {
+            $regexYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexNoCookieYoutube = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/www.youtube-nocookie.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+            $regexVimeo = '/<iframe(?:\b|_).*?(?:\b|_)src="https:\/\/player.vimeo.com\/(?:\b|_).*?(?:\b|_)iframe>/';
+
+            $cover_embedded = $this->input('cover_media');
+            $isValid = 0;
+
+            // Check for YouTube iframe
+            preg_match_all($regexYoutube, $cover_embedded, $matchesYoutube);
+            $isValid += count($matchesYoutube[0]);
+
+            // Check for YouTube no-cookie iframe
+            preg_match_all($regexNoCookieYoutube, $cover_embedded, $matchesNoCookieYoutube);
+            $isValid += count($matchesNoCookieYoutube[0]);
+
+            // Check for Vimeo iframe
+            preg_match_all($regexVimeo, $cover_embedded, $matchesVimeo);
+            $isValid += count($matchesVimeo[0]);
+
+            $base_rules['cover_media'] = [
+                'required',
+                function ($attribute, $value, $fail) use ($isValid) {
+                    if ($isValid === 0) {
+                        $fail($attribute.' must contain exactly one valid YouTube or Vimeo iframe.');
+                    } elseif ($isValid > 1) {
+                        $fail($attribute.' must not contain more than one valid YouTube or Vimeo iframe.');
+                    }
+                },
+            ];
+        }
 
         return $base_rules;
     }

@@ -35,7 +35,42 @@ class UpdateChallengeAssessmentRequest extends FormRequest
             $base_rules['members_email.*'] = 'email';
         }
 
+        if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
+            $base_rules['assessment_title'] = 'required|array';
+            $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed,ai';
+            $base_rules['assessment_score'] = 'required|array';
+            $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed,ai|numeric';
+            $base_rules['assessment_weight'] = [
+                'required',
+                'array',
+                'required_if:assessment_type,open,closed,ai',
+                function ($attribute, $value, $fail) {
+                    if (array_sum($value) != 100) {
+                        $fail(__('responses.challenge_weight_should_be_100'));
+                    }
+                },
+            ];
+            $base_rules['assessment_weight.*'] = 'required_if:assessment_type,open,closed,ai|numeric';
+        }
+
         return $base_rules;
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            $assessment_title = $this->input('assessment_title', []);
+            $assessment_score = $this->input('assessment_score', []);
+
+            $count_title = count($assessment_title);
+            $count_score = count($assessment_score);
+
+            if (($count_title > 0 || $count_score > 0) &&
+                ($count_title !== $count_score)
+            ) {
+                $validator->errors()->add('assessment_data', __('responses.title_score_should_match_count'));
+            }
+        });
     }
 
     public function failedValidation(Validator $validator)

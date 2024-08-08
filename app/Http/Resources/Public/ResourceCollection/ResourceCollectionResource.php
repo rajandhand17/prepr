@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceCollection;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceModuleService;
@@ -36,6 +37,7 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $module_progress = null;
 
         if ($this->resource_modules) {
             if (count($this->resource_modules) > 0) {
@@ -145,6 +147,30 @@ class ResourceCollectionResource extends JsonResource
             if ($this->resource_rating) {
                 $rating = intval($this->resource_rating->rating);
             }
+
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($this->resource_collection_completion_status) {
+                switch ($this->resource_collection_completion_status->status) {
+                    case '0':
+                        $module_status = 'not_started';
+                        break;
+                    case '1':
+                        $module_status = 'in_progress';
+                        break;
+                    case '2':
+                        $module_status = 'completed';
+                        break;
+                }
+
+                $module_progress = [
+                    'status'        => $module_status,
+                    'percentage'    => $this->resource_collection_completion_status->percentage,
+                ];
+            }
         }
 
         return [
@@ -155,6 +181,7 @@ class ResourceCollectionResource extends JsonResource
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'privacy'                       => $privacy,
             'status'                        => $status,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
@@ -177,6 +204,7 @@ class ResourceCollectionResource extends JsonResource
             'shares'                        => $this->shares()->count(),
             'liked'                         => $this->liked(),
             'favourite'                     => $this->favorites(),
+            'module_progress'               => $module_progress,
         ];
     }
 }

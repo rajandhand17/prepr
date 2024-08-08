@@ -5,6 +5,7 @@ namespace App\Http\Resources\Manage\Organization;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrganizationResource extends JsonResource
@@ -31,6 +32,15 @@ class OrganizationResource extends JsonResource
         if (empty($this->chargebee_details)) {
             $feedChargeBeeDetails = ChargebeeHelper::createChargebeePlanDetails($this->id);
         }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
 
         return [
             'id'                            => $this->uuid,
@@ -40,6 +50,7 @@ class OrganizationResource extends JsonResource
             'description'                   => $this->description,
             'cover_image'                   => $this->cover_image,
             'profile_image'                 => $this->profile_image,
+            'custom_url'                    => $this->custom_url,
             'website'                       => $this->website,
             'about'                         => $this->about,
             'status'                        => $status,
@@ -52,6 +63,7 @@ class OrganizationResource extends JsonResource
             'challenge_count'               => $this->challenges_count()->count(),
             'resource_count'                => $this->resource_modules_count()->count(),
             'organization_users_count'      => $this->members->count(),
+            'organization_type'             => OrganizationTypeModeResource::collection($this->organizationType),
             'member_since'                  => UtilityHelper::formatDateTime($this->created_at),
             'organization_address'          => OrganizationAddressResource::collection($this->address),
             'organization_members'          => OrganizationMemberResource::collection($this->organizationMembers),
@@ -61,6 +73,7 @@ class OrganizationResource extends JsonResource
             'external_links'                => OrganizationExternalLinkResource::collection($this->external_links),
             'organization_details'          => OrganizationChargebeeLimitResource::make($this),
             'custom_login_register'         => OrganizationCustomizationResource::make($this->customization_login_register),
+            'created_by'                    => $created_by,
         ];
     }
 }

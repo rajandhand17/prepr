@@ -3,12 +3,15 @@
 namespace App\Http\Resources\Manage\LabProgram;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
+use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -36,7 +39,6 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-
         if ($this->component_association) {
             foreach ($this->component_association as $association) {
                 if ($association->lab_id) {
@@ -101,14 +103,66 @@ class LabProgramResource extends JsonResource
             ];
         }
 
+        $module_status = 'not_started';
+        $module_progress = [
+            'status'        => $module_status,
+            'percentage'    => '0',
+        ];
+        if ($this->lab_program_completion_status) {
+            switch ($this->lab_program_completion_status->status) {
+                case '0':
+                    $module_status = 'not_started';
+                    break;
+                case '1':
+                    $module_status = 'in_progress';
+                    break;
+                case '2':
+                    $module_status = 'completed';
+                    break;
+            }
+
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => $this->lab_program_completion_status->percentage,
+            ];
+        }
+
+        $mode = null;
+        if ($this->labProgramMode) {
+            switch ($this->labProgramMode->value) {
+                case '4':
+                    $mode = 'team';
+                    break;
+                case '5':
+                    $mode = 'individual';
+                    break;
+            }
+        }
+
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'title'                         => $this->title,
+            'type'                          => LabProgramTypeResource::make($this->labProgramType()),
+            'mode'                          => $mode,
+            'created_by'                    => $created_by,
+            'source'                        => LabProgramService::getSourceByLabProgramId($this->id),
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'slug'                          => $this->slug,
             'description'                   => $this->description,
             'labs'                          => $componentAssociation,
             'user_id'                       => $this->user_id,
+            'media_type'                    => $this->media_type,
             'media'                         => $this->media,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
@@ -130,6 +184,7 @@ class LabProgramResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'module_progress'               => $module_progress,
             'liked'                         => $this->liked(),
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
