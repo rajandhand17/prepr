@@ -244,6 +244,11 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            if ($checkComponentBasedOnSlug->submitted_projects()->exists()) {
+                return $this->sendError(__('responses.challenge_not_delete_project_exists'), 403);
+            }
+
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
