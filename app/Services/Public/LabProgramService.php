@@ -144,7 +144,7 @@ class LabProgramService
         }
     }
 
-    public function fetchLabProgramLabAssociation($request, $fetchLabProgramIdsAssociatedLabId)
+    public function fetchLabProgramAssociation($request, $fetchLabProgramIdsAssociatedLabId)
     {
         try {
             $lab_program_list = LabProgram::whereIn('lab_programs.id', $fetchLabProgramIdsAssociatedLabId)->where(['lab_programs.status' => '1', 'lab_programs.is_accessible' => '1']);

@@ -200,10 +200,10 @@ class ResourceGroupService
         }
     }
 
-    public function fetchResourceGroupLabAssociation($request, $fetchResourceGroupIdsAssociatedLabId)
+    public function fetchResourceGroupAssociation($request, $fetchResourceGroupAssociation)
     {
         try {
-            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupAssociation)->where(['status' => '1', 'is_accessible' => '1']);
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
 
             return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));

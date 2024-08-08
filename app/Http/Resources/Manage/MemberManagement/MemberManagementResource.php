@@ -86,7 +86,7 @@ class MemberManagementResource extends JsonResource
             'email_status'    => $email_status,
             'subject'         => $this->subject_line,
             'email_content'   => $this->email_body,
-            'joined_at'       => !empty($this->created_at) ? UtilityHelper::formatDateTime($this->created_at) : null,
+            'joined_at'       => !empty($this->updated_at) ? UtilityHelper::formatDateTime($this->updated_at) : null,
         ];
     }
 }
