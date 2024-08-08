@@ -478,7 +478,6 @@ class ChallengeService
         }
     }
 
-
     public function getRelatedChallenges($challengeIds)
     {
         try {
