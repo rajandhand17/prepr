@@ -759,4 +759,52 @@ class ComponentAssociationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getComponentRelatedBasedOnOtherComponent($component, $slug)
+    {
+        try {
+            if (!in_array($component, ['lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
+            }
+
+            $response = [];
+            $message = __('responses.no_related_found');
+            switch ($component) {
+                case 'lab':
+                    $fetchRelatedLabs = $this->componentAssociationRepository->fetchRelatedLabs($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedLabs->isNotEmpty()) {
+                        $response = LabResource::collection($fetchRelatedLabs);
+                        $message = __('responses.lab_related_found');
+                    }
+                    break;
+
+                case 'lab-program':
+                    $fetchRelatedLabPrograms = $this->componentAssociationRepository->fetchRelatedLabPrograms($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedLabPrograms->isNotEmpty()) {
+                        $response = LabProgramResource::collection($fetchRelatedLabPrograms);
+                        $message = __('responses.lab_program_related_found');
+                    }
+                    break;
+
+                case 'challenge':
+                    $fetchRelatedChallenges = $this->componentAssociationRepository->fetchRelatedChallenges($checkComponentBasedOnSlug->id);
+                    if ($fetchRelatedChallenges->isNotEmpty()) {
+                        $response = ChallengeResource::collection($fetchRelatedChallenges);
+                        $message = __('responses.challenge_related_found');
+                    }
+                    break;
+            }
+
+            return $this->sendResponse($response, $message, 200);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
