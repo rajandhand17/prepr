@@ -690,7 +690,7 @@
     "responses.degree_required": "The Degree field is required",
     "responses.start_date_required": "The Start date field is required",
     "responses.before_or_equal": "The Date should be current or before the current date",
-    "responses.after_or_equal": "The end date must be later than the start date. Please adjust the dates accordingly.",
+    "responses.after_or_equal": "The start date must be before the end date",
     "responses.end_date_required": "The Start date field is required",
     "responses.add_user_patent_created": "Your patent details have been updated successfully.",
     "responses.add_user_patent_failed": "Oops! The Creating of a Patent Failed.",
@@ -1376,5 +1376,13 @@
     "responses.organization_subscription_not_retrieved": "Something went wrong will fetching the Organization subscription, please try later.",
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
     "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
-    "responses.no_association_found": "No component association data found."
+    "responses.no_association_found": "No component association data found.",
+    "responses.no_related_found": "No component related data found.",
+    "responses.lab_related_found": "Lab component related data found.",
+    "responses.lab_program_related_found": "Lab Program component related data found.",
+    "responses.challenge_related_found": "Challenge component related data found.",
+    "responses.challenge_path_related_found": "Challenge Path component related data found.",
+    "responses.resource_module_related_found": "Resource Module component related data found.",
+    "responses.resource_collection_related_found": "Resource Collection component related data found.",
+    "responses.resource_group_related_found": "Resource Group component related data found."
 }

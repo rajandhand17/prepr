@@ -157,4 +157,18 @@ class LabProgramService
             return false;
         }
     }
+
+    public function getRelatedLabPrograms($labProgramIds)
+    {
+        try {
+            // Retrieve lab program with the given IDs using findMany for primary keys and limiting by 2 values
+            $labPrograms = LabProgram::findMany($labProgramIds)->slice(0, 2);
+
+            return $labPrograms;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

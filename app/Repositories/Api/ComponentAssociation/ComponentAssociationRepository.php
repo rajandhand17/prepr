@@ -3,7 +3,14 @@
 namespace App\Repositories\Api\ComponentAssociation;
 
 use App\Helpers\UtilityHelper;
+use App\Services\Manage\ChallengePathSkillsGroupsStackService;
+use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\LabProgramSkillsGroupsStackService;
+use App\Services\Manage\LabSkillsGroupsStackService;
+use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
+use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
+use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Public\ChallengePathService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\LabProgramService;
@@ -23,8 +30,15 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
     private $resourceCollectionService;
     private $resourceGroupService;
     private $componentAssociationService;
+    private $labSkillsGroupsStackService;
+    private $labProgramSkillsGroupsStackService;
+    private $challengeSkillsGroupsStackService;
+    private $challengePathSkillsGroupsStackService;
+    private $resourceModuleSkillsGroupsStackService;
+    private $resourceCollectionSkillsGroupsStackService;
+    private $resourceGroupSkillsGroupsStackService;
 
-    public function __construct(LabService $labService, LabProgramService $labProgramService, ChallengeService $challengeService, ChallengePathService $challengePathService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService)
+    public function __construct(LabService $labService, LabProgramService $labProgramService, ChallengeService $challengeService, ChallengePathService $challengePathService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ResourceModuleSkillsGroupsStackService $resourceModuleSkillsGroupsStackService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupsStackService, ResourceGroupSkillsGroupsStackService $resourceGroupSkillsGroupsStackService)
     {
         $this->labService = $labService;
         $this->labProgramService = $labProgramService;
@@ -34,6 +48,13 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         $this->resourceCollectionService = $resourceCollectionService;
         $this->resourceGroupService = $resourceGroupService;
         $this->componentAssociationService = $componentAssociationService;
+        $this->labSkillsGroupsStackService = $labSkillsGroupsStackService;
+        $this->labProgramSkillsGroupsStackService = $labProgramSkillsGroupsStackService;
+        $this->challengeSkillsGroupsStackService = $challengeSkillsGroupsStackService;
+        $this->challengePathSkillsGroupsStackService = $challengePathSkillsGroupsStackService;
+        $this->resourceModuleSkillsGroupsStackService = $resourceModuleSkillsGroupsStackService;
+        $this->resourceCollectionSkillsGroupsStackService = $resourceCollectionSkillsGroupsStackService;
+        $this->resourceGroupSkillsGroupsStackService = $resourceGroupSkillsGroupsStackService;
     }
 
     public function fetchLabs($request, $organizationId)
@@ -412,6 +433,125 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
             }
 
             return $fetchResourceGroupsBasedOnChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedLabs($labId)
+    {
+        try {
+            $labs = collect();
+            $labIds = $this->labSkillsGroupsStackService->getRecommendedLab($labId);
+            if ($labIds) {
+                $labs = $this->labService->getRelatedLabs($labIds);
+            }
+
+            return $labs;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedLabPrograms($labProgramId)
+    {
+        try {
+            $labPrograms = collect();
+            $labProgramIds = $this->labProgramSkillsGroupsStackService->getRecommendedLabProgram($labProgramId);
+            if ($labProgramIds) {
+                $labPrograms = $this->labProgramService->getRelatedLabPrograms($labProgramIds);
+            }
+
+            return $labPrograms;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedChallenges($challengeId)
+    {
+        try {
+            $challenges = collect();
+            $challengeIds = $this->challengeSkillsGroupsStackService->getRecommendedChallenge($challengeId);
+            if ($challengeIds) {
+                $challenges = $this->challengeService->getRelatedChallenges($challengeIds);
+            }
+
+            return $challenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedChallengePaths($challengePathId)
+    {
+        try {
+            $challengePaths = collect();
+            $challengePathIds = $this->challengePathSkillsGroupsStackService->getRecommendedChallengePath($challengePathId);
+            if ($challengePathIds) {
+                $challengePaths = $this->challengePathService->getRelatedChallengePaths($challengePathIds);
+            }
+
+            return $challengePaths;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceModules($resourceModuleId)
+    {
+        try {
+            $resourceModules = collect();
+            $resourceModuleIds = $this->resourceModuleSkillsGroupsStackService->getRecommendedResourceModule($resourceModuleId);
+            if ($resourceModuleIds) {
+                $resourceModules = $this->resourceModuleService->getRelatedResourceModules($resourceModuleIds);
+            }
+
+            return $resourceModules;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceCollections($resourceCollectionId)
+    {
+        try {
+            $resourceCollections = collect();
+            $resourceCollectionIds = $this->resourceCollectionSkillsGroupsStackService->getRecommendedResourceCollection($resourceCollectionId);
+            if ($resourceCollectionIds) {
+                $resourceCollections = $this->resourceCollectionService->getRelatedResourceCollections($resourceCollectionIds);
+            }
+
+            return $resourceCollections;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRelatedResourceGroups($resourceGroupId)
+    {
+        try {
+            $resourceGroups = collect();
+            $resourceGroupIds = $this->resourceGroupSkillsGroupsStackService->getRecommendedResourceGroup($resourceGroupId);
+            if ($resourceGroupIds) {
+                $resourceGroups = $this->resourceGroupService->getRelatedResourceGroups($resourceGroupIds);
+            }
+
+            return $resourceGroups;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
