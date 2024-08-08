@@ -129,6 +129,39 @@ class ComponentAssociationController extends AppBaseController
                     }
                     break;
 
+                case 'challenge':
+                    switch ($type) {
+                        case 'lab':
+                            $fetchLabs = self::fetchLabsBasedOnChallengeId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchLabs['response'];
+                            $message = $fetchLabs['message'];
+                            break;
+
+                        case 'lab-program':
+                            $fetchLabPrograms = self::fetchLabProgramsBasedOnChallengeId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchLabPrograms['response'];
+                            $message = $fetchLabPrograms['message'];
+                            break;
+
+                        case 'resource-module':
+                            $fetchResourceModules = self::fetchResourceModulesBasedOnChallengeId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchResourceModules['response'];
+                            $message = $fetchResourceModules['message'];
+                            break;
+
+                        case 'resource-collection':
+                            $fetchResourceCollections = self::fetchResourceCollectionsBasedOnChallengeId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchResourceCollections['response'];
+                            $message = $fetchResourceCollections['message'];
+                            break;
+
+                        case 'resource-group':
+                            $fetchResourceGroups = self::fetchResourceGroupsBasedOnChallengeId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchResourceGroups['response'];
+                            $message = $fetchResourceGroups['message'];
+                            break;
+                    }
+                    break;
                 case 'lab-program':
                     switch ($type) {
                         case 'lab':
@@ -238,6 +271,20 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchLabsBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchLabs = $this->componentAssociationRepository->fetchLabChallengeAssociation($request, $challengeId);
+            $data = self::labResponse($fetchLabs);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function labResponse($labData)
     {
         try {
@@ -281,6 +328,20 @@ class ComponentAssociationController extends AppBaseController
     {
         try {
             $fetchLabPrograms = $this->componentAssociationRepository->fetchLabProgramLabAssociation($request, $labId);
+            $data = self::labProgramResponse($fetchLabPrograms);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchLabProgramsBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchLabPrograms = $this->componentAssociationRepository->fetchLabProgramChallengeAssociation($request, $challengeId);
             $data = self::labProgramResponse($fetchLabPrograms);
 
             return $data;
@@ -481,6 +542,20 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchResourceModulesBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchResourceModules = $this->componentAssociationRepository->fetchResourceModuleChallengeAssociation($request, $challengeId);
+            $data = self::resourceModulesResponse($fetchResourceModules);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function fetchResourceModulesBasedOnResourceGroupId($request, $resourceGroupId)
     {
         try {
@@ -563,6 +638,20 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchResourceCollectionsBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchResourceCollections = $this->componentAssociationRepository->fetchResourceCollectionChallengeAssociation($request, $challengeId);
+            $data = self::resourceCollectionsResponse($fetchResourceCollections);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function fetchResourceCollectionsBasedOnOrganizationId($request, $organizationId)
     {
         try {
@@ -621,6 +710,20 @@ class ComponentAssociationController extends AppBaseController
     {
         try {
             $fetchResourceGroups = $this->componentAssociationRepository->fetchResourceGroupLabAssociation($request, $labId);
+            $data = self::resourceGroupsResponse($fetchResourceGroups);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchResourceGroupsBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchResourceGroups = $this->componentAssociationRepository->fetchResourceGroupsBasedOnChallengeId($request, $challengeId);
             $data = self::resourceGroupsResponse($fetchResourceGroups);
 
             return $data;

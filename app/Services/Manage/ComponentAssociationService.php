@@ -1252,6 +1252,19 @@ class ComponentAssociationService
         }
     }
 
+    public function fetchResourceModuleIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceModuleIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModuleIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchResourceModuleIdsAssociatedResourceGroupId($resourceGroupId)
     {
         try {
@@ -1304,12 +1317,38 @@ class ComponentAssociationService
         }
     }
 
+    public function fetchResourceCollectionIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceCollectionIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
+
+            return $fetchResourceCollectionIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchLabIdsAssociatedLabProgramId($labProgramId)
     {
         try {
             $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('lab_program_id', $labProgramId)->whereNotNull('lab_id')->pluck('lab_id');
 
             return $fetchLabIdsAssociatedLabProgramId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -1343,12 +1382,38 @@ class ComponentAssociationService
         }
     }
 
+    public function fetchResourceGroupIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceGroupIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
+
+            return $fetchResourceGroupIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchLabProgramIdsAssociatedLabId($labId)
     {
         try {
             $fetchLabProgramIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('lab_program_id')->pluck('lab_program_id');
 
             return $fetchLabProgramIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabProgramIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_program_id')->pluck('lab_program_id');
+
+            return $fetchLabProgramIdsAssociatedChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

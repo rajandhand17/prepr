@@ -64,6 +64,23 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         }
     }
 
+    public function fetchLabChallengeAssociation($request, $challengeId)
+    {
+        try {
+            $fetchLabChallengeAssociation = collect();
+            $fetchLabIdsAssociatedChallengeId = $this->componentAssociationService->fetchLabIdsAssociatedChallengeId($challengeId);
+            if ($fetchLabIdsAssociatedChallengeId->isNotEmpty()) {
+                $fetchLabChallengeAssociation = $this->labService->fetchLabAssociation($request, $fetchLabIdsAssociatedChallengeId);
+            }
+
+            return $fetchLabChallengeAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchLabResourceCollectionAssociation($request, $resourceCollectionId)
     {
         try {
@@ -87,10 +104,27 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
             $fetchLabProgramLabAssociation = collect();
             $fetchLabProgramIdsAssociatedLabId = $this->componentAssociationService->fetchLabProgramIdsAssociatedLabId($labId);
             if ($fetchLabProgramIdsAssociatedLabId->isNotEmpty()) {
-                $fetchLabProgramLabAssociation = $this->labProgramService->fetchLabProgramLabAssociation($request, $fetchLabProgramIdsAssociatedLabId);
+                $fetchLabProgramLabAssociation = $this->labProgramService->fetchLabProgramAssociation($request, $fetchLabProgramIdsAssociatedLabId);
             }
 
             return $fetchLabProgramLabAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramChallengeAssociation($request, $challengeId)
+    {
+        try {
+            $fetchLabProgramChallengeAssociation = collect();
+            $fetchLabProgramIdsAssociatedChallengeId = $this->componentAssociationService->fetchLabProgramIdsAssociatedChallengeId($challengeId);
+            if ($fetchLabProgramIdsAssociatedChallengeId->isNotEmpty()) {
+                $fetchLabProgramChallengeAssociation = $this->labProgramService->fetchLabProgramAssociation($request, $fetchLabProgramIdsAssociatedChallengeId);
+            }
+
+            return $fetchLabProgramChallengeAssociation;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -227,6 +261,23 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         }
     }
 
+    public function fetchResourceModuleChallengeAssociation($request, $challengeId)
+    {
+        try {
+            $fetchResourceModuleChallengeAssociation = collect();
+            $fetchResourceModuleIdsAssociatedChallengeId = $this->componentAssociationService->fetchResourceModuleIdsAssociatedChallengeId($challengeId);
+            if ($fetchResourceModuleIdsAssociatedChallengeId->isNotEmpty()) {
+                $fetchResourceModuleChallengeAssociation = $this->resourceModuleService->fetchResourceModuleAssociation($request, $fetchResourceModuleIdsAssociatedChallengeId);
+            }
+
+            return $fetchResourceModuleChallengeAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchResourceModuleResourceGroupAssociation($request, $resourceGroupId)
     {
         try {
@@ -306,6 +357,23 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         }
     }
 
+    public function fetchResourceCollectionChallengeAssociation($request, $challengeId)
+    {
+        try {
+            $fetchResourceCollectionChallengeAssociation = collect();
+            $fetchResourceCollectionIdsAssociatedChallengeId = $this->componentAssociationService->fetchResourceCollectionIdsAssociatedChallengeId($challengeId);
+            if ($fetchResourceCollectionIdsAssociatedChallengeId->isNotEmpty()) {
+                $fetchResourceCollectionChallengeAssociation = $this->resourceCollectionService->fetchResourceCollectionAssociation($request, $fetchResourceCollectionIdsAssociatedChallengeId);
+            }
+
+            return $fetchResourceCollectionChallengeAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchResourceGroups($request, $organizationId)
     {
         try {
@@ -323,10 +391,27 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
             $fetchResourceGroupLabAssociation = collect();
             $fetchResourceGroupIdsAssociatedLabId = $this->componentAssociationService->fetchResourceGroupIdsAssociatedLabId($labId);
             if ($fetchResourceGroupIdsAssociatedLabId->isNotEmpty()) {
-                $fetchResourceGroupLabAssociation = $this->resourceGroupService->fetchResourceGroupLabAssociation($request, $fetchResourceGroupIdsAssociatedLabId);
+                $fetchResourceGroupLabAssociation = $this->resourceGroupService->fetchResourceGroupAssociation($request, $fetchResourceGroupIdsAssociatedLabId);
             }
 
             return $fetchResourceGroupLabAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupsBasedOnChallengeId($request, $challengeId)
+    {
+        try {
+            $fetchResourceGroupsBasedOnChallengeId = collect();
+            $fetchResourceGroupIdsAssociatedChallengeId = $this->componentAssociationService->fetchResourceGroupIdsAssociatedChallengeId($challengeId);
+            if ($fetchResourceGroupIdsAssociatedChallengeId->isNotEmpty()) {
+                $fetchResourceGroupsBasedOnChallengeId = $this->resourceGroupService->fetchResourceGroupAssociation($request, $fetchResourceGroupIdsAssociatedChallengeId);
+            }
+
+            return $fetchResourceGroupsBasedOnChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
