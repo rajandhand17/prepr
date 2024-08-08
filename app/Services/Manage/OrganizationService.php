@@ -557,6 +557,7 @@ class OrganizationService
             }
 
             return [
+                'title'                         => $organizationData->title,
                 'plan'                          => $plan,
                 'plan_name'                     => $planName,
                 'plan_end_date'                 => UtilityHelper::formatDateTime($organizationData->chargebee_details->trial_end_date),
