@@ -23,6 +23,7 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -199,26 +200,6 @@ class LabResource extends JsonResource
             }
         }
 
-        $type = 'na';
-
-        switch ($this->type) {
-            case '0':
-                $type = 'assess';
-                break;
-            case '1':
-                $type = 'onboard';
-                break;
-            case '2':
-                $type = 'engage';
-                break;
-            case '3':
-                $type = 'grow';
-                break;
-            default:
-                $type = 'na';
-                break;
-        }
-
         if (auth('api')->check()) {
             $module_status = 'not_started';
             $module_progress = [
@@ -244,10 +225,20 @@ class LabResource extends JsonResource
                 ];
             }
         }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
 
         return [
             'id'                            => $this->uuid,
-            'type'                          => $type,
+            'type'                          => LabTypeResource::make($this->labType()),
+            'created_by'                    => $created_by,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
