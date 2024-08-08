@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\LabProgram;
+use App\Services\Manage\LabProgramTypeModesService;
 
 class LabProgramService
 {
@@ -92,6 +93,11 @@ class LabProgramService
             }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $labProgramList = $labProgramList->whereIn('level_id', $request->level_id);
+            }
+
+            if ($request->has('type') && !empty($request->type)) {
+                $typeFilterIds = LabProgramTypeModesService::getLabProgramType($request->type);
+                $labProgramList = $labProgramList->whereIn('lab_programs.id', $typeFilterIds);
             }
 
             return $labProgramList;
