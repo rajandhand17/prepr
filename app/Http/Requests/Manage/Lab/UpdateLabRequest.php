@@ -35,7 +35,6 @@ class UpdateLabRequest extends FormRequest
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
 
         $base_rules = [
-            'cover_image'              => 'image|mimes:jpeg,jpg,png,webp|max:1536',
             'title'                    => 'required|max:255|unique:labs,title,'.$lab->id,
             'request_type'             => 'required|in:draft,publish,archive',
             'type'                     => 'required|array',
