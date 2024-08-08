@@ -30,7 +30,7 @@ class FeaturedLabService
     {
         try {
             $featuredLab=FeaturedLab::where('lab_id',$lab->id)->first();
-            if($featuredLab){
+            if(!$featuredLab){
                 $featuredLab = new FeaturedLab();
                 $featuredLab->lab_id=$lab->id;
                 $featuredLab->save();
