@@ -17,4 +17,25 @@ class FeaturedLabService
             return false;
         }
     }
+
+    public static function getFeaturedLabBasedOnLabId($id){
+        try {
+            return FeaturedLab::where('lab_id', $id)->first();
+        }catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function createFeaturedLab($lab)
+    {
+        try {
+            $featuredLab = new FeaturedLab();
+            $featuredLab->lab_id=$lab->id;
+            $featuredLab->save();
+            return true;
+        }catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }
