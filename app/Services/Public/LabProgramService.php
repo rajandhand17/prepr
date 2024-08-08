@@ -144,13 +144,27 @@ class LabProgramService
         }
     }
 
-    public function fetchLabProgramLabAssociation($request, $fetchLabProgramIdsAssociatedLabId)
+    public function fetchLabProgramAssociation($request, $fetchLabProgramIdsAssociatedLabId)
     {
         try {
             $lab_program_list = LabProgram::whereIn('lab_programs.id', $fetchLabProgramIdsAssociatedLabId)->where(['lab_programs.status' => '1', 'lab_programs.is_accessible' => '1']);
             $lab_program_list = self::filterLabProgramList($request, $lab_program_list);
 
             return $lab_program_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedLabPrograms($labProgramIds)
+    {
+        try {
+            // Retrieve lab program with the given IDs using findMany for primary keys and limiting by 2 values
+            $labPrograms = LabProgram::findMany($labProgramIds)->slice(0, 2);
+
+            return $labPrograms;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

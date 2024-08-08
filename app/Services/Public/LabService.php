@@ -432,4 +432,18 @@ class LabService
             return false;
         }
     }
+
+    public function getRelatedLabs($labIds)
+    {
+        try {
+            // Retrieve resource modules with the given IDs using findMany for primary keys and limiting by 2 values
+            $labs = Lab::findMany($labIds)->slice(0, 2);
+
+            return $labs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
