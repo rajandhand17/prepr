@@ -185,4 +185,32 @@ class ResourceGroupService
             return false;
         }
     }
+
+    public function getComponentBasedResourceGroupList($request, $organizationId)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
+            return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupLabAssociation($request, $fetchResourceGroupIdsAssociatedLabId)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
+            return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
