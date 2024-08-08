@@ -123,4 +123,32 @@ class LabProgramService
             return false;
         }
     }
+
+    public function getComponentBasedLabProgramList($request, $organizationId)
+    {
+        try {
+            $lab_program_list = LabProgram::where(['lab_programs.organization_id' => $organizationId, 'lab_programs.status' => '1', 'lab_programs.is_accessible' => '1']);
+            $lab_program_list = self::filterLabProgramList($request, $lab_program_list);
+
+            return $lab_program_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramLabAssociation($request, $fetchLabProgramIdsAssociatedLabId)
+    {
+        try {
+            $lab_program_list = LabProgram::whereIn('lab_programs.id', $fetchLabProgramIdsAssociatedLabId)->where(['lab_programs.status' => '1', 'lab_programs.is_accessible' => '1']);
+            $lab_program_list = self::filterLabProgramList($request, $lab_program_list);
+
+            return $lab_program_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
