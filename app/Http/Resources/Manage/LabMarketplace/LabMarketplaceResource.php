@@ -13,6 +13,8 @@ use App\Services\AchievementConditionListService;
 use App\Services\Manage\ChallengePathTemplateService;
 use App\Services\Manage\ChallengeTemplateService;
 use App\Services\Manage\LabMarketplaceService;
+use App\Services\Manage\LabService;
+use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
@@ -194,7 +196,10 @@ class LabMarketplaceResource extends JsonResource
                 }
             }
         }
-
+        /*Temporary added this code start*/
+        $getMemberCountsOflabs=LabService::getLabBasedOnSlug($this->slug);
+        $getMemberCountsOfMembers=MemberManagementService::getLabMembersCount($getMemberCountsOflabs->id);
+        /*Temporary added this code end*/
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -206,7 +211,7 @@ class LabMarketplaceResource extends JsonResource
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,
-            'member_count'                  => 45, // Temporary added this values, afte discussion it will be removed or dyanmically set
+            'member_count'                  => $getMemberCountsOfMembers->count(), // Temporary added this values
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
