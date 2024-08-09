@@ -439,7 +439,7 @@ class MemberManagementService
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
                         } else {
-                            if ($checkMemberExists['invite_status'] == '3') {
+                            if ($checkMemberExists['invite_status'] == '3' || $checkMemberExists['invite_status'] == '2') {
                                 $subject = $request->subject_line;
                                 $emailBody = $request->email_body;
                                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);

@@ -13,8 +13,6 @@ use App\Services\AchievementConditionListService;
 use App\Services\Manage\ChallengePathTemplateService;
 use App\Services\Manage\ChallengeTemplateService;
 use App\Services\Manage\LabMarketplaceService;
-use App\Services\Manage\LabService;
-use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
@@ -196,6 +194,7 @@ class LabMarketplaceResource extends JsonResource
                 }
             }
         }
+
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
