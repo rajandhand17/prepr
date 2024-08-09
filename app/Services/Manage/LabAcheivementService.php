@@ -106,8 +106,9 @@ class LabAcheivementService
     public static function getLabAchivements($lab_id)
     {
         try {
-            return LabAcheivement::where('lab_id', $lab_id)->first();
+            $getLabAchivements = LabAcheivement::where('lab_id', $lab_id)->first();
 
+            return $getLabAchivements;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

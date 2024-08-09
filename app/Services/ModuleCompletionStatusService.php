@@ -218,18 +218,16 @@ class ModuleCompletionStatusService
         }
     }
 
-    public static function checkChallengePathAchievementAssignedOrNotArray($challengePathIds, $userId)
+    public static function fetchChallengePathCompletedBasedOnIds($challengePathIds, $userId)
     {
         try {
-            $checkChallengePathAchievementAssignedOrNot = ModuleCompletionStatus::where([
-
+            $fetchChallengePathCompletedBasedOnIds = ModuleCompletionStatus::where([
                 'user_id'       => $userId,
                 'module_type'   => '3',
-                'status'        => '2',
                 'is_completed'  => '1',
             ])->whereIn('module_id' , $challengePathIds)->get();
 
-            return $checkChallengePathAchievementAssignedOrNot;
+            return $fetchChallengePathCompletedBasedOnIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -237,17 +235,50 @@ class ModuleCompletionStatusService
         }
     }
 
-    public static function checkResourceModuleProgressBasedOnResourceIds($resourceModuleIds, $userId)
+    public static function fetchResourceModuleCompletedBasedOnIds($resourceModuleIds, $userId)
     {
         try {
             $checkResourceModuleProgress = ModuleCompletionStatus::where([
-
                 'user_id'       => $userId,
-                'module_type'   => '3',
+                'module_type'   => '4',
                 'percentage'        => '100',
-            ])->whereIn('module_id' , $resourceModuleIds)->get();
+            ])->whereIn('module_id', $resourceModuleIds)->get();
 
             return $checkResourceModuleProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceCollectionCompletedBasedOnIds($resourceCollectionIds, $userId)
+    {
+        try {
+            $checkResourceCollectionProgress = ModuleCompletionStatus::where([
+                'user_id'       => $userId,
+                'module_type'   => '5',
+                'percentage'        => '100',
+            ])->whereIn('module_id', $resourceCollectionIds)->get();
+
+            return $checkResourceCollectionProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceGroupCompletedBasedOnIds($resourceGroupIds, $userId)
+    {
+        try {
+            $checkResourceGroupProgress = ModuleCompletionStatus::where([
+                'user_id'       => $userId,
+                'module_type'   => '6',
+                'is_completed'  => '1',
+            ])->whereIn('module_id', $resourceGroupIds)->get();
+
+            return $checkResourceGroupProgress;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
