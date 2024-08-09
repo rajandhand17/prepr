@@ -207,6 +207,7 @@ class ProjectResource extends JsonResource
         $audiosCollection = ProjectAudioResource::make($this)->toArray(request());
         $docsCollection   = ProjectDocResource::make($this)->toArray(request());
 
+        $images_count = count(ProjectImageResource::make($this)->toArray(request()));
         // Counting total files
         $files_count = count($videosCollection) + count($audiosCollection) + count($docsCollection);
 
@@ -247,8 +248,8 @@ class ProjectResource extends JsonResource
             'project_task'          => $challenge_task,
             'docs'                  => $docsCollection ,
             'images'                => $imagesCollection,
-            'images_count'          => count($imagesCollection), // Adding image count
-            'files_count'           => $files_count,
+            'images_count'          => "You've "  . $images_count . " " . ($images_count > 1 ? "images uploaded" : "image uploaded"), // Adding image count
+            'files_count'           => "You've "  . $files_count . " " . ($files_count > 1 ? "files uploaded" : "file uploaded"),
             'videos'                => $videosCollection,
             'audios'                => $audiosCollection ,
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
