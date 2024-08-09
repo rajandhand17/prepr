@@ -409,6 +409,22 @@ class ChallengePathService
         }
     }
 
+    public static function getChallengePathIdBasedOnIds($ids)
+    {
+        try {
+            $challengePath = ChallengePath::whereIn('id', $ids)->pluck('id')->all();
+            if ($challengePath != null) {
+                return $challengePath;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getChallengePathBasedOnUUIDArray($challengePathUUIDArray)
     {
         try {
