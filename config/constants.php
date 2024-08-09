@@ -40,6 +40,7 @@ return [
         'lab'          => '1',
         'challenge'    => '2',
         'project'      => '5',
+        'lab_program'  => '3',
     ],
 
     'member_management_invite_status' => [
