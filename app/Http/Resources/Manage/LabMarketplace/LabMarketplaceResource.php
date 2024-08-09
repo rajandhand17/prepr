@@ -197,8 +197,9 @@ class LabMarketplaceResource extends JsonResource
             }
         }
         /*Temporary added this code start*/
-        $getMemberCountsOflabs=LabService::getLabBasedOnSlug($this->slug);
-        $getMemberCountsOfMembers=MemberManagementService::getLabMembersCount($getMemberCountsOflabs->id);
+        $getMemberCountsOflabs = LabService::getLabBasedOnSlug($this->slug);
+        $getMemberCountsOfMembers = MemberManagementService::getLabMembersCount($getMemberCountsOflabs->id);
+
         /*Temporary added this code end*/
         return [
             'id'                            => $this->uuid,
