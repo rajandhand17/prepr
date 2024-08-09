@@ -491,6 +491,7 @@
     "responses.create_member_manger_success_organization": "Congratulations! You have successfully added member(s) to an Organization.",
     "responses.create_member_manger_success_lab": "Congratulations! You have successfully added member(s) to an Lab.",
     "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
+    "responses.create_member_manger_success_lab_program": "Congratulations! You have successfully added member(s) to Lab Program.",
     "responses.resource_module_rating_successfully": "Congratulations! You have successfully rated the resource module",
     "responses.resource_collection_rating_successfully": "Congratulations! You have successfully rated the resource collection",
     "responses.resource_collection_rating_failed": "Oops! You have failed to rate the resource collection",

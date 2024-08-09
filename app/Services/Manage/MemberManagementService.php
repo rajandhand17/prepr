@@ -259,7 +259,6 @@ class MemberManagementService
                 if (!empty($memberList)) {
                     return $memberList;
                 }
-
                 return false;
             }
 
@@ -316,6 +315,10 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     $addedMemberResponse = __('responses.create_member_manger_success_challenge');
+                    break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
                 default:
                     $module_type = null;
@@ -542,6 +545,9 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -581,6 +587,9 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -610,6 +619,9 @@ class MemberManagementService
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
+                    break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
                     break;
                 default:
                     $module_type = null;
