@@ -24,7 +24,7 @@ class ResumeUploadRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-                'resume' => 'required|file|max:1024|mimes:pdf,doc,docx,txt',
+            'resume' => 'required|file|max:1024|mimes:pdf,doc,docx,txt',
         ];
 
         return $base_rules;
