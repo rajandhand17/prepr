@@ -9,6 +9,7 @@ use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Collection;
 
 class LabService
 {
@@ -58,6 +59,16 @@ class LabService
                 $lab_list = $lab_list->whereIn('labs.category_id', $request->category);
             }
 
+            if ($request->has('type') && !empty($request->type)) {
+                $typeFilterIds = LabTypeModesService::getLabType($request->type);
+                $lab_list = $lab_list->whereIn('labs.id', $typeFilterIds);
+            }
+
+            if ($request->has('source') && !empty($request->source)) {
+                $sourceLabIds = self::getLabBaseOnSource($request->source);
+                $lab_list = $lab_list->whereIn('labs.id', $sourceLabIds);
+            }
+
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -99,10 +110,67 @@ class LabService
         }
     }
 
+    public static function getLabBaseOnSource($source)
+    {
+        try {
+            $createdByYouLabIds = collect([]);
+            $onboardingLabIds = collect([]);
+            $clonedByYouLabIds = collect([]);
+            $createdByOrgLabIds = collect([]);
+            if (in_array('created_by_you', $source)) {
+                $createdByYouLabIds = Lab::where(['user_id' => auth('api')->user()->id])->pluck('id');
+            }
+            if (in_array('onboarding_challenges', $source)) {
+                $onboardingLabIds = Lab::where(['is_auto_created' => '1'])->pluck('id');
+            }
+            if (in_array('cloned_by_you', $source)) {
+                $clonedByYouLabIds = Lab::where(['is_pre_built' => '1'])->pluck('id');
+            }
+            if (in_array('created_by_organizations', $source)) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                $createdByOrgLabIds = Lab::where(['organization_id' => $organization->id])->pluck('id');
+            }
+
+            $labsCollection = new Collection();
+            $labsCollection = $labsCollection->concat($createdByYouLabIds);
+            $labsCollection = $labsCollection->concat($onboardingLabIds);
+            $labsCollection = $labsCollection->concat($clonedByYouLabIds);
+            $labsCollection = $labsCollection->concat($createdByOrgLabIds);
+
+            return $labsCollection;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getLabBasedOnSlug($slug)
     {
         try {
             return Lab::where('slug', $slug)->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getSourceByLabId($labId)
+    {
+        try {
+            if (Lab::where(['id' => $labId, 'user_id' => auth('api')->user()->id])->exists()) {
+                $source = 'created_by_you';
+            } elseif (Lab::where(['id' => $labId, 'is_auto_created' => '1'])->exists()) {
+                $source = 'onboarding_challenges';
+            } elseif (Lab::where(['id' => $labId, 'is_pre_built' => '1', 'user_id' => auth('api')->user()->id])->exists()) {
+                $source = 'cloned_by_you';
+            } else {
+                $source = 'created_by_organizations';
+            }
+
+            return $source;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -220,7 +288,7 @@ class LabService
             $lab->title = $request->title;
             $lab->description = $request->description;
             $lab->privacy = $privacy;
-            $lab->media_type = 'image';
+            $lab->media_type = $request->media_type;
             $lab->media = $upload_cover_image;
             $lab->status = $status;
             $lab->total_share = 0;
@@ -345,7 +413,7 @@ class LabService
                 $lab->description = ($request->has('description')) ? $request->description : $lab->description;
                 $lab->type = $type;
                 $lab->privacy = $privacy;
-                $lab->media_type = 'image';
+                $lab->media_type = $request->media_type;
                 $lab->media = ($upload_cover_image != null) ? $upload_cover_image : $lab->cover_image;
                 $lab->status = ($request->request_type == 'draft') ? '0' : (($request->request_type == 'publish') ? '1' : '2');
                 $lab->is_resource_sequential = ($request->has('is_resource_sequential')) ? (($request->is_resource_sequential == 'yes') ? '1' : '0') : $lab->is_resource_sequential;

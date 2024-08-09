@@ -4,24 +4,21 @@
 /public/storage
 /storage/*.key
 /vendor
+/sql
 
-# Environment files ignore
+# Environment files, ignore
 .env
 .env.backup
 .env.production
 .env.beta
 .env.pre
 .env.demo
+.env.testing
 
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 auth.json
-npm-debug.log
-yarn-error.log
-/.fleet
-/.idea
-/.vscode
 sendgrid.env
 ddev
 .ddev
@@ -30,3 +27,24 @@ ddev
 /docker
 /sql
 .DS_Store
+
+# Local composer executable
+composer
+composer.phar
+
+# Mac OS specific files
+.DS_Store
+
+# Docker specific files
+# /docker-compose-local.yml
+# /docker
+
+# Code editor specific folders
+/.fleet
+/.idea
+/.vscode
+/.zed
+
+# Error logs
+npm-debug.log
+yarn-error.log

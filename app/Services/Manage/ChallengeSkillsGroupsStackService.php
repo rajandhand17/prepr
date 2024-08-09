@@ -224,4 +224,22 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public function getRecommendedChallenge($challengeId)
+    {
+        try {
+            $challengeIds = collect();
+            // Get unique foreign IDs related to the given challenge ID
+            $skillsArray = ChallengeSkillsGroupsStack::where(['type' => '0', 'challenge_id' => $challengeId])->pluck('foreign_id')->unique();
+            if ($skillsArray->isNotEmpty()) {
+                $challengeIds = ChallengeSkillsGroupsStack::where('type', '0')->whereIn('foreign_id', $skillsArray)->where('challenge_id', '<>', $challengeId)->pluck('challenge_id');
+            }
+
+            return $challengeIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

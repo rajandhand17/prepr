@@ -109,7 +109,7 @@ class ProjectResource extends JsonResource
         }
 
         if ($this->challenge_id) {
-            $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);     
+            $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
             $org = OrganizationService::getOrganizationExistBasedOnId($fetchChallenge->organization_id);
 
@@ -205,7 +205,7 @@ class ProjectResource extends JsonResource
         $imagesCollection = ProjectImageResource::make($this)->toArray(request());
         $videosCollection = ProjectVideoResource::make($this)->toArray(request());
         $audiosCollection = ProjectAudioResource::make($this)->toArray(request());
-        $docsCollection   = ProjectDocResource::make($this)->toArray(request());
+        $docsCollection = ProjectDocResource::make($this)->toArray(request());
 
         $images_count = count(ProjectImageResource::make($this)->toArray(request()));
         // Counting total files
@@ -246,12 +246,12 @@ class ProjectResource extends JsonResource
             'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,
-            'docs'                  => $docsCollection ,
+            'docs'                  => $docsCollection,
             'images'                => $imagesCollection,
             'images_count'          => "You've "  . $images_count . " " . ($images_count > 1 ? "images uploaded" : "image uploaded"), // Adding image count
             'files_count'           => "You've "  . $files_count . " " . ($files_count > 1 ? "files uploaded" : "file uploaded"),
             'videos'                => $videosCollection,
-            'audios'                => $audiosCollection ,
+            'audios'                => $audiosCollection,
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
             'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
