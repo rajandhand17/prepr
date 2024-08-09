@@ -144,6 +144,11 @@ class ChallengeService
                     $query->where('is_submitted', '1');
                 });
             }
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
+                });
+            }
 
             return $challenge_list;
         } catch (Exception $e) {
