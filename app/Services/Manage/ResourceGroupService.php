@@ -381,6 +381,22 @@ class ResourceGroupService
         }
     }
 
+    public static function getResourceGroupBasedOnIdArray($resourceGroupIdArray)
+    {
+        try {
+            $resourceGroupIds = ResourceGroup::whereIn('id', $resourceGroupIdArray)->pluck('id')->all();
+            if ($resourceGroupIds != null) {
+                return $resourceGroupIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function deleteOrganizationResourceGroup($organizationId)
     {
         try {

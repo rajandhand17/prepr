@@ -181,7 +181,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id', 'category_id', 'user_id')->where('id', $Id)->first();
+            return Lab::where('id', $Id)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
