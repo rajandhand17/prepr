@@ -994,5 +994,4 @@ class MemberManagementService
             return false;
         }
     }
-
 }
