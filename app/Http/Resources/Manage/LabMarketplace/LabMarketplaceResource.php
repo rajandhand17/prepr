@@ -196,10 +196,6 @@ class LabMarketplaceResource extends JsonResource
                 }
             }
         }
-        /*Temporary added this code start*/
-        $getMemberCountsOflabs=LabService::getLabBasedOnSlug($this->slug);
-        $getMemberCountsOfMembers=MemberManagementService::getLabMembersCount($getMemberCountsOflabs->id);
-        /*Temporary added this code end*/
         return [
             'id'                            => $this->uuid,
             'type'                          => $type,
@@ -211,7 +207,6 @@ class LabMarketplaceResource extends JsonResource
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,
-            'member_count'                  => $getMemberCountsOfMembers->count(), // Temporary added this values
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
