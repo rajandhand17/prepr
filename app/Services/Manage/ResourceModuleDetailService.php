@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleDetail;
+use App\Models\ResourceModuleVisit;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -116,6 +117,8 @@ class ResourceModuleDetailService
                 'type'               => $type,
             ])->delete();
 
+            self::deleteResourceModuleDetailVisitBasedOnAssetId($request->media_id, $resource_module_id);
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -129,9 +132,13 @@ class ResourceModuleDetailService
         try {
             foreach ($request->links as  $value) {
                 $type = config('constants.resource_module_type.url');
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
-                if (!$resourceModuleDetailed) {
-                    return false;
+                $checkExistsResourceModules = self::checkDuplicateLinks($value['path'], $value['social_link_id'], $resource_module_id);
+
+                if (!$checkExistsResourceModules) {
+                    $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
+                    if (!$resourceModuleDetailed) {
+                        return false;
+                    }
                 }
             }
 
@@ -139,6 +146,15 @@ class ResourceModuleDetailService
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function checkDuplicateLinks($path, $social_link_id, $resource_module_id)
+    {
+        try {
+            return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$path, 'social_link_id'=>$social_link_id])->first();
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -202,6 +218,32 @@ class ResourceModuleDetailService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createResourceModuleDetailsAI in ResourceModuleDetailService.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public static function deleteResourceModuleDetailVisit($resource_module_id)
+    {
+        try {
+            ResourceModuleVisit::where('module_id', $resource_module_id)->delete();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function deleteResourceModuleDetailVisitBasedOnAssetId($assetId, $resource_module_id)
+    {
+        try {
+            ResourceModuleVisit::where(['module_id' => $resource_module_id, 'module_asset_id' => $assetId])->delete();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
             return false;
         }

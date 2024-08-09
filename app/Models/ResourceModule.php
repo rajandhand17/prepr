@@ -60,6 +60,9 @@ class ResourceModule extends Model
         if ($this->is_go1) {
             return data_get($this->go1_metadata, 'image');
         }
+        if ($this->media_type == '1') {
+            return $value;
+        }
 
         return config('site-settings.aws_url').$value;
     }
@@ -67,6 +70,16 @@ class ResourceModule extends Model
     public function organization()
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills_group_stack()
+    {
+        return $this->hasMany(ResourceModuleSkillsGroupsStack::class, 'resource_module_id', 'id');
+    }
+
+    public function resource_module_type_modes()
+    {
+        return $this->hasOne(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
     }
 
     public function documents()
@@ -91,7 +104,7 @@ class ResourceModule extends Model
 
     public function urls()
     {
-        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id')->where('type', '=', '5');
+        return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path', 'social_link_id', 'type')->where('type', '=', '5');
     }
 
     public function images()

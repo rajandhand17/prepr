@@ -4,9 +4,15 @@
 /public/storage
 /storage/*.key
 /vendor
+
+# Environment files ignore
 .env
 .env.backup
 .env.production
+.env.beta
+.env.pre
+.env.demo
+
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -23,3 +29,4 @@ ddev
 /docker-compose-local.yml
 /docker
 /sql
+.DS_Store

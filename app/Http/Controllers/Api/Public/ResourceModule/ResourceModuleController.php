@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceModule\AddRatingRequest;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Public\ResourceModule\ResourceModuleRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceModuleController extends AppBaseController
@@ -54,8 +55,13 @@ class ResourceModuleController extends AppBaseController
                 }
 
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
+
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.resource_modules');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
                 }
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));

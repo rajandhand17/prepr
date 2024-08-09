@@ -18,6 +18,7 @@ use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\Manage\LabTypeModesService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\SkillService;
@@ -43,8 +44,9 @@ class LabRepository implements LabInterface
     private $campusConnectOpportunityService;
     private $campusConnectStoryService;
     private $organizationService;
+    private $labTypeModesService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService)
+    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -61,6 +63,7 @@ class LabRepository implements LabInterface
         $this->campusConnectOpportunityService = $campusConnectOpportunityService;
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->organizationService = $organizationService;
+        $this->labTypeModesService = $labTypeModesService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -114,8 +117,8 @@ class LabRepository implements LabInterface
                 $createLab = $this->labService->createLab($request, $upload_profile_image, $organizationData->id);
                 $createdLabAddress = $this->labAddressService->createLabAddress($request, $createLab);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
-                $createdLabTagAssociations = $this->labTagsGroupsService->createLabTagsGroups($request, $createLab);
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createLab);
+                $labTypeModes = $this->labTypeModesService->labTypeModes($request, $createLab->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $createdLabAchievement = $this->labAcheivementService->createLabAchievement($request, $createLab, $upload_achievements_image);
                 }
@@ -158,26 +161,26 @@ class LabRepository implements LabInterface
                     'createdLab'                  => $createLab,
                     'createdLabAddress'           => $createdLabAddress,
                     'createdLabSkillAssociations' => $createdLabSkillAssociations,
-                    'createdLabTagAssociations'   => $createdLabTagAssociations,
                     'createdLabExternalLinks'     => $createdLabExternalLinks,
                     'createdLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $createdLabAchievement : true,
                     'createdLabAssociations'      => $createdLabAssociations,
                     'createdEvent'                => $request->is_live_event_enabled == 'yes' ? $createdEvent : true,
                     'campusConnectOpportunity'    => $campusConnectOpportunity,
                     'campusConnectStory'          => $campusConnectStory,
+                    'labTypeModes'                => $labTypeModes,
                 ];
             });
             if (
                 $createdLab['createdLab'] &&
                 $createdLab['createdLabAddress'] &&
                 $createdLab['createdLabSkillAssociations'] &&
-                $createdLab['createdLabTagAssociations'] &&
                 $createdLab['createdLabExternalLinks'] &&
                 $createdLab['createdLabAchievement'] &&
                 $createdLab['createdLabAssociations'] &&
                 $createdLab['createdEvent'] &&
                 $createdLab['campusConnectOpportunity'] &&
-                $createdLab['campusConnectStory']
+                $createdLab['campusConnectStory'] &&
+                $createdLab['labTypeModes']
             ) {
                 DB::commit();
                 $groups_for_mixpanel = [];
@@ -212,10 +215,9 @@ class LabRepository implements LabInterface
                 $updateLab = $this->labService->updateLab($slug, $request, $upload_cover_image, $organizationData);
                 $updatedLabAddress = $this->labAddressService->updateLabAddress($request, $updateLab->id);
                 $updatedLabSkillAssociations = $this->labSkillsGroupsStackService->updateLabSkillsGroupsStack($request, $updateLab->id);
-                $updatedLabTagAssociations = $this->labTagsGroupsService->updateLabTagsGroups($request, $updateLab->id);
 
                 $updatedLabExternalLinks = $this->labExternalLinksService->updateLabExternalLinks($request, $updateLab->id);
-
+                $labTypeModes = $this->labTypeModesService->labTypeModes($request, $updateLab->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
                 }
@@ -258,25 +260,25 @@ class LabRepository implements LabInterface
                     'updatedLab'                  => $updateLab,
                     'updatedLabAddress'           => $updatedLabAddress,
                     'updatedLabSkillAssociations' => $updatedLabSkillAssociations,
-                    'updatedLabTagAssociations'   => $updatedLabTagAssociations,
                     'updatedLabExternalLinks'     => $updatedLabExternalLinks,
                     'updatedLabAchievement'       => ($request->is_achievement_enabled == 'yes') ? $updatedLabAchievement : true,
                     'updatedLabAssociations'      => $updatedLabAssociations,
                     'updatedEvent'                => $request->is_live_event_enabled == 'yes' ? $updatedEvent : true,
                     'campusConnectOpportunity'    => $campusConnectOpportunity,
                     'campusConnectStory'          => $campusConnectStory,
+                    'labTypeModes'                => $labTypeModes,
                 ];
             });
             if (
                 $updatedLab['updatedLab'] &&
                 $updatedLab['updatedLabAddress'] &&
                 $updatedLab['updatedLabSkillAssociations'] &&
-                $updatedLab['updatedLabTagAssociations'] &&
                 $updatedLab['updatedLabExternalLinks'] &&
                 $updatedLab['updatedLabAchievement'] &&
                 $updatedLab['updatedLabAssociations'] &&
                 $updatedLab['campusConnectOpportunity'] &&
-                $updatedLab['campusConnectStory']
+                $updatedLab['campusConnectStory'] &&
+                $updatedLab['labTypeModes']
             ) {
                 DB::commit();
                 $groups_for_mixpanel = [];
@@ -379,11 +381,11 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image)
+    public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image, $organization)
     {
         try {
-            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image) {
-                $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image);
+            $createdLabUsingAI = DB::transaction(function () use ($request, $upload_profile_image, $organization) {
+                $createLabUsingAI = $this->labService->createLabUsingAI($request, $upload_profile_image, $organization);
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLabUsingAI);
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLabUsingAI);
 

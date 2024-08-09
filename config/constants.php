@@ -534,5 +534,73 @@ return [
         'resource_modules'        => '4',
         'resource_collections'    => '5',
         'resource_group'          => '6',
+        'projects'                => '7',
+    ],
+
+    'resource_types' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+    ],
+
+    'resource_types_key' => [
+        '0'       => 'assess',
+        '1'       => 'onboard',
+        '2'       => 'engage',
+        '3'       => 'grow',
+    ],
+    'resource_mode_type' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'resource_mode_type_key' => [
+        '4'       => 'team',
+        '5'       => 'individual',
+    ],
+    'resource_mode'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+
+    'module_completion_statuses_types'=> [
+        'resource_module'     => '4',
+        'resource_collection' => '5',
+        'resource_group'      => '6',
+    ],
+
+    'status_module_completion'=> [
+        'not_started' => '0',
+        'in_progress' => '1',
+        'completed'   => '2',
+    ],
+
+    'resource_media_type' => [
+        'image'    => '0',
+        'embedded' => '1',
+        'video'    => '2',
+    ],
+    'lab_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_program_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 ];

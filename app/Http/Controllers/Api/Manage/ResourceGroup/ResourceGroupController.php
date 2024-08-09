@@ -9,10 +9,10 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceGroupController extends AppBaseController
@@ -40,12 +40,15 @@ class ResourceGroupController extends AppBaseController
                     return $this->sendError(__('responses.reached_resource_group_limit'), 400);
                 }
             }
-
             $upload_cover_image = config('site-settings.default_resource_group_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -70,6 +73,37 @@ class ResourceGroupController extends AppBaseController
         }
     }
 
+    public function cloneResourceGroup($slug)
+    {
+        try {
+            // Checking resource group based on slug exists or not
+            $getResourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if (!$getResourceGroup) {
+                return $this->sendError(__('responses.selected_resource_group_not_found'), 404);
+            }
+            // Fetching resource group is belongs to current users or not
+            if ($getResourceGroup->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'), 403);
+            }
+            // Fetching Resource group Based on title and resource current users
+            $getResourceCollectionBasedOnTitle = $this->resourceGroupRepository->getResourceGroupBasedOnTitle($getResourceGroup->title);
+            if ($getResourceCollectionBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+            }
+            // Cloning resource groups based on title and resource group id
+            $cloneResourceModule = $this->resourceGroupRepository->cloneResourceGroup($getResourceGroup->id);
+            if ($cloneResourceModule) {
+                return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_collection_successfully'));
+            }
+
+            return $this->sendError(__('responses.clone_responses_failed'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function show($slug)
     {
         try {
@@ -86,8 +120,13 @@ class ResourceGroupController extends AppBaseController
                 if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                     return $this->sendError(__('responses.resource_group_not_accessible'), 403);
                 }
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackResourceGroupUserProgress($checkResourceGroupExistsOrNot, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_group');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceGroupExistsOrNot->id, $userId, $moduleType);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
 
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
@@ -179,14 +218,19 @@ class ResourceGroupController extends AppBaseController
             if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
             }
+
             if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_group_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceGroupExistsOrNot->media);
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceGroupRepository->uploadResourceGroupCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -200,7 +244,7 @@ class ResourceGroupController extends AppBaseController
             }
             $updateResourceGroup = $this->resourceGroupRepository->updateResourceGroup($slug, $request, $upload_cover_image, $upload_achievement_image, $organization->id);
             if ($updateResourceGroup) {
-                return $this->sendResponse(ResourceCollectionResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
+                return $this->sendResponse(ResourceGroupResource::make($updateResourceGroup), __('responses.resource_collection_update_success'), 200);
             }
 
             return $this->sendError(__('responses.resource_collection_update_failed'), 403);
@@ -219,6 +263,7 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+
             $resourceGroup = $this->resourceGroupRepository->getResourceGroupList($request, $organization);
             if ($resourceGroup) {
                 $response = [
@@ -255,7 +300,7 @@ class ResourceGroupController extends AppBaseController
             }
 
             return $this->sendResponse($getResourceGroupListName, __('responses.found_resource_group_list'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

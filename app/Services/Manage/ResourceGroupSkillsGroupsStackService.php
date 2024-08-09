@@ -162,4 +162,50 @@ class ResourceGroupSkillsGroupsStackService
             return false;
         }
     }
+
+    public function cloneResourceGroupSkillsGroupsStack($originalResourceGroupAssociation, $clonedResourceGroupId)
+    {
+        try {
+            $originalResourceGroupAssociation->each(function ($resource_group_skill_group) use ($clonedResourceGroupId) {
+                if ($resource_group_skill_group) {
+                    $cloneResourceGroupSKills = $resource_group_skill_group->replicate();
+                    $cloneResourceGroupSKills->resource_group_id = $clonedResourceGroupId;
+                    $cloneResourceGroupSKills->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getRecommendedResourceGroup($resourceGroupId)
+    {
+        try {
+            // Get unique foreign IDs related to the given resource group ID
+            $skills = ResourceGroupSkillsGroupStack::where([
+                ['type', '=', '0'],
+                ['resource_group_id', '=', $resourceGroupId],
+            ])
+                ->pluck('foreign_id')
+                ->unique();
+
+            // Retrieve resource group IDs based on the unique foreign IDs
+            $resourceGroupIds = $skills->isNotEmpty()
+                ? ResourceGroupSkillsGroupStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)
+                ->where('resource_group_id', '<>', $resourceGroupId)
+                ->pluck('resource_group_id')
+                : collect(); // Return an empty collection if no skills found
+
+            return $resourceGroupIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

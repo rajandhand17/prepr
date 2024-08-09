@@ -24,22 +24,22 @@ class ResourceCollectionSkillsGroupsStackService
             if ($request->has('skill_groups')) {
                 if (count($request->skill_groups) > 0) {
                     foreach ($request->skill_groups as $skill_group) {
-                        $ResourceCollectionSkillGroups = new ResourceCollectionSkillsGroupsStack();
-                        $ResourceCollectionSkillGroups->resource_collection_id = $resource_collection_id;
-                        $ResourceCollectionSkillGroups->foreign_id = $skill_group;
-                        $ResourceCollectionSkillGroups->type = '1';
-                        $ResourceCollectionSkillGroups->save();
+                        $resourceCollectionSkillGroups = new ResourceCollectionSkillsGroupsStack();
+                        $resourceCollectionSkillGroups->resource_collection_id = $resource_collection_id;
+                        $resourceCollectionSkillGroups->foreign_id = $skill_group;
+                        $resourceCollectionSkillGroups->type = '1';
+                        $resourceCollectionSkillGroups->save();
                     }
                 }
             }
             if ($request->has('skill_stacks')) {
                 if (count($request->skill_stacks) > 0) {
                     foreach ($request->skill_stacks as $skill_stack) {
-                        $ResourceCollectionSkillStack = new ResourceCollectionSkillsGroupsStack();
-                        $ResourceCollectionSkillStack->resource_collection_id = $resource_collection_id;
-                        $ResourceCollectionSkillStack->foreign_id = $skill_stack;
-                        $ResourceCollectionSkillStack->type = '2';
-                        $ResourceCollectionSkillStack->save();
+                        $resourceCollectionSkillStack = new ResourceCollectionSkillsGroupsStack();
+                        $resourceCollectionSkillStack->resource_collection_id = $resource_collection_id;
+                        $resourceCollectionSkillStack->foreign_id = $skill_stack;
+                        $resourceCollectionSkillStack->type = '2';
+                        $resourceCollectionSkillStack->save();
                     }
                 }
             }
@@ -89,11 +89,11 @@ class ResourceCollectionSkillsGroupsStackService
                     ])->whereIn('foreign_id', $nonExistingIds)->delete();
                     $newSkillGroups = array_diff($request->skill_groups, $getExistsSkillGroups);
                     foreach ($newSkillGroups as $skill_group) {
-                        $ResourceCollectionSkillGroups = new ResourceCollectionSkillsGroupsStack();
-                        $ResourceCollectionSkillGroups->resource_collection_id = $resource_collection_id;
-                        $ResourceCollectionSkillGroups->foreign_id = $skill_group;
-                        $ResourceCollectionSkillGroups->type = '1';
-                        $ResourceCollectionSkillGroups->save();
+                        $resourceCollectionSkillGroups = new ResourceCollectionSkillsGroupsStack();
+                        $resourceCollectionSkillGroups->resource_collection_id = $resource_collection_id;
+                        $resourceCollectionSkillGroups->foreign_id = $skill_group;
+                        $resourceCollectionSkillGroups->type = '1';
+                        $resourceCollectionSkillGroups->save();
                     }
                 }
             }
@@ -110,11 +110,11 @@ class ResourceCollectionSkillsGroupsStackService
                     ])->whereIn('foreign_id', $nonExistingIds)->delete();
                     $newSkillGroups = array_diff($request->skill_stacks, $getExistsSkillStacks);
                     foreach ($newSkillGroups as $skill_stack) {
-                        $ResourceCollectionSkillStack = new ResourceCollectionSkillsGroupsStack();
-                        $ResourceCollectionSkillStack->resource_collection_id = $resource_collection_id;
-                        $ResourceCollectionSkillStack->foreign_id = $skill_stack;
-                        $ResourceCollectionSkillStack->type = '2';
-                        $ResourceCollectionSkillStack->save();
+                        $resourceCollectionSkillStack = new ResourceCollectionSkillsGroupsStack();
+                        $resourceCollectionSkillStack->resource_collection_id = $resource_collection_id;
+                        $resourceCollectionSkillStack->foreign_id = $skill_stack;
+                        $resourceCollectionSkillStack->type = '2';
+                        $resourceCollectionSkillStack->save();
                     }
                 }
             }
@@ -158,6 +158,52 @@ class ResourceCollectionSkillsGroupsStackService
             }
 
             return $resourceSkillIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceCollectionSkillsGroupsStack($originalResourceCollectionAssociation, $clonedResourceCollectionId)
+    {
+        try {
+            $originalResourceCollectionAssociation->each(function ($resource_collection_skill_group) use ($clonedResourceCollectionId) {
+                if ($resource_collection_skill_group) {
+                    $cloneChallengeAssociation = $resource_collection_skill_group->replicate();
+                    $cloneChallengeAssociation->resource_collection_id = $clonedResourceCollectionId;
+                    $cloneChallengeAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getRecommendedResourceCollection($resourceCollectionId)
+    {
+        try {
+            // Get unique foreign IDs related to the given resource collection ID
+            $skills = ResourceCollectionSkillsGroupsStack::where([
+                ['type', '=', '0'],
+                ['resource_collection_id', '=', $resourceCollectionId],
+            ])
+                ->pluck('foreign_id')
+                ->unique();
+
+            // Retrieve resource collection IDs based on the unique foreign IDs
+            $resourceCollectionIds = $skills->isNotEmpty()
+                ? ResourceCollectionSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)
+                ->where('resource_collection_id', '<>', $resourceCollectionId)
+                ->pluck('resource_collection_id')
+                : collect(); // Return an empty collection if no skills found
+
+            return $resourceCollectionIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

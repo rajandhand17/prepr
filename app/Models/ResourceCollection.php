@@ -40,6 +40,10 @@ class ResourceCollection extends Model
 
     public function getMediaAttribute($value)
     {
+        if ($this->media_type == '1') {
+            return $value;
+        }
+
         return config('site-settings.aws_url').$value;
     }
 
@@ -51,6 +55,23 @@ class ResourceCollection extends Model
     public function resource_modules()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('resource_module_id', '!=', null);
+    }
+
+    /* Fetching all the component associated data*/
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id');
+    }
+
+    /* Getting all skills groups stacks data*/
+    public function skills_groups_stack()
+    {
+        return $this->hasMany(ResourceCollectionSkillsGroupsStack::class, 'resource_collection_id', 'id');
+    }
+
+    public function resource_collection_type_modes()
+    {
+        return $this->hasOne(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id');
     }
 
     public function labs()

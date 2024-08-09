@@ -435,4 +435,23 @@ class ConversationService
             return false;
         }
     }
+
+    public function dashboardInboxList($userData)
+    {
+        try {
+            $conversation = Conversation::whereHas('users', function ($query) use ($userData) {
+                $query->where('user_id', $userData->id)->where('is_archived', false);
+            })->orderByDesc(ConversationMessage::select('updated_at')
+            ->whereColumn('conversation_id', 'conversations.id')
+            ->orderByDesc('updated_at')
+            ->limit(1))
+            ->take(5)->get();
+
+            return $conversation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

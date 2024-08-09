@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Public\ResourceCollection\AddRatingRequest;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
 use App\Repositories\Api\Public\ResourceCollection\ResourceCollectionRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class ResourceCollectionController extends AppBaseController
@@ -53,11 +54,16 @@ class ResourceCollectionController extends AppBaseController
                     return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
                 }
                 if (auth('api')->check()) {
+                    // For user progress tracking
                     $userId = auth('api')->user()->id;
                     TrackUserProgressHelper::trackResourceCollectionUserProgress($checkResourceCollectionExistsOrNot, $userId);
+
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.resource_collections');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceCollectionExistsOrNot->id, $userId, $moduleType);
                 }
 
-                return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection_list'));
+                return $this->sendResponse(ResourceCollectionResource::make($checkResourceCollectionExistsOrNot), __('responses.found_resource_collection'));
             }
 
             return $this->sendError(__('responses.not_found_resource_collection_view'), 404);

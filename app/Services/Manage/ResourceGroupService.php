@@ -6,6 +6,7 @@ use App\Events\ResourceGroup\DeleteResourceGroupAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
+use App\Services\ModuleCompletionStatusService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
@@ -55,7 +56,17 @@ class ResourceGroupService
                     $status = config('constants.resource_group_status.draft');
                     break;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = config('constants.resource_media_type.image');
+            }
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_group_privacy.no');
@@ -72,10 +83,11 @@ class ResourceGroupService
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = $request->category_id;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
-            $resourceGroup->media_type = 'image';
+            $resourceGroup->media_type = $media_type;
             $resourceGroup->media = $upload_cover_image;
             $resourceGroup->level = $request->level;
             $resourceGroup->duration = $request->duration;
@@ -95,6 +107,20 @@ class ResourceGroupService
     {
         try {
             return ResourceGroup::where('slug', $slug)->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnTitle($title)
+    {
+        try {
+            $userId = auth()->id();
+            $resourceGroup = ResourceGroup::where(['title'=>$title, 'user_id'=>auth()->user()->id])->first();
+
+            return $resourceGroup;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -148,7 +174,17 @@ class ResourceGroupService
                     $status = config('constants.resource_group_status.draft');
                     break;
             }
-
+            $media_type = config('constants.resource_media_type.image');
+            switch ($request->media_type) {
+                case 'image':
+                    $media_type = config('constants.resource_media_type.image');
+                    break;
+                case 'embedded':
+                    $media_type = config('constants.resource_media_type.embedded');
+                    break;
+                default:
+                    $media_type = null;
+            }
             switch ($request->privacy) {
                 case 'no':
                     $privacy = config('constants.resource_group_privacy.no');
@@ -161,9 +197,10 @@ class ResourceGroupService
             }
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = ($request->has('category_id')) ? $request->category_id : $resourceGroup->category_id;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
-            $resourceGroup->media_type = ($request->has('media_type')) ? $request->media_type : $resourceGroup->media_type;
+            $resourceGroup->media_type = ($request->has('media_type')) ? $media_type : $resourceGroup->media_type;
             $resourceGroup->media = ($upload_cover_image != null) ? $upload_cover_image : $resourceGroup->cover_image;
             $resourceGroup->level = ($request->has('level')) ? $request->level : $resourceGroup->level;
             $resourceGroup->duration = ($request->has('duration')) ? $request->duration : $resourceGroup->duration;
@@ -250,22 +287,37 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceGroupList = $resourceGroupList->whereIn('resource_groups.id', function ($query) use ($request) {
-                    $query->select('resource_group_tags_groups.challenge_id')
-                        ->from('resource_group_tags_groups')
-                        ->whereIn('resource_group_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_group_tags_groups.type', '0')
-                        ->whereNull('resource_group_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_groups.uuid');
-            }
 
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
+            }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
+            }
+            if ($request->has('type') && $request->type !== null) {
+                $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
+
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceGroupProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_group');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
             }
 
             return $resourceGroupList;
@@ -343,6 +395,50 @@ class ResourceGroupService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourcesWithRelations($id)
+    {
+        try {
+            return ResourceGroup::with('skills_group_stack', 'resource_group_achievement', 'component_association', 'resource_group_type_mode')->find($id);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function cloneResourceGroup($resourceGroupData)
+    {
+        try {
+            $resourceGroup = new ResourceGroup();
+            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $slug = UtilityHelper::generateSlug($resourceGroupData->title.$uuid, $resourceGroup);
+            $resourceGroup = $resourceGroupData->replicate();
+            $resourceGroup->uuid = $uuid;
+            $resourceGroup->slug = $slug;
+            $resourceGroup->user_id = auth()->user()->id;
+            $resourceGroup->save();
+
+            return $resourceGroup;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceGroup = ResourceGroup::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceGroup;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

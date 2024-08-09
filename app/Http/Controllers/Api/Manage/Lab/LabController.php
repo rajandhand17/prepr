@@ -15,6 +15,7 @@ use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -76,10 +77,21 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
+
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
 
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
+
+                // For last visited activity tracking
+                $joined_status = $lab->joined();
+                if ($joined_status != 'NA' && $joined_status != null) {
+                    if ($joined_status->invite_status == '1') {
+                        $moduleType = config('constants.module_type.labs');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($lab->id, $userId, $moduleType);
+                    }
+                }
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }
@@ -110,21 +122,29 @@ class LabController extends AppBaseController
                 }
             }
             $upload_cover_image = config('site-settings.default_lab_cover_image');
-            $upload_achievement_image = null;
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
 
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if (!$uploaded_achievement_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
 
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image, $organization);
@@ -161,21 +181,28 @@ class LabController extends AppBaseController
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
-            $upload_achievement_image = null;
-
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if ($uploaded_cover_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($uploaded_achievement_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if ($uploaded_achievement_image == false) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organization);
             if ($updateLab != false) {
@@ -278,7 +305,13 @@ class LabController extends AppBaseController
     {
         try {
             // checks creation limits of the Lab
-            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
                 if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
@@ -304,7 +337,13 @@ class LabController extends AppBaseController
     {
         try {
             // checks creation limits of the Lab
-            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'lab');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($checkLabLimit['organizationId']);
                 if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
@@ -314,7 +353,7 @@ class LabController extends AppBaseController
             $upload_cover_image = config('site-settings.default_lab_cover_image');
             $upload_achievement_image = config('site-settings.default_achievement_image');
 
-            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image);
+            $createLabUsingAI = $this->labRepository->createLabUsingAI($request, $upload_cover_image, $upload_achievement_image, $organization);
 
             if ($createLabUsingAI) {
                 return $this->sendResponse(LabResource::make($createLabUsingAI), __('responses.lab_created_successfully'), 200);

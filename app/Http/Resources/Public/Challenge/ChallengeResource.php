@@ -5,6 +5,7 @@ namespace App\Http\Resources\Public\Challenge;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
@@ -361,6 +362,7 @@ class ChallengeResource extends JsonResource
             'organization'                      => $this->organization->title,
             'category_id'                       => $category_id,
             'category'                          => $category,
+            'hosted_by'                         => OrganizationHostResource::make($this->organization),
             'duration'                          => $duration,
             'duration_id'                       => $duration_id,
             'level'                             => $level,
@@ -370,7 +372,7 @@ class ChallengeResource extends JsonResource
             'title'                             => $this->title,
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $this->description,
-            'scorm'                             => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                             => new ScormResource($this->scorm),
             'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                        => $this->media_type,
             'media'                             => $media,
@@ -406,6 +408,8 @@ class ChallengeResource extends JsonResource
             'submissions_count'                 => $this->submitted_projects()->count(),
             'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects),
             'external_links'                    => ChallengeExternalLinkResource::collection($this->external_links),
+            'challenge_type'                    => ChallengeTypeResource::collection($this->challengeType),
+            'challenge_mode'                    => ChallengeModeResource::collection($this->challengeMode),
             'lab_count'                         => count($labs),
             'lab_program_count'                 => count($lab_programs),
             'resource_module_count'             => count($resource_modules),

@@ -2,14 +2,14 @@
 
 namespace App\Http\Resources\Manage\ResourceCollection;
 
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\ResourceCollectionTypeModesService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ResourceCollectionResource extends JsonResource
@@ -27,8 +27,6 @@ class ResourceCollectionResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $duration = null;
         $duration_id = null;
         $level = null;
@@ -100,15 +98,6 @@ class ResourceCollectionResource extends JsonResource
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
 
         switch($this->privacy) {
             case '0':
@@ -165,14 +154,24 @@ class ResourceCollectionResource extends JsonResource
                 'percentage'    => $this->resource_collection_completion_status->percentage,
             ];
         }
+        $resourceTypeMode = $this->resource_collection_type_modes;
+        $type = null;
+        $mode = null;
+        if ($resourceTypeMode !== null) {
+            $getType = ResourceCollectionTypeModesService::getResourceCollectionType($this->id);
+            $getMode = ResourceCollectionTypeModesService::getResourceCollectionMode($this->id);
+            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
+            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
+        }
 
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'description'                   => $this->description,
-            'media_type'                    => $this->media_type,
+            'media_type'                    => $this->media_type == '0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,
             'privacy'                       => $privacy,
             'status'                        => $status,
@@ -188,9 +187,9 @@ class ResourceCollectionResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'rating'                        => $rating,
+            'mode'                          => $mode,
+            'type'                          => $type,
             'liked'                         => $this->liked(),
             'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',

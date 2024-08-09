@@ -55,9 +55,9 @@ class CreateChallengeRequest extends FormRequest
             'category_id'                           => 'nullable|exists:categories,id',
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|exists:job_titles,id',
-            'external_links'                        => 'array|required_if:request_type,publish',
-            'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
-            'external_links.*'                      => 'url',
+            'external_links'                        => 'array',
+            'external_link_ids'                     => 'array|exists:social_links,id',
+            'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
             'template_id'                           => 'required_if:template_type,existing|numeric|exists:pitch_templates,id',
@@ -67,10 +67,10 @@ class CreateChallengeRequest extends FormRequest
             'complete_experience'                   => 'in:yes,no',
             'min_experience'                        => 'required_if:complete_experience,yes|numeric',
             'agreement'                             => 'required_if:request_type,publish',
-            'achievement_image'                     => 'required_if:request_type,publish|mimes:jpeg,jpg,png,webp|max:5120',
-            'achievement_name'                      => 'required_if:request_type,publish|',
-            'achievement_prize'                     => 'required_if:request_type,publish|numeric',
-            'achievement_points'                    => 'required_if:request_type,publish|numeric',
+            'achievement_image'                     => 'nullable|mimes:jpeg,jpg,png,webp|max:5120',
+            'achievement_name'                      => 'nullable',
+            'achievement_prize'                     => 'nullable|numeric',
+            'achievement_points'                    => 'nullable|numeric',
             'winner_achievement_participation'      => 'required_if:request_type,publish|array',
             'winner_achievement_participation.*'    => 'in:yes,no',
             'winner_achievement_image'              => 'nullable|array',
@@ -105,8 +105,8 @@ class CreateChallengeRequest extends FormRequest
                 function ($attribute, $value, $fail) {
                     if ($value && $value->isValid()) {
                         $image = getimagesize($value);
-                        if ($image[0] < 625 || $image[1] < 325) {
-                            $fail(''.$attribute.' must be at least 625x325 pixels.');
+                        if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                            $fail(''.$attribute.' must be at least 625x355 pixels.');
                         }
                     }
                 },
@@ -178,7 +178,6 @@ class CreateChallengeRequest extends FormRequest
 
         // Challenge Template new adding code
         if ($this->request->has('template_type') && $this->input('template_type') == 'new') {
-            $base_rules['template_title'] = 'required|unique:pitch_templates,title';
             $base_rules['pitch_questions'] = 'array';
             $base_rules['pitch_questions.*'] = 'nullable';
             $base_rules['pitch_questions_description'] = 'array';
@@ -196,8 +195,6 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('assessment_type') && $this->input('assessment_type') != 'none') {
             $base_rules['assessment_title'] = 'required|array';
             $base_rules['assessment_title.*'] = 'required_if:assessment_type,open,closed';
-            $base_rules['assessment_description'] = 'required|array';
-            $base_rules['assessment_description.*'] = 'required_if:assessment_type,open,closed|string';
             $base_rules['assessment_score'] = 'required|array';
             $base_rules['assessment_score.*'] = 'required_if:assessment_type,open,closed|numeric';
             $base_rules['assessment_weight'] = [
@@ -226,7 +223,7 @@ class CreateChallengeRequest extends FormRequest
         // For challenge flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,week,month';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,months';
             $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
@@ -238,9 +235,9 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'nullable|array';
             $base_rules['custom_timelines_title.*'] = 'string';
             $base_rules['custom_timelines_number'] = 'nullable|array';
-            $base_rules['custom_timelines_number.*'] = 'integer';
+            $base_rules['custom_timelines_number.*'] = 'integer|max:100';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
-            $base_rules['custom_timelines_duration.*'] = 'in:days,week,month';
+            $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
             $base_rules['custom_timelines_description.*'] = 'string';
         }
@@ -252,9 +249,9 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_announcement_type'] = 'nullable|array';
             $base_rules['custom_announcement_type.*'] = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
             $base_rules['custom_announcement_number'] = 'nullable|array';
-            $base_rules['custom_announcement_number.*'] = 'integer';
+            $base_rules['custom_announcement_number.*'] = 'integer|max:100';
             $base_rules['custom_announcement_duration'] = 'nullable|array';
-            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
+            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
             $base_rules['custom_announcement_description'] = 'nullable|array';
             $base_rules['custom_announcement_description.*'] = 'string';
         }

@@ -25,7 +25,6 @@ use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTimelinesService;
 use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
-use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -256,7 +255,7 @@ class ChallengeRepository implements ChallengeInterface
         }
     }
 
-    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment)
+    public function createChallengeUsingAI($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization)
     {
         try {
             $createChallengeAssessmentUsingAi = $this->aiService->createChallengeAssessmentUsingAi($request);
@@ -264,9 +263,7 @@ class ChallengeRepository implements ChallengeInterface
             $updatedData = array_merge($request->json()->all(), $createChallengeAssessmentUsingAi);
             $request->json()->replace($updatedData);
 
-            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment) {
-                $organization = OrganizationService::getOrganizationExistBasedOnUuid($request->organization_id);
-
+            $createdChallenge = DB::transaction(function () use ($request, $upload_cover_image, $upload_achievement_image, $upload_assessment_attachment, $organization) {
                 $createChallenge = $this->challengeService->createChallenge($request, $upload_cover_image, $organization->id);
                 $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $upload_achievement_image);
                 $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
@@ -368,18 +365,27 @@ class ChallengeRepository implements ChallengeInterface
                     $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
                 }
                 $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
-                $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
                 $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
                 $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
                 $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
-                $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
-                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
-                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
-                $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
                 $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
                 $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
                 $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
                 $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
+
+                $updateChallengeAchievement = true;
+                $updateChallengeRequirement = true;
+                $updateChallengeAssessment = true;
+                $updateChallengeAssessmentCriteria = true;
+                $updateChallengeProjectTemplate = true;
+
+                if (!Challenge::query()->whereHas('submitted_projects')->where('slug', $slug)->exists()) {
+                    $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
+                    $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
+                    $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
+                    $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
+                    $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
+                }
 
                 $campusConnectOpportunity = true;
                 $campusConnectStory = true;
@@ -479,8 +485,8 @@ class ChallengeRepository implements ChallengeInterface
             DB::beginTransaction();
             $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
-            $challenge_data->skills = $challenge_data->skills->pluck('foreign_id');
-            $challenge_data->tags = $challenge_data->tags->pluck('foreign_id');
+            $challenge_data->skills = $challenge_data->skills?->pluck('foreign_id');
+
             if ($deleteChallenge == false) {
                 DB::rollBack();
 

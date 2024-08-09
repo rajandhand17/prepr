@@ -2,10 +2,14 @@
 
 namespace App\Helpers;
 
+use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
+use App\Services\Manage\ResourceCollectionService;
+use App\Services\Manage\ResourceGroupService;
+use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +18,22 @@ use Illuminate\Support\Str;
 
 class UtilityHelper
 {
+    public static function fetchLangaugeISO($languageISO)
+    {
+        try {
+            $language = Language::select('iso')->where('iso', $languageISO)->first();
+            if (!empty($language)) {
+                return $language['iso'];
+            }
+
+            return 'en';
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function generateSlug($name, $model)
     {
         $name = preg_replace('/[^A-Za-z0-9\-]/', '-', $name);
@@ -43,6 +63,18 @@ class UtilityHelper
                     break;
                 case 'challenge':
                     $checkComponentSlugExistOrNot = ChallengeService::getChallengeBasedOnSlug($slug);
+                    break;
+                case 'challenge-path':
+                    $checkComponentSlugExistOrNot = ChallengePathService::getChallengePathBasedOnSlug($slug);
+                    break;
+                case 'resource-module':
+                    $checkComponentSlugExistOrNot = ResourceModuleService::getResourceModuleBasedOnSlug($slug);
+                    break;
+                case 'resource-collection':
+                    $checkComponentSlugExistOrNot = ResourceCollectionService::getResourceCollectionBasedOnSlug($slug);
+                    break;
+                case 'resource-group':
+                    $checkComponentSlugExistOrNot = ResourceGroupService::getResourceGroupBasedOnSlug($slug);
                     break;
                 case 'project':
                     $checkComponentSlugExistOrNot = ProjectService::getProjectBasedOnSlug($slug);

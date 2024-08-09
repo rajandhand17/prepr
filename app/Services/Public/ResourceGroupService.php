@@ -5,6 +5,7 @@ namespace App\Services\Public;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceGroup;
 use App\Models\ResourceGroupRating;
+use App\Services\ModuleCompletionStatusService;
 
 class ResourceGroupService
 {
@@ -90,21 +91,38 @@ class ResourceGroupService
                         ->distinct();
                 })->distinct('resource_groups.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $resourceGroupList = $resourceGroupList->whereIn('resource_groups.id', function ($query) use ($request) {
-                    $query->select('resource_group_tags_groups.challenge_id')
-                        ->from('resource_group_tags_groups')
-                        ->whereIn('resource_group_tags_groups.foreign_id', $request->tags)
-                        ->where('resource_group_tags_groups.type', '0')
-                        ->whereNull('resource_group_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('resource_groups.uuid');
-            }
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('level', $request->level_id);
             }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $resourceGroupList = $resourceGroupList->whereIn('duration', $request->duration_id);
+            }
+            if ($request->has('rating') && !empty($request->rating)) {
+                $getResourceGroupList = ResourceGroupRatingService::getResourceGroupBasedOnRating($request->rating);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $getResourceGroupList->pluck('resource_group_id'));
+            }
+
+            if ($request->has('type') && $request->type !== null) {
+                $resourceGroupType = ResourceGroupTypeModesService::getResourceGroupBasedOnType($request->type);
+                $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupType->pluck('resource_group_id'));
+            }
+            if ($request->has('progress') && !empty($request->progress)) {
+                $resourceGroupProgress = [];
+                $moduleType = config('constants.module_completion_statuses_types.resource_group');
+                switch ($request->progress) {
+                    case 'not-started':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.not_started'));
+                        break;
+                    case 'in-progress':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.in_progress'));
+                        break;
+                    case 'complete':
+                        $resourceGroupProgress = ModuleCompletionStatusService::getResourceProgress($moduleType, config('constants.status_module_completion.completed'));
+                        break;
+                }
+                if (!empty($resourceGroupProgress)) {
+                    $resourceGroupList = $resourceGroupList->whereIn('id', $resourceGroupProgress->pluck('module_id'));
+                }
             }
 
             return $resourceGroupList;
@@ -161,6 +179,48 @@ class ResourceGroupService
             $resourceGroupList = ResourceGroup::whereIn('id', $resourceGroupIds)->where('is_accessible', '1')->get();
 
             return $resourceGroupList;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedResourceGroupList($request, $organizationId)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
+            return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupAssociation($request, $fetchResourceGroupAssociation)
+    {
+        try {
+            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupAssociation)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
+
+            return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedResourceGroups($resourceGroupIds)
+    {
+        try {
+            // Retrieve resource group with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceGroups = ResourceGroup::findMany($resourceGroupIds)->slice(0, 2);
+
+            return $resourceGroups;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -165,7 +165,7 @@ class TrackUserProgressHelper
                 if ($joined_status->invite_status == '1') {
                     // Check the Project status based on Challenge and UserId
                     $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                    if ($getUserChallengeProgress) {
+                    if ($getUserChallengeProgress != null) {
                         switch ($checkUserChallengeStatus->is_submitted) {
                             case '0':
                                 $getUserChallengeProgress = '50';
@@ -207,7 +207,7 @@ class TrackUserProgressHelper
                             if ($joined_status->invite_status == '1') {
                                 // Check User Joined Challenge or not to get progress
                                 $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                                if ($checkUserChallengeStatus) {
+                                if ($checkUserChallengeStatus != null) {
                                     if ($checkUserChallengeStatus->is_submitted == '0') {
                                         // If created project but not submitted so setting progress as 50% completion
                                         $completedChallengeCount += 0.5;
@@ -389,7 +389,7 @@ class TrackUserProgressHelper
                         if ($joined_status->invite_status == '1') {
                             // Check User Joined Challenge or not to get progress
                             $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
-                            if ($checkUserChallengeStatus) {
+                            if ($checkUserChallengeStatus != null) {
                                 if ($checkUserChallengeStatus->is_submitted == '0') {
                                     // If created project but not submitted so setting progress as 50% completion
                                     $competedLabChallengeAssociation += 0.5;

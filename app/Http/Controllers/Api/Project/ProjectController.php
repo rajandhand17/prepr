@@ -9,6 +9,7 @@ use App\Http\Requests\Project\AddLinksProjectRequest;
 use App\Http\Requests\Project\AddProjectAssessmentRequest;
 use App\Http\Requests\Project\CreateProjectRequest;
 use App\Http\Requests\Project\DeleteProjectMediaRequest;
+use App\Http\Requests\Project\FileUploadRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Http\Resources\Project\AssessedProjectResource;
 use App\Http\Resources\Project\ProjectAdditionalInfoResource;
@@ -18,6 +19,7 @@ use App\Http\Resources\Project\ProjectRequirementResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Repositories\Api\Project\ProjectRepository;
 use App\Services\ChallengeAssessmentUserService;
+use App\Services\LastVisitedActivityModuleService;
 use App\Services\Manage\ChallengeService;
 use Carbon\Carbon;
 use Exception;
@@ -147,6 +149,13 @@ class ProjectController extends AppBaseController
             } else {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            // Checking user has already created project with challenge or not based on user and challenge id's
+            $checkProjectCreatedWithChallenge = $this->projectRepository->checkProjectCreatedWithChallenge($checkChallenge->id);
+            if ($checkProjectCreatedWithChallenge) {
+                return $this->sendError(__('responses.project_already_created'), 403);
+            }
+
             $upload_project_cover_media = config('site-settings.default_project_cover_image');
             if ($request->cover_media != null) {
                 if ($request->media_type == 'image') {
@@ -199,7 +208,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function fileUpload($slug, Request $request)
+    public function fileUpload($slug, FileUploadRequest $request)
     {
         try {
             $checkProjectExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
@@ -226,6 +235,13 @@ class ProjectController extends AppBaseController
         try {
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
+                $userId = auth()->user()->id;
+                if ($userId == $project->user_id) {
+                    // For last visited activity tracking
+                    $moduleType = config('constants.module_type.projects');
+                    LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                }
+
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
             }
 

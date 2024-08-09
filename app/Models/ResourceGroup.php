@@ -18,6 +18,7 @@ class ResourceGroup extends Model
         'language',
         'user_id',
         'organization_id',
+        'category_id',
         'title',
         'slug',
         'description',
@@ -41,6 +42,10 @@ class ResourceGroup extends Model
 
     public function getMediaAttribute($value)
     {
+        if ($this->media_type == '1') {
+            return $value;
+        }
+
         return config('site-settings.aws_url').$value;
     }
 
@@ -54,6 +59,11 @@ class ResourceGroup extends Model
         return $this->belongsTo(Duration::class, 'duration', 'id');
     }
 
+    public function getCategory()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
     public function getLevel()
     {
         return $this->belongsTo(Levels::class, 'level', 'id');
@@ -62,6 +72,26 @@ class ResourceGroup extends Model
     public function getOrganization()
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function skills_group_stack()
+    {
+        return $this->hasMany(ResourceGroupSkillsGroupStack::class, 'resource_group_id', 'id');
+    }
+
+    public function resource_group_achievement()
+    {
+        return $this->hasOne(ResourceGroupAchievement::class, 'resource_group_id', 'id');
+    }
+
+    public function resource_group_type_mode()
+    {
+        return $this->hasOne(ResourceGroupTypeModes::class, 'resource_group_id', 'id');
+    }
+
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id');
     }
 
     public function skills()

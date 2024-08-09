@@ -17,6 +17,7 @@ use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -80,7 +81,12 @@ class ResourceModuleController extends AppBaseController
                     return $this->sendError(__('responses.resource_module_not_accessible'), 403);
                 }
                 $userId = auth()->user()->id;
+                // For user progress tracking
                 TrackUserProgressHelper::trackResourceModuleUserProgress($checkResourceModuleExistsOrNot, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.resource_modules');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
@@ -113,9 +119,13 @@ class ResourceModuleController extends AppBaseController
 
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -153,9 +163,13 @@ class ResourceModuleController extends AppBaseController
             }
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
+                    if (!$uploaded_cover_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
@@ -368,13 +382,20 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             // checks creation limits of the Resource Module
-            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
             if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
                 if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
                     return $this->sendError(__('responses.reached_resource_module_limit'), 400);
                 }
             }
+
             $createResourceModuleUsingAIPreview = $this->resourceModuleRepository->createResourceModuleUsingAIPreview($request);
             if ($createResourceModuleUsingAIPreview) {
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
@@ -394,15 +415,22 @@ class ResourceModuleController extends AppBaseController
     {
         try {
             // checks creation limits of the Resource Module
-            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($request->organization_id, 'resourceModule');
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            // checks creation limits of the Resource Module
+            $checkResourceModuleLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceModule');
             if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkResourceModuleCount = $this->resourceModuleRepository->getResourceModuleCountBasedOnOrganization($checkResourceModuleLimit['organizationId']);
                 if ($checkResourceModuleLimit['fetchOrganizationPlanDetails'] <= $checkResourceModuleCount) {
                     return $this->sendError(__('responses.reached_resource_module_limit'), 400);
                 }
             }
+
             $upload_cover_image = config('site-settings.default_resource_module_cover_image');
-            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request, $upload_cover_image);
+            $createResourceModuleUsingAI = $this->resourceModuleRepository->createResourceModuleUsingAI($request, $upload_cover_image, $organization->id);
 
             $createResourceModuleDetailsAI = $this->resourceModuleRepository->createResourceModuleDetailsAI($request, $createResourceModuleUsingAI->id);
 
@@ -420,6 +448,37 @@ class ResourceModuleController extends AppBaseController
             Log::error('Error in CreateResourceModuleUsingAI in ResourceModuleController.php: '.$e->getMessage());
 
             return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function cloneResourceModule($slug)
+    {
+        try {
+            // Checking resource module based on slug exists or not
+            $getResourceModule = $this->resourceModuleRepository->getResourceModuleBasedOnSlug($slug);
+            if (!$getResourceModule) {
+                return $this->sendError(__('responses.selected_resource_module_not_found'), 404);
+            }
+            // Fetching resource module is belongs to current users or not
+            if ($getResourceModule->user_id == auth()->user()->id) {
+                return $this->sendError(__('responses.selected_resource_module_already_exists'), 403);
+            }
+            // Fetching Resource module Based on title and resource current users
+            $getResourceModuleBasedOnTitle = $this->resourceModuleRepository->getResourceModuleBasedOnTitle($getResourceModule->title);
+            if ($getResourceModuleBasedOnTitle) {
+                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+            }
+            // Cloning resource module based on title and resource group id
+            $cloneResourceModule = $this->resourceModuleRepository->cloneResourceModule($getResourceModule->id);
+            if ($cloneResourceModule) {
+                return $this->sendResponse(ResourceModuleResource::make($cloneResourceModule), __('responses.clone_resource_module_successfully'));
+            }
+
+            return $this->sendError(__('responses.clone_resource_module_responses_failed'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

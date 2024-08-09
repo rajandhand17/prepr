@@ -98,4 +98,123 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchComponentDataProgress($componentType)
+    {
+        try {
+            switch ($componentType) {
+                case 'lab':
+                    $componentId = '0';
+                    break;
+                case 'lab-program':
+                    $componentId = '1';
+                    break;
+                case 'challenge':
+                    $componentId = '2';
+                    break;
+                case 'challenge-path':
+                    $componentId = '3';
+                    break;
+                case 'resource-module':
+                    $componentId = '4';
+                    break;
+                case 'resource-collection':
+                    $componentId = '5';
+                    break;
+                case 'resource-group':
+                    $componentId = '6';
+                    break;
+            }
+
+            $fetchComponentDataProgress = ModuleCompletionStatus::where('module_type', $componentId)->get();
+
+            return $fetchComponentDataProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceProgress($moduleType, $status)
+    {
+        try {
+            $checkChallengePathCompleted = ModuleCompletionStatus::where([
+                'module_type'   => $moduleType,
+                'status'        => $status,
+                'user_id'       => auth()->user()->id,
+            ])->get();
+
+            return $checkChallengePathCompleted;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceModuleIdsBasedOnProgress($userData)
+    {
+        try {
+            $fetchResourceModuleIdsBasedOnProgress = ModuleCompletionStatus::where(['user_id' => $userData->id, 'module_type' => '4'])->where('percentage', '<>', 0)->pluck('module_id');
+
+            return $fetchResourceModuleIdsBasedOnProgress->unique();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchUserLabProgressBasedOnLabids($labIds, $userData)
+    {
+        try {
+            $fetchUserLabProgressBasedOnLabids = ModuleCompletionStatus::whereIn('module_id', $labIds)->where(['module_type' => '0', 'user_id' => $userData->id])->get();
+
+            return $fetchUserLabProgressBasedOnLabids;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceModuleBasedOnUserId($userData)
+    {
+        try {
+            $fetchResourceModuleBasedOnUserId = ModuleCompletionStatus::where(['module_type' => '4', 'user_id' => $userData->id])->get();
+
+            return $fetchResourceModuleBasedOnUserId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function totalViewersCountBasedOnResourceModuleIds($resouceModuleIds)
+    {
+        try {
+            $totalViewersCountBasedOnResourceModuleIds = ModuleCompletionStatus::whereIn('module_id', $resouceModuleIds)->where('module_type', '4')->count();
+
+            return $totalViewersCountBasedOnResourceModuleIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchModuleIdBasedProgress($moduleId, $moduleType, $userId)
+    {
+        try {
+            $fetchComponentIdBasedProgress = ModuleCompletionStatus::where(['module_id' => $moduleId, 'module_type' => $moduleType, 'user_id' => $userId])->first();
+
+            return $fetchComponentIdBasedProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

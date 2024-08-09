@@ -71,20 +71,20 @@ class ResourceModule extends Command
                     })
                     ->where('resource_id', $single_resource->id)->first();
 
-                    $mediaType = 'image';
+                    $mediaType = '0';
                     $media = config('site-settings.default_resource_module_cover_image');
                     if ($resourceDetails) {
                         switch ($resourceDetails->type) {
                             case 'header':
-                                $mediaType = 'image';
+                                $mediaType = '0';
                                 $media = $resourceDetails->path;
                                 break;
                             case 'Embedded_Cover_Video':
-                                $mediaType = 'embedded';
+                                $mediaType = '1';
                                 $media = $resourceDetails->path;
                                 break;
                             default:
-                                $mediaType = 'image';
+                                $mediaType = '0';
                                 $media = config('site-settings.default_resource_module_cover_image');
                                 break;
                         }

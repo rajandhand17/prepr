@@ -61,7 +61,7 @@ class ChallengeSponsorService
     public static function getHostBasedOnIds($host_ids)
     {
         try {
-            $getHostsList = Host::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title')
+            $getHostsList = Host::select('id', LanguageColumnHelper::getLanguageColumnName(app()->getLocale(), 'title').' as title', 'link', 'image', 'status', 'created_at')
             ->whereIn('id', $host_ids)->get();
             if ($getHostsList) {
                 return $getHostsList;
