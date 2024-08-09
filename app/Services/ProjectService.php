@@ -14,7 +14,6 @@ use App\Services\Manage\LabService;
 use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
-use Illuminate\Support\Facades\DB;
 
 class ProjectService
 {
@@ -202,20 +201,20 @@ class ProjectService
     {
         try {
         // Retrieve user skills
-        $userSkills = $user->userSkills->pluck('skill')->toArray(); // Assuming 'skill' is the skill ID
-        $project_list = $project_list->addSelect([
-            'matching_skills_count' => function ($query) use ($userSkills) {
-                $query->selectRaw('COUNT(*)')
-                    ->from('project_skills')
-                    ->whereColumn('project_skills.project_id', 'projects.id')
-                    ->whereIn('project_skills.skill_id', $userSkills);
-            }
-        ]);
+            $userSkills = $user->userSkills->pluck('skill')->toArray(); // Assuming 'skill' is the skill ID
+            $project_list = $project_list->addSelect([
+                'matching_skills_count' => function ($query) use ($userSkills) {
+                    $query->selectRaw('COUNT(*)')
+                        ->from('project_skills')
+                        ->whereColumn('project_skills.project_id', 'projects.id')
+                        ->whereIn('project_skills.skill_id', $userSkills);
+                },
+            ]);
 
-        // Order by the matching skills count in descending order
-        $project_list = $project_list->orderByDesc('matching_skills_count');
+            // Order by the matching skills count in descending order
+            $project_list = $project_list->orderByDesc('matching_skills_count');
 
-         return $project_list;
+            return $project_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
