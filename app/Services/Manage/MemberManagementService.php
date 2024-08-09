@@ -176,6 +176,9 @@ class MemberManagementService
                 case 'project':
                     $module_type = config('constants.email_template_module_type.project');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.email_template_module_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
