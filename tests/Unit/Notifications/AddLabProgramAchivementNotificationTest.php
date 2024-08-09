@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\AddLabProgramAchievementNotification;
 use Tests\TestCase;
 
 /**

@@ -105,11 +105,12 @@ class TrackUserProgressHelper
             // Feed resource group progress
             $moduleType = config('constants.module_type.resource_group');
             $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $resourceGroupData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
-            if($feedModuleProgressData->percentage == '100' && $feedModuleProgressData->is_completed == '0'){
+            if ($feedModuleProgressData->percentage == '100' && $feedModuleProgressData->is_completed == '0') {
                 $feedModuleProgressData->is_completed = 1;
                 $feedModuleProgressData->save();
-                AchievementService::addResourceGroupAchievement($feedModuleProgressData->id,$feedModuleProgressData->user_id);
+                AchievementService::addResourceGroupAchievement($feedModuleProgressData->id, $feedModuleProgressData->user_id);
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

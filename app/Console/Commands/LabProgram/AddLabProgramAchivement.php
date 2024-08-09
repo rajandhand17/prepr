@@ -35,12 +35,12 @@ class AddLabProgramAchivement extends Command
      */
     public function handle()
     {
-        try{
+        try {
             $getLabProgramJoinedMembers = MemberManagementService::getMembersBasedOnModule(config('constants.member_management_component_type.lab_program'));
-            foreach ($getLabProgramJoinedMembers as $labProgramMember){
+            foreach ($getLabProgramJoinedMembers as $labProgramMember) {
                 $fetchUserData = UserService::getUserByEmail($labProgramMember->email);
                 $fetchLabProgram = LabProgramService::getLabProgramBasedOnId($labProgramMember->module_id);
-                if($fetchUserData && $fetchLabProgram){
+                if ($fetchUserData && $fetchLabProgram) {
                     $labProgramAchievement = LabProgramAchievementsService::getLabProgramsAchivements($fetchLabProgram->id);
                     if ($labProgramAchievement) {
                         $getAssociationLabIds = ComponentAssociationService::fetchLabIdsAssociatedLabProgramId($fetchLabProgram->id);
@@ -60,8 +60,7 @@ class AddLabProgramAchivement extends Command
                     }
                 }
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
             $this->error('Adding lab program achievement failed');
         }

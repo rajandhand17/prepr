@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Console\Commands\Lab;
 
-use App\Console\Commands\Lab\AddLabAchivement;
 use Tests\TestCase;
 
 /**
