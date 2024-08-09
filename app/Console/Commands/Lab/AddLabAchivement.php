@@ -41,44 +41,43 @@ class AddLabAchivement extends Command
      */
     public function handle()
     {
-        try{
+        try {
             $getLabJoinedMembers = MemberManagementService::getMembersBasedOnModule(config('constants.member_management_component_type.lab'));
-            foreach ($getLabJoinedMembers as $labMember){
+            foreach ($getLabJoinedMembers as $labMember) {
                 $fetchUserData = UserService::getUserByEmail($labMember->email);
                 $fetchLab = LabService::getLabBasedOnId($labMember->module_id);
-                if($fetchUserData && $fetchLab){
+                if ($fetchUserData && $fetchLab) {
                     $moduleType = '0';
                     $getLabCompletion = ModuleCompletionStatusService::fetchModuleIdBasedProgress($fetchLab->id, $moduleType, $fetchUserData->id);
                     $labAchievements = LabAcheivementService::getLabAchivements($fetchLab->id);
-                    if($labAchievements){
+                    if ($labAchievements) {
                         $addAchievement = 0;
-                        foreach ($labAchievements->achievement_condition as $achievementCondition){
+                        foreach ($labAchievements->achievement_condition as $achievementCondition) {
                             $achievementConditionData = AchievementConditionListService::getAchievementConditionByID($fetchLab->language, $achievementCondition);
-                            if ($achievementConditionData->title  == 'Complete All Challenges') {
+                            if ($achievementConditionData->title == 'Complete All Challenges') {
                                 $getAssociationChallengeIds = ComponentAssociationService::fetchChallengeIdsAssociatedLabId($fetchLab->id);
                                 $getChallegeIds = ChallengeService::getChallengeIdBasedOnId($getAssociationChallengeIds);
-                                if($getChallegeIds->isNotEmpty()){
+                                if ($getChallegeIds->isNotEmpty()) {
                                     $checkProjectCreated = ProjectService::fetchCompletedChallenges($getChallegeIds, $fetchUserData);
-                                    if($getChallegeIds == $checkProjectCreated){
+                                    if ($getChallegeIds == $checkProjectCreated) {
                                         $addAchievement++;
                                     }
                                 }
                             } elseif ($achievementConditionData->title == 'Complete All Challenge Paths') {
                                 $getAssociatedChallengePathIds = ComponentAssociationService::fetchChallengePathIdsAssociatedLabId($fetchLab->id);
                                 $getChallengePathIds = ChallengePathService::getChallengePathIdBasedOnIds($getAssociatedChallengePathIds);
-                                if($getChallengePathIds->isNotEmpty()){
+                                if ($getChallengePathIds->isNotEmpty()) {
                                     $getPathCompletion = ModuleCompletionStatusService::fetchChallengePathCompletedBasedOnIds($getChallengePathIds, $fetchUserData->id);
-                                    if($getPathCompletion->count() == count($getChallengePathIds)){
+                                    if ($getPathCompletion->count() == count($getChallengePathIds)) {
                                         $addAchievement++;
                                     }
                                 }
-
                             } elseif ($achievementConditionData->title == 'Complete All Resource Modules') {
                                 $getAssociatedResourceModuleIds = ComponentAssociationService::fetchResourceModuleIdsAssociatedLabId($fetchLab->id);
                                 $getResourceModuleIds = ResourceModuleService::getResourceModuleGetBasedId($getAssociatedResourceModuleIds);
-                                if($getResourceModuleIds){
+                                if ($getResourceModuleIds) {
                                     $getModuleCompletion = ModuleCompletionStatusService::fetchResourceModuleCompletedBasedOnIds($getResourceModuleIds, $fetchUserData->id);
-                                    if($getModuleCompletion->count() == count($getResourceModuleIds)){
+                                    if ($getModuleCompletion->count() == count($getResourceModuleIds)) {
                                         $addAchievement++;
                                     }
                                 }
@@ -107,22 +106,19 @@ class AddLabAchivement extends Command
                             }
                         }
 
-                        if(count($labAchievements->achievement_condition) != $addAchievement){
+                        if (count($labAchievements->achievement_condition) != $addAchievement) {
                             if ($getLabCompletion->is_completed == '0') {
                                 $getLabCompletion->is_completed = '1';
                                 $getLabCompletion->save();
                                 AchievementService::addLabAchievement($fetchLab->id, $fetchUserData->id);
                             }
                         }
-
                     }
                 }
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
             $this->error('Adding lab achievement failed');
         }
-
     }
 }

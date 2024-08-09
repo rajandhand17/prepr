@@ -225,7 +225,7 @@ class ModuleCompletionStatusService
                 'user_id'       => $userId,
                 'module_type'   => '3',
                 'is_completed'  => '1',
-            ])->whereIn('module_id' , $challengePathIds)->get();
+            ])->whereIn('module_id', $challengePathIds)->get();
 
             return $fetchChallengePathCompletedBasedOnIds;
         } catch (Exception $e) {
@@ -239,8 +239,8 @@ class ModuleCompletionStatusService
     {
         try {
             $checkResourceModuleProgress = ModuleCompletionStatus::where([
-                'user_id'       => $userId,
-                'module_type'   => '4',
+                'user_id'           => $userId,
+                'module_type'       => '4',
                 'percentage'        => '100',
             ])->whereIn('module_id', $resourceModuleIds)->get();
 
@@ -256,8 +256,8 @@ class ModuleCompletionStatusService
     {
         try {
             $checkResourceCollectionProgress = ModuleCompletionStatus::where([
-                'user_id'       => $userId,
-                'module_type'   => '5',
+                'user_id'           => $userId,
+                'module_type'       => '5',
                 'percentage'        => '100',
             ])->whereIn('module_id', $resourceCollectionIds)->get();
 

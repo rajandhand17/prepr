@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Notifications;
 
-use App\Notifications\AddResourceGroupAchivementNotification;
 use Tests\TestCase;
 
 /**
