@@ -968,4 +968,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public static function getMembersBasedOnModule($moduleType)
+    {
+        try {
+            $totalMembersBasedOnModule = MemberManagement::where(['module_type' => $moduleType, 'invite_status' => '1'])->get();
+
+            return $totalMembersBasedOnModule;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
