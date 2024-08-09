@@ -994,14 +994,16 @@ class MemberManagementService
             return false;
         }
     }
-/*Temporary added this function*/
-    public static function getLabMembersCount($labId){
+
+    /*Temporary added this function*/
+    public static function getLabMembersCount($labId)
+    {
         try {
-            return MemberManagement::where(['module_id' => $labId,'module_type'=>'1','invite_status'=>'1'])->get();
-        }catch (\Exception $e) {
+            return MemberManagement::where(['module_id' => $labId, 'module_type'=>'1', 'invite_status'=>'1'])->get();
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }
