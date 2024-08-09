@@ -147,21 +147,14 @@ class ProjectService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status_array = ['pending', 'completed', 'submitted', 'challenge_closed', 'assessment_details_available'];
+                $status_array = ['in_progress', 'submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
                     $projectStatusIds = $project_list->get()->map(function ($projectData) use ($request) {
                         $projectIds = [];
                         switch ($request->status) {
-                            case 'pending':
+                            case 'in_progress':
                                 $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
                                 if ($projectRequirementData === false) {
-                                    $projectIds = $projectData->id;
-                                }
-                                break;
-
-                            case 'completed':
-                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
-                                if ($projectRequirementData === true) {
                                     $projectIds = $projectData->id;
                                 }
                                 break;
@@ -442,23 +435,29 @@ class ProjectService
 
                         switch ($check_achievement_condition->id) {
                             case '1':
+                                $type = 'pitch';
                                 $requirementStatus = ProjectPitchService::checkProjectPitch($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
                             case '2':
+                                $type = 'task';
                                 $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
                             case '3':
+                                $type = 'links';
                                 $requirementStatus = ProjectExternalLinksService::checkProjectExternalLink($projectData->id);
                                 break;
                             case '4':
+                                $type = 'gallery';
                                 $requirementStatus = ProjectFileService::checkProjectGallery($projectData->id);
                                 break;
                             case '5':
+                                $type = 'file';
                                 $requirementStatus = ProjectFileService::checkProjectFile($projectData->id);
                                 break;
                         }
                         $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
                         $projectState = [
+                            'type'              => $type,
                             'status'            => $projectStatus,
                             'Requirement Title' => $check_achievement_condition->title,
                         ];
