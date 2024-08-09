@@ -54,7 +54,7 @@ class AddExperienceRequest extends FormRequest
             'start_date.*.before_or_equal'=> __('responses.before_or_equal'),
             'end_date.required'           => __('responses.end_date_required'),
             'end_date.array'              => __('responses.array_status'),
-            'end_date.*.after_or_equal'   => __('responses.end_date_required'),
+            'end_date.*.after_or_equal'   => __('responses.after_or_equal'),
             'address.required'            => __('responses.address_required'),
             'address.array'               => __('responses.array_status'),
             'state.required'              => __('responses.state_required'),

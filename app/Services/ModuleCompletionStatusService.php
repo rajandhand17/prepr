@@ -204,4 +204,17 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchModuleIdBasedProgress($moduleId, $moduleType, $userId)
+    {
+        try {
+            $fetchComponentIdBasedProgress = ModuleCompletionStatus::where(['module_id' => $moduleId, 'module_type' => $moduleType, 'user_id' => $userId])->first();
+
+            return $fetchComponentIdBasedProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
