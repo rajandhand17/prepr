@@ -242,7 +242,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return Lab::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

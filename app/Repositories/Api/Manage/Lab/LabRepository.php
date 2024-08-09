@@ -6,6 +6,7 @@ use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Services\DurationService;
+use App\Services\FeaturedLabService;
 use App\Services\Manage\AirmeetEventService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
@@ -45,8 +46,9 @@ class LabRepository implements LabInterface
     private $campusConnectStoryService;
     private $organizationService;
     private $labTypeModesService;
+    private $featuredLabService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
+    public function __construct(FeaturedLabService $featuredLabService, LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -64,6 +66,7 @@ class LabRepository implements LabInterface
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->organizationService = $organizationService;
         $this->labTypeModesService = $labTypeModesService;
+        $this->featuredLabService = $featuredLabService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -400,6 +403,27 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function getFeaturedLabBasedOnId($id)
+    {
+        try {
+            return $this->featuredLabService->getFeaturedLabBasedOnLabId($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createFeaturedLab($lab)
+    {
+        try {
+            return $this->featuredLabService->createFeaturedLab($lab);
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
 

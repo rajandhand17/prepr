@@ -317,6 +317,10 @@ class MemberManagementService
                     $module_type = config('constants.member_management_component_type.challenge');
                     $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
+                    break;
                 default:
                     $module_type = null;
                     $addedMemberResponse = null;
@@ -432,7 +436,7 @@ class MemberManagementService
                             Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                             $invited_emails[] = $member['invitee_email'];
                         } else {
-                            if ($checkMemberExists['invite_status'] == '3') {
+                            if ($checkMemberExists['invite_status'] == '3' || $checkMemberExists['invite_status'] == '2') {
                                 $subject = $request->subject_line;
                                 $emailBody = $request->email_body;
                                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
@@ -542,6 +546,9 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -581,6 +588,9 @@ class MemberManagementService
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -610,6 +620,9 @@ class MemberManagementService
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
+                    break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
                     break;
                 default:
                     $module_type = null;
@@ -962,6 +975,19 @@ class MemberManagementService
             $totalActiveMembersCountBasedOnModuleIds = MemberManagement::whereIn('module_id', $moduleIds)->where(['module_type' => $moduleType, 'invite_status' => '1'])->get();
 
             return $totalActiveMembersCountBasedOnModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getMembersBasedOnModule($moduleType)
+    {
+        try {
+            $totalMembersBasedOnModule = MemberManagement::where(['module_type' => $moduleType, 'invite_status' => '1'])->get();
+
+            return $totalMembersBasedOnModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
