@@ -17,8 +17,8 @@ use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\LabService;
 use App\Services\UserService;
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class AddLabAchivement extends Command
 {
@@ -119,9 +119,8 @@ class AddLabAchivement extends Command
                 }
             }
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             UtilityHelper::logError($e);
-            DB::rollback();
             $this->error('Adding lab achievement failed');
         }
 

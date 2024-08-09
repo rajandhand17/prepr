@@ -2,7 +2,16 @@
 
 namespace App\Console\Commands\LabProgram;
 
+use App\Helpers\UtilityHelper;
+use App\Services\AchievementService;
+use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\LabProgramAchievementsService;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\LabService;
 use App\Services\Manage\MemberManagementService;
+use App\Services\ModuleCompletionStatusService;
+use App\Services\UserService;
+use Exception;
 use Illuminate\Console\Command;
 
 class AddLabProgramAchivement extends Command
@@ -19,7 +28,7 @@ class AddLabProgramAchivement extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'This command is used to assigned users lab program achievement';
 
     /**
      * Execute the console command.
@@ -27,24 +36,34 @@ class AddLabProgramAchivement extends Command
     public function handle()
     {
         try{
-            $getData = MemberManagementService::getMembersBasedOnModule(config('constants.member_management_component_type.lab-program'));
-            dd(config('constants.module_type.labs'));
-
-            foreach ($getData as $single){
-                $user = UserService::getUserByEmail($single->email);
-                $lab = LabService::getLabBasedOnId($single->module_id);
-                if($user && $lab){
-                    $labAchivements = LabAcheivementService::getLabAchivements($lab->id);
-                    if($labAchivements){
-                        dd($labAchivements);
+            $getLabProgramJoinedMembers = MemberManagementService::getMembersBasedOnModule(config('constants.member_management_component_type.lab_program'));
+            foreach ($getLabProgramJoinedMembers as $labProgramMember){
+                $fetchUserData = UserService::getUserByEmail($labProgramMember->email);
+                $fetchLabProgram = LabProgramService::getLabProgramBasedOnId($labProgramMember->module_id);
+                if($fetchUserData && $fetchLabProgram){
+                    $labProgramAchievement = LabProgramAchievementsService::getLabProgramsAchivements($fetchLabProgram->id);
+                    if ($labProgramAchievement) {
+                        $getAssociationLabIds = ComponentAssociationService::fetchLabIdsAssociatedLabProgramId($fetchLabProgram->id);
+                        $getLabIds = LabService::getLabIdBasedOnId($getAssociationLabIds);
+                        if ($getLabIds->isNotEmpty()) {
+                            $getLabCompletion = ModuleCompletionStatusService::fetchLabCompletedBasedOnIds($getLabIds, $fetchUserData->id);
+                            if ($getLabCompletion->count() == count($getLabIds)) {
+                                $moduleType = '1';
+                                $getLabCompletion = ModuleCompletionStatusService::fetchModuleIdBasedProgress($fetchLabProgram->id, $moduleType, $fetchUserData->id);
+                                if ($getLabCompletion && $getLabCompletion->is_completed == '0') {
+                                    $getLabCompletion->is_completed = '1';
+                                    $getLabCompletion->save();
+                                    AchievementService::addLabProgramAchievement($fetchLabProgram->id, $fetchUserData->id);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error('Allow Challenge Winner selection status not updated');
+            $this->error('Adding lab program achievement failed');
         }
     }
 }

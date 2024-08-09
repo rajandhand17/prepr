@@ -285,4 +285,21 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchLabCompletedBasedOnIds($labIds, $userId)
+    {
+        try {
+            $checkResourceGroupProgress = ModuleCompletionStatus::where([
+                'user_id'       => $userId,
+                'module_type'   => '0',
+                'is_completed'  => '1',
+            ])->whereIn('module_id', $labIds)->get();
+
+            return $checkResourceGroupProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

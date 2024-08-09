@@ -238,13 +238,12 @@ class AchievementService
 
             return true;
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             return false;
         }
     }
 
-    public static function addLabProgramsAchievement($labProgramId, $userId)
+    public static function addLabProgramAchievement($labProgramId, $userId)
     {
         try {
             $fetchLabProgram = LabProgramService::getLabProgramBasedOnId($labProgramId);
