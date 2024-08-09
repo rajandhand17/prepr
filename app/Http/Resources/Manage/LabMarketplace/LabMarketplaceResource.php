@@ -206,6 +206,7 @@ class LabMarketplaceResource extends JsonResource
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,
+            'member_count'                  => 45, // Temporary added this values, afte discussion it will be removed or dyanmically set
             'duration_id'                   => $duration_id,
             'level'                         => $level,
             'level_id'                      => $level_id,
