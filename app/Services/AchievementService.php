@@ -5,7 +5,11 @@ namespace App\Services;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
+use App\Notifications\AddLabProgramAchievementNotification;
+use App\Notifications\AddResourceGroupAchivementNotification;
 use App\Notifications\AddWinnerAchievementNotification;
+use App\Services\Manage\LabProgramService;
+use App\Services\Manage\ResourceGroupService;
 use App\Services\Public\ChallengePathService;
 use Carbon\Carbon;
 use Exception;
@@ -106,7 +110,6 @@ class AchievementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
@@ -149,7 +152,90 @@ class AchievementService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+            return false;
+        }
+    }
 
+    public static function addResourceGroupAchievement($resourceGroupId, $userId)
+    {
+        try {
+            $fetchResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($resourceGroupId);
+            $key = 1;
+            $achievement_type = config('constants.user_achievement_type.resource_group');
+            $certificate_date = (int) date('ymd');
+            $olddata = $key - 1;
+            $certificate_id = $olddata.'00'.$key;
+            $certificate_number = $certificate_date.$certificate_id;
+
+            $userAchievement = new UserAchievement();
+            $userAchievement->user_id = $userId;
+            $userAchievement->certificate_number = $certificate_number;
+            $userAchievement->title = $fetchResourceGroup->achievement->achievement_name;
+            $userAchievement->description = $fetchResourceGroup->achievement->achievement_name;
+            $userAchievement->achievement_type = $achievement_type;
+            $userAchievement->module_id = $fetchResourceGroup->id;
+            $userAchievement->module_title = $fetchResourceGroup->title;
+            $userAchievement->module_parent_id = $fetchResourceGroup->getOrganization->id;
+            $userAchievement->module_parent_title = $fetchResourceGroup->getOrganization->title;
+            $userAchievement->achievement_prize = $fetchResourceGroup->achievement->achievement_name;
+            $userAchievement->achievement_points = $fetchResourceGroup->achievement->achievement_points;
+            $userAchievement->achievement_image = $fetchResourceGroup->achievement->achievement_image;
+            $userAchievement->issue_date = Carbon::now()->toDateTimeString();
+            $userAchievement->valid_date = null;
+            $userAchievement->user_notified = '0';
+            $userAchievement->promo_code = null;
+            $userAchievement->save();
+
+            $user = UserService::getUserById($userId);
+            if ($user) {
+                $user->notify(new AddResourceGroupAchivementNotification(__('responses.noti_congratulations'), __('responses.noti_challenge_path_achievement')));
+            }
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
+    public static function addLabProgramsAchievement($labProgramId, $userId)
+    {
+        try {
+            $fetchLabProgram = LabProgramService::getLabProgramBasedOnId($labProgramId);
+            $key = 1;
+            $achievement_type = config('constants.lab_program.resource_group');
+            $certificate_date = (int) date('ymd');
+            $olddata = $key - 1;
+            $certificate_id = $olddata.'00'.$key;
+            $certificate_number = $certificate_date.$certificate_id;
+
+            $userAchievement = new UserAchievement();
+            $userAchievement->user_id = $userId;
+            $userAchievement->certificate_number = $certificate_number;
+            $userAchievement->title = $fetchLabProgram->achievement->achievement_name;
+            $userAchievement->description = $fetchLabProgram->achievement->achievement_name;
+            $userAchievement->achievement_type = $achievement_type;
+            $userAchievement->module_id = $fetchLabProgram->id;
+            $userAchievement->module_title = $fetchLabProgram->title;
+            $userAchievement->module_parent_id = $fetchLabProgram->getOrganization->id;
+            $userAchievement->module_parent_title = $fetchLabProgram->getOrganization->title;
+            $userAchievement->achievement_prize = $fetchLabProgram->achievement->achievement_name;
+            $userAchievement->achievement_points = $fetchLabProgram->achievement->achievement_points;
+            $userAchievement->achievement_image = $fetchLabProgram->achievement->achievement_image;
+            $userAchievement->issue_date = Carbon::now()->toDateTimeString();
+            $userAchievement->valid_date = null;
+            $userAchievement->user_notified = '0';
+            $userAchievement->promo_code = null;
+            $userAchievement->save();
+
+            $user = UserService::getUserById($userId);
+            if ($user) {
+                $user->notify(new AddLabProgramAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_participation_achievement')));
+            }
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }

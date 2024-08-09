@@ -6,6 +6,7 @@ use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
+use App\Services\AchievementService;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService;
@@ -104,7 +105,11 @@ class TrackUserProgressHelper
             // Feed resource group progress
             $moduleType = config('constants.module_type.resource_group');
             $feedModuleProgressData = ModuleCompletionStatusService::feedModuleProgressData($userId, $resourceGroupData->id, $moduleType, $getUserProgressBasedOnResourceModuleIds);
-
+            if($feedModuleProgressData->percentage == '100' && $feedModuleProgressData->is_completed == '0'){
+                $feedModuleProgressData->is_completed = 1;
+                $feedModuleProgressData->save();
+                AchievementService::addResourceGroupAchievement($feedModuleProgressData->id,$feedModuleProgressData->user_id);
+            }
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

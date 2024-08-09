@@ -102,4 +102,16 @@ class LabAcheivementService
             return false;
         }
     }
+
+    public static function getLabAchivements($lab_id)
+    {
+        try {
+            return LabAcheivement::where('lab_id', $lab_id)->first();
+
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
