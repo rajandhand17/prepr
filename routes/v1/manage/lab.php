@@ -14,4 +14,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/check-title/{title}', [LabController::class, 'checkName'])->middleware('permission:create_lab');
     Route::post('/ai/create/preview', [LabController::class, 'createLabUsingAIPreview'])->middleware('permission:create_lab');
     Route::post('/ai/create', [LabController::class, 'createLabUsingAI'])->middleware('permission:create_lab');
+    Route::post('/featured/{slug}/create', [LabController::class, 'createFeaturedLab'])->middleware('permission:create_lab');
 });

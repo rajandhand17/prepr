@@ -5,6 +5,7 @@ namespace App\Http\Resources\Project;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\SkillService;
@@ -110,6 +111,8 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
+            $org = OrganizationService::getOrganizationExistBasedOnId($fetchChallenge->organization_id);
+
             if ($fetchChallenge && $fetchChallenge->participation_achievement) {
                 $achievement = [
                     'achievement_name'      => $fetchChallenge->participation_achievement->achievement_name,
@@ -198,6 +201,15 @@ class ProjectResource extends JsonResource
         $submit_enabled = ProjectService::checkProjectRequirementCompleted($this);
 
         $project_role = ProjectService::checkProjectRole($this);
+        // Extracting media collections from resources
+        $imagesCollection = ProjectImageResource::make($this)->toArray(request());
+        $videosCollection = ProjectVideoResource::make($this)->toArray(request());
+        $audiosCollection = ProjectAudioResource::make($this)->toArray(request());
+        $docsCollection = ProjectDocResource::make($this)->toArray(request());
+
+        $images_count = count(ProjectImageResource::make($this)->toArray(request()));
+        // Counting total files
+        $files_count = count($videosCollection) + count($audiosCollection) + count($docsCollection);
 
         return [
             'id'                    => $this->uuid,
@@ -206,6 +218,8 @@ class ProjectResource extends JsonResource
             'title'                 => $this->title,
             'slug'                  => $this->slug,
             'description'           => $this->description,
+            'organization_id'       => (!empty($org->uuid)) ? $org->uuid : null,
+            'organisation'          => (!empty($org->title)) ? $org->title : null,
             'is_view_enabled'       => $view_enabled,
             'is_download_enabled'   => $download_enabled,
             'media_type'            => $media_type,
@@ -232,10 +246,12 @@ class ProjectResource extends JsonResource
             'requirement_status'    => ProjectRequirementResource::make($this),
             'project_pitch'         => $challenge_pitch,
             'project_task'          => $challenge_task,
-            'docs'                  => ProjectDocResource::make($this),
-            'images'                => ProjectImageResource::make($this),
-            'videos'                => ProjectVideoResource::make($this),
-            'audios'                => ProjectAudioResource::make($this),
+            'docs'                  => $docsCollection,
+            'images'                => $imagesCollection,
+            'images_count'          => "You've ".$images_count.' '.($images_count > 1 ? 'images uploaded' : 'image uploaded'), // Adding image count
+            'files_count'           => "You've ".$files_count.' '.($files_count > 1 ? 'files uploaded' : 'file uploaded'),
+            'videos'                => $videosCollection,
+            'audios'                => $audiosCollection,
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
             'is_assess_enabled'     => $is_assess_enabled,
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),

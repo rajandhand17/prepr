@@ -61,7 +61,7 @@
     "responses.failed_registration": "Sorry! we were unable to register, please try later!",
     "responses.email_subject_forget_password": "Forget Password",
     "responses.email_subject_verified_successfully": "Verified Successfully",
-    "responses.otp_correct_required": "Please enter a valid OTP!",
+    "responses.otp_correct_required": "The OTP you entered is incorrect",
     "responses.account_not_verified": "Please verify your account to continue!",
     "responses.email_subject_reset_password": "Reset Password Successfull!",
     "responses.first_name_field_required": "This first name field is required",
@@ -491,6 +491,7 @@
     "responses.create_member_manger_success_organization": "Congratulations! You have successfully added member(s) to an Organization.",
     "responses.create_member_manger_success_lab": "Congratulations! You have successfully added member(s) to an Lab.",
     "responses.create_member_manger_success_challenge": "Congratulations! You have successfully added member(s) to an Challenge.",
+    "responses.create_member_manger_success_lab_program": "Congratulations! You have successfully added member(s) to Lab Program.",
     "responses.resource_module_rating_successfully": "Congratulations! You have successfully rated the resource module",
     "responses.resource_collection_rating_successfully": "Congratulations! You have successfully rated the resource collection",
     "responses.resource_collection_rating_failed": "Oops! You have failed to rate the resource collection",
@@ -1377,6 +1378,7 @@
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
     "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
     "responses.no_association_found": "No component association data found.",
+
     "responses.no_related_found": "No component related data found.",
     "responses.lab_related_found": "Lab component related data found.",
     "responses.lab_program_related_found": "Lab Program component related data found.",
@@ -1384,5 +1386,8 @@
     "responses.challenge_path_related_found": "Challenge Path component related data found.",
     "responses.resource_module_related_found": "Resource Module component related data found.",
     "responses.resource_collection_related_found": "Resource Collection component related data found.",
-    "responses.resource_group_related_found": "Resource Group component related data found."
+    "responses.resource_group_related_found": "Resource Group component related data found.",
+    "responses.feature_lab_created_successfully": "The featured lab has been successfully created.",
+    "responses.feature_lab_created_failed": "The creation of the featured lab has failed.",
+    "responses.already_featured_lab": "This lab already exists in the featured labs."
 }
