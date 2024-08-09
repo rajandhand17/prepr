@@ -24,6 +24,7 @@ class MemberManagementRepository implements MemberManagementInterface
             return $this->memberManagementService->getComponentBasedUsers($componentCollectionObject, $component, $request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
