@@ -2,7 +2,17 @@
 
 namespace App\Traits\Maestro\Master;
 
-use App\Services\Maestro\Master\MasterService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\CategoryService;
+use App\Services\Maestro\ChallengeService;
+use App\Services\Maestro\DurationService;
+use App\Services\Maestro\LabService;
+use App\Services\Maestro\LevelsService;
+use App\Services\Maestro\OrganizationService;
+use App\Services\Maestro\RankService;
+use App\Services\Maestro\ResourceModuleService;
+use App\Services\Maestro\SkillService;
+use App\Services\Maestro\UserService;
 use Exception;
 
 trait MasterTrait
@@ -10,13 +20,15 @@ trait MasterTrait
     private function getOrganizationsById($request)
     {
         try {
-            $organizations = MasterService::getOrganizationsById($request);
+            $organizations = OrganizationService::getOrganizationsById($request);
             if ($organizations) {
                 return $organizations;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -24,13 +36,15 @@ trait MasterTrait
     private function getCategoriesById($request)
     {
         try {
-            $categories = MasterService::getCategoriesById($request);
+            $categories = CategoryService::getCategoriesByLanguageId($request);
             if ($categories) {
                 return $categories;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -38,13 +52,15 @@ trait MasterTrait
     private function getMinRanksById($request)
     {
         try {
-            $ranks = MasterService::getMinRanksById($request);
+            $ranks = RankService::getMinRanksById($request);
             if ($ranks) {
                 return $ranks;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -52,13 +68,15 @@ trait MasterTrait
     private function getSkillsById($request)
     {
         try {
-            $skills = MasterService::getSkillsById($request);
+            $skills = SkillService::getSkillsByLanguageId($request);
             if ($skills) {
                 return $skills;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -66,13 +84,15 @@ trait MasterTrait
     private function getUsersById($request)
     {
         try {
-            $users = MasterService::getUsersById($request);
+            $users = UserService::getUsersById($request);
             if ($users) {
                 return $users;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -80,13 +100,15 @@ trait MasterTrait
     private function getLabsById($request)
     {
         try {
-            $labs = MasterService::getLabsById($request);
+            $labs = LabService::getLabsByLanguageId($request);
             if ($labs) {
                 return $labs;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -94,13 +116,15 @@ trait MasterTrait
     private function getResourceModulesById($request)
     {
         try {
-            $resourceModules = MasterService::getResourceModulesById($request);
+            $resourceModules = ResourceModuleService::getResourceModulesById($request);
             if ($resourceModules) {
                 return $resourceModules;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -108,13 +132,15 @@ trait MasterTrait
     private function getLevelsById($request)
     {
         try {
-            $labs = MasterService::getLevelsById($request);
+            $labs = LevelsService::getLevelsById($request);
             if ($labs) {
                 return $labs;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -122,13 +148,15 @@ trait MasterTrait
     private function getDurationsById($request)
     {
         try {
-            $labs = MasterService::getDurationsById($request);
+            $labs = DurationService::getDurationsById($request);
             if ($labs) {
                 return $labs;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -136,13 +164,47 @@ trait MasterTrait
     private function getUsersEmail($request)
     {
         try {
-            $users = MasterService::getUsersEmail($request);
+            $users = UserService::getUsersEmail($request);
             if ($users) {
                 return $users;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getAllChallenges($request)
+    {
+        try {
+            $challenges = ChallengeService::getChallenges($request);
+            if ($challenges) {
+                return $challenges;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getAllLabsById($request)
+    {
+        try {
+            $labs = LabService::getLabs($request);
+            if ($labs) {
+                return $labs;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

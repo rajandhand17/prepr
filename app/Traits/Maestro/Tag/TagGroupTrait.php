@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\Tag;
 
-use App\Services\Maestro\Tag\TagGroupService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\TagGroupService;
 use Exception;
 
 trait TagGroupTrait
@@ -16,7 +17,7 @@ trait TagGroupTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -27,6 +28,8 @@ trait TagGroupTrait
         try {
             return TagGroupService::getTagGroupById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ trait TagGroupTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +58,8 @@ trait TagGroupTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -67,6 +74,8 @@ trait TagGroupTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

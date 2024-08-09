@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Maestro\Users;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Services\Maestro\RoleAndPermissionService;
 use App\Traits\Maestro\User\UserTrait;
 use Exception;
 use Illuminate\Http\Request;
@@ -74,6 +75,8 @@ class UsersController extends Controller
 
             return view('maestro.users.index', compact('html'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -89,6 +92,8 @@ class UsersController extends Controller
 
             return view('maestro.users.create', compact('roles', 'permissions'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -105,6 +110,8 @@ class UsersController extends Controller
 
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -122,11 +129,14 @@ class UsersController extends Controller
 
             return view('maestro.users.view', compact('user'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
     /**
+     * /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
@@ -141,6 +151,8 @@ class UsersController extends Controller
 
             return view('maestro.users.edit', compact('user', 'permissions', 'roles'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -155,8 +167,10 @@ class UsersController extends Controller
                 return redirect()->route('users.index')->with('success', 'User Updated successfully');
             }
 
-            return redirect()->route('users.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->route('users.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
@@ -171,6 +185,8 @@ class UsersController extends Controller
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }

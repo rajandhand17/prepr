@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\Skill;
 
-use App\Services\Maestro\Skill\SkillGroupService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\SkillGroupService;
 use Exception;
 
 trait SkillGroupTrait
@@ -16,7 +17,7 @@ trait SkillGroupTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -27,6 +28,8 @@ trait SkillGroupTrait
         try {
             return SkillGroupService::getSkillGroupById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ trait SkillGroupTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,20 +58,24 @@ trait SkillGroupTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    private function getSkills()
+    private function getSkillGroup()
     {
         try {
-            $skills = SkillGroupService::getSkills();
+            $skills = SkillGroupService::getSkillGroup();
             if ($skills) {
                 return $skills;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

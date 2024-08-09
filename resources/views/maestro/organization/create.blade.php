@@ -50,5 +50,80 @@
 @stop
 
 @section('scripts')
-    
+    <script>
+
+      
+$(document).ready(function () {
+        var language = $('#languageId').val();
+        getCategories(language);
+        getUsers();
+
+    });
+
+    $("#languageId").change(function () {
+        var language = $('#languageId').val();
+        $('#listCategory').empty();
+        getCategories(language);
+      
+    });
+        /* This function for select categorys */
+    function getCategories(language){
+        // $("#listCategory").closest(".input-group").siblings(".help-block").text('');
+        $('#listCategory').select2({           
+            placeholder: "Select category",
+            ajax: {
+                url: '{{route('getCategories')}}',
+                cache: true,
+                type: 'GET',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        search: params.term,
+                        language: language,
+                        component:'challenge'
+                    };
+                },
+                processResults: function (data) {
+                    if(data.status == 'fail'){
+                      $('#listCategory').select2("close");
+                      $('.category_error').show();
+                      $('.category_error').html(data.message);
+                    } else {
+                        $('.category_error').hide();
+                        return {
+                          results: data.result
+                        };
+                    }
+                }
+            }
+        });
+    }
+    function getUsers(){
+        $('#userId').select2({      
+            placeholder: "Select User",
+            ajax: {
+                url: "{{ route('getUsers') }}",
+                type: 'GET',
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    if(data.status == 'fail'){
+                      $('#userId').select2("close");
+                      $('.user_error').show();
+                      $('.user_error').html(data.message);
+                    } else {
+                        $('.user_error').hide();
+                        return {
+                          results: data.result
+                        };
+                    }
+                }
+            }
+        });
+    }
+    </script>
 @endsection

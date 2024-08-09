@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\EmailTemplate;
 
-use App\Services\Maestro\EmailTemplate\EmailTemplateService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\EmailTemplateService;
 use Exception;
 
 trait EmailTemplateTrait
@@ -16,6 +17,8 @@ trait EmailTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,6 +32,8 @@ trait EmailTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +47,8 @@ trait EmailTemplateTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -49,13 +56,31 @@ trait EmailTemplateTrait
     private function getEmailTemplates()
     {
         try {
-            $orgs = EmailTemplateService::getEmailTemplates();
-            if ($orgs) {
-                return $orgs;
+            $emailTemplates = EmailTemplateService::getEmailTemplates();
+            if ($emailTemplates) {
+                return $emailTemplates;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getEmailTemplatesById($id)
+    {
+        try {
+            $emailTemplates = EmailTemplateService::getEmailTemplatesById($id);
+            if ($emailTemplates) {
+                return $emailTemplates;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

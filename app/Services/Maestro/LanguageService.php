@@ -2,7 +2,10 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\Language;
+use Exception;
+use Session;
 
 class LanguageService
 {
@@ -15,7 +18,9 @@ class LanguageService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,7 +34,25 @@ class LanguageService
             }
 
             return false;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getCurrentLanguage()
+    {
+        try {
+            $language = Session::get('globalLocale') ? Session::get('globalLocale') : 'en';
+            if ($language != null) {
+                return $language;
+            }
+
+            return false;
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

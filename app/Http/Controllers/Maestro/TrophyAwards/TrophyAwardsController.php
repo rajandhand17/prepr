@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\TrophyAwards;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\TrophyAwards;
 use App\Models\User;
 use App\Traits\Maestro\TrophyAwards\TrophyAwardsTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
@@ -53,7 +53,7 @@ class TrophyAwardsController extends Controller
                         return "<img src ='".asset($trophy_awards->image)."' >";
                     })
                     ->addColumn('action', static function (TrophyAwards $trophy_awards) {
-                        return '<a href="'.route('trophyawards.edit', $trophy_awards->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy_awards->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteTrophyAward(\''.route('trophyawards.destroy', $trophy_awards->id).'\')"> <i class="fas fa-trash"></i></a>';
+                        return '<a href="'.route('trophy-awards.edit', $trophy_awards->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$trophy_awards->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;<a href="javascript:void(0)" onclick="deleteTrophyAward(\''.route('trophy-awards.destroy', $trophy_awards->id).'\')"> <i class="fas fa-trash"></i></a>';
                     })
                     ->rawColumns(['action', 'DT_Row_Index'])
                     ->make(true);
@@ -71,7 +71,7 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.index', compact('html'));
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -94,6 +94,8 @@ class TrophyAwardsController extends Controller
 
             return view('maestro.trophy.create', compact('status', 'users', 'awardedMembers'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -106,19 +108,15 @@ class TrophyAwardsController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createTrophyAwards($request)) {
-                DB::commit();
-
-                return redirect()->route('trophyawards.index')->with('success', 'Trophy Awards created successfully');
+                return redirect()->route('trophy-awards.index')->with('success', 'Trophy Awards created successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -130,23 +128,17 @@ class TrophyAwardsController extends Controller
     public function edit($id)
     {
         try {
-            $status = [
-                'active'   => 'Active',
-                'inactive' => 'Inactive',
-            ];
-
-            $awardedTrophies = TrophyAwards::find($id);
-
+            $status = ['active'   => 'Active', 'inactive' => 'Inactive'];
+            $awardedTrophies = $this->getTrophyAwardsById($id);
             // get awarded members
             $awardedMembers = explode(',', $awardedTrophies->user_id);
-
             $users = User::pluck('username', 'id');
 
             return view('maestro.trophy.edit', compact('awardedTrophies', 'users', 'status', 'awardedMembers'));
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
-            return redirect()->route('trophyawards.index')->withErrors(['error' => $e->getMessage()]);
+            return redirect()->route('trophy-awards.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -159,20 +151,15 @@ class TrophyAwardsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateTrophyAwardsById($id, $request)) {
-                DB::commit();
-
-                return redirect()->route('trophyawards.index')->with('success', 'Trophy Award Updated successfully');
+                return redirect()->route('trophy-awards.index')->with('success', 'Trophy Award Updated successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong']);
         } catch (Exception $e) {
-            dd($e);
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('trophyawards.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('trophy-awards.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -185,15 +172,11 @@ class TrophyAwardsController extends Controller
     public function destroy($id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteTrophyAwardsById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
             return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
         }

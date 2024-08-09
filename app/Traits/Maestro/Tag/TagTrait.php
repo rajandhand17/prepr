@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\Tag;
 
-use App\Services\Maestro\Tag\TagService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\TagService;
 use Exception;
 
 trait TagTrait
@@ -16,7 +17,7 @@ trait TagTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -27,6 +28,8 @@ trait TagTrait
         try {
             return TagService::getTagById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ trait TagTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,6 +58,8 @@ trait TagTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,13 +67,15 @@ trait TagTrait
     private function getTags()
     {
         try {
-            $skills = TagService::getTags();
-            if ($skills) {
-                return $skills;
+            $tags = TagService::getTags();
+            if ($tags) {
+                return $tags;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

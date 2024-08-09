@@ -2,8 +2,9 @@
 
 namespace App\Traits\Maestro\Explore;
 
-use App\Services\Maestro\Explore\ExploreService;
-use App\Services\Maestro\RoleAndPermission\RoleAndPermissionService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\ExploreService;
+use App\Services\Maestro\RoleAndPermissionService;
 use Exception;
 
 trait ExploreTrait
@@ -17,7 +18,7 @@ trait ExploreTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -32,6 +33,8 @@ trait ExploreTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -39,13 +42,15 @@ trait ExploreTrait
     private function getExploreData()
     {
         try {
-            $orgs = ExploreService::getExploreData();
-            if ($orgs) {
-                return $orgs;
+            $data = ExploreService::getExploreData();
+            if ($data) {
+                return $data;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -60,6 +65,24 @@ trait ExploreTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function insertExploreDatas($request)
+    {
+        try {
+            $data = ExploreService::insertExploreDatas($request);
+            if ($data) {
+                return $data;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

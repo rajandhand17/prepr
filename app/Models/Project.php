@@ -169,6 +169,11 @@ class Project extends Model
         return $this->hasOne(Challenge::class, 'id', 'challenge_id');
     }
 
+    public function friendRequest()
+    {
+        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
+    }
+
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -202,10 +207,5 @@ class Project extends Model
     public function getType()
     {
         return $this->belongsTo(ProjectType::class, 'type_id', 'id');
-    }
-
-    public function friendRequest()
-    {
-        return $this->hasOne(ProjectMemberManagement::class, 'project_id', 'id')->where('email', auth()->user()->email);
     }
 }

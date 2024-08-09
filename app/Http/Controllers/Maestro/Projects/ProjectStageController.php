@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ProjectStage;
+use App\Services\Maestro\LanguageService;
 use App\Traits\Maestro\Project\ProjectStageTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -31,7 +32,7 @@ class ProjectStageController extends Controller
                     })
                     ->editColumn('status', static function (ProjectStage $stage) {
                         if ($stage->status == 0) {
-                            return 'Not Active';
+                            return 'InActive';
                         } else {
                             return 'Active';
                         }
@@ -40,23 +41,12 @@ class ProjectStageController extends Controller
                     ->toJson();
             }
 
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false],
             ];
             foreach ($languages as $single) {
-                if ($single->iso == 'en') {
-                    $columName = 'title';
-                } else {
-                    $columName = $single->iso;
-                    if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                        $columName = str_replace(' ', '_', $columName);
-                    }
-                    if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                        $columName = str_replace('-', '_', $columName);
-                    }
-                    $columName = $columName.'_title';
-                }
+                $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Stage Name'];
                 array_push($tableColumns, $singleLangCol);
             }
@@ -66,7 +56,9 @@ class ProjectStageController extends Controller
 
             return view('maestro.projects.stage.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -76,12 +68,13 @@ class ProjectStageController extends Controller
     public function create()
     {
         try {
-            $languages = $this->getLanguage();
-            $status = $this->getProjectStageStatus();
+            $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.projects.stage.create', compact('languages', 'status'));
+            return view('maestro.projects.stage.create', compact('languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -91,18 +84,15 @@ class ProjectStageController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, '', 'create')) {
-                DB::commit();
-
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage Added successfully.']);
             }
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -112,13 +102,14 @@ class ProjectStageController extends Controller
     public function edit(string $id)
     {
         try {
-            $languages = $this->getLanguage();
+            $languages = LanguageService::getAllActiveLanguages();
             $projectStage = $this->findProjectStage($id);
-            $status = $this->getProjectStageStatus();
 
-            return view('maestro.projects.stage.edit', compact('projectStage', 'languages', 'status'));
+            return view('maestro.projects.stage.edit', compact('projectStage', 'languages'));
         } catch (Exception $e) {
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -128,18 +119,15 @@ class ProjectStageController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->storeUpdateProjectStage($request, $id, 'update')) {
-                DB::commit();
-
                 return redirect()->route('projects-stage.index')->with(['success' => 'Project Stage updated successfully.']);
             }
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('projects-stage.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects-stage.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -149,18 +137,16 @@ class ProjectStageController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             $projectStage = $this->findProjectStage($id);
             if (!empty($projectStage)) {
                 $this->deleteProjectStage($projectStage);
-                DB::commit();
 
                 return response()->json(['status' => 'success', 'message' => 'Project Stage deleted successfully.']);
             }
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

@@ -695,7 +695,7 @@
           $('#associativeLab').select2({
             placeholder: "Select lab",
             ajax: {
-                url: '{{route("getLabs")}}',
+                url: '{{route("getAssociatedLabs")}}',
                     cache: true,
                     type: 'GET',
                     dataType: 'json',

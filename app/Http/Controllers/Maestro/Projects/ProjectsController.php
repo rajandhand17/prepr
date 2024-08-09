@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Maestro\Projects;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Traits\Maestro\Project\ProjectTrait;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -80,6 +80,8 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.index', compact('html', 'module_name'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return response()->route('projects.index')->with(['error' => $e->getMessage()]);
         }
     }
@@ -90,21 +92,13 @@ class ProjectsController extends Controller
     public function create()
     {
         try {
-            $project_user = $this->getProjectAssociateItems('user');
-            $project_stage = $this->getProjectAssociateItems('stage');
-            $project_type = $this->getProjectAssociateItems('type');
-            $project_status = $this->getProjectAssociateItems('status');
-            $project_industry = $this->getProjectAssociateItems('industry');
-            $project_verticals = $this->getProjectAssociateItems('vertical');
-            $project_category = $this->getProjectAssociateItems('category');
-            $project_privacy = $this->getProjectAssociateItems('privacy');
-            $project_team = $this->getProjectAssociateItems('team');
-            $project_lab = $this->getProjectAssociateItems('lab');
-            $project_challenge = $this->getProjectAssociateItems('challenge');
+            $projectData = $this->getProjectAssociateItems('create', null);
 
-            return view('maestro.projects.project.create', compact('project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
+            return view('maestro.projects.project.create', compact('projectData'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -114,19 +108,15 @@ class ProjectsController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
             if ($this->createProject($request)) {
-                DB::commit();
-
                 return redirect()->route('projects.index')->with('success', 'Project created successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -143,7 +133,9 @@ class ProjectsController extends Controller
 
             return view('maestro.projects.project.view', compact('project'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -157,22 +149,13 @@ class ProjectsController extends Controller
             if (!$project->exists) {
                 return redirect()->route('projects.index')->with(['error' => 'Project not found.']);
             }
-            $selected_member = [];
-            $project_user = $this->getProjectAssociateItems('user');
-            $project_stage = $this->getProjectAssociateItems('stage');
-            $project_type = $this->getProjectAssociateItems('type');
-            $project_status = $this->getProjectAssociateItems('status');
-            $project_industry = $this->getProjectAssociateItems('industry');
-            $project_verticals = $this->getProjectAssociateItems('vertical');
-            $project_category = $this->getProjectAssociateItems('category');
-            $project_privacy = $this->getProjectAssociateItems('privacy');
-            $project_team = $this->getProjectAssociateItems('team');
-            $project_lab = $this->getProjectAssociateItems('lab');
-            $project_challenge = $this->getProjectAssociateItems('challenge');
+            $projectData = $this->getProjectAssociateItems('edit', $project);
 
-            return view('maestro.projects.project.edit', compact('project', 'selected_member', 'project_user', 'project_stage', 'project_type', 'project_status', 'project_industry', 'project_verticals', 'project_category', 'project_privacy', 'project_team', 'project_lab', 'project_challenge'));
+            return view('maestro.projects.project.edit', compact('project', 'projectData'));
         } catch (Exception $e) {
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            UtilityHelper::logError($e);
+
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -182,19 +165,15 @@ class ProjectsController extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->updateProjectById($id, $request)) {
-                DB::commit();
-
                 return redirect()->route('projects.index')->with('success', 'Project Updated successfully');
             }
-            DB::rollback();
 
-            return redirect()->route('projects.index')->with(['error' => 'Something want wrong']);
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return redirect()->route('projects.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('projects.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
@@ -204,17 +183,13 @@ class ProjectsController extends Controller
     public function destroy(string $id)
     {
         try {
-            DB::beginTransaction();
             if ($this->deleteProjectById($id)) {
-                DB::commit();
-
                 return response()->json(['status' => 'success', 'message' => 'Project deleted successfully']);
             }
-            DB::rollback();
         } catch (Exception $e) {
-            DB::rollback();
+            UtilityHelper::logError($e);
 
-            return response()->json(['status' => 'fail', 'message' => 'Something went wrong.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 }

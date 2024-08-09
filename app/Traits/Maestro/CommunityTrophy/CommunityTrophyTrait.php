@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\CommunityTrophy;
 
-use App\Services\Maestro\CommunityTrophy\CommunityTrophyService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\CommunityTrophyService;
 use Exception;
 
 trait CommunityTrophyTrait
@@ -16,6 +17,8 @@ trait CommunityTrophyTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -29,6 +32,8 @@ trait CommunityTrophyTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -42,6 +47,8 @@ trait CommunityTrophyTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +63,8 @@ trait CommunityTrophyTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

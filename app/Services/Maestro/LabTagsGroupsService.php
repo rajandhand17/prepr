@@ -2,9 +2,11 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
+
 class LabTagsGroupsService
 {
-    public static function createLabTagsGroups($originalLabsTags, $clonedLabId)
+    public static function createCloneLabTagsGroups($originalLabsTags, $clonedLabId)
     {
         try {
             $originalLabsTags->each(function ($tags) use ($clonedLabId) {
@@ -17,6 +19,8 @@ class LabTagsGroupsService
 
             return true;
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

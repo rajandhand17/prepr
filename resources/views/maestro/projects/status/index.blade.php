@@ -1,17 +1,17 @@
 @extends('maestro.layouts.default')
-@section('title', 'Rank')
+@section('title', 'Project Status')
 @section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0">Rank</h1>
+                <h1 class="m-0">Project Status</h1>
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Rank</li>
+                    <li class="breadcrumb-item active">Project Status</li>
                 </ol>
             </div><!-- /.col -->
         </div><!-- /.row -->
@@ -30,7 +30,7 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('ranks.create')}}" role="menuitem">Create Rank</a>
+                            href="{{route('projects-status.create')}}" role="menuitem">Create Project Status</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -67,7 +67,7 @@
     </script>
 
     <script>
-        function deleteRank(url) {
+        function deleteProjectStatus(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',

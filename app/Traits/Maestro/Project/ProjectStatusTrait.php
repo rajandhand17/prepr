@@ -2,25 +2,12 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectStatusService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\ProjectStatusService;
 use Exception;
 
 trait ProjectStatusTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectStatusService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getProjectStatus()
     {
         try {
@@ -31,20 +18,8 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
-            return false;
-        }
-    }
+            UtilityHelper::logError($e);
 
-    private function getProjectStatusStatus()
-    {
-        try {
-            $status = ProjectStatusService::getProjectStatusStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
             return false;
         }
     }
@@ -58,6 +33,8 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +49,8 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +64,8 @@ trait ProjectStatusTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

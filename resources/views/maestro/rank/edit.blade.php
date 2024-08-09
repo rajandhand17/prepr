@@ -32,53 +32,27 @@
                     <div class="row">
                       @if($languages->count() > 0)
                           @foreach($languages as $single)
-                              @php
-                                  if ($single->iso == 'en') {
-                                      $lableName = 'English Rank Title';
-                                      $inputName = 'title';
-                                  } else {
-                                        $columName = $single->iso;
-                                        $lableName = $single->name . ' Rank Title';
-                                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                            $columName = str_replace(' ', '_', $columName);
-                                        }
-                                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-
-                                      $inputName = $columName . '_title';
-                                    }
-                              @endphp
+                            @php
+                                $titleColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'title');
+                                $titleLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Rank Title');
+                            @endphp
                               <div class="col-md-6">
                                 <div class="form-group">
-                                    {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                    {!! Form::text($inputName,null, ['class' => 'form-control']) !!}
+                                    {!! Form::label($titleColumName, $titleLableName, ['class' => 'control-label']) !!}
+                                    {!! Form::text($titleColumName,null, ['class' => 'form-control','required' => 'required']) !!}
                                 </div>
                               </div>
                           @endforeach
 
                           @foreach($languages as $single)
-                              @php
-                                  if ($single->iso == 'en') {
-                                      $lableName = 'English Description';
-                                      $inputName = 'description';
-                                  } else {
-                                        $columName = $single->iso;
-                                        $lableName = $single->name . ' Description';
-                                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                            $columName = str_replace(' ', '_', $columName);
-                                        }
-                                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-
-                                      $inputName = $columName . '_description';
-                                    }
-                              @endphp
+                            @php
+                                $descriptionColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'description');
+                                $descriptionLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Description');
+                            @endphp
                               <div class="col-md-6">
                                 <div class="form-group">
-                                    {!! Form::label($inputName, $lableName, ['class' => 'control-label']) !!}
-                                    {!! Form::textarea($inputName,null, ['class' => 'form-control','rows'=>'6','required' => 'required']) !!}
+                                    {!! Form::label($descriptionColumName, $descriptionLableName, ['class' => 'control-label']) !!}
+                                    {!! Form::textarea($descriptionColumName,null, ['class' => 'form-control','rows'=>'6','required' => 'required']) !!}
                                 </div>
                               </div>
                           @endforeach
@@ -88,7 +62,7 @@
                       <div class="col-md-3">
                         <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
                             {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-                            {!! Form::select('status', $status, $rank->status, ['class' => 'form-control']) !!}
+                            {!! Form::select('status', ['1' => 'Active', '0' => 'InActive'], $rank->status, ['class' => 'form-control']) !!}
                             <span class="help-block">{{ $errors->first('status')}}</span>
                         </div>
                       </div>
@@ -99,11 +73,16 @@
                             <span class="help-block">{{ $errors->first('point')}}</span>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-5">
                         <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
                           {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
                           {!! Form::file('image', ['class' => 'form-control']) !!}
                           <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
+                        </div>
+                      </div>
+                      <div class="col-md-1">
+                        <div>
+                          <img src="{{ $rank->image }}" height="80px" width="80px">
                         </div>
                       </div>
                   </div>

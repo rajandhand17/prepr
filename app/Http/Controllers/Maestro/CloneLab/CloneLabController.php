@@ -25,7 +25,7 @@ class CloneLabController extends Controller
             $associativeLab = $this->getAllLabs();
             $languages = LanguageService::getLanguages();
 
-            return view('maestro.cloneLab.index', compact('organizations', 'languages', 'associativeLab'));
+            return view('maestro.clone-lab.index', compact('organizations', 'languages', 'associativeLab'));
         } catch (\Exception $e) {
             return redirect()->route('dashboard.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }

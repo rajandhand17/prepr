@@ -2,25 +2,12 @@
 
 namespace App\Traits\Maestro\PreBuiltAchievement;
 
-use App\Services\Maestro\PreBuiltAchievement\PreBuiltAchievementService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\PreBuiltAchievementService;
 use Exception;
 
 trait PreBuiltAchievementTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = PreBuiltAchievementService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getPreBuiltAchievement()
     {
         try {
@@ -31,6 +18,8 @@ trait PreBuiltAchievementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -44,6 +33,8 @@ trait PreBuiltAchievementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -58,6 +49,8 @@ trait PreBuiltAchievementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -71,6 +64,8 @@ trait PreBuiltAchievementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

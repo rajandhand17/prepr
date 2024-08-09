@@ -32,4 +32,5 @@ Route::middleware(['language'])->group(function () {
     Route::get('/challenge-announcement-recipient', [MasterController::class, 'getChallengeAnnouncementRecipient']);
     Route::get('/job-titles', [MasterController::class, 'getJobTitles']);
     Route::get('/business-challenge-tacklings', [MasterController::class, 'businessChallengeTackling']);
+    Route::post('get-labs', [MasterController::class, 'getLabs'])->name('getLabs');
 });

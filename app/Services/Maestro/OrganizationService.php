@@ -3,18 +3,34 @@
 namespace App\Services\Maestro;
 
 use App\Helpers\ChargebeeHelper;
+use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Category;
 use App\Models\Organization;
-use App\Models\OrganizationAddress;
-use App\Models\OrganizationMember;
-use App\Models\OrganizationSocialLink;
+use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 
 class OrganizationService
 {
-    public static function updateOrganizationById($id, $request)
+    public static function getOrgById($id)
+    {
+        try {
+            $organization = Organization::find($id);
+            if ($organization) {
+                return $organization;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function updateOrganizationById($request, $id)
     {
         try {
             $organization = Organization::findOrFail($id);
@@ -23,13 +39,13 @@ class OrganizationService
                 $profile_image = '';
                 $cover_image = '';
                 if ($request->file('profile_image')) {
-                    $profile_image = $request->file('profile_image')->store('uploads/organization', 's3');
+                    $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image'), 'organization');
                     $organization->profile_image = $profile_image ? $profile_image : 'NULL';
                     $organization->save();
                 }
                 $input = $request->except('cover_image', 'people_name', 'user_name', 'user_role', 'org_social', 'social_url');
                 if ($request->file('cover_image')) {
-                    $cover_image = $request->file('cover_image')->store('uploads/organization', 's3');
+                    $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'organization');
                     $organization->cover_image = $cover_image ? $cover_image : 'NULL';
                     $organization->save();
                 }
@@ -38,66 +54,15 @@ class OrganizationService
                 $organization->website = $request->website;
                 $organization->about = $request->about;
                 $organization->category = $request->category;
-                // $organization->latitude = $request->latitude;
-                // $organization->longitude = $request->longitude;
-                // $organization->address = $request->address;
                 $organization->status = $request->status;
-                // $organization->vanity_link = $request->vanity_link;
-                //$organization->slug = $request->slug;
-                $organization->save();
+                $org = $organization->save();
 
-                if ($request->address) {
-                    OrganizationAddress::where('organization_id', $organization->id)->delete();
-                    $organization_address = new OrganizationAddress();
-                    $organization_address->organization_id = $organization->id;
-                    $organization_address->full_address = $request->address;
-                    $organization_address->save();
-                }
-                $people = OrganizationMember::where('organization_id', $organization->id)->forceDelete();
-
-                if (!empty(array_filter($request->people_name))) {
-                    foreach ($request->people_name as $key => $value) {
-                        $people = new OrganizationMember();
-                        $image = '';
-                        $aws = env('AWS_URL');
-                        if (isset($request->file('image')[$key])) {
-                            if ($request->file('image')[$key]) {
-                                $file = $request->file('image')[$key];
-                                $image = $file->store('uploads/people', 's3');
-                                $image = str_replace($aws, '', $image);
-                                $people->image = $image;
-                                $people->organization_id = $organization->id;
-                                $people->name = $value;
-                                $people->description = $request->people_des[$key];
-                                $people->save();
-                            }
-                        } else {
-                            $people->name = $value;
-                            $people->description = $request->people_des[$key];
-                            $people->organization_id = $organization->id;
-                            $image = $request->image[$key];
-                            $image = str_replace($aws, '', $image);
-                            $people->image = $image;
-                            $people->save();
-                        }
-                    }
-                }
-                OrganizationSocialLink::where('organization_id', $id)->forceDelete();
-                if (!empty(array_filter($request->social_url))) {
-                    foreach ($request->social_url as $key => $value) {
-                        $org_social_data['organization_id'] = $organization->id;
-                        $org_social_data['social_link_id'] = $request->org_social[$key];
-                        $org_social_data['social_media_link'] = $value;
-                        OrganizationSocialLink::create($org_social_data);
-                    }
-                }
-
-                return true;
+                return $org;
             }
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -107,15 +72,13 @@ class OrganizationService
     {
         try {
             $organization = Organization::find($id);
-            $people = OrganizationMember::where('organization_id', $id)->delete();
-
             if ($organization) {
                 return $organization->delete();
             }
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -127,11 +90,11 @@ class OrganizationService
             $profile_image = '';
             $cover_image = '';
             if ($request->file('profile_image')) {
-                $profile_image = $request->file('profile_image')->store('uploads/organization', 's3');
+                $profile_image = FileUploadHelper::uploadImageToS3($request->file('profile_image'), 'organization');
             }
 
             if ($request->file('cover_image')) {
-                $cover_image = $request->file('cover_image')->store('uploads/organization', 's3');
+                $cover_image = FileUploadHelper::uploadImageToS3($request->file('cover_image'), 'organization');
             }
             $model = new Organization();
             //$vanityUpdatedSlug = $this->removeHttp($request->vanity_link);
@@ -153,51 +116,10 @@ class OrganizationService
                 'vanity_link'   => $request->vanity_link,
             ];
             $organization = Organization::create($data);
-            $org_address = [
-                'organization_id' => $organization->id,
-                'latitude'        => $request->latitude,
-                'longitude'       => $request->longitude,
-                'full_address'    => $request->address,
-                'city'            => $request->city2,
 
-            ];
-
-            OrganizationAddress::create($org_address);
-
-            if (!empty(array_filter($request->people_name))) {
-                foreach ($request->people_name as $key => $value) {
-                    $image = '';
-                    if (isset($request->image[$key])) {
-                        $image = $request->image[$key]->store('uploads/people', 's3');
-                    } else {
-                        $image = '';
-                    }
-
-                    $people_data = [
-                        'organization_id' => $organization->id,
-                        'name'            => $value,
-                        'description'     => $request->people_des[$key],
-                        'image'           => $image,
-                    ];
-                    $people = OrganizationMember::create($people_data);
-                }
-            }
-            if (!empty(array_filter($request->social_url))) {
-                foreach ($request->social_url as $key => $value) {
-                    // $org_social_data['user_id'] = $request->user_id;
-                    $org_social_data['organization_id'] = $organization->id;
-                    $org_social_data['social_link_id'] = $request->org_social[$key];
-                    $org_social_data['social_media_link'] = $value;
-                    OrganizationSocialLink::create($org_social_data);
-                }
-            }
-
-            $profile_image = $organization->profile_image;
-            $selectPlan = self::selectPlan($organization, $request);
-
-            return true;
+            return $organization;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -208,6 +130,8 @@ class OrganizationService
         try {
             return Organization::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -222,11 +146,13 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    public static function selectPlan($organization, $request)
+    public static function selectPlan($request, $organization)
     {
         try {
             switch ($request->plan_name) {
@@ -258,6 +184,103 @@ class OrganizationService
 
             return false;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getOrganization($id)
+    {
+        try {
+            $organization = Organization::select('title', 'id');
+            if (!empty($id)) {
+                $organization = $organization->where(['id' => $id]);
+            }
+
+            return $organization->pluck('title', 'id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getOrgAssociatedItemsById($org)
+    {
+        try {
+            $user = !empty($org->user_id) ? User::where(['id' => $org->user_id])->pluck('username', 'id') : null;
+            $category = !empty($org->category) ? Category::where(['id' => $org->category])->pluck('title', 'id') : null;
+
+            return ['user' => $user, 'category' => $category];
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getOrganizationById($organization_id)
+    {
+        try {
+            $organization = Organization::where(['id' => $organization_id])->pluck('title', 'id');
+            if ($organization != null) {
+                return $organization;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getOrganizationsById($request)
+    {
+        try {
+            $orgList = Organization::where(['language' => $request->language, 'status' => '1'])->orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $orgList->where('title', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $orgList = $orgList->pluck('title', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($orgList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function verifyOrg($request)
+    {
+        try {
+            if ($request->org_v == '0') {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '1']);
+                $message = 'Organization has been successfully verified.';
+            } else {
+                Organization::where('id', $request->org_id)->update(['is_verified' => '0']);
+                $message = 'Organization verification has been removed.';
+            }
+            if ($message) {
+                return $message;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

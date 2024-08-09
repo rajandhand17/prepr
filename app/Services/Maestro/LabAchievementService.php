@@ -2,9 +2,11 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
+
 class LabAchievementService
 {
-    public static function createLabAchievement($originalLabsAchievement, $clonedLabId)
+    public static function createCloneLabAchievement($originalLabsAchievement, $clonedLabId)
     {
         try {
             if ($originalLabsAchievement) {
@@ -15,6 +17,8 @@ class LabAchievementService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

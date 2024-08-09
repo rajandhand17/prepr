@@ -2,25 +2,12 @@
 
 namespace App\Traits\Maestro\Project;
 
-use App\Services\Maestro\Project\ProjectSubmissionRequirementService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\ProjectSubmissionRequirementService;
 use Exception;
 
 trait ProjectSubmissionRequirementTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = ProjectSubmissionRequirementService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getSubmissionRequirement()
     {
         try {
@@ -31,20 +18,8 @@ trait ProjectSubmissionRequirementTrait
 
             return false;
         } catch (Exception $e) {
-            return false;
-        }
-    }
+            UtilityHelper::logError($e);
 
-    private function getSubmissionRequirementStatus()
-    {
-        try {
-            $status = ProjectSubmissionRequirementService::getSubmissionRequirementStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
             return false;
         }
     }
@@ -58,6 +33,8 @@ trait ProjectSubmissionRequirementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +49,8 @@ trait ProjectSubmissionRequirementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +64,8 @@ trait ProjectSubmissionRequirementTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

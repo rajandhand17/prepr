@@ -2,7 +2,8 @@
 
 namespace App\Traits\Maestro\Skill;
 
-use App\Services\Maestro\Skill\SkillStackService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\SkillStackService;
 use Exception;
 
 trait SkillStackTrait
@@ -16,7 +17,7 @@ trait SkillStackTrait
 
             return false;
         } catch (Exception $e) {
-            dd($e);
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -27,6 +28,8 @@ trait SkillStackTrait
         try {
             return SkillStackService::getSkillStackById($id);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -40,6 +43,8 @@ trait SkillStackTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -53,20 +58,40 @@ trait SkillStackTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
 
-    private function getSkills()
+    private function getSkillStack()
     {
         try {
-            $skills = SkillStackService::getSkills();
+            $skills = SkillStackService::getSkillStack();
             if ($skills) {
                 return $skills;
             }
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getAjaxAllSkillStack($request)
+    {
+        try {
+            $skills = SkillStackService::getAjaxAllSkillStack($request);
+            if ($skills) {
+                return $skills;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

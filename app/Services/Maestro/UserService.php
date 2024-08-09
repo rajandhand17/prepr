@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro;
 
+use App\Helpers\UtilityHelper;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +14,8 @@ class UserService
         try {
             return User::count();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -27,6 +30,8 @@ class UserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -56,6 +61,8 @@ class UserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -70,6 +77,8 @@ class UserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -84,6 +93,8 @@ class UserService
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -93,6 +104,100 @@ class UserService
         try {
             return User::orderBy('id', 'desc');
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectTeamMembers()
+    {
+        try {
+            return User::count();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getUser($action, $userId)
+    {
+        try {
+            $user = User::select('username', 'id');
+            if ($action == 'edit') {
+                $user = $user->where(['id' => $userId]);
+            }
+
+            return $user->pluck('username', 'id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getUserPluckById($user_id)
+    {
+        try {
+            return User::where(['id' => $user_id])->pluck('username', 'id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getUsersById($request)
+    {
+        try {
+            $userList = User::orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $userList->where('username', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $userList = $userList->pluck('username', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($userList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getUsersEmail($request)
+    {
+        try {
+            $userList = User::orderBy('id', 'DESC')->take(30);
+
+            if ($request->search) {
+                $userList->where('email', 'LIKE', '%'.$request->search.'%');
+            }
+
+            $userList = $userList->pluck('email', 'id');
+            $count = 0;
+            $orgResponse = $finalResult = [];
+            foreach ($userList as $key => $orgObj) {
+                $orgResponse[$count]['id'] = $key;
+                $orgResponse[$count]['text'] = $orgObj;
+                $count++;
+            }
+            $finalResult['result'] = $orgResponse;
+
+            return response()->json($finalResult);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

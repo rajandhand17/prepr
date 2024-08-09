@@ -2,25 +2,12 @@
 
 namespace App\Traits\Maestro\Rank;
 
-use App\Services\Maestro\Rank\RankService;
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\RankService;
 use Exception;
 
 trait RankTrait
 {
-    private function getLanguage()
-    {
-        try {
-            $languages = RankService::getLanguage();
-            if ($languages) {
-                return $languages;
-            }
-
-            return false;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
     private function getRank()
     {
         try {
@@ -31,20 +18,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
-            return false;
-        }
-    }
+            UtilityHelper::logError($e);
 
-    private function getRankStatus()
-    {
-        try {
-            $status = RankService::getRankStatus();
-            if ($status) {
-                return $status;
-            }
-
-            return false;
-        } catch (Exception $e) {
             return false;
         }
     }
@@ -58,6 +33,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -72,6 +49,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -85,6 +64,8 @@ trait RankTrait
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }
