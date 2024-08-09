@@ -22,6 +22,11 @@ auth.json
 sendgrid.env
 ddev
 .ddev
+.env.testing
+/docker-compose-local.yml
+/docker
+/sql
+.DS_Store
 
 # Local composer executable
 composer

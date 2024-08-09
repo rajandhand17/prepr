@@ -28,7 +28,7 @@ class CreateProjectRequest extends FormRequest
             'description'               => 'required',
             'is_view_enabled'           => 'required|in:yes,no',
             'is_download_enabled'       => 'required|in:yes,no',
-            'media_type'                => 'required|in:image,embedded,none',
+            'media_type'                => 'in:image,embedded,none',
             'privacy'                   => 'required|in:public,private',
             'challenge_id'              => 'required|exists:challenges,uuid',
             'lab_id'                    => 'nullable|exists:labs,uuid',

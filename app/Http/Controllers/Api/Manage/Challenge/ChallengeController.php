@@ -19,6 +19,7 @@ use App\Http\Resources\Manage\Challenge\ChallengeAssessmentResource;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -98,7 +99,7 @@ class ChallengeController extends AppBaseController
                 }
             }
 
-            $uploaded_achievement_image = config('site-settings.default_challenge_achievement_image');
+            $uploaded_achievement_image = null;
             if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
                 $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
                 if (!$upload_achievement_image) {
@@ -146,7 +147,17 @@ class ChallengeController extends AppBaseController
                     return $this->sendError(__('responses.challenge_not_accessible'), 403);
                 }
                 $userId = $userData->id;
+                // For user progress tracking
                 TrackUserProgressHelper::trackChallengeUserProgress($challenge, $userId);
+
+                // For last visited activity tracking
+                $joined_status = $challenge->joined();
+                if ($joined_status != 'NA' && $joined_status != null) {
+                    if ($joined_status->invite_status == '1') {
+                        $moduleType = config('constants.module_type.challenges');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($challenge->id, $userId, $moduleType);
+                    }
+                }
 
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
@@ -195,7 +206,7 @@ class ChallengeController extends AppBaseController
                 }
             }
 
-            $uploaded_achievement_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image);
+            $uploaded_achievement_image = !empty($checkComponentBasedOnSlug->participation_achievement->achievement_image) ? str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->participation_achievement->achievement_image) : null;
             if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
                 $upload_achievement_image = $this->challengeRepository->uploadChallengeParticipationAchievementImage($request->achievement_image);
                 if (!$upload_achievement_image) {
@@ -233,6 +244,11 @@ class ChallengeController extends AppBaseController
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.challenge_not_found'), 403);
             }
+
+            if ($checkComponentBasedOnSlug->submitted_projects()->exists()) {
+                return $this->sendError(__('responses.challenge_not_delete_project_exists'), 403);
+            }
+
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {

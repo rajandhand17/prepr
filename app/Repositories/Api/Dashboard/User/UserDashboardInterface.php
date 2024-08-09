@@ -48,7 +48,9 @@ interface UserDashboardInterface
 
     public function fetchUpComingDeadlineChallenges($challengeIds, $userData);
 
-    public function userDashboardInboxList($userData);
+    public function dashboardInboxList($userData);
 
     public function userDashboardFriendList($userData);
+
+    public function fetchLastVisited($userData);
 }

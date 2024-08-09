@@ -13,4 +13,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/my-progress', [UserDashboardController::class, 'getMyProgress']);
     Route::get('/upcoming-challenge-deadlines', [UserDashboardController::class, 'getUpComingChallengeDeadlines']);
     Route::get('/inbox-friend-request', [UserDashboardController::class, 'getInboxFriendRequests']);
+    Route::get('/last-visited-module', [UserDashboardController::class, 'getLastVisitedModule']);
 });

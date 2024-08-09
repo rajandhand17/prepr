@@ -65,7 +65,7 @@ class ResourceGroupService
                     $media_type = config('constants.resource_media_type.embedded');
                     break;
                 default:
-                    $media_type = null;
+                    $media_type = config('constants.resource_media_type.image');
             }
             switch ($request->privacy) {
                 case 'no':
@@ -83,6 +83,7 @@ class ResourceGroupService
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = $request->category_id;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
@@ -196,6 +197,7 @@ class ResourceGroupService
             }
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = ($request->has('category_id')) ? $request->category_id : $resourceGroup->category_id;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $media_type : $resourceGroup->media_type;
@@ -424,6 +426,19 @@ class ResourceGroupService
             $resourceGroup->save();
 
             return $resourceGroup;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceGroup = ResourceGroup::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceGroup;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

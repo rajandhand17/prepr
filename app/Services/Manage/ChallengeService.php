@@ -106,16 +106,6 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
-                    $query->select('challenge_tags_groups.challenge_id')
-                        ->from('challenge_tags_groups')
-                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
-                        ->where('challenge_tags_groups.type', '0')
-                        ->whereNull('challenge_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenges.uuid');
-            }
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
@@ -148,6 +138,38 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
 
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
+                });
+            }
+
+            if ($request->has('template_status') && !empty($request->template_status) && is_array($request->template_status)) {
+                $challenge_list = $challenge_list->whereIn('challenges.uuid', function ($query) use ($request) {
+                    $query->select('challenge_templates.uuid')->from('challenge_templates')->whereIn('status', $request->template_status);
+                });
+            }
+
+            if ($request->has('source') && !empty($request->source)) {
+                switch ($request->source) {
+                    case 'onboarding_challenges':
+                        $challenge_list = $challenge_list->where('is_auto_created', 1);
+                        break;
+
+                    case 'created_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id);
+                        break;
+
+                    case 'created_by_organizations':
+                        $challenge_list = $challenge_list->where('organization_id', auth()->user()->preferred_organization);
+                        break;
+
+                    case 'cloned_by_you':
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', 1);
+                        break;
+                }
+            }
+
             return $challenge_list;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -176,7 +198,7 @@ class ChallengeService
     {
         try {
             $status = config('constants.challenge_status.draft');
-            if ($request->is_ai_created) {
+            if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                 $status = config('constants.challenge_status.publish');
             } else {
                 switch ($request->request_type) {
@@ -318,7 +340,7 @@ class ChallengeService
             $challenge->media = $upload_cover_image;
             $challenge->status = $status;
             $challenge->source_link = $request->source_link ?? null;
-            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : 'No Terms and Conditions.';
+            $challenge->agreement = ($request->has('agreement')) ? $request->agreement : null;
             $challenge->is_notification_enabled = $is_notification_enabled;
             $challenge->project_privacy = $project_privacy;
             $challenge->is_open = $is_open;
@@ -340,7 +362,9 @@ class ChallengeService
     public static function updateChallenge($slug, $request, $update_cover_image, $organizationId)
     {
         try {
-            $challenge = Challenge::where('slug', $slug)->first();
+            $challenge = Challenge::with('submitted_projects')->where('slug', $slug)->first();
+            $has_submitted_projects = $challenge->submitted_projects()->exists();
+
             if ($challenge !== null) {
                 $privacy = $challenge->privacy;
                 if ($request->has('privacy')) {
@@ -358,7 +382,7 @@ class ChallengeService
                 }
 
                 $status = $challenge->status;
-                if ($request->is_ai_created) {
+                if ($request->is_ai_created && $request->is_ai_created === 'yes') {
                     $status = config('constants.challenge_status.publish');
                 } else {
                     switch ($request->request_type) {
@@ -475,15 +499,15 @@ class ChallengeService
                 $challenge->category_id = ($request->has('category_id')) ? $request->category_id : $challenge->category_id;
                 $challenge->duration_id = ($request->has('duration_id')) ? $request->duration_id : $challenge->duration_id;
                 $challenge->level_id = ($request->has('level_id')) ? $request->level_id : $challenge->level_id;
-                $challenge->title = ($request->has('title')) ? $request->title : $challenge->title;
+                $challenge->title = $request->has('title') && !$has_submitted_projects ? $request->title : $challenge->title;
                 $challenge->description_type = $description_type;
-                $challenge->description = ($description_type == '0') ? ($request->description ?? $challenge->description) : null;
+                $challenge->description = ($description_type == '0') ? (!$has_submitted_projects ? $request->description : $challenge->description) : null;
                 $challenge->privacy = $privacy;
                 $challenge->media_type = $media_type;
                 $challenge->media = ($update_cover_image != null) ? $update_cover_image : $challenge->cover_image;
                 $challenge->status = $status;
                 $challenge->source_link = ($request->has('source_link') ? $request->source_link : $challenge->source_link);
-                $challenge->agreement = ($request->has('agreement')) ? $request->agreement : $challenge->agreement;
+                $challenge->agreement = ($request->has('agreement') && !$has_submitted_projects) ? $request->agreement : $challenge->agreement;
                 $challenge->is_notification_enabled = $is_notification_enabled;
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
@@ -985,6 +1009,56 @@ class ChallengeService
             $challengeData->save();
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchChallenges = Challenge::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchManagersUpComingDeadlineChallenges($challengeData)
+    {
+        try {
+            $restrictedDeadlineCollection = collect();
+            if ($challengeData->isNotEmpty()) {
+                foreach ($challengeData as $challenge) {
+                    if ($challenge->challenge_timelines) {
+                        if ($challenge->challenge_timelines->timeline_type == '1') {
+                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                                // For restricted challenge
+                                $restrictedDeadline = [
+                                    'id'       => $challenge->uuid,
+                                    'title'    => $challenge->title,
+                                    'slug'     => $challenge->slug,
+                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                ];
+                                $restrictedDeadlineCollection->push($restrictedDeadline);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!empty($restrictedDeadlineCollection)) {
+                $restrictedDeadlineCollection = $restrictedDeadlineCollection->sortBy(function ($challenge) {
+                    return strtotime($challenge['deadline']);
+                });
+            }
+
+            return $restrictedDeadlineCollection->take(5);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
