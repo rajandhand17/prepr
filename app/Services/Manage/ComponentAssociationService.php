@@ -1187,7 +1187,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchChallengeIdsAssociatedLabId($componentId)
+    public static function fetchChallengeIdsAssociatedLabId($componentId)
     {
         try {
             $fetchChallengeIdsBasedOnLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_id')->pluck('challenge_id');
@@ -1213,7 +1213,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchChallengePathIdsAssociatedLabId($componentId)
+    public static function fetchChallengePathIdsAssociatedLabId($componentId)
     {
         try {
             $fetchChallengePathIdsAssociatedLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_path_id')->pluck('challenge_path_id');
@@ -1239,7 +1239,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceModuleIdsAssociatedLabId($labId)
+    public static function fetchResourceModuleIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceModulePathIdsBasedOnLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
@@ -1291,7 +1291,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceCollectionIdsAssociatedLabId($labId)
+    public static function fetchResourceCollectionIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceCollectionIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
@@ -1330,7 +1330,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchLabIdsAssociatedLabProgramId($labProgramId)
+    public static function fetchLabIdsAssociatedLabProgramId($labProgramId)
     {
         try {
             $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('lab_program_id', $labProgramId)->whereNotNull('lab_id')->pluck('lab_id');
@@ -1369,7 +1369,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceGroupIdsAssociatedLabId($labId)
+    public static function fetchResourceGroupIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceGroupIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
