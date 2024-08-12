@@ -169,7 +169,7 @@ class ProjectResource extends JsonResource
         if ($this->lab_id) {
             $lab_details = LabService::getLabBasedOnId($this->lab_id);
             if ($lab_details) {
-                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug']);
+                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug', 'description', 'media', 'media_type', 'privacy', 'status']);
             }
         }
 
@@ -219,7 +219,7 @@ class ProjectResource extends JsonResource
             'slug'                  => $this->slug,
             'description'           => $this->description,
             'organization_id'       => (!empty($org->uuid)) ? $org->uuid : null,
-            'organisation'          => (!empty($org->title)) ? $org->title : null,
+            'organization'          => (!empty($org->title)) ? $org->title : null,
             'is_view_enabled'       => $view_enabled,
             'is_download_enabled'   => $download_enabled,
             'media_type'            => $media_type,
