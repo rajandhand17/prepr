@@ -4,6 +4,8 @@ namespace App\Http\Resources\Manage\Lab;
 
 use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
+use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
@@ -175,7 +177,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_collection_id) {
                         $getResourceCollection = ResourceCollectionService::getResourceCollectionsBasedOnId($lab_association->resource_collection_id);
                         if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);
                         }
                     }
                 }
@@ -183,7 +185,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_group_id) {
                         $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
                         if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup);
                         }
                     }
                 }
@@ -249,7 +251,6 @@ class LabResource extends JsonResource
             'slug'                             => $this->slug,
             'title'                            => $this->title,
             'description'                      => $this->description,
-            'resource_collection'              => $resource_collections,
             'privacy'                          => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                           => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                     => $this->members()->count(),
@@ -279,10 +280,11 @@ class LabResource extends JsonResource
             'resource_collection_count'        => count($resource_collections),
             'resource_group_count'             => count($resource_groups),
             'lab_program'                      => $lab_programs,
-            'challenge'                        => $challenges,
+            'challenge'                        => array_filter($challenges ?? []),
             'challenge_path'                   => $challenge_paths,
-            'resource_module'                  => $resource_modules,
-            'resource_group'                   => $resource_groups,
+            'resource_module'                  => array_filter($resource_modules ?? []),
+            'resource_group'                   => array_filter($resource_groups ?? []),
+            'resource_collection'              => array_filter($resource_collections ?? []),
             'last_updated'                     => $this->updated_at,
             'campus_connect_opportunity'       => $campusConnectOpportunity,
             'campus_connect_story'             => $campusConnectStory,

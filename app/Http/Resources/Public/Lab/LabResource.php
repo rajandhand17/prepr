@@ -3,13 +3,13 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
-use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
+use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Public\Organization\OrganizationHostResource;
-use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
-use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
-use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
+use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
+use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
+use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Services\AchievementConditionListService;
 use App\Services\Public\ChallengePathService;
 use App\Services\Public\ChallengeService;
@@ -160,7 +160,7 @@ class LabResource extends JsonResource
                     if ($lab_association->challenge_id) {
                         $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
                         if ($getChallenge !== null) {
-                            $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
+                            $challenges[$lab_association->challenge_id] = ChallengeResource::make($getChallenge);
                         }
                     }
                 }
@@ -176,7 +176,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_module_id) {
                         $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
                         if ($getResourceModule !== null) {
-                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
+                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleResource::make($getResourceModule);
                         }
                     }
                 }
@@ -184,7 +184,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_collection_id) {
                         $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
                         if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
+                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);
                         }
                     }
                 }
@@ -192,7 +192,7 @@ class LabResource extends JsonResource
                     if ($lab_association->resource_group_id) {
                         $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
                         if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
+                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup);
                         }
                     }
                 }
@@ -281,11 +281,11 @@ class LabResource extends JsonResource
             'resource_collection_count'     => count($resource_collections),
             'resource_group_count'          => count($resource_groups),
             'lab_program'                   => $lab_programs,
-            'challenge'                     => $challenges,
+            'challenge'                     => array_filter($challenges ?? []),
             'challenge_path'                => $challenge_paths,
-            'resource_module'               => $resource_modules,
-            'resource_collection'           => $resource_collections,
-            'resource_group'                => $resource_groups,
+            'resource_module'               => array_filter($resource_modules ?? []),
+            'resource_collection'           => array_filter($resource_collections ?? []),
+            'resource_group'                => array_filter($resource_groups ?? []),
             'last_updated'                  => $this->updated_at,
         ];
     }
