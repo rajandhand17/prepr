@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -716,7 +717,7 @@ class OrganizationController extends AppBaseController
     {
         try {
 
-            $planData = $this->organizationRepository->allPlansData();
+            $planData = ChargebeeHelper::getAllPlanDetailsAndLimits();
             if ($planData) {
                 return $this->sendResponse($planData, __('responses.plan_details_retrived'));
             }

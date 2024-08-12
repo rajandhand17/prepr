@@ -243,17 +243,6 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
-    public function allPlansData()
-    {
-        try {
-            return $this->organizationService->allPlansData();
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public function updateOrganizationCustomLoginRegistration($request, $organizationData)
     {
         try {
