@@ -1011,21 +1011,23 @@ class MemberManagementService
         }
     }
 
-    public static function getOrganizationIds($email,$action)
+    public static function getOrganizationIds($email, $action)
     {
         try {
-            $organizationIds=[];
-            switch ($action){
+            $organizationIds = [];
+            switch ($action) {
                 case 'pending':
-                    $organizationIds=MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.invited'),'module_type'=>'0','email'=>$email])->pluck('module_id');
+                    $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.invited'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
                     break;
                 case 'accepted':
-                    $organizationIds=MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'),'module_type'=>'0','email'=>$email])->pluck('module_id');
+                    $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
                     break;
             }
+
             return $organizationIds;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
