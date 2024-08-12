@@ -26,6 +26,7 @@ trait ProjectPitchTemplateTrait
             return false;
         }
     }
+
     private function getPitchTemplate()
     {
         try {
@@ -73,7 +74,6 @@ trait ProjectPitchTemplateTrait
         }
     }
 
-
     private function deletePitchTemplate($pitchTemplate)
     {
         try {
@@ -88,8 +88,4 @@ trait ProjectPitchTemplateTrait
             return false;
         }
     }
-
-
-
-
 }
