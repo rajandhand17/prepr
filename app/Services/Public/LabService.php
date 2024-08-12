@@ -10,6 +10,8 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\LabTagsGroupsService;
+use App\Services\Manage\LabTypeModesService;
+use App\Services\ModuleCompletionStatusService;
 use Carbon\Carbon;
 
 class LabService
@@ -19,6 +21,19 @@ class LabService
         try {
             $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getLabList($labIds)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $labIds)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
 
             return $lab_list->paginate(config('site-settings.pagination_per_page'));
         } catch (\Exception $e) {
@@ -127,6 +142,11 @@ class LabService
                 }
             }
 
+            if ($request->has('type') && !empty($request->type)) {
+                $typeBaseLabIds = LabTypeModesService::getLabType($request->type);
+                $lab_list = $lab_list->whereIn('labs.id', $typeBaseLabIds);
+            }
+
             return $lab_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -222,7 +242,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return Lab::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -334,6 +354,92 @@ class LabService
     {
         try {
             return Lab::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedLabs($fetchUserSkills, $userData)
+    {
+        try {
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($fetchUserSkills);
+            $labIds = $getLabsIdsBasedOnSKills->unique();
+            $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedLabs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyLabProgress($userData)
+    {
+        try {
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchLabIds = MemberManagementService::labRequestIds($userData, $inviteStatus);
+            $fetchUserLabProgressBasedOnLabids = ModuleCompletionStatusService::fetchUserLabProgressBasedOnLabids($fetchLabIds, $userData);
+            $inProgressLabsCount = 0;
+            $completedLabsCount = 0;
+            if ($fetchUserLabProgressBasedOnLabids->isNotEmpty()) {
+                foreach ($fetchUserLabProgressBasedOnLabids as $fetchUserLabProgress) {
+                    if ($fetchUserLabProgress->percentage == '100') {
+                        $completedLabsCount++;
+                    } elseif ($fetchUserLabProgress->percentage > '0' && $fetchUserLabProgress->percentage < '100') {
+                        $inProgressLabsCount++;
+                    }
+                }
+            }
+            $overAllJoinedLabs = $fetchLabIds->count();
+            $notStartedLabsCount = $overAllJoinedLabs - ($inProgressLabsCount + $completedLabsCount);
+            $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressLabsCount' => $inProgressLabsCount, 'notStartedLabsCount' => $notStartedLabsCount];
+
+            return $fetchMyLabProgress;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedLabList($request, $organizationId)
+    {
+        try {
+            $lab_list = Lab::where(['labs.organization_id' => $organizationId, 'labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabAssociation($request, $fetchLabAssociation)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $fetchLabAssociation)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
+            $lab_list = self::filterLabList($request, $lab_list);
+
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedLabs($labIds)
+    {
+        try {
+            // Retrieve resource modules with the given IDs using findMany for primary keys and limiting by 2 values
+            $labs = Lab::findMany($labIds)->slice(0, 2);
+
+            return $labs;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

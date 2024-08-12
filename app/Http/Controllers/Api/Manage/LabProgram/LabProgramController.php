@@ -12,6 +12,7 @@ use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramResource;
 use App\Repositories\Api\Manage\LabProgram\LabProgramRepository;
 use App\Repositories\Api\Manage\LabProgramAchievement\LabProgramAchievementRepository;
+use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
 
 class LabProgramController extends AppBaseController
@@ -73,8 +74,13 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
+                // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabProgramUserProgress($labProgram, $userId);
+
+                // For last visited activity tracking
+                $moduleType = config('constants.module_type.lab_programs');
+                LastVisitedActivityModuleService::lastVisitedActivityModule($labProgram->id, $userId, $moduleType);
 
                 return $this->sendResponse(LabProgramResource::make($labProgram), __('responses.found_lab_program_view'));
             }
@@ -105,20 +111,26 @@ class LabProgramController extends AppBaseController
             }
 
             $upload_media = config('site-settings.default_lab_program_profile_image');
-            if ($request->media !== null) {
-                $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
-                if (!$uploaded_media) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+            if ($request->media_type == 'image') {
+                if ($request->hasFile('media') && $request->file('media')->isValid()) {
+                    $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
+                    if (!$uploaded_media) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_media = $uploaded_media;
                 }
-                $upload_media = $uploaded_media;
+            } elseif ($request->media_type == 'embedded') {
+                $upload_media = $request->media;
             }
             $upload_achievement_image = config('site-settings.default_lab_program_profile_image');
             if ($request->achievement_image !== null) {
-                $uploaded_achievement_image = $this->labProgramAchievements->uploadAchievementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labProgramAchievements->uploadAchievementImage($request->achievement_image);
+                    if (!$uploaded_achievement_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
             $createLabProgram = $this->labProgramRepository->createLabProgram($request, $upload_media, $upload_achievement_image, $organization->id);
             if ($createLabProgram != false) {
@@ -152,12 +164,16 @@ class LabProgramController extends AppBaseController
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
             $upload_media = config('site-settings.default_lab_program_profile_image');
-            if ($request->media !== null) {
-                $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
-                if (!$uploaded_media) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+            if ($request->media_type == 'image') {
+                if ($request->hasFile('media') && $request->file('media')->isValid()) {
+                    $uploaded_media = $this->labProgramRepository->uploadLabProgramMedia($request->media);
+                    if (!$uploaded_media) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_media = $uploaded_media;
                 }
-                $upload_media = $uploaded_media;
+            } elseif ($request->media_type == 'embedded') {
+                $upload_media = $request->media;
             }
             $upload_achievement_image = null;
             if ($request->achievement_image !== null) {

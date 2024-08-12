@@ -46,6 +46,10 @@ class DiscussionService
                     ->orderByDesc('dislikes_count');
             }
 
+            if ($sortBy == 'most_replies') {
+                $getComments = $getComments->withCount('comments_reply')->orderBy('comments_reply_count', 'DESC');
+            }
+
             return $getComments;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -59,13 +63,16 @@ class DiscussionService
         try {
             $attachmentPath = null;
             $file_upload = $request->file('attachment');
+
             if (isset($file_upload) && !empty($file_upload)) {
-                if (false !== mb_strpos($file_upload->getMimeType(), 'image')) {
-                    $file_type = config('constants.file_type.image');
-                    $attachmentPath = FileUploadHelper::uploadImageToS3($file_upload, 'discussion');
-                } else {
-                    $file_type = (mb_strpos($file_upload->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
-                    $attachmentPath = FileUploadHelper::UploadVideoDocToS3($file_upload, 'discussion');
+                foreach ($file_upload as $discussion_attachment) {
+                    if (false !== mb_strpos($discussion_attachment->getMimeType(), 'image')) {
+                        $file_type = config('constants.file_type.image');
+                        $attachmentPath[] = FileUploadHelper::uploadImageToS3($discussion_attachment, 'discussion');
+                    } else {
+                        $file_type = (mb_strpos($discussion_attachment->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
+                        $attachmentPath[] = FileUploadHelper::UploadVideoDocToS3($discussion_attachment, 'discussion');
+                    }
                 }
             }
 
@@ -75,7 +82,7 @@ class DiscussionService
             $addComment->module_id = $getComponentId;
             $addComment->module_type = config('constants.discussion_module_type.'.$component);
             $addComment->comments = $request->comment ? $request->comment : null;
-            $addComment->attachment = $attachmentPath;
+            $addComment->attachment = empty($attachmentPath) ? $attachmentPath : json_encode($attachmentPath);
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
             $addComment->save();
             $comment_data = [

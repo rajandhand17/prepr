@@ -4,6 +4,7 @@ namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModule;
+use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\ModuleCompletionStatusService;
 
 class ResourceModuleService
@@ -187,6 +188,120 @@ class ResourceModuleService
     {
         try {
             return ResourceModule::select();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedResourceModules($fetchUserSkills, $userData)
+    {
+        try {
+            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasesOnSKillsId($fetchUserSkills);
+            $resourceModuleIds = $getResourceModulesIdsBasedOnSKills->unique();
+            $fetchRecommendedResourceModules = ResourceModule::whereIn('id', $resourceModuleIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedResourceModules;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function myResourceModuleIds($userData)
+    {
+        try {
+            $fetchResourceModuleIdsBasedOnProgress = ModuleCompletionStatusService::fetchResourceModuleIdsBasedOnProgress($userData);
+            $myResourceModuleIds = ResourceModule::whereIn('id', $fetchResourceModuleIdsBasedOnProgress)->pluck('id');
+            if (!empty($myResourceModuleIds)) {
+                return $myResourceModuleIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceModuleDashboardList($resourceModuleIds)
+    {
+        try {
+            $resourceModule = ResourceModule::whereIn('id', $resourceModuleIds)->where('is_accessible', '1');
+
+            return $resourceModule->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyResourceModuleProgress($userData)
+    {
+        try {
+            $inProgressResourceModulesCount = 0;
+            $completedResourceModulesCount = 0;
+            $fetchResourceModuleBasedOnUserId = ModuleCompletionStatusService::fetchResourceModuleBasedOnUserId($userData);
+            if ($fetchResourceModuleBasedOnUserId->isNotEmpty()) {
+                foreach ($fetchResourceModuleBasedOnUserId as $fetchResourceModule) {
+                    if ($fetchResourceModule->percentage == '100') {
+                        $completedResourceModulesCount++;
+                    } elseif ($fetchResourceModule->percentage > '0' && $fetchResourceModule->percentage < '100') {
+                        $inProgressResourceModulesCount++;
+                    }
+                }
+            }
+            $overAllJoinedResourceModules = ($inProgressResourceModulesCount + $completedResourceModulesCount);
+
+            $fetchMyResourceModuleProgress = ['overAllJoined' => $overAllJoinedResourceModules, 'completedCount' => $completedResourceModulesCount, 'inProgressCount' => $inProgressResourceModulesCount];
+
+            return $fetchMyResourceModuleProgress;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedResourceModuleList($request, $organizationId)
+    {
+        try {
+            $resourceModule = ResourceModule::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
+            return $resourceModule->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleAssociation($request, $fetchResourceModuleAssociation)
+    {
+        try {
+            $resourceModule = ResourceModule::whereIn('id', $fetchResourceModuleAssociation)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
+            return $resourceModule->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedResourceModules($resourceModuleIds)
+    {
+        try {
+            // Retrieve resource module with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceModules = ResourceModule::findMany($resourceModuleIds)->slice(0, 2);
+
+            return $resourceModules;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

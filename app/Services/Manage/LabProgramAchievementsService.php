@@ -100,4 +100,17 @@ class LabProgramAchievementsService
             return false;
         }
     }
+
+    public static function getLabProgramsAchivements($labProgramId)
+    {
+        try {
+            $getLabProgramsAchivements = LabProgramsAchievement::where('lab_programs_id', $labProgramId)->first();
+
+            return $getLabProgramsAchivements;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

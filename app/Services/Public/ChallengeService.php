@@ -9,7 +9,10 @@ use App\Models\ChallengeTask;
 use App\Models\MemberManagement;
 use App\Models\PitchTemplate;
 use App\Models\Project;
+use App\Services\Manage\ChallengeSkillsGroupsStackService;
+use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
+use Carbon\Carbon;
 use Exception;
 
 class ChallengeService
@@ -19,6 +22,19 @@ class ChallengeService
         try {
             $challenge_list = Challenge::where('challenges.status', '1')->where('challenges.is_accessible', '1');
             $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getChallengeList($challengeIds)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $challengeIds)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
 
             return $challenge_list->paginate(config('site-settings.pagination_per_page'));
         } catch (Exception $e) {
@@ -80,6 +96,7 @@ class ChallengeService
                         break;
                 }
             }
+
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
                     $query->select('challenge_skills_groups_stacks.challenge_id')
@@ -90,22 +107,15 @@ class ChallengeService
                         ->distinct();
                 })->distinct('challenges.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $challenge_list = $challenge_list->whereIn('challenges.id', function ($query) use ($request) {
-                    $query->select('challenge_tags_groups.challenge_id')
-                        ->from('challenge_tags_groups')
-                        ->whereIn('challenge_tags_groups.foreign_id', $request->tags)
-                        ->where('challenge_tags_groups.type', '0')
-                        ->whereNull('challenge_tags_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenges.uuid');
-            }
+
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $challenge_list = $challenge_list->whereIn('duration_id', $request->duration_id);
             }
+
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
+
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
                     $status_array = ['accepted', 'pending', 'declined'];
@@ -130,8 +140,13 @@ class ChallengeService
             }
 
             if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
-                $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
+                $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->whereHas('submitted_projects', function ($query) {
                     $query->where('is_submitted', '1');
+                });
+            }
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
                 });
             }
 
@@ -323,6 +338,159 @@ class ChallengeService
         try {
             return Challenge::select();
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchRecommendedChallenges($fetchUserSkills, $userData)
+    {
+        try {
+            $getChallengeIdBasedOnSkill = ChallengeSkillsGroupsStackService::getChallengeIdBasedOnSkills($fetchUserSkills);
+            $challengeIds = $getChallengeIdBasedOnSkill->unique();
+            $fetchRecommendedChallenges = Challenge::whereIn('id', $challengeIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
+
+            return $fetchRecommendedChallenges;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMyChallengeProgress($userData)
+    {
+        try {
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchChallenge = MemberManagementService::challengeRequestIds($userData, $inviteStatus);
+            $overAllJoinedChallenges = $fetchChallenge->count();
+            $completedChallengesCount = ProjectService::fetchCompletedChallenges($fetchChallenge, $userData);
+            $inProgressChallengesCount = ProjectService::fetchInProgressChallenges($fetchChallenge, $userData);
+            $deadlineMissedChallengesCount = ProjectService::fetchDeadlineMissedChallenges($fetchChallenge, $userData);
+            $notStartedChallengesCount = $overAllJoinedChallenges - ($completedChallengesCount + $inProgressChallengesCount + $deadlineMissedChallengesCount);
+
+            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount];
+
+            return $fetchMyChallengeProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengesBasedOnIds($challengeIds)
+    {
+        try {
+            $getChallengesBasedOnIds = Challenge::whereIn('id', $challengeIds)->get();
+
+            return $getChallengesBasedOnIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchUpComingDeadlineChallenges($challengeIds, $userData)
+    {
+        try {
+            $restrictedDeadlineCollection = collect();
+            $flexibleDeadlineCollection = collect();
+            $fetchChallenges = self::getChallengesBasedOnIds($challengeIds);
+            if ($fetchChallenges->isNotEmpty()) {
+                foreach ($fetchChallenges as $fetchChallenge) {
+                    if ($fetchChallenge->challenge_timelines) {
+                        if ($fetchChallenge->challenge_timelines->timeline_type == '0') {
+                            // For flexible challenge
+                            if (!empty($fetchChallenge->challenge_timelines->flexible_date_duration)) {
+                                $fetchCreatedProject = ProjectService::checkUserChallengeStatus($fetchChallenge->id, $userData->id);
+                                if (!empty($fetchCreatedProject)) {
+                                    switch ($fetchChallenge->challenge_timelines->flexible_date_duration) {
+                                        case 'days':
+                                            $convertedDeadline = Carbon::parse($fetchCreatedProject->created_at)->addDays($fetchChallenge->challenge_timelines->flexible_date_number)->toDateTimeString();
+                                            break;
+                                        case 'weeks':
+                                            $convertedDeadline = Carbon::parse($fetchCreatedProject->created_at)->addWeek($fetchChallenge->challenge_timelines->flexible_date_number)->toDateTimeString();
+                                            break;
+                                        case 'months':
+                                            $convertedDeadline = Carbon::parse($fetchCreatedProject->created_at)->addMonth($fetchChallenge->challenge_timelines->flexible_date_number)->toDateTimeString();
+                                            break;
+                                    }
+                                    $flexibleDeadline = [
+                                        'id'       => $fetchChallenge->uuid,
+                                        'title'    => $fetchChallenge->title,
+                                        'slug'     => $fetchChallenge->slug,
+                                        'deadline' => UtilityHelper::formatDateTime($convertedDeadline) ?? null,
+                                    ];
+                                    $flexibleDeadlineCollection->push($flexibleDeadline);
+                                }
+                            }
+                        } elseif ($fetchChallenge->challenge_timelines->timeline_type == '1') {
+                            // For restricted challenge
+                            $restrictedDeadline = [
+                                'id'       => $fetchChallenge->uuid,
+                                'title'    => $fetchChallenge->title,
+                                'slug'     => $fetchChallenge->slug,
+                                'deadline' => UtilityHelper::formatDateTime($fetchChallenge->challenge_timelines->submission_deadline_date) ?? null,
+                            ];
+                            $restrictedDeadlineCollection->push($restrictedDeadline);
+                        }
+                    }
+                }
+            }
+            $userDeadlineChallenges = $restrictedDeadlineCollection->merge($flexibleDeadlineCollection);
+            if (!empty($userDeadlineChallenges)) {
+                $userDeadlineChallenges = $userDeadlineChallenges->sortBy(function ($challenge) {
+                    return strtotime($challenge['deadline']);
+                });
+            }
+
+            return $userDeadlineChallenges->take(5);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getComponentBasedChallengeList($request, $organizationId)
+    {
+        try {
+            $challenge_list = Challenge::where(['challenges.organization_id' => $organizationId, 'challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeAssociation($request, $fetchChallengeAssociation)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $fetchChallengeAssociation)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+            $challenge_list = self::filterChallengeList($request, $challenge_list);
+
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedChallenges($challengeIds)
+    {
+        try {
+            // Retrieve challenge with the given IDs using findMany for primary keys and limiting by 2 values
+            $challenges = Challenge::findMany($challengeIds)->slice(0, 2);
+
+            return $challenges;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

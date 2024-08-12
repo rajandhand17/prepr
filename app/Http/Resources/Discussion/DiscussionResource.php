@@ -35,7 +35,7 @@ class DiscussionResource extends JsonResource
             'likes'           => $getLikedByUser,
             'dislikes'        => $getDislikedByUser,
             'by_me'           => $byMe,
-            'attachment'      => $this->attachment !== null ? config('site-settings.aws_url').$this->attachment : '',
+            'attachment'      => $this->attachment,
             'user_details'    => UserResource::make($this->users),
             'comment_replies' => CommentReplies::collection($this->comments_reply),
             'created_at'      => UtilityHelper::formatDateTime($this->created_at),

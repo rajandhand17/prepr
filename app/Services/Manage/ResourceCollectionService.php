@@ -40,7 +40,7 @@ class ResourceCollectionService
                     $status = config('constants.resource_collection_status.draft');
                     break;
             }
-            $media_type = config('constants.resource_media_type.image');
+
             switch ($request->media_type) {
                 case 'image':
                     $media_type = config('constants.resource_media_type.image');
@@ -49,7 +49,7 @@ class ResourceCollectionService
                     $media_type = config('constants.resource_media_type.embedded');
                     break;
                 default:
-                    $media_type = null;
+                    $media_type = config('constants.resource_media_type.image');
             }
             switch ($request->privacy) {
                 case 'no':
@@ -482,6 +482,19 @@ class ResourceCollectionService
 
             return  $resourceCollection;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceCollectionReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceCollection = ResourceCollection::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceCollection;
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

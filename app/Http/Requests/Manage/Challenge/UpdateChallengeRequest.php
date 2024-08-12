@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateChallengeRequest extends FormRequest
 {
@@ -28,7 +27,7 @@ class UpdateChallengeRequest extends FormRequest
     {
         $challenge = ChallengeService::getChallengeBasedOnSlug(request()->route('slug'));
         if (!$challenge) {
-            throw new NotFoundHttpException();
+            return [];
         }
 
         $base_rules = [
@@ -61,8 +60,8 @@ class UpdateChallengeRequest extends FormRequest
             'category_id'                           => 'nullable|exists:categories,id',
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|exists:job_titles,id',
-            'external_links'                        => 'array|required_if:request_type,publish',
-            'external_link_ids'                     => 'array|exists:social_links,id|required_if:request_type,publish',
+            'external_links'                        => 'array',
+            'external_link_ids'                     => 'array|exists:social_links,id',
             'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
@@ -74,9 +73,9 @@ class UpdateChallengeRequest extends FormRequest
             'min_experience'                        => 'required_if:complete_experience,yes|numeric',
             'agreement'                             => 'required_if:request_type,publish',
             'achievement_image'                     => 'mimes:jpeg,jpg,png,webp|max:1024',
-            'achievement_name'                      => 'required_if:request_type,publish|',
-            'achievement_prize'                     => 'required_if:request_type,publish|numeric',
-            'achievement_points'                    => 'required_if:request_type,publish|numeric',
+            'achievement_name'                      => 'nullable',
+            'achievement_prize'                     => 'nullable|numeric',
+            'achievement_points'                    => 'nullable|numeric',
             'winner_achievement_participation'      => 'required_if:request_type,publish|array',
             'winner_achievement_participation.*'    => 'in:yes,no',
             'winner_achievement_image'              => 'nullable|array',
@@ -105,7 +104,7 @@ class UpdateChallengeRequest extends FormRequest
         // Add scorm_file rule based on the condition
         $description_type = $this->get('description_type');
         if ($description_type == 'scorm') {
-            if ($challenge->hasScorm() == false) {
+            if (!$challenge->scorm()->exists()) {
                 $base_rules['scorm_file'] = 'required_if:description_type,scorm|file|mimes:zip|max:500000';
             } else {
                 $base_rules['scorm_file'] = 'nullable|file|mimes:zip|max:500000';
@@ -122,8 +121,8 @@ class UpdateChallengeRequest extends FormRequest
                     function ($attribute, $value, $fail) {
                         if ($value && $value->isValid()) {
                             $image = getimagesize($value);
-                            if ($image[0] < 625 || $image[1] < 325) {
-                                $fail(''.$attribute.' must be at least 625x325 pixels.');
+                            if ($image && ($image[0] < 625 || $image[1] < 355)) {
+                                $fail(''.$attribute.' must be at least 625x355 pixels.');
                             }
                         }
                     },
@@ -240,7 +239,7 @@ class UpdateChallengeRequest extends FormRequest
         // For challenge flexible timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
-            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,month';
+            $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,months';
             $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
@@ -252,7 +251,7 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'nullable|array';
             $base_rules['custom_timelines_title.*'] = 'string';
             $base_rules['custom_timelines_number'] = 'nullable|array';
-            $base_rules['custom_timelines_number.*'] = 'integer';
+            $base_rules['custom_timelines_number.*'] = 'integer|max:100';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
             $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
@@ -266,9 +265,9 @@ class UpdateChallengeRequest extends FormRequest
             $base_rules['custom_announcement_type'] = 'nullable|array';
             $base_rules['custom_announcement_type.*'] = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
             $base_rules['custom_announcement_number'] = 'nullable|array';
-            $base_rules['custom_announcement_number.*'] = 'integer';
+            $base_rules['custom_announcement_number.*'] = 'integer|max:100';
             $base_rules['custom_announcement_duration'] = 'nullable|array';
-            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,week,month';
+            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
             $base_rules['custom_announcement_description'] = 'nullable|array';
             $base_rules['custom_announcement_description.*'] = 'string';
         }
