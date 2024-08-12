@@ -284,7 +284,7 @@ class LabResource extends JsonResource
             'challenge_path'                   => $challenge_paths,
             'resource_module'                  => $resource_modules,
             'resource_group'                   => $resource_groups,
-            'last_updated'                     => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                     => $this->updated_at,
             'campus_connect_opportunity'       => $campusConnectOpportunity,
             'campus_connect_story'             => $campusConnectStory,
             'campus_connect_status'            => data_get($this, 'campus_connect_status'),
