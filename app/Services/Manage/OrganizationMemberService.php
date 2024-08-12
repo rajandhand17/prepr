@@ -53,6 +53,7 @@ class OrganizationMemberService
                     $organization_member->save();
                 }
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
