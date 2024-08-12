@@ -997,4 +997,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public function fetchMemberOrganizationIds($userEmail, $role, $inviteStatus)
+    {
+        try {
+            $fetchMemberOrganizationIds = MemberManagement::where(['email' => $userEmail, 'role' => $role, 'invite_status' => $inviteStatus])->pluck('module_id');
+
+            return $fetchMemberOrganizationIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
