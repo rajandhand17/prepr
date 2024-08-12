@@ -43,7 +43,6 @@ class OrganizationMemberService
         try {
             DB::beginTransaction();
             if (isset($request->organization_members) && !empty($request->organization_members)) {
-                OrganizationMember::where('organization_id', $organization_id)->delete();
                 foreach ($request->organization_members as $value) {
                     $organization_member = new OrganizationMember();
                     $organization_member->organization_id = $organization_id;
