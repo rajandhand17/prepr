@@ -331,25 +331,4 @@ class ResourceModuleRepository implements ResourceModuleInterface
             return false;
         }
     }
-
-    public function getRelatedResources($resourceModuleId)
-    {
-        try {
-            // Retrieve recommended resource module IDs
-            $resourceModuleIds = $this->resouceModuleSkillsGroupStackService->getRecommendedResourceModule($resourceModuleId);
-
-            // If resource module IDs are found, get the related resource modules
-            if ($resourceModuleIds) {
-                return $this->resourceModuleService->getRelatedResources($resourceModuleIds);
-            }
-
-            // Return an empty collection if no related resource modules are found
-            return collect();
-        } catch (\Exception $e) {
-            // Log the error for debugging purposes
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
 }
