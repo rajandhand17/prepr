@@ -730,7 +730,6 @@ class OrganizationController extends AppBaseController
         }
     }
 
-
     public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
     {
         try {

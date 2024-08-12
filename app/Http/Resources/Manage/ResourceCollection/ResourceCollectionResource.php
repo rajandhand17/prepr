@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\ResourceCollection;
 
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionTypeModesService;
@@ -168,6 +169,7 @@ class ResourceCollectionResource extends JsonResource
             'language'                      => $this->language,
             'title'                         => $this->title,
             'slug'                          => $this->slug,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'description'                   => $this->description,
             'media_type'                    => $this->media_type == '0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,

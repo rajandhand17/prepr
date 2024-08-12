@@ -565,8 +565,8 @@ return [
 
     'module_completion_statuses_types'=> [
         'resource_module'     => '4',
-        'resource_group'      => '5',
-        'resource_collection' => '6',
+        'resource_collection' => '5',
+        'resource_group'      => '6',
     ],
 
     'status_module_completion'=> [
@@ -579,5 +579,28 @@ return [
         'image'    => '0',
         'embedded' => '1',
         'video'    => '2',
+    ],
+    'lab_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_mode_type'=> [
+        'type' => '0',
+        'mode' => '1',
+    ],
+    'lab_program_modes' => [
+        'team'       => '4',
+        'individual' => '5',
+    ],
+    'lab_program_type' => [
+        'assess'  => '0',
+        'onboard' => '1',
+        'engage'  => '2',
+        'grow'    => '3',
+        'na'      => '4',
     ],
 ];

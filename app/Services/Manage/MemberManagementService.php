@@ -955,4 +955,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public static function totalActiveMembersCountBasedOnModuleIds($moduleIds, $moduleType)
+    {
+        try {
+            $totalActiveMembersCountBasedOnModuleIds = MemberManagement::whereIn('module_id', $moduleIds)->where(['module_type' => $moduleType, 'invite_status' => '1'])->get();
+
+            return $totalActiveMembersCountBasedOnModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

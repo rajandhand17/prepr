@@ -5,6 +5,7 @@ namespace App\Http\Resources\Manage\LabMarketplace;
 use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
+use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
@@ -201,6 +202,7 @@ class LabMarketplaceResource extends JsonResource
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'               => $this->organization->uuid,
             'organization'                  => $this->organization->title,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration'                      => $duration,

@@ -487,4 +487,17 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public function fetchResourceCollectionReportBasedOnOrganization($organizationId)
+    {
+        try {
+            $fetchResourceCollection = ResourceCollection::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
+
+            return $fetchResourceCollection;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

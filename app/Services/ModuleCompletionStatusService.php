@@ -191,4 +191,30 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public function totalViewersCountBasedOnResourceModuleIds($resouceModuleIds)
+    {
+        try {
+            $totalViewersCountBasedOnResourceModuleIds = ModuleCompletionStatus::whereIn('module_id', $resouceModuleIds)->where('module_type', '4')->count();
+
+            return $totalViewersCountBasedOnResourceModuleIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchModuleIdBasedProgress($moduleId, $moduleType, $userId)
+    {
+        try {
+            $fetchComponentIdBasedProgress = ModuleCompletionStatus::where(['module_id' => $moduleId, 'module_type' => $moduleType, 'user_id' => $userId])->first();
+
+            return $fetchComponentIdBasedProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
