@@ -9,6 +9,7 @@ use App\Models\ChallengeTemplate;
 use App\Models\ComponentAssociation;
 use App\Models\LabMarketplace;
 use App\Models\LabMarketplaceComponentAssociations;
+use App\Models\LabProgram;
 use Exception;
 
 class ChallengeTemplateService
@@ -144,4 +145,20 @@ class ChallengeTemplateService
             return false;
         }
     }
+
+    public static function getChallengesTemplateList($request){
+        try {
+            $searched = $request->search;
+            $modules = ChallengeTemplate::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
+            if (!empty($searched)) {
+                $modules = $modules->where('title', 'like', '%'.$searched.'%');
+            }
+            $modules = $modules->pluck('title', 'id');
+            return $modules;
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
 }

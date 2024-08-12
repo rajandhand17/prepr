@@ -69,29 +69,25 @@ class AutoCreateTemplatesService
     public static function fetchModuleList($request)
     {
         try {
+            $modules=[];
+            $data = [];
             switch ($request->module) {
                 case 'lab_template':
-                    $module = LabMarketplace::class;
+                    $modules=LabMarketplaceService::getLabMarketplaceList($request);
                     break;
                 case 'lab_program':
-                    $module = LabProgram::class;
+                    $modules=LabProgramService::getLabProgramList($request);
                     break;
                 case 'challenge_template':
-                    $module = ChallengeTemplate::class;
+                    $modules=ChallengeTemplateService::getChallengesTemplateList($request);
                     break;
                 case 'challenge_path':
-                    $module = ChallengePath::class;
+                    $modules=ChallengePathService::getChallengePathList($request);
                     break;
             }
-            $searched = $request->search;
-            $modules = $module::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
-            if (!empty($searched)) {
-                $modules = $modules->where('title', 'like', '%'.$searched.'%');
-            }
-            $modules = $modules->pluck('title', 'id');
+
             $count = 0;
-            $data = [];
-            if (!empty($module)) {
+            if (!empty($modules)) {
                 foreach ($modules as $key => $title) {
                     $data[$count]['id'] = $key;
                     $data[$count]['title'] = $title;
