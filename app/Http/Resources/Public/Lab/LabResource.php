@@ -287,7 +287,7 @@ class LabResource extends JsonResource
             'resource_module'               => $resource_modules,
             'resource_collection'           => $resource_collections,
             'resource_group'                => $resource_groups,
-            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                  => $this->updated_at,
         ];
     }
 }
