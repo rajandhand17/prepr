@@ -246,8 +246,8 @@ class ProjectMemberManagementService
             DB::beginTransaction();
             foreach ($pariticipateLists as $pariticipateData) {
                 if (UtilityHelper::validEmail($pariticipateData['invitee_email'])) {
-                    $checkExistenceEntry = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $pariticipateData['invitee_email']])->exists();
-                    if ($checkExistenceEntry == false) {
+                    $checkExistenceEntry = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $pariticipateData['invitee_email']]);
+                    if ($checkExistenceEntry->exists() == false ||  $checkExistenceEntry->first()->invite_status == "3") {
                         $invite_status = config('constants.project_member_management_invite_status.invited');
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
@@ -283,8 +283,10 @@ class ProjectMemberManagementService
                         }
 
                         // feeding in project member management table
+                        if($checkExistenceEntry->exists() == false )
                         self::feedParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
-
+                        elseif( $checkExistenceEntry->first()->invite_status == "3")
+                        self::updateParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
@@ -336,6 +338,29 @@ class ProjectMemberManagementService
             $participatesData = ProjectMemberManagement::create([
                 'uuid'                      => Randomize::chars(10)->alphanumeric()->unique()->generate(),
                 'project_id'                => $projectDataId,
+                'inviter_id'                => $inviterId,
+                'email'                     => $inviteeEmail,
+                'invitee_name'              => $invitee_name,
+                'invite_type'               => $inviteType,
+                'invite_status'             => $inviteStatus,
+                'email_status'              => $emailStatus,
+                'inviter_access_level'      => $accessLevel,
+                'subject_line'              => $subject,
+                'email_body'                => $emailBody,
+            ]);
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function updateParticipatesData($projectDataId, $inviterId, $inviteeEmail, $invitee_name, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody)
+    {
+        try {
+            $participatesData = ProjectMemberManagement::where(['project_id' => $projectDataId, 'email' => $inviteeEmail])->update([
                 'inviter_id'                => $inviterId,
                 'email'                     => $inviteeEmail,
                 'invitee_name'              => $invitee_name,
