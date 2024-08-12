@@ -4,8 +4,14 @@ use App\Http\Controllers\Api\Dashboard\Organization\OrganizationDashboardControl
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language', 'auth:api'])->group(function () {
-    Route::get('/my-organizations', [OrganizationDashboardController::class, 'getMyOrganizations']);
-    Route::get('/my-labs', [OrganizationDashboardController::class, 'getMyLabs']);
+    Route::get('/reports', [OrganizationDashboardController::class, 'getReports']);
+    Route::get('/subscription-details', [OrganizationDashboardController::class, 'subscriptionDetails']);
+    Route::get('/upcoming-challenge-deadlines', [OrganizationDashboardController::class, 'getUpComingChallengeDeadlines']);
+    Route::get('/get-projects-list', [OrganizationDashboardController::class, 'getProjectsList']);
+    Route::get('/inbox-friend-request', [OrganizationDashboardController::class, 'getInboxFriendRequests']);
+    Route::get('/my-recommendations', [OrganizationDashboardController::class, 'getMyRecommendations']);
     Route::get('/my-challenges', [OrganizationDashboardController::class, 'getMyChallenges']);
-    Route::get('/my-projects', [OrganizationDashboardController::class, 'getMyProjects']);
+    Route::get('/my-labs', [OrganizationDashboardController::class, 'getMyLabs']);
+    Route::get('/my-resource-module', [OrganizationDashboardController::class, 'getMyResourceModule']);
+    Route::get('/my-organization', [OrganizationDashboardController::class, 'getMyOrganization']);
 });

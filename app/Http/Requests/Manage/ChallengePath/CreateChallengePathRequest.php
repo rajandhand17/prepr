@@ -26,7 +26,7 @@ class CreateChallengePathRequest extends FormRequest
         $achievement_en_switch = $this->request->get('is_achievement_enabled');
         $base_rules = [
             'status'                  => 'required|in:draft,publish,archive',
-            'title'                   => 'required|unique:challenge_paths,title',
+            'title'                   => 'required|max:255|unique:challenge_paths,title',
             'description'             => 'required',
             'category_id'             => 'required|exists:categories,id',
             'level_id'                => 'required|exists:levels,id',
