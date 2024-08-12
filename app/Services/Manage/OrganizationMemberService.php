@@ -47,12 +47,12 @@ class OrganizationMemberService
                 $existingMembers = OrganizationMember::where('organization_id', $organization_id)
                     ->get(['name', 'position'])
                     ->keyBy(function ($item) {
-                        return $item->name . ':' . $item->position;
+                        return $item->name.':'.$item->position;
                     });
                 // Prepare request members by name and position
                 $requestMembers = [];
                 foreach ($request->organization_members as $value) {
-                    $key = $value['name'] . ':' . $value['position'];
+                    $key = $value['name'].':'.$value['position'];
                     $requestMembers[$key] = $value;
                 }
                 // Determine which existing members are no longer in the request
@@ -77,9 +77,9 @@ class OrganizationMemberService
 
                         $recordsToInsert[] = [
                             'organization_id' => $organization_id,
-                            'name' => $value['name'],
-                            'position' => $value['position'],
-                            'image' => $image
+                            'name'            => $value['name'],
+                            'position'        => $value['position'],
+                            'image'           => $image,
                         ];
                     }
                 }
