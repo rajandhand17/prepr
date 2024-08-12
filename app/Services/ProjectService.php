@@ -121,6 +121,9 @@ class ProjectService
                     case 'creation_date':
                         $project_list = $project_list->orderBy('projects.created_at', 'ASC');
                         break;
+                    case 'relevance' :
+                        $project_list = self::getRelevence(auth()->user(), $project_list);
+                        break;
                     default:
                         $project_list = $project_list->orderBy('projects.id', 'ASC');
                 }
@@ -147,21 +150,14 @@ class ProjectService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status_array = ['pending', 'completed', 'submitted', 'challenge_closed', 'assessment_details_available'];
+                $status_array = ['in_progress', 'submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
                     $projectStatusIds = $project_list->get()->map(function ($projectData) use ($request) {
                         $projectIds = [];
                         switch ($request->status) {
-                            case 'pending':
+                            case 'in_progress':
                                 $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
                                 if ($projectRequirementData === false) {
-                                    $projectIds = $projectData->id;
-                                }
-                                break;
-
-                            case 'completed':
-                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
-                                if ($projectRequirementData === true) {
                                     $projectIds = $projectData->id;
                                 }
                                 break;
@@ -192,6 +188,31 @@ class ProjectService
                     $project_list = $project_list->whereIn('projects.id', $projectStatusIds->filter());
                 }
             }
+
+            return $project_list;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getRelevence($user, $project_list)
+    {
+        try {
+        // Retrieve user skills
+            $userSkills = $user->userSkills->pluck('skill')->toArray(); // Assuming 'skill' is the skill ID
+            $project_list = $project_list->addSelect([
+                'matching_skills_count' => function ($query) use ($userSkills) {
+                    $query->selectRaw('COUNT(*)')
+                        ->from('project_skills')
+                        ->whereColumn('project_skills.project_id', 'projects.id')
+                        ->whereIn('project_skills.skill_id', $userSkills);
+                },
+            ]);
+
+            // Order by the matching skills count in descending order
+            $project_list = $project_list->orderByDesc('matching_skills_count');
 
             return $project_list;
         } catch (Exception $e) {
@@ -442,23 +463,29 @@ class ProjectService
 
                         switch ($check_achievement_condition->id) {
                             case '1':
+                                $type = 'pitch';
                                 $requirementStatus = ProjectPitchService::checkProjectPitch($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
                             case '2':
+                                $type = 'task';
                                 $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
                                 break;
                             case '3':
+                                $type = 'links';
                                 $requirementStatus = ProjectExternalLinksService::checkProjectExternalLink($projectData->id);
                                 break;
                             case '4':
+                                $type = 'gallery';
                                 $requirementStatus = ProjectFileService::checkProjectGallery($projectData->id);
                                 break;
                             case '5':
+                                $type = 'file';
                                 $requirementStatus = ProjectFileService::checkProjectFile($projectData->id);
                                 break;
                         }
                         $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
                         $projectState = [
+                            'type'              => $type,
                             'status'            => $projectStatus,
                             'Requirement Title' => $check_achievement_condition->title,
                         ];

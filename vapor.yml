@@ -15,8 +15,9 @@ environments:
     #   - chat
     timeout: 600
     cli-timeout: 900
+    # gateway-version: 2
     build:
-      - "composer install --ignore-platform-reqs"
+      - "composer install"
       - "php artisan event:cache"
     firewall:
       rate-limit: 1000
