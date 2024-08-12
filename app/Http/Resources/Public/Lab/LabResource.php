@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\Lab;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
