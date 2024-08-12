@@ -1,5 +1,8 @@
+# Make sure to keep this file organised when adding to it.
+
+# Miscellaneous / build related folders
 /node_modules
-#/public/build
+# /public/build
 /public/hot
 /public/storage
 /storage/*.key
@@ -15,6 +18,7 @@
 .env.demo
 .env.testing
 
+# Miscellaneous files
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
@@ -22,11 +26,6 @@ auth.json
 sendgrid.env
 ddev
 .ddev
-.env.testing
-/docker-compose-local.yml
-/docker
-/sql
-.DS_Store
 
 # Local composer executable
 composer
@@ -35,7 +34,7 @@ composer.phar
 # Mac OS specific files
 .DS_Store
 
-# Docker specific files
+# Docker specific files (keep these commented out)
 # /docker-compose-local.yml
 # /docker
 
