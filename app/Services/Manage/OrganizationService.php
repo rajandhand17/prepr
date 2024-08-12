@@ -99,7 +99,9 @@ class OrganizationService
             }
             if($request->has('request') && $request->get('request')){
                 $getOrganizationIds=MemberManagementService::getOrganizationIds(auth()->user()->email,$request->get('request'));
-                $organization_list=$organization_list->whereIn('id',$getOrganizationIds);
+                if($getOrganizationIds){
+                    $organization_list=$organization_list->whereIn('id',$getOrganizationIds);
+                }
             }
             return $organization_list;
         } catch (\Exception $e) {
