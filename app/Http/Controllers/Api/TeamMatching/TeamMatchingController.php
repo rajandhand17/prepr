@@ -94,7 +94,6 @@ class TeamMatchingController extends AppBaseController
 
             return $this->sendError(__('responses.send_request_failed'), 403);
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
