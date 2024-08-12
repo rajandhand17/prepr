@@ -73,6 +73,9 @@ class OrganizationController extends AppBaseController
             if (!auth()->user()->isAbleTo('view_organization')) {
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
+            if(!in_array($request->owner,['all', 'my' , 'invited'])){
+                return $this->sendError(__('responses.owner_required'), 403);
+            }
             $organization = $this->organizationRepository->getOrganizationList($request);
             if ($organization !== false) {
                 $response = [
