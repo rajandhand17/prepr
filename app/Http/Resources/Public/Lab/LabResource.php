@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources\Public\Lab;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
@@ -22,6 +22,7 @@ use App\Services\SkillService;
 use App\Services\SkillStackService;
 use App\Services\TagGroupService;
 use App\Services\TagService;
+use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LabResource extends JsonResource
@@ -59,7 +60,6 @@ class LabResource extends JsonResource
             $category_id = $this->getCategory->id;
             $category = $this->getCategory->title;
         }
-
         if ($this->durations) {
             $duration = $this->durations->title;
             $duration_id = $this->durations->id;
@@ -199,26 +199,6 @@ class LabResource extends JsonResource
             }
         }
 
-        $type = 'na';
-
-        switch ($this->type) {
-            case '0':
-                $type = 'assess';
-                break;
-            case '1':
-                $type = 'onboard';
-                break;
-            case '2':
-                $type = 'engage';
-                break;
-            case '3':
-                $type = 'grow';
-                break;
-            default:
-                $type = 'na';
-                break;
-        }
-
         if (auth('api')->check()) {
             $module_status = 'not_started';
             $module_progress = [
@@ -244,10 +224,20 @@ class LabResource extends JsonResource
                 ];
             }
         }
+        $created_by = [];
+        if (!empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['uuid'] = $userDetails->uuid;
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
 
         return [
             'id'                            => $this->uuid,
-            'type'                          => $type,
+            'type'                          => LabTypeResource::make($this->labType()),
+            'created_by'                    => $created_by,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),
             'title'                         => $this->title,
@@ -256,6 +246,7 @@ class LabResource extends JsonResource
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                    => $this->media_type,
             'media'                         => $media,
+            'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
             'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
@@ -295,7 +286,7 @@ class LabResource extends JsonResource
             'resource_module'               => $resource_modules,
             'resource_collection'           => $resource_collections,
             'resource_group'                => $resource_groups,
-            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                  => $this->updated_at,
         ];
     }
 }

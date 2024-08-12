@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\ResourceCollection;
 
+use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceModuleService;
@@ -180,6 +181,7 @@ class ResourceCollectionResource extends JsonResource
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,
+            'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'privacy'                       => $privacy,
             'status'                        => $status,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',

@@ -266,4 +266,46 @@ class ResourceModuleService
             return false;
         }
     }
+
+    public function getComponentBasedResourceModuleList($request, $organizationId)
+    {
+        try {
+            $resourceModule = ResourceModule::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
+            return $resourceModule->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleAssociation($request, $fetchResourceModuleAssociation)
+    {
+        try {
+            $resourceModule = ResourceModule::whereIn('id', $fetchResourceModuleAssociation)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
+            return $resourceModule->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedResourceModules($resourceModuleIds)
+    {
+        try {
+            // Retrieve resource module with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceModules = ResourceModule::findMany($resourceModuleIds)->slice(0, 2);
+
+            return $resourceModules;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

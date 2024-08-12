@@ -320,12 +320,12 @@ class FriendService
         }
     }
 
-    public function userDashboardFriendList($userData)
+    public function dashboardFriendList($userData)
     {
         try {
-            $userDashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->get();
+            $dashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->get();
 
-            return $userDashboardFriendList;
+            return $dashboardFriendList;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
