@@ -21,20 +21,20 @@ class AutoCreateTemplatesService
             $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=>$getRoleType, 'user_type'=>'4'])->pluck($request->plucked);
             switch ($request->plucked) {
                 case 'lab_template_id':
-                $model = LabMarketplace::class;
-                break;
+                    $model = LabMarketplace::class;
+                    break;
                 case 'challenge_template_id':
-                $model = ChallengeTemplate::class;
-                break;
+                    $model = ChallengeTemplate::class;
+                    break;
                 case 'project_id':
-                $model = Project::class;
-                break;
+                    $model = Project::class;
+                    break;
                 case 'lab_program_id':
-                $model = LabProgram::class;
-                break;
+                    $model = LabProgram::class;
+                    break;
                 case 'challenge_path_id':
-                $model = ChallengePath::class;
-                break;
+                    $model = ChallengePath::class;
+                    break;
                 default:
                     $model = '';
                     break;
@@ -72,11 +72,11 @@ class AutoCreateTemplatesService
                     $module = LabProgram::class;
                     break;
                 case 'challenge_template':
-                $module = ChallengeTemplate::class;
-                break;
+                    $module = ChallengeTemplate::class;
+                    break;
                 case 'challenge_path':
-                $module = ChallengePath::class;
-                break;
+                    $module = ChallengePath::class;
+                    break;
             }
             $searched = $request->search;
             $modules = $module::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
