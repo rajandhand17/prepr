@@ -92,4 +92,15 @@ class LabMarketplaceService
             return false;
         }
     }
+
+
+    public static function getList($getPreSelectedLabTemplates,$language)
+    {
+        try {
+            return LabMarketplace::whereIn('id', $getPreSelectedLabTemplates)->where('privacy', '0')->where('language', $language)->orderBy('id', 'DESC')->pluck('title', 'id');
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }

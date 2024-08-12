@@ -10,6 +10,11 @@ use App\Models\LabMarketplace;
 use App\Models\LabProgram;
 use App\Models\Project;
 use App\Models\Role;
+use App\Services\Maestro\ChallengePathService;
+use App\Services\Maestro\ChallengeTemplateService;
+use App\Services\Maestro\LabMarketplaceService;
+use App\Services\Maestro\LabProgramService;
+use App\Services\Maestro\ProjectService;
 use Exception;
 
 class AutoCreateTemplatesService
@@ -22,27 +27,26 @@ class AutoCreateTemplatesService
             $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=>$getRoleType, 'user_type'=>'4'])->pluck($request->plucked);
             switch ($request->plucked) {
                 case 'lab_template_id':
-                    $model = LabMarketplace::class;
+                    $getList=LabMarketplaceService::getList($getPreSelectedLabTemplates,$request->language);
                     break;
                 case 'challenge_template_id':
-                    $model = ChallengeTemplate::class;
+                    $getList=ChallengeTemplateService::getList($getPreSelectedLabTemplates,$request->language);
                     break;
                 case 'project_id':
-                    $model = Project::class;
+                    $getList=ProjectService::getList($getPreSelectedLabTemplates,$request->language);
                     break;
                 case 'lab_program_id':
-                    $model = LabProgram::class;
+                    $getList=LabProgramService::getList($getPreSelectedLabTemplates,$request->language);
                     break;
                 case 'challenge_path_id':
-                    $model = ChallengePath::class;
+                    $getList=ChallengePathService::getList($getPreSelectedLabTemplates,$request->language);
                     break;
                 default:
-                    $model = '';
+                    $getList = '';
                     break;
             }
-            if ($model !== '') {
+            if ($getList !== '') {
                 $request->language = 'en';
-                $getList = $model::whereIn('id', $getPreSelectedLabTemplates)->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id');
                 $count = 0;
                 $data = [];
                 $labsr = [];

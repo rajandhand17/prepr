@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\ChallengeTemplate;
 use App\Models\ComponentAssociation;
+use App\Models\LabMarketplace;
 use App\Models\LabMarketplaceComponentAssociations;
 use Exception;
 
@@ -130,6 +131,16 @@ class ChallengeTemplateService
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public static function getList($getPreSelectedLabTemplates,$language)
+    {
+        try {
+            return ChallengeTemplate::whereIn('id', $getPreSelectedLabTemplates)->where('privacy', '0')->where('language', $language)->orderBy('id', 'DESC')->pluck('title', 'id');
+        }catch (Exception $e){
+            UtilityHelper::logError($e);
             return false;
         }
     }
