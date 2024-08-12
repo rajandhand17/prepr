@@ -5,7 +5,6 @@ namespace App\Services\Public;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Services\Manage\ChargebeeSubscriptionService;
-use App\Services\Public\MemberManagementService;
 use Exception;
 
 class OrganizationService
@@ -106,6 +105,7 @@ class OrganizationService
                     $organization_list = $organization_list->whereIn('id', $getOrganizationIds);
                 }
             }
+
             return $organization_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
