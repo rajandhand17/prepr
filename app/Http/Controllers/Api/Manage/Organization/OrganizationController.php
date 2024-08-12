@@ -716,7 +716,6 @@ class OrganizationController extends AppBaseController
     public function plansDetail()
     {
         try {
-
             $planData = ChargebeeHelper::getAllPlanDetailsAndLimits();
             if ($planData) {
                 return $this->sendResponse($planData, __('responses.plan_details_retrived'));

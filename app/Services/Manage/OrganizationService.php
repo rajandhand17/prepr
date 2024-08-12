@@ -605,7 +605,6 @@ class OrganizationService
         }
     }
 
-
     public function organizationOnboarding($organizationId, $request)
     {
         try {
