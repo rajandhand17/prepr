@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Maestro\AutoCreateTemplate;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Traits\Maestro\AutoCreateTemplate\AutoCreateTemplateTrait;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class AutoCreateTemplateController extends Controller
 
             return view('maestro.autocreatetemplate.index', compact('roles'));
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -37,6 +39,7 @@ class AutoCreateTemplateController extends Controller
 
             return redirect()->back()->with(['error' =>'Clone module failed']);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
     }
@@ -51,6 +54,7 @@ class AutoCreateTemplateController extends Controller
 
             return redirect()->back()->with(['error' =>'Module List Not Found']);
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Services\Maestro\AutoCreateTemplates;
 
+use App\Helpers\UtilityHelper;
 use App\Models\AutoCreateTemplate;
 use App\Models\ChallengePath;
 use App\Models\ChallengeTemplate;
@@ -96,6 +97,7 @@ class AutoCreateTemplatesService
 
             return  response()->json($data);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
@@ -142,19 +144,25 @@ class AutoCreateTemplatesService
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
             return false;
         }
     }
 
     public static function getInviteUserInfo($roleSelected, $roleTypeSelected)
     {
-        $data = [];
-        $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $roleSelected, 'role_user_type'=> $roleTypeSelected])->first();
-        if ($getPreSelectedLabTemplates !== null) {
-            $data['invite_labs'] = $getPreSelectedLabTemplates->invite_labs;
-            $data['invite_challenges'] = $getPreSelectedLabTemplates->invite_challenges;
-        }
+        try {
+            $data = [];
+            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $roleSelected, 'role_user_type'=> $roleTypeSelected])->first();
+            if ($getPreSelectedLabTemplates !== null) {
+                $data['invite_labs'] = $getPreSelectedLabTemplates->invite_labs;
+                $data['invite_challenges'] = $getPreSelectedLabTemplates->invite_challenges;
+            }
 
-        return $data;
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
     }
 }
