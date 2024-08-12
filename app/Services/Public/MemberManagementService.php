@@ -152,7 +152,6 @@ class MemberManagementService
         }
     }
 
-
     public static function getOrganizationIds($email, $action)
     {
         try {
