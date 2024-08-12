@@ -652,4 +652,31 @@ class OrganizationService
             return false;
         }
     }
+
+    public function fetchOwnOrganizationIds($userId)
+    {
+        try {
+            $fetchOwnOrganizationIds = Organization::where('user_id', $userId)->pluck('id');
+
+            return $fetchOwnOrganizationIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchOrganizations($request, $fetchOrganizationIds)
+    {
+        try {
+            $fetchOrganizations = Organization::whereIn('id', $fetchOrganizationIds);
+            $organization_list = self::filterOrganizationList($request, $fetchOrganizations);
+
+            return $organization_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

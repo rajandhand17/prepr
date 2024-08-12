@@ -176,6 +176,9 @@ class MemberManagementService
                 case 'project':
                     $module_type = config('constants.email_template_module_type.project');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.email_template_module_type.lab_program');
+                    break;
                 default:
                     $module_type = null;
                     break;
@@ -988,6 +991,19 @@ class MemberManagementService
             $totalMembersBasedOnModule = MemberManagement::where(['module_type' => $moduleType, 'invite_status' => '1'])->get();
 
             return $totalMembersBasedOnModule;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchMemberOrganizationIds($userEmail, $role, $inviteStatus)
+    {
+        try {
+            $fetchMemberOrganizationIds = MemberManagement::where(['email' => $userEmail, 'role' => $role, 'invite_status' => $inviteStatus])->pluck('module_id');
+
+            return $fetchMemberOrganizationIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
