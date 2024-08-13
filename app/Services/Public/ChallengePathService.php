@@ -135,4 +135,46 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function getComponentBasedChallengePathList($request, $organizationId)
+    {
+        try {
+            $challengePathList = ChallengePath::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengePathAssociation($request, $fetchChallengePathIdsAssociatedLabId)
+    {
+        try {
+            $challengePathList = ChallengePath::whereIn('id', $fetchChallengePathIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $challengePathList = self::filterChallengePathList($request, $challengePathList);
+
+            return $challengePathList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedChallengePaths($challengePathIds)
+    {
+        try {
+            // Retrieve challenge path with the given IDs using findMany for primary keys and limiting by 2 values
+            $challengePaths = ChallengePath::findMany($challengePathIds)->slice(0, 2);
+
+            return $challengePaths;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

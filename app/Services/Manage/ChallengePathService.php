@@ -409,6 +409,22 @@ class ChallengePathService
         }
     }
 
+    public static function getChallengePathIdBasedOnIds($ids)
+    {
+        try {
+            $challengePath = ChallengePath::whereIn('id', $ids)->pluck('id')->all();
+            if ($challengePath != null) {
+                return $challengePath;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getChallengePathBasedOnUUIDArray($challengePathUUIDArray)
     {
         try {
@@ -475,6 +491,17 @@ class ChallengePathService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnSlug($slug)
+    {
+        try {
+            return ChallengePath::where(['slug' => $slug, 'is_accessible' => '1'])->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

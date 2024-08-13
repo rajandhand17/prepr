@@ -35,7 +35,6 @@ class ResourceGroupResource extends JsonResource
         $organization_id = null;
         $category = null;
         $category_id = null;
-
         if ($this->getDuration) {
             $duration = $this->getDuration->title;
             $duration_id = $this->getDuration->id;
@@ -51,6 +50,10 @@ class ResourceGroupResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+        }
+        if ($this->getCategory) {
+            $category = $this->getCategory->title;
+            $category_id = $this->getCategory->id;
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');

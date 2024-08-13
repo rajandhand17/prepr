@@ -1,0 +1,88 @@
+services:
+  app:
+    build:
+      context: ./docker/8.2
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: '${WWWGROUP}'
+    container_name: prep_lab_latest
+    working_dir: /var/www/html
+    restart: unless-stopped
+    environment:
+      WWWUSER: '${WWWUSER}'
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+      XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - redis_pl_latest
+    networks:
+      - PREPLAB_APP_LATEST
+    ports:
+      - '8080:80'
+
+  redis_pl_latest:
+    image: redis:6.2-alpine
+    container_name: 'redis_6.2_pl_latest'
+    restart: always
+    ports:
+      - '6378:6378'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD} --port 6378
+    networks:
+      - PREPLAB_APP_LATEST
+    volumes:
+      - ~/docker/${APP_NAME}/redis:/data
+
+  mysql_prep_latest:
+    image: 'mysql:8'
+    container_name: 'mysql_prep_latest'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'preprlab_latest'
+    ports:
+      - '3307:3307'
+    command: -P 3307
+    volumes:
+      - ~/docker/${APP_NAME}/mysql:/var/lib/mysql
+      - ./sql:/sql
+    restart: always
+    networks:
+      - PREPLAB_APP_LATEST
+
+  solr_prepr:
+    image: solr:9.4.0
+    container_name: solr_prepr
+    ports:
+      - "8981:8983"
+    environment:
+      - ZK_HOST=zoo_prepr:2181
+    volumes:
+      - 'solr_prepr:/var/solr'
+    networks:
+      - PREPLAB_APP_LATEST
+    depends_on:
+      - zoo_prepr
+
+  zoo_prepr:
+    tty: true
+    image: zookeeper:3.7.2
+    container_name: zoo_prepr
+    restart: always
+    hostname: zoo_prepr
+    ports:
+      - 2181:2181
+      - 7001:7000
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo_prepr:2888:3888;2181
+      ZOO_4LW_COMMANDS_WHITELIST: mntr, conf, ruok
+      ZOO_CFG_EXTRA: "metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider metricsProvider.httpPort=7000 metricsProvider.exportJvmInfo=true"
+    networks:
+      - PREPLAB_APP_LATEST
+networks:
+  PREPLAB_APP_LATEST:
+    driver: bridge
+
+volumes:
+  solr_prepr:

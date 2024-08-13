@@ -1186,4 +1186,238 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public static function fetchChallengeIdsAssociatedLabId($componentId)
+    {
+        try {
+            $fetchChallengeIdsBasedOnLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengeIdsBasedOnLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeIdsAssociatedResourceCollectionId($resourceCollectionId)
+    {
+        try {
+            $fetchChallengeIdsAssociatedResourceCollectionId = ComponentAssociation::where('resource_collection_id', $resourceCollectionId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengeIdsAssociatedResourceCollectionId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengePathIdsAssociatedLabId($componentId)
+    {
+        try {
+            $fetchChallengePathIdsAssociatedLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_path_id')->pluck('challenge_path_id');
+
+            return $fetchChallengePathIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchChallengeIdsAssociatedChallengePathId($challengePathId)
+    {
+        try {
+            $fetchChallengeIdsAssociatedChallengePathId = ComponentAssociation::where('challenge_path_id', $challengePathId)->whereNotNull('challenge_id')->pluck('challenge_id');
+
+            return $fetchChallengeIdsAssociatedChallengePathId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceModuleIdsAssociatedLabId($labId)
+    {
+        try {
+            $fetchResourceModulePathIdsBasedOnLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModulePathIdsBasedOnLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceModuleIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModuleIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleIdsAssociatedResourceGroupId($resourceGroupId)
+    {
+        try {
+            $fetchResourceModuleIdsAssociatedResourceGroupId = ComponentAssociation::where('resource_group_id', $resourceGroupId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModuleIdsAssociatedResourceGroupId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleIdsAssociatedResourceCollectionId($resourceCollectionId)
+    {
+        try {
+            $fetchResourceModuleIdsAssociatedResourceCollectionId = ComponentAssociation::where('resource_collection_id', $resourceCollectionId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModuleIdsAssociatedResourceCollectionId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceCollectionIdsAssociatedLabId($labId)
+    {
+        try {
+            $fetchResourceCollectionIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
+
+            return $fetchResourceCollectionIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceCollectionIdsAssociatedResourceGroupId($resourceGroupId)
+    {
+        try {
+            $fetchResourceCollectionIdsAssociatedResourceGroupId = ComponentAssociation::where('resource_group_id', $resourceGroupId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
+
+            return $fetchResourceCollectionIdsAssociatedResourceGroupId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceCollectionIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceCollectionIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
+
+            return $fetchResourceCollectionIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchLabIdsAssociatedLabProgramId($labProgramId)
+    {
+        try {
+            $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('lab_program_id', $labProgramId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedLabProgramId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabIdsAssociatedResourceCollectionId($resourceCollectionId)
+    {
+        try {
+            $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('resource_collection_id', $resourceCollectionId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedLabProgramId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchResourceGroupIdsAssociatedLabId($labId)
+    {
+        try {
+            $fetchResourceGroupIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
+
+            return $fetchResourceGroupIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceGroupIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
+
+            return $fetchResourceGroupIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramIdsAssociatedLabId($labId)
+    {
+        try {
+            $fetchLabProgramIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('lab_program_id')->pluck('lab_program_id');
+
+            return $fetchLabProgramIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabProgramIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_program_id')->pluck('lab_program_id');
+
+            return $fetchLabProgramIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

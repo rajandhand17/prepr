@@ -9,14 +9,16 @@ environments:
     storage: learnlab-serverless-beta
     warm: 4
     concurrency: 50
+    balancer: Learnlab-Serverless-Beta
     # queue-timeout: 10
     queues: false
     #   - default
     #   - chat
     timeout: 600
     cli-timeout: 900
+    # gateway-version: 2
     build:
-      - "composer install --ignore-platform-reqs"
+      - "composer install"
       - "php artisan event:cache"
     firewall:
       rate-limit: 1000

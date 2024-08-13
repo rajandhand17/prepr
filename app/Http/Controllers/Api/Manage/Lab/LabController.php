@@ -122,21 +122,29 @@ class LabController extends AppBaseController
                 }
             }
             $upload_cover_image = config('site-settings.default_lab_cover_image');
-            $upload_achievement_image = null;
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if (!$uploaded_cover_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
 
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if (!$uploaded_achievement_image) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if (!$uploaded_achievement_image) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
 
             $createdLab = $this->labRepository->createLab($request, $upload_cover_image, $upload_achievement_image, $organization);
@@ -173,21 +181,28 @@ class LabController extends AppBaseController
                 return $this->sendError(__('responses.lab_not_accessible'), 403);
             }
             $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkComponentBasedOnSlug->media);
-            $upload_achievement_image = null;
-
             if ($request->cover_image !== null) {
-                $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                if ($uploaded_cover_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->media_type == 'image') {
+                    if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
+                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$uploaded_cover_image) {
+                            return $this->sendError(__('responses.image_upload_failed'), 400);
+                        }
+                    }
+                } elseif ($request->media_type == 'embedded') {
+                    $uploaded_cover_image = $request->cover_image;
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
+            $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {
-                $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
-                if ($uploaded_achievement_image == false) {
-                    return $this->sendError(__('responses.image_upload_failed'), 400);
+                if ($request->hasFile('achievement_image') && $request->file('achievement_image')->isValid()) {
+                    $uploaded_achievement_image = $this->labAcheivementRepository->uploadAcheivementImage($request->achievement_image);
+                    if ($uploaded_achievement_image == false) {
+                        return $this->sendError(__('responses.image_upload_failed'), 400);
+                    }
+                    $upload_achievement_image = $uploaded_achievement_image;
                 }
-                $upload_achievement_image = $uploaded_achievement_image;
             }
             $updateLab = $this->labRepository->updateLab($slug, $request, $upload_cover_image, $upload_achievement_image, $organization);
             if ($updateLab != false) {
@@ -349,6 +364,28 @@ class LabController extends AppBaseController
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
 
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createFeaturedLab($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_exists'), 404);
+            }
+            $checkLabIsFeaturedOrNot = $this->labRepository->getFeaturedLabBasedOnId($checkComponentBasedOnSlug->id);
+            if ($checkLabIsFeaturedOrNot) {
+                return $this->sendError(__('responses.already_featured_lab'), 400);
+            }
+            $createFeaturedLab = $this->labRepository->createFeaturedLab($checkComponentBasedOnSlug);
+            if ($createFeaturedLab) {
+                return $this->sendResponse([], __('responses.feature_lab_created_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.feature_lab_created_failed'), 400);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

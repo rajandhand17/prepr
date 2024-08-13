@@ -83,6 +83,7 @@ class ResourceGroupService
             $resourceGroup->language = $request->language;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = $request->category_id;
             $resourceGroup->title = $request->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->description = $request->description;
@@ -196,6 +197,7 @@ class ResourceGroupService
             }
             $resourceGroup->language = ($request->has('language')) ? $request->language : $resourceGroup->language;
             $resourceGroup->organization_id = $organizationId;
+            $resourceGroup->category_id = ($request->has('category_id')) ? $request->category_id : $resourceGroup->category_id;
             $resourceGroup->title = ($request->has('title')) ? $request->title : $resourceGroup->title;
             $resourceGroup->description = ($request->has('description')) ? $request->description : $resourceGroup->description;
             $resourceGroup->media_type = ($request->has('media_type')) ? $media_type : $resourceGroup->media_type;
@@ -367,6 +369,22 @@ class ResourceGroupService
     {
         try {
             $resourceGroupIds = ResourceGroup::whereIn('uuid', $resourceGroupUUIDArray)->pluck('id')->all();
+            if ($resourceGroupIds != null) {
+                return $resourceGroupIds;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getResourceGroupBasedOnIdArray($resourceGroupIdArray)
+    {
+        try {
+            $resourceGroupIds = ResourceGroup::whereIn('id', $resourceGroupIdArray)->pluck('id')->all();
             if ($resourceGroupIds != null) {
                 return $resourceGroupIds;
             }
