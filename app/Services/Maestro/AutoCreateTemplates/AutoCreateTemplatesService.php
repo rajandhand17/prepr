@@ -4,11 +4,6 @@ namespace App\Services\Maestro\AutoCreateTemplates;
 
 use App\Helpers\UtilityHelper;
 use App\Models\AutoCreateTemplate;
-use App\Models\ChallengePath;
-use App\Models\ChallengeTemplate;
-use App\Models\LabMarketplace;
-use App\Models\LabProgram;
-use App\Models\Project;
 use App\Models\Role;
 use App\Services\Maestro\ChallengePathService;
 use App\Services\Maestro\ChallengeTemplateService;
@@ -27,19 +22,19 @@ class AutoCreateTemplatesService
             $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=>$getRoleType, 'user_type'=>'4'])->pluck($request->plucked);
             switch ($request->plucked) {
                 case 'lab_template_id':
-                    $getList=LabMarketplaceService::getList($getPreSelectedLabTemplates,$request->language);
+                    $getList = LabMarketplaceService::getList($getPreSelectedLabTemplates, $request->language);
                     break;
                 case 'challenge_template_id':
-                    $getList=ChallengeTemplateService::getList($getPreSelectedLabTemplates,$request->language);
+                    $getList = ChallengeTemplateService::getList($getPreSelectedLabTemplates, $request->language);
                     break;
                 case 'project_id':
-                    $getList=ProjectService::getList($getPreSelectedLabTemplates,$request->language);
+                    $getList = ProjectService::getList($getPreSelectedLabTemplates, $request->language);
                     break;
                 case 'lab_program_id':
-                    $getList=LabProgramService::getList($getPreSelectedLabTemplates,$request->language);
+                    $getList = LabProgramService::getList($getPreSelectedLabTemplates, $request->language);
                     break;
                 case 'challenge_path_id':
-                    $getList=ChallengePathService::getList($getPreSelectedLabTemplates,$request->language);
+                    $getList = ChallengePathService::getList($getPreSelectedLabTemplates, $request->language);
                     break;
                 default:
                     $getList = '';
@@ -69,20 +64,20 @@ class AutoCreateTemplatesService
     public static function fetchModuleList($request)
     {
         try {
-            $modules=[];
+            $modules = [];
             $data = [];
             switch ($request->module) {
                 case 'lab_template':
-                    $modules=LabMarketplaceService::getLabMarketplaceList($request);
+                    $modules = LabMarketplaceService::getLabMarketplaceList($request);
                     break;
                 case 'lab_program':
-                    $modules=LabProgramService::getLabProgramList($request);
+                    $modules = LabProgramService::getLabProgramList($request);
                     break;
                 case 'challenge_template':
-                    $modules=ChallengeTemplateService::getChallengesTemplateList($request);
+                    $modules = ChallengeTemplateService::getChallengesTemplateList($request);
                     break;
                 case 'challenge_path':
-                    $modules=ChallengePathService::getChallengePathList($request);
+                    $modules = ChallengePathService::getChallengePathList($request);
                     break;
             }
 
@@ -98,6 +93,7 @@ class AutoCreateTemplatesService
             return  response()->json($data);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -145,6 +141,7 @@ class AutoCreateTemplatesService
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -162,6 +159,7 @@ class AutoCreateTemplatesService
             return $data;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

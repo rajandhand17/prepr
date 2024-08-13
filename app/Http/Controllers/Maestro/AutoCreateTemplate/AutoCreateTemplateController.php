@@ -25,6 +25,7 @@ class AutoCreateTemplateController extends Controller
             return view('maestro.autocreatetemplate.index', compact('roles'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' => $e->getMessage()]);
         }
     }
@@ -40,6 +41,7 @@ class AutoCreateTemplateController extends Controller
             return redirect()->back()->with(['error' =>'Clone module failed']);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
     }
@@ -55,6 +57,7 @@ class AutoCreateTemplateController extends Controller
             return redirect()->back()->with(['error' =>'Module List Not Found']);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
     }
