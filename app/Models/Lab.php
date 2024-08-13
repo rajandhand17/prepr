@@ -206,27 +206,32 @@ class Lab extends Model
 
     public function lab_challenge_association()
     {
-        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_id', '!=', null)->whereNull('deleted_at');
     }
 
     public function lab_challenge_path_association()
     {
-        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_path_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_path_id', '!=', null)->whereNull('deleted_at');
     }
 
     public function lab_resource_module_association()
     {
-        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_module_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_module_id', '!=', null)->whereNull('deleted_at');
     }
 
     public function lab_resource_collection_association()
     {
-        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_collection_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_collection_id', '!=', null)->whereNull('deleted_at');
     }
 
     public function lab_resource_group_association()
     {
-        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_group_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_group_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_lab_program_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('lab_program_id', '!=', null)->whereNull('deleted_at');
     }
 
     public function lab_completion_status()
