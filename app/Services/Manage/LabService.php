@@ -691,7 +691,13 @@ class LabService
     public function cloneLab($lab)
     {
         try {
-            $lab=$lab->
+            $cloneLab = $lab->replicate();
+            $cloneLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $cloneLab->organization_id = $organizationId;
+            $cloneLab->user_id = auth()->user()->id;
+            $cloneLab->save();
+
+            return $cloneLab;
         }catch (Exception $e) {
             UtilityHelper::logError($e);
             return false;
