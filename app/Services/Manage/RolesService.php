@@ -45,4 +45,15 @@ class RolesService
             return false;
         }
     }
+
+    public static function getAllRoles()
+    {
+        try {
+            return Role::where('role_type', '1')->get();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
