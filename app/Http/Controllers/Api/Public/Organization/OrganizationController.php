@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Organization;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Public\Organization\OrganizationDetailResource;
@@ -55,6 +56,21 @@ class OrganizationController extends AppBaseController
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function plansDetail()
+    {
+        try {
+            $planData = ChargebeeHelper::getAllPlanDetailsAndLimits();
+            if ($planData) {
+                return $this->sendResponse($planData, __('responses.plan_details_retrived'));
+            }
+
+            return $this->sendError(__('responses.plan_not_retrived'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

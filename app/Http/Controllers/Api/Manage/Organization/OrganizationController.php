@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
-use App\Helpers\ChargebeeHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -703,23 +702,6 @@ class OrganizationController extends AppBaseController
             $planData = $this->organizationRepository->planData($organizationDetail);
             if ($planData) {
                 return $this->sendResponse(OrganizationChargebeeLimitResource::make($organizationDetail), __('responses.plan_details_retrived'));
-            }
-
-            return $this->sendError(__('responses.plan_not_retrived'), 400);
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return $this->sendError(__('responses.send_error'), 500);
-        }
-    }
-
-    public function plansDetail()
-    {
-        try {
-
-            $planData = ChargebeeHelper::getAllPlanDetailsAndLimits();
-            if ($planData) {
-                return $this->sendResponse($planData, __('responses.plan_details_retrived'));
             }
 
             return $this->sendError(__('responses.plan_not_retrived'), 400);
