@@ -20,16 +20,16 @@ environments:
     build:
       - "composer install"
       - "php artisan event:cache"
-    firewall:
-      rate-limit: 1000
-      bot-control:
-      #     - CategorySearchEngine
-      #     - CategorySocialMedia
-          - CategoryScrapingFramework
-          - CategoryAdvertising
-          - CategoryArchiver
-      #     - SignalNonBrowserUserAgent
-      #     - CategoryHttpLibrary
-          - CategoryLinkChecker
-      #     - CategoryMiscellaneous
-          - SignalKnownBotDataCenter
+    # firewall:
+    #   rate-limit: 1000
+    #   bot-control:
+    #   #     - CategorySearchEngine
+    #   #     - CategorySocialMedia
+    #       - CategoryScrapingFramework
+    #       - CategoryAdvertising
+    #       - CategoryArchiver
+    #   #     - SignalNonBrowserUserAgent
+    #   #     - CategoryHttpLibrary
+    #       - CategoryLinkChecker
+    #   #     - CategoryMiscellaneous
+    #       - SignalKnownBotDataCenter
