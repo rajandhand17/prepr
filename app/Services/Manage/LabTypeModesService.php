@@ -81,4 +81,20 @@ class LabTypeModesService
             return false;
         }
     }
+
+    public static function cloneLabTypeModes($originalLabTypeMode,$newLabId){
+        try {
+            $originalLabTypeMode->each(function ($lab_type_mode) use ($newLabId) {
+                if ($lab_type_mode) {
+                    $cloneLabAssociation = $lab_type_mode->replicate();
+                    $cloneLabAssociation->lab_id = $newLabId;
+                    $cloneLabAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

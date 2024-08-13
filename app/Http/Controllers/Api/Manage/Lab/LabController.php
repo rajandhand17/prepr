@@ -176,7 +176,7 @@ class LabController extends AppBaseController
             if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
                 return $this->sendError(__('responses.lab_switcher_error'), 403);
             }
-            // checks creation limits of the Challenge
+            // Checks creation limits of the Labs
             $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
             if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
                 $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($organization->id);

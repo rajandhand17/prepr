@@ -115,6 +115,7 @@ class LabRepository implements LabInterface
                 $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
                 $createdLabAchievement =$this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
                 $createComponentAssociations=$this->componentAssociationService->cloneComponentAssociation($originalLab->component_association,$newLab->id);
+                $labTypeModes = $this->labTypeModesService->cloneLabTypeModes($originalLab->lab_type_mode, $newLab->id);
 
                 return [
                     'lab'                          => $newLab,
@@ -124,11 +125,18 @@ class LabRepository implements LabInterface
                     'lab_external_links'           => $labExternalLinks,
                     'lab_achievement'              => $createdLabAchievement,
                     'component_association'        => $createComponentAssociations,
+                    'lab_type_modes'               => $labTypeModes,
                 ];
             });
             // Checking all the tables records inserted successfully
-            if ($createdLab['lab'] && $createdLab['lab_address'] && $createdLab['lab_sKills_group_stack']
-                && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement'] && $createdLab['component_association']){
+            if ($createdLab['lab'] && $createdLab['lab_address']
+                && $createdLab['lab_sKills_group_stack']
+                && $createdLab['lab_tag_group_stack']
+                && $createdLab['lab_external_links']
+                && $createdLab['lab_achievement']
+                && $createdLab['component_association']
+                && $createdLab['lab_type_modes']
+            ){
                 DB::commit();
                 // Returning new created table details
                 return $createdLab['lab'];
@@ -137,7 +145,6 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             return false;
         }

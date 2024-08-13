@@ -170,7 +170,7 @@ class Lab extends Model
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
 
-    public function lab_type()
+    public function lab_type_mode()
     {
         return $this->hasMany(LabTypeModes::class, 'lab_id', 'id');
     }
