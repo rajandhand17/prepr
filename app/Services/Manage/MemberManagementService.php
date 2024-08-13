@@ -43,6 +43,12 @@ class MemberManagementService
                         'module_type' => $module_type,
                     ]);
                     break;
+                case 'challenge-path':
+                    $componentCollectionObject->load('challenges');
+                    $challengeIds = $componentCollectionObject->challenges?->pluck('challenge_id');
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $memberListCollection = $memberListCollection->where('module_type', $module_type)->whereIn('module_id', $challengeIds);
+                    break;
                 default:
                     $module_type = null;
                     $memberListCollection = null;
@@ -171,6 +177,9 @@ class MemberManagementService
                     $module_type = config('constants.email_template_module_type.lab');
                     break;
                 case 'challenge':
+                    $module_type = config('constants.email_template_module_type.challenge');
+                    break;
+                case 'challenge-path':
                     $module_type = config('constants.email_template_module_type.challenge');
                     break;
                 case 'project':
