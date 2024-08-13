@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\Labs\DeleteLabAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Challenge;
 use App\Models\Lab;
 use App\Models\LabChallengeRedeem;
 use Exception;
@@ -677,27 +678,29 @@ class LabService
         }
     }
 
-    public static function getLabBasedOnSlugWithRelations($slug)
+    public static function getLabBasedOnSlugWithRelations($labId)
     {
         try {
-            return Lab::with('address','skills','external_links','component_associations','lab_type')
-                ->where('slug', $slug)->first();
+            return Lab::with(['address','skills','external_links','component_associations','lab_type'])->find($labId);
         }catch (Exception $e) {
             UtilityHelper::logError($e);
             return false;
         }
     }
 
-    public function cloneLab($lab)
+    public function cloneLab($labId, $organization)
     {
         try {
-            $cloneLab = $lab->replicate();
-            $cloneLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $cloneLab->organization_id = $organizationId;
-            $cloneLab->user_id = auth()->user()->id;
-            $cloneLab->save();
-
-            return $cloneLab;
+            $originalLab=Lab::find($labId);
+            $model = new Lab();
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalLab->title, $model);
+            $clonedLab = $originalLab->replicate();
+            $clonedLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $clonedLab->user_id = auth()->user()->id;
+            $clonedLab->organization_id = $organization->id;
+            $clonedLab->slug = $slug;
+            $clonedLab->save();
+            return $clonedLab;
         }catch (Exception $e) {
             UtilityHelper::logError($e);
             return false;

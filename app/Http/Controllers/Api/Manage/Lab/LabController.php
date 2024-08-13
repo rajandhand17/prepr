@@ -164,11 +164,27 @@ class LabController extends AppBaseController
     public function cloneLab($slug)
     {
         try {
-            $checkLab = $this->labRepository->getLabBasedOnSlug($slug);
-            if (!$checkLab) {
+            $checkComponentBasedOnSlug = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.lab_slug_not_found'), 404);
             }
-            $cloneLab=$this->labRepository->cloneLab($slug);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
+            }
+            // checks creation limits of the Challenge
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($organization->id);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $cloneLab=$this->labRepository->cloneLab($checkComponentBasedOnSlug->id, $organization);
             if ($cloneLab){
                 return $this->sendResponse(__('responses.lab_clone_success'), 200);
             }
@@ -178,6 +194,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function update($slug, UpdateLabRequest $request)
     {
         try {

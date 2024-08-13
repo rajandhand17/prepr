@@ -211,7 +211,7 @@ class Lab extends Model
 
     public function component_associations()
     {
-        return $this->hasMany(ComponentAssociation::class,'lab_id','id');
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
     public function lab_challenge_association()
     {
