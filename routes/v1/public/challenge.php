@@ -16,4 +16,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/active-challenge/list', [ChallengeController::class, 'challengeList']);
     Route::get('{uuid}/requirements', [ChallengeController::class, 'challengeRequirements']);
     Route::post('/{slug}/{activity}', [ChallengeController::class, 'socialActivity']);
+    Route::get('/{slug}/project-submission', [ChallengeController::class, 'projectSubmission']);
 });

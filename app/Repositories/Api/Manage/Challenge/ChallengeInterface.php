@@ -53,4 +53,8 @@ interface ChallengeInterface
     public function getChallengeListName($request, $organization);
 
     public function selectChallengeWinner($challengeData, $request);
+
+    public function fetchProjectIdsBasedOnChallenge($challengeId);
+
+    public function fetchProjectIds($projectIds, $request);
 }

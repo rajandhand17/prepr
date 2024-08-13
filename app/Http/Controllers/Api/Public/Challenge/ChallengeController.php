@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public\Challenge;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\Challenge\ChallengeProjectRequirementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
@@ -143,6 +144,41 @@ class ChallengeController extends AppBaseController
             }
 
             return $this->sendError(__('responses.project_not_requirement_found'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function projectSubmission($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 403);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            $fetchProjectIdsBasedOnChallenge = $this->challengeRepository->fetchProjectIdsBasedOnChallenge($checkComponentBasedOnSlug->id);
+            $fetchProjectIds = $this->challengeRepository->fetchProjectIds($fetchProjectIdsBasedOnChallenge, $request);
+            if ($fetchProjectIds !== false) {
+                $response = [
+                    'total_count'  => $fetchProjectIds->total(),
+                    'per_page'     => $fetchProjectIds->perPage(),
+                    'count'        => $fetchProjectIds->count(),
+                    'current_page' => $fetchProjectIds->currentPage(),
+                    'total_pages'  => $fetchProjectIds->lastPage(),
+                    'list'         => ProjectResource::collection($fetchProjectIds),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

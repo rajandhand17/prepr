@@ -1420,4 +1420,23 @@ class ComponentAssociationService
             return false;
         }
     }
+
+    public function cloneComponentAssociation($originalLabAssociation, $newLabId)
+    {
+        try {
+            $originalLabAssociation->each(function ($lab_associated) use ($newLabId) {
+                if ($lab_associated) {
+                    $cloneLabAssociation = $lab_associated->replicate();
+                    $cloneLabAssociation->lab_id = $newLabId;
+                    $cloneLabAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

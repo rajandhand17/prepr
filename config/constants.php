@@ -538,6 +538,12 @@ return [
         'projects'                => '7',
     ],
 
+    'assessment_type' => [
+        'no_evaluation'         => 'noEvAttachments',
+        'open_evaluation'       => 'openEvAttachments',
+        'close_evaluation'      => 'closeEvAttachments',
+    ],
+
     'resource_types' => [
         'assess'  => '0',
         'onboard' => '1',
