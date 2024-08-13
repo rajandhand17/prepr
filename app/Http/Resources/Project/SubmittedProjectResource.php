@@ -48,7 +48,7 @@ class SubmittedProjectResource extends JsonResource
             'media_type'            => $this->media_type,
             'media'                 => $media,
             'skills'                => $skills,
-            'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
+            'updated_at'            => $this->updated_at,
         ];
     }
 }

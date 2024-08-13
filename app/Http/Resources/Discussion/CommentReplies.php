@@ -38,7 +38,7 @@ class CommentReplies extends JsonResource
             'by_me'           => $byMe,
             'attachment'      => $this->attachment,
             'user_details'    => UserResource::make($this->users),
-            'created_at'      => UtilityHelper::formatDateTime($this->created_at),
+            'created_at'      => $this->created_at,
         ];
 
         return $data;
