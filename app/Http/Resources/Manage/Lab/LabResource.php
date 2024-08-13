@@ -3,20 +3,9 @@
 namespace App\Http\Resources\Manage\Lab;
 
 use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
-use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Services\AchievementConditionListService;
-use App\Services\Manage\ChallengePathService;
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
-use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceGroupService;
-use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;

@@ -228,6 +228,7 @@ class Lab extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_group_id', '!=', null)->whereNull('deleted_at');
     }
+
     public function lab_lab_program_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('lab_program_id', '!=', null)->whereNull('deleted_at');
