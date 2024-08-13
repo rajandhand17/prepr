@@ -1378,7 +1378,10 @@
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
     "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
     "responses.no_association_found": "No component association data found.",
-
+    "responses.found_user_dashboard_detail": "The User Dashboard layout has been successfully retrieved",
+    "responses.update_user_dashboard_detail": "The User Dashboard layout has been updated successfully",
+    "responses.failed_found_user_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_user_dashboard_detail": "Failed to update User Dashboard layout",
     "responses.no_related_found": "No component related data found.",
     "responses.lab_related_found": "Lab component related data found.",
     "responses.lab_program_related_found": "Lab Program component related data found.",

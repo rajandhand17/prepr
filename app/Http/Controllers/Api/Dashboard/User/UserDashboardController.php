@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\Dashboard\User;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Dashboard\UpdateUserDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
+use App\Http\Resources\Dashboard\UserDashboardLayoutResource;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
@@ -426,6 +428,43 @@ class UserDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.last_visited_not_found'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchUserDashboardLayout($type = null)
+    {
+        try {
+            $message = ($type != null) ? __('responses.update_user_dashboard_detail') : __('responses.found_user_dashboard_detail');
+            $userData = auth()->user();
+            $dashboardType = 'user';
+            $fetchUserDashboardLayout = $this->userDashboardRepository->fetchUserDashboardLayout($userData, $dashboardType);
+            if ($fetchUserDashboardLayout->isNotEmpty()) {
+                return $this->sendResponse(UserDashboardLayoutResource::collection($fetchUserDashboardLayout), $message, 200);
+            }
+
+            return $this->sendError(__('responses.failed_found_user_dashboard_detail'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function updateUserDashboardLayout(UpdateUserDashboardLayoutRequest $request)
+    {
+        try {
+            $userData = auth()->user();
+            $dashboardType = 'user';
+            $updateUserDashboardLayout = $this->userDashboardRepository->updateUserDashboardLayout($request, $userData, $dashboardType);
+            if ($updateUserDashboardLayout != false) {
+                return self::fetchUserDashboardLayout('update');
+            }
+
+            return $this->sendError(__('responses.failed_update_user_dashboard_detail'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

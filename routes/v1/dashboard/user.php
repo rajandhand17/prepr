@@ -14,4 +14,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/upcoming-challenge-deadlines', [UserDashboardController::class, 'getUpComingChallengeDeadlines']);
     Route::get('/inbox-friend-request', [UserDashboardController::class, 'getInboxFriendRequests']);
     Route::get('/last-visited-module', [UserDashboardController::class, 'getLastVisitedModule']);
+    Route::get('/fetch-layout', [UserDashboardController::class, 'fetchUserDashboardLayout']);
+    Route::post('/update-layout', [UserDashboardController::class, 'updateUserDashboardLayout']);
 });
