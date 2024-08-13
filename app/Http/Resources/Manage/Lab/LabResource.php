@@ -7,8 +7,6 @@ use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
-use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Services\AchievementConditionListService;
