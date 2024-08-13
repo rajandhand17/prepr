@@ -9,6 +9,7 @@ environments:
     storage: learnlab-serverless-beta
     warm: 4
     concurrency: 50
+    balancer: Learnlab-Serverless-Beta
     # queue-timeout: 10
     queues: false
     #   - default
