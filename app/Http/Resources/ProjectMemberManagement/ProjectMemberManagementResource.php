@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\ProjectMemberManagement;
 
-use App\Helpers\UtilityHelper;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 

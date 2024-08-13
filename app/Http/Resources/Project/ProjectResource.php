@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
