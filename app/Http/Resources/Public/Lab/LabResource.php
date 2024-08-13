@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Public\Lab;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
 use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
@@ -287,7 +286,7 @@ class LabResource extends JsonResource
             'resource_module'               => $resource_modules,
             'resource_collection'           => $resource_collections,
             'resource_group'                => $resource_groups,
-            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                  => $this->updated_at,
         ];
     }
 }

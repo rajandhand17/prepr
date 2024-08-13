@@ -163,4 +163,18 @@ class ChallengePathService
             return false;
         }
     }
+
+    public function getRelatedChallengePaths($challengePathIds)
+    {
+        try {
+            // Retrieve challenge path with the given IDs using findMany for primary keys and limiting by 2 values
+            $challengePaths = ChallengePath::findMany($challengePathIds)->slice(0, 2);
+
+            return $challengePaths;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

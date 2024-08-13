@@ -66,7 +66,7 @@ class MemberManagementController extends AppBaseController
                 $response['total_pages'] = 1;
                 $response['users'] = [];
 
-                return $this->sendResponse($response, __('responses.create_member_manger_failed'));
+                return $this->sendResponse($response, __('responses.member_manager_found'));
             }
 
             return $this->sendResponse($response, __('responses.member_manager_found'));

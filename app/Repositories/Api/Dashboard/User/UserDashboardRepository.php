@@ -313,7 +313,7 @@ class UserDashboardRepository implements UserDashboardInterface
     public function userDashboardFriendList($userData)
     {
         try {
-            return $this->friendService->userDashboardFriendList($userData);
+            return $this->friendService->dashboardFriendList($userData);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -557,6 +557,7 @@ class OrganizationService
             }
 
             return [
+                'title'                         => $organizationData->title,
                 'plan'                          => $plan,
                 'plan_name'                     => $planName,
                 'plan_end_date'                 => UtilityHelper::formatDateTime($organizationData->chargebee_details->trial_end_date),
@@ -604,7 +605,6 @@ class OrganizationService
         }
     }
 
-
     public function organizationOnboarding($organizationId, $request)
     {
         try {
@@ -648,6 +648,33 @@ class OrganizationService
             return Organization::whereIn('magnet_community_id', $communityIds)->get();
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
+    public function fetchOwnOrganizationIds($userId)
+    {
+        try {
+            $fetchOwnOrganizationIds = Organization::where('user_id', $userId)->pluck('id');
+
+            return $fetchOwnOrganizationIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchOrganizations($request, $fetchOrganizationIds)
+    {
+        try {
+            $fetchOrganizations = Organization::whereIn('id', $fetchOrganizationIds);
+            $organization_list = self::filterOrganizationList($request, $fetchOrganizations);
+
+            return $organization_list->paginate(config('site-settings.pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
 
             return false;
         }

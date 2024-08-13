@@ -26,6 +26,7 @@ class CheckComponentMiddleware
                 'lab',
                 'challenge',
                 'project',
+                'lab-program',
             ];
             if (in_array(request()->route()->parameter('component'), $components)) {
                 return $next($request);

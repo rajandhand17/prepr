@@ -196,4 +196,18 @@ class ResourceCollectionService
             return false;
         }
     }
+
+    public function getRelatedResourceCollections($resourceCollectionIds)
+    {
+        try {
+            // Retrieve resource collection with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceCollections = ResourceCollection::findMany($resourceCollectionIds)->slice(0, 2);
+
+            return $resourceCollections;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
