@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\ProjectMemberManagement;
 
-use App\Helpers\UtilityHelper;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -105,7 +104,7 @@ class ProjectMemberManagementResource extends JsonResource
             'email_status'          => $email_status,
             'subject'               => $this->subject_line,
             'email_content'         => $this->email_body,
-            'joined_at'             => !empty($this->updated_at) ? UtilityHelper::formatDateTime($this->updated_at) : null,
+            'joined_at'             => !empty($this->updated_at) ? $this->updated_at : null,
         ];
     }
 }
