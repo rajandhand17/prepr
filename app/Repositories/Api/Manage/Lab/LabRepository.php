@@ -15,7 +15,6 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
-use App\Services\Manage\LabProgramAchievementsService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
@@ -102,14 +101,16 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-    public function cloneLab($labId, $organization)
+
+    public function cloneLab($lab, $organization)
     {
         try {
             /*Getting lab and it's related tables details */
-            $originalLab=$this->labService->getLabBasedOnSlugWithRelations($labId);
-            $createdLab = DB::transaction(function () use ($labId, $organization, $originalLab) {
-                $newLab = $this->labService->cloneLab($labId, $organization);
-                $labAddress =$this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
+            $originalLab =$lab;
+
+            $createdLab = DB::transaction(function () use ($organization, $originalLab) {
+                $newLab = $this->labService->cloneLab($originalLab->id, $organization);
+                $labAddress = $this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
                 $labSKillsGroupStack = $this->labSkillsGroupsStackService->cloneLabSkillsGroupsStack($originalLab->skills, $newLab->id);
                 $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
                 $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
@@ -138,6 +139,7 @@ class LabRepository implements LabInterface
                 && $createdLab['lab_type_modes']
             ){
                 DB::commit();
+
                 // Returning new created table details
                 return $createdLab['lab'];
             }
@@ -146,9 +148,11 @@ class LabRepository implements LabInterface
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public function uploadLabCoverImage($image)
     {
         try {
