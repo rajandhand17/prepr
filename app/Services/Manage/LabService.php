@@ -681,7 +681,7 @@ class LabService
     public static function getLabBasedOnSlugWithRelations($labId)
     {
         try {
-            return Lab::with(['address','skills','external_links','lab_type','lab_association'])->find($labId);
+            return Lab::with(['address','skills','external_links','lab_type','component_association'])->find($labId);
         }catch (Exception $e) {
             UtilityHelper::logError($e);
             return false;

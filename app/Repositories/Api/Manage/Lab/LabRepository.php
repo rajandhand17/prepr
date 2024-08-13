@@ -114,7 +114,7 @@ class LabRepository implements LabInterface
                 $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
                 $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
                 $createdLabAchievement =$this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
-                $createComponentAssociations=$this->componentAssociationService->cloneComponentAssociation($originalLab->lab_association,$newLab->id);
+                $createComponentAssociations=$this->componentAssociationService->cloneComponentAssociation($originalLab->component_association,$newLab->id);
 
                 return [
                     'lab'                          => $newLab,
