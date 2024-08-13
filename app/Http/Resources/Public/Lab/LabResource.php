@@ -48,12 +48,6 @@ class LabResource extends JsonResource
         $tags = [];
         $tag_groups = [];
         $achievement = [];
-        $lab_programs = [];
-        $challenges = [];
-        $challenge_paths = [];
-        $resource_modules = [];
-        $resource_collections = [];
-        $resource_groups = [];
         $module_progress = null;
 
         if ($this->getCategory) {
@@ -146,59 +140,6 @@ class LabResource extends JsonResource
                 break;
         }
 
-        if (!empty($this->component_association)) {
-            foreach ($this->component_association as $lab_association) {
-                if (count($lab_programs) < 5) {
-                    if ($lab_association->lab_program_id) {
-                        $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
-                        if ($getLabProgram !== null) {
-                            $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
-                        }
-                    }
-                }
-                if (count($challenges) < 5) {
-                    if ($lab_association->challenge_id) {
-                        $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
-                        if ($getChallenge !== null) {
-                            $challenges[$lab_association->challenge_id] = ChallengeResource::make($getChallenge);
-                        }
-                    }
-                }
-                if (count($challenge_paths) < 5) {
-                    if ($lab_association->challenge_path_id) {
-                        $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
-                        if ($getChallengePath !== null) {
-                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
-                        }
-                    }
-                }
-                if (count($resource_modules) < 5) {
-                    if ($lab_association->resource_module_id) {
-                        $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
-                        if ($getResourceModule !== null) {
-                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleResource::make($getResourceModule);
-                        }
-                    }
-                }
-                if (count($resource_collections) < 5) {
-                    if ($lab_association->resource_collection_id) {
-                        $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
-                        if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionResource::make($getResourceCollection);
-                        }
-                    }
-                }
-                if (count($resource_groups) < 5) {
-                    if ($lab_association->resource_group_id) {
-                        $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
-                        if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupResource::make($getResourceGroup);
-                        }
-                    }
-                }
-            }
-        }
-
         if (auth('api')->check()) {
             $module_status = 'not_started';
             $module_progress = [
@@ -274,18 +215,12 @@ class LabResource extends JsonResource
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
-            'lab_program_count'             => count($lab_programs),
-            'challenge_count'               => count($challenges),
-            'challenge_path_count'          => count($challenge_paths),
-            'resource_module_count'         => count($resource_modules),
-            'resource_collection_count'     => count($resource_collections),
-            'resource_group_count'          => count($resource_groups),
-            'lab_program'                   => $lab_programs,
-            'challenge'                     => array_filter($challenges ?? []),
-            'challenge_path'                => $challenge_paths,
-            'resource_module'               => array_filter($resource_modules ?? []),
-            'resource_collection'           => array_filter($resource_collections ?? []),
-            'resource_group'                => array_filter($resource_groups ?? []),
+            'lab_program_count'             => $this->lab_lab_program_association()->count(),
+            'challenge_count'               => $this->lab_challenge_association()->count(),
+            'challenge_path_count'          => $this->lab_challenge_path_association()->count(),
+            'resource_module_count'         => $this->lab_resource_module_association()->count(),
+            'resource_collection_count'     => $this->lab_resource_collection_association()->count(),
+            'resource_group_count'          => $this->lab_resource_group_association()->count(),
             'last_updated'                  => $this->updated_at,
         ];
     }
