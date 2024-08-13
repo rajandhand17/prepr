@@ -265,7 +265,7 @@ class ChargebeeHelper
                     if (!isset($featuresLimits[$featureId])) {
                         $featuresLimits[$featureId] = [
                             'feature_id' => $featureId,
-                            'limits' => []
+                            'limits'     => [],
                         ];
                     }
                     // Add the limit for this plan under the corresponding feature
@@ -275,8 +275,8 @@ class ChargebeeHelper
 
             // Convert associative featureLimits to an indexed array
             $featuresLimits = array_values($featuresLimits);
-            return $featuresLimits;
 
+            return $featuresLimits;
         } catch (Exception $e) {
             // Log the error and return false
             UtilityHelper::logError($e);

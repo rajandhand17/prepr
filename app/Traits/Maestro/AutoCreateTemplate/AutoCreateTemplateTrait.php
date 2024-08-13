@@ -14,6 +14,7 @@ trait AutoCreateTemplateTrait
             return RolesService::getAllRoles();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -24,6 +25,7 @@ trait AutoCreateTemplateTrait
             return AutoCreateTemplatesService::fetchModuleList($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -34,6 +36,7 @@ trait AutoCreateTemplateTrait
             return AutoCreateTemplatesService::cloneModule($request);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
