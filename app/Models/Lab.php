@@ -114,11 +114,10 @@ class Lab extends Model
         return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '1');
     }
 
-    public function component_association()
+    public function lab_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
-
     public function liked()
     {
         if (auth('api')->check()) {

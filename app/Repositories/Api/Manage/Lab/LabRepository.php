@@ -114,6 +114,8 @@ class LabRepository implements LabInterface
                 $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
                 $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
                 $createdLabAchievement =$this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
+                $createComponentAssociations=$this->componentAssociationService->cloneComponentAssociation($originalLab->lab_association,$newLab->id);
+
                 return [
                     'lab'                          => $newLab,
                     'lab_address'                  => $labAddress,
@@ -121,11 +123,12 @@ class LabRepository implements LabInterface
                     'lab_tag_group_stack'          => $labTagGroupStack,
                     'lab_external_links'           => $labExternalLinks,
                     'lab_achievement'              => $createdLabAchievement,
+                    'component_association'        => $createComponentAssociations,
                 ];
             });
             // Checking all the tables records inserted successfully
             if ($createdLab['lab'] && $createdLab['lab_address'] && $createdLab['lab_sKills_group_stack']
-                && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement']){
+                && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement'] && $createdLab['component_association']){
                 DB::commit();
                 // Returning new created table details
                 return $createdLab['lab'];
@@ -134,6 +137,7 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
             return false;
         }

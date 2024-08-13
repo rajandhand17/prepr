@@ -1421,14 +1421,17 @@ class ComponentAssociationService
         }
     }
 
-    public function cloneComponentAssociation($originalComponentAssociation,$newLabId)
+    public function cloneComponentAssociation($originalLabAssociation,$newLabId)
     {
         try {
-            if ($originalComponentAssociation) {
-                $cloneLabAchievement = $originalComponentAssociation->replicate();
-                $cloneLabAchievement->lab_id = $newLabId;
-                $cloneLabAchievement->save();
-            }
+            $originalLabAssociation->each(function ($lab_associated) use ($newLabId) {
+                if ($lab_associated) {
+                    $cloneLabAssociation = $lab_associated->replicate();
+                    $cloneLabAssociation->lab_id = $newLabId;
+                    $cloneLabAssociation->save();
+                }
+            });
+
             return true;
         } catch (\Exception $e) {
             dd($e);
