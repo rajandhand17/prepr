@@ -82,7 +82,8 @@ class LabTypeModesService
         }
     }
 
-    public static function cloneLabTypeModes($originalLabTypeMode,$newLabId){
+    public static function cloneLabTypeModes($originalLabTypeMode, $newLabId)
+    {
         try {
             $originalLabTypeMode->each(function ($lab_type_mode) use ($newLabId) {
                 if ($lab_type_mode) {
