@@ -144,7 +144,6 @@ class LabTagsGroupsService
         }
     }
 
-
     public static function cloneLabTagsGroups($originalLabsTags, $clonedLabId)
     {
         try {
