@@ -171,6 +171,11 @@ class Lab extends Model
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
 
+    public function lab_type()
+    {
+        return $this->hasMany(LabTypeModes::class, 'lab_id', 'id');
+    }
+
     public function labType()
     {
         return $this->hasMany(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '0')->pluck('value');
@@ -204,6 +209,10 @@ class Lab extends Model
         return config('constants.campus_connect_status_id.'.$value);
     }
 
+    public function component_associations()
+    {
+        return $this->hasMany(ComponentAssociation::class,'lab_id','id');
+    }
     public function lab_challenge_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_id', '!=', null);

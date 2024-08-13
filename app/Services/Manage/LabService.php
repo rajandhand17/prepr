@@ -676,4 +676,25 @@ class LabService
             return false;
         }
     }
+
+    public static function getLabBasedOnSlugWithRelations($slug)
+    {
+        try {
+            return Lab::with('address','skills','external_links','component_associations','lab_type')
+                ->where('slug', $slug)->first();
+        }catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
+
+    public function cloneLab($lab)
+    {
+        try {
+            $lab=$lab->
+        }catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }

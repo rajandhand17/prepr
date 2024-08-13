@@ -101,7 +101,18 @@ class LabRepository implements LabInterface
             return false;
         }
     }
-
+    public function cloneLab($slug)
+    {
+        try {
+            $getLab=$this->labService->getLabBasedOnSlugWithRelations($slug);
+            if($getLab){
+                $cloneLab=$this->labService->cloneLab($getLab);
+            }
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
     public function uploadLabCoverImage($image)
     {
         try {

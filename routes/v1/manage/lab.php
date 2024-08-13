@@ -8,6 +8,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/get-list', [LabController::class, 'getList'])->middleware('permission:create_lab');
     Route::get('{slug}', [LabController::class, 'show'])->middleware('permission:view_lab');
     Route::post('/create', [LabController::class, 'create'])->middleware('permission:create_lab');
+    Route::post('{slug}/clone', [LabController::class, 'cloneLab'])->middleware('permission:create_lab');
     Route::put('/{slug}/update', [LabController::class, 'update'])->middleware('permission:edit_lab');
     Route::delete('/{slug}/delete', [LabController::class, 'delete'])->middleware('permission:delete_lab');
     Route::get('/check-slug/{slug}', [LabController::class, 'checkSlug'])->middleware('permission:create_lab');

@@ -161,6 +161,23 @@ class LabController extends AppBaseController
         }
     }
 
+    public function cloneLab($slug)
+    {
+        try {
+            $checkLab = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkLab) {
+                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            }
+            $cloneLab=$this->labRepository->cloneLab($slug);
+            if ($cloneLab){
+                return $this->sendResponse(__('responses.lab_clone_success'), 200);
+            }
+            return $this->sendError(__('responses.lab_clone_failed'));
+        }catch (\Exception $e) {
+            UtilityHelper::logError($e);
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
     public function update($slug, UpdateLabRequest $request)
     {
         try {
@@ -212,7 +229,6 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.lab_not_update'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
