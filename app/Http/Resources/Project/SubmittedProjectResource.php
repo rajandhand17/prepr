@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Helpers\UtilityHelper;
 use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
