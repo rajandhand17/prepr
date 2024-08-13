@@ -2,24 +2,10 @@
 
 namespace App\Http\Resources\Manage\Lab;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Airmeet\AirmeetEventResource;
-use App\Http\Resources\Manage\Challenge\ChallengeResource;
-use App\Http\Resources\Manage\ChallengePath\ChallengePathListNameResource;
-use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
-use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
-use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
-use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
 use App\Services\AchievementConditionListService;
-use App\Services\Manage\ChallengePathService;
-use App\Services\Manage\ChallengeService;
-use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
-use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceGroupService;
-use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -42,20 +28,12 @@ class LabResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
         $duration_id = null;
         $level = null;
         $level_id = null;
-        $lab_programs = [];
-        $challenges = [];
-        $challenge_paths = [];
-        $resource_modules = [];
-        $resource_collections = [];
-        $resource_groups = [];
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -138,59 +116,6 @@ class LabResource extends JsonResource
                 break;
         }
 
-        if (!empty($this->component_association)) {
-            foreach ($this->component_association as $lab_association) {
-                if (count($lab_programs) < 5) {
-                    if ($lab_association->lab_program_id) {
-                        $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
-                        if ($getLabProgram !== null) {
-                            $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
-                        }
-                    }
-                }
-                if (count($challenges) < 5) {
-                    if ($lab_association->challenge_id) {
-                        $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
-                        if ($getChallenge !== null) {
-                            $challenges[$lab_association->challenge_id] = ChallengeResource::make($getChallenge);
-                        }
-                    }
-                }
-                if (count($challenge_paths) < 5) {
-                    if ($lab_association->challenge_path_id) {
-                        $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
-                        if ($getChallengePath !== null) {
-                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
-                        }
-                    }
-                }
-                if (count($resource_modules) < 5) {
-                    if ($lab_association->resource_module_id) {
-                        $getResourceModule = ResourceModuleService::getResourceModulesBasedOnId($lab_association->resource_module_id);
-                        if ($getResourceModule !== null) {
-                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleResource::make($getResourceModule); //ResourceModuleListNameResource::make($getResourceModule);
-                        }
-                    }
-                }
-                if (count($resource_collections) < 5) {
-                    if ($lab_association->resource_collection_id) {
-                        $getResourceCollection = ResourceCollectionService::getResourceCollectionsBasedOnId($lab_association->resource_collection_id);
-                        if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
-                        }
-                    }
-                }
-                if (count($resource_groups) < 5) {
-                    if ($lab_association->resource_group_id) {
-                        $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
-                        if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
-                        }
-                    }
-                }
-            }
-        }
-
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 
@@ -250,7 +175,6 @@ class LabResource extends JsonResource
             'slug'                             => $this->slug,
             'title'                            => $this->title,
             'description'                      => $this->description,
-            'resource_collection'              => $resource_collections,
             'privacy'                          => ($this->privacy == '1') ? 'yes' : 'no',
             'status'                           => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'member_count'                     => $this->members()->count(),
@@ -273,18 +197,13 @@ class LabResource extends JsonResource
             'skill_stacks'                     => $skill_stacks,
             'likes'                            => $this->likes()->count(),
             'shares'                           => $this->shares()->count(),
-            'lab_program_count'                => count($lab_programs),
-            'challenge_count'                  => count($challenges),
-            'challenge_path_count'             => count($challenge_paths),
-            'resource_module_count'            => count($resource_modules),
-            'resource_collection_count'        => count($resource_collections),
-            'resource_group_count'             => count($resource_groups),
-            'lab_program'                      => $lab_programs,
-            'challenge'                        => $challenges,
-            'challenge_path'                   => $challenge_paths,
-            'resource_module'                  => $resource_modules,
-            'resource_group'                   => $resource_groups,
-            'last_updated'                     => UtilityHelper::formatDateTime($this->updated_at),
+            'lab_program_count'                => $this->lab_lab_program_association()->count(),
+            'challenge_count'                  => $this->lab_challenge_association()->count(),
+            'challenge_path_count'             => $this->lab_challenge_path_association()->count(),
+            'resource_module_count'            => $this->lab_resource_module_association()->count(),
+            'resource_collection_count'        => $this->lab_resource_collection_association()->count(),
+            'resource_group_count'             => $this->lab_resource_group_association()->count(),
+            'last_updated'                     => $this->updated_at,
             'campus_connect_opportunity'       => $campusConnectOpportunity,
             'campus_connect_story'             => $campusConnectStory,
             'campus_connect_status'            => data_get($this, 'campus_connect_status'),

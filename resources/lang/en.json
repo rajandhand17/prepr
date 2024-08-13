@@ -1389,5 +1389,6 @@
     "responses.resource_group_related_found": "Resource Group component related data found.",
     "responses.feature_lab_created_successfully": "The featured lab has been successfully created.",
     "responses.feature_lab_created_failed": "The creation of the featured lab has failed.",
-    "responses.already_featured_lab": "This lab already exists in the featured labs."
+    "responses.already_featured_lab": "This lab already exists in the featured labs.",
+    "responses.owner_required": "This owner filter should be between all, my or invited"
 }
