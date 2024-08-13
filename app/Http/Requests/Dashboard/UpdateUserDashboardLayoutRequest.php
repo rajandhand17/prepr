@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Dashboard;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdateUserDashboardLayoutRequest extends FormRequest
@@ -50,23 +50,24 @@ class UpdateUserDashboardLayoutRequest extends FormRequest
                         count($position_x) !== $count ||
                         count($position_y) !== $count
                     ) {
-                        $fail('The number of items for ' . $attribute . ' must match the number of items for is_active, position_x, and position_y.');
+                        $fail('The number of items for '.$attribute.' must match the number of items for is_active, position_x, and position_y.');
                     }
 
                     // Check that position_x and position_y combinations are unique, except when is_active is "no"
                     $combinations = [];
                     for ($i = 0; $i < $count; $i++) {
                         if ($is_active[$i] === 'yes') {
-                            $combination = $position_x[$i] . '-' . $position_y[$i];
+                            $combination = $position_x[$i].'-'.$position_y[$i];
                             if (in_array($combination, $combinations)) {
                                 $fail('The combination of position_x and position_y must be unique when is_active is "yes".');
+
                                 return;
                             }
                             $combinations[] = $combination;
                         }
                     }
-                }
-            ]
+                },
+            ],
         ]);
 
         return $base_rules;

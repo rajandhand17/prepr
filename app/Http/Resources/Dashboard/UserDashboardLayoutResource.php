@@ -67,6 +67,7 @@ class UserDashboardLayoutResource extends JsonResource
                 $cardType = 'achievement';
                 break;
         }
+
         return [
             'dashboard_type'        => 'user',
             'card_type'             => $cardType,
