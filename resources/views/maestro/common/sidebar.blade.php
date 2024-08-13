@@ -317,6 +317,11 @@
                   <p>Setting</p>
               </a>
           </li>
+          <li class="nav-item">
+          <a href="{{ route('auto-create.index')}} " class="nav-link {{ Route::currentRouteName() == 'auto-create.index' ? 'active' : ''  }}">
+                  <i class="fa fa-database" aria-hidden="true"></i>
+                  <p>Auto Create</p>
+          </li>
         <li class="nav-item">
           <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> <i class="nav-icon fas fa-sign-out-alt"></i> {{ __('Logout') }}</a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

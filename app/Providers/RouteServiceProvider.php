@@ -54,6 +54,7 @@ class RouteServiceProvider extends ServiceProvider
             $this->mapMaestroEmailTemplateRoutes();
             $this->mapMaestroExploreRoutes();
             $this->mapMaestroEmailLogsRoutes();
+            $this->mapMaestroAutoCrateTemplateRoutes();
             $this->mapMaestroCloneLabRoutes();
             $this->mapMaestroLabRoutes();
             $this->mapMaestroPreBuiltAchievementRoutes();
@@ -337,6 +338,11 @@ class RouteServiceProvider extends ServiceProvider
     public function mapMaestroEmailLogsRoutes()
     {
         Route::prefix('maestro')->group(base_path('routes/maestro/email-logs.php'));
+    }
+
+    public function mapMaestroAutoCrateTemplateRoutes()
+    {
+        Route::prefix('maestro')->group(base_path('routes/maestro/auto-create-template.php'));
     }
 
     public function mapMaestroCloneLabRoutes()
