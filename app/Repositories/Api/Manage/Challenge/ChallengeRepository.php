@@ -26,6 +26,7 @@ use App\Services\Manage\ChallengeTimelinesService;
 use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\ProjectPitchService;
+use App\Services\ProjectService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -53,8 +54,9 @@ class ChallengeRepository implements ChallengeInterface
     private $campusConnectStoryService;
     private $achievementService;
     private $challengeTypeModeService;
+    private $projectService;
 
-    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService)
+    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService, ProjectService $projectService)
     {
         $this->challengeService = $challengeService;
         $this->scormRepository = $scormRepository;
@@ -77,6 +79,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->achievementService = $achievementService;
         $this->challengeTypeModeService = $challengeTypeModeService;
+        $this->projectService = $projectService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -727,6 +730,28 @@ class ChallengeRepository implements ChallengeInterface
             }
 
             return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectIdsBasedOnChallenge($challengeId)
+    {
+        try {
+            return $this->projectService->fetchProjectIdsBasedOnChallenge($challengeId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectIds($projectIds, $request)
+    {
+        try {
+            return $this->projectService->getProjectList($projectIds, $request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
