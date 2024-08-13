@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\OrganizationService;
@@ -257,7 +256,7 @@ class ProjectResource extends JsonResource
             'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
             'assessment_data'       => AssessedProjectResource::make($this),
             'history'               => ProjectHistoryResource::collection($this->history),
-            'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
+            'updated_at'            => $this->updated_at,
         ];
     }
 }
