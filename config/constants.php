@@ -623,5 +623,5 @@ return [
         'recommendations'   => '10',
         'continue-left'     => '11',
         'achievement'       => '12',
-    ]
+    ],
 ];

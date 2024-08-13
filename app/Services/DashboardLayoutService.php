@@ -34,6 +34,7 @@ class DashboardLayoutService
             return false;
         }
     }
+
     public function updateDashboardLayout($request, $userData, $dashboardType)
     {
         try {
