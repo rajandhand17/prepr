@@ -15,7 +15,6 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\LabAcheivementService;
 use App\Services\Manage\LabAddressService;
 use App\Services\Manage\LabExternalLinksService;
-use App\Services\Manage\LabProgramAchievementsService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
 use App\Services\Manage\LabSkillsGroupsStackService;
@@ -102,19 +101,20 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function cloneLab($labId, $organization)
     {
         try {
             /*Getting lab and it's related tables details */
-            $originalLab=$this->labService->getLabBasedOnSlugWithRelations($labId);
+            $originalLab = $this->labService->getLabBasedOnSlugWithRelations($labId);
             $createdLab = DB::transaction(function () use ($labId, $organization, $originalLab) {
                 $newLab = $this->labService->cloneLab($labId, $organization);
-                $labAddress =$this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
+                $labAddress = $this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
                 $labSKillsGroupStack = $this->labSkillsGroupsStackService->cloneLabSkillsGroupsStack($originalLab->skills, $newLab->id);
                 $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
                 $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
-                $createdLabAchievement =$this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
-                $createComponentAssociations=$this->componentAssociationService->cloneComponentAssociation($originalLab->component_association,$newLab->id);
+                $createdLabAchievement = $this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
+                $createComponentAssociations = $this->componentAssociationService->cloneComponentAssociation($originalLab->component_association, $newLab->id);
 
                 return [
                     'lab'                          => $newLab,
@@ -128,8 +128,9 @@ class LabRepository implements LabInterface
             });
             // Checking all the tables records inserted successfully
             if ($createdLab['lab'] && $createdLab['lab_address'] && $createdLab['lab_sKills_group_stack']
-                && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement'] && $createdLab['component_association']){
+                && $createdLab['lab_tag_group_stack'] && $createdLab['lab_external_links'] && $createdLab['lab_achievement'] && $createdLab['component_association']) {
                 DB::commit();
+
                 // Returning new created table details
                 return $createdLab['lab'];
             }
@@ -139,9 +140,11 @@ class LabRepository implements LabInterface
         } catch (\Exception $e) {
             dd($e);
             UtilityHelper::logError($e);
+
             return false;
         }
     }
+
     public function uploadLabCoverImage($image)
     {
         try {

@@ -184,13 +184,15 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.reached_challenge_limit'), 400);
                 }
             }
-            $cloneLab=$this->labRepository->cloneLab($checkComponentBasedOnSlug->id, $organization);
-            if ($cloneLab){
+            $cloneLab = $this->labRepository->cloneLab($checkComponentBasedOnSlug->id, $organization);
+            if ($cloneLab) {
                 return $this->sendResponse(__('responses.lab_clone_success'), 200);
             }
+
             return $this->sendError(__('responses.lab_clone_failed'));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -246,6 +248,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.lab_not_update'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

@@ -118,6 +118,7 @@ class Lab extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
+
     public function liked()
     {
         if (auth('api')->check()) {
@@ -212,6 +213,7 @@ class Lab extends Model
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
     }
+
     public function lab_challenge_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_id', '!=', null)->whereNull('deleted_at');

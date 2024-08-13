@@ -1421,7 +1421,7 @@ class ComponentAssociationService
         }
     }
 
-    public function cloneComponentAssociation($originalLabAssociation,$newLabId)
+    public function cloneComponentAssociation($originalLabAssociation, $newLabId)
     {
         try {
             $originalLabAssociation->each(function ($lab_associated) use ($newLabId) {
@@ -1435,6 +1435,7 @@ class ComponentAssociationService
             return true;
         } catch (\Exception $e) {
             dd($e);
+
             return false;
         }
     }
