@@ -28,8 +28,6 @@ class LabResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
