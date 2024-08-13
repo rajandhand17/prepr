@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Public\Organization\OrganizationController;
 use Illuminate\Support\Facades\Route;
 
 $middleware = ['language'];
-if (\request()->has('social_type')) {
+if (\request()->has('social_type') || \request()->has('request')) {
     $middleware = ['language', 'auth:api'];
 }
 Route::middleware($middleware)->group(function () {

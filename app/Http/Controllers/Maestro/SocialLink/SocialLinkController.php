@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Http\Controllers\Maestro\SocialLink;
+
+use App\Helpers\UtilityHelper;
+use App\Http\Controllers\Controller;
+use App\Models\SocialLink;
+use App\Traits\Maestro\SocialLink\SocialLinkTrait;
+use Exception;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+use Yajra\DataTables\Html\Builder;
+
+class SocialLinkController extends Controller
+{
+    use SocialLinkTrait;
+
+    public function __construct()
+    {
+        $this->middleware('auth-check');
+    }
+
+    public function index(Builder $builder, Request $request)
+    {
+        try {
+            $socialLinks = $this->getSocialLinkList();
+            if (request()->ajax()) {
+                return DataTables::eloquent($socialLinks)
+                    ->addIndexColumn()
+                    ->editColumn('title', static function (SocialLink $socialLinks) {
+                        return $socialLinks->title;
+                    })
+                    ->editColumn('icon', static function (SocialLink $socialLinks) {
+                        $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
+
+                        return "<img src='".asset($socialLinks->icon)."' width='30px' ".$onerror.'>';
+                    })
+
+                    ->addColumn('action', static function (SocialLink $socialLinks) {
+                        return '<a class="mr-10" href="'.route('social-links.edit', ['social_link' => $socialLinks->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:10px" href="javascript:void(0)" onclick="deleteSocialLink(\''.route('social-links.destroy', ['social_link' => $socialLinks->id]).'\')"><i class="fas fa-trash"></i></a>';
+                    })
+                    ->rawColumns(['icon', 'action', 'DT_Row_Index'])
+                    ->make(true);
+            }
+            $html = $builder->columns([
+                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Social Media Name', 'width' => '85%'],
+                ['data' => 'icon', 'name' => 'icon', 'title' => 'Icon', 'width' => '10%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%'],
+            ])->parameters([
+                'order' => [[1, 'asc']],
+            ]);
+
+            return view('maestro.social-link.index', compact('html'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        try {
+            return view('maestro.social-link.create');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+            if ($this->createSocialLink($request)) {
+                return redirect()->route('social-links.index')->with('success', 'SocialLink created successfully');
+            }
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        try {
+            $socialLink = $this->getSocialLinkById($id);
+            if (!$socialLink->exists) {
+                return redirect()->route('social-links.index')->with(['error' => 'SocialLink not found.']);
+            }
+
+            return view('maestro.social-link.edit', compact('socialLink'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            if ($this->updateSocialLinkById($id, $request)) {
+                return redirect()->route('social-links.index')->with('success', 'SocialLink Updated successfully');
+            }
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('social-links.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try {
+            if ($this->deleteSocialLinkById($id)) {
+                return response()->json(['status' => 'success', 'message' => 'SocialLink deleted successfully']);
+            }
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+}
