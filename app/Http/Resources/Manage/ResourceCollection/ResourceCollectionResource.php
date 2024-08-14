@@ -153,6 +153,7 @@ class ResourceCollectionResource extends JsonResource
                 'percentage'    => $this->resource_collection_completion_status->percentage,
             ];
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
