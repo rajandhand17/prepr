@@ -102,6 +102,57 @@ class LabRepository implements LabInterface
         }
     }
 
+    public function cloneLab($lab, $organization)
+    {
+        try {
+            /*Getting lab and it's related tables details */
+            $originalLab = $lab;
+
+            $createdLab = DB::transaction(function () use ($organization, $originalLab) {
+                $newLab = $this->labService->cloneLab($originalLab->id, $organization);
+                $labAddress = $this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
+                $labSKillsGroupStack = $this->labSkillsGroupsStackService->cloneLabSkillsGroupsStack($originalLab->skills, $newLab->id);
+                $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
+                $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
+                $createdLabAchievement = $this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
+                $createComponentAssociations = $this->componentAssociationService->cloneComponentAssociation($originalLab->component_association, $newLab->id);
+                $labTypeModes = $this->labTypeModesService->cloneLabTypeModes($originalLab->lab_type_mode, $newLab->id);
+
+                return [
+                    'lab'                          => $newLab,
+                    'lab_address'                  => $labAddress,
+                    'lab_sKills_group_stack'       => $labSKillsGroupStack,
+                    'lab_tag_group_stack'          => $labTagGroupStack,
+                    'lab_external_links'           => $labExternalLinks,
+                    'lab_achievement'              => $createdLabAchievement,
+                    'component_association'        => $createComponentAssociations,
+                    'lab_type_modes'               => $labTypeModes,
+                ];
+            });
+            // Checking all the tables records inserted successfully
+            if ($createdLab['lab'] && $createdLab['lab_address']
+                && $createdLab['lab_sKills_group_stack']
+                && $createdLab['lab_tag_group_stack']
+                && $createdLab['lab_external_links']
+                && $createdLab['lab_achievement']
+                && $createdLab['component_association']
+                && $createdLab['lab_type_modes']
+            ) {
+                DB::commit();
+
+                // Returning new created table details
+                return $createdLab['lab'];
+            }
+            DB::rollBack();
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function uploadLabCoverImage($image)
     {
         try {

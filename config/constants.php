@@ -538,6 +538,12 @@ return [
         'projects'                => '7',
     ],
 
+    'assessment_type' => [
+        'no_evaluation'         => 'noEvAttachments',
+        'open_evaluation'       => 'openEvAttachments',
+        'close_evaluation'      => 'closeEvAttachments',
+    ],
+
     'resource_types' => [
         'assess'  => '0',
         'onboard' => '1',
@@ -603,5 +609,25 @@ return [
         'engage'  => '2',
         'grow'    => '3',
         'na'      => '4',
+    ],
+    'dashboard_type' => [
+        'user'          => '0',
+        'lab'           => '1',
+        'organization'  => '2',
+    ],
+    'dashboard_card_type' => [
+        'reports'           => '0',
+        'deadlines'         => '1',
+        'leaderboard'       => '2',
+        'my-challenges'     => '3',
+        'my-labs'           => '4',
+        'my-projects'       => '5',
+        'my-resources'      => '6',
+        'my-organizations'  => '7',
+        'subscription'      => '8',
+        'inbox-friends'     => '9',
+        'recommendations'   => '10',
+        'continue-left'     => '11',
+        'achievement'       => '12',
     ],
 ];

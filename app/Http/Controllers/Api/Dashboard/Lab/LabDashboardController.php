@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Dashboard\UpdateManagerDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
+use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
 use App\Http\Resources\Manage\Challenge\ChallengeResource;
 use App\Http\Resources\Manage\Lab\LabResource;
@@ -323,6 +325,43 @@ class LabDashboardController extends AppBaseController
             }
 
             return $this->sendError(__('responses.not_found_resource_module_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchManagerDashboardLayout($type = null)
+    {
+        try {
+            $message = ($type != null) ? __('responses.update_lab_dashboard_detail') : __('responses.found_lab_dashboard_detail');
+            $userData = auth()->user();
+            $dashboardType = 'lab';
+            $fetchDashboardLayout = $this->labDashboardRepository->fetchDashboardLayout($userData, $dashboardType);
+            if ($fetchDashboardLayout->isNotEmpty()) {
+                return $this->sendResponse(DashboardLayoutResource::collection($fetchDashboardLayout), $message, 200);
+            }
+
+            return $this->sendError(__('responses.failed_found_lab_dashboard_detail'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function updateManagerDashboardLayout(UpdateManagerDashboardLayoutRequest $request)
+    {
+        try {
+            $userData = auth()->user();
+            $dashboardType = 'lab';
+            $updateManagerDashboardLayout = $this->labDashboardRepository->updateDashboardLayout($request, $userData, $dashboardType);
+            if ($updateManagerDashboardLayout != false) {
+                return self::fetchManagerDashboardLayout('update');
+            }
+
+            return $this->sendError(__('responses.failed_update_lab_dashboard_detail'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

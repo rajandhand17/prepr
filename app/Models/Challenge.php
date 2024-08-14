@@ -225,6 +225,11 @@ class Challenge extends Model
         return config('constants.campus_connect_status_id.'.$value);
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     /**
      * @return MorphOne
      */

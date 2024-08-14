@@ -25,6 +25,7 @@
         "laravel/passport": "^11.3",
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.7",
+        "laravel/ui": "^4.5",
         "laravel/vapor-cli": "^1.65",
         "laravel/vapor-core": "^2.37",
         "league/flysystem-aws-s3-v3": "^3.12",
@@ -35,7 +36,8 @@
         "sendgrid/sendgrid": "^7",
         "solarium/solarium": "^6.3",
         "spatie/pdf-to-image": "^2.2",
-        "twilio/sdk": "^6.44"
+        "twilio/sdk": "^6.44",
+        "yajra/laravel-datatables-oracle": "^10.11"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

@@ -4,7 +4,6 @@ namespace App\Http\Resources\Manage\ResourceGroup;
 
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ResourceCollectionService;
-use App\Services\Manage\ResourceGroupTypeModesService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -128,15 +127,6 @@ class ResourceGroupResource extends JsonResource
                 'percentage'    => $this->resource_group_completion_status->percentage,
             ];
         }
-        $resourceTypeMode = $this->resource_group_type_mode;
-        $type = null;
-        $mode = null;
-        if ($resourceTypeMode !== null) {
-            $getType = ResourceGroupTypeModesService::getResourceGroupType($this->id);
-            $getMode = ResourceGroupTypeModesService::getResourceGroupMode($this->id);
-            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
-            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
-        }
 
         return [
             'id'                            => $this->uuid,
@@ -147,13 +137,13 @@ class ResourceGroupResource extends JsonResource
             'description'                   => $this->description,
             'media_type'                    => $this->media_type == '0' ? 'image' : 'embedded',
             'cover_image'                   => $this->media,
-            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
+            'privacy'                       => ($this->privacy == '1') ? 'private' : 'public',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'duration_id'                   => $duration_id,
             'duration'                      => $duration,
             'level_id'                      => $level_id,
-            'type'                          => $type,
-            'mode'                          => $mode,
+            'mode'                          => ResourceGroupModeResource::collection($this->resource_group_mode),
+            'type'                          => ResourceGroupTypeResource::collection($this->resource_group_type),
             'level'                         => $level,
             'resource_modules'              => $resourceModules,
             'organization'                  => $organization,

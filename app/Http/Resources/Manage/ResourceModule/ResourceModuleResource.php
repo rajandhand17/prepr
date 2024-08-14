@@ -4,7 +4,6 @@ namespace App\Http\Resources\Manage\ResourceModule;
 
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
-use App\Services\Manage\ResourceModuleTypeModesService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -83,13 +82,13 @@ class ResourceModuleResource extends JsonResource
 
         switch($this->privacy) {
             case '0':
-                $privacy = 'no';
+                $privacy = 'public';
                 break;
             case '1':
-                $privacy = 'yes';
+                $privacy = 'private';
                 break;
             default:
-                $privacy = 'no';
+                $privacy = 'public';
                 break;
         }
 
@@ -176,15 +175,6 @@ class ResourceModuleResource extends JsonResource
                 'percentage'    => $this->resource_module_completion_status->percentage,
             ];
         }
-        $resourceTypeMode = $this->resource_module_type_modes;
-        $type = null;
-        $mode = null;
-        if ($resourceTypeMode !== null) {
-            $getType = ResourceModuleTypeModesService::getResourceModuleType($this->id);
-            $getMode = ResourceModuleTypeModesService::getResourceModuleMode($this->id);
-            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
-            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
-        }
 
         return [
             'id'                            => $this->uuid,
@@ -197,8 +187,8 @@ class ResourceModuleResource extends JsonResource
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
-            'type'                          => $type,
-            'mode'                          => $mode,
+            'mode'                          => ResourceModuleModeResource::collection($this->resource_module_mode),
+            'type'                          => ResourceModuleTypeResource::collection($this->resource_module_type),
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'description'                   => $this->description,

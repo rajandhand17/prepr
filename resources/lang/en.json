@@ -460,6 +460,7 @@
     "responses.path_array": "The path field must be an array",
     "responses.embedded_type_in": "The Type should be between embedded_audio, embedded_video.",
     "responses.type_array": "The type field must be an array",
+    "responses.mode_array": "The mode field must be an array",
     "responses.type_content_255": "The type character limit is 255.",
     "responses.join_challenge_successfully": "You have successfully joined Challenge!",
     "responses.join_challenge_failed": "You have failed to join Challenge!",
@@ -1378,7 +1379,6 @@
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
     "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
     "responses.no_association_found": "No component association data found.",
-
     "responses.no_related_found": "No component related data found.",
     "responses.lab_related_found": "Lab component related data found.",
     "responses.lab_program_related_found": "Lab Program component related data found.",
@@ -1389,5 +1389,20 @@
     "responses.resource_group_related_found": "Resource Group component related data found.",
     "responses.feature_lab_created_successfully": "The featured lab has been successfully created.",
     "responses.feature_lab_created_failed": "The creation of the featured lab has failed.",
-    "responses.already_featured_lab": "This lab already exists in the featured labs."
+    "responses.already_featured_lab": "This lab already exists in the featured labs.",
+    "responses.lab_clone_success": "The lab has been successfully copied & added to your labs!",
+    "responses.lab_clone_failed": "The lab clone operation has failed.",
+    "responses.owner_required": "This owner filter should be between all, my or invited",
+    "responses.found_user_dashboard_detail": "The User Dashboard layout has been successfully retrieved",
+    "responses.found_lab_dashboard_detail": "The Lab Dashboard layout has been successfully retrieved",
+    "responses.found_organization_dashboard_detail": "The Organization Dashboard layout has been successfully retrieved",
+    "responses.update_user_dashboard_detail": "The User Dashboard layout has been updated successfully",
+    "responses.update_lab_dashboard_detail": "The Lab Dashboard layout has been updated successfully",
+    "responses.update_organization_dashboard_detail": "The Organization Dashboard layout has been updated successfully",
+    "responses.failed_found_user_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_user_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.failed_found_lab_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout"
 }
