@@ -53,8 +53,13 @@ class ChallengeService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
-                $challenge_list = $challenge_list->where('challenges.status', $status);
+                if (in_array($request->status, ['draft', 'published'])) {
+                    $status = ($request->status == 'draft') ? '0' :  '1';
+                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                } elseif (in_array($request->status, ['deactivated', 'archived'])) {
+                    $status = ($request->status == 'deactivated') ? '1' :  '3';
+                    $challenge_list = $challenge_list->where('challenges.is_open', $status);
+                }
             } else {
                 $challenge_list = $challenge_list->where('challenges.status', '1');
             }
@@ -138,9 +143,9 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
 
-            if ($request->has('type') && $request->type && is_array($request->type)) {
+            if ($request->has('type') && $request->type) {
                 $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
-                    $query->whereIn('value', $request->type);
+                    $query->where('value', config('constants.resource_types.'.$request->type));
                 });
             }
 
@@ -178,6 +183,7 @@ class ChallengeService
 
             return $challenge_list;
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return false;
