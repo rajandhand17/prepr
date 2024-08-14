@@ -38,12 +38,12 @@ class ResourceModuleTypeModesService
 
             // Create new resource group type modes based on request types and modes
             if ($request->has('type')) {
-                ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->where('type_mode','0')->delete();
+                ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->where('type_mode', '0')->delete();
                 $createResourceModuleTypeMode($typeMappings, $request->type);
             }
 
             if ($request->has('mode')) {
-                ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->where('type_mode','1')->delete();
+                ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->where('type_mode', '1')->delete();
                 $createResourceModuleTypeMode($modeMappings, $request->mode);
             }
 
@@ -51,6 +51,7 @@ class ResourceModuleTypeModesService
         } catch (\Exception $e) {
             // Log the exception or handle it according to your needs
             UtilityHelper::logError($e);
+
             return false;
         }
     }

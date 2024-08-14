@@ -48,7 +48,6 @@ class ResourceGroupTypeModesService
                 'individual' => ['type' => '1', 'value' => '5'],
             ];
 
-
             // Helper function to create resource group type modes
             $createResourceGroupTypeMode = function ($mappings, $items) use ($resourceGroupId) {
                 foreach ($items as $item) {
@@ -64,12 +63,12 @@ class ResourceGroupTypeModesService
 
             // Create new resource group type modes based on request types and modes
             if ($request->has('type')) {
-                ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->where('type_mode','0')->delete();
+                ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->where('type_mode', '0')->delete();
                 $createResourceGroupTypeMode($typeMappings, $request->type);
             }
 
             if ($request->has('mode')) {
-                ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->where('type_mode','1')->delete();
+                ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->where('type_mode', '1')->delete();
                 $createResourceGroupTypeMode($modeMappings, $request->mode);
             }
 
