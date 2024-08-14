@@ -50,7 +50,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $createResourceGroupComponentAssociation = $this->componentAssociationService->createResourceGroupComponentAssociation($request, $createResourceGroup->id);
                 $createResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->createResourceGroupSkillsGroupsStack($request, $createResourceGroup->id);
                 $createResourceGroupsAchievements = $this->resourceGroupAchievementsService->createResourceGroupsAchievements($request, $upload_achievement_image, $createResourceGroup->id);
-                $createResourceGroupTypeModesService = $this->resourceGroupTypeModesService->createResourceGroupTypeModes($request, $createResourceGroup->id);
+                $createResourceGroupTypeModesService = $this->resourceGroupTypeModesService->createUpdateResourceGroupTypeModes($request, $createResourceGroup->id);
 
                 return[
                     'createResourceGroup'                             => $createResourceGroup,
@@ -159,7 +159,7 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $updateResourceGroupComponentAssociation = $this->componentAssociationService->updateResourceGroupComponentAssociation($request, $updateResourceGroup->id);
                 $updateResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->updateResourceGroupSkillsGroupsStack($request, $updateResourceGroup->id);
                 $updateResourceGroupsAchievements = $this->resourceGroupAchievementsService->updateResourceGroupsAchievements($request, $upload_achievement_image, $updateResourceGroup->id);
-                $updateResourceGroupTypeModes = $this->resourceGroupTypeModesService->updateResourceGroupTypeModes($request, $upload_achievement_image, $updateResourceGroup->id);
+                $updateResourceGroupTypeModes = $this->resourceGroupTypeModesService->createUpdateResourceGroupTypeModes($request, $updateResourceGroup->id);
 
                 return[
                     'updateResourceGroup'                             => $updateResourceGroup,

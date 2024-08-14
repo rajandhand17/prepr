@@ -100,6 +100,25 @@ class UserExperienceService
         }
     }
 
+    public static function updateFilePrivacy($id)
+    {
+        try {
+            $isPublic = UserPersonalFile::where('id', $id)->first();
+            if ($isPublic->public == 1) {
+                UserPersonalFile::where('id', $id)->update(['public'=> 0]);
+            } else {
+                UserPersonalFile::where('id', $id)->update(['public'=> 1]);
+            }
+
+            return true;
+        } catch(\Exception $e) {
+            dd($e);
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function addUserExperienceByUsingResumeData($response, $user)
     {
         try {

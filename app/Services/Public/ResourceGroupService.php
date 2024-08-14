@@ -67,10 +67,10 @@ class ResourceGroupService
             if ($request->has('privacy')) {
                 $privacy = null;
                 switch ($request->privacy) {
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_group_privacy.yes');
                         break;
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_group_privacy.no');
                         break;
                     default:

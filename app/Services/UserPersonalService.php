@@ -80,6 +80,7 @@ class UserPersonalService
             $dob = new Carbon($request->date_of_birth);
             $now = Carbon::now();
             $age = $dob->diffInYears($now);
+            $externalLinks = ProfileExternalLinksService::updateProfileExternalLinks($request, $user->id);
             $userPersonalDetails = UserPersonal::updateOrCreate([
                 'user_id' => $user->id,
             ], [
