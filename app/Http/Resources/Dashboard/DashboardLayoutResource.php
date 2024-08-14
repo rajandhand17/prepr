@@ -5,7 +5,7 @@ namespace App\Http\Resources\Dashboard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserDashboardLayoutResource extends JsonResource
+class DashboardLayoutResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,20 @@ class UserDashboardLayoutResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        switch ($this->dashboard_type) {
+            case '0':
+                $dashboardType = 'user';
+                break;
+
+            case '1':
+                $dashboardType = 'lab';
+                break;
+
+            case '2':
+                $dashboardType = 'organization';
+                break;
+        }
+
         switch ($this->card_type) {
             case '0':
                 $cardType = 'reports';
@@ -69,7 +83,7 @@ class UserDashboardLayoutResource extends JsonResource
         }
 
         return [
-            'dashboard_type'        => 'user',
+            'dashboard_type'        => $dashboardType,
             'card_type'             => $cardType,
             'is_active'             => $this->is_active == '0' ? 'yes' : 'no',
             'position_x'            => $this->position_x,

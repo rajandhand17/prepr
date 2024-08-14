@@ -13,4 +13,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/my-challenges', [LabDashboardController::class, 'getMyChallenges']);
     Route::get('/my-labs', [LabDashboardController::class, 'getMyLabs']);
     Route::get('/my-resource-module', [LabDashboardController::class, 'getMyResourceModule']);
+    Route::get('/fetch-layout', [LabDashboardController::class, 'fetchManagerDashboardLayout']);
+    Route::post('/update-layout', [LabDashboardController::class, 'updateManagerDashboardLayout']);
 });

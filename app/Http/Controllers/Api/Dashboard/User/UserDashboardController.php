@@ -7,7 +7,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Dashboard\UpdateUserDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
-use App\Http\Resources\Dashboard\UserDashboardLayoutResource;
+use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
@@ -443,7 +443,7 @@ class UserDashboardController extends AppBaseController
             $dashboardType = 'user';
             $fetchUserDashboardLayout = $this->userDashboardRepository->fetchUserDashboardLayout($userData, $dashboardType);
             if ($fetchUserDashboardLayout->isNotEmpty()) {
-                return $this->sendResponse(UserDashboardLayoutResource::collection($fetchUserDashboardLayout), $message, 200);
+                return $this->sendResponse(DashboardLayoutResource::collection($fetchUserDashboardLayout), $message, 200);
             }
 
             return $this->sendError(__('responses.failed_found_user_dashboard_detail'), 404);

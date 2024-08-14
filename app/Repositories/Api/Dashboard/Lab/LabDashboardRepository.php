@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Dashboard\Lab;
 use App\Helpers\UtilityHelper;
 use App\Services\ChallengeAssessmentUserService;
 use App\Services\Chat\ConversationService;
+use App\Services\DashboardLayoutService;
 use App\Services\FriendService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
@@ -41,8 +42,9 @@ class LabDashboardRepository implements LabDashboardInterface
     private $publicChallengeService;
     private $publicLabService;
     private $publicResourceModuleService;
+    private $dashboardLayoutService;
 
-    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService, OrganizationService $organizationService, ConversationService $conversationService, FriendService $friendService, UserSkillsService $userSkillsService, PublicChallengeService $publicChallengeService, PublicLabService $publicLabService, PublicResourceModuleService $publicResourceModuleService)
+    public function __construct(MemberManagementService $memberManagementService, ChallengeService $challengeService, LabService $labService, LabProgramService $labProgramService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ModuleCompletionStatusService $moduleCompletionStatusService, ProjectService $projectService, ChallengeAssessmentUserService $challengeAssessmentUserService, OrganizationService $organizationService, ConversationService $conversationService, FriendService $friendService, UserSkillsService $userSkillsService, PublicChallengeService $publicChallengeService, PublicLabService $publicLabService, PublicResourceModuleService $publicResourceModuleService, DashboardLayoutService $dashboardLayoutService)
     {
         $this->memberManagementService = $memberManagementService;
         $this->challengeService = $challengeService;
@@ -61,6 +63,7 @@ class LabDashboardRepository implements LabDashboardInterface
         $this->publicChallengeService = $publicChallengeService;
         $this->publicLabService = $publicLabService;
         $this->publicResourceModuleService = $publicResourceModuleService;
+        $this->dashboardLayoutService = $dashboardLayoutService;
     }
 
     public function fetchChallengeReportBasedOnOrganization($organizationId)
@@ -300,6 +303,28 @@ class LabDashboardRepository implements LabDashboardInterface
     {
         try {
             return  $this->resourceModuleService->getResourceModuleList($request, $organization);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchDashboardLayout($userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->fetchDashboardLayout($userData, $dashboardType);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function updateDashboardLayout($request, $userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->updateDashboardLayout($request, $userData, $dashboardType);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

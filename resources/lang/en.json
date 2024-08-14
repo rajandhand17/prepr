@@ -1393,7 +1393,15 @@
     "responses.lab_clone_failed": "The lab clone operation has failed.",
     "responses.owner_required": "This owner filter should be between all, my or invited",
     "responses.found_user_dashboard_detail": "The User Dashboard layout has been successfully retrieved",
+    "responses.found_lab_dashboard_detail": "The Lab Dashboard layout has been successfully retrieved",
+    "responses.found_organization_dashboard_detail": "The Organization Dashboard layout has been successfully retrieved",
     "responses.update_user_dashboard_detail": "The User Dashboard layout has been updated successfully",
+    "responses.update_lab_dashboard_detail": "The Lab Dashboard layout has been updated successfully",
+    "responses.update_organization_dashboard_detail": "The Organization Dashboard layout has been updated successfully",
     "responses.failed_found_user_dashboard_detail": "Failed to retrieve User Dashboard layout",
-    "responses.failed_update_user_dashboard_detail": "Failed to update User Dashboard layout"
+    "responses.failed_update_user_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.failed_found_lab_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
+    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout"
 }

@@ -8,7 +8,7 @@ use Exception;
 
 class DashboardLayoutService
 {
-    public function fetchUserDashboardLayout($userData, $dashboardType)
+    public function fetchDashboardLayout($userData, $dashboardType)
     {
         try {
             switch ($dashboardType) {
