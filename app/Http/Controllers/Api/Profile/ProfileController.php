@@ -77,7 +77,6 @@ class ProfileController extends AppBaseController
 
             return $this->sendError(__('responses.add_user_personal_failed'), 400);
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
