@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.319.3",
+            "version": "3.319.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "4f29bf3c43ff32732e105ac8bcff325f7db86bd0"
+                "reference": "b39a56786bef9e922c8bdd0e47c73ba828cc512e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/4f29bf3c43ff32732e105ac8bcff325f7db86bd0",
-                "reference": "4f29bf3c43ff32732e105ac8bcff325f7db86bd0",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b39a56786bef9e922c8bdd0e47c73ba828cc512e",
+                "reference": "b39a56786bef9e922c8bdd0e47c73ba828cc512e",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.319.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.319.4"
             },
-            "time": "2024-08-12T18:06:14+00:00"
+            "time": "2024-08-13T18:04:50+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -705,16 +705,16 @@
         },
         {
             "name": "chargebee/chargebee-php",
-            "version": "v3.31.0",
+            "version": "v3.32.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/chargebee/chargebee-php.git",
-                "reference": "311da5c83c716fc3df083998fcb33f0c2a762534"
+                "reference": "c5d0ab3b51ea24038d1b3fcdeec79db0b21cd275"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/chargebee/chargebee-php/zipball/311da5c83c716fc3df083998fcb33f0c2a762534",
-                "reference": "311da5c83c716fc3df083998fcb33f0c2a762534",
+                "url": "https://api.github.com/repos/chargebee/chargebee-php/zipball/c5d0ab3b51ea24038d1b3fcdeec79db0b21cd275",
+                "reference": "c5d0ab3b51ea24038d1b3fcdeec79db0b21cd275",
                 "shasum": ""
             },
             "require": {
@@ -748,9 +748,9 @@
             ],
             "support": {
                 "issues": "https://github.com/chargebee/chargebee-php/issues",
-                "source": "https://github.com/chargebee/chargebee-php/tree/v3.31.0"
+                "source": "https://github.com/chargebee/chargebee-php/tree/v3.32.0"
             },
-            "time": "2024-07-31T07:12:23+00:00"
+            "time": "2024-08-14T07:38:38+00:00"
         },
         {
             "name": "darkaonline/l5-swagger",
