@@ -88,14 +88,17 @@ class ResourceGroup extends Model
     {
         return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id');
     }
+
     public function resource_group_type()
     {
-        return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id')->where('type_mode','0');
+        return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id')->where('type_mode', '0');
     }
+
     public function resource_group_mode()
     {
-        return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id')->where('type_mode','1');
+        return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id')->where('type_mode', '1');
     }
+
     public function component_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_group_id', 'id');

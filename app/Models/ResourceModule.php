@@ -81,14 +81,17 @@ class ResourceModule extends Model
     {
         return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id');
     }
+
     public function resource_module_type()
     {
-        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id')->where('type_mode','0');
+        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id')->where('type_mode', '0');
     }
+
     public function resource_module_mode()
     {
-        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id')->where('type_mode','1');
+        return $this->hasMany(ResourceModuleTypeModes::class, 'resource_module_id', 'id')->where('type_mode', '1');
     }
+
     public function documents()
     {
         return $this->hasMany(ResourceModuleDetail::class, 'resource_module_id', 'id')->select('id', 'title', 'path')->where('type', '=', '0');

@@ -73,14 +73,17 @@ class ResourceCollection extends Model
     {
         return $this->hasMany(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id');
     }
+
     public function resource_collection_type()
     {
-        return $this->hasMany(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id')->where('type_mode','0');
+        return $this->hasMany(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id')->where('type_mode', '0');
     }
+
     public function resource_collection_mode()
     {
-        return $this->hasMany(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id')->where('type_mode','1');
+        return $this->hasMany(ResourceCollectionTypeModes::class, 'resource_collection_id', 'id')->where('type_mode', '1');
     }
+
     public function labs()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('lab_id', '!=', null);

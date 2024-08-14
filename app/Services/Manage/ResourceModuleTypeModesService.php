@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceGroupTypeModes;
 use App\Models\ResourceModuleTypeModes;
 
 class ResourceModuleTypeModesService
@@ -27,7 +26,7 @@ class ResourceModuleTypeModesService
             // Delete existing entries for the given resource module
             ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->delete();
             // Helper function to create resource module type modes
-            $createResourceModuleTypeMode = function($mappings, $items) use ($resourceModuleId) {
+            $createResourceModuleTypeMode = function ($mappings, $items) use ($resourceModuleId) {
                 foreach ($items as $item) {
                     if (isset($mappings[$item])) {
                         ResourceModuleTypeModes::create([
@@ -51,10 +50,12 @@ class ResourceModuleTypeModesService
             return true;
         } catch (\Exception $e) {
             // Log the exception or handle it according to your needs
-            Log::error('Failed to store challenge type modes: ' . $e->getMessage());
+            Log::error('Failed to store challenge type modes: '.$e->getMessage());
+
             return false;
         }
     }
+
     public static function getResourceModuleBasedOnType($type)
     {
         try {
