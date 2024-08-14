@@ -33,10 +33,10 @@ class CreateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'type'                   => 'required|array',
-            'type.*'                 => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|array',
-            'mode.*'                 => 'required|in:team,individual',
+            'type'                     => 'required|array',
+            'type.*'                   => 'required|in:assess,onboard,engage,grow',
+            'mode'                     => 'required|array',
+            'mode.*'                   => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
@@ -185,7 +185,6 @@ class CreateResourceGroupRequest extends FormRequest
             'mode.*.in'                      => __('responses.resource_mode_in'),
             'mode.*.required'                => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
-
 
         ];
     }

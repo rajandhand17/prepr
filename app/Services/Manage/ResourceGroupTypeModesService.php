@@ -3,7 +3,6 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ResourceCollectionTypeModes;
 use App\Models\ResourceGroupTypeModes;
 
 class ResourceGroupTypeModesService
@@ -33,7 +32,6 @@ class ResourceGroupTypeModesService
         }
     }
 
-
     // Storing type's and mode's
     public function createUpdateResourceGroupTypeModes($request, $resourceGroupId)
     {
@@ -53,11 +51,11 @@ class ResourceGroupTypeModesService
             // Delete existing entries for the given resource group
             ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->delete();
             // Helper function to create resource group type modes
-            $createResourceGroupTypeMode = function($mappings, $items) use ($resourceGroupId) {
+            $createResourceGroupTypeMode = function ($mappings, $items) use ($resourceGroupId) {
                 foreach ($items as $item) {
                     if (isset($mappings[$item])) {
                         ResourceGroupTypeModes::create([
-                            'resource_group_id' => $resourceGroupId,
+                            'resource_group_id'      => $resourceGroupId,
                             'type_mode'              => $mappings[$item]['type'],
                             'value'                  => $mappings[$item]['value'],
                         ]);
@@ -77,7 +75,8 @@ class ResourceGroupTypeModesService
             return true;
         } catch (\Exception $e) {
             // Log the exception or handle it according to your needs
-            Log::error('Failed to store challenge type modes: ' . $e->getMessage());
+            Log::error('Failed to store challenge type modes: '.$e->getMessage());
+
             return false;
         }
     }
