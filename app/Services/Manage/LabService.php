@@ -676,4 +676,25 @@ class LabService
             return false;
         }
     }
+
+    public function cloneLab($labId, $organization)
+    {
+        try {
+            $originalLab = Lab::find($labId);
+            $model = new Lab();
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalLab->title, $model);
+            $clonedLab = $originalLab->replicate();
+            $clonedLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $clonedLab->user_id = auth()->user()->id;
+            $clonedLab->organization_id = $organization->id;
+            $clonedLab->slug = $slug;
+            $clonedLab->save();
+
+            return $clonedLab;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -58,10 +58,10 @@ class ResourceModuleService
 
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_module_privacy.no');
                         break;
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_module_privacy.yes');
                         break;
                     default:

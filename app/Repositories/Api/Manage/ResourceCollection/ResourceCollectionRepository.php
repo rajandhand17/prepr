@@ -46,7 +46,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createResourceCollection = $this->resourceCollectionService->createResourceCollection($request, $upload_cover_image, $organizationId);
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
-                $createResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createResourceCollectionTypeModes($request, $createResourceCollection->id);
+                $createResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createUpdateResourceCollectionTypeModes($request, $createResourceCollection->id);
 
                 return[
                     'createResourceCollection'                        => $createResourceCollection,
@@ -126,7 +126,7 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $updateResourceCollection = $this->resourceCollectionService->updateResourceCollection($slug, $request, $upload_cover_image, $organizationId);
                 $updateComponentAssociation = $this->componentAssociationService->updateResourceCollectionAssociation($request, $updateResourceCollection->id);
                 $updateResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->updateResourceCollectionSkillsGroupsStack($request, $updateResourceCollection->id);
-                $updateResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->updateResourceCollectionTypeModes($request, $updateResourceCollection->id);
+                $updateResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createUpdateResourceCollectionTypeModes($request, $updateResourceCollection->id);
 
                 return[
                     'updateResourceCollection'                       => $updateResourceCollection,

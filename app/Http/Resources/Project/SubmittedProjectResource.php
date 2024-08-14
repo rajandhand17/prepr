@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Helpers\UtilityHelper;
 use App\Services\SkillService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -48,7 +47,7 @@ class SubmittedProjectResource extends JsonResource
             'media_type'            => $this->media_type,
             'media'                 => $media,
             'skills'                => $skills,
-            'updated_at'            => UtilityHelper::formatDateTime($this->updated_at),
+            'updated_at'            => $this->updated_at,
         ];
     }
 }

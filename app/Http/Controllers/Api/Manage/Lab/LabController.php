@@ -161,6 +161,42 @@ class LabController extends AppBaseController
         }
     }
 
+    public function cloneLab($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
+            }
+            // Checks creation limits of the Labs
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($organization->id);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $cloneLab = $this->labRepository->cloneLab($checkComponentBasedOnSlug, $organization);
+            if ($cloneLab) {
+                return $this->sendResponse(__('responses.lab_clone_success'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_clone_failed'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function update($slug, UpdateLabRequest $request)
     {
         try {
@@ -184,15 +220,14 @@ class LabController extends AppBaseController
             if ($request->cover_image !== null) {
                 if ($request->media_type == 'image') {
                     if ($request->hasFile('cover_image') && $request->file('cover_image')->isValid()) {
-                        $uploaded_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
-                        if (!$uploaded_cover_image) {
+                        $upload_cover_image = $this->labRepository->uploadLabCoverImage($request->cover_image);
+                        if (!$upload_cover_image) {
                             return $this->sendError(__('responses.image_upload_failed'), 400);
                         }
                     }
                 } elseif ($request->media_type == 'embedded') {
-                    $uploaded_cover_image = $request->cover_image;
+                    $upload_cover_image = $request->cover_image;
                 }
-                $upload_cover_image = $uploaded_cover_image;
             }
             $upload_achievement_image = null;
             if ($request->is_achievement_enabled == 'yes') {

@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Public\Challenge;
 
 use App\Helpers\UtilityHelper;
+use App\Services\ProjectService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\ChallengeSocialActivitiesService;
 use Exception;
@@ -11,11 +12,13 @@ class ChallengeRepository implements ChallengeInterface
 {
     private $challengeService;
     private $challengeSocialActivitiesService;
+    private $projectService;
 
-    public function __construct(ChallengeService $challengeService, ChallengeSocialActivitiesService $challengeSocialActivitiesService)
+    public function __construct(ChallengeService $challengeService, ChallengeSocialActivitiesService $challengeSocialActivitiesService, ProjectService $projectService)
     {
         $this->challengeService = $challengeService;
         $this->challengeSocialActivitiesService = $challengeSocialActivitiesService;
+        $this->projectService = $projectService;
     }
 
     public function getList($request)
@@ -99,6 +102,28 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             return $this->challengeService->getProjectChallengeRequirement($challengeData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectIdsBasedOnChallenge($challengeId)
+    {
+        try {
+            return $this->projectService->fetchProjectIdsBasedOnChallenge($challengeId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectIds($projectIds, $request)
+    {
+        try {
+            return $this->projectService->getProjectList($projectIds, $request);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
