@@ -86,7 +86,7 @@ class ResourceGroup extends Model
 
     public function resource_group_type_mode()
     {
-        return $this->hasOne(ResourceGroupTypeModes::class, 'resource_group_id', 'id');
+        return $this->hasMany(ResourceGroupTypeModes::class, 'resource_group_id', 'id');
     }
     public function resource_group_type()
     {
