@@ -83,7 +83,7 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
             if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError(__('responses.select_valid_role_error'), 422);

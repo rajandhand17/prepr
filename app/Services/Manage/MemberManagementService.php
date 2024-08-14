@@ -541,7 +541,7 @@ class MemberManagementService
             DB::rollBack();
 
             return false;
-        }catch (InvitationQuotaExceededException $e) {
+        } catch (InvitationQuotaExceededException $e) {
             throw $e;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

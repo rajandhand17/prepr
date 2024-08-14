@@ -54,10 +54,10 @@ class ChallengeService
 
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
-                    $status = ($request->status == 'draft') ? '0' :  '1';
+                    $status = ($request->status == 'draft') ? '0' : '1';
                     $challenge_list = $challenge_list->where('challenges.status', $status);
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' :  '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '3';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
             } else {

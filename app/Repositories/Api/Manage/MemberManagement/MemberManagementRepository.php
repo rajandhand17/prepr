@@ -107,7 +107,7 @@ class MemberManagementRepository implements MemberManagementInterface
             }
 
             return false;
-        }catch (InvitationQuotaExceededException $e) {
+        } catch (InvitationQuotaExceededException $e) {
             // Re-throw the specific exception
             throw $e;
         } catch (\Exception $e) {
