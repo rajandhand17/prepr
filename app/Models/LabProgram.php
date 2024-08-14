@@ -151,6 +151,7 @@ class LabProgram extends Model
     {
         return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '1');
     }
+
     public function isJoined()
     {
         if (auth('api')->check()) {
