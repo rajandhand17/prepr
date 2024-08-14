@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Api\Manage\MemberManagement;
 
+use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\MemberManagement\ChangeRoleRequest;
@@ -82,12 +83,16 @@ class MemberManagementController extends AppBaseController
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
+                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
             }
             if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
-            $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request);
+
+            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+            $invitationSentUser = $memberManagementListing->total();
+            $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request, $invitationSentUser);
+
             if ((count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
                 return $this->sendError($memberLists['add_member_response'], 422);
             } elseif ($memberLists) {
@@ -95,6 +100,8 @@ class MemberManagementController extends AppBaseController
             }
 
             return $this->sendError(__('responses.create_member_manger_failed'), 404);
+        } catch (InvitationQuotaExceededException $exception) {
+            return $this->sendError($exception->getMessage(), 422);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
