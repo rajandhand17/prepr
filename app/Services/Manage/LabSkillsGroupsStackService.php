@@ -217,4 +217,23 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function cloneLabSkillsGroupsStack($originalLabsSkills, $clonedLabId)
+    {
+        try {
+            $originalLabsSkills->each(function ($skills) use ($clonedLabId) {
+                if ($skills) {
+                    $cloneSkill = $skills->replicate();
+                    $cloneSkill->lab_id = $clonedLabId;
+                    $cloneSkill->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

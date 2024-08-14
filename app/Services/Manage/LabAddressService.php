@@ -56,4 +56,19 @@ class LabAddressService
             return false;
         }
     }
+
+    public static function cloneLabAddress($lab, $newLabId)
+    {
+        try {
+            if ($lab) {
+                $cloneLabAddress = $lab->replicate();
+                $cloneLabAddress->lab_id = $newLabId;
+                $cloneLabAddress->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
