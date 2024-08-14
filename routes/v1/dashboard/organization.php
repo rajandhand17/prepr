@@ -14,4 +14,6 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/my-labs', [OrganizationDashboardController::class, 'getMyLabs']);
     Route::get('/my-resource-module', [OrganizationDashboardController::class, 'getMyResourceModule']);
     Route::get('/my-organization', [OrganizationDashboardController::class, 'getMyOrganization']);
+    Route::get('/fetch-layout', [OrganizationDashboardController::class, 'fetchManagerDashboardLayout']);
+    Route::post('/update-layout', [OrganizationDashboardController::class, 'updateManagerDashboardLayout']);
 });
