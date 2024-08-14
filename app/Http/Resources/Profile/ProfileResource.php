@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Profile;
 
+use App\Models\UserSetting;
 use App\Services\SkillService;
 use App\Services\TagService;
 use Illuminate\Http\Request;
@@ -15,7 +16,27 @@ class ProfileResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request)
-    {
+    {   
+        switch ($this->userSetting->profile_privacy) {
+            case '0':
+                $profile_privacy = 'public';
+                break;
+            case '1':
+                $profile_privacy = 'private';
+                break;
+            case '2':
+                $profile_privacy = 'signed-user';
+                break;
+            default:
+                $profile_privacy = 'null';
+                break;
+        } 
+
+        if($profile_privacy =='private' || auth()->user->id != $this->id) {
+            return [
+                'profile_privacy'       => $profile_privacy,
+                ];
+        } else {
         $purpose = null;
         $user_type = null;
         if ($this->userPersonal !== null) {
@@ -209,7 +230,8 @@ class ProfileResource extends JsonResource
             'user_pinned_skills'     => $pinnedSkills,
             'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
             'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
-
+            'profile_privacy'       => $profile_privacy,
         ];
+        }
     }
 }
