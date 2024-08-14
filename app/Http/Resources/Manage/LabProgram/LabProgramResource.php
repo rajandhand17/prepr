@@ -2,15 +2,11 @@
 
 namespace App\Http\Resources\Manage\LabProgram;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\LabProgramService;
-use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,12 +21,9 @@ class LabProgramResource extends JsonResource
     public function toArray(Request $request): array
     {
         $achievement = [];
-        $componentAssociation = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
@@ -39,19 +32,6 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
-        if ($this->component_association) {
-            foreach ($this->component_association as $association) {
-                if ($association->lab_id) {
-                    $labData = LabService::getLabBasedOnId($association->lab_id);
-                    if ($labData) {
-                        $componentAssociation[$association->lab_id] = $labData;
-                        $componentAssociation[$association->lab_id]['liked'] = $labData ? $labData->liked() : 'no';
-                        $componentAssociation[$association->lab_id]['favourite'] = $labData ? $labData->favourite() : 'no';
-                        $componentAssociation[$association->lab_id]['member_count'] = $labData ? $labData->members()->count() : 0;
-                    }
-                }
-            }
-        }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
@@ -84,15 +64,6 @@ class LabProgramResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->achievement) {
@@ -160,7 +131,6 @@ class LabProgramResource extends JsonResource
             'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
             'slug'                          => $this->slug,
             'description'                   => $this->description,
-            'labs'                          => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media_type'                    => $this->media_type,
             'media'                         => $this->media,
@@ -175,8 +145,6 @@ class LabProgramResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
             'favourite'                     => $this->favourite(),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
@@ -189,7 +157,7 @@ class LabProgramResource extends JsonResource
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'member_count'                  => '0', //Static for temporary basis,
-            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                  => $this->updated_at,
         ];
     }
 }

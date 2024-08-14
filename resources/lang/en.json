@@ -1378,7 +1378,6 @@
     "responses.manager_upcomming_deadline_retrieved": "Manager's upcoming deadline retrieved successfully.",
     "responses.not_manager_upcomming_deadline_retrieved": "Failed to retrieve manager's upcoming deadlines.",
     "responses.no_association_found": "No component association data found.",
-
     "responses.no_related_found": "No component related data found.",
     "responses.lab_related_found": "Lab component related data found.",
     "responses.lab_program_related_found": "Lab Program component related data found.",
@@ -1389,5 +1388,8 @@
     "responses.resource_group_related_found": "Resource Group component related data found.",
     "responses.feature_lab_created_successfully": "The featured lab has been successfully created.",
     "responses.feature_lab_created_failed": "The creation of the featured lab has failed.",
-    "responses.already_featured_lab": "This lab already exists in the featured labs."
+    "responses.already_featured_lab": "This lab already exists in the featured labs.",
+    "responses.lab_clone_success": "The lab has been successfully cloned.",
+    "responses.lab_clone_failed": "The lab clone operation has failed.",
+    "responses.owner_required": "This owner filter should be between all, my or invited"
 }

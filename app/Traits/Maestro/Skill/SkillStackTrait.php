@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Traits\Maestro\Skill;
+
+use App\Helpers\UtilityHelper;
+use App\Services\Maestro\SkillStackService;
+use Exception;
+
+trait SkillStackTrait
+{
+    private function createSkillStack($request)
+    {
+        try {
+            if (SkillStackService::createSkillStack($request)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getSkillStackById($id)
+    {
+        try {
+            return SkillStackService::getSkillStackById($id);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function updateSkillStackById($id, $request)
+    {
+        try {
+            if (SkillStackService::updateSkillStackById($id, $request)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function deleteSkillStackById($id)
+    {
+        try {
+            if (SkillStackService::deleteSkillStackById($id)) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getSkillStack()
+    {
+        try {
+            $skills = SkillStackService::getSkillStack();
+            if ($skills) {
+                return $skills;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private function getAjaxAllSkillStack($request)
+    {
+        try {
+            $skills = SkillStackService::getAjaxAllSkillStack($request);
+            if ($skills) {
+                return $skills;
+            }
+
+            return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+}

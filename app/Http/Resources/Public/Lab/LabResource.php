@@ -3,25 +3,11 @@
 namespace App\Http\Resources\Public\Lab;
 
 use App\Http\Resources\Public\Airmeet\AirmeetEventResource;
-use App\Http\Resources\Public\Challenge\ChallengeListNameResource;
-use App\Http\Resources\Public\ChallengePath\ChallengePathListNameResource;
-use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Public\Organization\OrganizationHostResource;
-use App\Http\Resources\Public\ResourceCollection\ResourceCollectionListNameResource;
-use App\Http\Resources\Public\ResourceGroup\ResourceGroupListNameResource;
-use App\Http\Resources\Public\ResourceModule\ResourceModuleListNameResource;
 use App\Services\AchievementConditionListService;
-use App\Services\Public\ChallengePathService;
-use App\Services\Public\ChallengeService;
-use App\Services\Public\LabProgramService;
-use App\Services\Public\ResourceCollectionService;
-use App\Services\Public\ResourceGroupService;
-use App\Services\Public\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -45,15 +31,7 @@ class LabResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $achievement = [];
-        $lab_programs = [];
-        $challenges = [];
-        $challenge_paths = [];
-        $resource_modules = [];
-        $resource_collections = [];
-        $resource_groups = [];
         $module_progress = null;
 
         if ($this->getCategory) {
@@ -86,16 +64,6 @@ class LabResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->achievement) {
@@ -144,59 +112,6 @@ class LabResource extends JsonResource
             default:
                 $media = $this->media;
                 break;
-        }
-
-        if (!empty($this->component_association)) {
-            foreach ($this->component_association as $lab_association) {
-                if (count($lab_programs) < 5) {
-                    if ($lab_association->lab_program_id) {
-                        $getLabProgram = LabProgramService::getLabProgramBasedOnId($lab_association->lab_program_id);
-                        if ($getLabProgram !== null) {
-                            $lab_programs[$lab_association->lab_program_id] = LabProgramListNameResource::make($getLabProgram);
-                        }
-                    }
-                }
-                if (count($challenges) < 5) {
-                    if ($lab_association->challenge_id) {
-                        $getChallenge = ChallengeService::getChallengeBasedOnId($lab_association->challenge_id);
-                        if ($getChallenge !== null) {
-                            $challenges[$lab_association->challenge_id] = ChallengeListNameResource::make($getChallenge);
-                        }
-                    }
-                }
-                if (count($challenge_paths) < 5) {
-                    if ($lab_association->challenge_path_id) {
-                        $getChallengePath = ChallengePathService::getChallengePathBasedOnId($lab_association->challenge_path_id);
-                        if ($getChallengePath !== null) {
-                            $challenge_paths[$lab_association->challenge_path_id] = ChallengePathListNameResource::make($getChallengePath);
-                        }
-                    }
-                }
-                if (count($resource_modules) < 5) {
-                    if ($lab_association->resource_module_id) {
-                        $getResourceModule = ResourceModuleService::getResourceModuleBasedOnId($lab_association->resource_module_id);
-                        if ($getResourceModule !== null) {
-                            $resource_modules[$lab_association->resource_module_id] = ResourceModuleListNameResource::make($getResourceModule);
-                        }
-                    }
-                }
-                if (count($resource_collections) < 5) {
-                    if ($lab_association->resource_collection_id) {
-                        $getResourceCollection = ResourceCollectionService::getResourceCollectionBasedOnId($lab_association->resource_collection_id);
-                        if ($getResourceCollection !== null) {
-                            $resource_collections[$lab_association->resource_collection_id] = ResourceCollectionListNameResource::make($getResourceCollection);
-                        }
-                    }
-                }
-                if (count($resource_groups) < 5) {
-                    if ($lab_association->resource_group_id) {
-                        $getResourceGroup = ResourceGroupService::getResourceGroupBasedOnId($lab_association->resource_group_id);
-                        if ($getResourceGroup !== null) {
-                            $resource_groups[$lab_association->resource_group_id] = ResourceGroupListNameResource::make($getResourceGroup);
-                        }
-                    }
-                }
-            }
         }
 
         if (auth('api')->check()) {
@@ -260,8 +175,6 @@ class LabResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'joined'                        => $join_status,
@@ -274,18 +187,12 @@ class LabResource extends JsonResource
             'lab_address'                   => LabAddressResource::make($this->address),
             'lab_achievement'               => $achievement,
             'lab_external_links'            => LabExternalLinksResource::collection($this->external_links),
-            'lab_program_count'             => count($lab_programs),
-            'challenge_count'               => count($challenges),
-            'challenge_path_count'          => count($challenge_paths),
-            'resource_module_count'         => count($resource_modules),
-            'resource_collection_count'     => count($resource_collections),
-            'resource_group_count'          => count($resource_groups),
-            'lab_program'                   => $lab_programs,
-            'challenge'                     => $challenges,
-            'challenge_path'                => $challenge_paths,
-            'resource_module'               => $resource_modules,
-            'resource_collection'           => $resource_collections,
-            'resource_group'                => $resource_groups,
+            'lab_program_count'             => $this->lab_lab_program_association()->count(),
+            'challenge_count'               => $this->lab_challenge_association()->count(),
+            'challenge_path_count'          => $this->lab_challenge_path_association()->count(),
+            'resource_module_count'         => $this->lab_resource_module_association()->count(),
+            'resource_collection_count'     => $this->lab_resource_collection_association()->count(),
+            'resource_group_count'          => $this->lab_resource_group_association()->count(),
             'last_updated'                  => $this->updated_at,
         ];
     }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Discussion;
 
-use App\Helpers\UtilityHelper;
 use App\Services\DiscussionSocialActivitiesService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -38,7 +37,7 @@ class CommentReplies extends JsonResource
             'by_me'           => $byMe,
             'attachment'      => $this->attachment,
             'user_details'    => UserResource::make($this->users),
-            'created_at'      => UtilityHelper::formatDateTime($this->created_at),
+            'created_at'      => $this->created_at,
         ];
 
         return $data;

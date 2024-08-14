@@ -19,4 +19,8 @@ interface ChallengeInterface
     public function captureSocialActivity($challenge_id, $column, $value);
 
     public function getProjectChallengeRequirement($challengeData);
+
+    public function fetchProjectIdsBasedOnChallenge($challengeId);
+
+    public function fetchProjectIds($projectIds, $request);
 }
