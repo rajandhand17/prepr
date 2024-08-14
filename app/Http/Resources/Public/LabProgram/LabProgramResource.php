@@ -121,7 +121,7 @@ class LabProgramResource extends JsonResource
                     break;
             }
         }
-        
+
         $mode = null;
         if ($this->labProgramMode) {
             switch ($this->labProgramMode->value) {

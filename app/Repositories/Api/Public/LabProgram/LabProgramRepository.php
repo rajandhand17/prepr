@@ -3,9 +3,9 @@
 namespace App\Repositories\Api\Public\LabProgram;
 
 use App\Helpers\UtilityHelper;
+use App\Services\Manage\MemberManagementService;
 use App\Services\Public\LabProgramService;
 use App\Services\Public\LabProgramSocialActivitiesService;
-use App\Services\Manage\MemberManagementService;
 
 class LabProgramRepository implements LabProgramInterface
 {
@@ -14,7 +14,7 @@ class LabProgramRepository implements LabProgramInterface
 
     private $memberManagementService;
 
-    public function __construct(LabProgramService $labProgramService, LabProgramSocialActivitiesService $labProgramSocialActivitiesService,MemberManagementService $memberManagementService)
+    public function __construct(LabProgramService $labProgramService, LabProgramSocialActivitiesService $labProgramSocialActivitiesService, MemberManagementService $memberManagementService)
     {
         $this->labProgramService = $labProgramService;
         $this->labProgramSocialActivitiesService = $labProgramSocialActivitiesService;
@@ -97,6 +97,7 @@ class LabProgramRepository implements LabProgramInterface
             return false;
         }
     }
+
     public function setJoinRequestParameters($language)
     {
         try {
@@ -118,6 +119,7 @@ class LabProgramRepository implements LabProgramInterface
             return false;
         }
     }
+
     public function unJoinLabProgram($labProgram, $component, $request)
     {
         try {

@@ -104,6 +104,7 @@ class LabProgramController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function joinLabProgram($slug, Request $request)
     {
         try {
