@@ -23,7 +23,9 @@ class ResourceModuleRatingService
     public static function getResourceModuleBasedOnRating($rating)
     {
         try {
-            $resourceModuleRating = ResourceModuleRating::where('rating', $rating)->get();
+            $resourceModuleRating = ResourceModuleRating::where('rating', $rating)
+                ->where('user_id', auth()->user()->id)
+                ->get();
 
             return $resourceModuleRating;
         } catch (\Exception $e) {
