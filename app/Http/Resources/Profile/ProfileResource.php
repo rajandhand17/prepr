@@ -29,8 +29,8 @@ class ProfileResource extends JsonResource
             default:
                 $profile_privacy = 'null';
                 break;
-        } 
-        if($profile_privacy =='private' || auth()->user()->id != $this->id) {
+        }
+        if ($profile_privacy == 'private' || auth()->user()->id != $this->id) {
             return [
                 'profile_privacy'       => $profile_privacy,
             ];
