@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Public\ResourceGroup\ResourceGroupController;
 use Illuminate\Support\Facades\Route;
 
 $middleware = ['language'];
-if (\request()->has('social_type') || \request()->has('progress')) {
+if (\request()->has('social_type') || \request()->has('progress') || \request()->has('rating')) {
     $middleware = ['language', 'auth:api'];
 }
 Route::middleware($middleware)->group(function () {
