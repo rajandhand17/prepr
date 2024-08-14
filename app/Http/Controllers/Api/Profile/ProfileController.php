@@ -43,13 +43,6 @@ class ProfileController extends AppBaseController
             if (!$userDetails) {
                 return $this->sendError(__('responses.not_found_user_profile_detail'), 400);
             }
-            if ($userDetails->userSetting) {
-                $profilePrivacy = $userDetails->userSetting->profile_privacy;
-                $projectPrivacy = $userDetails->userSetting->project_privacy;
-                if (($profilePrivacy == '1' || $projectPrivacy == '1') && $userDetails->id !== auth()->user()->id) {
-                    return $this->sendError(__('responses.not_visible_for_others'));
-                }
-            }
 
             return $this->sendResponse(ProfileResource::make($userDetails), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
@@ -65,6 +58,22 @@ class ProfileController extends AppBaseController
             $createProfile = $this->profileRepository->addPersonalDetail($request);
             if ($createProfile) {
                 return $this->sendResponse(ProfileResource::make($createProfile), __('responses.add_user_personal_created'));
+            }
+
+            return $this->sendError(__('responses.add_user_personal_failed'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function updateFilePrivacy($fileId)
+    {
+        try {
+            $fileprivate = $this->profileRepository->updateFilePrivacy($fileId);
+            if ($fileprivate) {
+                return $this->sendResponse(__('responses.add_user_personal_created'), 200);
             }
 
             return $this->sendError(__('responses.add_user_personal_failed'), 400);
