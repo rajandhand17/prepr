@@ -38,7 +38,7 @@ class CreateResourceModuleRequest extends FormRequest
             'type'                     => 'required|in:assess,onboard,engage,grow',
             'mode'                     => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
-            'privacy'                  => 'required|in:yes,no',
+            'privacy'                  => 'required|in:public,private',
             'status'                   => 'required|in:draft,publish,archive',
             'is_global'                => 'required|in:yes,no',
             'skills'                   => 'required|array',

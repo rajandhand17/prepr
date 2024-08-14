@@ -153,13 +153,13 @@ class ResourceModuleResource extends JsonResource
 
         switch($this->privacy) {
             case '0':
-                $privacy = 'no';
+                $privacy = 'public';
                 break;
             case '1':
-                $privacy = 'yes';
+                $privacy = 'private';
                 break;
             default:
-                $privacy = 'no';
+                $privacy = 'public';
                 break;
         }
 
