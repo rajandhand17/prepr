@@ -121,4 +121,33 @@ class LabMarketplace extends Model
     {
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
+    public function lab_template_challenge_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('challenge_template_id', '!=', null)->whereNull('deleted_at');
+    }
+    
+    public function lab_template_challenge_path_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('challenge_path_template_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_template_resource_module_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('resource_module_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_template_resource_collection_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('resource_collection_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_template_resource_group_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('resource_group_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_template_lab_program_association()
+    {
+        return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('lab_program_id', '!=', null)->whereNull('deleted_at');
+    }
 }
