@@ -14,6 +14,7 @@ class ResourceCollectionRatingService
             $resourceCollectionRating = ResourceCollectionRating::where('rating', $rating)
                 ->where('user_id', auth()->user()->id)
                 ->get();
+
             return $resourceCollectionRating;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
