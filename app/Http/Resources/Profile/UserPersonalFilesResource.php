@@ -20,6 +20,7 @@ class UserPersonalFilesResource extends JsonResource
             'id'        => $this->id,
             'path'      => $this->name,
             'name'      => end($array),
+            'public'    => $this->public,
         ];
     }
 }
