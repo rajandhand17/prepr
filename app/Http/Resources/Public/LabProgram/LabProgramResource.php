@@ -100,6 +100,28 @@ class LabProgramResource extends JsonResource
             }
         }
 
+        $join_status = 'No';
+        $joined_status = $this->isJoined();
+        if ($joined_status != 'NA' && $joined_status != null) {
+            switch ($joined_status->invite_status) {
+                case '0':
+                    $join_status = 'Invited';
+                    break;
+                case '1':
+                    $join_status = 'Yes';
+                    break;
+                case '2':
+                    $join_status = 'Pending';
+                    break;
+                case '3':
+                    $join_status = 'No';
+                    break;
+                default:
+                    $join_status = 'No';
+                    break;
+            }
+        }
+        
         $mode = null;
         if ($this->labProgramMode) {
             switch ($this->labProgramMode->value) {
@@ -129,6 +151,7 @@ class LabProgramResource extends JsonResource
             'slug'                          => $this->slug,
             'type'                          => LabProgramTypeResource::make($this->labProgramType()),
             'mode'                          => $mode,
+            'is_joined'                     => $join_status,
             'created_by'                    => $created_by,
             'description'                   => $this->description,
             'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),

@@ -630,4 +630,7 @@ return [
         'continue-left'     => '11',
         'achievement'       => '12',
     ],
+    'member_management_component' => [
+        'lab_program'       => 'lab-program',
+    ],
 ];

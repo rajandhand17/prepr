@@ -36,6 +36,13 @@ class MemberManagementService
                         'module_type' => $module_type,
                     ]);
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    $memberListCollection = $memberListCollection->where([
+                        'module_id'   => $componentCollectionObject->id,
+                        'module_type' => $module_type,
+                    ]);
+                    break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     $memberListCollection = $memberListCollection->where([
@@ -528,11 +535,10 @@ class MemberManagementService
         }
     }
 
-    public function checkJoinedOrNot($checkComponentBasedOnSlug, $component)
+    public function checkJoinedOrNot($checkComponentBasedOnSlug, $moduleType)
     {
         try {
-            $module_type = config('constants.member_management_component_type.lab');
-            $records = MemberManagement::where('email', auth()->user()->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->first();
+            $records = MemberManagement::where('email', auth()->user()->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $moduleType])->first();
             if ($records) {
                 return true;
             }

@@ -151,4 +151,12 @@ class LabProgram extends Model
     {
         return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '1');
     }
+    public function isJoined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '3', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return 'NA';
+    }
 }
