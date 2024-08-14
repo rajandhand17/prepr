@@ -32,8 +32,10 @@ class UpdateResourceModuleRequest extends FormRequest
         $base_rules = [
             'title'                  => 'required|max:255|unique:resource_modules,title,'.$resourceModuleService->id,
             'description'            => 'required',
-            'type'                   => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|in:team,individual',
+            'type'                   => 'required|array',
+            'type.*'                 => 'required|in:assess,onboard,engage,grow',
+            'mode'                   => 'required|array',
+            'mode.*'                 => 'required|in:team,individual',
             'privacy'                => 'required|in:yes,no',
             'media_type'             => 'in:image,embedded',
             'status'                 => 'required|in:draft,publish,archive',
@@ -126,9 +128,13 @@ class UpdateResourceModuleRequest extends FormRequest
             'skill_stacks.*.numeric'            => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'             => __('responses.skill_stacks_not_exists'),
             'type.required'                     => __('responses.type_required'),
-            'type.in'                           => __('responses.resource_type_in'),
+            'type.array'                        => __('responses.type_array'),
+            'type.*.in'                         => __('responses.resource_type_in'),
+            'type.*.required'                   => __('responses.type_required'),
             'mode.required'                     => __('responses.mode_required'),
-            'mode.in'                           => __('responses.resource_mode_in'),
+            'mode.array'                        => __('responses.mode_array'),
+            'mode.*.in'                         => __('responses.resource_mode_in'),
+            'mode.*.required'                   => __('responses.resource_mode_in'),
             'media_type.in'                     => __('responses.choose_image_embedded'),
 
         ];

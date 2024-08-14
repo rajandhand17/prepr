@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceCollectionTypeModes;
 use App\Models\ResourceGroupTypeModes;
 
 class ResourceGroupTypeModesService
@@ -32,75 +33,51 @@ class ResourceGroupTypeModesService
         }
     }
 
-    public static function getResourceGroupMode($resourceGroupId)
-    {
-        try {
-            return ResourceGroupTypeModes::where([
-                'type_mode'         => config('constants.resource_mode.mode'),
-                'resource_group_id' => $resourceGroupId])->first();
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
 
     // Storing type's and mode's
-    public function createResourceGroupTypeModes($request, $resourceGroupId)
+    public function createUpdateResourceGroupTypeModes($request, $resourceGroupId)
     {
         try {
+            $typeMappings = [
+                'assess'  => ['type' => '0', 'value' => '0'],
+                'onboard' => ['type' => '0', 'value' => '1'],
+                'engage'  => ['type' => '0', 'value' => '2'],
+                'grow'    => ['type' => '0', 'value' => '3'],
+            ];
+
+            $modeMappings = [
+                'team'       => ['type' => '1', 'value' => '4'],
+                'individual' => ['type' => '1', 'value' => '5'],
+            ];
+
+            // Delete existing entries for the given resource group
+            ResourceGroupTypeModes::where('resource_group_id', $resourceGroupId)->delete();
+            // Helper function to create resource group type modes
+            $createResourceGroupTypeMode = function($mappings, $items) use ($resourceGroupId) {
+                foreach ($items as $item) {
+                    if (isset($mappings[$item])) {
+                        ResourceGroupTypeModes::create([
+                            'resource_group_id' => $resourceGroupId,
+                            'type_mode'              => $mappings[$item]['type'],
+                            'value'                  => $mappings[$item]['value'],
+                        ]);
+                    }
+                }
+            };
+
+            // Create new resource group type modes based on request types and modes
             if ($request->has('type')) {
-                $value = config('constants.resource_types.'.$request->type);
-                $resourceGroupType = new ResourceGroupTypeModes();
-                $resourceGroupType->resource_group_id = $resourceGroupId;
-                $resourceGroupType->type_mode = config('constants.resource_mode.type');
-                $resourceGroupType->value = $value;
-                $resourceGroupType->Save();
+                $createResourceGroupTypeMode($typeMappings, $request->type);
             }
+
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.'.$request->mode);
-                $resourceGroupMode = new ResourceGroupTypeModes();
-                $resourceGroupMode->resource_group_id = $resourceGroupId;
-                $resourceGroupMode->type_mode = config('constants.resource_mode.mode');
-                $resourceGroupMode->value = $value;
-                $resourceGroupMode->Save();
+                $createResourceGroupTypeMode($modeMappings, $request->mode);
             }
 
             return true;
         } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    // Updating type's and mode's
-    public function updateResourceGroupTypeModes($request, $resourceGroupId)
-    {
-        try {
-            if ($request->has('type') && !empty($request->type)) {
-                $value = config('constants.resource_types.'.$request->type);
-                ResourceGroupTypeModes::updateOrCreate([
-                    'resource_group_id'  => $resourceGroupId,
-                    'type_mode'          => config('constants.resource_mode.type'),
-                ], [
-                    'value'              => $value,
-                ]);
-            }
-            if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.'.$request->mode);
-                ResourceGroupTypeModes::updateOrCreate([
-                    'resource_group_id'  => $resourceGroupId,
-                    'type_mode'          => config('constants.resource_mode.mode'),
-                ], [
-                    'value'              => $value,
-                ]);
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
+            // Log the exception or handle it according to your needs
+            Log::error('Failed to store challenge type modes: ' . $e->getMessage());
             return false;
         }
     }

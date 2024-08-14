@@ -3,69 +3,58 @@
 namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ResourceGroupTypeModes;
 use App\Models\ResourceModuleTypeModes;
 
 class ResourceModuleTypeModesService
 {
     // Base on key store data
-    public function createResourceModuleTypeModes($request, $resourceModuleId)
+    public function createUpdateResourceModuleTypeModes($request, $resourceModuleId)
     {
         try {
+            $typeMappings = [
+                'assess'  => ['type' => '0', 'value' => '0'],
+                'onboard' => ['type' => '0', 'value' => '1'],
+                'engage'  => ['type' => '0', 'value' => '2'],
+                'grow'    => ['type' => '0', 'value' => '3'],
+            ];
+
+            $modeMappings = [
+                'team'       => ['type' => '1', 'value' => '4'],
+                'individual' => ['type' => '1', 'value' => '5'],
+            ];
+
+            // Delete existing entries for the given resource module
+            ResourceModuleTypeModes::where('resource_module_id', $resourceModuleId)->delete();
+            // Helper function to create resource module type modes
+            $createResourceModuleTypeMode = function($mappings, $items) use ($resourceModuleId) {
+                foreach ($items as $item) {
+                    if (isset($mappings[$item])) {
+                        ResourceModuleTypeModes::create([
+                            'resource_module_id'     => $resourceModuleId,
+                            'type_mode'              => $mappings[$item]['type'],
+                            'value'                  => $mappings[$item]['value'],
+                        ]);
+                    }
+                }
+            };
+
+            // Create new resource group type modes based on request types and modes
             if ($request->has('type')) {
-                $value = config('constants.resource_types.'.$request->type);
-                $resourceModule = new ResourceModuleTypeModes();
-                $resourceModule->resource_module_id = $resourceModuleId;
-                $resourceModule->type_mode = config('constants.resource_mode.type');
-                $resourceModule->value = $value;
-                $resourceModule->Save();
+                $createResourceModuleTypeMode($typeMappings, $request->type);
             }
+
             if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.'.$request->mode);
-                $resourceModule = new ResourceModuleTypeModes();
-                $resourceModule->resource_module_id = $resourceModuleId;
-                $resourceModule->type_mode = config('constants.resource_mode.mode');
-                $resourceModule->value = $value;
-                $resourceModule->Save();
+                $createResourceModuleTypeMode($modeMappings, $request->mode);
             }
 
             return true;
         } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
+            // Log the exception or handle it according to your needs
+            Log::error('Failed to store challenge type modes: ' . $e->getMessage());
             return false;
         }
     }
-
-    public function updateResourceModuleTypeModes($request, $resourceModuleId)
-    {
-        try {
-            if ($request->has('type') && !empty($request->type)) {
-                $value = config('constants.resource_types.'.$request->type);
-                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
-                    'resource_module_id' => $resourceModuleId,
-                    'type_mode'          => config('constants.resource_mode.type'),
-                ], [
-                    'value'              => $value,
-                ]);
-            }
-            if ($request->has('mode')) {
-                $value = config('constants.resource_mode_type.'.$request->mode);
-                $resourceModule = ResourceModuleTypeModes::updateOrCreate([
-                    'resource_module_id' => $resourceModuleId,
-                    'type_mode'          => config('constants.resource_mode.mode'),
-                ], [
-                    'value'              => $value,
-                ]);
-            }
-
-            return true;
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function getResourceModuleBasedOnType($type)
     {
         try {

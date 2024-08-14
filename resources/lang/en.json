@@ -460,6 +460,7 @@
     "responses.path_array": "The path field must be an array",
     "responses.embedded_type_in": "The Type should be between embedded_audio, embedded_video.",
     "responses.type_array": "The type field must be an array",
+    "responses.mode_array": "The mode field must be an array",
     "responses.type_content_255": "The type character limit is 255.",
     "responses.join_challenge_successfully": "You have successfully joined Challenge!",
     "responses.join_challenge_failed": "You have failed to join Challenge!",

@@ -32,8 +32,10 @@ class UpdateResourceCollectionRequest extends FormRequest
         $base_rules = [
             'title'                  => 'required|max:255|unique:resource_collections,title,'.$resourceCollection->id,
             'description'            => 'required',
-            'type'                   => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|in:team,individual',
+            'type'                   => 'required|array',
+            'type.*'                 => 'required|in:assess,onboard,engage,grow',
+            'mode'                   => 'required|array',
+            'mode.*'                 => 'required|in:team,individual',
             'media_type'             => 'in:image,embedded',
             'privacy'                => 'required|in:yes,no',
             'status'                 => 'required|in:draft,publish,archive',
@@ -143,9 +145,13 @@ class UpdateResourceCollectionRequest extends FormRequest
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
             'type.required'                  => __('responses.type_required'),
-            'type.in'                        => __('responses.resource_type_in'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'type.*.required'                => __('responses.type_required'),
             'mode.required'                  => __('responses.mode_required'),
-            'mode.in'                        => __('responses.resource_mode_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
+            'mode.*.required'                => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }
