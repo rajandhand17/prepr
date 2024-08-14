@@ -38,7 +38,7 @@ class CreateResourceGroupRequest extends FormRequest
             'mode'                     => 'array',
             'mode.*'                   => 'nullable|in:team,individual',
             'media_type'               => 'in:image,embedded',
-            'privacy'                  => 'required|in:yes,no',
+            'privacy'                  => 'required|in:public,private',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',
             'resource_ids.*'           => [
