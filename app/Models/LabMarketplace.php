@@ -121,11 +121,12 @@ class LabMarketplace extends Model
     {
         return $this->belongsTo(Levels::class, 'level_id', 'id');
     }
+
     public function lab_template_challenge_association()
     {
         return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('challenge_template_id', '!=', null)->whereNull('deleted_at');
     }
-    
+
     public function lab_template_challenge_path_association()
     {
         return $this->hasMany(LabMarketplaceComponentAssociations::class, 'lab_marketplace_id', 'id')->where('challenge_path_template_id', '!=', null)->whereNull('deleted_at');
