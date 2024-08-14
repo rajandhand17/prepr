@@ -5,7 +5,6 @@ namespace App\Http\Resources\Manage\ResourceCollection;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabService;
-use App\Services\Manage\ResourceCollectionTypeModesService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -154,15 +153,6 @@ class ResourceCollectionResource extends JsonResource
                 'percentage'    => $this->resource_collection_completion_status->percentage,
             ];
         }
-        $resourceTypeMode = $this->resource_collection_type_modes;
-        $type = null;
-        $mode = null;
-        if ($resourceTypeMode !== null) {
-            $getType = ResourceCollectionTypeModesService::getResourceCollectionType($this->id);
-            $getMode = ResourceCollectionTypeModesService::getResourceCollectionMode($this->id);
-            $type = $getType !== null ? config('constants.resource_types_key.'.$getType->value) : null;
-            $mode = $getMode !== null ? config('constants.resource_mode_type_key.'.$getMode->value) : null;
-        }
 
         return [
             'id'                            => $this->uuid,
@@ -188,8 +178,8 @@ class ResourceCollectionResource extends JsonResource
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'rating'                        => $rating,
-            'mode'                          => $mode,
-            'type'                          => $type,
+            'mode'                          => ResourceCollectionModeResource::collection($this->resource_collection_mode),
+            'type'                          => ResourceCollectionTypeResource::collection($this->resource_collection_type),
             'liked'                         => $this->liked(),
             'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',

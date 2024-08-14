@@ -35,8 +35,10 @@ class CreateResourceModuleRequest extends FormRequest
         $base_rules = [
             'title'                    => 'required|unique:resource_modules,title',
             'description'              => 'required',
-            'type'                     => 'required|in:assess,onboard,engage,grow',
-            'mode'                     => 'required|in:team,individual',
+            'type'                     => 'array',
+            'type.*'                   => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                     => 'array',
+            'mode.*'                   => 'nullable|in:team,individual',
             'media_type'               => 'in:image,embedded',
             'privacy'                  => 'required|in:public,private',
             'status'                   => 'required|in:draft,publish,archive',
@@ -118,10 +120,10 @@ class CreateResourceModuleRequest extends FormRequest
             'skill_stacks.*.numeric'         => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'          => __('responses.skill_stacks_not_exists'),
             'skills.required'                => __('responses.skills_required'),
-            'type.required'                  => __('responses.type_required'),
-            'type.in'                        => __('responses.resource_type_in'),
-            'mode.required'                  => __('responses.mode_required'),
-            'mode.in'                        => __('responses.resource_mode_in'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }

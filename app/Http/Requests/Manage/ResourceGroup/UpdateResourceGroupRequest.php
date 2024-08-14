@@ -89,8 +89,10 @@ class UpdateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'type'                     => 'required|in:assess,onboard,engage,grow',
-            'mode'                     => 'required|in:team,individual',
+            'type'                   => 'array',
+            'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                   => 'array',
+            'mode.*'                 => 'nullable|in:team,individual',
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [
@@ -177,10 +179,10 @@ class UpdateResourceGroupRequest extends FormRequest
             'level.exists'                   => __('responses.level_id_exists'),
             'duration.required'              => __('responses.duration_id_required'),
             'duration.exists'                => __('responses.duration_id_exists'),
-            'type.required'                  => __('responses.type_required'),
-            'type.in'                        => __('responses.resource_type_in'),
-            'mode.required'                  => __('responses.mode_required'),
-            'mode.in'                        => __('responses.resource_mode_in'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
 
         ];

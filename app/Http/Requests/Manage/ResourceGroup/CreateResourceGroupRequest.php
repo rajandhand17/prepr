@@ -33,8 +33,10 @@ class CreateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'type'                     => 'required|in:assess,onboard,engage,grow',
-            'mode'                     => 'required|in:team,individual',
+            'type'                     => 'array',
+            'type.*'                   => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                     => 'array',
+            'mode.*'                   => 'nullable|in:team,individual',
             'media_type'               => 'in:image,embedded',
             'privacy'                  => 'required|in:yes,no',
             'status'                   => 'required|in:draft,publish,archive',
@@ -174,10 +176,10 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_ids.required'          => __('responses.resource_ids_required'),
             'resource_ids.array'             => __('responses.resource_ids_array'),
             'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
-            'type.required'                  => __('responses.type_required'),
-            'type.in'                        => __('responses.resource_type_in'),
-            'mode.required'                  => __('responses.mode_required'),
-            'mode.in'                        => __('responses.resource_mode_in'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
 
         ];
