@@ -71,7 +71,7 @@ class ScormArchiver
         $zip->open($file);
         /** READING THE MANIFEST FILE FROM THE ZIP*/
         $stream = $zip->getStream(ScormConstant::MANIFEST_FILE_NAME->value);
-        if(!is_resource($stream)){
+        if (!is_resource($stream)) {
             throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
         }
         while (!feof($stream)) {

@@ -106,9 +106,9 @@ class UpdateChallengeRequest extends FormRequest
         $description_type = $this->get('description_type');
         if ($description_type == 'scorm') {
             if (!$challenge->scorm()->exists()) {
-                $base_rules['scorm_file'] = ['required_if:description_type,scorm', 'file', 'mimes:zip', 'max:500000', new ScormFile];
+                $base_rules['scorm_file'] = ['required_if:description_type,scorm', 'file', 'mimes:zip', 'max:500000', new ScormFile()];
             } else {
-                $base_rules['scorm_file'] = ['nullable', 'file', 'mimes:zip', 'max:500000', new ScormFile];
+                $base_rules['scorm_file'] = ['nullable', 'file', 'mimes:zip', 'max:500000', new ScormFile()];
             }
         }
 
