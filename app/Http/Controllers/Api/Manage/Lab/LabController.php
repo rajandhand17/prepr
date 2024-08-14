@@ -161,6 +161,42 @@ class LabController extends AppBaseController
         }
     }
 
+    public function cloneLab($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.lab_slug_not_found'), 404);
+            }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id) {
+                return $this->sendError(__('responses.lab_switcher_error'), 403);
+            }
+            // Checks creation limits of the Labs
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'lab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labRepository->getLabCountBasedOnOrganization($organization->id);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_challenge_limit'), 400);
+                }
+            }
+            $cloneLab = $this->labRepository->cloneLab($checkComponentBasedOnSlug, $organization);
+            if ($cloneLab) {
+                return $this->sendResponse(__('responses.lab_clone_success'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_clone_failed'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function update($slug, UpdateLabRequest $request)
     {
         try {
@@ -364,6 +400,28 @@ class LabController extends AppBaseController
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabController.php: '.$e->getMessage());
 
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function createFeaturedLab($slug)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.slug_not_exists'), 404);
+            }
+            $checkLabIsFeaturedOrNot = $this->labRepository->getFeaturedLabBasedOnId($checkComponentBasedOnSlug->id);
+            if ($checkLabIsFeaturedOrNot) {
+                return $this->sendError(__('responses.already_featured_lab'), 400);
+            }
+            $createFeaturedLab = $this->labRepository->createFeaturedLab($checkComponentBasedOnSlug);
+            if ($createFeaturedLab) {
+                return $this->sendResponse([], __('responses.feature_lab_created_successfully'), 200);
+            }
+
+            return $this->sendError(__('responses.feature_lab_created_failed'), 400);
+        } catch (\Exception $e) {
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Helpers\UtilityHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +18,7 @@ class ProjectHistoryResource extends JsonResource
     {
         return [
             'activity'      => $this->activity,
-            'updated_at'    => UtilityHelper::formatDateTime($this->updated_at),
+            'updated_at'    => $this->updated_at,
         ];
     }
 }

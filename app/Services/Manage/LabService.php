@@ -181,7 +181,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description', 'organization_id', 'category_id', 'user_id')->where('id', $Id)->first();
+            return Lab::where('id', $Id)->first();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -670,6 +670,27 @@ class LabService
             $fetchLabs = Lab::where(['organization_id' => $organizationId, 'status' => '1', 'is_accessible' => '1'])->get();
 
             return $fetchLabs;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneLab($labId, $organization)
+    {
+        try {
+            $originalLab = Lab::find($labId);
+            $model = new Lab();
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$originalLab->title, $model);
+            $clonedLab = $originalLab->replicate();
+            $clonedLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $clonedLab->user_id = auth()->user()->id;
+            $clonedLab->organization_id = $organization->id;
+            $clonedLab->slug = $slug;
+            $clonedLab->save();
+
+            return $clonedLab;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -144,6 +144,11 @@ class ChallengeService
                     $query->where('is_submitted', '1');
                 });
             }
+            if ($request->has('type') && $request->type && is_array($request->type)) {
+                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
+                    $query->whereIn('value', $request->type);
+                });
+            }
 
             return $challenge_list;
         } catch (Exception $e) {
@@ -472,6 +477,20 @@ class ChallengeService
 
             return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedChallenges($challengeIds)
+    {
+        try {
+            // Retrieve challenge with the given IDs using findMany for primary keys and limiting by 2 values
+            $challenges = Challenge::findMany($challengeIds)->slice(0, 2);
+
+            return $challenges;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

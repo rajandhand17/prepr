@@ -8,9 +8,13 @@ interface ComponentAssociationInterface
 
     public function fetchLabLabProgramAssociation($request, $labProgramId);
 
+    public function fetchLabChallengeAssociation($request, $challengeId);
+
     public function fetchLabResourceCollectionAssociation($request, $resourceCollectionId);
 
     public function fetchLabProgramLabAssociation($request, $labId);
+
+    public function fetchLabProgramChallengeAssociation($request, $challengeId);
 
     public function fetchLabPrograms($request, $organizationId);
 
@@ -30,6 +34,8 @@ interface ComponentAssociationInterface
 
     public function fetchResourceModuleLabAssociation($request, $labId);
 
+    public function fetchResourceModuleChallengeAssociation($request, $challengeId);
+
     public function fetchResourceModuleResourceGroupAssociation($request, $resourceGroupId);
 
     public function fetchResourceModuleResourceCollectionAssociation($request, $resourceCollectionId);
@@ -40,7 +46,25 @@ interface ComponentAssociationInterface
 
     public function fetchResourceCollectionResourceGroupAssociation($request, $resourceGroupId);
 
+    public function fetchResourceCollectionChallengeAssociation($request, $challengeId);
+
     public function fetchResourceGroups($request, $organizationId);
 
     public function fetchResourceGroupLabAssociation($request, $labId);
+
+    public function fetchResourceGroupsBasedOnChallengeId($request, $challengeId);
+
+    public function fetchRelatedLabs($labId);
+
+    public function fetchRelatedLabPrograms($labProgramId);
+
+    public function fetchRelatedChallenges($challengeId);
+
+    public function fetchRelatedChallengePaths($challengePathId);
+
+    public function fetchRelatedResourceModules($resourceModuleId);
+
+    public function fetchRelatedResourceCollections($resourceCollectionId);
+
+    public function fetchRelatedResourceGroups($resourceGroupId);
 }

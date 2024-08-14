@@ -242,7 +242,7 @@ class LabService
     public static function getLabBasedOnId($Id)
     {
         try {
-            return Lab::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return Lab::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -426,6 +426,20 @@ class LabService
             $lab_list = self::filterLabList($request, $lab_list);
 
             return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedLabs($labIds)
+    {
+        try {
+            // Retrieve resource modules with the given IDs using findMany for primary keys and limiting by 2 values
+            $labs = Lab::findMany($labIds)->slice(0, 2);
+
+            return $labs;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -200,13 +200,27 @@ class ResourceGroupService
         }
     }
 
-    public function fetchResourceGroupLabAssociation($request, $fetchResourceGroupIdsAssociatedLabId)
+    public function fetchResourceGroupAssociation($request, $fetchResourceGroupAssociation)
     {
         try {
-            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupIdsAssociatedLabId)->where(['status' => '1', 'is_accessible' => '1']);
+            $resourceGroupList = ResourceGroup::whereIn('id', $fetchResourceGroupAssociation)->where(['status' => '1', 'is_accessible' => '1']);
             $resourceGroupList = self::filterResourceGroupList($resourceGroupList, $request);
 
             return $resourceGroupList->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getRelatedResourceGroups($resourceGroupIds)
+    {
+        try {
+            // Retrieve resource group with the given IDs using findMany for primary keys and limiting by 2 values
+            $resourceGroups = ResourceGroup::findMany($resourceGroupIds)->slice(0, 2);
+
+            return $resourceGroups;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

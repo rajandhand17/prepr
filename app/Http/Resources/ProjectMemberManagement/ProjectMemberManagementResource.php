@@ -104,6 +104,7 @@ class ProjectMemberManagementResource extends JsonResource
             'email_status'          => $email_status,
             'subject'               => $this->subject_line,
             'email_content'         => $this->email_body,
+            'joined_at'             => !empty($this->updated_at) ? $this->updated_at : null,
         ];
     }
 }

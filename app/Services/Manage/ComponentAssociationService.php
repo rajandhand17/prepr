@@ -1187,7 +1187,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchChallengeIdsAssociatedLabId($componentId)
+    public static function fetchChallengeIdsAssociatedLabId($componentId)
     {
         try {
             $fetchChallengeIdsBasedOnLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_id')->pluck('challenge_id');
@@ -1213,7 +1213,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchChallengePathIdsAssociatedLabId($componentId)
+    public static function fetchChallengePathIdsAssociatedLabId($componentId)
     {
         try {
             $fetchChallengePathIdsAssociatedLabId = ComponentAssociation::where('lab_id', $componentId)->whereNotNull('challenge_path_id')->pluck('challenge_path_id');
@@ -1239,12 +1239,25 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceModuleIdsAssociatedLabId($labId)
+    public static function fetchResourceModuleIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceModulePathIdsBasedOnLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
 
             return $fetchResourceModulePathIdsBasedOnLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceModuleIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceModuleIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_module_id')->pluck('resource_module_id');
+
+            return $fetchResourceModuleIdsAssociatedChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -1278,7 +1291,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceCollectionIdsAssociatedLabId($labId)
+    public static function fetchResourceCollectionIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceCollectionIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
@@ -1304,12 +1317,38 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchLabIdsAssociatedLabProgramId($labProgramId)
+    public function fetchResourceCollectionIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceCollectionIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_collection_id')->pluck('resource_collection_id');
+
+            return $fetchResourceCollectionIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchLabIdsAssociatedLabProgramId($labProgramId)
     {
         try {
             $fetchLabIdsAssociatedLabProgramId = ComponentAssociation::where('lab_program_id', $labProgramId)->whereNotNull('lab_id')->pluck('lab_id');
 
             return $fetchLabIdsAssociatedLabProgramId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->pluck('lab_id');
+
+            return $fetchLabIdsAssociatedChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -1330,12 +1369,25 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchResourceGroupIdsAssociatedLabId($labId)
+    public static function fetchResourceGroupIdsAssociatedLabId($labId)
     {
         try {
             $fetchResourceGroupIdsAssociatedLabId = ComponentAssociation::where('lab_id', $labId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
 
             return $fetchResourceGroupIdsAssociatedLabId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchResourceGroupIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchResourceGroupIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('resource_group_id')->pluck('resource_group_id');
+
+            return $fetchResourceGroupIdsAssociatedChallengeId;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -1350,6 +1402,38 @@ class ComponentAssociationService
 
             return $fetchLabProgramIdsAssociatedLabId;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchLabProgramIdsAssociatedChallengeId($challengeId)
+    {
+        try {
+            $fetchLabProgramIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_program_id')->pluck('lab_program_id');
+
+            return $fetchLabProgramIdsAssociatedChallengeId;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneComponentAssociation($originalLabAssociation, $newLabId)
+    {
+        try {
+            $originalLabAssociation->each(function ($lab_associated) use ($newLabId) {
+                if ($lab_associated) {
+                    $cloneLabAssociation = $lab_associated->replicate();
+                    $cloneLabAssociation->lab_id = $newLabId;
+                    $cloneLabAssociation->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

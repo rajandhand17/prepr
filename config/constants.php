@@ -40,6 +40,7 @@ return [
         'lab'          => '1',
         'challenge'    => '2',
         'project'      => '5',
+        'lab_program'  => '3',
     ],
 
     'member_management_invite_status' => [
@@ -535,6 +536,12 @@ return [
         'resource_collections'    => '5',
         'resource_group'          => '6',
         'projects'                => '7',
+    ],
+
+    'assessment_type' => [
+        'no_evaluation'         => 'noEvAttachments',
+        'open_evaluation'       => 'openEvAttachments',
+        'close_evaluation'      => 'closeEvAttachments',
     ],
 
     'resource_types' => [

@@ -6,6 +6,7 @@ use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Services\DurationService;
+use App\Services\FeaturedLabService;
 use App\Services\Manage\AirmeetEventService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
@@ -45,8 +46,9 @@ class LabRepository implements LabInterface
     private $campusConnectStoryService;
     private $organizationService;
     private $labTypeModesService;
+    private $featuredLabService;
 
-    public function __construct(LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
+    public function __construct(FeaturedLabService $featuredLabService, LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -64,6 +66,7 @@ class LabRepository implements LabInterface
         $this->campusConnectStoryService = $campusConnectStoryService;
         $this->organizationService = $organizationService;
         $this->labTypeModesService = $labTypeModesService;
+        $this->featuredLabService = $featuredLabService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -92,6 +95,57 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->labService->getLabBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneLab($lab, $organization)
+    {
+        try {
+            /*Getting lab and it's related tables details */
+            $originalLab = $lab;
+
+            $createdLab = DB::transaction(function () use ($organization, $originalLab) {
+                $newLab = $this->labService->cloneLab($originalLab->id, $organization);
+                $labAddress = $this->labAddressService->cloneLabAddress($originalLab->address, $newLab->id);
+                $labSKillsGroupStack = $this->labSkillsGroupsStackService->cloneLabSkillsGroupsStack($originalLab->skills, $newLab->id);
+                $labTagGroupStack = $this->labTagsGroupsService->cloneLabTagsGroups($originalLab->tags, $newLab->id);
+                $labExternalLinks = $this->labExternalLinksService->cloneLabExternalLinks($originalLab->external_links, $newLab->id);
+                $createdLabAchievement = $this->labAcheivementService->cloneLabAchievement($originalLab->achievement, $newLab->id);
+                $createComponentAssociations = $this->componentAssociationService->cloneComponentAssociation($originalLab->component_association, $newLab->id);
+                $labTypeModes = $this->labTypeModesService->cloneLabTypeModes($originalLab->lab_type_mode, $newLab->id);
+
+                return [
+                    'lab'                          => $newLab,
+                    'lab_address'                  => $labAddress,
+                    'lab_sKills_group_stack'       => $labSKillsGroupStack,
+                    'lab_tag_group_stack'          => $labTagGroupStack,
+                    'lab_external_links'           => $labExternalLinks,
+                    'lab_achievement'              => $createdLabAchievement,
+                    'component_association'        => $createComponentAssociations,
+                    'lab_type_modes'               => $labTypeModes,
+                ];
+            });
+            // Checking all the tables records inserted successfully
+            if ($createdLab['lab'] && $createdLab['lab_address']
+                && $createdLab['lab_sKills_group_stack']
+                && $createdLab['lab_tag_group_stack']
+                && $createdLab['lab_external_links']
+                && $createdLab['lab_achievement']
+                && $createdLab['component_association']
+                && $createdLab['lab_type_modes']
+            ) {
+                DB::commit();
+
+                // Returning new created table details
+                return $createdLab['lab'];
+            }
+            DB::rollBack();
+
+            return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -400,6 +454,27 @@ class LabRepository implements LabInterface
 
             return false;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    public function getFeaturedLabBasedOnId($id)
+    {
+        try {
+            return $this->featuredLabService->getFeaturedLabBasedOnLabId($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function createFeaturedLab($lab)
+    {
+        try {
+            return $this->featuredLabService->createFeaturedLab($lab);
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());
 

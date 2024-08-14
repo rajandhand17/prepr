@@ -18,4 +18,9 @@ class LabSkillsGroupsStack extends Model
         'foreign_id',
         'type',
     ];
+
+    public function lab()
+    {
+        return $this->belongsTo(Lab::class);
+    }
 }
