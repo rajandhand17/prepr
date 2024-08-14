@@ -26,17 +26,11 @@ class CreateResourceCollectionRequest extends FormRequest
         $base_rules = [
             'title'                  => 'required|unique:resource_collections,title',
             'description'            => 'required',
-<<<<<<< HEAD
-            'type'                   => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|in:team,individual',
-            'privacy'                => 'required|in:public,private',
-=======
             'type'                   => 'array',
             'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
             'mode'                   => 'array',
             'mode.*'                 => 'nullable|in:team,individual',
             'privacy'                => 'required|in:yes,no',
->>>>>>> BetaDevelopment
             'media_type'             => 'in:image,embedded',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',
