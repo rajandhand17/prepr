@@ -89,10 +89,10 @@ class UpdateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'type'                   => 'required|array',
-            'type.*'                 => 'required|in:assess,onboard,engage,grow',
-            'mode'                   => 'required|array',
-            'mode.*'                 => 'required|in:team,individual',
+            'type'                   => 'array',
+            'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                   => 'array',
+            'mode.*'                 => 'nullable|in:team,individual',
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [

@@ -61,8 +61,7 @@ class ResourceCollectionTypeModesService
                 'individual' => ['type' => '1', 'value' => '5'],
             ];
 
-            // Delete existing entries for the given resource collection
-            ResourceCollectionTypeModes::where('resource_collection_id', $resourceCollectionId)->delete();
+
             // Helper function to create resource collection type modes
             $createResourceCollectionTypeMode = function ($mappings, $items) use ($resourceCollectionId) {
                 foreach ($items as $item) {
@@ -78,18 +77,19 @@ class ResourceCollectionTypeModesService
 
             // Create new resource collection type modes based on request types and modes
             if ($request->has('type')) {
+                ResourceCollectionTypeModes::where('resource_collection_id', $resourceCollectionId)->where('type_mode','0')->delete();
                 $createResourceCollectionTypeMode($typeMappings, $request->type);
             }
 
             if ($request->has('mode')) {
+                ResourceCollectionTypeModes::where('resource_collection_id', $resourceCollectionId)->where('type_mode','1')->delete();
                 $createResourceCollectionTypeMode($modeMappings, $request->mode);
             }
 
             return true;
         } catch (\Exception $e) {
             // Log the exception or handle it according to your needs
-            Log::error('Failed to store challenge type modes: '.$e->getMessage());
-
+            UtilityHelper::logError($e);
             return false;
         }
     }
