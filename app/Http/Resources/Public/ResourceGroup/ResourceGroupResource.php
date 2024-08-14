@@ -140,7 +140,7 @@ class ResourceGroupResource extends JsonResource
             'description'                   => $this->description,
             'media_type'                    => $this->media_type,
             'cover_image'                   => $this->media,
-            'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
+            'privacy'                       => ($this->privacy == '1') ? 'private' : 'public',
             'status'                        => ($this->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
             'duration_id'                   => $duration_id,
             'duration'                      => $duration,

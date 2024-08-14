@@ -1389,7 +1389,7 @@
     "responses.feature_lab_created_successfully": "The featured lab has been successfully created.",
     "responses.feature_lab_created_failed": "The creation of the featured lab has failed.",
     "responses.already_featured_lab": "This lab already exists in the featured labs.",
-    "responses.lab_clone_success": "The lab has been successfully cloned.",
+    "responses.lab_clone_success": "The lab has been successfully copied & added to your labs!",
     "responses.lab_clone_failed": "The lab clone operation has failed.",
     "responses.owner_required": "This owner filter should be between all, my or invited"
 }

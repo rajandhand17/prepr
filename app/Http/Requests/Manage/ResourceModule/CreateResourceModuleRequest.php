@@ -102,7 +102,7 @@ class CreateResourceModuleRequest extends FormRequest
             'title.unique'                   => __('responses.title_unique'),
             'description.required'           => __('responses.description_required'),
             'privacy.required'               => __('responses.privacy_required'),
-            'privacy.in'                     => __('responses.choose_yes_no'),
+            'privacy.in'                     => __('responses.public_or_private'),
             'status.required'                => __('responses.status_required'),
             'status.in'                      => __('responses.status_in'),
             'is_global.required'             => __('responses.choose_yes_no'),

@@ -52,10 +52,10 @@ class ResourceCollectionService
                     $media_type = config('constants.resource_media_type.image');
             }
             switch ($request->privacy) {
-                case 'no':
+                case 'public':
                     $privacy = config('constants.resource_collection_privacy.no');
                     break;
-                case 'yes':
+                case 'private':
                     $privacy = config('constants.resource_collection_privacy.yes');
                     break;
                 default:
@@ -166,10 +166,10 @@ class ResourceCollectionService
                         $media_type = null;
                 }
                 switch ($request->privacy) {
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_collection_privacy.no');
                         break;
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_collection_privacy.yes');
                         break;
                     default:
@@ -243,7 +243,7 @@ class ResourceCollectionService
                 }
             }
 
-            if ($request->has('privacy')) {
+            if ($request->has('privacy') && !empty($request->privacy)) {
                 $privacy = null;
                 switch ($request->privacy) {
                     case 'yes':
