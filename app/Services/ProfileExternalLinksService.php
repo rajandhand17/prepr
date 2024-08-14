@@ -7,7 +7,6 @@ use App\Models\ProfileExternalLinks;
 
 class ProfileExternalLinksService
 {
-
     public static function updateProfileExternalLinks($request, $user_id)
     {
         try {
@@ -37,9 +36,9 @@ class ProfileExternalLinksService
                             }
                         }
                     }
-                } 
+                }
             } else {
-            self::deleteProfileExternalLinks($user_id);                
+                self::deleteProfileExternalLinks($user_id);
             }
 
             return true;
@@ -49,6 +48,7 @@ class ProfileExternalLinksService
             return false;
         }
     }
+
     public static function deleteProfileExternalLinks($user_id)
     {
         try {
@@ -63,11 +63,11 @@ class ProfileExternalLinksService
                     return false;
                 }
             }
-    
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-    
+
             return false;
         }
     }
