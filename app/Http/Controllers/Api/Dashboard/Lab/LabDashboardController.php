@@ -210,7 +210,7 @@ class LabDashboardController extends AppBaseController
             // Fetch User Skills.
             $fetchUserSkills = $this->labDashboardRepository->fetchUserSkills($userData);
             if ($fetchUserSkills == false) {
-                return $this->sendError(__('responses.lab_skills_not_found'));
+                return $this->sendError(__('responses.user_skills_not_found'));
             }
 
             switch ($request->type) {
