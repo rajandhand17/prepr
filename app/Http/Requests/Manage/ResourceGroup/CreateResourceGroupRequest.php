@@ -176,14 +176,10 @@ class CreateResourceGroupRequest extends FormRequest
             'resource_ids.required'          => __('responses.resource_ids_required'),
             'resource_ids.array'             => __('responses.resource_ids_array'),
             'resource_ids.exists'            => __('responses.resource_ids_array_not_exists'),
-            'type.required'                  => __('responses.type_required'),
             'type.array'                     => __('responses.type_array'),
             'type.*.in'                      => __('responses.resource_type_in'),
-            'type.*.required'                => __('responses.type_required'),
-            'mode.required'                  => __('responses.mode_required'),
             'mode.array'                     => __('responses.mode_array'),
             'mode.*.in'                      => __('responses.resource_mode_in'),
-            'mode.*.required'                => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
 
         ];

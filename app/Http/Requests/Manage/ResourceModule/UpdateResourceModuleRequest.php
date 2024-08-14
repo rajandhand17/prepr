@@ -127,14 +127,10 @@ class UpdateResourceModuleRequest extends FormRequest
             'skill_stacks.array'                => __('responses.skill_stacks_array'),
             'skill_stacks.*.numeric'            => __('responses.skill_stacks_numeric'),
             'skill_stacks.*.exists'             => __('responses.skill_stacks_not_exists'),
-            'type.required'                     => __('responses.type_required'),
             'type.array'                        => __('responses.type_array'),
             'type.*.in'                         => __('responses.resource_type_in'),
-            'type.*.required'                   => __('responses.type_required'),
-            'mode.required'                     => __('responses.mode_required'),
             'mode.array'                        => __('responses.mode_array'),
             'mode.*.in'                         => __('responses.resource_mode_in'),
-            'mode.*.required'                   => __('responses.resource_mode_in'),
             'media_type.in'                     => __('responses.choose_image_embedded'),
 
         ];
