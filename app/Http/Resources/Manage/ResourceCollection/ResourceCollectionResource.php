@@ -154,11 +154,12 @@ class ResourceCollectionResource extends JsonResource
             ];
         }
         $type = $this->resource_collection_type->map(function ($item) {
-            return config("constants.resource_types_key.".$item->value); // or $item->onboard depending on your needs
-        })->toArray();
+            return config('constants.resource_types_key.' . $item->value);
+        });
+
         $mode = $this->resource_collection_mode->map(function ($item) {
-            return config("constants.resource_mode_type_key.".$item->value); // or $item->onboard depending on your needs
-        })->toArray();
+            return config('constants.resource_mode_type_key.' . $item->value);
+        });
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
