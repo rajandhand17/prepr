@@ -2,6 +2,7 @@
 
 namespace App\Services\Manage;
 
+use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
@@ -317,7 +318,7 @@ class MemberManagementService
         }
     }
 
-    public static function addMembers($componentCollectionObject, $component, $request, $memberList)
+    public static function addMembers($componentCollectionObject, $component, $request, $memberList, $totalInvitationSent = 0)
     {
         try {
             $already_members = [];
@@ -386,6 +387,19 @@ class MemberManagementService
                             'email'       => $member['invitee_email'],
                         ])->first();
                         if ($checkMemberExists == null) {
+                            //check user email limit here
+                            $userData = auth()->user();
+                            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                            $organization->load('chargebee_details');
+                            $userInviteLimit = $organization->chargebee_details->user_invite_limits;
+                            // dd($userInviteLimit, $totalInvitationSent);
+                            $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
+                            if (!$isWithinInviteLimit) {
+                                throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
+                            }
+
+                            $totalInvitationSent++;
+
                             $invite_status = config('constants.member_management_invite_status.invited');
                             if ($auto_invite == 0) {
                                 $invite_status = config('constants.member_management_invite_status.pending');
@@ -527,6 +541,8 @@ class MemberManagementService
             DB::rollBack();
 
             return false;
+        } catch (InvitationQuotaExceededException $e) {
+            throw $e;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
             DB::rollBack();

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Manage\MemberManagement;
 
+use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\RolesService;
@@ -76,7 +77,7 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public function addMembers($componentCollectionObject, $component, $request)
+    public function addMembers($componentCollectionObject, $component, $request, $totalInvite = 0)
     {
         try {
             $memberList = [];
@@ -97,7 +98,7 @@ class MemberManagementRepository implements MemberManagementInterface
                 }
             }
             if (is_array($memberList) && count($memberList) > 0) {
-                $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList);
+                $checkStatus = $this->memberManagementService->addMembers($componentCollectionObject, $component, $request, $memberList, $totalInvite);
                 if ($checkStatus) {
                     return $checkStatus;
                 }
@@ -106,6 +107,9 @@ class MemberManagementRepository implements MemberManagementInterface
             }
 
             return false;
+        } catch (InvitationQuotaExceededException $e) {
+            // Re-throw the specific exception
+            throw $e;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
