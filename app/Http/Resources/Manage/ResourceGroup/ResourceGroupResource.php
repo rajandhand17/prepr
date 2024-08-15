@@ -84,11 +84,15 @@ class ResourceGroupResource extends JsonResource
                 if (ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id == '')) {
                     continue;
                 }
-                $resourceModules[$resource_module->resource_module_id]['uuid'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->uuid;
-                $resourceModules[$resource_module->resource_module_id]['title'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->title;
-                $resourceModules[$resource_module->resource_module_id]['image'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->media;
-                $resourceModules[$resource_module->resource_module_id]['description'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->description;
-                $resourceModules[$resource_module->resource_module_id]['slug'] = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id)->slug;
+                $resourceModule=ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
+                if($resourceModule==null || !isset($resourceModule)){
+                    continue;
+                }
+                $resourceModules[$resource_module->resource_module_id]['uuid']  = $resourceModule->uuid;
+                $resourceModules[$resource_module->resource_module_id]['title'] = $resourceModule->title;
+                $resourceModules[$resource_module->resource_module_id]['image'] = $resourceModule->media;
+                $resourceModules[$resource_module->resource_module_id]['description'] = $resourceModule->description;
+                $resourceModules[$resource_module->resource_module_id]['slug'] = $resourceModule->slug;
             }
         }
         if ($this->resource_collection) {

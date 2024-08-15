@@ -34,13 +34,14 @@ class CreateLabProgramRequest extends FormRequest
             'lab_ids.*'               => 'exists:labs,uuid',
             'skills'                  => 'required|array',
             'skills.*'                => 'numeric|exists:skills,id',
-            'is_sequential'           => 'in:yes,no',
-            'privacy'                 => 'in:yes,no',
-            'is_achievement_enabled'  => 'in:yes,no',
-            'type'                    => 'required|array',
-            'type.*'                  => 'in:assess,onboard,engage,grow',
-            'mode'                    => 'required|in:team,individual',
-            'media_type'              => 'in:image,embedded',
+            'is_sequential'            => 'in:yes,no',
+            'privacy'                  => 'in:yes,no',
+            'is_achievement_enabled'   => 'in:yes,no',
+            'type'                     => 'array',
+            'type.*'                   => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                     => 'array',
+            'mode.*'                   => 'nullable|in:team,individual',
+            'media_type'               => 'in:image,embedded',
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
@@ -135,10 +136,10 @@ class CreateLabProgramRequest extends FormRequest
             'achievement_image.required'     => __('responses.achievement_image_required'),
             'achievement_image.mimes'        => __('responses.mimes_image'),
             'achievement_image.max'          => __('responses.mimes_image_max'),
-            'type.required'                  => __('responses.type_required'),
-            'type.in'                        => __('responses.type_in'),
-            'mode.required'                  => __('responses.mode_required'),
-            'mode.in'                        => __('responses.resource_mode_in'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
     }

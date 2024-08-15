@@ -43,9 +43,9 @@ class UpdateLabProgramRequest extends FormRequest
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
-            'type'                    => 'required|array',
+            'type'                    => 'nullable|array',
             'type.*'                  => 'in:assess,onboard,engage,grow',
-            'mode'                    => 'required|in:team,individual',
+            'mode'                    => 'nullable|in:team,individual',
             'media_type'              => 'in:image,embedded',
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
@@ -143,9 +143,7 @@ class UpdateLabProgramRequest extends FormRequest
             'achievement_image.required'     => __('responses.achievement_image_required'),
             'achievement_image.mimes'        => __('responses.mimes_image'),
             'achievement_image.max'          => __('responses.mimes_image_max'),
-            'type.required'                  => __('responses.type_required'),
             'type.in'                        => __('responses.type_in'),
-            'mode.required'                  => __('responses.mode_required'),
             'mode.in'                        => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
         ];
