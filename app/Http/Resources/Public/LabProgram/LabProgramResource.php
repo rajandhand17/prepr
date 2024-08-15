@@ -2,14 +2,10 @@
 
 namespace App\Http\Resources\Public\LabProgram;
 
-use App\Helpers\UtilityHelper;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
-use App\Services\Manage\LabService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,12 +20,9 @@ class LabProgramResource extends JsonResource
     public function toArray(Request $request): array
     {
         $achievement = [];
-        $componentAssociation = [];
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
@@ -39,19 +32,6 @@ class LabProgramResource extends JsonResource
         $organization = null;
         $organization_id = null;
         $module_progress = null;
-        if ($this->component_association) {
-            foreach ($this->component_association as $association) {
-                if ($association->lab_id) {
-                    $labData = LabService::getLabBasedOnId($association->lab_id);
-                    if ($labData) {
-                        $componentAssociation[$association->lab_id] = $labData;
-                        $componentAssociation[$association->lab_id]['liked'] = $labData ? $labData->liked() : 'no';
-                        $componentAssociation[$association->lab_id]['favourite'] = $labData ? $labData->favourite() : 'no';
-                        $componentAssociation[$association->lab_id]['member_count'] = $labData ? $labData->members()->count() : 0;
-                    }
-                }
-            }
-        }
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
@@ -84,16 +64,6 @@ class LabProgramResource extends JsonResource
         if ($this->skill_stacks) {
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
         if ($this->achievement) {
@@ -130,6 +100,28 @@ class LabProgramResource extends JsonResource
             }
         }
 
+        $join_status = 'No';
+        $joined_status = $this->isJoined();
+        if ($joined_status != 'NA' && $joined_status != null) {
+            switch ($joined_status->invite_status) {
+                case '0':
+                    $join_status = 'Invited';
+                    break;
+                case '1':
+                    $join_status = 'Yes';
+                    break;
+                case '2':
+                    $join_status = 'Pending';
+                    break;
+                case '3':
+                    $join_status = 'No';
+                    break;
+                default:
+                    $join_status = 'No';
+                    break;
+            }
+        }
+
         $mode = null;
         if ($this->labProgramMode) {
             switch ($this->labProgramMode->value) {
@@ -159,10 +151,10 @@ class LabProgramResource extends JsonResource
             'slug'                          => $this->slug,
             'type'                          => LabProgramTypeResource::make($this->labProgramType()),
             'mode'                          => $mode,
+            'is_joined'                     => $join_status,
             'created_by'                    => $created_by,
             'description'                   => $this->description,
             'hosted_by'                     => OrganizationHostResource::make($this->getOrganization),
-            'labs'                          => $componentAssociation,
             'user_id'                       => $this->user_id,
             'media_type'                    => $this->media_type,
             'media'                         => $this->media,
@@ -177,8 +169,6 @@ class LabProgramResource extends JsonResource
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
             'favourite'                     => $this->favourite(),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
@@ -191,7 +181,7 @@ class LabProgramResource extends JsonResource
             'shares'                        => $this->shares()->count(),
             'module_progress'               => $module_progress,
             'member_count'                  => '0', //Static for temporary basis
-            'last_updated'                  => UtilityHelper::formatDateTime($this->updated_at),
+            'last_updated'                  => $this->updated_at,
         ];
     }
 }

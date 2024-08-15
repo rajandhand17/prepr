@@ -243,36 +243,42 @@ class ChargebeeHelper
     {
         try {
             Environment::configure(config('chargebee.chargebee_site'), config('chargebee.chargebee_key'));
+            // Fetch all plans
             $allPlans = Item::all([
                 'type[is]' => 'plan',
             ]);
-            $plansDetails = [];
+            // Prepare an array to hold features and their associated plan limits
+            $featuresLimits = [];
+            // Loop through all plans
             foreach ($allPlans as $entry) {
                 $item = $entry->item();
-                $planDetails = [
-                    'id'           => $item->id,
-                    'name'         => $item->name,
-                    'description'  => $item->description,
-                    'entitlements' => [],
-                ];
+                $planId = $item->id;
                 // Fetch entitlements for the plan
                 $entitlements = Entitlement::all([
-                    'entity_id[is]' => $item->id,
+                    'entity_id[is]' => $planId,
                 ]);
 
                 foreach ($entitlements as $entitlementEntry) {
                     $entitlement = $entitlementEntry->entitlement();
-                    $planDetails['entitlements'][] = [
-                        'id'         => $entitlement->id,
-                        'feature_id' => $entitlement->featureId,
-                        'value'      => $entitlement->value,
-                    ];
+                    $featureId = $entitlement->featureId;
+                    // Check if this feature is already in the featuresLimits array
+                    if (!isset($featuresLimits[$featureId])) {
+                        $featuresLimits[$featureId] = [
+                            'feature_id' => $featureId,
+                            'limits'     => [],
+                        ];
+                    }
+                    // Add the limit for this plan under the corresponding feature
+                    $featuresLimits[$featureId]['limits'][$planId] = $entitlement->value;
                 }
-                $plansDetails[] = $planDetails;
             }
 
-            return $plansDetails;
+            // Convert associative featureLimits to an indexed array
+            $featuresLimits = array_values($featuresLimits);
+
+            return $featuresLimits;
         } catch (Exception $e) {
+            // Log the error and return false
             UtilityHelper::logError($e);
 
             return false;

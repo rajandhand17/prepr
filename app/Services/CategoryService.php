@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\LanguageColumnHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 
 class CategoryService
@@ -47,6 +48,17 @@ class CategoryService
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
+            return false;
+        }
+    }
+
+    public function getCategoryBasedOnId($category_id)
+    {
+        try {
+            $fetchCategory = Category::where('id', $category_id)->first();
+
+            return  $fetchCategory;
+        } catch (\Exception $e) {
             return false;
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Discussion;
 use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
@@ -12,6 +13,7 @@ use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -150,6 +152,37 @@ class UtilityHelper
         return $url;
     }
 
+    public static function getColumName($iso, $fieldName)
+    {
+        try {
+            if ($iso == 'en') {
+                $columName = $fieldName;
+            } else {
+                $columName = $iso;
+                if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
+                    $columName = str_replace(' ', '_', $columName);
+                }
+                if ($columName == trim($columName) && strpos($columName, '-') !== false) {
+                    $columName = str_replace('-', '_', $columName);
+                }
+                $columName = $columName.'_'.$fieldName;
+            }
+
+            return $columName;
+        } catch (Exception $e) {
+            return $fieldName;
+        }
+    }
+
+    public static function getLabelName($name, $labelName)
+    {
+        try {
+            return $name.' '.$labelName;
+        } catch (Exception $e) {
+            return $labelName;
+        }
+    }
+
     public static function UserIdBasedPreferredOrganization($userData)
     {
         try {
@@ -184,5 +217,19 @@ class UtilityHelper
             'file'      => $file,
             'line'      => $line,
         ]);
+    }
+
+    public static function getComponentTotalDiscussions($component, $moduleId)
+    {
+        try {
+            $moduleType = Config('constants.discussion_module_type.'.$component);
+
+            return Discussion::where('module_id', $moduleId)
+                ->where('module_type', $moduleType)->count();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return 0;
+        }
     }
 }

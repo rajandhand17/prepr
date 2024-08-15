@@ -53,4 +53,8 @@ interface UserDashboardInterface
     public function userDashboardFriendList($userData);
 
     public function fetchLastVisited($userData);
+
+    public function fetchUserDashboardLayout($userData, $dashboardType);
+
+    public function updateUserDashboardLayout($request, $userData, $dashboardType);
 }
