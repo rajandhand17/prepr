@@ -150,7 +150,8 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 $component = config('constants.lab_component.lab');
-                $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $component);
+                $moduleType = config('constants.member_management_component_type.lab');
+                $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $moduleType);
                 if ($checkActivity === true) {
                     return $this->sendError(__('responses.already_join_lab'), 400);
                 }
@@ -187,7 +188,8 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
                 $component = config('constants.lab_component.lab');
-                $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $component);
+                $moduleType = config('constants.member_management_component_type.lab');
+                $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $moduleType);
                 if ($checkActivity === false) {
                     return $this->sendError(__('responses.already_un_join_lab'), 400);
                 }

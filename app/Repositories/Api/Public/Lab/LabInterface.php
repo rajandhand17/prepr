@@ -15,7 +15,7 @@ interface LabInterface
 
     public function checkSocialActivity($lab_id, $column, $action);
 
-    public function checkJoinedOrNot($lab, $component);
+    public function checkJoinedOrNot($lab, $moduleType);
 
     public function joinLab($lab, $component, $request, $memberList);
 

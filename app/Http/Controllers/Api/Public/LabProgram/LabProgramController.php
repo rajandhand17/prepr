@@ -9,6 +9,7 @@ use App\Http\Resources\Public\LabProgram\LabProgramResource;
 use App\Repositories\Api\Public\LabProgram\LabProgramRepository;
 use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
+use stdClass;
 
 class LabProgramController extends AppBaseController
 {
@@ -94,6 +95,76 @@ class LabProgramController extends AppBaseController
                 if ($labProgram) {
                     return $this->sendResponse([], __('responses.'.$action.'_lab_program_successfully'));
                 }
+            }
+
+            return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function joinLabProgram($slug, Request $request)
+    {
+        try {
+            $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram !== null) {
+                if ($labProgram->is_accessible == '0') {
+                    return $this->sendError(__('responses.lab_program_not_accessible'), 403);
+                }
+                $component = config('constants.member_management_component_type.lab_program');
+                $moduleType = config('constants.member_management_component_type.lab_program');
+                $checkActivity = $this->labProgramRepository->checkJoinedOrNot($labProgram, $moduleType);
+                if ($checkActivity === true) {
+                    return $this->sendError(__('responses.already_join_lab_program'), 400);
+                }
+                $memberList = $this->labProgramRepository->getRecordsFromJoinRequest();
+                if (!$memberList && !count($memberList) > 0) {
+                    return $this->sendError(__('responses.send_error'), 404);
+                }
+                $requestedData = $this->labProgramRepository->setJoinRequestParameters($request->language);
+                if (!$requestedData) {
+                    return $this->sendError(__('responses.send_error'), 403);
+                }
+                $joinLabProgram = $this->labProgramRepository->joinLabProgram($labProgram, $component, $requestedData, $memberList);
+                if ($joinLabProgram) {
+                    return $this->sendResponse([], __('responses.join_lab_program_successfully'));
+                }
+
+                return $this->sendError(__('responses.join_lab_program_failed'), 400);
+            }
+
+            return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function unJoinLabProgram($slug)
+    {
+        try {
+            $labProgram = $this->labProgramRepository->getLabProgramBasedOnSlug($slug);
+            if ($labProgram !== null) {
+                if ($labProgram->is_accessible == '0') {
+                    return $this->sendError(__('responses.lab_not_accessible'), 403);
+                }
+                $component = config('constants.member_management_component_type.lab_program');
+                $moduleType = config('constants.member_management_component_type.lab_program');
+                $checkActivity = $this->labProgramRepository->checkJoinedOrNot($labProgram, $moduleType);
+                if ($checkActivity === false) {
+                    return $this->sendError(__('responses.already_un_join_lab_program'), 400);
+                }
+                $data = new stdClass();
+                $data->email = [auth()->user()->email];
+                $joinLab = $this->labProgramRepository->unJoinLabProgram($labProgram, $component, $data);
+                if ($joinLab) {
+                    return $this->sendResponse([], __('responses.un_join_lab_program_successfully'));
+                }
+
+                return $this->sendError(__('responses.join_lab_program_failed'), 400);
             }
 
             return $this->sendError(__('responses.lab_program_slug_not_found'), 404);
