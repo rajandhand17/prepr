@@ -232,7 +232,6 @@ class LabProgramService
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
             $labProgram->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
-            $labProgram->is_accessible = ($request->is_accessible == 'yes') ? '1' : '0';
             $labProgram->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
             $labProgram->save();
 
