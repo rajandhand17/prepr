@@ -37,7 +37,7 @@
         "solarium/solarium": "^6.3",
         "spatie/pdf-to-image": "^2.2",
         "twilio/sdk": "^6.44",
-        "yajra/laravel-datatables-oracle": "^10.11"
+        "yajra/laravel-datatables": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
