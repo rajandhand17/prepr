@@ -113,7 +113,7 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_program_not_accessible'), 403);
                 }
-                $component = config('constants.member_management_component.lab_program');
+                $component = config('constants.member_management_component_type.lab_program');
                 $moduleType = config('constants.member_management_component_type.lab_program');
                 $checkActivity = $this->labProgramRepository->checkJoinedOrNot($labProgram, $moduleType);
                 if ($checkActivity === true) {
@@ -151,7 +151,7 @@ class LabProgramController extends AppBaseController
                 if ($labProgram->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
-                $component = config('constants.member_management_component.lab_program');
+                $component = config('constants.member_management_component_type.lab_program');
                 $moduleType = config('constants.member_management_component_type.lab_program');
                 $checkActivity = $this->labProgramRepository->checkJoinedOrNot($labProgram, $moduleType);
                 if ($checkActivity === false) {
