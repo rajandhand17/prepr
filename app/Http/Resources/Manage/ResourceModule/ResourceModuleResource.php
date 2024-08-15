@@ -176,10 +176,10 @@ class ResourceModuleResource extends JsonResource
             ];
         }
         $type = $this->resource_module_type->map(function ($item) {
-            return config("constants.resource_types_key.".$item->value);
+            return config('constants.resource_types_key.'.$item->value);
         });
         $mode = $this->resource_module_mode->map(function ($item) {
-            return config("constants.resource_mode_type_key.".$item->value);
+            return config('constants.resource_mode_type_key.'.$item->value);
         });
 
         return [
