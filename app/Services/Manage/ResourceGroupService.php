@@ -93,7 +93,7 @@ class ResourceGroupService
             $resourceGroup->duration = $request->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
-            $resourceGroup->is_accessible ='1';
+            $resourceGroup->is_accessible = '1';
             $resourceGroup->save();
 
             return $resourceGroup;
@@ -207,7 +207,7 @@ class ResourceGroupService
             $resourceGroup->duration = ($request->has('duration')) ? $request->duration : $resourceGroup->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
-            $resourceGroup->is_accessible ='1';
+            $resourceGroup->is_accessible = '1';
             $resourceGroup->save();
 
             return $resourceGroup;
