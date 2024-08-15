@@ -153,7 +153,13 @@ class ResourceCollectionResource extends JsonResource
                 'percentage'    => $this->resource_collection_completion_status->percentage,
             ];
         }
+        $type = $this->resource_collection_type->map(function ($item) {
+            return config('constants.resource_types_key.' . $item->value);
+        });
 
+        $mode = $this->resource_collection_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.' . $item->value);
+        });
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -178,8 +184,8 @@ class ResourceCollectionResource extends JsonResource
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
             'rating'                        => $rating,
-            'mode'                          => ResourceCollectionModeResource::collection($this->resource_collection_mode),
-            'type'                          => ResourceCollectionTypeResource::collection($this->resource_collection_type),
+            'mode'                          => $mode,
+            'type'                          => $type,
             'liked'                         => $this->liked(),
             'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
