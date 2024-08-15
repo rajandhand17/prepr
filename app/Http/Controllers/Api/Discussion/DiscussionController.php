@@ -36,8 +36,9 @@ class DiscussionController extends AppBaseController
             if ($list->count() > 0) {
                 $response = [
                     'total_discussion_count' => UtilityHelper::getComponentTotalDiscussions($component, $getComponentId),
-                    'list' => DiscussionResource::collection($list)
+                    'list'                   => DiscussionResource::collection($list),
                 ];
+
                 return $this->sendResponse($response, __('responses.comments_lists_successfully'));
             }
 

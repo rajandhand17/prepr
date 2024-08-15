@@ -222,7 +222,8 @@ class UtilityHelper
     public static function getComponentTotalDiscussions($component, $moduleId)
     {
         try {
-            $moduleType = Config('constants.discussion_module_type.' . $component);
+            $moduleType = Config('constants.discussion_module_type.'.$component);
+
             return Discussion::where('module_id', $moduleId)
                 ->where('module_type', $moduleType)->count();
         } catch (\Exception $e) {
