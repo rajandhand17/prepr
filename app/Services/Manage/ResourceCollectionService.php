@@ -76,6 +76,7 @@ class ResourceCollectionService
             $resourceCollection->duration = $request->duration;
             $resourceCollection->privacy = $privacy;
             $resourceCollection->status = $status;
+            $resourceCollection->is_accessible = ($request->is_accessible == 'yes') ? '1' : '0';
             $resourceCollection->save();
 
             return $resourceCollection;

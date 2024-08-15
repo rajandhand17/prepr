@@ -44,6 +44,7 @@ class CreateResourceCollectionRequest extends FormRequest
             'level'                  => 'required|exists:levels,id',
             'duration'               => 'required|exists:durations,id',
             'skill_groups'           => 'array',
+            'is_accessible'          => 'in:yes,no',
             'skill_groups.*'         => 'numeric|exists:skill_groups,id',
             'skill_stacks'           => 'array',
             'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
@@ -142,6 +143,7 @@ class CreateResourceCollectionRequest extends FormRequest
             'mode.array'                     => __('responses.mode_array'),
             'mode.*.in'                      => __('responses.resource_mode_in'),
             'media_type.in'                  => __('responses.choose_image_embedded'),
+            'is_accessible.in'               => __('responses.choose_yes_no'),
         ];
     }
 }

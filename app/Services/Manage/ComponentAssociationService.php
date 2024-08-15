@@ -516,11 +516,13 @@ class ComponentAssociationService
         try {
             $sequence = 1;
             if ($request->has('lab_ids') && count($request->lab_ids) > 0) {
+
                 $getLabId = LabService::getLabIdBasedOnUUIDArray($request->lab_ids);
                 $sequence = ComponentAssociation::where([
                     ['resource_collection_id', '=', $resourceCollectionId],
                     ['lab_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
+
                 if (isset($sequence->sequence) && !empty($sequence->sequence)) {
                     $sequence = $sequence->sequence;
                 }
