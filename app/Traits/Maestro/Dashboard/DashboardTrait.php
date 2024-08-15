@@ -4,7 +4,6 @@ namespace App\Traits\Maestro\Dashboard;
 
 use App\Helpers\UtilityHelper;
 use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\LabProgramService;
 use App\Services\Maestro\LabService;
 use App\Services\Maestro\ProjectService;
 use App\Services\Maestro\UserService;
