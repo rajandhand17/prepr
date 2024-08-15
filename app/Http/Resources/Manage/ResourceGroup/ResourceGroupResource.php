@@ -84,11 +84,11 @@ class ResourceGroupResource extends JsonResource
                 if (ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id == '')) {
                     continue;
                 }
-                $resourceModule=ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
-                if($resourceModule==null || !isset($resourceModule)){
+                $resourceModule = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
+                if ($resourceModule == null || !isset($resourceModule)) {
                     continue;
                 }
-                $resourceModules[$resource_module->resource_module_id]['uuid']  = $resourceModule->uuid;
+                $resourceModules[$resource_module->resource_module_id]['uuid'] = $resourceModule->uuid;
                 $resourceModules[$resource_module->resource_module_id]['title'] = $resourceModule->title;
                 $resourceModules[$resource_module->resource_module_id]['image'] = $resourceModule->media;
                 $resourceModules[$resource_module->resource_module_id]['description'] = $resourceModule->description;

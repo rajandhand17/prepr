@@ -188,5 +188,4 @@ class ResourceGroup extends Model
 
         return 'N/A';
     }
-
 }

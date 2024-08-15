@@ -357,7 +357,7 @@ class ChallengeService
             $challenge->is_open = $is_open;
             $challenge->is_auto_created = $is_auto_created;
             $challenge->is_ai_created = $is_ai_created;
-            $challenge->is_accessible ='1';
+            $challenge->is_accessible = '1';
             $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
             $challenge->allow_winner_change = '0';
             $challenge->save();
@@ -523,7 +523,7 @@ class ChallengeService
                 $challenge->is_notification_enabled = $is_notification_enabled;
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
-                $challenge->is_accessible ='1';
+                $challenge->is_accessible = '1';
                 $challenge->is_auto_created = $is_auto_created;
                 $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
                 $challenge->allow_winner_change = '0';

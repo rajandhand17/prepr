@@ -313,7 +313,7 @@ class ResourceModuleService
             $resourceModule->is_ai_created = $is_ai_created;
             $resourceModule->go1_course_id = $is_go1 ? $go1Course['id'] : null;
             $resourceModule->go1_metadata = $is_go1 ? $go1Course : null;
-            $resourceModule->is_accessible ='1';
+            $resourceModule->is_accessible = '1';
             $resourceModule->save();
 
             return $resourceModule;
@@ -400,7 +400,7 @@ class ResourceModuleService
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
-            $resourceModule->is_accessible ='1';
+            $resourceModule->is_accessible = '1';
             $resourceModule->save();
 
             return $resourceModule;
