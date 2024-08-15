@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Discussion;
 use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
@@ -216,5 +217,18 @@ class UtilityHelper
             'file'      => $file,
             'line'      => $line,
         ]);
+    }
+
+    public static function getComponentTotalDiscussions($component, $moduleId)
+    {
+        try {
+            $moduleType = Config('constants.discussion_module_type.' . $component);
+            return Discussion::where('module_id', $moduleId)
+                ->where('module_type', $moduleType)->count();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return 0;
+        }
     }
 }
