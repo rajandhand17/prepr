@@ -127,6 +127,12 @@ class ResourceGroupResource extends JsonResource
                 'percentage'    => $this->resource_group_completion_status->percentage,
             ];
         }
+        $type = $this->resource_group_type->map(function ($item) {
+            return config("constants.resource_types_key.".$item->value); // or $item->onboard depending on your needs
+        })->toArray();
+        $mode = $this->resource_group_mode->map(function ($item) {
+            return config("constants.resource_mode_type_key.".$item->value); // or $item->onboard depending on your needs
+        })->toArray();
 
         return [
             'id'                            => $this->uuid,
@@ -142,8 +148,8 @@ class ResourceGroupResource extends JsonResource
             'duration_id'                   => $duration_id,
             'duration'                      => $duration,
             'level_id'                      => $level_id,
-            'mode'                          => ResourceGroupModeResource::collection($this->resource_group_mode),
-            'type'                          => ResourceGroupTypeResource::collection($this->resource_group_type),
+            'mode'                          => $mode,
+            'type'                          => $type,
             'level'                         => $level,
             'resource_modules'              => $resourceModules,
             'organization'                  => $organization,

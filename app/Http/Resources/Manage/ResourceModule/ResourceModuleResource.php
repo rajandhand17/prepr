@@ -175,7 +175,12 @@ class ResourceModuleResource extends JsonResource
                 'percentage'    => $this->resource_module_completion_status->percentage,
             ];
         }
-
+        $type = $this->resource_module_type->map(function ($item) {
+            return config("constants.resource_types_key.".$item->value); // or $item->onboard depending on your needs
+        })->toArray();
+        $mode = $this->resource_module_mode->map(function ($item) {
+            return config("constants.resource_mode_type_key.".$item->value); // or $item->onboard depending on your needs
+        })->toArray();
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -187,8 +192,8 @@ class ResourceModuleResource extends JsonResource
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
-            'mode'                          => ResourceModuleModeResource::collection($this->resource_module_mode),
-            'type'                          => ResourceModuleTypeResource::collection($this->resource_module_type),
+            'mode'                          => $mode,
+            'type'                          => $type,
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'description'                   => $this->description,
