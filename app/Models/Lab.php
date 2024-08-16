@@ -183,7 +183,7 @@ class Lab extends Model
 
     public function labMode()
     {
-        return $this->hasOne(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '1');
+        return $this->hasOne(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '1')->pluck('value');
     }
 
     /**
