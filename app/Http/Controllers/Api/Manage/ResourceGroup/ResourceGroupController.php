@@ -79,7 +79,7 @@ class ResourceGroupController extends AppBaseController
             // Checking resource group based on slug exists or not
             $getResourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
             if (!$getResourceGroup) {
-                return $this->sendError(__('responses.selected_resource_group_not_found'), 404);
+                return $this->sendError(__('responses.selected_resource_not_found'), 404);
             }
             // Fetching resource group is belongs to current users or not
             if ($getResourceGroup->user_id == auth()->user()->id) {

@@ -301,6 +301,7 @@ class LabService
             $lab->is_verified = '0';
             $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
             $lab->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+            $lab->is_accessible = '1';
             $lab->save();
 
             return $lab;
@@ -422,6 +423,7 @@ class LabService
                 $lab->is_notification_enabled = ($request->has('is_achievement_enabled')) ? (($request->is_notification_enabled == 'yes') ? '1' : '0') : $lab->is_achievement_enabled;
                 $lab->is_live_event_enabled = $request->get('is_live_event_enabled') === 'yes' ? true : false;
                 $lab->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
+                $lab->is_accessible = '1';
                 $lab->save();
 
                 return $lab;
