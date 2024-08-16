@@ -72,7 +72,7 @@ class AchievementService
                     'challenge'      => ['9', '10'],
                     'challenge-path' => '3',
                     'resource-group' => '4',
-                   
+
                 ];
                 $achievementLevelMap = array_map(function ($level) use ($levelsMapping) {
                     return $levelsMapping[$level] ?? null;
@@ -80,7 +80,7 @@ class AchievementService
 
                 $achievementLevel = array_reduce($achievementLevelMap, function ($carry, $item) {
                     return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
-                }, []);  
+                }, []);
             }
             if ($request->has('placement') && !empty($request->placement)) {
                 $placementMapping = [
