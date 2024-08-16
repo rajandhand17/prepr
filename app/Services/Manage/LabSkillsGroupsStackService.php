@@ -236,4 +236,17 @@ class LabSkillsGroupsStackService
             return false;
         }
     }
+
+    public function fetchLabSkillAssociation($skillId)
+    {
+        try {
+            $labIds = LabSkillsGroupsStack::where(['foreign_id' => $skillId, 'type' => '0'])->pluck('lab_id')->unique();
+
+            return $labIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
