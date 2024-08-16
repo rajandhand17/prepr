@@ -92,18 +92,6 @@ class LabResource extends JsonResource
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
 
-        $mode = null;
-        if ($this->labMode) {
-            switch ($this->labMode->value) {
-                case '4':
-                    $mode = 'team';
-                    break;
-                case '5':
-                    $mode = 'individual';
-                    break;
-            }
-        }
-
         switch ($this->media_type) {
             case 'image':
                 $media = $this->media;
@@ -156,7 +144,7 @@ class LabResource extends JsonResource
             'id'                               => $this->uuid,
             'language'                         => $this->language,
             'type'                             => LabTypeResource::make($this->labType()),
-            'mode'                             => $mode,
+            'mode'                             => LabModeResource::make($this->labMode()),
             'media_type'                       => $this->media_type,
             'media'                            => $media,
             'created_by'                       => $created_by,
