@@ -923,20 +923,19 @@ class ProjectService
     public static function getProjectsByUserId($userId)
     {
         try {
-         // Eager load the 'challenge' relationship
-         $getUserProjects = Project::where('user_id', $userId)
-         ->with(['challenge' => function($query) {
-             $query->select('id', 'slug', 'title'); // Select only required columns
-         }])
-         ->select('id', 'title', 'description', 'challenge_id')
-         ->paginate(config('site-settings.pagination_per_page'));
-        return $getUserProjects;
-      
+            // Eager load the 'challenge' relationship
+            $getUserProjects = Project::where('user_id', $userId)
+            ->with(['challenge' => function ($query) {
+                $query->select('id', 'slug', 'title'); // Select only required columns
+            }])
+            ->select('id', 'title', 'description', 'challenge_id')
+            ->paginate(config('site-settings.pagination_per_page'));
+
+            return $getUserProjects;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;
         }
     }
-    
 }
