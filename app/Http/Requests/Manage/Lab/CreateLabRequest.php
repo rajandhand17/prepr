@@ -30,9 +30,10 @@ class CreateLabRequest extends FormRequest
         $base_rules = [
             'request_type'             => 'required|in:draft,publish,archive',
             'media_type'               => 'in:image,embedded',
-            'type'                     => 'required|array',
+            'type'                     => 'array',
             'type.*'                   => 'in:assess,onboard,engage,grow',
-            'mode'                     => 'required|in:team,individual',
+            'mode'                     => 'array',
+            'mode.*'                   => 'in:team,individual',
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
             'category_id'              => 'required|exists:categories,id',
@@ -232,9 +233,7 @@ class CreateLabRequest extends FormRequest
         return [
             'request_type.required'                            => __('responses.request_type_required'),
             'request_type.in'                                  => __('responses.request_type_status'),
-            'type.required'                                    => __('responses.type_required'),
             'type.in'                                          => __('responses.type_in'),
-            'mode.required'                                    => __('responses.mode_required'),
             'mode.in'                                          => __('responses.resource_mode_in'),
             'cover_image.mimes'                                => __('responses.cover_image_type'),
             'cover_image.max'                                  => __('responses.cover_image_max'),
