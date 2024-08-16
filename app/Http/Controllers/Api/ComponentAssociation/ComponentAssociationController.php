@@ -42,7 +42,7 @@ class ComponentAssociationController extends AppBaseController
             }
 
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
 
             $response = [];
@@ -244,9 +244,8 @@ class ComponentAssociationController extends AppBaseController
                             $response = $fetchLabs['response'];
                             $message = $fetchLabs['message'];
                             break;
-
-                       }
-                break;
+                    }
+                    break;
             }
 
             return $this->sendResponse($response, $message, 200);
