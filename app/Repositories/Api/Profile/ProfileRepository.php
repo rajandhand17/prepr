@@ -6,6 +6,8 @@ use App\Helpers\MixpanelHelper;
 use App\Helpers\ResumeParserHelper;
 use App\Helpers\UtilityHelper;
 use App\Services\FriendService;
+use App\Services\ProjectService;
+use App\Services\Public\ChallengeService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
 use App\Services\UserEducationService;
@@ -15,8 +17,6 @@ use App\Services\UserPersonalService;
 use App\Services\UserService;
 use App\Services\UserSkillsService;
 use App\Services\UserTagsService;
-use App\Services\ProjectService;
-use App\Services\Public\ChallengeService;
 use DB;
 
 class ProfileRepository implements ProfileInterface
@@ -70,6 +70,7 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             $userProjects = ProjectService::getProjectsByUserId($user_id);
+
             return  $userProjects;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -78,11 +79,11 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    
     public function getUserChallenges($user_id)
     {
         try {
             $userProjects = ChallengeService::getChallengesByUserId($user_id);
+
             return  $userProjects;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -90,7 +91,7 @@ class ProfileRepository implements ProfileInterface
             return false;
         }
     }
-    
+
     public function addPersonalDetail($request)
     {
         try {
