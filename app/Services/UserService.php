@@ -560,4 +560,22 @@ class UserService
             return false;
         }
     }
+
+    public function getUserProjects($user_id)
+    {
+        try {
+            $user = $this->getUserById($user_id);
+            dd($user->userTags());
+          
+
+            return true;
+        } catch (\Exception $e) {
+            dd($e);
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    
 }

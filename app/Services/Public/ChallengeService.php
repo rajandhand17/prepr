@@ -496,4 +496,15 @@ class ChallengeService
             return false;
         }
     }
+    
+    public static function getChallengesByUserId($user_id)
+    {
+        try {
+            $challenge_list = Challenge::where('user_id', $user_id)->with(['challenge_timelines', 'participation_achievement'])->select('id','title','slug', 'media', 'description','media_type', 'privacy');
+            return $challenge_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
+        }
+    }
 }
