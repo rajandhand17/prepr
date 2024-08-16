@@ -473,34 +473,36 @@ class ProfileController extends AppBaseController
     public function getUserProjects($userid)
     {
         try {
-        $userProjects = $this->profileRepository->getUserProjects($userid);
-              // Format the response data
-              $formattedProjects = $userProjects->map(function($project) {
+            $userProjects = $this->profileRepository->getUserProjects($userid);
+            // Format the response data
+            $formattedProjects = $userProjects->map(function ($project) {
                 return [
-                'id' => $project->id,
-                'title' => $project->title,
-                'description' => $project->description,
-                'challenge' => [
-                'slug' => $project->challenge->slug,
-                'title' => $project->challenge->title,
-                ]
-            ];
-            });
-            $response =[
-                'data' => $formattedProjects,
-                    'pagination' => [
-                    'current_page' => $userProjects->currentPage(),
-                    'per_page' => $userProjects->perPage(),
-                    'total' => $userProjects->total(),
-                    'last_page' => $userProjects->lastPage(),
-                    ]
+                    'id'          => $project->id,
+                    'title'       => $project->title,
+                    'description' => $project->description,
+                    'challenge'   => [
+                        'slug'  => $project->challenge->slug,
+                        'title' => $project->challenge->title,
+                    ],
                 ];
+            });
+            $response = [
+                'data'       => $formattedProjects,
+                'pagination' => [
+                    'current_page' => $userProjects->currentPage(),
+                    'per_page'     => $userProjects->perPage(),
+                    'total'        => $userProjects->total(),
+                    'last_page'    => $userProjects->lastPage(),
+                ],
+            ];
             if ($response) {
                 return $this->sendResponse($response, __('responses.found_projects_list'));
             }
+
             return $this->sendResponse([], __('responses.found_projects_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
@@ -508,36 +510,38 @@ class ProfileController extends AppBaseController
     public function getUserChallenges($userid)
     {
         try {
-        $userChallenges = $this->profileRepository->getUserChallenges($userid);
-              // Format the response data
-              $formattedChallenges = $userChallenges->map(function($challenge) {
+            $userChallenges = $this->profileRepository->getUserChallenges($userid);
+            // Format the response data
+            $formattedChallenges = $userChallenges->map(function ($challenge) {
                 return [
-                'id' => $challenge->id,
-                'title' => $challenge->title,
-                'description'  => $challenge->description,
-                'slug'         => $challenge->slug,
-                'media'         => $challenge->media,
-                'privacy'       => $challenge->privacy,
-                'media_type'    => $challenge->media_type,
-                'challenge_timelines'   => $challenge->challenge_timelines,
-                'participation_achievement' =>  $challenge->participation_achievement,
-            ];
-            });
-            $response =[
-                'data' => $formattedChallenges,
-                    'pagination' => [
-                    'current_page' => $userChallenges->currentPage(),
-                    'per_page' => $userChallenges->perPage(),
-                    'total' => $userChallenges->total(),
-                    'last_page' => $userChallenges->lastPage(),
-                    ]
+                    'id'                        => $challenge->id,
+                    'title'                     => $challenge->title,
+                    'description'               => $challenge->description,
+                    'slug'                      => $challenge->slug,
+                    'media'                     => $challenge->media,
+                    'privacy'                   => $challenge->privacy,
+                    'media_type'                => $challenge->media_type,
+                    'challenge_timelines'       => $challenge->challenge_timelines,
+                    'participation_achievement' => $challenge->participation_achievement,
                 ];
+            });
+            $response = [
+                'data'       => $formattedChallenges,
+                'pagination' => [
+                    'current_page' => $userChallenges->currentPage(),
+                    'per_page'     => $userChallenges->perPage(),
+                    'total'        => $userChallenges->total(),
+                    'last_page'    => $userChallenges->lastPage(),
+                ],
+            ];
             if ($response) {
                 return $this->sendResponse($response, __('responses.found_challenges_list'));
             }
+
             return $this->sendResponse([], __('responses.found_challenges_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }

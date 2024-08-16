@@ -566,7 +566,6 @@ class UserService
         try {
             $user = $this->getUserById($user_id);
             dd($user->userTags());
-          
 
             return true;
         } catch (\Exception $e) {
@@ -576,6 +575,4 @@ class UserService
             return false;
         }
     }
-
-    
 }
