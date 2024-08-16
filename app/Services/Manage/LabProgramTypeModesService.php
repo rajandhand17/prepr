@@ -18,7 +18,9 @@ class LabProgramTypeModesService
                 'engage'  => ['type' => '0', 'value' => '2'],
                 'grow'    => ['type' => '0', 'value' => '3'],
             ];
-            LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->delete();
+            if(LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->exists()){
+                LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->delete();
+            }
             if ($request->has('type')) {
                 foreach ($request->type as $labProgramType) {
                     if (isset($typeMappings[$labProgramType])) {
@@ -30,13 +32,24 @@ class LabProgramTypeModesService
                     }
                 }
             }
+            if(LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '1'])->exists()){
+                LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '1'])->delete();
+            }
+            $modeMappings = [
+                'team'  => ['mode' => '1', 'value' => '4'],
+                'individual' => ['mode' => '1', 'value' => '5'],
+            ];
+            
             if ($request->has('mode')) {
-                LabProgramTypeModes::updateOrCreate([
-                    'lab_program_id'        => $labProgramId,
-                    'type_mode'             => config('constants.lab_program_mode_type.mode'),
-                ], [
-                    'value'         => config('constants.lab_program_modes.'.$request->mode),
-                ]);
+                foreach ($request->mode as $labProgramMode) {
+                    if (isset($modeMappings[$labProgramMode])) {
+                        LabProgramTypeModes::create([
+                            'lab_program_id'=> $labProgramId,
+                            'type_mode'     => $modeMappings[$labProgramMode]['mode'],
+                            'value'         => $modeMappings[$labProgramMode]['value'],
+                        ]);
+                    }
+                }
             }
 
             return true;
