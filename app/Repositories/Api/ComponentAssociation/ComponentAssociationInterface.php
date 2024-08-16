@@ -67,4 +67,12 @@ interface ComponentAssociationInterface
     public function fetchRelatedResourceCollections($resourceCollectionId);
 
     public function fetchRelatedResourceGroups($resourceGroupId);
+
+    public function getSkillBasedOnId($skillId);
+
+    public function fetchChallengeSkillAssociation($request, $skillId);
+
+    public function fetchResourceModuleSkillAssociation($request, $resourceModuleId);
+
+    public function fetchLabsBasedOnSkillId($request, $skillId);
 }

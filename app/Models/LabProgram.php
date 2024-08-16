@@ -149,7 +149,7 @@ class LabProgram extends Model
 
     public function labProgramMode()
     {
-        return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '1');
+        return $this->hasOne(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '1')->pluck('value');
     }
 
     public function isJoined()
