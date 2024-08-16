@@ -48,20 +48,13 @@ class AchievementService
             if ($request->has('search') && !empty($request->search)) {
                 $achievement_list = $achievement_list->where('user_achievements.title', 'like', '%'.$request->search.'%');
             }
-
+            $achievementType = $achievementLevel = $achievementPlacement = [];
             if ($request->has('type') && !empty($request->type)) {
                 $typesMapping = [
-                    'lab'            => '0',
-                    'lab-program'    => '1',
-                    'challenge'      => ['9', '10'],
-                    'challenge-path' => '3',
-                    'resource-group' => '4',
                     'appreciation'   => '5',
                     'activity'       => '6',
                     'skill-activity' => '7',
                     'imported'       => '8',
-                    'winner'         => '9',
-                    'participation'  => '10',
                 ];
                 $achievementTypeMap = array_map(function ($type) use ($typesMapping) {
                     return $typesMapping[$type] ?? null;
@@ -70,10 +63,51 @@ class AchievementService
                 $achievementType = array_reduce($achievementTypeMap, function ($carry, $item) {
                     return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
                 }, []);
-
-                $achievement_list = $achievement_list->whereIn('user_achievements.achievement_type', $achievementType);
             }
 
+            if ($request->has('level') && !empty($request->level)) {
+                $levelsMapping = [
+                    'lab'            => '0',
+                    'lab-program'    => '1',
+                    'challenge'      => ['9', '10'],
+                    'challenge-path' => '3',
+                    'resource-group' => '4',
+
+                ];
+                $achievementLevelMap = array_map(function ($level) use ($levelsMapping) {
+                    return $levelsMapping[$level] ?? null;
+                }, $request->level);
+
+                $achievementLevel = array_reduce($achievementLevelMap, function ($carry, $item) {
+                    return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
+                }, []);
+            }
+            if ($request->has('placement') && !empty($request->placement)) {
+                $placementMapping = [
+                    'winner'         => '9',
+                    'participation'  => '10',
+                ];
+                $achievementPlacementMap = array_map(function ($placement) use ($placementMapping) {
+                    return $placementMapping[$placement] ?? null;
+                }, $request->placement);
+
+                $achievementPlacement = array_reduce($achievementPlacementMap, function ($carry, $item) {
+                    return is_array($item) ? array_merge($carry, $item) : array_merge($carry, [$item]);
+                }, []);
+            }
+
+            // Apply OR logic for filtering based on type, level, and placement
+            $achievement_list = $achievement_list->where(function ($query) use ($achievementType, $achievementLevel, $achievementPlacement) {
+                if (!empty($achievementType)) {
+                    $query->orWhereIn('user_achievements.achievement_type', $achievementType);
+                }
+                if (!empty($achievementLevel)) {
+                    $query->orWhereIn('user_achievements.achievement_type', $achievementLevel);
+                }
+                if (!empty($achievementPlacement)) {
+                    $query->orWhereIn('user_achievements.achievement_type', $achievementPlacement);
+                }
+            });
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
@@ -84,6 +118,12 @@ class AchievementService
                         break;
                     case 'creation_date':
                         $achievement_list->orderBy('user_achievements.issue_date', 'ASC');
+                        break;
+                    case 'relevance':
+                        $achievement_list; // need to implement
+                        break;
+                    case 'popularity':
+                        $achievement_list; // need to implement
                         break;
                     default:
                         $achievement_list->orderBy('user_achievements.id', 'ASC');

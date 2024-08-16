@@ -163,7 +163,7 @@
     "responses.organization_stored_failed": "Oops! The Creation organization has failed.",
     "responses.organization_not_found": "Organization not found",
     "responses.selected_organization_not_found": "Preferred Organization not found",
-    "responses.selected_resource_collection_not_found": "There are no resources available related to this slug",
+    "responses.selected_resource_not_found": "There are no resources available related to this slug",
     "responses.selected_organization_found": "Preferred Organization found",
     "responses.organization_update_access_denied": "Sorry! You are not allowed to update this organization.",
     "responses.organization_update_successfully": "The organization has been updated successfully",
@@ -1410,5 +1410,6 @@
     "responses.failed_found_lab_dashboard_detail": "Failed to retrieve User Dashboard layout",
     "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
     "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
-    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout"
+    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.type_image": "The :attribute must be an image."
 }
