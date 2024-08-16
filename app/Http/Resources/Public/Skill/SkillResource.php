@@ -29,7 +29,6 @@ class SkillResource extends JsonResource
         $relatedKeyUrl = isset($key[0]) ? config('wikipedia.WIKIPEDIA_URL').str_replace(' ', '_', $key[0]) : [];
         $getJobIds = JobTitleSkillServices::getJobTitleBasedOnSkills([$this->id]);
         $getJobIdsBasedOnSkills = JobTitleService::getJobTitles('en', $this->search, $getJobIds)->take(config('site-settings.skills_par_module_limit'));
-        $getLabIdsBasedOnSKills = LabService::getLabBasedOnSkills($this->id);
         $data = [
             'id'                     => $this->id,
             'title'                  => $this->title,
@@ -38,11 +37,7 @@ class SkillResource extends JsonResource
             'skill_url'              => $relatedKeyUrl,
             'is_saved'               => (!empty(UserSkillsService::checkUserSkillExists($this->id))) ? 'yes' : 'no',
             'related_skills_count'   => $count_related_skills,
-            'related_challenges'     => $this->getChallenges != null ? $this->getChallenges->count() : 0,
-            'related_labs_count'     => $this->getLabs != null ? $this->getLabs->count() : 0,
-            'related_resources'      => $this->getLlatedResources != null ? $this->getLlatedResources->count() : 0,
             'related_jobs'           => CareerResource::collection($getJobIdsBasedOnSkills),
-            'related_labs'           => LabResource::collection($getLabIdsBasedOnSKills),
         ];
         if (auth('api')->check()) {
             $data['saved_on'] = isset($this->saved_skill->created_at) ? UtilityHelper::formatDateTime($this->saved_skill->created_at) : null;
