@@ -25,6 +25,7 @@ class CheckComponentMiddleware
                 'organization',
                 'lab',
                 'challenge',
+                'challenge-path',
                 'project',
                 'lab-program',
             ];

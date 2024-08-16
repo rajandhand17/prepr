@@ -53,8 +53,13 @@ class ChallengeService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated') ? '2' : '3'));
-                $challenge_list = $challenge_list->where('challenges.status', $status);
+                if (in_array($request->status, ['draft', 'published'])) {
+                    $status = ($request->status == 'draft') ? '0' : '1';
+                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                } elseif (in_array($request->status, ['deactivated', 'archived'])) {
+                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $challenge_list = $challenge_list->where('challenges.is_open', $status);
+                }
             } else {
                 $challenge_list = $challenge_list->where('challenges.status', '1');
             }
@@ -112,7 +117,8 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                             ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
+                             ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -138,15 +144,21 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereIn('level_id', $request->level_id);
             }
 
-            if ($request->has('type') && $request->type && is_array($request->type)) {
+            if ($request->has('type') && $request->type) {
                 $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
-                    $query->whereIn('value', $request->type);
+                    $query->where('value', config('constants.resource_types.'.$request->type));
                 });
             }
 
             if ($request->has('template_status') && !empty($request->template_status) && is_array($request->template_status)) {
                 $challenge_list = $challenge_list->whereIn('challenges.uuid', function ($query) use ($request) {
                     $query->select('challenge_templates.uuid')->from('challenge_templates')->whereIn('status', $request->template_status);
+                });
+            }
+
+            if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
+                $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->whereHas('submitted_projects', function ($query) {
+                    $query->where('is_submitted', '1');
                 });
             }
 
@@ -346,6 +358,7 @@ class ChallengeService
             $challenge->is_open = $is_open;
             $challenge->is_auto_created = $is_auto_created;
             $challenge->is_ai_created = $is_ai_created;
+            $challenge->is_accessible = '1';
             $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
             $challenge->allow_winner_change = '0';
             $challenge->save();
@@ -511,6 +524,7 @@ class ChallengeService
                 $challenge->is_notification_enabled = $is_notification_enabled;
                 $challenge->project_privacy = $project_privacy;
                 $challenge->is_open = $is_open;
+                $challenge->is_accessible = '1';
                 $challenge->is_auto_created = $is_auto_created;
                 $challenge->campus_connect_status = config('constants.campus_connect_status.'.$campusConnectStatus);
                 $challenge->allow_winner_change = '0';

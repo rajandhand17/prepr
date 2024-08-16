@@ -68,10 +68,10 @@ class ResourceGroupService
                     $media_type = config('constants.resource_media_type.image');
             }
             switch ($request->privacy) {
-                case 'no':
+                case 'public':
                     $privacy = config('constants.resource_group_privacy.no');
                     break;
-                case 'yes':
+                case 'private':
                     $privacy = config('constants.resource_group_privacy.yes');
                     break;
                 default:
@@ -93,6 +93,7 @@ class ResourceGroupService
             $resourceGroup->duration = $request->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
+            $resourceGroup->is_accessible = '1';
             $resourceGroup->save();
 
             return $resourceGroup;
@@ -186,10 +187,10 @@ class ResourceGroupService
                     $media_type = null;
             }
             switch ($request->privacy) {
-                case 'no':
+                case 'public':
                     $privacy = config('constants.resource_group_privacy.no');
                     break;
-                case 'yes':
+                case 'private':
                     $privacy = config('constants.resource_group_privacy.yes');
                     break;
                 default:
@@ -206,6 +207,7 @@ class ResourceGroupService
             $resourceGroup->duration = ($request->has('duration')) ? $request->duration : $resourceGroup->duration;
             $resourceGroup->privacy = $privacy;
             $resourceGroup->status = $status;
+            $resourceGroup->is_accessible = '1';
             $resourceGroup->save();
 
             return $resourceGroup;
@@ -260,13 +262,13 @@ class ResourceGroupService
                 }
             }
 
-            if ($request->has('privacy')) {
+            if ($request->has('privacy') && !empty($request->privacy)) {
                 $privacy = null;
                 switch ($request->privacy) {
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_group_privacy.yes');
                         break;
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_group_privacy.no');
                         break;
                     default:

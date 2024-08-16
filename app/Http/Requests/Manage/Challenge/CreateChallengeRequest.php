@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
+use App\Rules\ScormFile;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,7 +32,7 @@ class CreateChallengeRequest extends FormRequest
             'title'                                 => 'required|unique:challenges,title',
             'description_type'                      => 'required_if:request_type,publish|in:text,scorm',
             'description'                           => 'required_if:description_type,text',
-            'scorm_file'                            => 'required_if:description_type,scorm|file|mimes:zip|max:500000',
+            'scorm_file'                            => ['required_if:description_type,scorm', 'file', 'mimes:zip', 'max:500000', new ScormFile()],
             'duration_id'                           => 'nullable|exists:durations,id',
             'level_id'                              => 'nullable|exists:levels,id',
             'skills'                                => 'required_if:request_type,publish|array',

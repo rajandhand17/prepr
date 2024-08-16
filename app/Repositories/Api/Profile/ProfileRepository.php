@@ -110,6 +110,17 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function updateFilePrivacy($id)
+    {
+        try {
+            return $this->userExperienceService->updateFilePrivacy($id);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function deleteExperience($id)
     {
         try {

@@ -2,7 +2,7 @@ id: 63117
 name: Learnlab-Serverless-API
 environments:
   beta:
-    domain: 'api.beta.learnlab.ai'
+    domain: "api.beta.learnlab.ai"
     database: Learnlab-Serverless-Beta
     runtime: docker
     memory: 4096
@@ -20,16 +20,81 @@ environments:
     build:
       - "composer install"
       - "php artisan event:cache"
+    # firewall:
+    #   rate-limit: 1000
+    #   bot-control:
+    #   #     - CategorySearchEngine
+    #   #     - CategorySocialMedia
+    #       - CategoryScrapingFramework
+    #       - CategoryAdvertising
+    #       - CategoryArchiver
+    #   #     - SignalNonBrowserUserAgent
+    #   #     - CategoryHttpLibrary
+    #       - CategoryLinkChecker
+    #   #     - CategoryMiscellaneous
+    #       - SignalKnownBotDataCenter
+
+  pre:
+    domain: "api.pre.learnlab.ai"
+    database: Learnlab-Serverless-Pre
+    runtime: docker
+    memory: 4096
+    storage: learnlab-serverless-pre
+    warm: 4
+    concurrency: 50
+    # queue-timeout: 10
+    queues: false
+    #   - default
+    #   - chat
+    timeout: 600
+    cli-timeout: 900
+    # gateway-version: 2
+    build:
+      - "composer install"
+      - "php artisan event:cache"
     firewall:
       rate-limit: 1000
       bot-control:
-      #     - CategorySearchEngine
-      #     - CategorySocialMedia
-          - CategoryScrapingFramework
-          - CategoryAdvertising
-          - CategoryArchiver
-      #     - SignalNonBrowserUserAgent
-      #     - CategoryHttpLibrary
-          - CategoryLinkChecker
-      #     - CategoryMiscellaneous
-          - SignalKnownBotDataCenter
+        # - CategorySearchEngine
+        # - CategorySocialMedia
+        - CategoryScrapingFramework
+        - CategoryAdvertising
+        - CategoryArchiver
+        # - SignalNonBrowserUserAgent
+        # - CategoryHttpLibrary
+        - CategoryLinkChecker
+        # - CategoryMiscellaneous
+        - SignalKnownBotDataCenter
+
+  production:
+    domain: "api.learnlab.ai"
+    database: Learnlab-Serverless-Production
+    runtime: docker
+    memory: 4096
+    storage: learnlab-serverless-production
+    warm: 4
+    concurrency: 50
+    # balancer: Learnlab-Serverless-Production
+    # queue-timeout: 10
+    queues: false
+    #   - default
+    #   - chat
+    timeout: 600
+    cli-timeout: 900
+    # gateway-version: 2
+    build:
+      - "composer install"
+      - "php artisan event:cache"
+    firewall:
+      rate-limit: 1000
+      bot-control:
+        #     - CategorySearchEngine
+        #     - CategorySocialMedia
+        - CategoryScrapingFramework
+        - CategoryAdvertising
+        - CategoryArchiver
+        #     - SignalNonBrowserUserAgent
+        #     - CategoryHttpLibrary
+        - CategoryLinkChecker
+        #     - CategoryMiscellaneous
+        - SignalKnownBotDataCenter

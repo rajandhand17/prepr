@@ -68,10 +68,10 @@ class ResourceModuleService
 
             if ($request->has('privacy') && !empty($request->privacy)) {
                 switch ($request->privacy) {
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_module_privacy.no');
                         break;
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_module_privacy.yes');
                         break;
                     default:
@@ -244,10 +244,10 @@ class ResourceModuleService
             }
             $privacy = null;
             switch ($request->privacy) {
-                case 'no':
+                case 'public':
                     $privacy = config('constants.resource_module_privacy.no');
                     break;
-                case 'yes':
+                case 'private':
                     $privacy = config('constants.resource_module_privacy.yes');
                     break;
                 default:
@@ -313,6 +313,7 @@ class ResourceModuleService
             $resourceModule->is_ai_created = $is_ai_created;
             $resourceModule->go1_course_id = $is_go1 ? $go1Course['id'] : null;
             $resourceModule->go1_metadata = $is_go1 ? $go1Course : null;
+            $resourceModule->is_accessible = '1';
             $resourceModule->save();
 
             return $resourceModule;
@@ -366,10 +367,10 @@ class ResourceModuleService
                     $is_global = null;
             }
             switch ($request->privacy) {
-                case 'no':
+                case 'public':
                     $privacy = config('constants.resource_module_privacy.no');
                     break;
-                case 'yes':
+                case 'private':
                     $privacy = config('constants.resource_module_privacy.yes');
                     break;
                 default:
@@ -399,6 +400,7 @@ class ResourceModuleService
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;
+            $resourceModule->is_accessible = '1';
             $resourceModule->save();
 
             return $resourceModule;
