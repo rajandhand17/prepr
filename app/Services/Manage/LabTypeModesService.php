@@ -19,7 +19,7 @@ class LabTypeModesService
                 'grow'    => ['type' => '0', 'value' => '3'],
             ];
 
-            if(LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '0'])->exists()){
+            if (LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '0'])->exists()) {
                 LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '0'])->delete();
             }
 
@@ -35,12 +35,12 @@ class LabTypeModesService
                 }
             }
 
-            if(LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '1'])->exists()){
+            if (LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '1'])->exists()) {
                 LabTypeModes::where(['lab_id' => $labId, 'type_mode' => '1'])->delete();
             }
 
             $modeMappings = [
-                'team'  => ['mode' => '1', 'value' => '4'],
+                'team'       => ['mode' => '1', 'value' => '4'],
                 'individual' => ['mode' => '1', 'value' => '5'],
             ];
             if ($request->has('mode')) {

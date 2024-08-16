@@ -18,7 +18,7 @@ class LabProgramTypeModesService
                 'engage'  => ['type' => '0', 'value' => '2'],
                 'grow'    => ['type' => '0', 'value' => '3'],
             ];
-            if(LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->exists()){
+            if (LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->exists()) {
                 LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '0'])->delete();
             }
             if ($request->has('type')) {
@@ -32,14 +32,14 @@ class LabProgramTypeModesService
                     }
                 }
             }
-            if(LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '1'])->exists()){
+            if (LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '1'])->exists()) {
                 LabProgramTypeModes::where(['lab_program_id' => $labProgramId, 'type_mode' => '1'])->delete();
             }
             $modeMappings = [
-                'team'  => ['mode' => '1', 'value' => '4'],
+                'team'       => ['mode' => '1', 'value' => '4'],
                 'individual' => ['mode' => '1', 'value' => '5'],
             ];
-            
+
             if ($request->has('mode')) {
                 foreach ($request->mode as $labProgramMode) {
                     if (isset($modeMappings[$labProgramMode])) {
