@@ -46,7 +46,6 @@ class ProfileController extends AppBaseController
 
             return $this->sendResponse(ProfileResource::make($userDetails), __('responses.found_user_profile_detail'));
         } catch(\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
