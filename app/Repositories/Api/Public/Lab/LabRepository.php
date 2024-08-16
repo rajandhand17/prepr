@@ -99,10 +99,10 @@ class LabRepository implements LabInterface
         }
     }
 
-    public function checkJoinedOrNot($lab, $component)
+    public function checkJoinedOrNot($lab, $moduleType)
     {
         try {
-            return $this->memberManagementService->checkJoinedOrNot($lab, $component);
+            return $this->memberManagementService->checkJoinedOrNot($lab, $moduleType);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

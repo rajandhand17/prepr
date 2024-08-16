@@ -39,7 +39,7 @@ class UpdateResourceGroupRequest extends FormRequest
                     $query->whereNull('deleted_at');
                 }),
             ],
-            'privacy'                  => 'required|in:yes,no',
+            'privacy'                  => 'required|in:public,private',
             'media_type'               => 'in:image,embedded',
             'status'                   => 'required|in:draft,publish,archive',
             'resource_ids'             => 'required|array',

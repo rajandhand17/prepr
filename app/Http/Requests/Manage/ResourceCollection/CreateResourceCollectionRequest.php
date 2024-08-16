@@ -30,7 +30,7 @@ class CreateResourceCollectionRequest extends FormRequest
             'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
             'mode'                   => 'array',
             'mode.*'                 => 'nullable|in:team,individual',
-            'privacy'                => 'required|in:yes,no',
+            'privacy'                => 'required|in:public,private',
             'media_type'             => 'in:image,embedded',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',

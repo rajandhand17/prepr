@@ -76,6 +76,7 @@ class ResourceCollectionService
             $resourceCollection->duration = $request->duration;
             $resourceCollection->privacy = $privacy;
             $resourceCollection->status = $status;
+            $resourceCollection->is_accessible = '1';
             $resourceCollection->save();
 
             return $resourceCollection;
@@ -184,6 +185,7 @@ class ResourceCollectionService
                 $resourceCollection->media_type = ($request->has('media_type')) ? $media_type : $resourceCollection->media_type;
                 $resourceCollection->level = ($request->has('level')) ? $request->level : $resourceCollection->level;
                 $resourceCollection->duration = ($request->has('duration')) ? $request->duration : $resourceCollection->duration;
+                $resourceCollection->is_accessible = '1';
                 $resourceCollection->privacy = $privacy;
                 $resourceCollection->status = $status;
                 $resourceCollection->save();
@@ -246,10 +248,10 @@ class ResourceCollectionService
             if ($request->has('privacy') && !empty($request->privacy)) {
                 $privacy = null;
                 switch ($request->privacy) {
-                    case 'yes':
+                    case 'private':
                         $privacy = config('constants.resource_collection_privacy.yes');
                         break;
-                    case 'no':
+                    case 'public':
                         $privacy = config('constants.resource_collection_privacy.no');
                         break;
                     default:
