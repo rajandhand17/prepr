@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Manage\Lab;
+namespace App\Http\Resources\Public\LabProgram;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LabModeResource extends JsonResource
+class LabProgramModeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,10 @@ class LabModeResource extends JsonResource
     {
         $modeArrayData = [];
         if (!empty($this->all())) {
-            $labModes = collect(['4'=>'team', '5'=>'individual']);
-            foreach ($this->all() as $labMode) {
-                if ($labModes->has($labMode)) {
-                    $modeArrayData[] = $labModes->get($labMode);
+            $labProgramModes = collect(['4'=>'team', '5'=>'individual']);
+            foreach ($this->all() as $labProgramMode) {
+                if ($labProgramModes->has($labProgramMode)) {
+                    $modeArrayData[] = $labProgramModes->get($labProgramMode);
                 }
             }
         }
