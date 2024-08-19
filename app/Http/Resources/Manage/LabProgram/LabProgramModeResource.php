@@ -20,9 +20,7 @@ class LabProgramModeResource extends JsonResource
             $labProgramModes = collect(['4'=>'team', '5'=>'individual']);
             foreach ($this->all() as $labProgramMode) {
                 if ($labProgramModes->has($labProgramMode)) {
-                    $typeArray['id'] = $labProgramMode;
-                    $typeArray['title'] = $labProgramModes->get($labProgramMode);
-                    $modeArrayData[] = $typeArray;
+                    $modeArrayData[] = $labProgramModes->get($labProgramMode);
                 }
             }
         }

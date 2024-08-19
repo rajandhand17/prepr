@@ -122,18 +122,6 @@ class LabProgramResource extends JsonResource
             }
         }
 
-        $mode = null;
-        if ($this->labProgramMode) {
-            switch ($this->labProgramMode->value) {
-                case '4':
-                    $mode = 'team';
-                    break;
-                case '5':
-                    $mode = 'individual';
-                    break;
-            }
-        }
-
         $created_by = [];
         if (!empty($this->user_id)) {
             $userDetails = UserService::getUserById($this->user_id);
@@ -150,7 +138,7 @@ class LabProgramResource extends JsonResource
             'title'                         => $this->title,
             'slug'                          => $this->slug,
             'type'                          => LabProgramTypeResource::make($this->labProgramType()),
-            'mode'                          => $mode,
+            'mode'                          => LabProgramModeResource::make($this->labProgramMode()),
             'is_joined'                     => $join_status,
             'created_by'                    => $created_by,
             'description'                   => $this->description,
