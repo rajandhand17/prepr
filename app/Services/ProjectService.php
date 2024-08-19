@@ -673,15 +673,21 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $myProjects     = ProjectService::getMyProjectIds($userData->id);
-            $teamProjects   = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
-            $invitesProjects= ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+            $myProjects = ProjectService::getMyProjectIds($userData->id);
+            $teamProjects = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+            $invitesProjects = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
             $projectCollection = new Collection();
-            if($myProjects){ $projectCollection = $projectCollection->concat($myProjects); }
-            if($teamProjects){ $projectCollection = $projectCollection->concat($teamProjects); }
-            if($invitesProjects){ $projectCollection = $projectCollection->concat($invitesProjects); }
-            
-            $projectIds = Project::whereNotIn('id',$projectCollection)->where('projects.privacy', '0')->pluck('id');
+            if ($myProjects) {
+                $projectCollection = $projectCollection->concat($myProjects);
+            }
+            if ($teamProjects) {
+                $projectCollection = $projectCollection->concat($teamProjects);
+            }
+            if ($invitesProjects) {
+                $projectCollection = $projectCollection->concat($invitesProjects);
+            }
+
+            $projectIds = Project::whereNotIn('id', $projectCollection)->where('projects.privacy', '0')->pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {
