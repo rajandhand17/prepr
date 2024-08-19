@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
             ChannelApiSeeder::class,
             ChannelVendorSeeder::class,
             ChannelApiAccessSeeder::class,
-            // ChannelApiOrganizationSeeder::class,
         ];
 
         if (app()->environment('testing')) {
