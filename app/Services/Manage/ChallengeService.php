@@ -663,9 +663,9 @@ class ChallengeService
     {
         try {
             $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
-            $challenge_list = self::filterChallengeList($challenge_list, $request);
+            $limit = config('site-settings.listing_limit');
 
-            return $challenge_list->get();
+            return $challenge_list->limit($limit)->get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
