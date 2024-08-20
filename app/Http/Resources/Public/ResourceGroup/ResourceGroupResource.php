@@ -130,7 +130,13 @@ class ResourceGroupResource extends JsonResource
                 ];
             }
         }
+        $type = $this->resource_group_type->map(function ($item) {
+            return config('constants.resource_types_key.'.$item->value);
+        });
 
+        $mode = $this->resource_group_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.'.$item->value);
+        });
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -162,6 +168,8 @@ class ResourceGroupResource extends JsonResource
             'rating'                        => $rating,
             'module_progress'               => $module_progress,
             'resource_collection'           => $resourceCollection,
+            'mode'                          => $mode,
+            'type'                          => $type,
         ];
     }
 }
