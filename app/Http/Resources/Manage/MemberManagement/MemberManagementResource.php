@@ -75,6 +75,7 @@ class MemberManagementResource extends JsonResource
             'id'              => $this->uuid,
             'type'            => $type,
             'invite_type'     => $invite_type,
+            'request_status'  => $this->type == '1' ? $invite_status : null,
             'name'            => $this->invitee_name,
             'email'           => $this->email,
             'username'        => $username,
