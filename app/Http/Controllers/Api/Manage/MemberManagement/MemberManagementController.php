@@ -129,6 +129,46 @@ class MemberManagementController extends AppBaseController
         }
     }
 
+    public function deleteAllMember($component, $slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
+            }
+            $deleted_members = $this->memberManagementRepository->deleteAllMembers($checkComponentBasedOnSlug, $component, $request);
+            if ($deleted_members) {
+                return $this->sendResponse(null, __('responses.all_members_delete'));
+            }
+
+            return $this->sendError(__('responses.member_manger_not_delete'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function approveAllPendingJoinRequests($component, $slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
+            }
+            $approved_all_join_requests = $this->memberManagementRepository->approveAllPendingJoinRequests($checkComponentBasedOnSlug, $component, $request);
+            if ($approved_all_join_requests) {
+                return $this->sendResponse(null, __('responses.all_members_accepted'));
+            }
+
+            return $this->sendError(__('responses.pending_request_not_accepted'), 400);
+        } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function acceptOrRejectLabJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
     {
         try {
