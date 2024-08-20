@@ -20,9 +20,7 @@ class LabTypeResource extends JsonResource
             $labTypes = collect(['0'=>'assess', '1'=>'onboard', '2'=>'engage', '3'=>'grow']);
             foreach ($this->all() as $labType) {
                 if ($labTypes->has($labType)) {
-                    $typeArray['id'] = $labType;
-                    $typeArray['title'] = $labTypes->get($labType);
-                    $typeArrayData[] = $typeArray;
+                    $typeArrayData[] = $labTypes->get($labType);
                 }
             }
         }
