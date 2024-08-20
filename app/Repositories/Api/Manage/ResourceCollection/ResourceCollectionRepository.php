@@ -47,7 +47,6 @@ class ResourceCollectionRepository implements ResourceCollectionInterface
                 $createComponentAssociation = $this->componentAssociationService->createResourceCollectionAssociation($request, $createResourceCollection->id);
                 $createResourceCollectionSkillsGroupStack = $this->resourceCollectionSkillsGroupStackService->createResourceCollectionSkillsGroupsStack($request, $createResourceCollection->id);
                 $createResourceCollectionTypeModesService = $this->resourceCollectionTypeModesService->createUpdateResourceCollectionTypeModes($request, $createResourceCollection->id);
-
                 return[
                     'createResourceCollection'                        => $createResourceCollection,
                     'createComponentAssociation'                      => $createComponentAssociation,

@@ -54,6 +54,7 @@ class ResourceCollectionController extends AppBaseController
                 $upload_cover_image = $uploaded_cover_image;
             }
             $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image, $organization->id);
+
             if ($createResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection), __('responses.resource_collection_stored_success'), 200);
             }
