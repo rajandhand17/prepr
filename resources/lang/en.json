@@ -1132,6 +1132,7 @@
     "responses.added_jobs_successfully": "You have successfully add this job",
     "responses.related_career_successfully": "you have successfully retrieved related jobs list",
     "responses.team_matching_list_successfully": "Team Matching List has been successfully retrieved",
+    "responses.team_matching_count_successfully": "Team Matching count has been successfully retrieved",
     "responses.team_matching_updated_successfully": "Team Matching updated successfully.",
     "responses.team_matching_list_failed": "Team Matching List has not been retrieved",
     "responses.resource_doesn_t_have_a_scorm_file": "Resource doesn't have a scorm file.",
