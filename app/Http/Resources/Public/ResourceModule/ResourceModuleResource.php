@@ -254,6 +254,7 @@ class ResourceModuleResource extends JsonResource
         $mode = $this->resource_module_mode->map(function ($item) {
             return config('constants.resource_mode_type_key.'.$item->value);
         });
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
