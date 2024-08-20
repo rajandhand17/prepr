@@ -77,6 +77,7 @@ class UserResource extends JsonResource
             'is_lab_onboarding'           => ($this->display_lab_mini_onboarding == 0) ? 'no' : 'yes',
             'is_challenge_onboarding'     => ($this->display_challenge_mini_onboarding == 0) ? 'no' : 'yes',
             'is_organization_onboarding'  => ($this->display_organization_mini_onboarding == 0) ? 'no' : 'yes',
+            'team_matching_profile_check' => $this->team_matching_profile_check,
 
             'user_experiences' => UserExperienceResource::collection($this->userExperience),
             'go1'              => [
