@@ -11,6 +11,7 @@ use App\Services\Manage\LabSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
+use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\LabProgramService;
@@ -39,8 +40,9 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
     private $resourceCollectionSkillsGroupsStackService;
     private $resourceGroupSkillsGroupsStackService;
     private $skillService;
+    private $projectService;
 
-    public function __construct(LabService $labService, LabProgramService $labProgramService, ChallengeService $challengeService, ChallengePathService $challengePathService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ResourceModuleSkillsGroupsStackService $resourceModuleSkillsGroupsStackService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupsStackService, ResourceGroupSkillsGroupsStackService $resourceGroupSkillsGroupsStackService, SkillService $skillService)
+    public function __construct(LabService $labService, LabProgramService $labProgramService, ChallengeService $challengeService, ChallengePathService $challengePathService, ResourceModuleService $resourceModuleService, ResourceCollectionService $resourceCollectionService, ResourceGroupService $resourceGroupService, ComponentAssociationService $componentAssociationService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ResourceModuleSkillsGroupsStackService $resourceModuleSkillsGroupsStackService, ResourceCollectionSkillsGroupsStackService $resourceCollectionSkillsGroupsStackService, ResourceGroupSkillsGroupsStackService $resourceGroupSkillsGroupsStackService, SkillService $skillService, ProjectService $projectService)
     {
         $this->labService = $labService;
         $this->labProgramService = $labProgramService;
@@ -58,6 +60,7 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
         $this->resourceCollectionSkillsGroupsStackService = $resourceCollectionSkillsGroupsStackService;
         $this->resourceGroupSkillsGroupsStackService = $resourceGroupSkillsGroupsStackService;
         $this->skillService = $skillService;
+        $this->projectService = $projectService;
     }
 
     public function fetchLabs($request, $organizationId)
@@ -419,6 +422,19 @@ class ComponentAssociationRepository implements ComponentAssociationInterface
             }
 
             return $fetchResourceGroupLabAssociation;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectLabAssociation($request, $labId)
+    {
+        try {
+            $fetchProjectLabAssociation = $this->projectService->fetchProjectLabAssociation($labId);
+
+            return $fetchProjectLabAssociation;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
