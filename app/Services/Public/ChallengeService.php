@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Exception;
 
@@ -506,25 +507,15 @@ class ChallengeService
     public static function getChallengesByUserId($user_id)
     {
         try {
-            $userEmail = auth()->user()->email;
-            // Challenges created by the user
-            $createdChallenges = Challenge::with(['challenge_timelines', 'participation_achievement'])
-            ->where('user_id', auth()->id())
-            ->select('id', 'title', 'slug', 'media', 'description', 'media_type', 'privacy');
-
+            $user = UserService::getUserById($user_id);
+            $userEmail =  $user->email;
             // Challenges where the user is invited (through member_management)
-            $invitedChallenges = Challenge::with(['challenge_timelines', 'participation_achievement'])
-            ->select('challenges.id', 'challenges.title', 'challenges.slug', 'challenges.media', 'challenges.description', 'challenges.media_type', 'challenges.privacy')
-            ->join('member_management', function($join) use ($userEmail) {
+            $invitedChallenges = Challenge::select('challenges.*')->join('member_management', function($join) use ($userEmail) {
                 $join->on('challenges.id', '=', 'member_management.module_id')
                     ->where('member_management.module_type', '=', 2)
                     ->where('member_management.email', '=', $userEmail);
             });
-
-            // Combine the two queries using union
-            $allChallenges = $createdChallenges->union($invitedChallenges);
-
-            return $allChallenges->paginate(config('site-settings.association_pagination_per_page'));
+            return $invitedChallenges->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

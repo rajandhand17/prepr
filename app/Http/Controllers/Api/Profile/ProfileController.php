@@ -477,7 +477,15 @@ class ProfileController extends AppBaseController
         try {
             $userProjects = $this->profileRepository->getUserProjects($userid);
             if ($userProjects) {
-                return $this->sendResponse(UserProjectResource::make($userProjects), __('responses.found_projects_list'));
+                $response = [
+                    'total_count'  => $userProjects->total(),
+                    'per_page'     => $userProjects->perPage(),
+                    'count'        => $userProjects->count(),
+                    'current_page' => $userProjects->currentPage(),
+                    'total_pages'  => $userProjects->lastPage(),
+                    'list'         => UserProjectResource::collection($userProjects),
+                ];
+                return $this->sendResponse($response, __('responses.found_projects_list'));
             }
 
             return $this->sendResponse([], __('responses.found_projects_list'));
@@ -492,9 +500,16 @@ class ProfileController extends AppBaseController
     {
         try {
             $userChallenges = $this->profileRepository->getUserChallenges($userid);
-         
             if ($userChallenges) {
-                return $this->sendResponse(UserChallengeResource::make($userChallenges), __('responses.found_challenges_list'));
+                $response = [
+                    'total_count'  => $userChallenges->total(),
+                    'per_page'     => $userChallenges->perPage(),
+                    'count'        => $userChallenges->count(),
+                    'current_page' => $userChallenges->currentPage(),
+                    'total_pages'  => $userChallenges->lastPage(),
+                    'list'         => UserChallengeResource::collection($userChallenges),
+                ];
+                return $this->sendResponse($response, __('responses.found_challenges_list'));
             }
 
             return $this->sendResponse([], __('responses.found_challenges_list'));

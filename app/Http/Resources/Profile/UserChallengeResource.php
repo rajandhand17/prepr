@@ -21,27 +21,16 @@ class UserChallengeResource extends JsonResource
     public function toArray(Request $request): array
     {
           // Format the response data
-          $formattedChallenges = $this->map(function ($challenge) {
-            return [
-                'id'                        => $challenge->id,
-                'title'                     => $challenge->title,
-                'description'               => $challenge->description,
-                'slug'                      => $challenge->slug,
-                'media'                     => $challenge->media,
-                'privacy'                   => $challenge->privacy,
-                'media_type'                => $challenge->media_type,
-                'challenge_timelines'       => $challenge->challenge_timelines,
-                'participation_achievement' => $challenge->participation_achievement,
-            ];
-        });
         return [
-            'data'       => $formattedChallenges,
-            'pagination' => [
-                'current_page' => $this->currentPage(),
-                'per_page'     => $this->perPage(),
-                'total'        => $this->total(),
-                'last_page'    => $this->lastPage(),
-            ],
+            'id'                        => $this->id,
+            'title'                     => $this->title,
+            'description'               => $this->description,
+            'slug'                      => $this->slug,
+            'media'                     => $this->media,
+            'privacy'                   => $this->privacy,
+            'media_type'                => $this->media_type,
+            'challenge_timelines'       => $this->challenge_timelines,
+            'participation_achievement' => $this->participation_achievement,
         ];
     }
 }
