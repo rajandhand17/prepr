@@ -560,6 +560,7 @@ class UserService
             return false;
         }
     }
+
     public function checkIsCompletedTeamMatching()
     {
         try {
@@ -568,6 +569,7 @@ class UserService
             if ($userData->team_matching_profile_check == 'yes') {
                 $response = true;
             }
+
             return $response;
         } catch (\Exception $e) {
             return false;
@@ -579,6 +581,7 @@ class UserService
         try {
             $user = auth()->user();
             $user->update(['team_matching_profile_check' => 'yes']);
+
             return $user;
         } catch (\Exception $e) {
             return false;

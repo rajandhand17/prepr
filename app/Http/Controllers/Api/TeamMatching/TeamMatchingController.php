@@ -6,9 +6,9 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\TeamMatching\PendingRequestsResources;
 use App\Http\Resources\TeamMatching\TeamMatchingResource;
+use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\TeamMatching\TeamMatchingRepository;
 use Illuminate\Http\Request;
-use App\Http\Resources\User\UserResource;
 
 class TeamMatchingController extends AppBaseController
 {
@@ -100,6 +100,7 @@ class TeamMatchingController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function getTeamMatchingProfileCheck()
     {
         try {
@@ -108,15 +109,18 @@ class TeamMatchingController extends AppBaseController
                 return $this->sendError(__('responses.already_completed_team_matching'), 400);
             }
             $this->teamMatchingRepository->completeTeamMatching();
+
             return $this->sendResponse(UserResource::make(auth()->user()), __('responses.team_matching_updated_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
     public function getTeamMatchingRequestCount()
     {
         try {
             $response = $this->teamMatchingRepository->getCountForTeamMatching();
+
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
             return $this->sendError(__('responses.send_error'), 500);
