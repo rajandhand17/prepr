@@ -129,7 +129,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function deleteAllMember($component, $slug,Request $request)
+    public function deleteAllMember($component, $slug, Request $request)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
@@ -149,7 +149,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function approveAllPendingJoinRequests($component, $slug,Request $request)
+    public function approveAllPendingJoinRequests($component, $slug, Request $request)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
