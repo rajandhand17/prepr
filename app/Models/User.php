@@ -916,4 +916,9 @@ class User extends Authenticatable
     {
         return $this->fcm_token;
     }
+
+    public function external_links()
+    {
+        return $this->hasMany(ProfileExternalLinks::class, 'user_id', 'id');
+    }
 }

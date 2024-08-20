@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
+use App\Services\UserService;
 use Carbon\Carbon;
 use Exception;
 
@@ -497,6 +498,23 @@ class ChallengeService
 
             return $challenges;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengesByUserId($user_id)
+    {
+        try {
+            $user = UserService::getUserById($user_id);
+            $inviteStatus = config('constants.member_management_invite_status.accepted');
+            $fetchChallenge = MemberManagementService::challengeRequestIds($user, $inviteStatus);
+            // Challenges where the user is invited (through member_management)
+            $invitedChallenges = Challenge::whereIn('id', $fetchChallenge);
+
+            return $invitedChallenges->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;
