@@ -511,7 +511,8 @@ class ChallengeService
             $inviteStatus = config('constants.member_management_invite_status.accepted');
             $fetchChallenge = MemberManagementService::challengeRequestIds($user, $inviteStatus);
             // Challenges where the user is invited (through member_management)
-            $invitedChallenges = Challenge::whereIn('id',  $fetchChallenge);
+            $invitedChallenges = Challenge::whereIn('id', $fetchChallenge);
+
             return $invitedChallenges->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);

@@ -15,16 +15,15 @@ class UserPersonalFilesResource extends JsonResource
     public function toArray(Request $request): array
     {
         $array = explode('/', $this->name);
-        if($this->public == '1'){
+        if ($this->public == '1') {
             $public = 'yes';
         } else {
             $public = 'no';
         }
 
-        if(!auth()->check() && $public == 'no' || $public == 'no' && auth()->user()->id != $this->user_id){
+        if (!auth()->check() && $public == 'no' || $public == 'no' && auth()->user()->id != $this->user_id) {
             return [];
-        }
-        else {
+        } else {
             return [
                 'id'        => $this->id,
                 'path'      => $this->name,
@@ -32,6 +31,5 @@ class UserPersonalFilesResource extends JsonResource
                 'public'    => $public,
             ];
         }
-        
     }
 }
