@@ -23,7 +23,7 @@ class DiscussionController extends AppBaseController
     public function index($component, $slug, Request $request)
     {
         try {
-            if (!in_array($component, ['lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
@@ -32,8 +32,14 @@ class DiscussionController extends AppBaseController
             }
             $getComponentId = $checkComponentBasedOnSlug->id;
             $list = $this->discussionRepository->index($component, $getComponentId, $request->sort_by);
+
             if ($list->count() > 0) {
-                return $this->sendResponse(DiscussionResource::collection($list), __('responses.comments_lists_successfully'));
+                $response = [
+                    'total_discussion_count' => UtilityHelper::getComponentTotalDiscussions($component, $getComponentId),
+                    'list'                   => DiscussionResource::collection($list),
+                ];
+
+                return $this->sendResponse($response, __('responses.comments_lists_successfully'));
             }
 
             return $this->sendResponse([], __('responses.comments_lists_successfully'));

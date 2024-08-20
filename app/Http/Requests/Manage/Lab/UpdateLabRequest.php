@@ -39,7 +39,7 @@ class UpdateLabRequest extends FormRequest
             'request_type'             => 'required|in:draft,publish,archive',
             'type'                     => 'required|array',
             'type.*'                   => 'in:assess,onboard,engage,grow',
-            'mode'                     => 'required|in:team,individual',
+            'mode.*'                   => 'required|in:team,individual',
             'media_type'               => 'in:image,embedded',
             'description'              => 'required_if:request_type,publish|nullable',
             'category_id'              => 'required|exists:categories,id',

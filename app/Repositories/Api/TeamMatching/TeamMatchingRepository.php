@@ -132,4 +132,37 @@ class TeamMatchingRepository implements TeamMatchingInterface
             return false;
         }
     }
+
+    public function checkComponentTeamMatching()
+    {
+        try {
+            return $this->userService->checkIsCompletedTeamMatching();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function completeTeamMatching()
+    {
+        try {
+            $response = $this->userService->TeamMatchingProfileUpdate();
+
+            return  $response;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function getCountForTeamMatching()
+    {
+        try {
+            $userData = auth()->user();
+            $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData);
+            $getProjectsPendingList = $this->projectMemberManagementService->getMatchedTeams();
+
+            return ['pending_requests' => $getProjectsIds ? $getProjectsIds->count() : 0, 'matched_items' => $getProjectsPendingList ? $getProjectsPendingList->count() : 0];
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

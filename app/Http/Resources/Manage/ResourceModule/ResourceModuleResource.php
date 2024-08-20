@@ -42,7 +42,7 @@ class ResourceModuleResource extends JsonResource
                     'title'            => $index->title,
                     'path'             => $index->getRawOriginal('path'),
                     'social_link_id'   => $index->social_link_id,
-                    'social_link_title'=> $index->social_link->title,
+                    'social_link_title'=> $index?->social_link?->title,
                     'type'             => 'url',
                 ];
             })->all();
@@ -175,6 +175,12 @@ class ResourceModuleResource extends JsonResource
                 'percentage'    => $this->resource_module_completion_status->percentage,
             ];
         }
+        $type = $this->resource_module_type->map(function ($item) {
+            return config('constants.resource_types_key.'.$item->value);
+        });
+        $mode = $this->resource_module_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.'.$item->value);
+        });
 
         return [
             'id'                            => $this->uuid,
@@ -187,8 +193,8 @@ class ResourceModuleResource extends JsonResource
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
-            'mode'                          => ResourceModuleModeResource::collection($this->resource_module_mode),
-            'type'                          => ResourceModuleTypeResource::collection($this->resource_module_type),
+            'mode'                          => $mode,
+            'type'                          => $type,
             'level_id'                      => $level_id,
             'slug'                          => $this->slug,
             'description'                   => $this->description,

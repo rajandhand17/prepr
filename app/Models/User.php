@@ -70,6 +70,7 @@ class User extends Authenticatable
         'display_lab_mini_onboarding',
         'display_challenge_mini_onboarding',
         'display_organization_mini_onboarding',
+        'team_matching_profile_check',
     ];
     /**
      * The attributes that should be hidden for serialization.
