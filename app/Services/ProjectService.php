@@ -934,4 +934,17 @@ class ProjectService
             return false;
         }
     }
+
+    public function fetchProjectLabAssociation($labId)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->where('projects.lab_id', $labId);
+
+            return $project_list->paginate(config('site-settings.association_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
