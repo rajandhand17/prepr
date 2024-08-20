@@ -18,8 +18,10 @@ use App\Http\Requests\Profile\ResumeUploadRequest;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
+use App\Http\Resources\Profile\UserChallengeResource;
 use App\Http\Resources\Profile\UserEducationResource;
 use App\Http\Resources\Profile\UserExperienceResource;
+use App\Http\Resources\Profile\UserProjectResource;
 use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
 use App\Http\Resources\Profile\UserSkillsResource;
@@ -474,29 +476,8 @@ class ProfileController extends AppBaseController
     {
         try {
             $userProjects = $this->profileRepository->getUserProjects($userid);
-            // Format the response data
-            $formattedProjects = $userProjects->map(function ($project) {
-                return [
-                    'id'          => $project->id,
-                    'title'       => $project->title,
-                    'description' => $project->description,
-                    'challenge'   => [
-                        'slug'  => $project->challenge->slug,
-                        'title' => $project->challenge->title,
-                    ],
-                ];
-            });
-            $response = [
-                'data'       => $formattedProjects,
-                'pagination' => [
-                    'current_page' => $userProjects->currentPage(),
-                    'per_page'     => $userProjects->perPage(),
-                    'total'        => $userProjects->total(),
-                    'last_page'    => $userProjects->lastPage(),
-                ],
-            ];
-            if ($response) {
-                return $this->sendResponse($response, __('responses.found_projects_list'));
+            if ($userProjects) {
+                return $this->sendResponse(UserProjectResource::make($userProjects), __('responses.found_projects_list'));
             }
 
             return $this->sendResponse([], __('responses.found_projects_list'));
@@ -511,31 +492,9 @@ class ProfileController extends AppBaseController
     {
         try {
             $userChallenges = $this->profileRepository->getUserChallenges($userid);
-            // Format the response data
-            $formattedChallenges = $userChallenges->map(function ($challenge) {
-                return [
-                    'id'                        => $challenge->id,
-                    'title'                     => $challenge->title,
-                    'description'               => $challenge->description,
-                    'slug'                      => $challenge->slug,
-                    'media'                     => $challenge->media,
-                    'privacy'                   => $challenge->privacy,
-                    'media_type'                => $challenge->media_type,
-                    'challenge_timelines'       => $challenge->challenge_timelines,
-                    'participation_achievement' => $challenge->participation_achievement,
-                ];
-            });
-            $response = [
-                'data'       => $formattedChallenges,
-                'pagination' => [
-                    'current_page' => $userChallenges->currentPage(),
-                    'per_page'     => $userChallenges->perPage(),
-                    'total'        => $userChallenges->total(),
-                    'last_page'    => $userChallenges->lastPage(),
-                ],
-            ];
-            if ($response) {
-                return $this->sendResponse($response, __('responses.found_challenges_list'));
+         
+            if ($userChallenges) {
+                return $this->sendResponse(UserChallengeResource::make($userChallenges), __('responses.found_challenges_list'));
             }
 
             return $this->sendResponse([], __('responses.found_challenges_list'));
