@@ -597,11 +597,13 @@ class MemberManagementService
     {
         try {
             $module_type = self::getModuleType($component);
-            if(isset($module_type)){
+            if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -614,11 +616,13 @@ class MemberManagementService
     {
         try {
             $module_type = self::getModuleType($component);
-            if(isset($module_type)){
-                MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type,'type' => '1','invite_type' => '2'])->update(['invite_status' => '1']);
+            if (isset($module_type)) {
+                MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
                 return true;
             }
+
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -645,6 +649,7 @@ class MemberManagementService
                     $module_type = config('constants.member_management_component_type.lab_program');
                     break;
             }
+
             return $module_type;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
