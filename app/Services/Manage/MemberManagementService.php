@@ -392,7 +392,7 @@ class MemberManagementService
                             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                             $organization->load('chargebee_details');
                             $userInviteLimit = $organization->chargebee_details->user_invite_limits;
-                            // dd($userInviteLimit, $totalInvitationSent);
+
                             $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
                             if (!$isWithinInviteLimit) {
                                 throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
