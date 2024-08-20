@@ -21,9 +21,9 @@ use App\Http\Resources\Profile\UserCertificateResource;
 use App\Http\Resources\Profile\UserChallengeResource;
 use App\Http\Resources\Profile\UserEducationResource;
 use App\Http\Resources\Profile\UserExperienceResource;
-use App\Http\Resources\Profile\UserProjectResource;
 use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
+use App\Http\Resources\Profile\UserProjectResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Profile\UserTagsResource;
 use App\Http\Resources\User\UserResource;
@@ -485,6 +485,7 @@ class ProfileController extends AppBaseController
                     'total_pages'  => $userProjects->lastPage(),
                     'list'         => UserProjectResource::collection($userProjects),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_projects_list'));
             }
 
@@ -509,6 +510,7 @@ class ProfileController extends AppBaseController
                     'total_pages'  => $userChallenges->lastPage(),
                     'list'         => UserChallengeResource::collection($userChallenges),
                 ];
+
                 return $this->sendResponse($response, __('responses.found_challenges_list'));
             }
 
