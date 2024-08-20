@@ -421,7 +421,7 @@ class ChallengeResource extends JsonResource
             'resource_modules'                  => $resource_modules,
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
-            'is_auth_user'                      => $is_authenticated_user
+            'is_auth_user'                      => $is_authenticated_user,
         ];
     }
 }
