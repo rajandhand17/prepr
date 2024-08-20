@@ -429,7 +429,7 @@ class Challenge extends Command
                                 $challengeAssessment->guidelines = null;
                                 $challengeAssessment->attachments = null;
                                 $challengeAssessment->save();
-                            }   
+                            }
 
                             // For Challenge Assessments criterias table
                             $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $checkChallengeAssessment->id)->whereNull('deleted_at')->get();
