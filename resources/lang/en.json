@@ -1342,7 +1342,7 @@
     "responses.advance_search.failed_to_fetch_user_list": "Failed to fetch User list.",
     "responses.advance_search.user_lists": "User lists.",
     "responses.selected_resource_collection_already_exists": "This resource collection already relates to you.",
-    "responses.clone_resource_collection_successfully": "You have successfully cloned this resource collection.",
+    "responses.clone_resource_collection_successfully": "You have successfully cloned this resource group.",
     "responses.clone_responses_failed": "You have failed to cloned this resource collection.",
     "responses.selected_resource_group_already_exists": "This resource group already relates to you.",
     "responses.clone_resource_group_successfully": "You have successfully cloned this resource group.",
