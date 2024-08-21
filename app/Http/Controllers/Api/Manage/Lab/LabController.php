@@ -353,6 +353,7 @@ class LabController extends AppBaseController
                     return $this->sendError(__('responses.reached_lab_limit'), 400);
                 }
             }
+            Log::info('createLabUsingAIPreview - done with limit check');
             $createLabUsingAIPreview = $this->labRepository->createLabUsingAIPreview($request);
 
             if ($createLabUsingAIPreview) {

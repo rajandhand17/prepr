@@ -935,6 +935,20 @@ class ProjectService
         }
     }
 
+    public static function getProjectsByUserId($userId)
+    {
+        try {
+            $getUserProjects = Project::where('user_id', $userId)
+            ->paginate(config('site-settings.association_pagination_per_page'));
+
+            return $getUserProjects;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fetchProjectLabAssociation($labId)
     {
         try {
