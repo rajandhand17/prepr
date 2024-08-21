@@ -582,7 +582,7 @@ class AIService
 
                                 Log::info('escapedSkills');
                                 $escapedSkills = array_map('addslashes', $mergedSkills);
-                                
+
                                 Log::info('orderedTitles');
                                 $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
                                 Log::info('Skill::whereIn');
@@ -594,7 +594,7 @@ class AIService
                                 $skillIds = $skills->pluck('id')->toArray();
                                 Log::info('skillTitles');
                                 $skillTitles = array_unique($skills->pluck('title')->toArray());
-                                
+
                                 Log::info('categoryID');
                                 $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
 
