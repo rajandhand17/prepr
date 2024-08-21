@@ -35,7 +35,6 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
         $base_rules = [
             'challengeTitle'                        => 'nullable',
             'labTitle'                              => 'nullable',
-            'organization_id'                       => 'required|exists:organizations,uuid',
             'challengeDescription'                  => 'nullable',
             'labDescription'                        => 'nullable',
             'category_id'                           => 'nullable|exists:categories,id',
@@ -66,8 +65,6 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
     public function messages()
     {
         return [
-            'organization_id.required'              => __('responses.organization_id_required'),
-            'organization_id.exists'                => __('responses.organization_not_found'),
             'category_id.exists'                    => __('responses.category_not_found'),
             'duration_id.required'                  => __('responses.duration_id_required'),
             'duration_id.exists'                    => __('responses.duration_id_exists'),

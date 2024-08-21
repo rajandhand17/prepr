@@ -532,10 +532,10 @@ class AIService
             while ($attempt < 3 && count($validLabs) < 2) {
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
-                return false;
 
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
                 Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
+                return false;
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
@@ -662,7 +662,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -730,7 +730,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -807,7 +807,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -886,7 +886,7 @@ class AIService
             $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 1,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -1259,7 +1259,7 @@ class AIService
                             ' Example json format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
-                            'model'           => 'gpt-4o',
+                            'model'           => 'gpt-4o-mini',
                             'n'               => 1,
                             'response_format' => ['type' => 'json_object'],
                             'messages'        => [
@@ -1429,7 +1429,7 @@ class AIService
 
                 $fullQueryString = implode(', ', $queryParts).'.';
                 $payload = [
-                    'model'           => 'gpt-4o',
+                    'model'           => 'gpt-4o-mini',
                     'n'               => 1,
                     'response_format' => ['type' => 'json_object'],
                     'messages'        => [
