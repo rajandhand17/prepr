@@ -24,7 +24,6 @@ class CreateChallengeUsingAIPreviewRequest extends FormRequest
     public function rules()
     {
         $base_rules = [
-            'organization_id'                       => 'required|exists:organizations,uuid',
             'duration_id'                           => 'required',
             'duration_id.*.key'                     => 'exists:durations,id',
             'level_id'                              => 'required',
@@ -60,8 +59,6 @@ class CreateChallengeUsingAIPreviewRequest extends FormRequest
     public function message()
     {
         return [
-            'organization_id.required'              => __('responses.organization_id_required'),
-            'organization_id.exists'                => __('responses.organization_not_found'),
             'duration_id.required'                  => __('responses.duration_id_required'),
             'duration_id.*.exists'                  => __('responses.duration_id_exists'),
             'level_id.required'                     => __('responses.level_id_required'),
