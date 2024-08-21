@@ -534,8 +534,6 @@ class AIService
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
 
-                return false;
-
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
                 Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
 
