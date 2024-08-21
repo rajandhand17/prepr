@@ -534,6 +534,8 @@ class AIService
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
 
+                return false;
+
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
                 Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
 
@@ -543,48 +545,48 @@ class AIService
                 }
 
                 $pool = Pool::create();
-                
+
                 // Iterate over each OpenAI response choice
                 foreach ($openAIResponse['choices'] as $choice) {
                     $pool->add(function () use ($choice, $skillTitlesArray, $levelTitle, $levelID, $durationTitle, $durationID, $request, $jobTitlesArray, $jobIdsArray) {
                         $validLab = null;
                         $lab = json_decode($choice['message']['content'], true);
-                
+
                         if (isset($lab['challenges']) && is_array($lab['challenges'])) {
                             $allChallengesValid = true;
                             $processedChallenges = [];
-                
+
                             foreach ($lab['challenges'] as $challenge) {
                                 if (isset($challenge['challengeTitle']) && Challenge::where('title', $challenge['challengeTitle'])->exists()) {
                                     $allChallengesValid = false;
                                     continue;
                                 }
-                
+
                                 if (empty($challenge['skills']) || count($challenge['skills']) < 4) {
                                     $allChallengesValid = false;
                                     continue;
                                 }
-                
+
                                 $updatedSkills = $this->processSkills($challenge['skills']);
                                 $updatedSkills = array_values($updatedSkills);
                                 $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
-                
+
                                 // Making sure each challenge has more than 5 verified skills
                                 if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                                     continue;
                                 }
-                
+
                                 $escapedSkills = array_map('addslashes', $mergedSkills);
-                
+
                                 $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
                                 $skills = Skill::whereIn('title', $escapedSkills)
                                     ->orderByRaw("FIELD(title, $orderedTitles)", $escapedSkills)
                                     ->get(['id', 'title']);
                                 $skillIds = $skills->pluck('id')->toArray();
                                 $skillTitles = array_unique($skills->pluck('title')->toArray());
-                
+
                                 $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
-                
+
                                 $challenge = array_merge($challenge, [
                                     'level'                         => $levelTitle,
                                     'level_id'                      => $levelID,
@@ -604,10 +606,10 @@ class AIService
                                     'go1_resource_module_types'     => $request->go1_resource_module_types,
                                     'added'                         => true,
                                 ]);
-                
+
                                 $processedChallenges[] = $challenge;
                             }
-                
+
                             if ($allChallengesValid && !empty($processedChallenges)) {
                                 $validLab = [
                                     'labTitle'                      => $lab['labTitle'],
@@ -632,21 +634,19 @@ class AIService
                                 ];
                             }
                         }
-                
+
                         return $validLab;
-                
                     })->then(function ($validLab) use (&$validLabs) {
                         if ($validLab !== null) {
                             $validLabs[] = $validLab;
                         }
                     })->catch(function (Exception $exception) {
-                        Log::error('Error processing OpenAI response choice: ' . $exception->getMessage());
+                        Log::error('Error processing OpenAI response choice: '.$exception->getMessage());
                     });
                 }
-                
+
                 // Wait for all tasks to complete
                 $pool->wait();
-                
             }
 
             if (count($validLabs) < 2) {

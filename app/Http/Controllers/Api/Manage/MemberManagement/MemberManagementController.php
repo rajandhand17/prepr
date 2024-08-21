@@ -89,7 +89,7 @@ class MemberManagementController extends AppBaseController
                 return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
 
-            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, new Request());
             $invitationSentUser = $memberManagementListing->total();
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request, $invitationSentUser);
 
