@@ -128,6 +128,28 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
+    public function deleteAllMembers($checkComponentBasedOnSlug, $component, $request)
+    {
+        try {
+            return $this->memberManagementService->deleteAllMembers($checkComponentBasedOnSlug, $component, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function approveAllPendingJoinRequests($checkComponentBasedOnSlug, $component, $request)
+    {
+        try {
+            return $this->memberManagementService->approveAllPendingJoinRequests($checkComponentBasedOnSlug, $component, $request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
     {
         try {
