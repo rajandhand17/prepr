@@ -527,11 +527,15 @@ class AIService
 
             $categoryTitles = Category::pluck('title')->implode(', ');
 
+            Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done extracting details from request');
+
             while ($attempt < 3 && count($validLabs) < 2) {
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
 
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
+                Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
+                return false;
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
