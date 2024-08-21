@@ -535,7 +535,6 @@ class AIService
 
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
                 Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
-                return false;
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
@@ -565,7 +564,7 @@ class AIService
                                 $allChallengesValid = false;
                                 continue;
                             }
-
+                            
                             $updatedSkills = $this->processSkills($challenge['skills']);
                             $updatedSkills = array_values($updatedSkills);
                             $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
