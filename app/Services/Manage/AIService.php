@@ -16,14 +16,12 @@ use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
-use Error;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Spatie\Async\Pool;
 
 class AIService
 {
@@ -143,7 +141,7 @@ class AIService
                     $updatedSkills = array_values($updatedSkills);
                     $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
 
-                    // Making sure each challenge has more than 5 verified skill
+                    // Making sure each challenge has more than 5 verified skills
                     if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                         Log::info('Skipping challenge due to insufficient skills or missing title', ['challenge' => $challenge]);
                         continue;
@@ -439,7 +437,7 @@ class AIService
                     $updatedSkills = $this->processSkills($challenge['skills']);
                     $updatedSkills = array_values($updatedSkills);
 
-                    // Making sure each challenge has more than 5 verified skill
+                    // Making sure each challenge has more than 5 verified skills
                     if (count($updatedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                         Log::info('Skipping challenge due to insufficient skills or missing title');
                         continue;
@@ -543,123 +541,99 @@ class AIService
                     continue;
                 }
 
-                Log::info('creating the pool');
-                $pool = Pool::create();
-
-                // Iterate over each OpenAI response choice
                 foreach ($openAIResponse['choices'] as $choice) {
-                    Log::info('adding to the pool');
-                    $pool->add(function () use ($choice, $skillTitlesArray, $levelTitle, $levelID, $durationTitle, $durationID, $request, $jobTitlesArray, $jobIdsArray) {
-                        $validLab = null;
-                        Log::info('json_decode the lab');
-                        $lab = json_decode($choice['message']['content'], true);
+                    $lab = json_decode($choice['message']['content'], true);
+                    // // Checks for duplicate names in all labs so no duplicate titles would exist
+                    // if (is_array($lab) && isset($lab['labTitle'])) {
+                    //     if (Lab::where('title', $lab['labTitle'])->exists()) {
+                    //         continue;
+                    //     }
+                    // }
 
-                        if (isset($lab['challenges']) && is_array($lab['challenges'])) {
-                            $allChallengesValid = true;
-                            $processedChallenges = [];
+                    if (isset($lab['challenges']) && is_array($lab['challenges'])) {
+                        $allChallengesValid = true;
+                        $processedChallenges = [];
 
-                            foreach ($lab['challenges'] as $challenge) {
-                                if (isset($challenge['challengeTitle']) && Challenge::where('title', $challenge['challengeTitle'])->exists()) {
-                                    $allChallengesValid = false;
-                                    continue;
-                                }
-
-                                if (empty($challenge['skills']) || count($challenge['skills']) < 4) {
-                                    $allChallengesValid = false;
-                                    continue;
-                                }
-
-                                Log::info('updatedSkills');
-                                $updatedSkills = $this->processSkills($challenge['skills']);
-                                Log::info('updatedSkills');
-                                $updatedSkills = array_values($updatedSkills);
-                                Log::info('mergedSkills');
-                                $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
-
-                                // Making sure each challenge has more than 5 verified skills
-                                if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
-                                    continue;
-                                }
-
-                                Log::info('escapedSkills');
-                                $escapedSkills = array_map('addslashes', $mergedSkills);
-
-                                Log::info('orderedTitles');
-                                $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
-                                Log::info('Skill::whereIn');
-                                $skills = Skill::whereIn('title', $escapedSkills)
-                                    ->orderByRaw("FIELD(title, $orderedTitles)", $escapedSkills)
-                                    ->get(['id', 'title']);
-
-                                Log::info('skillIds');
-                                $skillIds = $skills->pluck('id')->toArray();
-                                Log::info('skillTitles');
-                                $skillTitles = array_unique($skills->pluck('title')->toArray());
-
-                                Log::info('categoryID');
-                                $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
-
-                                $challenge = array_merge($challenge, [
-                                    'level'                         => $levelTitle,
-                                    'level_id'                      => $levelID,
-                                    'duration'                      => $durationTitle,
-                                    'duration_id'                   => $durationID,
-                                    'is_ai_created'                 => $request->is_ai_created,
-                                    'skill_titles'                  => $skillTitles,
-                                    'skills'                        => $skillIds,
-                                    'job_titles'                    => $jobTitlesArray,
-                                    'jobs'                          => $jobIdsArray,
-                                    'category_id'                   => $categoryID,
-                                    'resource_modules'              => $request->resource_modules,
-                                    'resource_module_prepr'         => $request->resource_module_prepr,
-                                    'resource_module_openai'        => $request->resource_module_openai,
-                                    'resource_module_go1'           => $request->resource_module_go1,
-                                    'openai_resource_module_types'  => $request->openai_resource_module_types,
-                                    'go1_resource_module_types'     => $request->go1_resource_module_types,
-                                    'added'                         => true,
-                                ]);
-
-                                $processedChallenges[] = $challenge;
+                        foreach ($lab['challenges'] as $challenge) {
+                            if (isset($challenge['challengeTitle']) && Challenge::where('title', $challenge['challengeTitle'])->exists()) {
+                                $allChallengesValid = false;
+                                continue;
                             }
 
-                            if ($allChallengesValid && !empty($processedChallenges)) {
-                                $validLab = [
-                                    'labTitle'                      => $lab['labTitle'],
-                                    'labDescription'                => $lab['labDescription'],
-                                    'challenges'                    => $processedChallenges,
-                                    'level'                         => $levelTitle,
-                                    'level_id'                      => $levelID,
-                                    'duration'                      => $durationTitle,
-                                    'duration_id'                   => $durationID,
-                                    'is_ai_created'                 => $request->is_ai_created,
-                                    'skill_titles'                  => $skillTitles,
-                                    'skills'                        => $skillIds,
-                                    'job_titles'                    => $jobTitlesArray,
-                                    'jobs'                          => $jobIdsArray,
-                                    'category_id'                   => $categoryID,
-                                    'resource_modules'              => $request->resource_modules,
-                                    'resource_module_prepr'         => $request->resource_module_prepr,
-                                    'resource_module_openai'        => $request->resource_module_openai,
-                                    'resource_module_go1'           => $request->resource_module_go1,
-                                    'openai_resource_module_types'  => $request->openai_resource_module_types,
-                                    'go1_resource_module_types'     => $request->go1_resource_module_types,
-                                ];
-                                Log::info('Valid lab added', ['lab' => $validLab]);
+                            if (empty($challenge['skills']) || count($challenge['skills']) < 4) {
+                                $allChallengesValid = false;
+                                continue;
                             }
+                            
+                            $updatedSkills = $this->processSkills($challenge['skills']);
+                            $updatedSkills = array_values($updatedSkills);
+                            $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
+
+                            // Making sure each challenge has more than 5 verified skills
+                            if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
+                                continue;
+                            }
+
+                            $escapedSkills = array_map('addslashes', $mergedSkills);
+
+                            $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
+                            $skills = Skill::whereIn('title', $escapedSkills)
+                                ->orderByRaw("FIELD(title, $orderedTitles)", $escapedSkills)
+                                ->get(['id', 'title']);
+                            $skillIds = $skills->pluck('id')->toArray();
+                            $skillTitles = array_unique($skills->pluck('title')->toArray());
+
+                            $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
+
+                            $challenge = array_merge($challenge, [
+                                'level'                         => $levelTitle,
+                                'level_id'                      => $levelID,
+                                'duration'                      => $durationTitle,
+                                'duration_id'                   => $durationID,
+                                'is_ai_created'                 => $request->is_ai_created,
+                                'skill_titles'                  => $skillTitles,
+                                'skills'                        => $skillIds,
+                                'job_titles'                    => $jobTitlesArray,
+                                'jobs'                          => $jobIdsArray,
+                                'category_id'                   => $categoryID,
+                                'resource_modules'              => $request->resource_modules,
+                                'resource_module_prepr'         => $request->resource_module_prepr,
+                                'resource_module_openai'        => $request->resource_module_openai,
+                                'resource_module_go1'           => $request->resource_module_go1,
+                                'openai_resource_module_types'  => $request->openai_resource_module_types,
+                                'go1_resource_module_types'     => $request->go1_resource_module_types,
+                                'added'                         => true,
+                            ]);
+
+                            $processedChallenges[] = $challenge;
                         }
 
-                        return $validLab;
-                    })->then(function ($validLab) use (&$validLabs) {
-                        if ($validLab !== null) {
-                            $validLabs[] = $validLab;
+                        if ($allChallengesValid && !empty($processedChallenges)) {
+                            $validLabs[] = [
+                                'labTitle'                      => $lab['labTitle'],
+                                'labDescription'                => $lab['labDescription'],
+                                'challenges'                    => $processedChallenges,
+                                'level'                         => $levelTitle,
+                                'level_id'                      => $levelID,
+                                'duration'                      => $durationTitle,
+                                'duration_id'                   => $durationID,
+                                'is_ai_created'                 => $request->is_ai_created,
+                                'skill_titles'                  => $skillTitles,
+                                'skills'                        => $skillIds,
+                                'job_titles'                    => $jobTitlesArray,
+                                'jobs'                          => $jobIdsArray,
+                                'category_id'                   => $categoryID,
+                                'resource_modules'              => $request->resource_modules,
+                                'resource_module_prepr'         => $request->resource_module_prepr,
+                                'resource_module_openai'        => $request->resource_module_openai,
+                                'resource_module_go1'           => $request->resource_module_go1,
+                                'openai_resource_module_types'  => $request->openai_resource_module_types,
+                                'go1_resource_module_types'     => $request->go1_resource_module_types,
+                            ];
+                            Log::info('Valid lab added', ['lab' => $lab]);
                         }
-                    })->catch(function (Exception $exception) {
-                        Log::error('Error processing OpenAI response choice: '.$exception->getMessage());
-                    });
+                    }
                 }
-
-                // Wait for all tasks to complete
-                $pool->wait();
             }
 
             if (count($validLabs) < 2) {
@@ -669,10 +643,9 @@ class AIService
             Log::info('createLabUsingAIPreview completed successfully');
 
             return $validLabs;
-        } catch (Error $e) {
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
-            Log::error('Error line in createLabUsingAIPreview: '.$e->getLine());
 
             return false;
         }
@@ -1740,7 +1713,7 @@ class AIService
         $request = new Request('POST', '', [], json_encode($data));
 
         try {
-            $response = $this->projectAssessorClient->send($request);
+            $this->projectAssessorClient->send($request);
             Log::info('Done calling projectAssessor');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
