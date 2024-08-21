@@ -16,6 +16,7 @@ use App\Models\ProjectFile;
 use App\Models\ResourceModule;
 use App\Models\ResourceModuleDetail;
 use App\Models\Skill;
+use Error;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -654,9 +655,10 @@ class AIService
             Log::info('createLabUsingAIPreview completed successfully');
 
             return $validLabs;
-        } catch (Exception $e) {
+        } catch (Error $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAIPreview: '.$e->getMessage());
+            Log::error('Error line in createLabUsingAIPreview: '.$e->getLine());
 
             return false;
         }
