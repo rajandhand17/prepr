@@ -532,6 +532,7 @@ class AIService
             while ($attempt < 3 && count($validLabs) < 2) {
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
+
                 return false;
 
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
