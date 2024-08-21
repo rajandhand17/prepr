@@ -548,6 +548,7 @@ class AIService
 
                 // Iterate over each OpenAI response choice
                 foreach ($openAIResponse['choices'] as $choice) {
+                    Log::info('adding to the pool');
                     $pool->add(function () use ($choice, $skillTitlesArray, $levelTitle, $levelID, $durationTitle, $durationID, $request, $jobTitlesArray, $jobIdsArray) {
                         $validLab = null;
                         Log::info('json_decode the lab');
