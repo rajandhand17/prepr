@@ -600,6 +600,7 @@
     "responses.resource_collection_update_failed": "Oops! The Updating of resource collection has failed.",
     "responses.create_member_manger_error_org": "The members(s) you're trying to invite already exist in the Organization",
     "responses.create_member_manger_error_lab": "The members(s) you're trying to invite already exist in the Lab Or entering invalid emails",
+    "responses.create_member_manger_error_lab_program": "The members(s) you're trying to invite already exist in the Lab Program Or entering invalid emails",
     "responses.create_member_manger_error_cha": "The members(s) you're trying to invite already exist in the Challenge",
     "responses.found_challenge_assessment_detail": "The Challenge Assessment has been successfully retrieved",
     "responses.update_challenge_assessment_detail": "The Challenge Assessment has been updated successfully",
