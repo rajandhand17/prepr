@@ -18,10 +18,12 @@ use App\Http\Requests\Profile\ResumeUploadRequest;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Profile\ProfileResource;
 use App\Http\Resources\Profile\UserCertificateResource;
+use App\Http\Resources\Profile\UserChallengeResource;
 use App\Http\Resources\Profile\UserEducationResource;
 use App\Http\Resources\Profile\UserExperienceResource;
 use App\Http\Resources\Profile\UserPatentResource;
 use App\Http\Resources\Profile\UserPersonalFilesResource;
+use App\Http\Resources\Profile\UserProjectResource;
 use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Profile\UserTagsResource;
 use App\Http\Resources\User\UserResource;
@@ -463,6 +465,56 @@ class ProfileController extends AppBaseController
             }
 
             return $this->sendResponse([], __('responses.friends_listing'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getUserProjects($userid)
+    {
+        try {
+            $userProjects = $this->profileRepository->getUserProjects($userid);
+            if ($userProjects) {
+                $response = [
+                    'total_count'  => $userProjects->total(),
+                    'per_page'     => $userProjects->perPage(),
+                    'count'        => $userProjects->count(),
+                    'current_page' => $userProjects->currentPage(),
+                    'total_pages'  => $userProjects->lastPage(),
+                    'list'         => UserProjectResource::collection($userProjects),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendResponse([], __('responses.found_projects_list'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getUserChallenges($userid)
+    {
+        try {
+            $userChallenges = $this->profileRepository->getUserChallenges($userid);
+            if ($userChallenges) {
+                $response = [
+                    'total_count'  => $userChallenges->total(),
+                    'per_page'     => $userChallenges->perPage(),
+                    'count'        => $userChallenges->count(),
+                    'current_page' => $userChallenges->currentPage(),
+                    'total_pages'  => $userChallenges->lastPage(),
+                    'list'         => UserChallengeResource::collection($userChallenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_challenges_list'));
+            }
+
+            return $this->sendResponse([], __('responses.found_challenges_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
