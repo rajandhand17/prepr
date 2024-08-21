@@ -91,12 +91,14 @@ class OrganizationMemberService
 
                 return true;
             }
-            $deleteMembers=self::deleteOrganizationMembers($organization_id);
-            if($deleteMembers){
+            $deleteMembers = self::deleteOrganizationMembers($organization_id);
+            if ($deleteMembers) {
                 DB::commit();
+
                 return true;
             }
             DB::rollback();
+
             return false;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
