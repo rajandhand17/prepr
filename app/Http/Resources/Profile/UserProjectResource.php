@@ -19,6 +19,9 @@ class UserProjectResource extends JsonResource
             'id'          => $this->id,
             'title'       => $this->title,
             'description' => $this->description,
+            'slug'        => $this->slug,
+            'media'       => $this->media,
+            'media_type'   => $this->media_type,
             'challenge'   => [
                 'slug'  => $this->challenge->slug,
                 'title' => $this->challenge->title,
