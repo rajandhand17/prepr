@@ -515,6 +515,9 @@ class MemberManagementService
                             case 'challenge':
                                 $addedMemberResponse = __('responses.create_member_manger_error_cha');
                                 break;
+                            case 'lab-program':
+                                $addedMemberResponse = __('responses.create_member_manger_error_lab_program');
+                                break;
                             default:
                                 $addedMemberResponse = __('responses.create_member_manger_error');
                                 break;
