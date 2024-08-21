@@ -16,13 +16,13 @@ class UserProjectResource extends JsonResource
     {
         // Format the response data
         return [
-            'id'          => $this->id,
-            'title'       => $this->title,
-            'description' => $this->description,
-            'slug'        => $this->slug,
-            'media'       => $this->media,
+            'id'           => $this->id,
+            'title'        => $this->title,
+            'description'  => $this->description,
+            'slug'         => $this->slug,
+            'media'        => $this->media,
             'media_type'   => $this->media_type,
-            'challenge'   => [
+            'challenge'    => [
                 'slug'  => $this->challenge->slug,
                 'title' => $this->challenge->title,
             ],
