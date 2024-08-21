@@ -20,7 +20,7 @@ class UserPersonalFilesResource extends JsonResource
         } else {
             $public = 'no';
         }
-        if(!auth('api')->check() && $public == 'no' || $public == 'no' && auth('api')->user()->id != $this->user_id){
+        if (!auth('api')->check() && $public == 'no' || $public == 'no' && auth('api')->user()->id != $this->user_id) {
             return [];
         } else {
             return [
