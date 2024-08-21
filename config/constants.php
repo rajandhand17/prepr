@@ -64,6 +64,13 @@ return [
         'na'        => '3',
     ],
 
+    'member_management_component_name' => [
+        'organization' => 'organization',
+        'lab'          => 'lab',
+        'challenge'    => 'challenge',
+        'lab_program'  => 'lab-program',
+    ],
+
     'email_template_type' => [
         'invitation' => '0',
     ],
