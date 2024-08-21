@@ -191,6 +191,9 @@ class ProfileResource extends JsonResource
             } else {
                 $formattedExternalLinks = null;
             }
+            $userPersonalFiles = $this->userPersonalFiles;
+            $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); });
+            $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
 
             return [
                 'id'                     => $this->id,
@@ -237,7 +240,7 @@ class ProfileResource extends JsonResource
                 'user_certificates'      => UserCertificateResource::collection($this->userCertificates),
                 'user_skills'            => $skills,
                 'user_pinned_skills'     => $pinnedSkills,
-                'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
+                'user_personal_files'    => $personalfiles,
                 'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
                 'profile_privacy'        => $profile_privacy,
                 'external_link'          => $formattedExternalLinks,

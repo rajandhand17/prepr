@@ -29,7 +29,7 @@ class SqlCommandExecution extends Command
     public function handle()
     {
         try {
-            DB::statement('TRUNCATE TABLE project_submission_requirements');
+            DB::table('project_stages')->whereNotNull('deleted_at')->update(['deleted_at' => null]);
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
