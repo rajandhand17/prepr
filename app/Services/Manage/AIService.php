@@ -543,12 +543,14 @@ class AIService
                     continue;
                 }
 
+                Log::info('creating the pool');
                 $pool = Pool::create();
 
                 // Iterate over each OpenAI response choice
                 foreach ($openAIResponse['choices'] as $choice) {
                     $pool->add(function () use ($choice, $skillTitlesArray, $levelTitle, $levelID, $durationTitle, $durationID, $request, $jobTitlesArray, $jobIdsArray) {
                         $validLab = null;
+                        Log::info('json_decode the lab');
                         $lab = json_decode($choice['message']['content'], true);
 
                         if (isset($lab['challenges']) && is_array($lab['challenges'])) {
@@ -566,8 +568,11 @@ class AIService
                                     continue;
                                 }
 
+                                Log::info('updatedSkills');
                                 $updatedSkills = $this->processSkills($challenge['skills']);
+                                Log::info('updatedSkills');
                                 $updatedSkills = array_values($updatedSkills);
+                                Log::info('mergedSkills');
                                 $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
 
                                 // Making sure each challenge has more than 5 verified skills
@@ -575,15 +580,22 @@ class AIService
                                     continue;
                                 }
 
+                                Log::info('escapedSkills');
                                 $escapedSkills = array_map('addslashes', $mergedSkills);
-
+                                
+                                Log::info('orderedTitles');
                                 $orderedTitles = implode(',', array_fill(0, count($escapedSkills), '?'));
+                                Log::info('Skill::whereIn');
                                 $skills = Skill::whereIn('title', $escapedSkills)
                                     ->orderByRaw("FIELD(title, $orderedTitles)", $escapedSkills)
                                     ->get(['id', 'title']);
-                                $skillIds = $skills->pluck('id')->toArray();
-                                $skillTitles = array_unique($skills->pluck('title')->toArray());
 
+                                Log::info('skillIds');
+                                $skillIds = $skills->pluck('id')->toArray();
+                                Log::info('skillTitles');
+                                $skillTitles = array_unique($skills->pluck('title')->toArray());
+                                
+                                Log::info('categoryID');
                                 $categoryID = Category::where('title', $challenge['category'])->pluck('id')->first();
 
                                 $challenge = array_merge($challenge, [
@@ -631,6 +643,7 @@ class AIService
                                     'openai_resource_module_types'  => $request->openai_resource_module_types,
                                     'go1_resource_module_types'     => $request->go1_resource_module_types,
                                 ];
+                                Log::info('Valid lab added', ['lab' => $validLab]);
                             }
                         }
 
