@@ -30,7 +30,7 @@ class ProfileResource extends JsonResource
                 $profile_privacy = 'null';
                 break;
         }
-        if (!auth()->check() && $profile_privacy == 'private' || $profile_privacy == 'private' && auth()->user()->id != $this->id) {
+        if (!auth('api')->check() && $profile_privacy == 'private' || $profile_privacy == 'private' && auth('api')->user()->id != $this->id) {
             return [
                 'profile_privacy'       => $profile_privacy,
             ];

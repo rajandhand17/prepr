@@ -939,7 +939,7 @@ class ProjectService
     {
         try {
             $getUserProjects = Project::where('user_id', $userId)
-            ->paginate(config('site-settings.pagination_per_page'));
+            ->paginate(config('site-settings.association_pagination_per_page'));
 
             return $getUserProjects;
         } catch (Exception $e) {

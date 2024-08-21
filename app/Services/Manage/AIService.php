@@ -564,7 +564,7 @@ class AIService
                                 $allChallengesValid = false;
                                 continue;
                             }
-                            
+
                             $updatedSkills = $this->processSkills($challenge['skills']);
                             $updatedSkills = array_values($updatedSkills);
                             $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
