@@ -191,9 +191,10 @@ class ProfileResource extends JsonResource
             } else {
                 $formattedExternalLinks = null;
             }
-            $userPersonalFiles = $this->userPersonalFiles; 
-            $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); }); 
+            $userPersonalFiles = $this->userPersonalFiles;
+            $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); });
             $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
+
             return [
                 'id'                     => $this->id,
                 'first_name'             => $this->first_name,
