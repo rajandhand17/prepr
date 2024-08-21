@@ -568,17 +568,18 @@ class MemberManagementService
         try {
             $module_type = self::getModuleType($component);
             $member = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
-            if($member){
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
-            if ($module_type == '1') {
-                $lab = LabService::getLabBasedOnId($member->module_id);
-                $request = \Illuminate\Http\Request::capture();
-                $request->organization_id = $lab->organization_id;
-                $request->privacy = $lab->privacy;
-                $request->title = $lab->title;
-                $request->category = $lab->category_id;
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
-            }
+            if ($member) {
+                $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+                if ($module_type == '1') {
+                    $lab = LabService::getLabBasedOnId($member->module_id);
+                    $request = \Illuminate\Http\Request::capture();
+                    $request->organization_id = $lab->organization_id;
+                    $request->privacy = $lab->privacy;
+                    $request->title = $lab->title;
+                    $request->category = $lab->category_id;
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                }
+
                 return true;
             }
 
