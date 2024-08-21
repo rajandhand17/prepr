@@ -1418,5 +1418,7 @@
     "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
     "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
     "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout",
-    "responses.type_image": "The :attribute must be an image."
+    "responses.type_image": "The :attribute must be an image.",
+    "responses.updated_file_privacy_failed" :  "Failed to update File Privacy.",
+    "responses.updated_file_privacy": "File Privacy updated successfully."
 }
