@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Manage\ChallengePath;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
@@ -42,10 +43,12 @@ class ChallengePathResource extends JsonResource
                 if ($association->challenge_id) {
                     $challengeData = ChallengeService::getChallengeBasedOnId($association->challenge_id);
                     if ($challengeData) {
+                        $challengeData->load('members');
                         $componentAssociation[$association->challenge_id] = $challengeData->only('id', 'uuid', 'title', 'media', 'slug', 'description');
                         $componentAssociation[$association->challenge_id]['liked'] = $challengeData->liked();
                         $componentAssociation[$association->challenge_id]['favourite'] = $challengeData->favourite();
                         $componentAssociation[$association->challenge_id]['member_count'] = $challengeData->members()->count();
+                        $componentAssociation[$association->challenge_id]['members'] = MemberManagementResource::collection($challengeData->members);
                     }
                 }
             }
