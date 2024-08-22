@@ -44,6 +44,8 @@ interface ProjectInterface
 
     public function checkProjectRequirementCompleted($projectData);
 
+    public function checkSubmisstionDate($projectData);
+
     public function submitProject($projectData, $checkLateSubmission, $request);
 
     public function getColumnNameValue($action);

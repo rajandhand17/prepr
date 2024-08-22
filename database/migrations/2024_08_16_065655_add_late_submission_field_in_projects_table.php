@@ -25,7 +25,7 @@ return new class() extends Migration {
         Schema::table('projects', function (Blueprint $table) {
             $table->enum('is_submitted', ['0', '1', '2'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted & 2-> Late Submitted')
             ->change();
-            $table->string('late_submission_reason', 1000)->nullable();
+            $table->text('late_submission_reason')->nullable();
         });
     }
 };
