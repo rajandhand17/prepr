@@ -39,22 +39,22 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
             'challengeDescription'                  => 'nullable',
             'labDescription'                        => 'nullable',
             'category_id'                           => 'nullable|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'duration_id'                           => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                              => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skills'                                => 'required|array',
             'skills.*'                              => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'nullable|numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'steps'                                 => 'nullable|array',
             'reflections'                           => 'nullable|array',
             'is_ai_created'                         => 'required|boolean',

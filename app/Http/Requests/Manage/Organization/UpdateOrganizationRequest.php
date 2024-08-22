@@ -38,16 +38,16 @@ class UpdateOrganizationRequest extends FormRequest
             'profile_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
             'cover_image'                           => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
             'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
             'website'                               => 'required|url',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
             'external_links'                        => 'array',
             'external_link_ids'                     => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
         ];

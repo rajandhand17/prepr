@@ -27,7 +27,7 @@ class CreateChallengeFromResourceUsingAIPreviewRequest extends FormRequest
         $base_rules = [
             'resource_modules'                      => 'required|array',
             'resource_modules.*'                    => Rule::exists('resource_modules', 'uuid')->where(function ($query) {
-                          $query->whereNull('deleted_at');
+                $query->whereNull('deleted_at');
             }),
             'additional_information'                => 'nullable',
             'is_ai_created'                         => 'required|boolean',

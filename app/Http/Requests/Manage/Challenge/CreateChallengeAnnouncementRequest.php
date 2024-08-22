@@ -29,8 +29,8 @@ class CreateChallengeAnnouncementRequest extends FormRequest
             'subject'                                   => 'required',
             'to_recipient_ids'                          => 'required|array',
             'to_recipient_ids.*'                        => 'numeric|'.Rule::exists('challenge_announcement_recipients', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'sent_by'                                   => 'required',
             'sent_by.*'                                 => 'in:email,inbox,both',
             'description'                               => 'required',

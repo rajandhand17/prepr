@@ -38,14 +38,14 @@ class CreateLabRequest extends FormRequest
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
             'category_id'              => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'duration_id'              => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                 => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'privacy'                  => 'required_if:request_type,publish|in:yes,no',
             'location'                 => 'required_if:request_type,publish|nullable',
             'latitude'                 => 'required_if:request_type,publish|nullable',
@@ -54,24 +54,24 @@ class CreateLabRequest extends FormRequest
             'city'                     => 'required_if:request_type,publish|nullable',
             'skills'                   => 'required_if:request_type,publish|nullable|array',
             'skills.*'                 => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skill_groups'             => 'nullable|array',
             'skill_groups.*'           => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skill_stacks'             => 'nullable|array',
             'skill_stacks.*'           => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'is_notification_enabled'  => 'in:yes,no',
             'is_achievement_enabled'   => 'in:yes,no',
             'is_sequential'            => 'in:yes,no',
             'is_resource_sequential'   => 'in:yes,no',
             'external_links'           => 'array',
             'external_link_ids'        => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links.*'         => 'url',
             'external_link_ids.*'      => 'numeric',
             'integrate_campus_connect' => 'in:both,job,story,no',
@@ -180,8 +180,8 @@ class CreateLabRequest extends FormRequest
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
             $base_rules['lab_programs.*'] = Rule::exists('lab_programs', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                });
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('challenges')) {

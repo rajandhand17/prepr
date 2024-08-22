@@ -32,7 +32,7 @@ class CreateOrganizationRequest extends FormRequest
             'profile_image'                         => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
-                         $query->whereNull('deleted_at');
+                $query->whereNull('deleted_at');
             }),
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url',
             'website'                               => 'required|url',
@@ -41,8 +41,8 @@ class CreateOrganizationRequest extends FormRequest
             'total_employees'                       => 'integer',
             'external_links'                        => 'array',
             'external_link_ids'                     => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
         ];

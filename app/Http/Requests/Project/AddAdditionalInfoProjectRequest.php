@@ -34,20 +34,20 @@ class AddAdditionalInfoProjectRequest extends FormRequest
             }),
             'industry_id.*'     => 'numeric',
             'verticals_id'      => 'nullable|'.Rule::exists('project_verticals', 'id')->where(function ($query) {
-              $query->whereNull('deleted_at');
-              }),
+                $query->whereNull('deleted_at');
+            }),
             'verticals_id.*'    => 'numeric',
             'type_id'           => 'nullable|'.Rule::exists('project_types', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
             'type_id.*'         => 'numeric',
             'stage_id'          => 'nullable|'.Rule::exists('project_stages', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'stage_id.*'        => 'numeric',
             'status_id'         => 'nullable|'.Rule::exists('project_status', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'status_id.*'       => 'numeric',
         ];
 

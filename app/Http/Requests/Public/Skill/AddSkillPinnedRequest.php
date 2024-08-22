@@ -26,7 +26,7 @@ class AddSkillPinnedRequest extends FormRequest
     {
         return [
             'skill_id'   => 'required|'.Rule::exists('skills', 'id')->where(function ($query) {
-                   $query->whereNull('deleted_at');
+                $query->whereNull('deleted_at');
             }),
             'pinned'     => 'required|in:yes,no',
         ];

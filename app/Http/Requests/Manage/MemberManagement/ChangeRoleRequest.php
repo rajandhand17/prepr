@@ -28,11 +28,11 @@ class ChangeRoleRequest extends FormRequest
     {
         return [
             'id'  => 'required|'.Rule::exists('member_management', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'role'=> 'required|'.Rule::exists('roles', 'display_name')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

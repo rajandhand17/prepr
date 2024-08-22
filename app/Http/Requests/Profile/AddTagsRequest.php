@@ -26,7 +26,7 @@ class AddTagsRequest extends FormRequest
     {
         return [
             'tag_id'   => 'required|array',
-            'tag_id.*' =>  Rule::exists('tags', 'id')->where(function ($query) {
+            'tag_id.*' => Rule::exists('tags', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
         ];
