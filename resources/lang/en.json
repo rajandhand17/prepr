@@ -1410,5 +1410,6 @@
     "responses.failed_found_lab_dashboard_detail": "Failed to retrieve User Dashboard layout",
     "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
     "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
-    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout"
+    "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.late_submission_reason_required": "late submission reason is requried"
 }

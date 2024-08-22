@@ -399,15 +399,15 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_already_submitted'), 400);
             }
 
-            // $checkProjectRequirementCompleted = $this->projectRepository->checkProjectRequirementCompleted($checkProjectSlugExistsOrNot);
-            // if (!$checkProjectRequirementCompleted) {
-            //     return $this->sendError(__('responses.project_requirements_pending'), 400);
-            // }
+            $checkProjectRequirementCompleted = $this->projectRepository->checkProjectRequirementCompleted($checkProjectSlugExistsOrNot);
+            if (!$checkProjectRequirementCompleted) {
+                return $this->sendError(__('responses.project_requirements_pending'), 400);
+            }
 
             $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
             $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
             if( $submitProject == 'no') {
-                return $this->sendError(__('late submission reason is requried'), 400);
+                return $this->sendError(__('responses.late_submission_reason_required'), 400);
             }
             if ($submitProject == 'true') {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
