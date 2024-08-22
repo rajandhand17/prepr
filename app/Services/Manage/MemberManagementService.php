@@ -341,10 +341,6 @@ class MemberManagementService
                     $module_type = config('constants.member_management_component_type.lab_program');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
-                default:
-                    $module_type = null;
-                    $addedMemberResponse = null;
-                    break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
             switch ($request->auto_invite) {
@@ -392,7 +388,7 @@ class MemberManagementService
                             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                             $organization->load('chargebee_details');
                             $userInviteLimit = $organization->chargebee_details->user_invite_limits;
-                            // dd($userInviteLimit, $totalInvitationSent);
+
                             $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
                             if (!$isWithinInviteLimit) {
                                 throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
@@ -570,34 +566,20 @@ class MemberManagementService
     public static function deleteMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    break;
-                case 'challenge':
-                    $module_type = config('constants.member_management_component_type.challenge');
-                    break;
-                case 'lab-program':
-                    $module_type = config('constants.member_management_component_type.lab_program');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
+            $module_type = self::getModuleType($component);
             $member = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
-            if ($module_type == '1') {
-                $lab = LabService::getLabBasedOnId($member->module_id);
-                $request->organization_id = $lab->organization_id;
-                $request->privacy = $lab->privacy;
-                $request->title = $lab->title;
-                $request->category = $lab->category_id;
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
-            }
-            if ($member_manger) {
+            if ($member) {
+                $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+                if ($module_type == '1') {
+                    $lab = LabService::getLabBasedOnId($member->module_id);
+                    $request = \Illuminate\Http\Request::capture();
+                    $request->organization_id = $lab->organization_id;
+                    $request->privacy = $lab->privacy;
+                    $request->title = $lab->title;
+                    $request->category = $lab->category_id;
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                }
+
                 return true;
             }
 
@@ -609,9 +591,48 @@ class MemberManagementService
         }
     }
 
-    public static function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    public static function deleteAllMembers($checkComponentBasedOnSlug, $component, $request)
     {
         try {
+            $module_type = self::getModuleType($component);
+            if (isset($module_type)) {
+                MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function approveAllPendingJoinRequests($checkComponentBasedOnSlug, $component, $request)
+    {
+        try {
+            $module_type = self::getModuleType($component);
+            if (isset($module_type)) {
+                MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getModuleType($component)
+    {
+        try {
+            $module_type = null;
             switch ($component) {
                 case 'organization':
                     $module_type = config('constants.member_management_component_type.organization');
@@ -625,10 +646,20 @@ class MemberManagementService
                 case 'lab-program':
                     $module_type = config('constants.member_management_component_type.lab_program');
                     break;
-                default:
-                    $module_type = null;
-                    break;
             }
+
+            return $module_type;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component)
+    {
+        try {
+            $module_type = self::getModuleType($component);
             $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'invite_status' => '2'])->get();
             if ($member_manger->isNotEmpty()) {
                 return true;
@@ -645,23 +676,7 @@ class MemberManagementService
     public static function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
-            switch ($component) {
-                case 'organization':
-                    $module_type = config('constants.member_management_component_type.organization');
-                    break;
-                case 'lab':
-                    $module_type = config('constants.member_management_component_type.lab');
-                    break;
-                case 'challenge':
-                    $module_type = config('constants.member_management_component_type.challenge');
-                    break;
-                case 'lab-program':
-                    $module_type = config('constants.member_management_component_type.lab_program');
-                    break;
-                default:
-                    $module_type = null;
-                    break;
-            }
+            $module_type = self::getModuleType($component);
             switch ($action) {
                 case 'accept':
                     $invite_status = config('constants.member_management_invite_status.accepted');

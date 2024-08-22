@@ -173,7 +173,7 @@ class LabRepository implements LabInterface
                 $createdLabSkillAssociations = $this->labSkillsGroupsStackService->createLabSkillsGroupsStack($request, $createLab);
                 $createdLabExternalLinks = $this->labExternalLinksService->createLabExternalLinks($request, $createLab);
                 $labTypeModes = $this->labTypeModesService->labTypeModes($request, $createLab->id);
-                if ($request->is_achievement_enabled == 'yes') {
+                if ($request->get('is_achievement_enabled') === 'yes') {
                     $createdLabAchievement = $this->labAcheivementService->createLabAchievement($request, $createLab, $upload_achievements_image);
                 }
                 $createdLabAssociations = $this->componentAssociationService->labAssociation($request, $createLab);
@@ -424,6 +424,7 @@ class LabRepository implements LabInterface
     public function createLabUsingAIPreview($request)
     {
         try {
+            Log::info('createLabUsingAIPreview - about to run this->aiService->createLabUsingAIPreview(request)');
             $createLabUsingAIPreview = $this->aiService->createLabUsingAIPreview($request);
 
             return $createLabUsingAIPreview;

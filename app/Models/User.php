@@ -70,6 +70,7 @@ class User extends Authenticatable
         'display_lab_mini_onboarding',
         'display_challenge_mini_onboarding',
         'display_organization_mini_onboarding',
+        'team_matching_profile_check',
     ];
     /**
      * The attributes that should be hidden for serialization.
@@ -914,5 +915,10 @@ class User extends Authenticatable
     public function routeNotificationForFcm()
     {
         return $this->fcm_token;
+    }
+
+    public function external_links()
+    {
+        return $this->hasMany(ProfileExternalLinks::class, 'user_id', 'id');
     }
 }

@@ -14,6 +14,7 @@ use App\Services\Manage\LabService;
 use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
@@ -718,7 +719,21 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds = Project::pluck('id');
+            $myProjects = ProjectService::getMyProjectIds($userData->id);
+            $teamProjects = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+            $invitesProjects = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+            $projectCollection = new Collection();
+            if ($myProjects) {
+                $projectCollection = $projectCollection->concat($myProjects);
+            }
+            if ($teamProjects) {
+                $projectCollection = $projectCollection->concat($teamProjects);
+            }
+            if ($invitesProjects) {
+                $projectCollection = $projectCollection->concat($invitesProjects);
+            }
+
+            $projectIds = Project::whereNotIn('id', $projectCollection)->where('projects.privacy', '0')->pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {
@@ -959,6 +974,33 @@ class ProjectService
             $fetchProjectIdsBasedOnChallenge = Project::where('challenge_id', $challengeId)->pluck('id');
 
             return $fetchProjectIdsBasedOnChallenge;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectsByUserId($userId)
+    {
+        try {
+            $getUserProjects = Project::where('user_id', $userId)
+            ->paginate(config('site-settings.association_pagination_per_page'));
+
+            return $getUserProjects;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectLabAssociation($labId)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->where('projects.lab_id', $labId);
+
+            return $project_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

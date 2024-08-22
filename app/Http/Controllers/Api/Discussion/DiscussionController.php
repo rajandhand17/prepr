@@ -23,7 +23,7 @@ class DiscussionController extends AppBaseController
     public function index($component, $slug, Request $request)
     {
         try {
-            if (!in_array($component, ['lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);

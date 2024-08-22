@@ -4,7 +4,7 @@ namespace App\Http\Resources\Public\LabProgram;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LabProgramTypeResource extends JsonResource
+class LabProgramModeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,16 +15,16 @@ class LabProgramTypeResource extends JsonResource
      */
     public function toArray($request)
     {
-        $typeArrayData = [];
+        $modeArrayData = [];
         if (!empty($this->all())) {
-            $labProgramTypes = collect(['0'=>'assess', '1'=>'onboard', '2'=>'engage', '3'=>'grow']);
-            foreach ($this->all() as $labProgramType) {
-                if ($labProgramTypes->has($labProgramType)) {
-                    $typeArrayData[] = $labProgramTypes->get($labProgramType);
+            $labProgramModes = collect(['4'=>'team', '5'=>'individual']);
+            foreach ($this->all() as $labProgramMode) {
+                if ($labProgramModes->has($labProgramMode)) {
+                    $modeArrayData[] = $labProgramModes->get($labProgramMode);
                 }
             }
         }
 
-        return $typeArrayData;
+        return $modeArrayData;
     }
 }

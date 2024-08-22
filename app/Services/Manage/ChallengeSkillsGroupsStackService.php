@@ -242,4 +242,17 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public function fetchChallengeSkillAssociation($skillId)
+    {
+        try {
+            $challengeIds = ChallengeSkillsGroupsStack::where(['foreign_id' => $skillId, 'type' => '0'])->pluck('challenge_id')->unique();
+
+            return $challengeIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

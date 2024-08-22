@@ -233,6 +233,7 @@ class LabProgramService
             $labProgram->is_auto_created = '0';
             $labProgram->is_sequential = ($request->is_sequential == 'yes') ? '1' : '0';
             $labProgram->is_achievement_enabled = ($request->is_achievement_enabled == 'yes') ? '1' : '0';
+            $labProgram->is_accessible = '1';
             $labProgram->save();
 
             return $labProgram;
@@ -341,6 +342,7 @@ class LabProgramService
             $labProgram->privacy = $privacy;
             $labProgram->status = $status;
             $labProgram->is_auto_created = '0';
+            $labProgram->is_accessible = '1';
             $labProgram->is_sequential = $request->has('is_sequential') ? ($request->is_sequential == 'yes' ? '1' : '0') : $labProgram->is_sequential;
             $labProgram->is_achievement_enabled = $request->has('is_achievement_enabled') ? ($request->is_achievement_enabled == 'yes' ? '1' : '0') : $labProgram->is_achievement_enabled;
             $labProgram->save();
