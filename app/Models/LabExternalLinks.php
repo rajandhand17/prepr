@@ -18,4 +18,9 @@ class LabExternalLinks extends Model
         'social_media_link',
         'social_link_id',
     ];
+
+    public function social_link_data()
+    {
+        return $this->belongsTo(SocialLink::class, 'social_link_id', 'id');
+    }
 }
