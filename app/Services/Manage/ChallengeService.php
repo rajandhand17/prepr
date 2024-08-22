@@ -564,7 +564,7 @@ class ChallengeService
     public static function getChallengesBasedOnIds($ids, $relations = ['*'])
     {
         try {
-            return Challenge::with($relations)->whereIn('id', $ids)->where('is_accessible' , '1')->get();
+            return Challenge::with($relations)->whereIn('id', $ids)->where('is_accessible', '1')->get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

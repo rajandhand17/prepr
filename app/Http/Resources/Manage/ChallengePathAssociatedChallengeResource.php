@@ -69,12 +69,12 @@ class ChallengePathAssociatedChallengeResource extends JsonResource
             'module_progress'                   => $module_progress,
             'submissions_count'                 => $this->submitted_projects()->count(),
             'members_count'                     => $this->members()->count(),
-            'members'                           =>  MemberManagementResource::collection($this->members),
+            'members'                           => MemberManagementResource::collection($this->members),
             'durations'                         => $this->durations?->title,
             'level'                             => $this->levels?->title,
             'liked'                             => $this->liked(),
             'favourite'                         => $this->favourite(),
-            'skills'                            => $skills
+            'skills'                            => $skills,
         ];
     }
 }
