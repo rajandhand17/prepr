@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ComponentAssociation;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Http\Resources\Public\Lab\LabResource;
@@ -27,15 +28,20 @@ class ComponentAssociationController extends AppBaseController
     public function getComponentAssociationBasedOnOtherComponent($component, $slug, $type, Request $request)
     {
         try {
-            if (!in_array($component, ['organization', 'lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group'])) {
+            if (!in_array($component, ['organization', 'lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group', 'skill'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
-            if (!in_array($type, ['organization', 'lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group'])) {
+            if (!in_array($type, ['organization', 'lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group', 'project'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
-            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if ($component == 'skill') {
+                $checkComponentBasedOnSlug = $this->componentAssociationRepository->getSkillBasedOnId($slug);
+            } else {
+                $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            }
+
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
@@ -125,6 +131,12 @@ class ComponentAssociationController extends AppBaseController
                             $fetchResourceGroups = self::fetchResourceGroupsBasedOnLabId($request, $checkComponentBasedOnSlug->id);
                             $response = $fetchResourceGroups['response'];
                             $message = $fetchResourceGroups['message'];
+                            break;
+
+                        case 'project':
+                            $fetchProjects = self::fetchProjectsBasedOnLabId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchProjects['response'];
+                            $message = $fetchProjects['message'];
                             break;
                     }
                     break;
@@ -219,6 +231,28 @@ class ComponentAssociationController extends AppBaseController
                             break;
                     }
                     break;
+
+                case 'skill':
+                    switch ($type) {
+                        case 'challenge':
+                            $fetchChallenges = self::fetchChallengesBasedOnSkillId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchChallenges['response'];
+                            $message = $fetchChallenges['message'];
+                            break;
+
+                        case 'resource-module':
+                            $fetchResourceModules = self::fetchResourceModulesBasedOnSkillId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchResourceModules['response'];
+                            $message = $fetchResourceModules['message'];
+                            break;
+
+                        case 'lab':
+                            $fetchLabs = self::fetchLabsBasedOnSkillId($request, $checkComponentBasedOnSlug->id);
+                            $response = $fetchLabs['response'];
+                            $message = $fetchLabs['message'];
+                            break;
+                    }
+                    break;
             }
 
             return $this->sendResponse($response, $message, 200);
@@ -247,6 +281,20 @@ class ComponentAssociationController extends AppBaseController
     {
         try {
             $fetchLabs = $this->componentAssociationRepository->fetchLabResourceCollectionAssociation($request, $resourceCollectionId);
+            $data = self::labResponse($fetchLabs);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function fetchLabsBasedOnSkillId($request, $skillId)
+    {
+        try {
+            $fetchLabs = $this->componentAssociationRepository->fetchLabsBasedOnSkillId($request, $skillId);
             $data = self::labResponse($fetchLabs);
 
             return $data;
@@ -290,7 +338,7 @@ class ComponentAssociationController extends AppBaseController
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($labData != false) {
+            if ($labData != false && $labData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $labData->total(),
                     'per_page'     => $labData->perPage(),
@@ -357,7 +405,7 @@ class ComponentAssociationController extends AppBaseController
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($labProgramData !== false) {
+            if ($labProgramData != false && $labProgramData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $labProgramData->total(),
                     'per_page'     => $labProgramData->perPage(),
@@ -420,6 +468,20 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchChallengesBasedOnSkillId($request, $skillId)
+    {
+        try {
+            $fetchChallenges = $this->componentAssociationRepository->fetchChallengeSkillAssociation($request, $skillId);
+            $data = self::challengeResponse($fetchChallenges);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function fetchChallengePathsBasedOnLabId($request, $labId)
     {
         try {
@@ -453,7 +515,7 @@ class ComponentAssociationController extends AppBaseController
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($challengeData !== false) {
+            if ($challengeData != false && $challengeData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $challengeData->total(),
                     'per_page'     => $challengeData->perPage(),
@@ -493,7 +555,7 @@ class ComponentAssociationController extends AppBaseController
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($challengePathData !== false) {
+            if ($challengePathData != false && $challengePathData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $challengePathData->total(),
                     'per_page'     => $challengePathData->perPage(),
@@ -584,12 +646,26 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchResourceModulesBasedOnSkillId($request, $skillId)
+    {
+        try {
+            $fetchResourceModules = $this->componentAssociationRepository->fetchResourceModuleSkillAssociation($request, $skillId);
+            $data = self::resourceModulesResponse($fetchResourceModules);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function resourceModulesResponse($resourceModuleData)
     {
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($resourceModuleData !== false) {
+            if ($resourceModuleData != false && $resourceModuleData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $resourceModuleData->total(),
                     'per_page'     => $resourceModuleData->perPage(),
@@ -671,7 +747,7 @@ class ComponentAssociationController extends AppBaseController
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($resourceCollectionData !== false) {
+            if ($resourceCollectionData != false && $resourceCollectionData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $resourceCollectionData->total(),
                     'per_page'     => $resourceCollectionData->perPage(),
@@ -720,6 +796,20 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function fetchProjectsBasedOnLabId($request, $labId)
+    {
+        try {
+            $fetchProjects = $this->componentAssociationRepository->fetchProjectLabAssociation($request, $labId);
+            $data = self::projectResponse($fetchProjects);
+
+            return $data;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function fetchResourceGroupsBasedOnChallengeId($request, $challengeId)
     {
         try {
@@ -734,12 +824,38 @@ class ComponentAssociationController extends AppBaseController
         }
     }
 
+    public function projectResponse($projectData)
+    {
+        try {
+            $response = [];
+            $message = __('responses.no_association_found');
+            if ($projectData != false && $projectData->isNotEmpty()) {
+                $response = [
+                    'total_count'  => $projectData->total(),
+                    'per_page'     => $projectData->perPage(),
+                    'count'        => $projectData->count(),
+                    'current_page' => $projectData->currentPage(),
+                    'total_pages'  => $projectData->lastPage(),
+                    'list'         => ProjectResource::collection($projectData),
+                ];
+
+                $message = __('responses.found_projects_list');
+            }
+
+            return ['response' => $response, 'message' => $message];
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function resourceGroupsResponse($resourceGroupData)
     {
         try {
             $response = [];
             $message = __('responses.no_association_found');
-            if ($resourceGroupData !== false) {
+            if ($resourceGroupData != false && $resourceGroupData->isNotEmpty()) {
                 $response = [
                     'total_count'  => $resourceGroupData->total(),
                     'per_page'     => $resourceGroupData->perPage(),

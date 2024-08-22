@@ -14,6 +14,7 @@ use App\Services\Manage\LabService;
 use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
 {
@@ -547,13 +548,13 @@ class ProjectService
         try {
             $dates = $projectData->challenge->challenge_timelines;
             if ($dates->timeline_type == '1') {
-                if ($dates->submission_deadline_date <  date('Y-m-d H:i:s')){
-                $lateSubmission = "yes";
+                if ($dates->submission_deadline_date < date('Y-m-d H:i:s')) {
+                    $lateSubmission = 'yes';
                 } else {
-                    $lateSubmission = "no";
+                    $lateSubmission = 'no';
                 }
             } else {
-                $dateResult = " ";
+                $dateResult = ' ';
                 //for flexible challenge check if date if passed from duration
                 if ($dates->flexible_date_duration == 'days') {
                     $dateCount = $dates->flexible_date_number;
@@ -562,18 +563,20 @@ class ProjectService
                 } elseif ($dates->flexible_date_duration == 'months') {
                     $dateCount = $dates->flexible_date_number * 30;
                 }
-                $durationDate = date_create(date('Y-m-d', strtotime($projectData->created_at . ' + ' . $dateCount . 'days')));
-                $date = date_create(date("Y-m-d"));
+                $durationDate = date_create(date('Y-m-d', strtotime($projectData->created_at.' + '.$dateCount.'days')));
+                $date = date_create(date('Y-m-d'));
                 $dateResult = ($durationDate < $date);
-                if ($dateResult){
-                    $lateSubmission = "yes";
+                if ($dateResult) {
+                    $lateSubmission = 'yes';
                 } else {
-                    $lateSubmission = "no";
+                    $lateSubmission = 'no';
                 }
             }
+
             return $lateSubmission;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
@@ -581,19 +584,20 @@ class ProjectService
     public function submitProject($projectData, $checkLateSubmission, $request)
     {
         try {
-            if($checkLateSubmission == 'yes') {
+            if ($checkLateSubmission == 'yes') {
                 if ($request->late_submission_msg == null || !$request->has('late_submission_msg')) {
-                    $submitted = "no";
+                    $submitted = 'no';
+
                     return $submitted;
                 }
                 $projectData->is_submitted = '2';
                 $projectData->late_submission_reason = $request->late_submission_msg;
                 $projectData->save();
-            }
-            else {
+            } else {
                 $projectData->is_submitted = '1';
                 $projectData->save();
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -718,7 +722,21 @@ class ProjectService
     public static function getBrowsersListing($userData)
     {
         try {
-            $projectIds = Project::pluck('id');
+            $myProjects = ProjectService::getMyProjectIds($userData->id);
+            $teamProjects = ProjectMemberManagementService::getAcceptedInvitesProjectIds($userData);
+            $invitesProjects = ProjectMemberManagementService::getPendingInvitesProjectIds($userData);
+            $projectCollection = new Collection();
+            if ($myProjects) {
+                $projectCollection = $projectCollection->concat($myProjects);
+            }
+            if ($teamProjects) {
+                $projectCollection = $projectCollection->concat($teamProjects);
+            }
+            if ($invitesProjects) {
+                $projectCollection = $projectCollection->concat($invitesProjects);
+            }
+
+            $projectIds = Project::whereNotIn('id', $projectCollection)->where('projects.privacy', '0')->pluck('id');
 
             return $projectIds;
         } catch (Exception $e) {
@@ -959,6 +977,33 @@ class ProjectService
             $fetchProjectIdsBasedOnChallenge = Project::where('challenge_id', $challengeId)->pluck('id');
 
             return $fetchProjectIdsBasedOnChallenge;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getProjectsByUserId($userId)
+    {
+        try {
+            $getUserProjects = Project::where('user_id', $userId)
+            ->paginate(config('site-settings.association_pagination_per_page'));
+
+            return $getUserProjects;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectLabAssociation($labId)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->where('projects.lab_id', $labId);
+
+            return $project_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

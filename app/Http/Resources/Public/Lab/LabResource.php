@@ -152,6 +152,7 @@ class LabResource extends JsonResource
         return [
             'id'                            => $this->uuid,
             'type'                          => LabTypeResource::make($this->labType()),
+            'mode'                          => LabModeResource::make($this->labMode()),
             'created_by'                    => $created_by,
             'language'                      => $this->language,
             'is_pre_build'                  => ($this->is_pre_built == '1' ? 'yes' : 'no'),

@@ -6,6 +6,8 @@ use App\Helpers\MixpanelHelper;
 use App\Helpers\ResumeParserHelper;
 use App\Helpers\UtilityHelper;
 use App\Services\FriendService;
+use App\Services\ProjectService;
+use App\Services\Public\ChallengeService;
 use App\Services\UserAddressService;
 use App\Services\UserCertificateService;
 use App\Services\UserEducationService;
@@ -57,6 +59,32 @@ class ProfileRepository implements ProfileInterface
     {
         try {
             return $this->userService->getUserByUsername($user_name);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getUserProjects($user_id)
+    {
+        try {
+            $userProjects = ProjectService::getProjectsByUserId($user_id);
+
+            return  $userProjects;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function getUserChallenges($user_id)
+    {
+        try {
+            $userProjects = ChallengeService::getChallengesByUserId($user_id);
+
+            return  $userProjects;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

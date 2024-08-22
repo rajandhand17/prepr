@@ -43,9 +43,10 @@ class UpdateLabProgramRequest extends FormRequest
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
-            'type'                    => 'required|array',
+            'type'                    => 'array',
             'type.*'                  => 'in:assess,onboard,engage,grow',
-            'mode'                    => 'required|in:team,individual',
+            'mode'                    => 'array',
+            'mode.*'                  => 'in:team,individual',
             'media_type'              => 'in:image,embedded',
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {

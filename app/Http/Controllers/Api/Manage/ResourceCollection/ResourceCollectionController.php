@@ -54,6 +54,7 @@ class ResourceCollectionController extends AppBaseController
                 $upload_cover_image = $uploaded_cover_image;
             }
             $createResourceCollection = $this->resourceCollectionRepository->createResourceCollection($request, $upload_cover_image, $organization->id);
+
             if ($createResourceCollection) {
                 return $this->sendResponse(ResourceCollectionResource::make($createResourceCollection), __('responses.resource_collection_stored_success'), 200);
             }
@@ -72,7 +73,7 @@ class ResourceCollectionController extends AppBaseController
             // Checking resource collection based on slug exists or not
             $getResourceCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if (!$getResourceCollection) {
-                return $this->sendError(__('responses.selected_resource_collection_not_found'), 404);
+                return $this->sendError(__('responses.selected_resource_not_found'), 404);
             }
             // Fetching resource collection is belongs to current users or not
             if ($getResourceCollection->user_id == auth()->user()->id) {

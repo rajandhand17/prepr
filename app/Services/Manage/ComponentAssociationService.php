@@ -521,6 +521,7 @@ class ComponentAssociationService
                     ['resource_collection_id', '=', $resourceCollectionId],
                     ['lab_id', '!=', null],
                 ])->select('sequence')->orderBy('id', 'desc')->first();
+
                 if (isset($sequence->sequence) && !empty($sequence->sequence)) {
                     $sequence = $sequence->sequence;
                 }

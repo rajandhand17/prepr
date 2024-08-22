@@ -80,6 +80,7 @@ class Challenge extends Command
                         $descriptionType = config('constants.description_type.scorm');
                     }
 
+                    // For main Challenges table
                     $checkChallenge = ModelChallenge::find($challenge->id);
                     if ($checkChallenge) {
                         $newChallenge = $checkChallenge;
@@ -227,7 +228,8 @@ class Challenge extends Command
                         $newScorm->entry_url = $checkScrom->entry_url;
                         $newScorm->save();
                     }
-                    // For Challenge Host/Sponser
+
+                    // For Challenge Sponsers table
                     $arrayHost = json_decode($challenge->host_id, true);
                     if (!empty($arrayHost)) {
                         ChallengeSponsor::where('challenge_id', $challenge->id)->delete();
@@ -245,7 +247,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill
+                    // For Challenge skils table
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
@@ -258,7 +260,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill Stack
+                    // For Challenge skils stack table
                     $skillStacks = $challenge->skill_stacks;
                     if (!empty($skillStacks)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '2'])->delete();
@@ -271,7 +273,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill Group
+                    // For Challenge skils groups table
                     $skillGroups = $challenge->skill_groups;
                     if (!empty($skillGroups)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '1'])->delete();
@@ -284,7 +286,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Requirements
+                    // For Challenge Requirements table
                     $checkChallengeRequirements = ChallengeRequirement::where('challenge_id', $challenge->id)->first();
                     if ($checkChallengeRequirements) {
                         $challengeRequirements = $checkChallengeRequirements;
@@ -345,7 +347,7 @@ class Challenge extends Command
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
                     $challengeRequirements->save();
 
-                    // For Challenge Achievements
+                    // For Challenge Achievements table
                     $challengePrices = DB::connection('mysql2')->table('challange_prices')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($challengePrices->isNotEmpty()) {
                         ChallengeAchievement::where('challenge_id', $challenge->id)->delete();
@@ -373,7 +375,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Assessment
+                    // For Challenge Assessments table
                     $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeAssessments->isNotEmpty()) {
                         foreach ($checkChallengeAssessments as $checkChallengeAssessment) {
@@ -429,7 +431,7 @@ class Challenge extends Command
                                 $challengeAssessment->save();
                             }
 
-                            // For Challenge Assessment Criteria
+                            // For Challenge Assessments criterias table
                             $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $checkChallengeAssessment->id)->whereNull('deleted_at')->get();
                             if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
                                 foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
@@ -447,7 +449,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Project Template
+                    // For Challenge Project Template table
                     $checkChallengeProjectTemplates = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeProjectTemplates->isNotEmpty()) {
                         ChallengeProjectTemplate::where('challenge_id', $challenge->id)->delete();
@@ -459,7 +461,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Custom Timelines
+                    // For Challenge Custom Timeline table
                     $checkChallengeCustomTimelines = DB::connection('mysql2')->table('challenge_custom_time')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeCustomTimelines->isNotEmpty()) {
                         ChallengeCustomTimelines::where('challenge_id', $challenge->id)->delete();
@@ -487,18 +489,19 @@ class Challenge extends Command
                                     $challengeDateDuration = 'months';
                                     break;
                                 default:
-                                    $challengeDateDuration = 'weeks';
+                                    $challengeDateDuration = 'days';
                                     break;
                             }
                             $challengeCustomTimeline = new ChallengeCustomTimelines();
                             $challengeCustomTimeline->challenge_id = $checkChallengeCustomTimeline->challenge_id;
                             $challengeCustomTimeline->custom_timelines_title = $checkChallengeCustomTimeline->title;
-                            $challengeCustomTimeline->custom_timelines_number = '2';
+                            $challengeCustomTimeline->custom_timelines_number = $checkChallengeCustomTimeline->customDateNumber;
                             $challengeCustomTimeline->custom_timelines_description = $checkChallengeCustomTimeline->description;
                             $challengeCustomTimeline->custom_timelines_duration = $challengeDateDuration;
                             $challengeCustomTimeline->schedule_custom_notify = $challengeScheduleNotify;
                             $challengeCustomTimeline->save();
 
+                            // For Challenge Flexible Announcements table
                             $checkFlexibleAnnouncements = DB::connection('mysql2')->table('flexible_announcement')->where('customDateId', $checkChallengeCustomTimeline->id)->get();
                             if (!empty($checkFlexibleAnnouncements)) {
                                 foreach ($checkFlexibleAnnouncements as $flexibleAnnouncement) {
@@ -534,7 +537,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Timelines
+                    // For Challenge Timelines table
                     $checkchallengeTimelines = ChallengeTimelines::where('challenge_id', $challenge->id)->first();
                     if ($checkchallengeTimelines) {
                         $challengeTimelines = $checkchallengeTimelines;

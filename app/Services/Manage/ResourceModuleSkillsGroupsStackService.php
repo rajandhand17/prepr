@@ -220,4 +220,17 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
+    public function fetchResourceModuleSkillAssociation($skillId)
+    {
+        try {
+            $resourceModuleIds = ResourceModuleSkillsGroupsStack::where(['foreign_id' => $skillId, 'type' => '0'])->pluck('resource_module_id')->unique();
+
+            return $resourceModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

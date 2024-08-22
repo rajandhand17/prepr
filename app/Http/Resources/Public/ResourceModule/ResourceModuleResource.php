@@ -248,6 +248,12 @@ class ResourceModuleResource extends JsonResource
                 ];
             }
         }
+        $type = $this->resource_module_type->map(function ($item) {
+            return config('constants.resource_types_key.'.$item->value);
+        });
+        $mode = $this->resource_module_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.'.$item->value);
+        });
 
         return [
             'id'                    => $this->uuid,
@@ -279,6 +285,8 @@ class ResourceModuleResource extends JsonResource
             'audios'                => $audios,
             'embedded_media'        => $embedded_media,
             'rating'                => $rating,
+            'type'                  => $type,
+            'mode'                  => $mode,
             'likes'                 => $this->likes()->count(),
             'shares'                => $this->shares()->count(),
             'liked'                 => $this->liked(),
