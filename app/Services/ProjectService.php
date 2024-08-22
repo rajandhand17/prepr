@@ -544,33 +544,38 @@ class ProjectService
 
     public static function checkSubmisstionDate($projectData)
     {
-        $dates = $projectData->challenge->challenge_timelines;
-        if ($dates->timeline_type == '1') {
-            if ($dates->submission_deadline_date <  date('Y-m-d H:i:s')){
-              $lateSubmission = "yes";
-            } else {
-                $lateSubmission = "no";
-            }
-        } else {
-            $dateResult = " ";
-            //for flexible challenge check if date if passed from duration
-            if ($dates->flexible_date_duration == 'days') {
-                $dateCount = $dates->flexible_date_number;
-            } elseif ($dates->flexible_date_duration == 'weeks') {
-                $dateCount = $dates->flexible_date_number * 7;
-            } elseif ($dates->flexible_date_duration == 'months') {
-                $dateCount = $dates->flexible_date_number * 30;
-            }
-            $durationDate = date_create(date('Y-m-d', strtotime($projectData->created_at . ' + ' . $dateCount . 'days')));
-            $date = date_create(date("Y-m-d"));
-            $dateResult = ($durationDate < $date);
-            if ($dateResult){
+        try {
+            $dates = $projectData->challenge->challenge_timelines;
+            if ($dates->timeline_type == '1') {
+                if ($dates->submission_deadline_date <  date('Y-m-d H:i:s')){
                 $lateSubmission = "yes";
+                } else {
+                    $lateSubmission = "no";
+                }
             } else {
-                $lateSubmission = "no";
+                $dateResult = " ";
+                //for flexible challenge check if date if passed from duration
+                if ($dates->flexible_date_duration == 'days') {
+                    $dateCount = $dates->flexible_date_number;
+                } elseif ($dates->flexible_date_duration == 'weeks') {
+                    $dateCount = $dates->flexible_date_number * 7;
+                } elseif ($dates->flexible_date_duration == 'months') {
+                    $dateCount = $dates->flexible_date_number * 30;
+                }
+                $durationDate = date_create(date('Y-m-d', strtotime($projectData->created_at . ' + ' . $dateCount . 'days')));
+                $date = date_create(date("Y-m-d"));
+                $dateResult = ($durationDate < $date);
+                if ($dateResult){
+                    $lateSubmission = "yes";
+                } else {
+                    $lateSubmission = "no";
+                }
             }
+            return $lateSubmission;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return false;
         }
-        return $lateSubmission;
     }
 
     public function submitProject($projectData, $checkLateSubmission, $request)
