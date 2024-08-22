@@ -406,7 +406,7 @@ class ProjectController extends AppBaseController
 
             $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
             $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
-            if( $submitProject == 'no') {
+            if ($submitProject == 'no') {
                 return $this->sendError(__('responses.late_submission_reason_required'), 400);
             }
             if ($submitProject == 'true') {

@@ -435,7 +435,7 @@ class ProjectRepository implements ProjectInterface
                 if ($submitProject === 'no') {
                     return 'no'; // Return 'no' and exit the transaction closure
                 }
-    
+
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
