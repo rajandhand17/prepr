@@ -27,8 +27,8 @@ class MemberManagementRequest extends FormRequest
         return [
             'email'   => 'required|array',
             'email.*' => 'email|'.Rule::exists('member_management', 'email')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

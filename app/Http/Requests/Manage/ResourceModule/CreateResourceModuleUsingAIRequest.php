@@ -37,15 +37,15 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
             'title'                          => 'required',
             'description'                    => 'required',
             'duration_id'                    => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                       => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skills'                         => 'required|array',
             'skills.*'                       => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'is_ai_created'                  => 'required|boolean',
             'skill_titles'                   => 'nullable|array',
             'level'                          => 'nullable',

@@ -26,7 +26,7 @@ class AddSkillsRequest extends FormRequest
     {
         return [
             'skill_id'   => 'required|array',
-            'skill_id.*' =>  Rule::exists('skills', 'id')->where(function ($query) {
+            'skill_id.*' => Rule::exists('skills', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
         ];

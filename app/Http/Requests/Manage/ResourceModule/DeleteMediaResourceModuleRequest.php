@@ -26,8 +26,8 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     {
         return [
             'media_id' => 'required|'.Rule::exists('resource_module_details', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'type'     => 'required|in:document,video,audio,embedded_video,embedded_audio,url,image,embedded_cover_video',
         ];
     }

@@ -38,13 +38,13 @@ class OnboardingOrganizationRequest extends FormRequest
                 'type'                          => 'required|array',
                 'type.*'                        => 'in:assess,onboard,engage,grow',
                 'business_challenge_tacklings'  => 'required|numeric|'.Rule::exists('business_challenge_tacklings', 'id')->where(function ($query) {
-                        $query->whereNull('deleted_at');
-                    }),
+                    $query->whereNull('deleted_at');
+                }),
                 'total_employees'               => 'required|integer',
                 'website'                       => 'required|url',
                 'category'                      => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
-                        $query->whereNull('deleted_at');
-                    }),
+                    $query->whereNull('deleted_at');
+                }),
             ];
         }
 

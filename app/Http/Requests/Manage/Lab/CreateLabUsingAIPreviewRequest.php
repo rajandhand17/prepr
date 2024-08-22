@@ -33,12 +33,12 @@ class CreateLabUsingAIPreviewRequest extends FormRequest
             'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',
             'skills.*.key'                          => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'jobs'                                  => 'required|array',
             'jobs.*.key'                            => 'numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'resource_modules'                      => 'nullable|boolean',
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',

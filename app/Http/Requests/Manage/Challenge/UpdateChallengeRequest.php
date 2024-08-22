@@ -40,15 +40,15 @@ class UpdateChallengeRequest extends FormRequest
             'description_type'                      => 'required_if:request_type,publish|in:text,scorm',
             'description'                           => 'required_if:description_type,text',
             'duration_id'                           => 'nullable|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                              => 'nullable|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skills'                                => 'required_if:request_type,publish|array',
             'skills.*'                              => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'is_open'                               => 'required|in:yes,no',
             'privacy'                               => 'required|in:yes,no',
             'project_privacy'                       => 'required|in:yes,no',

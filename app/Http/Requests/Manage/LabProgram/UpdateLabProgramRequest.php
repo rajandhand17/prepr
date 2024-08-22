@@ -35,22 +35,22 @@ class UpdateLabProgramRequest extends FormRequest
             'title'                   => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
             'description'             => 'required',
             'category_id'             => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'duration_id'             => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'lab_ids'                 => 'required|array',
             'lab_ids.*'               => Rule::exists('labs', 'uuid')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
             'skills'                  => 'required|array',
             'skills.*'                => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',

@@ -32,8 +32,8 @@ class CreateMemberManagementRequest extends FormRequest
             'type'         => 'required|in:invite,join_request,auto_created',
             'invite_type'  => 'required|in:email,csv',
             'role'         => 'required|'.Rule::exists('roles', 'display_name')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'subject_line' => 'max:250',
             'email_body'   => 'max:2000',
             'auto_invite'  => 'required|in:yes,no,na',

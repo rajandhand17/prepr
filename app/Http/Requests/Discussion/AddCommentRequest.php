@@ -26,7 +26,7 @@ class AddCommentRequest extends FormRequest
     {
         $base_rules = [
             'comment'         => 'required|string',
-            'comment_id'      =>  Rule::exists('discussions', 'id')->where(function ($query) {
+            'comment_id'      => Rule::exists('discussions', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
             'attachment'      => 'array|max:5',
