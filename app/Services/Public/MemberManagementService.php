@@ -17,6 +17,9 @@ class MemberManagementService
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
@@ -46,6 +49,9 @@ class MemberManagementService
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
