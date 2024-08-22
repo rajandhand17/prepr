@@ -41,6 +41,7 @@ class OrganizationResource extends JsonResource
             $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
