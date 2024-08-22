@@ -184,8 +184,11 @@ class ProfileResource extends JsonResource
                 // Map over the collection to format the data
                 $formattedExternalLinks = $this->external_links->map(function ($link) {
                     return [
-                        'social_media_link' => $link->social_media_link,
-                        'social_link_id'    => $link->social_link_id,
+                        'id'        => $link->id,
+                        'link_id'   => $link->social_link_id,
+                        'link'      => $link->social_media_link,
+                        'title'     => optional($link->social_link)->title,
+                        'image'     => optional($link->social_link)->icon,
                     ];
                 });
             } else {
@@ -243,7 +246,7 @@ class ProfileResource extends JsonResource
                 'user_personal_files'    => $personalfiles,
                 'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
                 'profile_privacy'        => $profile_privacy,
-                'external_link'          => $formattedExternalLinks,
+                'external_links'          => $formattedExternalLinks,
             ];
         }
     }
