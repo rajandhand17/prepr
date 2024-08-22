@@ -33,7 +33,7 @@ class LabService
 
             $lab_list = self::filterLabList($lab_list, $request);
 
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

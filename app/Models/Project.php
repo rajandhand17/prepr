@@ -28,12 +28,6 @@ class Project extends Model
         'recruiting_status',
         'challenge_id',
         'lab_id',
-        'category_id',
-        'type_id',
-        'industry_id',
-        'stage_id',
-        'vertical_id',
-        'status_id',
         'is_submitted',
     ];
 

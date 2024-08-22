@@ -387,7 +387,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function submitProject($slug)
+    public function submitProject(Request $request, $slug)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
@@ -404,8 +404,12 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_requirements_pending'), 400);
             }
 
-            $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot);
-            if ($submitProject) {
+            $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
+            $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
+            if ($submitProject == 'no') {
+                return $this->sendError(__('responses.late_submission_reason_required'), 400);
+            }
+            if ($submitProject == 'true') {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
             }
 
