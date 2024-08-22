@@ -14,7 +14,7 @@ class LabProgramService
             $labProgramList = LabProgram::where('is_accessible', '1');
             $labProgramList = self::filterLabProgramList($request, $labProgramList);
 
-            return $labProgramList->paginate(config('site-settings.pagination_per_page'));
+            return $labProgramList->paginate(config('site-settings.association_pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
