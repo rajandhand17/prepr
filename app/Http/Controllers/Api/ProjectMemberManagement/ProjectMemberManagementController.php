@@ -63,9 +63,9 @@ class ProjectMemberManagementController extends AppBaseController
                 $user_name = UserService::joinName(auth()->user()->first_name, auth()->user()->last_name);
                 $getTemplate->body_content = str_replace('user_name', $user_name, str_replace('component_title', $checkProjectExistsOrNot->title, $getTemplate->body_content));
             }
-            if ($checkProjectExistsOrNot->is_submitted == '0'){
+            if ($checkProjectExistsOrNot->is_submitted == '0') {
                 $project_status = 'In Progress';
-            } else if($checkProjectExistsOrNot->is_submitted == '1') {
+            } elseif ($checkProjectExistsOrNot->is_submitted == '1') {
                 $project_status = 'Submitted';
             } else {
                 $project_status = 'Late Submitted';
