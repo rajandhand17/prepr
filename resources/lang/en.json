@@ -320,6 +320,7 @@
     "responses.un_favourite_lab_successfully": "The Lab have been successfully removed from favourites!",
     "responses.already_favourite_lab": "The Lab is already being added to favourites!",
     "responses.request_not_exist": "This member management request is not exist!",
+    "responses.request_component_draft_stage": "Unable to invite member as the :component is currently in the draft stage.",
     "responses.already_un_favourite_lab": "The Lab is already being removed from favourites!",
     "responses.join_type_in": "Sorry! we are not supporting this type which you have requested for!",
     "responses.join_invite_type_in": "Sorry! we are not supporting this invite type whic.h you have requested for!",
@@ -1418,6 +1419,7 @@
     "responses.failed_update_lab_dashboard_detail": "Failed to update User Dashboard layout",
     "responses.failed_found_organization_dashboard_detail": "Failed to retrieve User Dashboard layout",
     "responses.failed_update_organization_dashboard_detail": "Failed to update User Dashboard layout",
+    "responses.late_submission_reason_required": "late submission reason is requried",
     "responses.type_image": "The :attribute must be an image.",
     "responses.updated_file_privacy_failed" :  "Failed to update File Privacy.",
     "responses.updated_file_privacy": "File Privacy updated successfully."

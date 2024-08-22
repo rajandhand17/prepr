@@ -412,15 +412,30 @@ class ProjectRepository implements ProjectInterface
         }
     }
 
-    public function submitProject($projectData)
+    public function checkSubmisstionDate($projectData)
+    {
+        try {
+            return $this->projectService->checkSubmisstionDate($projectData);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function submitProject($projectData, $checkLateSubmission, $request)
     {
         try {
             $fetchAcceptedMemberIds = $this->projectMemberManagementService->fetchAcceptedMemberIds($projectData->id);
             $fetchChallenge = $this->challengeService->getChallengeBasedOnId($projectData->challenge_id);
             $fetchChallengeAchievement = $this->challengeAchievementService->fetchChallengeAchievement($projectData->challenge_id);
 
-            $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData) {
-                $submitProject = $this->projectService->submitProject($projectData);
+            $submitProject = DB::transaction(function () use ($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData, $checkLateSubmission, $request) {
+                $submitProject = $this->projectService->submitProject($projectData, $checkLateSubmission, $request);
+                if ($submitProject === 'no') {
+                    return 'no'; // Return 'no' and exit the transaction closure
+                }
+
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
@@ -432,6 +447,11 @@ class ProjectRepository implements ProjectInterface
                 ];
             });
 
+            // Handle the 'no' case after the transaction
+            if ($submitProject === 'no') {
+                return $submitProject; // Early return if the project submission was unsuccessful
+            }
+            // Continue with the rest of the code if submission was successful
             if (
                 $submitProject['submitProject'] &&
                 $submitProject['addAchievement'] &&
