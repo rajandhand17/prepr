@@ -424,6 +424,7 @@ class LabRepository implements LabInterface
     public function createLabUsingAIPreview($request)
     {
         try {
+            Log::info('createLabUsingAIPreview - about to run this->aiService->createLabUsingAIPreview(request)');
             $createLabUsingAIPreview = $this->aiService->createLabUsingAIPreview($request);
 
             return $createLabUsingAIPreview;

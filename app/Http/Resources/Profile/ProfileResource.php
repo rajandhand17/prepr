@@ -30,7 +30,7 @@ class ProfileResource extends JsonResource
                 $profile_privacy = 'null';
                 break;
         }
-        if ($profile_privacy == 'private' && auth()->user()->id != $this->id) {
+        if (!auth('api')->check() && $profile_privacy == 'private' || $profile_privacy == 'private' && auth('api')->user()->id != $this->id) {
             return [
                 'profile_privacy'       => $profile_privacy,
             ];
@@ -180,6 +180,20 @@ class ProfileResource extends JsonResource
             } else {
                 $pinnedSkills = [];
             }
+            if ($this->external_links && $this->external_links->isNotEmpty()) {
+                // Map over the collection to format the data
+                $formattedExternalLinks = $this->external_links->map(function ($link) {
+                    return [
+                        'social_media_link' => $link->social_media_link,
+                        'social_link_id'    => $link->social_link_id,
+                    ];
+                });
+            } else {
+                $formattedExternalLinks = null;
+            }
+            $userPersonalFiles = $this->userPersonalFiles;
+            $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); });
+            $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
 
             return [
                 'id'                     => $this->id,
@@ -203,7 +217,7 @@ class ProfileResource extends JsonResource
                 'achievements_list'      => UserAchievementResource::collection($this->userAchievements),
                 'featured_achievement'   => UserAchievementResource::collection($this->userFeaturedAchievements),
                 'role'                   => 'user',
-                'friends'                => FriendsResource::collection($this->userFriends),
+                'friends'                => auth()->check() ? FriendsResource::collection($this->userFriends) : null,
                 'tags'                   => $userTag,
                 'about'                  => $about,
                 'age'                    => $age,
@@ -226,9 +240,10 @@ class ProfileResource extends JsonResource
                 'user_certificates'      => UserCertificateResource::collection($this->userCertificates),
                 'user_skills'            => $skills,
                 'user_pinned_skills'     => $pinnedSkills,
-                'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
+                'user_personal_files'    => $personalfiles,
                 'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
                 'profile_privacy'        => $profile_privacy,
+                'external_link'          => $formattedExternalLinks,
             ];
         }
     }
