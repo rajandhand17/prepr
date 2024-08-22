@@ -11,8 +11,7 @@ return new class() extends Migration {
     public function up(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->enum('is_submitted', ['0', '1', '2'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted & 2-> Late Submitted')
-            ->change();
+            DB::statement("ALTER TABLE `projects` MODIFY `is_submitted` ENUM('0', '1', '2') DEFAULT '0' COMMENT 'Project Submission Status, 0 -> Not Submitted & 1 -> Submitted & 2-> Late Submitted'");
             $table->text('late_submission_reason')->after('is_submitted')->nullable();
         });
     }
@@ -23,9 +22,8 @@ return new class() extends Migration {
     public function down(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->enum('is_submitted', ['0', '1', '2'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted & 2-> Late Submitted')
-            ->change();
-            $table->text('late_submission_reason')->nullable();
+            DB::statement("ALTER TABLE `projects` MODIFY `is_submitted` ENUM('0', '1', '2') DEFAULT '0' COMMENT 'Project Submission Status, 0 -> Not Submitted & 1 -> Submitted & 2-> Late Submitted'");
+            $table->dropColumn('late_submission_reason');
         });
     }
 };
