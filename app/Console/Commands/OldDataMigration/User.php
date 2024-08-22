@@ -112,6 +112,10 @@ class User extends Command
                     $user->created_at = Carbon::createFromTimestamp($single_user->created_at);
                     $user->verified_user = $verified;
                     $user->is_profile_completed = ($single_user->is_profile_completed == 'no') ? '0' : '1';
+                    $user->go1_id = $single_user->go1_id;
+                    $user->go1_user_metadata = $single_user->go1_user_metadata;
+                    $user->magnet_user_id = $single_user->magnet_user_id;
+                    $user->magnet_user_role = $single_user->magnet_user_role;
                     $user->save();
 
                     $user->attachRole('user');
