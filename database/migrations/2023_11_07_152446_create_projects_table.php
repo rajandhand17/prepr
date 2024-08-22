@@ -27,12 +27,6 @@ return new class() extends Migration {
             $table->enum('recruiting_status', ['0', '1'])->default('0')->comment('0-> Currently recruiting, 1-> Currently not recruiting');
             $table->unsignedBigInteger('challenge_id');
             $table->unsignedBigInteger('lab_id')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->unsignedBigInteger('type_id')->nullable();
-            $table->unsignedBigInteger('industry_id')->nullable();
-            $table->unsignedBigInteger('stage_id')->nullable();
-            $table->unsignedBigInteger('vertical_id')->nullable();
-            $table->unsignedBigInteger('status_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
