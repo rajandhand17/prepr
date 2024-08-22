@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\Challenge;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateChallengeUsingAIRequest extends FormRequest
 {
@@ -26,22 +27,34 @@ class CreateChallengeUsingAIRequest extends FormRequest
         $base_rules = [
             'challengeTitle'                        => 'required',
             'challengeDescription'                  => 'required',
-            'category_id'                           => 'required|exists:categories,id',
-            'duration_id'                           => 'required|exists:durations,id',
+            'category_id'                           => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'duration_id'                           => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'duration'                              => 'nullable',
-            'level_id'                              => 'required|exists:levels,id',
+            'level_id'                              => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'level'                                 => 'nullable',
             'skills'                                => 'required|array',
-            'skills.*'                              => 'numeric|exists:skills,id',
+            'skills.*'                              => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_titles'                          => 'nullable|array',
             'jobs'                                  => 'nullable|array',
-            'jobs.*'                                => 'numeric|exists:job_titles,id',
+            'jobs.*'                                => 'numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'job_titles'                            => 'nullable|array',
             'steps'                                 => 'required|array',
             'reflections'                           => 'required|array',
             'is_ai_created'                         => 'required|boolean',
             'resource_modules'                      => 'nullable|array',
-            'resource_modules.*'                    => 'required_if:resource_modules,exists|exists:resource_modules,uuid',
+            'resource_modules.*'                    => 'required_if:resource_modules,exists|'.Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',
             'openai_resource_module_types.*'        => 'in:links,videos',

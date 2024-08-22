@@ -6,6 +6,7 @@ use App\Services\Manage\OrganizationService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
 
 class UpdateOrganizationRequest extends FormRequest
@@ -36,13 +37,17 @@ class UpdateOrganizationRequest extends FormRequest
             'description'                           => 'required',
             'profile_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
             'cover_image'                           => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024',
-            'category'                              => 'required|numeric|exists:categories,id',
+            'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
             'website'                               => 'required|url',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
             'external_links'                        => 'array',
-            'external_link_ids'                     => 'array|exists:social_links,id',
+            'external_link_ids'                     => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
         ];

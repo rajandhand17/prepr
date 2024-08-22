@@ -5,6 +5,7 @@ namespace App\Http\Requests\Project;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddLinksProjectRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class AddLinksProjectRequest extends FormRequest
     {
         $base_rules = [
             'external_links'         => 'array|required',
-            'external_link_ids'      => 'array|exists:social_links,id|required',
+            'external_link_ids'      => 'array|required|'.Rule::exists('social_links', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'external_links.*'       => 'url',
             'external_link_ids.*'    => 'numeric',
         ];

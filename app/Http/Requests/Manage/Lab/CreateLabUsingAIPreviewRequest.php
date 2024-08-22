@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\Lab;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateLabUsingAIPreviewRequest extends FormRequest
 {
@@ -31,9 +32,13 @@ class CreateLabUsingAIPreviewRequest extends FormRequest
             'additional_information'                => 'nullable',
             'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',
-            'skills.*.key'                          => 'numeric|exists:skills,id',
+            'skills.*.key'                          => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'jobs'                                  => 'required|array',
-            'jobs.*.key'                            => 'numeric|exists:job_titles,id',
+            'jobs.*.key'                            => 'numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'resource_modules'                      => 'nullable|boolean',
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',

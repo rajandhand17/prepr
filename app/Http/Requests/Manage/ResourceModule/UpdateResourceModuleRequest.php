@@ -6,6 +6,7 @@ use App\Services\Manage\ResourceModuleService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
 
 class UpdateResourceModuleRequest extends FormRequest
@@ -41,11 +42,17 @@ class UpdateResourceModuleRequest extends FormRequest
             'status'                 => 'required|in:draft,publish,archive',
             'is_global'              => 'required|in:yes,no',
             'skills'                 => 'required|array',
-            'skills.*'               => 'numeric|exists:skills,id',
+            'skills.*'               => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_groups'           => 'array',
-            'skill_groups.*'         => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'         => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_stacks'           => 'array',
-            'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
+            'skill_stacks.*'         => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
         ];
 
         if ($this->has('media_type') && $this->input('media_type') == 'image') {

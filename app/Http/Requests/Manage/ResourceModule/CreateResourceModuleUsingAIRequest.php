@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ResourceModule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateResourceModuleUsingAIRequest extends FormRequest
 {
@@ -35,10 +36,16 @@ class CreateResourceModuleUsingAIRequest extends FormRequest
         $base_rules = [
             'title'                          => 'required',
             'description'                    => 'required',
-            'duration_id'                    => 'required|exists:durations,id',
-            'level_id'                       => 'required|exists:levels,id',
+            'duration_id'                    => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'level_id'                       => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skills'                         => 'required|array',
-            'skills.*'                       => 'numeric|exists:skills,id',
+            'skills.*'                       => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'is_ai_created'                  => 'required|boolean',
             'skill_titles'                   => 'nullable|array',
             'level'                          => 'nullable',

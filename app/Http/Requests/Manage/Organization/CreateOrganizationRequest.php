@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\Organization;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateOrganizationRequest extends FormRequest
 {
@@ -30,14 +31,18 @@ class CreateOrganizationRequest extends FormRequest
             'description'                           => 'required',
             'profile_image'                         => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
             'cover_image'                           => 'image|mimes:jpeg,jpg,png,webp|max:1024|nullable',
-            'category'                              => 'required|numeric|exists:categories,id',
+            'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
+                         $query->whereNull('deleted_at');
+            }),
             'custom_url'                            => 'required|max:255|unique:organizations,custom_url',
             'website'                               => 'required|url',
             'slug'                                  => 'required|max:255|unique:organizations,slug',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
             'external_links'                        => 'array',
-            'external_link_ids'                     => 'array|exists:social_links,id',
+            'external_link_ids'                     => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'external_links.*'                      => 'url',
             'external_link_ids.*'                   => 'numeric',
         ];

@@ -6,6 +6,7 @@ use App\Services\ProjectService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateProjectRequest extends FormRequest
@@ -37,7 +38,9 @@ class UpdateProjectRequest extends FormRequest
             'is_download_enabled'       => 'required|in:yes,no',
             'media_type'                => 'nullable|in:image,embedded,none',
             'privacy'                   => 'required|in:public,private',
-            'lab_id'                    => 'nullable|exists:labs,uuid',
+            'lab_id'                    => 'nullable|'.Rule::exists('labs', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
         ];
 
         if ($this->has('media_type') && $this->input('media_type') == 'image') {

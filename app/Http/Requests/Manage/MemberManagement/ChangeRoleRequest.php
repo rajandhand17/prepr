@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\MemberManagement;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class ChangeRoleRequest extends FormRequest
 {
@@ -26,8 +27,12 @@ class ChangeRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'id'  => 'required|Exists:member_management,uuid',
-            'role'=> 'required|Exists:roles,display_name',
+            'id'  => 'required|'.Rule::exists('member_management', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'role'=> 'required|'.Rule::exists('roles', 'display_name')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
         ];
     }
 

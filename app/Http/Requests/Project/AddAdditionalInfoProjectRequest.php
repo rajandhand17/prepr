@@ -5,6 +5,7 @@ namespace App\Http\Requests\Project;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddAdditionalInfoProjectRequest extends FormRequest
 {
@@ -24,17 +25,29 @@ class AddAdditionalInfoProjectRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'category_id'       => 'nullable|exists:categories,id',
+            'category_id'       => 'nullable|'.Rule::exists('categories', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'category_id.*'     => 'numeric',
-            'industry_id'       => 'nullable|exists:project_industries,id',
+            'industry_id'       => 'nullable|'.Rule::exists('project_industries', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'industry_id.*'     => 'numeric',
-            'verticals_id'      => 'nullable|exists:project_verticals,id',
+            'verticals_id'      => 'nullable|'.Rule::exists('project_verticals', 'id')->where(function ($query) {
+              $query->whereNull('deleted_at');
+              }),
             'verticals_id.*'    => 'numeric',
-            'type_id'           => 'nullable|exists:project_types,id',
+            'type_id'           => 'nullable|'.Rule::exists('project_types', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'type_id.*'         => 'numeric',
-            'stage_id'          => 'nullable|exists:project_stages,id',
+            'stage_id'          => 'nullable|'.Rule::exists('project_stages', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'stage_id.*'        => 'numeric',
-            'status_id'         => 'nullable|exists:project_status,id',
+            'status_id'         => 'nullable|'.Rule::exists('project_status', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'status_id.*'       => 'numeric',
         ];
 

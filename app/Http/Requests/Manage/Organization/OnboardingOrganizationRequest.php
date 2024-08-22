@@ -6,6 +6,7 @@ use App\Services\Manage\OrganizationService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
 
 class OnboardingOrganizationRequest extends FormRequest
@@ -36,10 +37,14 @@ class OnboardingOrganizationRequest extends FormRequest
             $base_rules = [
                 'type'                          => 'required|array',
                 'type.*'                        => 'in:assess,onboard,engage,grow',
-                'business_challenge_tacklings'  => 'required|numeric|exists:business_challenge_tacklings,id',
+                'business_challenge_tacklings'  => 'required|numeric|'.Rule::exists('business_challenge_tacklings', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    }),
                 'total_employees'               => 'required|integer',
                 'website'                       => 'required|url',
-                'category'                      => 'required|numeric|exists:categories,id',
+                'category'                      => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
+                        $query->whereNull('deleted_at');
+                    }),
             ];
         }
 

@@ -6,6 +6,7 @@ use App\Rules\AirmeetEventUrlRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateLabRequest extends FormRequest
 {
@@ -36,9 +37,15 @@ class CreateLabRequest extends FormRequest
             'mode.*'                   => 'in:team,individual',
             'title'                    => 'required_if:request_type,publish|unique:labs,title|nullable',
             'description'              => 'required_if:request_type,publish|nullable',
-            'category_id'              => 'required|exists:categories,id',
-            'duration_id'              => 'required|exists:durations,id',
-            'level_id'                 => 'required|exists:levels,id',
+            'category_id'              => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'duration_id'              => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'level_id'                 => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'privacy'                  => 'required_if:request_type,publish|in:yes,no',
             'location'                 => 'required_if:request_type,publish|nullable',
             'latitude'                 => 'required_if:request_type,publish|nullable',
@@ -46,17 +53,25 @@ class CreateLabRequest extends FormRequest
             'country'                  => 'required_if:request_type,publish|nullable',
             'city'                     => 'required_if:request_type,publish|nullable',
             'skills'                   => 'required_if:request_type,publish|nullable|array',
-            'skills.*'                 => 'numeric|exists:skills,id',
+            'skills.*'                 => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_groups'             => 'nullable|array',
-            'skill_groups.*'           => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'           => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_stacks'             => 'nullable|array',
-            'skill_stacks.*'           => 'numeric|exists:skill_stacks,id',
+            'skill_stacks.*'           => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'is_notification_enabled'  => 'in:yes,no',
             'is_achievement_enabled'   => 'in:yes,no',
             'is_sequential'            => 'in:yes,no',
             'is_resource_sequential'   => 'in:yes,no',
             'external_links'           => 'array',
-            'external_link_ids'        => 'array|exists:social_links,id',
+            'external_link_ids'        => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'external_links.*'         => 'url',
             'external_link_ids.*'      => 'numeric',
             'integrate_campus_connect' => 'in:both,job,story,no',
@@ -164,32 +179,44 @@ class CreateLabRequest extends FormRequest
 
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
-            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+            $base_rules['lab_programs.*'] = Rule::exists('lab_programs', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                });
         }
 
         if ($this->request->has('challenges')) {
             $base_rules['challenges'] = 'array';
-            $base_rules['challenges.*'] = 'exists:challenges,uuid';
+            $base_rules['challenges.*'] = Rule::exists('challenges', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('challenge_paths')) {
             $base_rules['challenge_paths'] = 'array';
-            $base_rules['challenge_paths.*'] = 'exists:challenge_paths,uuid';
+            $base_rules['challenge_paths.*'] = Rule::exists('challenge_paths', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_modules')) {
             $base_rules['resource_modules'] = 'array';
-            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+            $base_rules['resource_modules.*'] = Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_groups')) {
             $base_rules['resource_groups'] = 'array';
-            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
+            $base_rules['resource_groups.*'] = Rule::exists('resource_groups', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_collections')) {
             $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+            $base_rules['resource_collections.*'] = Rule::exists('resource_collections', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('invite_type')) {

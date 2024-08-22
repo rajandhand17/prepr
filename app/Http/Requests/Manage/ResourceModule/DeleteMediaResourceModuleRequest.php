@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ResourceModule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class DeleteMediaResourceModuleRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class DeleteMediaResourceModuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'media_id' => 'required|exists:resource_module_details,id',
+            'media_id' => 'required|'.Rule::exists('resource_module_details', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'type'     => 'required|in:document,video,audio,embedded_video,embedded_audio,url,image,embedded_cover_video',
         ];
     }

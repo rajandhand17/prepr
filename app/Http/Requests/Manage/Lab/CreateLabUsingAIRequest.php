@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\Lab;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateLabUsingAIRequest extends FormRequest
 {
@@ -26,20 +27,32 @@ class CreateLabUsingAIRequest extends FormRequest
         $base_rules = [
             'labTitle'                              => 'required',
             'labDescription'                        => 'required',
-            'duration_id'                           => 'required|exists:durations,id',
+            'duration_id'                           => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'duration'                              => 'nullable',
-            'level_id'                              => 'required|exists:levels,id',
+            'level_id'                              => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'level'                                 => 'nullable',
-            'category_id'                           => 'required|exists:categories,id',
+            'category_id'                           => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',
-            'skills.*'                              => 'numeric|exists:skills,id',
+            'skills.*'                              => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_titles'                          => 'nullable|array',
             'jobs'                                  => 'required|array',
-            'jobs.*'                                => 'numeric|exists:job_titles,id',
+            'jobs.*'                                => 'numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'job_titles'                            => 'nullable|array',
             'resource_modules'                      => 'nullable|array',
-            'resource_modules.*'                    => 'required_if:resource_modules,exists|exists:resource_modules,uuid',
+            'resource_modules.*'                    => 'required_if:resource_modules,exists|'.Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'resource_module_openai'                => 'nullable|boolean',
             'openai_resource_module_types'          => 'nullable|array',
             'openai_resource_module_types.*'        => 'in:links,videos',
@@ -48,7 +61,9 @@ class CreateLabUsingAIRequest extends FormRequest
             'go1_resource_module_types.*'           => 'in:course,award,playlist,document,link,interactive,text,video,audio,integration',
             'resource_module_prepr'                 => 'nullable|boolean',
             'challenges'                            => 'nullable|array',
-            'challenges.*'                          => 'required_if:challenges,exists|exists:challenges,uuid',
+            'challenges.*'                          => 'required_if:challenges,exists|'.Rule::exists('challenges', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
         ];
 
         return $base_rules;

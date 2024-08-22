@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateChallengeAnnouncementRequest extends FormRequest
 {
@@ -27,7 +28,9 @@ class CreateChallengeAnnouncementRequest extends FormRequest
         $base_rules = [
             'subject'                                   => 'required',
             'to_recipient_ids'                          => 'required|array',
-            'to_recipient_ids.*'                        => 'numeric|exists:challenge_announcement_recipients,id',
+            'to_recipient_ids.*'                        => 'numeric|'.Rule::exists('challenge_announcement_recipients', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'sent_by'                                   => 'required',
             'sent_by.*'                                 => 'in:email,inbox,both',
             'description'                               => 'required',

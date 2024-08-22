@@ -6,6 +6,7 @@ use App\Services\Manage\ResourceCollectionService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
 
 class UpdateResourceCollectionRequest extends FormRequest
@@ -40,19 +41,35 @@ class UpdateResourceCollectionRequest extends FormRequest
             'privacy'                => 'required|in:public,private',
             'status'                 => 'required|in:draft,publish,archive',
             'lab_ids'                => 'required|array',
-            'lab_ids.*'              => 'exists:labs,uuid',
+            'lab_ids.*'              => Rule::exists('labs', 'uuid')->where(function ($query) {
+                       $query->whereNull('deleted_at');
+            }),
             'challenge_ids'          => 'required|array',
-            'challenge_ids.*'        => 'exists:challenges,uuid',
+            'challenge_ids.*'        => Rule::exists('challenges', 'uuid')->where(function ($query) {
+                            $query->whereNull('deleted_at');
+            }),
             'resource_ids'           => 'required|array',
-            'resource_ids.*'         => 'exists:resource_modules,uuid',
+            'resource_ids.*'         => Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+              }),
             'skills'                 => 'required|array',
-            'skills.*'               => 'numeric|exists:skills,id',
-            'level'                  => 'required|exists:levels,id',
-            'duration'               => 'required|exists:durations,id',
+            'skills.*'               => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                   $query->whereNull('deleted_at');
+             }),
+            'level'                  => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
+            'duration'               => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_groups'           => 'array',
-            'skill_groups.*'         => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'         => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'skill_stacks'           => 'array',
-            'skill_stacks.*'         => 'numeric|exists:skill_stacks,id',
+            'skill_stacks.*'         => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
         ];
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
             $base_rules['cover_image'] = [

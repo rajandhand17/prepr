@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\MemberManagement;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateMemberManagementRequest extends FormRequest
 {
@@ -30,7 +31,9 @@ class CreateMemberManagementRequest extends FormRequest
         $rules = [
             'type'         => 'required|in:invite,join_request,auto_created',
             'invite_type'  => 'required|in:email,csv',
-            'role'         => 'required|exists:roles,display_name',
+            'role'         => 'required|'.Rule::exists('roles', 'display_name')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'subject_line' => 'max:250',
             'email_body'   => 'max:2000',
             'auto_invite'  => 'required|in:yes,no,na',

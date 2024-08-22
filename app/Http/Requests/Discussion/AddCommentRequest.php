@@ -5,6 +5,7 @@ namespace App\Http\Requests\Discussion;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddCommentRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class AddCommentRequest extends FormRequest
     {
         $base_rules = [
             'comment'         => 'required|string',
-            'comment_id'      => 'exists:discussions,id',
+            'comment_id'      =>  Rule::exists('discussions', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'attachment'      => 'array|max:5',
             'attachment.*'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
         ];

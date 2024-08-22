@@ -5,6 +5,7 @@ namespace App\Http\Requests\ProjectMemberManagement;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateProjectMemberManagementRequest extends FormRequest
 {
@@ -32,7 +33,9 @@ class CreateProjectMemberManagementRequest extends FormRequest
             'subject_line'      => 'max:250',
             'email_body'        => 'max:2000',
             'skills'            => 'array',
-            'skills.*'          => 'numeric|exists:skills,id',
+            'skills.*'          => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'recruiting_status' => 'in:yes,no',
         ];
         if ($check_invite_type == 'csv') {
