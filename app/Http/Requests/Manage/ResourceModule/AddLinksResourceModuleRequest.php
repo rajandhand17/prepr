@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ResourceModule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddLinksResourceModuleRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class AddLinksResourceModuleRequest extends FormRequest
         if ($this->request->has('links')) {
             $base_rules['links'] = 'array';
             $base_rules['links.*.title'] = 'max:255|required|string';
-            $base_rules['links.*.social_link_id'] = 'required|exists:social_links,id';
+            $base_rules['links.*.social_link_id'] = 'required|'.Rule::exists('social_links', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
             $base_rules['links.*.path'] = 'required|max:1600';
         }
         if ($this->request->has('embed_media')) {

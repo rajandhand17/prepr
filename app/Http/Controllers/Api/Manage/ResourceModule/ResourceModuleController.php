@@ -173,6 +173,7 @@ class ResourceModuleController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
+
             $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image, $organization->id);
             if ($updateResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($updateResourceModule), __('responses.resource_module_update_success'), 200);

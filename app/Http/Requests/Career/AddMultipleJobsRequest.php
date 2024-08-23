@@ -5,6 +5,7 @@ namespace App\Http\Requests\Career;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddMultipleJobsRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class AddMultipleJobsRequest extends FormRequest
     {
         return [
             'job_ids'  => 'required|array',
-            'job_ids.*'=> 'integer|exists:job_titles,id',
+            'job_ids.*'=> 'integer|'.Rule::exists('job_titles', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 
