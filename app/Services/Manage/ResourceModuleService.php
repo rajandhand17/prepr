@@ -388,6 +388,7 @@ class ResourceModuleService
                     $media_type = null;
             }
             $resourceModule = ResourceModule::where('slug', $slug)->first();
+
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->duration_id = ($request->has('duration_id')) ? $request->duration_id : $resourceModule->duration_id;

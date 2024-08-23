@@ -35,7 +35,10 @@ class SelectChallengeWinnerRequest extends FormRequest
 
         $base_rules = [
             'project_id'                => ['array', 'required', 'size:'.$requiredWinnerCount, 'distinct'],
-            'project_id.*'              => ['exists:projects,uuid'],
+            'project_id.*'              => [Rule::exists('projects', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            ],
             'winner_achievement_id'     => ['array', 'required', 'size:'.$requiredWinnerCount, 'distinct'],
             'winner_achievement_id.*'   => [
                 'required', 'integer',
