@@ -6,6 +6,7 @@ use App\Services\Manage\LabProgramService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
 
 class UpdateLabProgramRequest extends FormRequest
@@ -33,13 +34,23 @@ class UpdateLabProgramRequest extends FormRequest
         $base_rules = [
             'title'                   => 'required|max:255|unique:lab_programs,title,'.$labProgram->id,
             'description'             => 'required',
-            'category_id'             => 'required|exists:categories,id',
-            'level_id'                => 'required|exists:levels,id',
-            'duration_id'             => 'required|exists:durations,id',
+            'category_id'             => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'level_id'                => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'duration_id'             => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'lab_ids'                 => 'required|array',
-            'lab_ids.*'               => 'exists:labs,uuid',
+            'lab_ids.*'               => Rule::exists('labs', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'skills'                  => 'required|array',
-            'skills.*'                => 'numeric|exists:skills,id',
+            'skills.*'                => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',

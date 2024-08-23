@@ -77,6 +77,8 @@ class LabController extends AppBaseController
                     }
                 }
 
+                $this->labRepository->incrementView($lab);
+
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
@@ -149,7 +151,7 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
-                $component = config('constants.lab_component.lab');
+                $component = config('constants.member_management_component_name.lab');
                 $moduleType = config('constants.member_management_component_type.lab');
                 $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $moduleType);
                 if ($checkActivity === true) {
@@ -187,7 +189,7 @@ class LabController extends AppBaseController
                 if ($lab->is_accessible == '0') {
                     return $this->sendError(__('responses.lab_not_accessible'), 403);
                 }
-                $component = config('constants.lab_component.lab');
+                $component = config('constants.member_management_component_name.lab');
                 $moduleType = config('constants.member_management_component_type.lab');
                 $checkActivity = $this->labRepository->checkJoinedOrNot($lab, $moduleType);
                 if ($checkActivity === false) {

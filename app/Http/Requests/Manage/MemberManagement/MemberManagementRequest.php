@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\MemberManagement;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class MemberManagementRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class MemberManagementRequest extends FormRequest
     {
         return [
             'email'   => 'required|array',
-            'email.*' => 'email|exists:member_management,email',
+            'email.*' => 'email|'.Rule::exists('member_management', 'email')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

@@ -388,6 +388,7 @@ class ResourceModuleService
                     $media_type = null;
             }
             $resourceModule = ResourceModule::where('slug', $slug)->first();
+
             $resourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $resourceModule->language = $request->language;
             $resourceModule->duration_id = ($request->has('duration_id')) ? $request->duration_id : $resourceModule->duration_id;
@@ -395,8 +396,8 @@ class ResourceModuleService
             $resourceModule->title = $request->title;
             $resourceModule->description = $request->description;
             $resourceModule->organization_id = $organizationId;
-            $resourceModule->media = $cover_image;
-            $resourceModule->media_type = $media_type;
+            $resourceModule->media = ($cover_image != null) ? $cover_image : $resourceModule->cover_image;
+            $resourceModule->media_type = ($request->has('media_type')) ? $media_type : $resourceModule->media_type;
             $resourceModule->privacy = $privacy;
             $resourceModule->status = $status;
             $resourceModule->is_global = $is_global;

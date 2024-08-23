@@ -49,7 +49,7 @@ return [
     | For identifying env unified.
     |
     */
-    'env' => env('APP_ENV'),
+    'env' => 'PRODUCTION',
 
     /*
     |--------------------------------------------------------------------------

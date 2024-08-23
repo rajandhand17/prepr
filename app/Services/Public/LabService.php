@@ -22,7 +22,7 @@ class LabService
             $lab_list = Lab::where('labs.status', '1')->where('labs.is_accessible', '1');
             $lab_list = self::filterLabList($request, $lab_list);
 
-            return $lab_list->paginate(config('site-settings.pagination_per_page'));
+            return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -440,6 +440,19 @@ class LabService
             $labs = Lab::findMany($labIds)->slice(0, 2);
 
             return $labs;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Lab $lab)
+    {
+        try {
+            $lab->increment('views_count');
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

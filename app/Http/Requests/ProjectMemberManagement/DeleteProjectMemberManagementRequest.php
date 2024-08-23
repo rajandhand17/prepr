@@ -5,6 +5,7 @@ namespace App\Http\Requests\ProjectMemberManagement;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class DeleteProjectMemberManagementRequest extends FormRequest
 {
@@ -27,7 +28,9 @@ class DeleteProjectMemberManagementRequest extends FormRequest
     {
         return [
             'email'   => 'required|array',
-            'email.*' => 'email|exists:project_member_management,email',
+            'email.*' => 'email|'.Rule::exists('project_member_management', 'email')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

@@ -43,8 +43,8 @@ class ChallengePathService
             if ($request->has('search') && !empty($request->search)) {
                 $getChallengePathList = $getChallengePathList->whereSearchFilter($request->search ?? '');
             }
-            if ($request->has('status') && !empty($request->status) && in_array($request->status, ['draft', 'published'])) {
-                $status = ($request->status == 'draft') ? '0' : '1';
+            if ($request->has('challenge_path_status') && !empty($request->challenge_path_status) && in_array($request->challenge_path_status, ['draft', 'published'])) {
+                $status = ($request->challenge_path_status == 'draft') ? '0' : '1';
                 $getChallengePathList = $getChallengePathList->where('challenge_paths.status', $status);
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -128,6 +128,17 @@ class ChallengePathService
 
             return $upload_challenge_path_cover_image;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengePathBasedOnSlug($slug)
+    {
+        try {
+            return ChallengePath::where('slug', $slug)->first();
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

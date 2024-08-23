@@ -572,7 +572,7 @@ class OrganizationController extends AppBaseController
                 if ($request->has('organization_address') && !empty($request->organization_address)) {
                     $this->organizationRepository->updatesOrganizationAddress($request, $organization->id);
                 }
-                if ($request->has('organization_members') && !empty($request->organization_members)) {
+                if (!empty($organization->id)) {
                     $this->organizationRepository->updatesOrganizationMembers($request, $organization->id);
                 }
                 if ($request->has('external_links') && !empty($request->external_links)) {

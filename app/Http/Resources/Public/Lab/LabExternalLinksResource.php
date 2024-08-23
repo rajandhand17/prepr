@@ -16,8 +16,11 @@ class LabExternalLinksResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'               => $this->id,
-            'social_media_link'=> $this->social_media_link,
+            'id'        => $this->id,
+            'link_id'   => $this->social_link_id,
+            'link'      => $this->social_media_link,
+            'title'     => optional($this->social_link_data)->title,
+            'image'     => optional($this->social_link_data)->icon,
         ];
     }
 }
