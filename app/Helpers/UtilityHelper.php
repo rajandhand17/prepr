@@ -232,4 +232,9 @@ class UtilityHelper
             return 0;
         }
     }
+
+    public static function isEngLocale(): bool
+    {
+        return app()->getLocale() === 'en';
+    }
 }

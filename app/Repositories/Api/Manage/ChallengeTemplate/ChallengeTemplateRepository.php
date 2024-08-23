@@ -249,7 +249,6 @@ class ChallengeTemplateRepository implements ChallengeTemplateInterface
 
             return false;
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             DB::rollback();
 

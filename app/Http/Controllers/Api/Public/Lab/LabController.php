@@ -77,6 +77,8 @@ class LabController extends AppBaseController
                     }
                 }
 
+                $this->labRepository->incrementView($lab);
+
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_lab_view'));
             }
 
