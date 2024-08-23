@@ -70,7 +70,7 @@ class ScormArchiver
         $zip = new \ZipArchive();
         $openResult = $zip->open($file);
 
-        if($openResult !== true) {
+        if ($openResult !== true) {
             throw new InvalidScormArchiveException('cannot_load_imsmanifest_message');
         }
         /** READING THE MANIFEST FILE FROM THE ZIP*/
