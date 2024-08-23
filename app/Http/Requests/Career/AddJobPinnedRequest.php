@@ -26,8 +26,8 @@ class AddJobPinnedRequest extends FormRequest
     {
         return [
             'job_id'     => 'required|'.Rule::exists('job_titles', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'pinned'     => 'required|in:yes,no',
         ];
     }

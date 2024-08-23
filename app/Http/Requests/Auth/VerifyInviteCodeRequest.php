@@ -28,8 +28,8 @@ class VerifyInviteCodeRequest extends FormRequest
     {
         return [
             'referral_code'=> 'required|'.Rule::exists('users', 'referral_code')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 
