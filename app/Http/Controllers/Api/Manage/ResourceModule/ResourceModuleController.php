@@ -182,6 +182,7 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.resource_module_stored_failed'), 403);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
