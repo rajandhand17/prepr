@@ -57,8 +57,8 @@ class UnifiedUserInviteRequest extends BaseRequest
         if ($state) {
             if (data_get($state, 'usage_type') === 'organization_member_invite') {
                 return 'required|'.Rule::exists('roles', 'display_name')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            });
+                    $query->whereNull('deleted_at');
+                });
             }
         }
 
