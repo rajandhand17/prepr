@@ -44,10 +44,10 @@ class LabProgramService
                 $userData = auth('api')->user();
                 switch ($request->request_status) {
                     case 'accepted':
-                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData,'3', '1');
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '1');
                         break;
                     case 'pending':
-                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData,'3', '2');
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '2');
                         break;
                 }
                 $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
