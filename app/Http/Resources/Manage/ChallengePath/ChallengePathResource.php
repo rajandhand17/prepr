@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Manage\ChallengePath;
 
 use App\Helpers\UtilityHelper;
-use App\Http\Resources\manage\ChallengePathAssociatedChallengeResource;
+use App\Http\Resources\Manage\ChallengePathAssociatedChallengeResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;

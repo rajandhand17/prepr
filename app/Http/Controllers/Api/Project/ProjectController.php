@@ -78,12 +78,14 @@ class ProjectController extends AppBaseController
                 $project = $this->projectRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
-                        'total_count'  => $project->total(),
-                        'per_page'     => $project->perPage(),
-                        'count'        => $project->count(),
-                        'current_page' => $project->currentPage(),
-                        'total_pages'  => $project->lastPage(),
-                        'list'         => ProjectResource::collection($project),
+                        'total_count'           => $project->total(),
+                        'per_page'              => $project->perPage(),
+                        'count'                 => $project->count(),
+                        'current_page'          => $project->currentPage(),
+                        'total_pages'           => $project->lastPage(),
+                        'pending_invites'       => $this->projectRepository->getPendingInvitesProjectIds(auth()->user())->count(),
+                        'pending_assessments'   => $this->projectRepository->getPendingProjectIds(auth()->user())->count(),
+                        'list'                  => ProjectResource::collection($project),
                     ];
 
                     return $this->sendResponse($response, __('responses.found_projects_list'));
