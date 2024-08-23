@@ -27,12 +27,12 @@ class CreateChallengeUsingAIPreviewRequest extends FormRequest
         $base_rules = [
             'duration_id'                           => 'required',
             'duration_id.*.key'                     => Rule::exists('durations', 'id')->where(function ($query) {
-                              $query->whereNull('deleted_at');
-                  }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                              => 'required',
             'level_id.*.key'                        => Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'additional_information'                => 'nullable',
             'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',

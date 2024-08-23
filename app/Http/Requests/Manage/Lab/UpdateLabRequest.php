@@ -44,14 +44,14 @@ class UpdateLabRequest extends FormRequest
             'media_type'               => 'in:image,embedded',
             'description'              => 'required_if:request_type,publish|nullable',
             'category_id'              => 'required|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'duration_id'              => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                 => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'privacy'                  => 'required_if:request_type,publish|in:yes,no',
             'location'                 => 'required_if:request_type,publish|nullable',
             'latitude'                 => 'required_if:request_type,publish|nullable',
@@ -70,8 +70,8 @@ class UpdateLabRequest extends FormRequest
             'is_resource_sequential'   => 'in:yes,no',
             'external_links'           => 'array',
             'external_link_ids'        => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links.*'         => 'url',
             'external_link_ids.*'      => 'numeric',
             'integrate_campus_connect' => 'in:both,job,story,no',

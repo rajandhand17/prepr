@@ -28,8 +28,8 @@ class DeleteOrganizationRequest extends FormRequest
     {
         return [
             'slug'=> 'required|'.Rule::exists('organizations', 'slug')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
 
         ];
     }

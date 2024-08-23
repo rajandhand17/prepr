@@ -29,7 +29,7 @@ class CreateChallengePathRequest extends FormRequest
             'status'                  => 'required|in:draft,publish,archive',
             'title'                   => 'required|max:255|unique:challenge_paths,title',
             'description'             => 'required',
-            'category_id'             =>  Rule::exists('categories', 'id')->where(function ($query) {
+            'category_id'             => Rule::exists('categories', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
             'level_id'                => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
@@ -37,11 +37,11 @@ class CreateChallengePathRequest extends FormRequest
             }),
             'duration_id'             => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
-             }),
+            }),
             'challenge_ids'           => 'required|array',
-            'challenge_ids.*'         =>  Rule::exists('challenges', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+            'challenge_ids.*'         => Rule::exists('challenges', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
@@ -56,16 +56,16 @@ class CreateChallengePathRequest extends FormRequest
             }),
             'skill_stacks'            => 'nullable|array',
             'skill_stacks.*'          => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'tags'                    => 'required|array',
             'tags.*'                  => 'numeric|'.Rule::exists('tags', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'tag_groups'              => 'nullable|array',
             'tag_groups.*'            => 'numeric|'.Rule::exists('tag_groups', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
 
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {

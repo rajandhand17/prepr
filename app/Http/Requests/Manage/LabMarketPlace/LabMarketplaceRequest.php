@@ -26,8 +26,8 @@ class LabMarketplaceRequest extends FormRequest
     {
         return [
             'organization_id'=> 'required|'.Rule::exists('organizations', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

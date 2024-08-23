@@ -39,8 +39,8 @@ class UpdateProjectRequest extends FormRequest
             'media_type'                => 'nullable|in:image,embedded,none',
             'privacy'                   => 'required|in:public,private',
             'lab_id'                    => 'nullable|'.Rule::exists('labs', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
 
         if ($this->has('media_type') && $this->input('media_type') == 'image') {
