@@ -26,9 +26,13 @@ class CreateLabUsingAIPreviewRequest extends FormRequest
     {
         $base_rules = [
             'duration_id'                           => 'required',
-            'duration_id.*.key'                     => 'exists:durations,id',
+            'duration_id.*.key'                     => Rule::exists('durations', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'level_id'                              => 'required',
-            'level_id.*.key'                        => 'exists:levels,id',
+            'level_id.*.key'                        =>  Rule::exists('levels', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'additional_information'                => 'nullable',
             'is_ai_created'                         => 'required|boolean',
             'skills'                                => 'required|array',

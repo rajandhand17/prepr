@@ -181,32 +181,44 @@ class UpdateLabRequest extends FormRequest
 
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
-            $base_rules['lab_programs.*'] = 'exists:lab_programs,uuid';
+            $base_rules['lab_programs.*'] = Rule::exists('lab_programs', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('challenges')) {
             $base_rules['challenges'] = 'array';
-            $base_rules['challenges.*'] = 'exists:challenges,uuid';
+            $base_rules['challenges.*'] = Rule::exists('challenges', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('challenge_paths')) {
             $base_rules['challenge_paths'] = 'array';
-            $base_rules['challenge_paths.*'] = 'exists:challenge_paths,uuid';
+            $base_rules['challenge_paths.*'] = Rule::exists('challenge_paths', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_modules')) {
             $base_rules['resource_modules'] = 'array';
-            $base_rules['resource_modules.*'] = 'exists:resource_modules,uuid';
+            $base_rules['resource_modules.*'] = Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_groups')) {
             $base_rules['resource_groups'] = 'array';
-            $base_rules['resource_groups.*'] = 'exists:resource_groups,uuid';
+            $base_rules['resource_groups.*'] = Rule::exists('resource_groups', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('resource_collections')) {
             $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] = 'exists:resource_collections,uuid';
+            $base_rules['resource_collections.*'] = Rule::exists('resource_collections', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            });
         }
 
         if ($this->request->has('invite_type')) {

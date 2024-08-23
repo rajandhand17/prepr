@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class SendOtpRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class SendOtpRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'  => 'required|email|max:50|exists:users,email',
+            'email'  => 'required|email|max:50|'.Rule::exists('users', 'email')->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             'purpose'=> 'required|in:forget_password,verify_email,two_factor_verification',
         ];
     }
