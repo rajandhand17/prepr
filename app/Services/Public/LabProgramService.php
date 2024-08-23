@@ -41,6 +41,7 @@ class LabProgramService
                 $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
             }
             if ($request->has('request_status') && !empty($request->request_status)) {
+                $labProgramIds = null;
                 $userData = auth('api')->user();
                 switch ($request->request_status) {
                     case 'accepted':
@@ -50,7 +51,9 @@ class LabProgramService
                         $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '2');
                         break;
                 }
-                $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
+                if ($labProgramIds) {
+                    $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
+                }
             }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
