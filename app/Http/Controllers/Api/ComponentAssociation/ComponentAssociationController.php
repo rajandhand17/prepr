@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ComponentAssociation;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\ComponentShareResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
@@ -959,7 +960,7 @@ class ComponentAssociationController extends AppBaseController
     public function getComponentShareBasedOnOtherComponent($component, $slug)
     {
         try {
-            if (!in_array($component, ['lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group'])) {
+            if (!in_array($component, ['lab', 'challenge', 'project'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 402);
             }
 
@@ -969,17 +970,12 @@ class ComponentAssociationController extends AppBaseController
             }
 
             $generateURL = UtilityHelper::generateURL($component, $checkComponentBasedOnSlug->slug);
-            $text = 'Check this out!';
-            $shareLinks = [
-                'facebook' => 'https://www.facebook.com/sharer/sharer.php?u='. $generateURL,
-                'twitter' => 'https://twitter.com/intent/tweet?url=' . $generateURL . '&text=' . urlencode($text),
-                'linkedin' => 'https://www.linkedin.com/shareArticle?url=' . $generateURL . '&title=' . urlencode($text),
-                'whatsapp' => 'https://api.whatsapp.com/send?text=' . $generateURL,
-            ];
+            if ($generateURL != false) {
+                return $this->sendResponse(ComponentShareResource::make($generateURL), __('responses.share_url_generated'), 200);
+            }
 
-            return response()->json($shareLinks);
+            return $this->sendError(__('responses.share_url_generated_failed'), 404);
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
