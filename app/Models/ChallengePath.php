@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Builder\ChallengePathBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ChallengePath extends Model
@@ -139,5 +141,21 @@ class ChallengePath extends Model
         }
 
         return 'N/A';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function challengePathProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'module_id')->where('module_type', '=', '3');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function labs(): BelongsToMany
+    {
+        return $this->belongsToMany(Lab::class, 'component_associations', 'challenge_path_id', 'lab_id');
     }
 }

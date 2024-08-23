@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Accessor\ChallengeAccessor;
 use App\Models\Builder\ChallengeBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Challenge extends Model
 {
     use HasFactory;
+    use ChallengeAccessor;
     use SoftDeletes;
 
     protected $table = 'challenges';
@@ -41,6 +45,7 @@ class Challenge extends Model
         'is_accessible',
         'allow_winner_change',
         'winner_select_date',
+        'views_count',
     ];
 
     public function newEloquentBuilder($query): ChallengeBuilder
@@ -96,6 +101,14 @@ class Challenge extends Model
     public function levels()
     {
         return $this->belongsTo(Levels::class, 'level_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function achievements(): HasMany
+    {
+        return $this->hasMany(ChallengeAchievement::class, 'challenge_id', 'id');
     }
 
     public function participation_achievement()
@@ -163,6 +176,11 @@ class Challenge extends Model
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '2', 'invite_status' => '1']);
     }
 
+    public function allMembers()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '2']);
+    }
+
     public function joined()
     {
         if (auth('api')->check()) {
@@ -205,6 +223,11 @@ class Challenge extends Model
         return $this->hasMany(Project::class, 'challenge_id', 'id')->where('is_submitted', '1');
     }
 
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'challenge_id', 'id');
+    }
+
     public function challenge_association()
     {
         return $this->hasMany(ComponentAssociation::class, 'challenge_id', 'id');
@@ -235,7 +258,7 @@ class Challenge extends Model
      */
     public function scorm(): MorphOne
     {
-        return $this->morphOne(Scorm::class, 'model');
+        return $this->morphOne(Scorm::class, 'model')->latest();
     }
 
     public function challenge_completion_status()
@@ -252,8 +275,59 @@ class Challenge extends Model
         return $this->hasMany(ChallengeTypeMode::class, 'challenge_id', 'id')->where(['type_mode' => '0']);
     }
 
+    public function challengeTyp()
+    {
+        return $this->hasMany(ChallengeTypeMode::class, 'challenge_id', 'id')->where(['type_mode' => '0']);
+    }
+
     public function challengeMode()
     {
         return $this->hasMany(ChallengeTypeMode::class, 'challenge_id', 'id')->where(['type_mode' => '1']);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function challengeProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'module_id')->where('module_type', '=', '2');
+    }
+
+    public function labs(): BelongsToMany
+    {
+        return $this->belongsToMany(Lab::class, 'component_associations', 'challenge_id', 'lab_id');
+    }
+
+    public function challengePaths(): BelongsToMany
+    {
+        return $this->belongsToMany(ChallengePath::class, 'component_associations', 'challenge_id', 'challenge_path_id');
+    }
+
+    public function labPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(LabProgram::class, 'component_associations', 'challenge_id', 'lab_program_id');
+    }
+
+    public function resourceModules(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceModule::class, 'component_associations', 'challenge_id', 'resource_module_id');
+    }
+
+    public function resourceCollections(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceCollection::class, 'component_associations', 'challenge_id', 'resource_collection_id');
+    }
+
+    public function resourceGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceGroup::class, 'component_associations', 'challenge_id', 'resource_group_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '2');
     }
 }

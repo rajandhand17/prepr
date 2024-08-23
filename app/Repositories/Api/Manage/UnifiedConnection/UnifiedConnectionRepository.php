@@ -4,7 +4,6 @@ namespace App\Repositories\Api\Manage\UnifiedConnection;
 
 use App\Helpers\Unified\UnifiedHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\User;
 use App\Services\Manage\UnifiedConnectionService;
 use Illuminate\Support\Facades\DB;
 
@@ -18,12 +17,12 @@ class UnifiedConnectionRepository implements UnifiedConnectionInterface
     }
 
     /**
-     * @param      $data
-     * @param User $user
+     * @param $data
+     * @param $user
      *
      * @return array|false
      */
-    public function getIntegrations($data, User $user): array|false
+    public function getIntegrations($data, $user): array|false
     {
         try {
             return $this->unifiedConnectionService->getIntegrations($data, $user);
