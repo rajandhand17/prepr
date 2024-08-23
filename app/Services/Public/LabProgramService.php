@@ -51,7 +51,7 @@ class LabProgramService
                         $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '2');
                         break;
                 }
-                if($labProgramIds){
+                if ($labProgramIds) {
                     $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
                 }
             }
