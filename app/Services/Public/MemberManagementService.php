@@ -178,4 +178,15 @@ class MemberManagementService
             return false;
         }
     }
+
+    public static function getModuleIdsBasedOnParam($userData,$module_type, $inviteStatus)
+    {
+        try {
+            return MemberManagement::where(['module_type' => $module_type, 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
