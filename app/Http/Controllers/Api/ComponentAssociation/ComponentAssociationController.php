@@ -966,7 +966,7 @@ class ComponentAssociationController extends AppBaseController
 
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
             if (!$checkComponentBasedOnSlug) {
-                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
             }
 
             $generateURL = UtilityHelper::generateURL($component, $checkComponentBasedOnSlug->slug);
