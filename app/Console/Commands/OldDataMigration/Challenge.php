@@ -191,39 +191,39 @@ class Challenge extends Command
                             break;
                     }
 
-                    $getTagGroups =  DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $challenge->id, 'module_type' => 'challenge']);
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $challenge->id, 'module_type' => 'challenge']);
                     // Clone the query to avoid modifying the original
                     $getDuration = clone $getTagGroups;
                     $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
-                    if($duration) {
-                        if($duration == '["169"]') {
+                    if ($duration) {
+                        if ($duration == '["169"]') {
                             $duration_id = '1';
-                        } else if($duration == '["170"]') {
+                        } elseif ($duration == '["170"]') {
                             $duration_id = '2';
-                        } else if($duration == '["171"]') {
+                        } elseif ($duration == '["171"]') {
                             $duration_id = '3';
-                        } else if($duration == '["172"]') {
+                        } elseif ($duration == '["172"]') {
                             $duration_id = '4';
-                        } else if($duration == '["173"]') {
+                        } elseif ($duration == '["173"]') {
                             $duration_id = '5';
-                        } else if($duration == '["174"]') {
+                        } elseif ($duration == '["174"]') {
                             $duration_id = '6';
                         }
                     }
                     $getLevel = clone $getTagGroups;
                     $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
-                    if($level) {
-                        if($level == '["157"]') {
+                    if ($level) {
+                        if ($level == '["157"]') {
                             $level_id = '1';
-                        } else if($level == '["158"]') {
+                        } elseif ($level == '["158"]') {
                             $level_id = '2';
-                        } else if($level == '["159"]') {
+                        } elseif ($level == '["159"]') {
                             $level_id = '3';
-                        } else if($level == '["160"]') {
+                        } elseif ($level == '["160"]') {
                             $level_id = '4';
                         }
                     }
-                   
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
@@ -281,18 +281,17 @@ class Challenge extends Command
                         }
                     }
 
-                    //for mode and type 
+                    //for mode and type
                     $getMode = clone $getTagGroups;
                     $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
-                    if($mode) {
-                        $modes = (json_decode($mode, true));
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '1'])->delete();
-                            foreach ($modes as $single_mode)
-                            {
-                                if ($single_mode == '196'){
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
                                     $mode_id = '4';
-                                } else if($single_mode == '197') {
+                                } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
                                 $challengeMode = new ChallengeTypeMode();
@@ -300,25 +299,24 @@ class Challenge extends Command
                                 $challengeMode->type_mode = '1';
                                 $challengeMode->value = $mode_id;
                                 $challengeMode->save();
-                            } 
+                            }
                         }
                     }
 
                     $getType = clone $getTagGroups;
                     $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
-                    if($type) {
-                        $types = (json_decode($type, true));
+                    if ($type) {
+                        $types = json_decode($type, true);
                         if (!empty($types)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '0'])->delete();
-                            foreach ($types as $single_type)
-                            {
-                                if ($single_type == '192'){
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
                                     $type_id = '0';
-                                } else if($single_type == '193') {
+                                } elseif ($single_type == '193') {
                                     $type_id = '1';
-                                } else if($single_type == '194') {
+                                } elseif ($single_type == '194') {
                                     $type_id = '2';
-                                } else if($single_type == '195') {
+                                } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
                                 $challengeMode = new ChallengeTypeMode();
@@ -326,7 +324,7 @@ class Challenge extends Command
                                 $challengeMode->type_mode = '0';
                                 $challengeMode->value = $type_id;
                                 $challengeMode->save();
-                            } 
+                            }
                         }
                     }
 
