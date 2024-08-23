@@ -242,7 +242,7 @@ class UtilityHelper
     {
         try {
             $frontEndUrl = self::sanitizeUrl(config('site-settings.frontend_site_url'));
-            $componentFrontEndUrl = sprintf('%s/' . $component . '/%s', $frontEndUrl, $slug);
+            $componentFrontEndUrl = sprintf('%s/'.$component.'/%s', $frontEndUrl, $slug);
 
             return $componentFrontEndUrl;
         } catch (\Exception $e) {
