@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class VerifyInviteCodeRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class VerifyInviteCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'referral_code'=> 'required|exists:users,referral_code',
+            'referral_code'=> 'required|'.Rule::exists('users', 'referral_code')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

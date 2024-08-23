@@ -4,6 +4,7 @@ namespace App\Http\Requests\Chat;
 
 use App\Http\Requests\BaseRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
 
 class CreateConversationRequest extends BaseRequest
 {
@@ -23,7 +24,10 @@ class CreateConversationRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'usernames' => 'required|exists:users,username',
+            'usernames' => 'required|'.
+            Rule::exists('users', 'username')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'type'      => 'required|in:announcement,message',
         ];
     }
