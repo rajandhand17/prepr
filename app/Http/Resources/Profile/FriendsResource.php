@@ -16,7 +16,7 @@ class FriendsResource extends JsonResource
     {
         $profile = $this->reference_id == auth()->user()->id ? $this->getFriendsProfileBasedOnUserId : $this->getFriendsProfilebasedOnReference;
         $data = [];
-        if($profile){
+        if ($profile) {
             $data = [
                 'id'            => $profile->id,
                 'first_name'    => $profile->first_name,
