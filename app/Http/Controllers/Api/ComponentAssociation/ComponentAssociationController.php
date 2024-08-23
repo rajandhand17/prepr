@@ -955,4 +955,34 @@ class ComponentAssociationController extends AppBaseController
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
+
+    public function getComponentShareBasedOnOtherComponent($component, $slug)
+    {
+        try {
+            if (!in_array($component, ['lab', 'lab-program', 'challenge', 'challenge-path', 'resource-module', 'resource-collection', 'resource-group'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component) . ' ' . __('responses.not_found_required'), 404);
+            }
+
+            $generateURL = UtilityHelper::generateURL($component, $checkComponentBasedOnSlug->slug);
+            $text = 'Check this out!';
+            $shareLinks = [
+                'facebook' => 'https://www.facebook.com/sharer/sharer.php?u='. $generateURL,
+                'twitter' => 'https://twitter.com/intent/tweet?url=' . $generateURL . '&text=' . urlencode($text),
+                'linkedin' => 'https://www.linkedin.com/shareArticle?url=' . $generateURL . '&title=' . urlencode($text),
+                'whatsapp' => 'https://api.whatsapp.com/send?text=' . $generateURL,
+            ];
+
+            return response()->json($shareLinks);
+        } catch (Exception $e) {
+            dd($e);
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
 }
