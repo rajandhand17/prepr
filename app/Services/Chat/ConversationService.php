@@ -325,6 +325,9 @@ class ConversationService
                 $conversation->where(function ($query) use ($searchText) {
                     $query->WhereHas('users', function ($query) use ($searchText) {
                         $query->whereRaw('LOWER(full_name) LIKE ?', ['%'.strtolower($searchText).'%']);
+                        $query->orWhereRaw('LOWER(first_name) LIKE ?', ['%'.strtolower($searchText).'%']);
+                        $query->orWhereRaw('LOWER(last_name) LIKE ?', ['%'.strtolower($searchText).'%']);
+
                     });
                 });
             }
