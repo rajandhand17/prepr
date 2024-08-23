@@ -28,8 +28,8 @@ class ResetPasswordFormRequest extends FormRequest
     {
         return [
             'email'                 => 'required|email|'.Rule::exists('users', 'email')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'password'              => 'required|min:6',
             'password_confirmation' => 'required|same:password',
             'otp'                   => 'required',

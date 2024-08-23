@@ -56,38 +56,38 @@ class UpdateChallengeRequest extends FormRequest
             'cover_banner_type'                     => 'required_if:request_type,publish|in:image,embedded,none',
             'skill_groups'                          => 'nullable|array',
             'skill_groups.*'                        => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'skill_stacks'                          => 'nullable|array',
             'skill_stacks.*'                        => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'host_id'                               => 'nullable|array',
             'host_id.*'                             => 'numeric|'.Rule::exists('hosts', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'type'                                  => 'nullable|array',
             'type.*'                                => 'in:assess,onboard,engage,grow',
             'mode'                                  => 'nullable|array',
             'mode.*'                                => 'in:team,individual',
             'source_link'                           => 'nullable|url',
             'category_id'                           => 'nullable|'.Rule::exists('categories', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'jobs'                                  => 'nullable|array',
             'jobs.*'                                => 'numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links'                        => 'array',
             'external_link_ids'                     => 'array|'.Rule::exists('social_links', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'external_links.*'                      => 'url|max:700',
             'external_link_ids.*'                   => 'numeric',
             'template_type'                         => 'required_if:request_type,publish|in:existing,new',
             'template_id'                           => 'required_if:template_type,existing|numeric|'.Rule::exists('pitch_templates', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
             'project_submission_requirement_ids'    => 'required_if:request_type,publish|array',
             'allow_submit_project'                  => 'in:yes,no',
             'complete_education_program'            => 'in:yes,no',
@@ -188,16 +188,16 @@ class UpdateChallengeRequest extends FormRequest
         if ($this->request->has('labs')) {
             $base_rules['labs'] = 'array';
             $base_rules['labs.*'] = Rule::exists('labs', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                });
+                $query->whereNull('deleted_at');
+            });
         }
 
         // Challenge Association code with lab programs
         if ($this->request->has('lab_programs')) {
             $base_rules['lab_programs'] = 'array';
             $base_rules['lab_programs.*'] = Rule::exists('lab_programs', 'uuid')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                });
+                $query->whereNull('deleted_at');
+            });
         }
 
         // Challenge Association code with resource module
@@ -211,7 +211,7 @@ class UpdateChallengeRequest extends FormRequest
         // Challenge Association code with resource collection
         if ($this->request->has('resource_collections')) {
             $base_rules['resource_collections'] = 'array';
-            $base_rules['resource_collections.*'] =Rule::exists('resource_collections', 'uuid')->where(function ($query) {
+            $base_rules['resource_collections.*'] = Rule::exists('resource_collections', 'uuid')->where(function ($query) {
                 $query->whereNull('deleted_at');
             });
         }

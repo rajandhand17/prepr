@@ -28,8 +28,8 @@ class ForgetPasswordRequest extends FormRequest
     {
         return [
             'email' => 'required|email|max:50|'.Rule::exists('users', 'email')->where(function ($query) {
-        $query->whereNull('deleted_at');
-    }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 

@@ -30,7 +30,7 @@ class CreateLabUsingAIPreviewRequest extends FormRequest
                 $query->whereNull('deleted_at');
             }),
             'level_id'                              => 'required',
-            'level_id.*.key'                        =>  Rule::exists('levels', 'id')->where(function ($query) {
+            'level_id.*.key'                        => Rule::exists('levels', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
             'additional_information'                => 'nullable',

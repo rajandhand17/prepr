@@ -26,8 +26,8 @@ class AddJobsRequest extends FormRequest
     {
         return [
             'job_id' => 'required|integer|'.Rule::exists('job_titles', 'id')->where(function ($query) {
-                    $query->whereNull('deleted_at');
-                }),
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 
