@@ -13,8 +13,7 @@ class LabReportRepository implements LabReportInterface
     public function __construct(
         protected LabReportService $labReportService,
         protected LabProgramReportService $labProgramReportService
-    )
-    {
+    ) {
     }
 
     public function getLabEngagement(Lab $lab): false|array
