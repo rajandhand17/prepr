@@ -62,6 +62,7 @@ class ResourceGroupAchievementService
     {
         try {
             $checkExistsResourceGroupAchievement = ResourceGroupAchievement::where('resource_group_id', $updateResourceGroupId)->first();
+
             if (!$checkExistsResourceGroupAchievement) {
                 $resourceGroupAchievement = new ResourceGroupAchievement();
                 $resourceGroupAchievement->resource_group_id = $updateResourceGroupId;
@@ -72,9 +73,11 @@ class ResourceGroupAchievementService
 
                 return true;
             }
+            $baseUrl = config('site-settings.aws_url');
+            $relativeImagePath = str_replace($baseUrl, '', $checkExistsResourceGroupAchievement->achievement_image);
             $checkExistsResourceGroupAchievement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsResourceGroupAchievement->achievement_name;
             $checkExistsResourceGroupAchievement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsResourceGroupAchievement->achievement_points;
-            $checkExistsResourceGroupAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsResourceGroupAchievement->achievement_image;
+            $checkExistsResourceGroupAchievement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $relativeImagePath;
             $checkExistsResourceGroupAchievement->save();
 
             return true;
