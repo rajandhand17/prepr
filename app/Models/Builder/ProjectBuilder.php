@@ -4,6 +4,7 @@ namespace App\Models\Builder;
 
 use App\Helpers\Solr\SolrBaseHelper;
 use App\Helpers\Solr\SolrProjectHelper;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProjectBuilder extends BaseBuilder
 {
@@ -45,6 +46,22 @@ class ProjectBuilder extends BaseBuilder
             return $this->where(function ($query) {
                 $query->where('user_id', '=', auth()->id())->orWhere('privacy', '=', '0')->orWhere('user_id', '=', auth()->id());
             });
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $assessment
+     *
+     * @return $this|ProjectBuilder|Builder
+     */
+    public function whereAssessment(string $assessment)
+    {
+        if ($assessment === 'assessed') {
+            return $this->whereHas('challengeAssessmentUsers');
+        } elseif ($assessment === 'pending') {
+            return $this->whereDoesntHave('challengeAssessmentUsers');
         }
 
         return $this;

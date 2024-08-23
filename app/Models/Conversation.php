@@ -87,7 +87,7 @@ class Conversation extends Model
         if ($this->type === 'direct_message') {
             $user = $this->users()->where('id', '!=', auth()->user()->id)->first();
 
-            return $user->full_name;
+            return $user->full_name ?? null;
         }
 
         return null;

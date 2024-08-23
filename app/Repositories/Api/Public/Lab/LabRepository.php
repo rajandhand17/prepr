@@ -178,6 +178,16 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+    public function incrementView(Lab $lab)
+    {
+        try {
+            return $this->labService->incrementView($lab);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 
     public function fetchHistory($moduleId)
     {
@@ -185,7 +195,6 @@ class LabRepository implements LabInterface
             return $this->labHistoryService->fetchHistory($moduleId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }

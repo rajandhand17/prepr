@@ -55,6 +55,10 @@ abstract class BaseBuilder extends Builder
      */
     public function whereSearchFilter(string|null $keyword, array $filters = [], ?string $additionalQuery = null, ?int $rows = 2000): self
     {
+        if (!$keyword) {
+            return $this;
+        }
+
         // APPLICATION LANG
         $lang = app()->getLocale();
 
