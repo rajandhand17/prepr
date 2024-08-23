@@ -7,7 +7,7 @@ trait UserAccessor
     /**
      * @return array
      */
-    public function getCompletionCountByModuleAttribute(): array
+    public function getFormattedCompletionCountByModuleAttribute(): array
     {
         $totalLabCompleted = $this->labsProgress()
             ->where('percentage', '=', '100')->orWhere('is_completed', '=', '1')->orWhere('status', '=', '2')->count();
@@ -25,7 +25,7 @@ trait UserAccessor
         ];
     }
 
-    public function getLastLoginDateAttribute()
+    public function getFormattedLastLoginDateAttribute()
     {
         $lastLogin = $this->userActivities()
             ->where('activity_type', 'login')
@@ -35,7 +35,7 @@ trait UserAccessor
         return $lastLogin ? $lastLogin->created_at : null;
     }
 
-    public function getLoginStatusAttribute(): string
+    public function getFormattedLoginStatusAttribute(): string
     {
         $lastLogin = $this->userActivities()
             ->where('activity_type', 'login')
