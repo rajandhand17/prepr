@@ -5,6 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class ResetPasswordFormRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class ResetPasswordFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'                 => 'required|email|exists:users,email',
+            'email'                 => 'required|email|'.Rule::exists('users', 'email')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'password'              => 'required|min:6',
             'password_confirmation' => 'required|same:password',
             'otp'                   => 'required',

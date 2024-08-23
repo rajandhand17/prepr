@@ -5,6 +5,7 @@ namespace App\Http\Requests\Public\Skill;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddSkillRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class AddSkillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'skill_id'   => 'required|exists:skills,id',
+            'skill_id'   => 'required|'.Rule::exists('skills', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'pinned'     => 'in:yes,no',
         ];
     }
