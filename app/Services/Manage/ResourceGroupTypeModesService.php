@@ -91,6 +91,7 @@ class ResourceGroupTypeModesService
                     $cloneResourceGroupSKills->save();
                 }
             });
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
