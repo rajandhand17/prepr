@@ -1423,5 +1423,10 @@
     "responses.late_submission_reason_required": "late submission reason is requried",
     "responses.type_image": "The :attribute must be an image.",
     "responses.updated_file_privacy_failed" :  "Failed to update File Privacy.",
-    "responses.updated_file_privacy": "File Privacy updated successfully."
+    "responses.updated_file_privacy": "File Privacy updated successfully.",
+    "responses.share_url_lab": "Check out this Lab on Prepr: ",
+    "responses.share_url_challenge": "Check out this Challenge on Prepr: ",
+    "responses.share_url_project": "Check out this Project on Prepr: ",
+    "responses.share_url_generated_failed": "Failed to generate share url.",
+    "responses.share_url_generated": "Share Url generated successfully."
 }
