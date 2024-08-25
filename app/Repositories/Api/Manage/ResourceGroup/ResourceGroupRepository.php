@@ -239,7 +239,6 @@ class ResourceGroupRepository implements ResourceGroupInterface
 
             return false;
         } catch(\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             DB::rollback();
 
