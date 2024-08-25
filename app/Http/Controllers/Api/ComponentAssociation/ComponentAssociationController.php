@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\ComponentAssociation;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\ComponentShareResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
@@ -949,6 +950,31 @@ class ComponentAssociationController extends AppBaseController
             }
 
             return $this->sendResponse($response, $message, 200);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function getComponentShareBasedOnOtherComponent($component, $slug)
+    {
+        try {
+            if (!in_array($component, ['lab', 'challenge', 'project'])) {
+                return $this->sendError(__('responses.handler_bad_request'), 402);
+            }
+
+            $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(ucfirst($component).' '.__('responses.not_found_required'), 404);
+            }
+
+            $generateURL = UtilityHelper::generateURL($component, $checkComponentBasedOnSlug->slug);
+            if ($generateURL != false) {
+                return $this->sendResponse(ComponentShareResource::make($generateURL), __('responses.share_url_generated'), 200);
+            }
+
+            return $this->sendError(__('responses.share_url_generated_failed'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
