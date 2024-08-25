@@ -96,8 +96,9 @@ class ResourceGroupController extends AppBaseController
                 return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_collection_successfully'));
             }
 
-            return $this->sendError(__('responses.clone_responses_failed'), 400);
+            return $this->sendError(__('responses.clone_responses_group_failed'), 400);
         } catch(\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

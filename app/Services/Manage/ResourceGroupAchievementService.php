@@ -91,10 +91,13 @@ class ResourceGroupAchievementService
     public static function cloneResourceGroupsAchievements($originalResourceGroupAssociation, $clonedResourceGroupId)
     {
         try {
-            $resourceGroup = new ResourceGroupAchievement();
-            $resourceGroup = $originalResourceGroupAssociation->replicate();
-            $resourceGroup->resource_group_id = $clonedResourceGroupId;
-            $resourceGroup->save();
+            if($originalResourceGroupAssociation!==null){
+                $resourceGroup = new ResourceGroupAchievement();
+                $resourceGroup = $originalResourceGroupAssociation->replicate();
+                $resourceGroup->resource_group_id = $clonedResourceGroupId;
+                $resourceGroup->save();
+            }
+           
 
             return true;
         } catch(\Exception $e) {
