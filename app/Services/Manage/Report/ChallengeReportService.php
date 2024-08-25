@@ -601,11 +601,11 @@ class ChallengeReportService
 
             $arr = [
                 ['Challenge Title', $challenge->title],
-                ['Status', $challenge->challengeStatus],
+                ['Status', $challenge->formattedChallengeStatus],
                 ['Deadline', $challenge->challenge_timelines->submission_deadline_date],
-                ['Level', data_get($challenge->challengeLevel, 'title')],
-                ['Duration', data_get($challenge->challengeDuration, 'title')],
-                ['Privacy', $challenge->challengePrivacy],
+                ['Level', data_get($challenge->formattedChallengeLevel, 'title')],
+                ['Duration', data_get($challenge->formattedChallengeDuration, 'title')],
+                ['Privacy', $challenge->formattedChallengePrivacy],
                 ['Pricing', ''],
                 ['Members Joined', $challenge->members_count],
                 ['Project Submission', $challenge->submitted_projects_count],

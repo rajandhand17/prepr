@@ -579,10 +579,10 @@ class LabReportService
 
             $arr = [
                 ['Lab Title', $lab->title],
-                ['Privacy', $lab->labPrivacy],
+                ['Privacy', $lab->formattedLabPrivacy],
                 ['Pricing', ''],
-                ['Level', data_get($lab->labLevel, 'title')],
-                ['Duration', data_get($lab->labDuration, 'title')],
+                ['Level', data_get($lab->formattedLabLevel, 'title')],
+                ['Duration', data_get($lab->formattedLabDuration, 'title')],
                 ['Members Joined', $lab->members_count],
                 [''],
                 ['Components Overview'],
