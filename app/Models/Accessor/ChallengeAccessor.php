@@ -20,7 +20,7 @@ trait ChallengeAccessor
         }
 
         return [
-            'id' => $duration->id,
+            'id'    => $duration->id,
             'title' => UtilityHelper::isEngLocale() ? $duration->title : $duration->fr_CA_title,
         ];
     }
@@ -47,7 +47,7 @@ trait ChallengeAccessor
         }
 
         return [
-            'id' => $level->id,
+            'id'    => $level->id,
             'title' => UtilityHelper::isEngLocale() ? $level->title : $level->fr_CA_title,
         ];
     }

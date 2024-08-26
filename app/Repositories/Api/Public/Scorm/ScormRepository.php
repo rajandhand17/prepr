@@ -17,8 +17,8 @@ class ScormRepository implements ScormInterface
     }
 
     /**
-     * @param string $uuid
-     * @param User|null   $scormUser
+     * @param string    $uuid
+     * @param User|null $scormUser
      *
      * @return Scorm|false|null
      */
