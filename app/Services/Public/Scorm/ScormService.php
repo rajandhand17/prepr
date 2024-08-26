@@ -11,35 +11,39 @@ use App\Services\Manage\Scorm\Utils\ScormArchiver;
 class ScormService
 {
     /**
-     * @param ScormArchiver         $scormArchiver
-     * @param ScormScoService       $scormScoService
+     * @param ScormArchiver $scormArchiver
+     * @param ScormScoService $scormScoService
      * @param ScormUserTokenService $scormUserTokenService
      */
     public function __construct(
-        protected ScormArchiver $scormArchiver,
-        protected ScormScoService $scormScoService,
+        protected ScormArchiver         $scormArchiver,
+        protected ScormScoService       $scormScoService,
         protected ScormUserTokenService $scormUserTokenService
-    ) {
+    )
+    {
     }
 
     /**
      * @param string $uuid
-     * @param User   $scormUser
+     * @param User|null $scormUser
      *
      * @return Scorm|false|null
      */
-    public function getScorm(string $uuid, User $scormUser): null|Scorm|false
+    public function getScorm(string $uuid, User|null $scormUser): null|Scorm|false
     {
         try {
             /** @var Scorm $scorm */
             $scorm = Scorm::query()
                 ->where(['uuid' => $uuid])
                 ->with(['scos' => function ($query) use ($scormUser) {
-                    $query->with(['scorm', 'children.scoTracking' => function ($query) use ($scormUser) {
-                        $query->where('user_id', '=', $scormUser->id);
-                    }, 'scoTracking' => function ($query) use ($scormUser) {
-                        $query->where('user_id', '=', $scormUser->id);
-                    }])->where('sco_parent_id', '=', null);
+                    if ($scormUser) {
+                        $query->with(['scorm', 'children.scoTracking' => function ($query) use ($scormUser) {
+                            $query->where('user_id', '=', $scormUser->id);
+                        }, 'scoTracking' => function ($query) use ($scormUser) {
+                            $query->where('user_id', '=', $scormUser->id);
+                        }]);
+                    }
+                    $query->where('sco_parent_id', '=', null);
                 }])->firstOrFail();
 
             return $scorm;
@@ -79,7 +83,7 @@ class ScormService
             }
 
             return [
-                'binary'       => $this->scormArchiver->storage->get($url),
+                'binary' => $this->scormArchiver->storage->get($url),
                 'content_type' => $contentType,
             ];
         } catch (\Exception $exception) {
@@ -119,21 +123,23 @@ class ScormService
      *
      * @return false|string
      */
-    public function generateScormPlayerUrl(Scorm $scorm): false|string
+    public function generateScormPlayerUrl(Scorm $scorm, $trackingId = true): false|string
     {
         try {
-            /** @var User $authUser */
-            $authUser = auth()->user();
-            $scormUserToken = $this->scormUserTokenService->getUserScormToken($authUser);
-            if (!$scormUserToken) {
-                return false;
+            if ($trackingId) {
+                /** @var User $authUser */
+                $authUser = auth()->user();
+                $scormUserToken = $this->scormUserTokenService->getUserScormToken($authUser);
+                if (!$scormUserToken) {
+                    return false;
+                }
             }
 
             return sprintf(
                 '%s/scorm-player/%s?tracking_id=%s&language=%s',
                 UtilityHelper::sanitizeUrl(config('scorm.scorm_app_base_url', '')),
                 $scorm->uuid,
-                $scormUserToken->token,
+                isset($scormUserToken) ? $scormUserToken->token : '',
                 app()->getLocale()
             );
         } catch (\Exception $exception) {

@@ -4,6 +4,7 @@ namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengeSocialActivity;
+use App\Repositories\Api\Public\Scorm\ScormRepository;
 
 trait ChallengeAccessor
 {
@@ -19,7 +20,7 @@ trait ChallengeAccessor
         }
 
         return [
-            'id'    => $duration->id,
+            'id' => $duration->id,
             'title' => UtilityHelper::isEngLocale() ? $duration->title : $duration->fr_CA_title,
         ];
     }
@@ -46,7 +47,7 @@ trait ChallengeAccessor
         }
 
         return [
-            'id'    => $level->id,
+            'id' => $level->id,
             'title' => UtilityHelper::isEngLocale() ? $level->title : $level->fr_CA_title,
         ];
     }
@@ -123,5 +124,17 @@ trait ChallengeAccessor
     public function getFormattedAchievementPointsAttribute(): int
     {
         return $this->achievements()->sum('achievement_points');
+    }
+
+    public function getFormattedScormUrlAttribute(): false|string|null
+    {
+        /** @var ScormRepository $scormRepository */
+        $scormRepository = app()->make(ScormRepository::class);
+        $scorm = $this->scorm;
+        if ($scorm) {
+            return $scormRepository->generateScormPlayerUrl($scorm, false);
+        }
+
+        return null;
     }
 }

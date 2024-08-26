@@ -26,7 +26,7 @@ class ScormController extends AppBaseController
     public function show(Request $request, string $uuid): JsonResponse
     {
         try {
-            $scormUser = $request->get('scormUser');
+            $scormUser = $request->get('scormUser') ?? null;
             $scormDetails = $this->scormRepository->getScorm($uuid, $scormUser);
 
             if ($scormDetails) {
