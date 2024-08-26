@@ -11,20 +11,19 @@ use App\Services\Manage\Scorm\Utils\ScormArchiver;
 class ScormService
 {
     /**
-     * @param ScormArchiver $scormArchiver
-     * @param ScormScoService $scormScoService
+     * @param ScormArchiver         $scormArchiver
+     * @param ScormScoService       $scormScoService
      * @param ScormUserTokenService $scormUserTokenService
      */
     public function __construct(
-        protected ScormArchiver         $scormArchiver,
-        protected ScormScoService       $scormScoService,
+        protected ScormArchiver $scormArchiver,
+        protected ScormScoService $scormScoService,
         protected ScormUserTokenService $scormUserTokenService
-    )
-    {
+    ) {
     }
 
     /**
-     * @param string $uuid
+     * @param string    $uuid
      * @param User|null $scormUser
      *
      * @return Scorm|false|null
@@ -83,7 +82,7 @@ class ScormService
             }
 
             return [
-                'binary' => $this->scormArchiver->storage->get($url),
+                'binary'       => $this->scormArchiver->storage->get($url),
                 'content_type' => $contentType,
             ];
         } catch (\Exception $exception) {
