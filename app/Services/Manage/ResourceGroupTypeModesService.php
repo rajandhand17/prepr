@@ -84,11 +84,13 @@ class ResourceGroupTypeModesService
     public static function cloneResourceGroupTypeModes($originalResourceGroupAssociation, $clonedResourceGroupId)
     {
         try {
-            if ($originalResourceGroupAssociation) {
-                $cloneResourceGroupSKills = $originalResourceGroupAssociation->replicate();
-                $cloneResourceGroupSKills->resource_group_id = $clonedResourceGroupId;
-                $cloneResourceGroupSKills->save();
-            }
+            $originalResourceGroupAssociation->each(function ($association) use ($clonedResourceGroupId) {
+                if ($association) {
+                    $cloneResourceGroupSKills = $association->replicate();
+                    $cloneResourceGroupSKills->resource_group_id = $clonedResourceGroupId;
+                    $cloneResourceGroupSKills->save();
+                }
+            });
 
             return true;
         } catch (\Exception $e) {
