@@ -226,9 +226,9 @@ class Challenge extends Command
                         }
                     }
 
-                    $createdAt = $challenge->created_at != null ? Carbon::createFromTimestamp($challenge->created_at)->translatedFormat("Y-m-d H:i:s") : null;
-                    $updatedAt = $challenge->updated_at != null ? Carbon::createFromTimestamp($challenge->updated_at)->translatedFormat("Y-m-d H:i:s") : null;
-                    $deletedAt = $challenge->deleted_at != null ? Carbon::createFromTimestamp($challenge->deleted_at)->translatedFormat("Y-m-d H:i:s") : null;
+                    $createdAt = $challenge->created_at != null ? Carbon::createFromTimestamp($challenge->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $updatedAt = $challenge->updated_at != null ? Carbon::createFromTimestamp($challenge->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $deletedAt = $challenge->deleted_at != null ? Carbon::createFromTimestamp($challenge->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
 
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
