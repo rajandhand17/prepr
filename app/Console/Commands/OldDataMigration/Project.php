@@ -157,8 +157,8 @@ class Project extends Command
                     $newProject->media = $project->image ?? null;
                     $newProject->privacy = $projectPrivacy;
                     $newProject->recruiting_status = $projectRecruitingStatus;
-                    $newProject->challenge_id = $fetchChallenge!= null ? $fetchChallenge->id : null;
-                    $newProject->lab_id = $fetchLab!= null ? $fetchLab->id : null;
+                    $newProject->challenge_id = $fetchChallenge != null ? $fetchChallenge->id : null;
+                    $newProject->lab_id = $fetchLab != null ? $fetchLab->id : null;
                     $newProject->total_share = $project->total_share;
                     $newProject->is_submitted = $submissionType;
                     $newProject->late_submission_reason = $submissionDescription;
@@ -223,7 +223,6 @@ class Project extends Command
                         }
                     }
 
-
                     $newProjectAdditionalInfo->project_id = $project->id;
                     $newProjectAdditionalInfo->category_id = $category;
                     $newProjectAdditionalInfo->industry_id = $industry;
@@ -232,7 +231,6 @@ class Project extends Command
                     $newProjectAdditionalInfo->stage_id = $stage;
                     $newProjectAdditionalInfo->status_id = $status;
                     $newProjectAdditionalInfo->save();
-
 
                     // For Project skills table
                     $arraySkills = json_decode($project->skills, true);
