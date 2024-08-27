@@ -5,9 +5,9 @@ namespace App\Repositories\Api\Public\Lab;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\User;
+use App\Services\LabHistoryService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Public\LabService;
-use App\Services\LabHistoryService;
 use App\Services\Public\LabSocialActivitiesService;
 
 class LabRepository implements LabInterface
@@ -178,6 +178,7 @@ class LabRepository implements LabInterface
             return false;
         }
     }
+
     public function incrementView(Lab $lab)
     {
         try {
@@ -195,6 +196,7 @@ class LabRepository implements LabInterface
             return $this->labHistoryService->fetchHistory($moduleId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }

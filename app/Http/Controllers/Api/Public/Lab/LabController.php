@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Public\Lab;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabHistoryResource;
+use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Models\AirmeetEvent;
 use App\Models\User;
@@ -309,6 +309,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
         }
     }
+
     public function labHistory($slug)
     {
         try {

@@ -8,12 +8,12 @@ use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
+use App\Services\LabHistoryService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
-use App\Services\LabHistoryService;
 use stdClass;
 
 class MemberManagementService
@@ -456,14 +456,14 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
-                            
-                            if($component == 'lab' && $member['type'] == '1' && $module_type == '1') {
+
+                            if ($component == 'lab' && $member['type'] == '1' && $module_type == '1') {
                                 $userId = auth()->user()->id;
                                 $activity = auth()->user()->full_name.' '.__('responses.lab_joined_activity').' '.$componentCollectionObject->title;
-                                $labHistoryService = new LabHistoryService;
+                                $labHistoryService = new LabHistoryService();
                                 $labHistoryService->storeHistory($componentCollectionObject->id, $userId, $activity);
                             }
-                            
+
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
@@ -590,10 +590,10 @@ class MemberManagementService
                     $request->title = $lab->title;
                     $request->category = $lab->category_id;
 
-                    if($component == 'lab'){
+                    if ($component == 'lab') {
                         $userId = auth()->user()->id;
                         $activity = auth()->user()->full_name.' '.__('responses.lab_un_joined_activity').' '.$lab->title;
-                        $labHistoryService = new LabHistoryService;
+                        $labHistoryService = new LabHistoryService();
                         $labHistoryService->storeHistory($lab->id, $userId, $activity);
                     }
 
