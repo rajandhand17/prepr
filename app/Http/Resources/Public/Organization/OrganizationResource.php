@@ -35,12 +35,13 @@ class OrganizationResource extends JsonResource
             $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
-        if($this->cover_image==config('site-settings.aws_url').config('site-settings.default_organization_cover_image')){
-            $this->cover_image=null;
+        if ($this->cover_image == config('site-settings.aws_url').config('site-settings.default_organization_cover_image')) {
+            $this->cover_image = null;
         }
-        if($this->profile_image==config('site-settings.aws_url').config('site-settings.default_organization_profile_image')){
-            $this->profile_image=null;
+        if ($this->profile_image == config('site-settings.aws_url').config('site-settings.default_organization_profile_image')) {
+            $this->profile_image = null;
         }
+
         return [
             'id'                           => $this->uuid,
             'language'                     => $this->language,

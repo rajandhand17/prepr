@@ -14,9 +14,10 @@ class LabNameListResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if($this->media==config('site-settings.aws_url').config('site-settings.default_lab_cover_image') || $this->media==config('site-settings.aws_url')){
-            $this->media=null;
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_lab_cover_image') || $this->media == config('site-settings.aws_url')) {
+            $this->media = null;
         }
+
         return [
             'uuid'   => $this->uuid,
             'title'  => $this->title,

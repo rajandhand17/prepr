@@ -73,8 +73,8 @@ class ResourceGroupResource extends JsonResource
         }
 
         if ($this->achievement) {
-            if($this->achievement->achievement_image==config('site-settings.aws_url') || $this->achievement->achievement_image==config('site-settings.aws_url').config('site-settings.default_resource_group_achievement_image')){
-                $this->achievement->achievement_image=null;
+            if ($this->achievement->achievement_image == config('site-settings.aws_url') || $this->achievement->achievement_image == config('site-settings.aws_url').config('site-settings.default_resource_group_achievement_image')) {
+                $this->achievement->achievement_image = null;
             }
             $achievements = [
                 'achievement_name'      => $this->achievement->achievement_name,
@@ -145,9 +145,10 @@ class ResourceGroupResource extends JsonResource
         $mode = $this->resource_group_mode->map(function ($item) {
             return config('constants.resource_mode_type_key.'.$item->value);
         });
-        if($this->media==config('site-settings.aws_url') || $this->media==config('site-settings.aws_url').config('site-settings.default_resource_group_cover_image')){
-            $this->media=null;
+        if ($this->media == config('site-settings.aws_url') || $this->media == config('site-settings.aws_url').config('site-settings.default_resource_group_cover_image')) {
+            $this->media = null;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

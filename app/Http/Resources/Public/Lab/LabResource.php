@@ -113,8 +113,8 @@ class LabResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-        if($media==config('site-settings.aws_url').config('site-settings.default_lab_cover_image') || $media==config('site-settings.aws_url')){
-            $media=null;
+        if ($media == config('site-settings.aws_url').config('site-settings.default_lab_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
         }
         if (auth('api')->check()) {
             $module_status = 'not_started';
