@@ -309,7 +309,7 @@ class LabController extends AppBaseController
             return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
         }
     }
-    public function labHistory(string $slug)
+    public function labHistory($slug)
     {
         try {
             $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);

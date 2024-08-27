@@ -8,10 +8,10 @@ use Exception;
 
 class LabHistoryService
 {
-    public static function storeHistory($projectId, $userId, $activity)
+    public function storeHistory($moduleId, $userId, $activity)
     {
         try {
-            $storeLabHistory = LabHistory::create(['module_id' => $projectId, 'user_id' => $userId, 'activity' => $activity]);
+            $storeLabHistory = LabHistory::create(['module_id' => $moduleId, 'user_id' => $userId, 'activity' => $activity]);
             if ($storeLabHistory) {
                 return true;
             }
@@ -27,7 +27,7 @@ class LabHistoryService
     public function fetchHistory($moduleId)
     {
         try {
-            $fetchLabHistory = LabHistory::where('module_id', $moduleId)->get();
+            $fetchLabHistory = LabHistory::where('module_id', $moduleId)->latest()->get();
             if (!empty($fetchLabHistory)) {
                 return $fetchLabHistory;
             }
