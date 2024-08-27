@@ -25,9 +25,10 @@ class ChallengeListNameResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-        if($media==config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media==config('site-settings.aws_url')){
-            $media=null;
+        if ($media == config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
         }
+
         return [
             'uuid'    => $this->uuid,
             'title'   => $this->title,

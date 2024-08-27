@@ -90,7 +90,6 @@ class ChallengePathResource extends JsonResource
         }
 
         if ($this->achievement) {
-
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
                 'achievement_points'    => $this->achievement->achievement_points,
@@ -121,9 +120,10 @@ class ChallengePathResource extends JsonResource
                 'percentage'    => $this->challenge_path_completion_status->percentage,
             ];
         }
-        if($this->media==config('site-settings.aws_url').config('site-settings.default_challenge_path_cover_image') || $this->media==config('site-settings.aws_url')){
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_challenge_path_cover_image') || $this->media == config('site-settings.aws_url')) {
             $this->media = null;
         }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

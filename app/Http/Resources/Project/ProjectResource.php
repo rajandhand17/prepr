@@ -106,9 +106,9 @@ class ProjectResource extends JsonResource
                 $media_type = 'image';
                 break;
         }
-            if($media==config('site-settings.aws_url').config('site-settings.default_project_cover_image') || $media==config('site-settings.aws_url')){
-                $media=null;
-            }
+        if ($media == config('site-settings.aws_url').config('site-settings.default_project_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
+        }
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);

@@ -255,7 +255,7 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $userData = auth()->user();
-            $response=null;
+            $response = null;
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
