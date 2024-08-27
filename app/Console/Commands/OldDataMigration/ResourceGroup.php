@@ -114,7 +114,7 @@ class ResourceGroup extends Command
                             $level_id = '4';
                         }
                     }
-                    
+
                     $checkResourceGroup = ResourceGroupModel::where('id', $singleResourceGroup->id)->first();
                     if ($checkResourceGroup) {
                         $newResourceGroup = $checkResourceGroup;
@@ -133,7 +133,7 @@ class ResourceGroup extends Command
                     $newResourceGroup->media_type = '0';  //0 for image and 1 for embedded
                     $newResourceGroup->media = $singleResourceGroup->group_image;
                     $newResourceGroup->level = $level_id;
-                    $newResourceGroup->duration =  $duration_id;
+                    $newResourceGroup->duration = $duration_id;
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
                     $newResourceGroup->is_auto_created = $is_auto_created_resourceGroup;

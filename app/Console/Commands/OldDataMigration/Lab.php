@@ -239,7 +239,7 @@ class Lab extends Command
                     if ($mode) {
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
-                        LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '1'])->delete();
+                            LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '1'])->delete();
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';

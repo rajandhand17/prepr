@@ -94,7 +94,7 @@ class LabProgram extends Command
                     }
 
                     $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $labProgram->id, 'module_type' => 'lab_program']);
-    
+
                     // Clone the query to avoid modifying the original
                     $getDuration = clone $getTagGroups;
                     $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
@@ -151,7 +151,6 @@ class LabProgram extends Command
                     $newLabProgram->is_sequential = '0';
                     $newLabProgram->is_accessible = $labProgram->is_accessable;
                     $newLabProgram->save();
-
 
                     //for mode and type
                     $getMode = clone $getTagGroups;
