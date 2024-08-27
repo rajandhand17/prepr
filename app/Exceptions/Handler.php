@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
             return Response::json(ResponseUtil::makeError(__('responses.handler_illegal_request_403')), 405);
         }
 
-        if($e instanceof PostTooLargeException){
+        if ($e instanceof PostTooLargeException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_post_too_large_413')), 413);
         }
 
