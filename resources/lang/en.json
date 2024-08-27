@@ -1427,6 +1427,7 @@
     "responses.share_url_lab": "Check out this Lab on Prepr: ",
     "responses.share_url_challenge": "Check out this Challenge on Prepr: ",
     "responses.share_url_project": "Check out this Project on Prepr: ",
+    "responses.check_this_preprlabs": "Check this out on Preprlabs!",
     "responses.share_url_generated_failed": "Failed to generate share url.",
     "responses.share_url_generated": "Share Url generated successfully."
 }

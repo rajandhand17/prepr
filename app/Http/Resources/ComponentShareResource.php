@@ -33,12 +33,13 @@ class ComponentShareResource extends JsonResource
 
         $encodedUrl = urlencode($this->resource);
         $encodedText = urlencode($titleText);
+        $subjectText = __('responses.check_this_preprlabs');
 
         $shareLinks = [
             'facebook'  => "https://www.facebook.com/sharer/sharer.php?u={$encodedUrl}",
             'twitter'   => "https://twitter.com/intent/tweet?url={$encodedUrl}&text={$encodedText}",
-            'linkedin'  => "https://www.linkedin.com/shareArticle?url={$encodedUrl}&title={$encodedText}",
             'whatsapp'  => "https://api.whatsapp.com/send?text={$encodedText}%20{$encodedUrl}",
+            'email' => "mailto:?subject=" . $subjectText . "&body=" . rawurlencode($titleText . "\n\nLink: " . $this->resource),
             'copyurl'   => $this->resource,
         ];
 
@@ -52,8 +53,8 @@ class ComponentShareResource extends JsonResource
                 'url'  => $shareLinks['twitter'],
             ],
             [
-                'type' => 'linkedin',
-                'url'  => $shareLinks['linkedin'],
+                'type' => 'email',
+                'url'  => $shareLinks['email'],
             ],
             [
                 'type' => 'whatsapp',
