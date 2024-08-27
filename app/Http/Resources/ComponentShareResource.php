@@ -39,7 +39,7 @@ class ComponentShareResource extends JsonResource
             'facebook'  => "https://www.facebook.com/sharer/sharer.php?u={$encodedUrl}",
             'twitter'   => "https://twitter.com/intent/tweet?url={$encodedUrl}&text={$encodedText}",
             'whatsapp'  => "https://api.whatsapp.com/send?text={$encodedText}%20{$encodedUrl}",
-            'email' => "mailto:?subject=" . $subjectText . "&body=" . rawurlencode($titleText . "\n\nLink: " . $this->resource),
+            'email'     => 'mailto:?subject='.$subjectText.'&body='.rawurlencode($titleText."\n\nLink: ".$this->resource),
             'copyurl'   => $this->resource,
         ];
 
