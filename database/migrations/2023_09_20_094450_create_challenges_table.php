@@ -38,6 +38,8 @@ return new class() extends Migration {
             $table->string('winner_select_date', 255)->nullable()->comment('Date of start challenge winner selection');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
