@@ -38,7 +38,6 @@ class Project extends Command
             // Fetch Projects from Legacy Database in chucks of 1000 data
             DB::connection('mysql2')->table('projects')->chunkById(1000, function ($projects) {
                 foreach ($projects as $key => $project) {
-
                     // Fetch User based on user_id
                     $checkUser = User::find($project->user_id);
                     if (!$checkUser) {
