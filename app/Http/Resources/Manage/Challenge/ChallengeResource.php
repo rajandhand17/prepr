@@ -427,6 +427,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_opportunity'        => $campusConnectOpportunity,
             'campus_connect_story'              => $campusConnectStory,
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
+            'scorm_url'                         => $this->formatted_scorm_url,
         ];
     }
 }
