@@ -226,6 +226,10 @@ class Challenge extends Command
                         }
                     }
 
+                    $createdAt = $challenge->created_at != null ? Carbon::createFromTimestamp($challenge->created_at)->translatedFormat("Y-m-d H:i:s") : null;
+                    $updatedAt = $challenge->updated_at != null ? Carbon::createFromTimestamp($challenge->updated_at)->translatedFormat("Y-m-d H:i:s") : null;
+                    $deletedAt = $challenge->deleted_at != null ? Carbon::createFromTimestamp($challenge->deleted_at)->translatedFormat("Y-m-d H:i:s") : null;
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
@@ -250,6 +254,10 @@ class Challenge extends Command
                     $newChallenge->is_auto_created = $challengeAutoCreated;
                     $newChallenge->is_ai_created = $challengeAiCreated;
                     $newChallenge->is_accessible = $challenge->is_accessable;
+                    $newChallenge->total_share = $challenge->total_share;
+                    $newChallenge->created_at = $createdAt;
+                    $newChallenge->updated_at = $updatedAt;
+                    $newChallenge->deleted_at = $deletedAt;
                     $newChallenge->save();
 
                     if ($checkScrom) {

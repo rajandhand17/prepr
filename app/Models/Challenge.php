@@ -46,6 +46,7 @@ class Challenge extends Model
         'allow_winner_change',
         'winner_select_date',
         'views_count',
+        'total_share',
     ];
 
     public function newEloquentBuilder($query): ChallengeBuilder

@@ -5,6 +5,7 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Lab;
+use App\Models\Project as ModelsProject;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
@@ -82,6 +83,31 @@ class Project extends Command
                             $projectRecruitingStatus = '0';
                             break;
                     }
+
+                    $mediaType = 'image';
+                    switch ($project->mediaType) {
+                        case 'image':
+                            $mediaType = '0';
+                            break;
+                        case 'embedded':
+                            $mediaType = '1';
+                            break;
+                        case 'video':
+                            $mediaType = '2';
+                            break;
+                        default:
+                            $mediaType = '0';
+                            break;
+                    }
+
+                    // For main Project table
+                    $checkProject = ModelsProject::find($project->id);
+                    if ($checkProject) {
+                        $newProject = $checkProject;
+                    } else {
+                        $newProject = new ModelsProject();
+                    }
+
                     dd($project, $projectPrivacy);
                 }
             });
