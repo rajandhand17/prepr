@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\ResourceGroup as ResourceGroupModel;
 use App\Models\ResourceGroupAchievement;
+use App\Models\ResourceGroupTypeModes;
 use App\Models\User;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -78,6 +79,42 @@ class ResourceGroup extends Command
                             break;
                     }
 
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $singleResourceGroup->id, 'module_type' => 'resource_group']);
+                    // Clone the query to avoid modifying the original
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
+                    
                     $checkResourceGroup = ResourceGroupModel::where('id', $singleResourceGroup->id)->first();
                     if ($checkResourceGroup) {
                         $newResourceGroup = $checkResourceGroup;
@@ -95,13 +132,60 @@ class ResourceGroup extends Command
                     $newResourceGroup->description = $singleResourceGroup->description;
                     $newResourceGroup->media_type = '0';  //0 for image and 1 for embedded
                     $newResourceGroup->media = $singleResourceGroup->group_image;
-                    $newResourceGroup->level = '1';
-                    $newResourceGroup->duration = '1';
+                    $newResourceGroup->level = $level_id;
+                    $newResourceGroup->duration =  $duration_id;
                     $newResourceGroup->privacy = $privacy;
                     $newResourceGroup->status = $status;
                     $newResourceGroup->is_auto_created = $is_auto_created_resourceGroup;
                     $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
                     $newResourceGroup->save();
+
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            ResourceGroupTypeModes::where(['resource_group_id' => $singleResourceGroup->id, 'type_mode' => '1'])->delete();
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                $resourceGroupMode = new ResourceGroupTypeModes();
+                                $resourceGroupMode->resource_group_id = $singleResourceGroup->id;
+                                $resourceGroupMode->type_mode = '1';
+                                $resourceGroupMode->value = $mode_id;
+                                $resourceGroupMode->save();
+                            }
+                        }
+                    }
+
+                    $getType = clone $getTagGroups;
+                    $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
+                    if ($type) {
+                        $types = json_decode($type, true);
+                        if (!empty($types)) {
+                            ResourceGroupTypeModes::where(['resource_group_id' => $singleResourceGroup->id, 'type_mode' => '0'])->delete();
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
+                                    $type_id = '0';
+                                } elseif ($single_type == '193') {
+                                    $type_id = '1';
+                                } elseif ($single_type == '194') {
+                                    $type_id = '2';
+                                } elseif ($single_type == '195') {
+                                    $type_id = '3';
+                                }
+                                $resourceGroupType = new ResourceGroupTypeModes();
+                                $resourceGroupType->resource_group_id = $singleResourceGroup->id;
+                                $resourceGroupType->type_mode = '0';
+                                $resourceGroupType->value = $type_id;
+                                $resourceGroupType->save();
+                            }
+                        }
+                    }
 
                     /*Add resource achievement*/
                     if (!empty($singleResourceGroup->prize)) {
