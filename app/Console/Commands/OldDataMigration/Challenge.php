@@ -195,6 +195,7 @@ class Challenge extends Command
                     // Clone the query to avoid modifying the original
                     $getDuration = clone $getTagGroups;
                     $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
                     if ($duration) {
                         if ($duration == '["169"]') {
                             $duration_id = '1';
@@ -212,6 +213,7 @@ class Challenge extends Command
                     }
                     $getLevel = clone $getTagGroups;
                     $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
                     if ($level) {
                         if ($level == '["157"]') {
                             $level_id = '1';
