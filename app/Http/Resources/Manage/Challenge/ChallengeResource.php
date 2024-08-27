@@ -356,7 +356,9 @@ class ChallengeResource extends JsonResource
 
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
-
+        if($media==config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media==config('site-settings.aws_url')){
+            $media=null;
+        }
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,

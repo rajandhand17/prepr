@@ -131,7 +131,9 @@ class LabProgramResource extends JsonResource
             $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
-
+        if($this->media==config('site-settings.aws_url').config('site-settings.default_lab_program_profile_image') || $this->media==config('site-settings.aws_url')){
+            $this->media=null;
+        }
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

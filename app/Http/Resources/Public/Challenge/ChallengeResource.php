@@ -273,7 +273,9 @@ class ChallengeResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-
+        if($media==config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media==config('site-settings.aws_url')){
+            $media=null;
+        }
         $joined_status = $this->joined();
         $join_status = 'No';
         if ($joined_status != 'NA' && $joined_status != null) {

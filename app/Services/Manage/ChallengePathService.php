@@ -134,16 +134,16 @@ class ChallengePathService
         }
     }
 
-    public static function getChallengePathBasedOnSlug($slug)
-    {
-        try {
-            return ChallengePath::where('slug', $slug)->first();
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
+//    public static function getChallengePathBasedOnSlug($slug)
+//    {
+//        try {
+//            return ChallengePath::where('slug', $slug)->first();
+//        } catch (\Exception $e) {
+//            UtilityHelper::logError($e);
+//
+//            return false;
+//        }
+//    }
 
     public function createChallengePath($cover_image, $request, $organizationId)
     {

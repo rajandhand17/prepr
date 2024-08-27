@@ -36,7 +36,9 @@ class SubmittedProjectResource extends JsonResource
             $associatedSkills = $this->skills->pluck('skill_id');
             $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
         }
-
+        if($media==config('site-settings.aws_url').config('site-settings.default_project_cover_image') || $media==config('site-settings.aws_url')){
+            $media=null;
+        }
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,

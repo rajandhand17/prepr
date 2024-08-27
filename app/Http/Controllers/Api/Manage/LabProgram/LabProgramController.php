@@ -263,6 +263,7 @@ class LabProgramController extends AppBaseController
     {
         try {
             $userData = auth()->user();
+            $response=null;
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
@@ -272,7 +273,7 @@ class LabProgramController extends AppBaseController
                 $response = LabProgramListNameResource::collection($getLabProgramListName);
             }
 
-            return $this->sendResponse($getLabProgramListName, __('responses.found_lab_program_list'));
+            return $this->sendResponse($response, __('responses.found_lab_program_list'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

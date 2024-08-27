@@ -15,6 +15,9 @@ class OrganizationHostResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->cover_image==config('site-settings.aws_url').config('site-settings.default_organization_cover_image')){
+            $this->cover_image=null;
+        }
         return [
             'uuid'        => $this->uuid,
             'title'       => $this->title,

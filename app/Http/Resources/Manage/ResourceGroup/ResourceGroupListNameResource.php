@@ -14,6 +14,9 @@ class ResourceGroupListNameResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if($this->media==config('site-settings.aws_url') || $this->media==config('site-settings.aws_url').config('site-settings.default_resource_group_cover_image')){
+            $this->media=null;
+        }
         return [
             'uuid'   => $this->uuid,
             'title'  => $this->title,
