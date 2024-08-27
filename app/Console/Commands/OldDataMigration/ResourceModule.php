@@ -174,7 +174,7 @@ class ResourceModule extends Command
                     $newResourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newResourceModule->user_id = $single_resource->user_id;
                     $newResourceModule->organization_id = $single_resource->org_id;
-                    $newResourceModule->duration_id =  $duration_id ;
+                    $newResourceModule->duration_id = $duration_id;
                     $newResourceModule->level_id = $level_id;
                     $newResourceModule->title = $single_resource->res_title;
                     $newResourceModule->slug = $single_resource->res_title_slug;
@@ -210,7 +210,7 @@ class ResourceModule extends Command
                     if ($mode) {
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
-                        ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '1'])->delete();
+                            ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '1'])->delete();
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
@@ -225,7 +225,7 @@ class ResourceModule extends Command
                             }
                         }
                     }
-  
+
                     $getType = clone $getTagGroups;
                     $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
                     if ($type) {

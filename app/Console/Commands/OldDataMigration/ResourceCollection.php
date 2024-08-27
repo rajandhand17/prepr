@@ -109,14 +109,13 @@ class ResourceCollection extends Command
                     $resourceCollection->description = $singleResourceCollection->description;
                     $resourceCollection->media_type = '0';  //0 for image and 1 for embedded
                     $resourceCollection->media = $singleResourceCollection->image;
-                    $resourceCollection->level =  $level_id;
+                    $resourceCollection->level = $level_id;
                     $resourceCollection->duration = $duration_id;
                     $resourceCollection->privacy = $privacy;
                     $resourceCollection->status = $status;
                     $resourceCollection->is_accessible = $singleResourceCollection->is_accessable;
                     $resourceCollection->save();
 
-                    
                     //for mode and type
                     $getMode = clone $getTagGroups;
                     $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
