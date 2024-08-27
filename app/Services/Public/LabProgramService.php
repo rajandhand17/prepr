@@ -40,6 +40,21 @@ class LabProgramService
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
                 $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
             }
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $labProgramIds = null;
+                $userData = auth('api')->user();
+                switch ($request->request_status) {
+                    case 'accepted':
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '1');
+                        break;
+                    case 'pending':
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '2');
+                        break;
+                }
+                if ($labProgramIds) {
+                    $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
+                }
+            }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':

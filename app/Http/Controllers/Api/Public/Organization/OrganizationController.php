@@ -9,6 +9,7 @@ use App\Http\Resources\Public\Organization\OrganizationDetailResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrganizationController extends AppBaseController
 {
@@ -51,6 +52,8 @@ class OrganizationController extends AppBaseController
             if ($organization) {
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }
+
+            $this->organizationRepository->incrementView($organization);
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
@@ -101,6 +104,30 @@ class OrganizationController extends AppBaseController
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function organizationMemberActivity(string $slug)
+    {
+        try {
+            $lab = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
+            if ($lab) {
+                $data = $this->organizationRepository->organizationMemberActivity($lab);
+                if ($data === false) {
+                    return $this->sendError(__('Failed to fetch organization member activity.'), Response::HTTP_BAD_REQUEST);
+                }
+
+                return $this->sendResponse($data, __('Organization member progress.'));
+            }
+
+            return $this->sendError(__('responses.organization_slug_not_found'), 404);
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return $this->sendError(__('Failed to fetch organization member activity.'), Response::HTTP_BAD_REQUEST);
         }
     }
 }

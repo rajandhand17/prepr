@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builder\ResourceCollectionBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ResourceCollection extends Model
@@ -87,6 +88,11 @@ class ResourceCollection extends Model
     public function labs()
     {
         return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('lab_id', '!=', null);
+    }
+
+    public function labs2()
+    {
+        return $this->belongsToMany(Lab::class, 'component_associations', 'resource_collection_id', 'lab_id');
     }
 
     public function challenges()
@@ -178,5 +184,13 @@ class ResourceCollection extends Model
         }
 
         return 'N/A';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function resourceCollectionProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'module_id')->where('module_type', '=', '5');
     }
 }

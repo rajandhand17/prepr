@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\manage;
+namespace App\Http\Resources\Manage;
 
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Services\SkillService;

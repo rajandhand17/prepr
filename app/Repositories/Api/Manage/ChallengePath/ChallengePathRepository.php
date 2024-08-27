@@ -50,6 +50,17 @@ class ChallengePathRepository implements ChallengePathInterface
         }
     }
 
+    public function getChallengePathBasedOnSlug($slug)
+    {
+        try {
+            return $this->challengePathService->getChallengePathBasedOnSlug($slug);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function uploadChallengePathMedia($image)
     {
         try {

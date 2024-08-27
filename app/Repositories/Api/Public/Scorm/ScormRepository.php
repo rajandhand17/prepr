@@ -17,12 +17,12 @@ class ScormRepository implements ScormInterface
     }
 
     /**
-     * @param string $uuid
-     * @param User   $scormUser
+     * @param string    $uuid
+     * @param User|null $scormUser
      *
      * @return Scorm|false|null
      */
-    public function getScorm(string $uuid, User $scormUser): false|Scorm|null
+    public function getScorm(string $uuid, User|null $scormUser): false|Scorm|null
     {
         try {
             return $this->scormService->getScorm($uuid, $scormUser);
@@ -54,10 +54,10 @@ class ScormRepository implements ScormInterface
      *
      * @return false|string
      */
-    public function generateScormPlayerUrl(Scorm $scorm): false|string
+    public function generateScormPlayerUrl(Scorm $scorm, $trackingId = true): false|string
     {
         try {
-            return $this->scormService->generateScormPlayerUrl($scorm);
+            return $this->scormService->generateScormPlayerUrl($scorm, $trackingId);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
 

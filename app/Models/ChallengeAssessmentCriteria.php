@@ -25,4 +25,9 @@ class ChallengeAssessmentCriteria extends Model
     {
         return $this->belongsTo(ChallengeAssessment::class, 'assessment_id', 'id');
     }
+
+    public function challengeAssessmentUser()
+    {
+        return $this->hasMany(ChallengeAssessmentUser::class, 'criteria_id', 'id');
+    }
 }

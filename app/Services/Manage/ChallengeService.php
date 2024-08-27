@@ -114,7 +114,7 @@ class ChallengeService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
-                    $status_array = ['accepted', 'pending', 'declined'];
+                    $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
                              ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
@@ -675,9 +675,8 @@ class ChallengeService
         try {
             $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
             $challenge_list = self::filterChallengeList($challenge_list, $request);
-            $limit = config('site-settings.listing_limit');
 
-            return $challenge_list->limit($limit)->get();
+            return $challenge_list->get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

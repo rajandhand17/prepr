@@ -161,7 +161,8 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
-            $upload_cover_image = config('site-settings.default_resource_module_cover_image');
+            $upload_cover_image = str_replace(config('site-settings.aws_url'), '', $checkResourceModuleExistsOrNot->media);
+
             if ($request->cover_image !== null) {
                 if ($request->media_type == 'image') {
                     $uploaded_cover_image = $this->resourceModuleRepository->uploadResourceModuleCoverImage($request->cover_image);
@@ -173,6 +174,7 @@ class ResourceModuleController extends AppBaseController
                 }
                 $upload_cover_image = $uploaded_cover_image;
             }
+
             $updateResourceModule = $this->resourceModuleRepository->updateResourceModule($slug, $request, $upload_cover_image, $organization->id);
             if ($updateResourceModule) {
                 return $this->sendResponse(ResourceModuleResource::make($updateResourceModule), __('responses.resource_module_update_success'), 200);
