@@ -5,6 +5,7 @@ namespace App\Repositories\Api\Public\Lab;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\User;
+use App\Services\LabHistoryService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Public\LabService;
 use App\Services\Public\LabSocialActivitiesService;
@@ -14,12 +15,14 @@ class LabRepository implements LabInterface
     private $labService;
     private $labSocialActivitiesService;
     private $memberManagementService;
+    private $labHistoryService;
 
-    public function __construct(LabService $labService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService)
+    public function __construct(LabService $labService, LabSocialActivitiesService $labSocialActivitiesService, MemberManagementService $memberManagementService, LabHistoryService $labHistoryService)
     {
         $this->labService = $labService;
         $this->labSocialActivitiesService = $labSocialActivitiesService;
         $this->memberManagementService = $memberManagementService;
+        $this->labHistoryService = $labHistoryService;
     }
 
     public function getList($request)
@@ -169,6 +172,28 @@ class LabRepository implements LabInterface
     {
         try {
             return $this->labService->liveEventDetails($lab);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Lab $lab)
+    {
+        try {
+            return $this->labService->incrementView($lab);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function fetchHistory($moduleId)
+    {
+        try {
+            return $this->labHistoryService->fetchHistory($moduleId);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

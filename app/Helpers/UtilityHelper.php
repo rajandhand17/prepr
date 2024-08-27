@@ -232,4 +232,23 @@ class UtilityHelper
             return 0;
         }
     }
+
+    public static function isEngLocale(): bool
+    {
+        return app()->getLocale() === 'en';
+    }
+
+    public static function generateURL($component, $slug)
+    {
+        try {
+            $frontEndUrl = self::sanitizeUrl(config('site-settings.frontend_site_url'));
+            $componentFrontEndUrl = sprintf('%s/'.$component.'/%s', $frontEndUrl, $slug);
+
+            return $componentFrontEndUrl;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

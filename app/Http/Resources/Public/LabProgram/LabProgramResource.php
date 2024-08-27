@@ -164,6 +164,7 @@ class LabProgramResource extends JsonResource
             'is_achievement_enabled'        => ($this->is_achievement_enabled == '1') ? 'yes' : 'no',
             'is_sequential'                 => ($this->is_sequential == '1') ? 'yes' : 'no',
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'lab_count'                     => $this->labs()->count(),
             'liked'                         => $this->liked(),
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
