@@ -25,12 +25,13 @@ return new class() extends Migration {
             $table->enum('privacy', ['0', '1'])->default('0')->comment('Privacy of Project, 0 -> Public & 1 -> Private');
             $table->enum('is_submitted', ['0', '1'])->default('0')->comment('Project Submission Status, 0 -> Not Submitted & 1 -> Submitted');
             $table->enum('recruiting_status', ['0', '1'])->default('0')->comment('0-> Currently recruiting, 1-> Currently not recruiting');
-            $table->unsignedBigInteger('challenge_id');
+            $table->unsignedBigInteger('challenge_id')->nullable();
             $table->unsignedBigInteger('lab_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('challenge_id')->references('id')->on('challenges')->onDelete('cascade');
+            $table->foreign('lab_id')->references('id')->on('labs')->onDelete('cascade');
         });
     }
 
