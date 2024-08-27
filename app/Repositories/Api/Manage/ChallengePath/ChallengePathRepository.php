@@ -93,14 +93,12 @@ class ChallengePathRepository implements ChallengePathInterface
                     $createdChallengePathAchievement = $this->challengePathAchievementsService->createChallengePathAchievement($request, $createdChallengePath->id, $upload_achievement_image);
                 }
                 $createdChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->createChallengePathSkillsGroupsStack($request, $createdChallengePath->id);
-                $createdChallengePathTagsGroupsService = $this->challengePathTagsGroupsService->createChallengePathTagsGroupsService($request, $createdChallengePath->id);
                 $createdComponentAssociation = $this->componentAssociationService->createChallengePathAssociation($request, $createdChallengePath->id);
 
                 return [
                     'createdChallengePath'                     => $createdChallengePath,
                     'createdChallengePathAchievement'          => $createdChallengePathAchievement,
                     'createdChallengePathSkillsGroupsStack'    => $createdChallengePathSkillsGroupsStack,
-                    'createdChallengePathTagsGroupsService'    => $createdChallengePathTagsGroupsService,
                     'createdComponentAssociation'              => $createdComponentAssociation,
                 ];
             });
@@ -109,7 +107,7 @@ class ChallengePathRepository implements ChallengePathInterface
                 $createChallengePath['createdChallengePath'] &&
                 $createChallengePath['createdChallengePathAchievement'] &&
                 $createChallengePath['createdChallengePathSkillsGroupsStack'] &&
-                $createChallengePath['createdChallengePathTagsGroupsService'] &&
+//                $createChallengePath['createdChallengePathTagsGroupsService'] &&
                 $createChallengePath['createdComponentAssociation']
             ) {
                 DB::commit();
