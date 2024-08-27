@@ -438,6 +438,9 @@ class ResourceGroupService
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $slug = UtilityHelper::generateSlug($resourceGroupData->title.$uuid, $resourceGroup);
             $resourceGroup = $resourceGroupData->replicate();
+            if ($resourceGroupData->media_type == '') {
+                $resourceGroup->media_type = '0';
+            }
             $resourceGroup->uuid = $uuid;
             $resourceGroup->slug = $slug;
             $resourceGroup->user_id = auth()->user()->id;
