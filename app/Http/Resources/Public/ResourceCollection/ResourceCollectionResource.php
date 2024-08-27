@@ -178,6 +178,9 @@ class ResourceCollectionResource extends JsonResource
         $mode = $this->resource_collection_mode->map(function ($item) {
             return config('constants.resource_mode_type_key.'.$item->value);
         });
+        if ($this->media == config('site-settings.aws_url') || $this->media == config('site-settings.aws_url').config('site-settings.default_resource_collection_cover_image')) {
+            $this->media = null;
+        }
 
         return [
             'id'                            => $this->uuid,
