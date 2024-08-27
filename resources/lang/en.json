@@ -1427,6 +1427,14 @@
     "responses.share_url_lab": "Check out this Lab on Prepr: ",
     "responses.share_url_challenge": "Check out this Challenge on Prepr: ",
     "responses.share_url_project": "Check out this Project on Prepr: ",
+    "responses.check_this_preprlabs": "Check this out on Preprlabs!",
     "responses.share_url_generated_failed": "Failed to generate share url.",
-    "responses.share_url_generated": "Share Url generated successfully."
+    "responses.share_url_generated": "Share Url generated successfully.",
+    "responses.lab_history_not_retrived": "The Lab(s) history has not been retrieved.",
+    "responses.lab_history_retrived": "The Lab(s) history has been retrieved.",
+    "responses.lab_created_activity": "created the Lab:-",
+    "responses.lab_updated_activity": "updated the Lab:-",
+    "responses.lab_deleted_activity": "deleted the Lab:-",
+    "responses.lab_joined_activity": "joined the Lab:-",
+    "responses.lab_un_joined_activity": "unjoined the Lab:-"
 }

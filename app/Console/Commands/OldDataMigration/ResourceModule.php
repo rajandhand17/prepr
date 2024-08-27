@@ -9,6 +9,7 @@ use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleRating as ResourceModuleRatings;
 use App\Models\ResourceModuleSkillsGroupsStack;
 use App\Models\ResourceModuleTagsGroups;
+use App\Models\ResourceModuleTypeModes;
 use App\Models\Skill;
 use App\Models\SocialLink;
 use App\Models\Tag;
@@ -126,6 +127,41 @@ class ResourceModule extends Command
                             break;
                     }
 
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $single_resource->id, 'module_type' => 'resource_module']);
+                    // Clone the query to avoid modifying the original
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
+
                     $check_resource_module = ResourceModules::where('id', $single_resource->id)->first();
                     $status = config('constants.resource_module_status.publish');
                     if ($check_resource_module) {
@@ -138,8 +174,8 @@ class ResourceModule extends Command
                     $newResourceModule->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newResourceModule->user_id = $single_resource->user_id;
                     $newResourceModule->organization_id = $single_resource->org_id;
-                    $newResourceModule->duration_id = '1';
-                    $newResourceModule->level_id = '1';
+                    $newResourceModule->duration_id = $duration_id;
+                    $newResourceModule->level_id = $level_id;
                     $newResourceModule->title = $single_resource->res_title;
                     $newResourceModule->slug = $single_resource->res_title_slug;
                     $newResourceModule->description = $single_resource->res_desc;
@@ -168,6 +204,52 @@ class ResourceModule extends Command
                         }
                     }
 
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '1'])->delete();
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                $resourceMode = new ResourceModuleTypeModes();
+                                $resourceMode->resource_module_id = $single_resource->id;
+                                $resourceMode->type_mode = '1';
+                                $resourceMode->value = $mode_id;
+                                $resourceMode->save();
+                            }
+                        }
+                    }
+
+                    $getType = clone $getTagGroups;
+                    $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
+                    if ($type) {
+                        $types = json_decode($type, true);
+                        if (!empty($types)) {
+                            ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '0'])->delete();
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
+                                    $type_id = '0';
+                                } elseif ($single_type == '193') {
+                                    $type_id = '1';
+                                } elseif ($single_type == '194') {
+                                    $type_id = '2';
+                                } elseif ($single_type == '195') {
+                                    $type_id = '3';
+                                }
+                                $resourceType = new ResourceModuleTypeModes();
+                                $resourceType->resource_module_id = $single_resource->id;
+                                $resourceType->type_mode = '0';
+                                $resourceType->value = $type_id;
+                                $resourceType->save();
+                            }
+                        }
+                    }
                     // For Resource Module Skill Stacks
                     $resourceSkillStacks = $single_resource->skill_stacks;
                     if (!empty($resourceSkillStacks)) {
