@@ -69,6 +69,13 @@ class LabService
                 $lab_list = $lab_list->whereIn('labs.id', $sourceLabIds);
             }
 
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $lab_list = $lab_list->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $lab_list = $lab_list->whereIn('level_id', $request->level_id);
+            }
+
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
