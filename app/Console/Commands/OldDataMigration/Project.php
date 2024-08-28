@@ -9,6 +9,7 @@ use App\Models\Lab;
 use App\Models\Project as ModelsProject;
 use App\Models\ProjectAdditionalInfo;
 use App\Models\ProjectIndustry;
+use App\Models\ProjectMemberManagement;
 use App\Models\ProjectSkill;
 use App\Models\ProjectStage;
 use App\Models\ProjectStatus;
@@ -244,6 +245,104 @@ class Project extends Command
                                 $projectSkill->skill_id = $skill;
                                 $projectSkill->save();
                             }
+                        }
+                    }
+
+                    // For project member and team leader
+                    $teamId = '';
+                    $merged = $teamIdArray1 = $teamIdArray2 = [];
+                    if (!empty($project->team)) {
+                        $teamId = $project->team;
+                        if (!empty($teamId)) {
+                            $merged = explode(',', $teamId);
+                        }
+                    }
+
+                    $userId = DB::connection('mysql2')->table('invite_data')->where(['module' => 'project', 'module_id' => $project->id])->pluck('user_id');
+                    if (!empty($userId->toArray())) {
+                        $teamIdArray2 = $userId->toArray();
+                        if (!empty($merged)) {
+                            $merged = array_unique(array_merge($merged, $teamIdArray2));
+                        } elseif (!empty($teamIdArray2) && empty($merged)) {
+                            $merged = $teamIdArray2;
+                        }
+                    }
+
+                    $projectDataMembers = User::whereIn('id', $merged)->get();
+
+                    $selected_member = [];
+                    if ($projectDataMembers->isNotEmpty()) {
+                        $membersDetails = DB::connection('mysql2')->table('project_members')->where('project_id', $project->id)->get();
+                        $memberIndex = 0;
+                        foreach (json_decode($projectDataMembers) as $members) {
+                            foreach (json_decode($membersDetails) as $detail) {
+                                if ($members->email == $detail->email) {
+                                    $selected_member[$memberIndex]['project_id'] = $detail->project_id;
+                                    $selected_member[$memberIndex]['is_team_leader'] = $detail->is_team_leader;
+                                    $selected_member[$memberIndex]['view_project'] = $detail->view_project;
+                                    $selected_member[$memberIndex]['edit_project'] = $detail->edit_project;
+                                    $selected_member[$memberIndex]['email'] = $detail->email;
+                                    $selected_member[$memberIndex]['user_id'] = $members->id;
+                                    break;
+                                }
+                            }
+                            $memberIndex++;
+                        }
+                    }
+
+                    if (!empty($selected_member) && $project->deleted_at == null) {
+                        ProjectMemberManagement::where('project_id', $project->id)->delete();
+
+                        foreach ($selected_member as $memberData) {
+                            $findUser = User::where('email', $memberData['email'])->first();
+                            $userInviteStatusCheck = DB::connection('mysql2')->table('invite_data')->where(['module' => 'project', 'module_id' => $project->id, 'user_id' => $memberData['user_id']])->first();
+                            $userInviteEmailStatus = config('constants.project_member_management_email_status.sent');
+                            $userAccessLevel = config('constants.project_access_level.viewer');
+                            if ($memberData['view_project'] == '1') {
+                                $userAccessLevel = config('constants.project_access_level.viewer');
+                            }
+
+                            if ($memberData['edit_project'] == '1') {
+                                $userAccessLevel = config('constants.project_access_level.editor');
+                            }
+
+                            if ($memberData['is_team_leader'] == '1') {
+                                $userAccessLevel = config('constants.project_access_level.team_leader');
+                            }
+
+                            $userInviteStatus = config('constants.project_member_management_invite_status.invited');
+                            if ($userInviteStatusCheck) {
+                                switch ($userInviteStatusCheck->status) {
+                                    case 'sent':
+                                        $userInviteStatus = config('constants.project_member_management_invite_status.invited');
+                                        break;
+
+                                    case 'accepted':
+                                        $userInviteStatus = config('constants.project_member_management_invite_status.accepted');
+                                        break;
+
+                                    case 'rejected':
+                                        $userInviteStatus = config('constants.project_member_management_invite_status.declined');
+                                        break;
+                                }
+                            }
+
+                            if ($project->user_id == $memberData['user_id']) {
+                                $userInviteStatus = config('constants.project_member_management_invite_status.accepted');
+                            }
+
+                            $newProjectMember = new ProjectMemberManagement();
+                            $newProjectMember->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                            $newProjectMember->project_id = $project->id;
+                            $newProjectMember->inviter_id = $project->user_id;
+                            $newProjectMember->email = $memberData['email'];
+                            $newProjectMember->invitee_name = $findUser != null ? $findUser->full_name : null;
+                            $newProjectMember->invite_type = '1';
+                            $newProjectMember->invite_status = $userInviteStatus;
+                            $newProjectMember->email_status = $userInviteEmailStatus;
+                            $newProjectMember->inviter_access_level = $userAccessLevel;
+                            $newProjectMember->save();
+
                         }
                     }
                 }
