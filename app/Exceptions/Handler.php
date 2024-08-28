@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Helpers\UtilityHelper;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\PostTooLargeException;
 use InfyOm\Generator\Utils\ResponseUtil;
 use League\Container\Exception\NotFoundException;
 use Response;
@@ -67,6 +68,10 @@ class Handler extends ExceptionHandler
 
         if ($e instanceof MethodNotAllowedHttpException) {
             return Response::json(ResponseUtil::makeError(__('responses.handler_illegal_request_403')), 405);
+        }
+
+        if ($e instanceof PostTooLargeException) {
+            return Response::json(ResponseUtil::makeError(__('responses.handler_post_too_large_413')), 413);
         }
 
         if ($e) {
