@@ -27,6 +27,12 @@ class OrganizationDetailResource extends JsonResource
             $category = null;
             $category_id = null;
         }
+        if ($this->cover_image == config('site-settings.aws_url').config('site-settings.default_organization_cover_image')) {
+            $this->cover_image = null;
+        }
+        if ($this->profile_image == config('site-settings.aws_url').config('site-settings.default_organization_profile_image')) {
+            $this->profile_image = null;
+        }
 
         return [
             'id'                           => $this->uuid,
