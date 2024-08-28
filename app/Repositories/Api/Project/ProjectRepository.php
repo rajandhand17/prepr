@@ -205,7 +205,7 @@ class ProjectRepository implements ProjectInterface
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
                 $user = UserService::getUserById(auth()->user()->id);
-                $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
+                //$user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
                 DB::commit();
 
                 return $createProject['createProject'];
