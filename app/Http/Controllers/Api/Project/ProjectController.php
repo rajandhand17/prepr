@@ -415,6 +415,7 @@ class ProjectController extends AppBaseController
             if ($submitProject === true) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
             }
+
             return $this->sendError(__('responses.project_not_submitted'), 404);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
