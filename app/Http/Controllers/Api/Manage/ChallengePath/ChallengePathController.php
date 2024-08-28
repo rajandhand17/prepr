@@ -255,6 +255,7 @@ class ChallengePathController extends AppBaseController
     {
         try {
             $userData = auth()->user();
+            $response = null;
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
@@ -264,7 +265,7 @@ class ChallengePathController extends AppBaseController
                 $response = ChallengePathListNameResource::collection($getChallengePathListName);
             }
 
-            return $this->sendResponse($getChallengePathListName, __('responses.found_challenge_path_list'));
+            return $this->sendResponse($response, __('responses.found_challenge_path_list'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
