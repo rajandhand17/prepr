@@ -6,7 +6,6 @@ use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathAchievementsService;
 use App\Services\Manage\ChallengePathSkillsGroupsStackService;
-use App\Services\Manage\ChallengePathTagsGroupsService;
 use App\Services\Manage\ComponentAssociationService;
 use Exception;
 

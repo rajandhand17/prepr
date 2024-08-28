@@ -14,10 +14,8 @@ class ChallengePathsTypeMode extends Model
 
     protected $table = 'challenge_paths_type_modes';
     protected $fillable = [
-        "challenge_path_id",
-        "type_mode",
-        "value",
+        'challenge_path_id',
+        'type_mode',
+        'value',
     ];
-
-
 }
