@@ -342,7 +342,6 @@ class Project extends Command
                             $newProjectMember->email_status = $userInviteEmailStatus;
                             $newProjectMember->inviter_access_level = $userAccessLevel;
                             $newProjectMember->save();
-
                         }
                     }
                 }
