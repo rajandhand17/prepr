@@ -237,7 +237,7 @@ class ProjectController extends AppBaseController
         try {
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
-                if(auth('api')->check()) {
+                if (auth('api')->check()) {
                     $userId = auth()->user()->id;
                     if ($userId == $project->user_id) {
                         // For last visited activity tracking
@@ -245,6 +245,7 @@ class ProjectController extends AppBaseController
                         LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
                     }
                 }
+
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
             }
 
