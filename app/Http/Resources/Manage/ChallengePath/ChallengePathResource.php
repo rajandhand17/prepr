@@ -9,8 +9,6 @@ use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -118,6 +116,7 @@ class ChallengePathResource extends JsonResource
         $mode = $this->challenge_path_mode->map(function ($item) {
             return config('constants.resource_mode_type_key.'.$item->value);
         });
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

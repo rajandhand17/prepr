@@ -21,14 +21,14 @@ class ChallengePathRepository implements ChallengePathInterface
     private $componentAssociationService;
     private $challengePathTypeModeService;
 
-    public function __construct(ChallengePathTypeModeService $challengePathTypeModeService,ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
+    public function __construct(ChallengePathTypeModeService $challengePathTypeModeService, ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
     {
         $this->challengePathService = $challengePathService;
         $this->challengePathSkillsGroupsStackService = $challengePathSkillsGroupsStackService;
         $this->challengePathAchievementsService = $challengePathAchievementsService;
         $this->challengePathTagsGroupsService = $challengePathTagsGroupsService;
         $this->componentAssociationService = $componentAssociationService;
-        $this->challengePathTypeModeService=$challengePathTypeModeService;
+        $this->challengePathTypeModeService = $challengePathTypeModeService;
     }
 
     public function getChallengePathCountBasedOnOrganization($organizationId)
@@ -97,12 +97,13 @@ class ChallengePathRepository implements ChallengePathInterface
                 }
                 $createdChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->createChallengePathSkillsGroupsStack($request, $createdChallengePath->id);
                 $createdComponentAssociation = $this->componentAssociationService->createChallengePathAssociation($request, $createdChallengePath->id);
-                $challengePathTypeModeService=$this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request,$createdChallengePath->id);
+                $challengePathTypeModeService = $this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request, $createdChallengePath->id);
+
                 return [
-                    'createdChallengePath'                     => $createdChallengePath,
-                    'createdChallengePathAchievement'          => $createdChallengePathAchievement,
-                    'createdChallengePathSkillsGroupsStack'    => $createdChallengePathSkillsGroupsStack,
-                    'createdComponentAssociation'              => $createdComponentAssociation,
+                    'createdChallengePath'                      => $createdChallengePath,
+                    'createdChallengePathAchievement'           => $createdChallengePathAchievement,
+                    'createdChallengePathSkillsGroupsStack'     => $createdChallengePathSkillsGroupsStack,
+                    'createdComponentAssociation'               => $createdComponentAssociation,
                     'challengePathTypeModeService'              => $challengePathTypeModeService,
                 ];
             });
@@ -139,7 +140,7 @@ class ChallengePathRepository implements ChallengePathInterface
                 }
                 $updateChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->updateChallengePathSkillsGroupsStack($request, $updateChallengePath->id);
                 $updateComponentAssociation = $this->componentAssociationService->updateChallengePathAssociation($request, $updateChallengePath->id);
-                $updatePathTypeModeService=$this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request,$updateChallengePath->id);
+                $updatePathTypeModeService = $this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request, $updateChallengePath->id);
 
                 return [
                     'updateChallengePath'                     => $updateChallengePath,

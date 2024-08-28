@@ -4,7 +4,6 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengePathsTypeMode;
-use App\Models\ResourceCollectionTypeModes;
 use Exception;
 
 class ChallengePathTypeModeService
@@ -53,6 +52,7 @@ class ChallengePathTypeModeService
         } catch (\Exception $e) {
             // Log the exception or handle it according to your needs
             UtilityHelper::logError($e);
+
             return false;
         }
     }
