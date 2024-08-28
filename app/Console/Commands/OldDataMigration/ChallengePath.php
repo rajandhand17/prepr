@@ -6,8 +6,10 @@ use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\ChallengePath as ModelsChallengePath;
 use App\Models\ChallengePathAchievement;
+use App\Models\ChallengePathsTypeMode;
 use App\Models\ComponentAssociation;
 use App\Models\Organization;
+use App\Models\ResourceModuleTypeModes;
 use App\Models\User;
 use App\Services\Manage\ChallengeService;
 use Exception;
@@ -42,6 +44,7 @@ class ChallengePath extends Command
 
             DB::connection('mysql2')->table('groups')->where('type', 'challenge')->chunkById(1000, function ($challengePaths) {
                 foreach ($challengePaths as $challengePath) {
+
                     $checkUser = User::find($challengePath->user_id);
                     if (!$checkUser) {
                         continue;
@@ -103,6 +106,41 @@ class ChallengePath extends Command
                             $challengePathPublished = '1';
                             break;
                     }
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $challengePath->id, 'module_type' => 'challenge_path']);
+                    // Clone the query to avoid modifying the original
+
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = 1;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = 1;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
 
                     $challengePathModel = new ModelsChallengePath();
 
@@ -115,8 +153,8 @@ class ChallengePath extends Command
                     $newChallengePath->user_id = $challengePath->user_id;
                     $newChallengePath->organization_id = $challengePath->organisation;
                     $newChallengePath->category_id = $category;
-                    $newChallengePath->duration_id = '1';
-                    $newChallengePath->level_id = '1';
+                    $newChallengePath->duration_id = $duration_id;
+                    $newChallengePath->level_id = $level_id;
                     $newChallengePath->media_type = 'image';
                     $newChallengePath->media = $challengePath->group_image;
                     $newChallengePath->privacy = $challengePathPrivacy;
@@ -156,8 +194,15 @@ class ChallengePath extends Command
                                 ['challenge_path_id', '=', $challengePath->id],
                                 ['challenge_id', '!=', null],
                             ])->select('sequence')->orderBy('id', 'desc')->first();
+
+                            if($sequence==null){
+                                $sequence = 1;
+                            }else{
+                                $sequence=$sequence->sequence;
+                            }
                             $newRecordsComponentAssociation = array_diff($existComponentAssociation, $getChallengeId);
                             foreach ($newRecordsComponentAssociation as $challenge_id) {
+
                                 $sequence++;
                                 $challengePathAssociation = new ComponentAssociation();
                                 $challengePathAssociation->challenge_path_id = $challengePath->id;
@@ -167,6 +212,30 @@ class ChallengePath extends Command
                             }
                         }
                     }
+
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            ChallengePathsTypeMode::where(['challenge_path_id' => $challengePath->id, 'type_mode' => '1'])->delete();
+                            foreach ($modes as $single_mode) {
+
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                $resourceMode = new ChallengePathsTypeMode();
+                                $resourceMode->challenge_path_id = $challengePath->id;
+                                $resourceMode->type_mode = '1';
+                                $resourceMode->value = $mode_id;
+                                $resourceMode->save();
+                            }
+                        }
+                    }
+
                 }
             });
             DB::commit();
