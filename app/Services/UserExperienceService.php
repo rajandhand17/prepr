@@ -109,7 +109,6 @@ class UserExperienceService
             } else {
                 UserPersonalFile::where('id', $id)->update(['public'=> 1]);
             }
-
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

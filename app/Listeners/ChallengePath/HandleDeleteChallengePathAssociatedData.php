@@ -36,12 +36,6 @@ class HandleDeleteChallengePathAssociatedData
             if (!$challengePathSkillGroupStack) {
                 return false;
             }
-
-            $challengePathTagGroup = ChallengePathTagsGroupsService::deleteChallengePathTagGroup($challenge_path_id);
-            if (!$challengePathTagGroup) {
-                return false;
-            }
-
             $componentAssociation = ComponentAssociationService::deleteChallengePathAssociation($challenge_path_id);
             if (!$componentAssociation) {
                 return false;

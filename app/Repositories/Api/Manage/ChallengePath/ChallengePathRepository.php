@@ -7,6 +7,7 @@ use App\Services\Manage\ChallengePathAchievementsService;
 use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengePathSkillsGroupsStackService;
 use App\Services\Manage\ChallengePathTagsGroupsService;
+use App\Services\Manage\ChallengePathTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -18,14 +19,16 @@ class ChallengePathRepository implements ChallengePathInterface
     private $challengePathAchievementsService;
     private $challengePathTagsGroupsService;
     private $componentAssociationService;
+    private $challengePathTypeModeService;
 
-    public function __construct(ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
+    public function __construct(ChallengePathTypeModeService $challengePathTypeModeService,ChallengePathService $challengePathService, ChallengePathAchievementsService $challengePathAchievementsService, ChallengePathSkillsGroupsStackService $challengePathSkillsGroupsStackService, ChallengePathTagsGroupsService $challengePathTagsGroupsService, ComponentAssociationService $componentAssociationService)
     {
         $this->challengePathService = $challengePathService;
         $this->challengePathSkillsGroupsStackService = $challengePathSkillsGroupsStackService;
         $this->challengePathAchievementsService = $challengePathAchievementsService;
         $this->challengePathTagsGroupsService = $challengePathTagsGroupsService;
         $this->componentAssociationService = $componentAssociationService;
+        $this->challengePathTypeModeService=$challengePathTypeModeService;
     }
 
     public function getChallengePathCountBasedOnOrganization($organizationId)
@@ -94,12 +97,13 @@ class ChallengePathRepository implements ChallengePathInterface
                 }
                 $createdChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->createChallengePathSkillsGroupsStack($request, $createdChallengePath->id);
                 $createdComponentAssociation = $this->componentAssociationService->createChallengePathAssociation($request, $createdChallengePath->id);
-
+                $challengePathTypeModeService=$this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request,$createdChallengePath->id);
                 return [
                     'createdChallengePath'                     => $createdChallengePath,
                     'createdChallengePathAchievement'          => $createdChallengePathAchievement,
                     'createdChallengePathSkillsGroupsStack'    => $createdChallengePathSkillsGroupsStack,
                     'createdComponentAssociation'              => $createdComponentAssociation,
+                    'challengePathTypeModeService'              => $challengePathTypeModeService,
                 ];
             });
 
@@ -107,7 +111,7 @@ class ChallengePathRepository implements ChallengePathInterface
                 $createChallengePath['createdChallengePath'] &&
                 $createChallengePath['createdChallengePathAchievement'] &&
                 $createChallengePath['createdChallengePathSkillsGroupsStack'] &&
-//                $createChallengePath['createdChallengePathTagsGroupsService'] &&
+                $createChallengePath['challengePathTypeModeService'] &&
                 $createChallengePath['createdComponentAssociation']
             ) {
                 DB::commit();
@@ -134,15 +138,15 @@ class ChallengePathRepository implements ChallengePathInterface
                     $updateChallengePathAchievement = $this->challengePathAchievementsService->updateChallengePathAchievement($request, $updateChallengePath->id, $upload_achievement_image);
                 }
                 $updateChallengePathSkillsGroupsStack = $this->challengePathSkillsGroupsStackService->updateChallengePathSkillsGroupsStack($request, $updateChallengePath->id);
-                $updateChallengePathTagsGroupsService = $this->challengePathTagsGroupsService->updateChallengePathTagsGroupsService($request, $updateChallengePath->id);
                 $updateComponentAssociation = $this->componentAssociationService->updateChallengePathAssociation($request, $updateChallengePath->id);
+                $updatePathTypeModeService=$this->challengePathTypeModeService->createUpdateChallengePathTypeModels($request,$updateChallengePath->id);
 
                 return [
                     'updateChallengePath'                     => $updateChallengePath,
                     'updateChallengePathAchievement'          => $updateChallengePathAchievement,
                     'updateChallengePathSkillsGroupsStack'    => $updateChallengePathSkillsGroupsStack,
-                    'updateChallengePathTagsGroupsService'    => $updateChallengePathTagsGroupsService,
                     'updateComponentAssociation'              => $updateComponentAssociation,
+                    'updatePathTypeModeService'               => $updatePathTypeModeService,
                 ];
             });
 
@@ -150,7 +154,7 @@ class ChallengePathRepository implements ChallengePathInterface
                 $updateChallengePath['updateChallengePath'] &&
                 $updateChallengePath['updateChallengePathAchievement'] &&
                 $updateChallengePath['updateChallengePathSkillsGroupsStack'] &&
-                $updateChallengePath['updateChallengePathTagsGroupsService'] &&
+                $updateChallengePath['updatePathTypeModeService'] &&
                 $updateChallengePath['updateComponentAssociation']
             ) {
                 DB::commit();

@@ -64,15 +64,6 @@ class UpdateChallengePathRequest extends FormRequest
             'skill_stacks.*'          => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
-            'tags'                    => 'required|array',
-            'tags.*'                  => 'numeric|'.Rule::exists('tags', 'id')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            }),
-            'tag_groups'              => 'nullable|array',
-            'tag_groups.*'            => 'numeric|'.Rule::exists('tag_groups', 'id')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            }),
-
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';

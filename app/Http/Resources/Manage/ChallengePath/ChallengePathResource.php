@@ -28,8 +28,6 @@ class ChallengePathResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
@@ -79,16 +77,6 @@ class ChallengePathResource extends JsonResource
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
         if ($this->achievement) {
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
@@ -121,6 +109,12 @@ class ChallengePathResource extends JsonResource
             ];
         }
 
+        $type = $this->challenge_path_type->map(function ($item) {
+            return config('constants.resource_types_key.'.$item->value);
+        });
+        $mode = $this->challenge_path_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.'.$item->value);
+        });
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -140,10 +134,10 @@ class ChallengePathResource extends JsonResource
             'level_id'                      => $level_id,
             'level'                         => $level,
             'skills'                        => $skills,
+            'type'                          => $type,
+            'mode'                          => $mode,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
             'favourite'                     => $this->favourite(),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',
