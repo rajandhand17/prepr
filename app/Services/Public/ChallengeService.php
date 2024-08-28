@@ -156,6 +156,9 @@ class ChallengeService
                     $query->where('value', config('constants.resource_types.'.$request->type));
                 });
             }
+            if ($request->has('challenge_uuid') && !empty($request->challenge_uuid)) {
+                $challenge_list = $challenge_list->where('uuid', $request->challenge_uuid);
+            }
 
             return $challenge_list;
         } catch (Exception $e) {
