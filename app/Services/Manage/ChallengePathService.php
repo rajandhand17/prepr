@@ -93,16 +93,6 @@ class ChallengePathService
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
-                    $query->select('challenge_path_tag_groups.challenge_path_id')
-                        ->from('challenge_path_tag_groups')
-                        ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
-                        ->where('challenge_path_tag_groups.type', '0')
-                        ->whereNull('challenge_path_tag_groups.deleted_at')
-                        ->distinct();
-                })->distinct('challenge_paths.uuid');
-            }
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $getChallengePathList = $getChallengePathList->whereIn('duration_id', $request->duration_id);
             }
