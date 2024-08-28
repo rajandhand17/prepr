@@ -9,7 +9,6 @@ use App\Models\ChallengePathAchievement;
 use App\Models\ChallengePathsTypeMode;
 use App\Models\ComponentAssociation;
 use App\Models\Organization;
-use App\Models\ResourceModuleTypeModes;
 use App\Models\User;
 use App\Services\Manage\ChallengeService;
 use Exception;
@@ -44,7 +43,6 @@ class ChallengePath extends Command
 
             DB::connection('mysql2')->table('groups')->where('type', 'challenge')->chunkById(1000, function ($challengePaths) {
                 foreach ($challengePaths as $challengePath) {
-
                     $checkUser = User::find($challengePath->user_id);
                     if (!$checkUser) {
                         continue;
@@ -195,14 +193,13 @@ class ChallengePath extends Command
                                 ['challenge_id', '!=', null],
                             ])->select('sequence')->orderBy('id', 'desc')->first();
 
-                            if($sequence==null){
+                            if ($sequence == null) {
                                 $sequence = 1;
-                            }else{
-                                $sequence=$sequence->sequence;
+                            } else {
+                                $sequence = $sequence->sequence;
                             }
                             $newRecordsComponentAssociation = array_diff($existComponentAssociation, $getChallengeId);
                             foreach ($newRecordsComponentAssociation as $challenge_id) {
-
                                 $sequence++;
                                 $challengePathAssociation = new ComponentAssociation();
                                 $challengePathAssociation->challenge_path_id = $challengePath->id;
@@ -221,7 +218,6 @@ class ChallengePath extends Command
                         if (!empty($modes)) {
                             ChallengePathsTypeMode::where(['challenge_path_id' => $challengePath->id, 'type_mode' => '1'])->delete();
                             foreach ($modes as $single_mode) {
-
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
@@ -235,7 +231,6 @@ class ChallengePath extends Command
                             }
                         }
                     }
-
                 }
             });
             DB::commit();
