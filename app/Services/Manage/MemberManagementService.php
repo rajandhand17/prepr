@@ -495,9 +495,12 @@ class MemberManagementService
                                         }
                                     }
                                 }
+                                $emailResendCount = $checkMemberExists->email_resend_count + 1;
                                 MemberManagement::where('id', $checkMemberExists['id'])
                                     ->update([
                                         'invite_status' => config('constants.member_management_invite_status.invited'),
+                                        'email_status'  => '0',
+                                        'email_resend_count' => $emailResendCount
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                                 $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
