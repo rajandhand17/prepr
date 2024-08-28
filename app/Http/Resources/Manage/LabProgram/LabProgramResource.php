@@ -151,7 +151,7 @@ class LabProgramResource extends JsonResource
             'liked'                         => $this->liked(),
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
-            'member_count'                  => '0', //Static for temporary basis,
+            'member_count'                  => $this->members()->count(),
             'last_updated'                  => $this->updated_at,
         ];
     }

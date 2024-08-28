@@ -169,4 +169,9 @@ class LabProgram extends Model
 
         return 'NA';
     }
+
+    public function members()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '3', 'invite_status' => '1']);
+    }
 }
