@@ -34,6 +34,22 @@ class ProjectResource extends JsonResource
         $project_role = 'none';
         $is_assess_enabled = 'yes';
 
+        switch ($this->privacy) {
+            case '0':
+                $privacy = 'no';
+                break;
+            case '1':
+                $privacy = 'yes';
+                break;
+            default:
+                $privacy = 'no';
+                break;
+        }
+        if (!auth('api')->check() && $privacy == 'yes' || $privacy == 'yes' && auth('api')->user()->id != $this->id) {
+            return [
+                'privacy'       =>  $privacy,
+            ];
+        } else {  
         if ($this->getProjectTemplate) {
             if ($this->getProjectTemplate->template_id == '0') {
                 $templateData = $this->getProjectIdBasedTemplate ?? $this->getProjectTemplate;
@@ -172,18 +188,6 @@ class ProjectResource extends JsonResource
             }
         }
 
-        switch ($this->privacy) {
-            case '0':
-                $privacy = 'no';
-                break;
-            case '1':
-                $privacy = 'yes';
-                break;
-            default:
-                $privacy = 'no';
-                break;
-        }
-
         if ($this->likes()) {
             $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
@@ -258,5 +262,6 @@ class ProjectResource extends JsonResource
             'history'               => ProjectHistoryResource::collection($this->history),
             'updated_at'            => $this->updated_at,
         ];
+    }
     }
 }
