@@ -189,7 +189,7 @@ class ProjectRepository implements ProjectInterface
 
             $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $getTemplate) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
-               $getTemplate->body_content = str_replace('user_name', $userFullName, str_replace('component_title', $createProject->title, $getTemplate->body_content));
+                $getTemplate->body_content = str_replace('user_name', $userFullName, str_replace('component_title', $createProject->title, $getTemplate->body_content));
                 $subject = $getTemplate->subject;
                 $emailBody = $getTemplate->body_content;
                 $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
@@ -199,10 +199,10 @@ class ProjectRepository implements ProjectInterface
                     'createProjectMember'   => $createProjectMember,
                 ];
             });
+
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
-                $projectId=$createProject['createProject']->id;
-                self::storeHistory($projectId, $userId, $activity);
+                self::storeHistory($createProject['createProject']->id, $userId, $activity);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
                 $user = UserService::getUserById(auth()->user()->id);
                 //$user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
