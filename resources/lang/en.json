@@ -280,6 +280,7 @@
     "responses.handler_not_found_404": "404! not found",
     "responses.handler_access_denied_403": "403! Access Denied. Please login.",
     "responses.handler_illegal_request_403": "403! Illegal Request.",
+    "responses.handler_post_too_large_413": "413! The Request size is large.",
     "responses.handler_bad_request": "402! Bad Request.",
     "responses.already_follow_organization": "The Organization is already being followed by you!",
     "responses.follow_organization_successfully": "The Organization have been followed successfully by you!",

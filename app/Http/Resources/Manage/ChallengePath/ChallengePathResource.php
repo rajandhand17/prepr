@@ -120,6 +120,9 @@ class ChallengePathResource extends JsonResource
                 'percentage'    => $this->challenge_path_completion_status->percentage,
             ];
         }
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_challenge_path_cover_image') || $this->media == config('site-settings.aws_url')) {
+            $this->media = null;
+        }
 
         return [
             'id'                            => $this->uuid,
