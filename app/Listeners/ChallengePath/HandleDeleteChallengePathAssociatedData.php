@@ -6,7 +6,6 @@ use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathAchievementsService;
 use App\Services\Manage\ChallengePathSkillsGroupsStackService;
-use App\Services\Manage\ChallengePathTagsGroupsService;
 use App\Services\Manage\ComponentAssociationService;
 use Exception;
 
@@ -36,12 +35,6 @@ class HandleDeleteChallengePathAssociatedData
             if (!$challengePathSkillGroupStack) {
                 return false;
             }
-
-            $challengePathTagGroup = ChallengePathTagsGroupsService::deleteChallengePathTagGroup($challenge_path_id);
-            if (!$challengePathTagGroup) {
-                return false;
-            }
-
             $componentAssociation = ComponentAssociationService::deleteChallengePathAssociation($challenge_path_id);
             if (!$componentAssociation) {
                 return false;

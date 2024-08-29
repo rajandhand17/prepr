@@ -29,6 +29,7 @@ class Project extends Model
         'challenge_id',
         'lab_id',
         'is_submitted',
+        'late_submission_reason',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];

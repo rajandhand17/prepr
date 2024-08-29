@@ -10,6 +10,7 @@ use App\Models\LabAddress;
 use App\Models\LabExternalLinks;
 use App\Models\LabSkillsGroupsStack;
 use App\Models\LabTagsGroups;
+use App\Models\LabTypeModes;
 use App\Models\Organization;
 use App\Models\SocialLink;
 use App\Models\User;
@@ -156,6 +157,41 @@ class Lab extends Command
                             break;
                     }
 
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $lab->id, 'module_type' => 'lab']);
+                    // Clone the query to avoid modifying the original
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
+
                     $newLab->id = $lab->id;
                     $newLab->type = '4';
                     $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -163,8 +199,8 @@ class Lab extends Command
                     $newLab->user_id = $lab->user_id;
                     $newLab->organization_id = $lab->organisation;
                     $newLab->category_id = $category;
-                    $newLab->duration_id = '1';
-                    $newLab->level_id = '1';
+                    $newLab->duration_id = $duration_id;
+                    $newLab->level_id = $level_id;
                     $newLab->slug = $lab->slug;
                     $newLab->title = $lab->title;
                     $newLab->description = $lab->description;
@@ -196,6 +232,53 @@ class Lab extends Command
                     $newLabAddress->city = $lab->city;
                     $newLabAddress->country = $lab->country;
                     $newLabAddress->save();
+
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '1'])->delete();
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                $labMode = new LabTypeModes();
+                                $labMode->lab_id = $lab->id;
+                                $labMode->type_mode = '1';
+                                $labMode->value = $mode_id;
+                                $labMode->save();
+                            }
+                        }
+                    }
+
+                    $getType = clone $getTagGroups;
+                    $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
+                    if ($type) {
+                        $types = json_decode($type, true);
+                        if (!empty($types)) {
+                            LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '0'])->delete();
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
+                                    $type_id = '0';
+                                } elseif ($single_type == '193') {
+                                    $type_id = '1';
+                                } elseif ($single_type == '194') {
+                                    $type_id = '2';
+                                } elseif ($single_type == '195') {
+                                    $type_id = '3';
+                                }
+                                $labMode = new LabTypeModes();
+                                $labMode->lab_id = $lab->id;
+                                $labMode->type_mode = '0';
+                                $labMode->value = $type_id;
+                                $labMode->save();
+                            }
+                        }
+                    }
 
                     // For Lab Skill
                     $arraySkills = json_decode($lab->lab_skills, true);
