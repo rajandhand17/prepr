@@ -20,8 +20,10 @@ class LabNameListResource extends JsonResource
 
         return [
             'uuid'   => $this->uuid,
+            'slug'   => $this->slug,
             'title'  => $this->title,
             'media'  => $this->media,
+            'description' => $this->description
         ];
     }
 }
