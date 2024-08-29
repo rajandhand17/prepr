@@ -338,7 +338,7 @@ class UserDashboardRepository implements UserDashboardInterface
     public function fetchUserDashboardLayout($userData, $dashboardType)
     {
         try {
-            return $this->dashboardLayoutService->fetchUserDashboardLayout($userData, $dashboardType);
+            return $this->dashboardLayoutService->fetchDashboardLayout($userData, $dashboardType);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

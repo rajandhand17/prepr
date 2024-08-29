@@ -110,7 +110,7 @@ class DashboardLayoutService
 
                 switch ($request['is_active'][$key]) {
                     case 'yes':
-                        $isActive = '1';
+                        $isActive = '0';
                         break;
 
                     case 'no':
