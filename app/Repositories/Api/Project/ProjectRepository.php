@@ -22,6 +22,7 @@ use App\Services\ProjectService;
 use App\Services\ProjectSkillsService;
 use App\Services\ProjectSocialActivitiesService;
 use App\Services\UserService;
+use App\Services\Manage\MemberManagementService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -43,8 +44,8 @@ class ProjectRepository implements ProjectInterface
     private $projectSkillsService;
     private $projectHistoryService;
     private $userService;
-
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, UserService $userService)
+    private $memberManagementService;
+    public function __construct(ProjectService $projectService,MemberManagementService $memberManagementService,ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, UserService $userService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -61,6 +62,7 @@ class ProjectRepository implements ProjectInterface
         $this->projectSkillsService = $projectSkillsService;
         $this->projectHistoryService = $projectHistoryService;
         $this->userService = $userService;
+        $this->memberManagementService = $memberManagementService;
     }
 
     public function getMyProjectIds($userId)
@@ -193,7 +195,13 @@ class ProjectRepository implements ProjectInterface
                 $subject = $getTemplate->subject;
                 $emailBody = $getTemplate->body_content;
                 $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
-
+                $challenge = $this->challengeService->getChallengeBasedOnId($createProject->challenge_id);
+                if($challenge){
+                    if($challenge->privacy == '0') {
+                        $this->memberManagementService->autoAssignedMemberFromAssociatedComponent(['type' => '1','invite_type' => '1','module_id' => $challenge->id,'module_type' => '2','inviter_id' => $userId,'role' => 'user','invite_status' => '1' ,'email' => $userEmail,'auto_invite' => '2','invitee_name' => $userFullName,'email_status' => '3','email_resend_status' => '0','subject_line' => $subject,'email_body' => $emailBody,'is_associated_member' => 'yes','associated_component' => 'project','associated_component_id' => $createProject->id]);
+                    }
+                }
+                
                 return [
                     'createProject'         => $createProject,
                     'createProjectMember'   => $createProjectMember,
