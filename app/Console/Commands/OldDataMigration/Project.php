@@ -9,6 +9,7 @@ use App\Models\Lab;
 use App\Models\Project as ModelsProject;
 use App\Models\ProjectAdditionalInfo;
 use App\Models\ProjectExternalLink;
+use App\Models\ProjectFile;
 use App\Models\ProjectIndustry;
 use App\Models\ProjectMemberManagement;
 use App\Models\ProjectSkill;
@@ -370,6 +371,87 @@ class Project extends Command
                             }
                         }
                     }
+
+                    // For project files from 2(project_files, project_galleries) table to single one
+                    $projectFiles = DB::connection('mysql2')->table('project_files')->where('project_id', $project->id)->get();
+                    if ($projectFiles->isNotEmpty()) {
+                        foreach ($projectFiles as $fileData) {
+                            $extensionFetch = strtolower(pathinfo($fileData->original, PATHINFO_EXTENSION));
+                            $fileType = $this->getFileType($extensionFetch);
+                            if ($fileType != null) {
+                                $createdAt = $fileData->created_at != null ? Carbon::createFromTimestamp($fileData->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $updatedAt = $fileData->updated_at != null ? Carbon::createFromTimestamp($fileData->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $deletedAt = $fileData->deleted_at != null ? Carbon::createFromTimestamp($fileData->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                                switch ($fileType) {
+                                    case 'image':
+                                        $file_type = config('constants.project_file_type.image');
+                                        break;
+
+                                    case 'audio':
+                                        $file_type = config('constants.project_file_type.audio');
+                                        break;
+
+                                    case 'document':
+                                        $file_type = config('constants.project_file_type.docs');
+                                        break;
+
+                                    case 'video':
+                                        $file_type = config('constants.project_file_type.video');
+                                        break;
+                                }
+                                $newProjectFile = new ProjectFile();
+                                $newProjectFile->project_id = $project->id;
+                                $newProjectFile->title = $fileData->original;
+                                $newProjectFile->path = $fileData->name;
+                                $newProjectFile->type = $file_type;
+                                $newProjectFile->created_at = $createdAt;
+                                $newProjectFile->updated_at = $updatedAt;
+                                $newProjectFile->deleted_at = $deletedAt;
+                                $newProjectFile->save();
+                            }
+                        }
+                    }
+
+                    $projectGalleries = DB::connection('mysql2')->table('project_galleries')->where('project_id', $project->id)->get();
+                    if ($projectGalleries->isNotEmpty()) {
+                        foreach ($projectGalleries as $galleryData) {
+                            $extensionFetch = strtolower(pathinfo($galleryData->original, PATHINFO_EXTENSION));
+                            $fileType = $this->getFileType($extensionFetch);
+                            if ($fileType != null) {
+                                $createdAt = $galleryData->created_at != null ? Carbon::createFromTimestamp($galleryData->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $updatedAt = $galleryData->updated_at != null ? Carbon::createFromTimestamp($galleryData->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $deletedAt = $galleryData->deleted_at != null ? Carbon::createFromTimestamp($galleryData->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                                switch ($fileType) {
+                                    case 'image':
+                                        $file_type = config('constants.project_file_type.image');
+                                        break;
+
+                                    case 'audio':
+                                        $file_type = config('constants.project_file_type.audio');
+                                        break;
+
+                                    case 'document':
+                                        $file_type = config('constants.project_file_type.docs');
+                                        break;
+
+                                    case 'video':
+                                        $file_type = config('constants.project_file_type.video');
+                                        break;
+                                }
+                                $newProjectFile = new ProjectFile();
+                                $newProjectFile->project_id = $project->id;
+                                $newProjectFile->title = $galleryData->original;
+                                $newProjectFile->path = $galleryData->name;
+                                $newProjectFile->type = $file_type;
+                                $newProjectFile->created_at = $createdAt;
+                                $newProjectFile->updated_at = $updatedAt;
+                                $newProjectFile->deleted_at = $deletedAt;
+                                $newProjectFile->save();
+                            }
+                        }
+                    }
                 }
             });
 
@@ -383,6 +465,33 @@ class Project extends Command
             $this->error($e->getMessage());
 
             return;
+        }
+    }
+
+    private function getFileType($extension)
+    {
+        try {
+            $imageExtensions = ['jpg', 'jpeg', 'webp', 'png'];
+            $audioExtensions = ['mp3'];
+            $docExtensions = ['pdf', 'doc', 'docx', 'xlsx', 'xls', 'pptx', 'pptm', 'odp', 'ppt'];
+            $videoExtensions = ['mp4', 'mov', 'wmv', 'avi', 'webm', 'mkv', 'mpeg-2'];
+
+            if (in_array($extension, $imageExtensions)) {
+                return 'image';
+            } elseif (in_array($extension, $audioExtensions)) {
+                return 'audio';
+            } elseif (in_array($extension, $docExtensions)) {
+                return 'document';
+            } elseif (in_array($extension, $videoExtensions)) {
+                return 'video';
+            }
+
+            return null; // Return null if no valid type is found
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            $this->error($e->getMessage());
+
+            return null;
         }
     }
 }
