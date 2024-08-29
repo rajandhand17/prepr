@@ -148,7 +148,7 @@ class ChallengeService
 
             if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
                 $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
-                    $query->where('is_submitted', '1');
+                    $query->where('user_id', auth('api')->user()->id)->where('is_submitted', '1');
                 });
             }
             if ($request->has('type') && $request->type) {
