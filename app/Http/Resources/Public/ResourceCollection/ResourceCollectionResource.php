@@ -172,12 +172,19 @@ class ResourceCollectionResource extends JsonResource
                 ];
             }
         }
-        $type = $this->resource_collection_type->map(function ($item) {
-            return config('constants.resource_types_key.'.$item->value);
-        });
-        $mode = $this->resource_collection_mode->map(function ($item) {
-            return config('constants.resource_mode_type_key.'.$item->value);
-        });
+        $type=[];
+        if($this->resource_collection_type){
+            $type = $this->resource_collection_type->map(function ($item) {
+                return config('constants.resource_types_key.'.$item->value);
+            });
+        }
+        $mode=[];
+        if($this->resource_collection_mode){
+            $mode = $this->resource_collection_mode->map(function ($item) {
+                return config('constants.resource_mode_type_key.'.$item->value);
+            });
+        }
+
         if ($this->media == config('site-settings.aws_url') || $this->media == config('site-settings.aws_url').config('site-settings.default_resource_collection_cover_image')) {
             $this->media = null;
         }

@@ -47,7 +47,6 @@ class OrganizationResource extends JsonResource
         if ($this->profile_image == config('site-settings.aws_url').config('site-settings.default_organization_profile_image')) {
             $this->profile_image = null;
         }
-
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
