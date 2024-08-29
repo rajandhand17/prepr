@@ -21,7 +21,7 @@ class OrganizationCustomizationService
             }
 
             $checkExisitingCustomDetails = OrganizationCustomization::where('organization_id', $organizationData->id)->first();
-            if ($request->enable_custom_login_and_registration !== 'none'){
+            if ($request->enable_custom_login_and_registration !== 'none') {
                 if ($checkExisitingCustomDetails) {
                     $organizationCustomization = $checkExisitingCustomDetails;
                 } else {
