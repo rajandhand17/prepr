@@ -172,14 +172,14 @@ class ResourceCollectionResource extends JsonResource
                 ];
             }
         }
-        $type=[];
-        if($this->resource_collection_type){
+        $type = [];
+        if ($this->resource_collection_type) {
             $type = $this->resource_collection_type->map(function ($item) {
                 return config('constants.resource_types_key.'.$item->value);
             });
         }
-        $mode=[];
-        if($this->resource_collection_mode){
+        $mode = [];
+        if ($this->resource_collection_mode) {
             $mode = $this->resource_collection_mode->map(function ($item) {
                 return config('constants.resource_mode_type_key.'.$item->value);
             });
