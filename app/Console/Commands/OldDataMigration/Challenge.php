@@ -298,17 +298,20 @@ class Challenge extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $challengeMode = new ChallengeTypeMode();
-                                $challengeMode->challenge_id = $challenge->id;
-                                $challengeMode->type_mode = '1';
-                                $challengeMode->value = $mode_id;
-                                $challengeMode->save();
+                                if ($mode_id != null) {
+                                    $challengeMode = new ChallengeTypeMode();
+                                    $challengeMode->challenge_id = $challenge->id;
+                                    $challengeMode->type_mode = '1';
+                                    $challengeMode->value = $mode_id;
+                                    $challengeMode->save();
+                                }
                             }
                         }
                     }
@@ -319,6 +322,7 @@ class Challenge extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -329,11 +333,13 @@ class Challenge extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $challengeMode = new ChallengeTypeMode();
-                                $challengeMode->challenge_id = $challenge->id;
-                                $challengeMode->type_mode = '0';
-                                $challengeMode->value = $type_id;
-                                $challengeMode->save();
+                                if ($type_id != null) {
+                                    $challengeMode = new ChallengeTypeMode();
+                                    $challengeMode->challenge_id = $challenge->id;
+                                    $challengeMode->type_mode = '0';
+                                    $challengeMode->value = $type_id;
+                                    $challengeMode->save();
+                                }
                             }
                         }
                     }
@@ -345,7 +351,7 @@ class Challenge extends Command
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
-                            $challengeSkill->foreign_id = $skill;
+                            $challengeSkill->foreign_id = (int) $skill;
                             $challengeSkill->type = '0';
                             $challengeSkill->save();
                         }
@@ -358,7 +364,7 @@ class Challenge extends Command
                         foreach (explode(',', $skillStacks) as $skillStack) {
                             $challengeSkillStack = new ChallengeSkillsGroupsStack();
                             $challengeSkillStack->challenge_id = $challenge->id;
-                            $challengeSkillStack->foreign_id = $skillStack;
+                            $challengeSkillStack->foreign_id = (int) $skillStack;
                             $challengeSkillStack->type = '2';
                             $challengeSkillStack->save();
                         }
@@ -371,7 +377,7 @@ class Challenge extends Command
                         foreach (explode(',', $skillGroups) as $skillGroup) {
                             $challengeSkillGroup = new ChallengeSkillsGroupsStack();
                             $challengeSkillGroup->challenge_id = $challenge->id;
-                            $challengeSkillGroup->foreign_id = $skillGroup;
+                            $challengeSkillGroup->foreign_id = (int) $skillGroup;
                             $challengeSkillGroup->type = '1';
                             $challengeSkillGroup->save();
                         }
