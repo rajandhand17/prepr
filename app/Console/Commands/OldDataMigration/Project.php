@@ -8,6 +8,7 @@ use App\Models\Challenge;
 use App\Models\Lab;
 use App\Models\Project as ModelsProject;
 use App\Models\ProjectAdditionalInfo;
+use App\Models\ProjectExternalLink;
 use App\Models\ProjectIndustry;
 use App\Models\ProjectMemberManagement;
 use App\Models\ProjectSkill;
@@ -16,6 +17,7 @@ use App\Models\ProjectStatus;
 use App\Models\ProjectType;
 use App\Models\ProjectVertical;
 use App\Models\Skill;
+use App\Models\SocialLink;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -342,6 +344,30 @@ class Project extends Command
                             $newProjectMember->email_status = $userInviteEmailStatus;
                             $newProjectMember->inviter_access_level = $userAccessLevel;
                             $newProjectMember->save();
+                        }
+                    }
+
+                    // For project external links
+                    $projectExternalLinks = DB::connection('mysql2')->table('user_sociallink')->where('project_id', $project->id)->get();
+                    if ($projectExternalLinks->isNotEmpty()) {
+                        ProjectExternalLink::where('project_id', $project->id)->delete();
+                        foreach ($projectExternalLinks as $projectLink) {
+                            if ($projectLink->link_url != null) {
+                                $createdAt = $projectLink->created_at != null ? Carbon::createFromTimestamp($projectLink->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $updatedAt = $projectLink->updated_at != null ? Carbon::createFromTimestamp($projectLink->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $deletedAt = $projectLink->deleted_at != null ? Carbon::createFromTimestamp($projectLink->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                $checkSocialLink = SocialLink::find($projectLink->social_link_id);
+
+                                $newProjectExternalLink = new ProjectExternalLink();
+                                $newProjectExternalLink->id = $projectLink->id;
+                                $newProjectExternalLink->project_id = $project->id;
+                                $newProjectExternalLink->social_media_link = $projectLink->link_url;
+                                $newProjectExternalLink->social_link_id = $checkSocialLink != null ? $projectLink->social_link_id : '15';
+                                $newProjectExternalLink->created_at = $createdAt;
+                                $newProjectExternalLink->updated_at = $updatedAt;
+                                $newProjectExternalLink->deleted_at = $deletedAt;
+                                $newProjectExternalLink->save();
+                            }
                         }
                     }
                 }
