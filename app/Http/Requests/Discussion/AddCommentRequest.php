@@ -30,7 +30,7 @@ class AddCommentRequest extends FormRequest
                 $query->whereNull('deleted_at');
             }),
             'attachment'      => 'array|max:5',
-            'attachment.*'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:1024',
+            'attachment.*'    => 'mimes:jpg,jpeg,webp,png,pdf,mp3,doc,docx,xlsx,xls,pptx,pptm,odp,ppt,mp4,mov,wmv,avi,webm,mkv,mpeg-2|max:5120',
         ];
 
         return $base_rules;
