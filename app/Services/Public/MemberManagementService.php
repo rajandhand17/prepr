@@ -17,6 +17,9 @@ class MemberManagementService
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
                     break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
+                    break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
                     break;
@@ -46,6 +49,9 @@ class MemberManagementService
                     break;
                 case 'lab':
                     $module_type = config('constants.member_management_component_type.lab');
+                    break;
+                case 'lab-program':
+                    $module_type = config('constants.member_management_component_type.lab_program');
                     break;
                 case 'challenge':
                     $module_type = config('constants.member_management_component_type.challenge');
@@ -166,6 +172,17 @@ class MemberManagementService
             }
 
             return $organizationIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getModuleIdsBasedOnParam($userData, $module_type, $inviteStatus)
+    {
+        try {
+            return MemberManagement::where(['module_type' => $module_type, 'invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('module_id');
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

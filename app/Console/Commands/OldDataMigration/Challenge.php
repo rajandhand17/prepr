@@ -15,6 +15,7 @@ use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTimelines;
+use App\Models\ChallengeTypeMode;
 use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
@@ -80,6 +81,7 @@ class Challenge extends Command
                         $descriptionType = config('constants.description_type.scorm');
                     }
 
+                    // For main Challenges table
                     $checkChallenge = ModelChallenge::find($challenge->id);
                     if ($checkChallenge) {
                         $newChallenge = $checkChallenge;
@@ -189,14 +191,49 @@ class Challenge extends Command
                             break;
                     }
 
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $challenge->id, 'module_type' => 'challenge']);
+                    // Clone the query to avoid modifying the original
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
                     $newChallenge->user_id = $challenge->user_id;
                     $newChallenge->organization_id = $challenge->organisation;
                     $newChallenge->category_id = $category;
-                    $newChallenge->duration_id = '1';
-                    $newChallenge->level_id = '1';
+                    $newChallenge->duration_id = $duration_id;
+                    $newChallenge->level_id = $level_id;
                     $newChallenge->slug = $challenge->slug;
                     $newChallenge->title = $challenge->title;
                     $newChallenge->description_type = $descriptionType;
@@ -227,7 +264,8 @@ class Challenge extends Command
                         $newScorm->entry_url = $checkScrom->entry_url;
                         $newScorm->save();
                     }
-                    // For Challenge Host/Sponser
+
+                    // For Challenge Sponsers table
                     $arrayHost = json_decode($challenge->host_id, true);
                     if (!empty($arrayHost)) {
                         ChallengeSponsor::where('challenge_id', $challenge->id)->delete();
@@ -245,7 +283,54 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '1'])->delete();
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                $challengeMode = new ChallengeTypeMode();
+                                $challengeMode->challenge_id = $challenge->id;
+                                $challengeMode->type_mode = '1';
+                                $challengeMode->value = $mode_id;
+                                $challengeMode->save();
+                            }
+                        }
+                    }
+
+                    $getType = clone $getTagGroups;
+                    $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
+                    if ($type) {
+                        $types = json_decode($type, true);
+                        if (!empty($types)) {
+                            ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '0'])->delete();
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
+                                    $type_id = '0';
+                                } elseif ($single_type == '193') {
+                                    $type_id = '1';
+                                } elseif ($single_type == '194') {
+                                    $type_id = '2';
+                                } elseif ($single_type == '195') {
+                                    $type_id = '3';
+                                }
+                                $challengeMode = new ChallengeTypeMode();
+                                $challengeMode->challenge_id = $challenge->id;
+                                $challengeMode->type_mode = '0';
+                                $challengeMode->value = $type_id;
+                                $challengeMode->save();
+                            }
+                        }
+                    }
+
+                    // For Challenge skils table
                     $arraySkills = json_decode($challenge->challange_skill, true);
                     if (!empty($arraySkills)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '0'])->delete();
@@ -258,7 +343,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill Stack
+                    // For Challenge skils stack table
                     $skillStacks = $challenge->skill_stacks;
                     if (!empty($skillStacks)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '2'])->delete();
@@ -271,7 +356,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Skill Group
+                    // For Challenge skils groups table
                     $skillGroups = $challenge->skill_groups;
                     if (!empty($skillGroups)) {
                         ChallengeSkillsGroupsStack::where(['challenge_id' => $challenge->id, 'foreign_id' => '1'])->delete();
@@ -284,7 +369,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Requirements
+                    // For Challenge Requirements table
                     $checkChallengeRequirements = ChallengeRequirement::where('challenge_id', $challenge->id)->first();
                     if ($checkChallengeRequirements) {
                         $challengeRequirements = $checkChallengeRequirements;
@@ -345,7 +430,7 @@ class Challenge extends Command
                     $challengeRequirements->additional_requirements = $challenge->additional_info;
                     $challengeRequirements->save();
 
-                    // For Challenge Achievements
+                    // For Challenge Achievements table
                     $challengePrices = DB::connection('mysql2')->table('challange_prices')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($challengePrices->isNotEmpty()) {
                         ChallengeAchievement::where('challenge_id', $challenge->id)->delete();
@@ -373,7 +458,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Assessment
+                    // For Challenge Assessments table
                     $checkChallengeAssessments = DB::connection('mysql2')->table('challange_assessments')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeAssessments->isNotEmpty()) {
                         foreach ($checkChallengeAssessments as $checkChallengeAssessment) {
@@ -429,7 +514,7 @@ class Challenge extends Command
                                 $challengeAssessment->save();
                             }
 
-                            // For Challenge Assessment Criteria
+                            // For Challenge Assessments criterias table
                             $checkChallengeAssessmentCriterias = DB::connection('mysql2')->table('challange_assessment_criterias')->where('challenge_assessment_id', $checkChallengeAssessment->id)->whereNull('deleted_at')->get();
                             if ($checkChallengeAssessmentCriterias->isNotEmpty()) {
                                 foreach ($checkChallengeAssessmentCriterias as $challengeAssessmentCriteriaOld) {
@@ -447,7 +532,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Project Template
+                    // For Challenge Project Template table
                     $checkChallengeProjectTemplates = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeProjectTemplates->isNotEmpty()) {
                         ChallengeProjectTemplate::where('challenge_id', $challenge->id)->delete();
@@ -459,7 +544,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Custom Timelines
+                    // For Challenge Custom Timeline table
                     $checkChallengeCustomTimelines = DB::connection('mysql2')->table('challenge_custom_time')->where('challenge_id', $challenge->id)->whereNull('deleted_at')->get();
                     if ($checkChallengeCustomTimelines->isNotEmpty()) {
                         ChallengeCustomTimelines::where('challenge_id', $challenge->id)->delete();
@@ -487,18 +572,19 @@ class Challenge extends Command
                                     $challengeDateDuration = 'months';
                                     break;
                                 default:
-                                    $challengeDateDuration = 'weeks';
+                                    $challengeDateDuration = 'days';
                                     break;
                             }
                             $challengeCustomTimeline = new ChallengeCustomTimelines();
                             $challengeCustomTimeline->challenge_id = $checkChallengeCustomTimeline->challenge_id;
                             $challengeCustomTimeline->custom_timelines_title = $checkChallengeCustomTimeline->title;
-                            $challengeCustomTimeline->custom_timelines_number = '2';
+                            $challengeCustomTimeline->custom_timelines_number = $checkChallengeCustomTimeline->customDateNumber;
                             $challengeCustomTimeline->custom_timelines_description = $checkChallengeCustomTimeline->description;
                             $challengeCustomTimeline->custom_timelines_duration = $challengeDateDuration;
                             $challengeCustomTimeline->schedule_custom_notify = $challengeScheduleNotify;
                             $challengeCustomTimeline->save();
 
+                            // For Challenge Flexible Announcements table
                             $checkFlexibleAnnouncements = DB::connection('mysql2')->table('flexible_announcement')->where('customDateId', $checkChallengeCustomTimeline->id)->get();
                             if (!empty($checkFlexibleAnnouncements)) {
                                 foreach ($checkFlexibleAnnouncements as $flexibleAnnouncement) {
@@ -534,7 +620,7 @@ class Challenge extends Command
                         }
                     }
 
-                    // For Challenge Timelines
+                    // For Challenge Timelines table
                     $checkchallengeTimelines = ChallengeTimelines::where('challenge_id', $challenge->id)->first();
                     if ($checkchallengeTimelines) {
                         $challengeTimelines = $checkchallengeTimelines;

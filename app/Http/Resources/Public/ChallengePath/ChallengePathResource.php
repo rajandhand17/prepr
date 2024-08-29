@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Public\ChallengePath;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\ChallengePathAssociatedChallengeResource;
 use App\Http\Resources\Public\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
@@ -39,16 +40,11 @@ class ChallengePathResource extends JsonResource
         $organization_id = null;
         $module_progress = null;
         if ($this->component_association) {
-            foreach ($this->component_association as $association) {
-                if ($association->challenge_id) {
-                    $challengeData = ChallengeService::getChallengeBasedOnId($association->challenge_id);
-                    if ($challengeData) {
-                        $componentAssociation[$association->challenge_id] = $challengeData->only('id', 'uuid', 'title', 'media', 'slug', 'description');
-                        $componentAssociation[$association->challenge_id]['liked'] = $challengeData->liked();
-                        $componentAssociation[$association->challenge_id]['favourite'] = $challengeData->favourite();
-                        $componentAssociation[$association->challenge_id]['member_count'] = $challengeData->members()->count();
-                    }
-                }
+            $challengeIds = $this->component_association->pluck('challenge_id');
+            $challengeData = ChallengeService::getChallengesBasedOnIds($challengeIds, ['members', 'durations', 'levels', 'challenge_completion_status', 'submitted_projects']);
+
+            if ($challengeData) {
+                $componentAssociation = ChallengePathAssociatedChallengeResource::collection($challengeData);
             }
         }
         if ($this->getOrganization) {
@@ -127,6 +123,9 @@ class ChallengePathResource extends JsonResource
                     'percentage'    => $this->challenge_path_completion_status->percentage,
                 ];
             }
+        }
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_challenge_path_cover_image') || $this->media == config('site-settings.aws_url')) {
+            $this->media = null;
         }
 
         return [

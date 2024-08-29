@@ -43,4 +43,17 @@ class ChallengeAssessment extends Model
     {
         return $this->hasMany(ChallengeAssessmentCriteria::class, 'assessment_id', 'id');
     }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'challenge_id', 'challenge_id');
+    }
+
+    public function getMemberNamesAttribute()
+    {
+        $emails = $this->members_email;
+        $names = User::whereIn('email', $emails)->pluck('full_name');
+
+        return $names->implode(', ');
+    }
 }

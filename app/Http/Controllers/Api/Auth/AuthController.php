@@ -22,6 +22,7 @@ use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
+use App\Models\UserActivity;
 use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController
@@ -91,6 +92,8 @@ class AuthController extends AppBaseController
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
+                UserActivity::logActivity($login['user']->id, 'login');
+
                 if ($login['code'] === 2) {
                     $response = ['message' => $login['message'], 'code' => $login['code']];
 

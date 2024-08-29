@@ -543,11 +543,60 @@ class ProjectService
         }
     }
 
-    public function submitProject($projectData)
+    public static function checkSubmisstionDate($projectData)
     {
         try {
-            $projectData->is_submitted = '1';
-            $projectData->save();
+            $dates = $projectData->challenge->challenge_timelines;
+            if ($dates->timeline_type == '1') {
+                if ($dates->submission_deadline_date < date('Y-m-d H:i:s')) {
+                    $lateSubmission = 'yes';
+                } else {
+                    $lateSubmission = 'no';
+                }
+            } else {
+                $dateResult = ' ';
+                //for flexible challenge check if date if passed from duration
+                if ($dates->flexible_date_duration == 'days') {
+                    $dateCount = $dates->flexible_date_number;
+                } elseif ($dates->flexible_date_duration == 'weeks') {
+                    $dateCount = $dates->flexible_date_number * 7;
+                } elseif ($dates->flexible_date_duration == 'months') {
+                    $dateCount = $dates->flexible_date_number * 30;
+                }
+                $durationDate = date_create(date('Y-m-d', strtotime($projectData->created_at.' + '.$dateCount.'days')));
+                $date = date_create(date('Y-m-d'));
+                $dateResult = ($durationDate < $date);
+                if ($dateResult) {
+                    $lateSubmission = 'yes';
+                } else {
+                    $lateSubmission = 'no';
+                }
+            }
+
+            return $lateSubmission;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function submitProject($projectData, $checkLateSubmission, $request)
+    {
+        try {
+            if ($checkLateSubmission == 'yes') {
+                if ($request->late_submission_msg == null || !$request->has('late_submission_msg')) {
+                    $submitted = 'no';
+
+                    return $submitted;
+                }
+                $projectData->is_submitted = '2';
+                $projectData->late_submission_reason = $request->late_submission_msg;
+                $projectData->save();
+            } else {
+                $projectData->is_submitted = '1';
+                $projectData->save();
+            }
 
             return true;
         } catch (Exception $e) {
@@ -939,7 +988,7 @@ class ProjectService
     {
         try {
             $getUserProjects = Project::where('user_id', $userId)
-            ->paginate(config('site-settings.pagination_per_page'));
+            ->paginate(config('site-settings.association_pagination_per_page'));
 
             return $getUserProjects;
         } catch (Exception $e) {

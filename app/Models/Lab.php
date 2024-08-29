@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Accessor\LabAccessor;
 use App\Models\Builder\LabBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lab extends Model
 {
     use HasFactory;
+    use LabAccessor;
     use SoftDeletes;
 
     protected $table = 'labs';
@@ -42,6 +46,7 @@ class Lab extends Model
         'campus_connect_status',
         'is_accessible',
         'is_live_event_enabled',
+        'views_count',
     ];
 
     /**
@@ -161,6 +166,11 @@ class Lab extends Model
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
     }
 
+    public function allMembers()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1']);
+    }
+
     public function durations()
     {
         return $this->belongsTo(Duration::class, 'duration_id', 'id');
@@ -251,5 +261,43 @@ class Lab extends Model
         }
 
         return 'N/A';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '0');
+    }
+
+    public function challenges(): BelongsToMany
+    {
+        return $this->belongsToMany(Challenge::class, 'component_associations', 'lab_id', 'challenge_id');
+    }
+
+    public function labPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(LabProgram::class, 'component_associations', 'lab_id', 'lab_program_id');
+    }
+
+    public function resourceModules(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceModule::class, 'component_associations', 'lab_id', 'resource_module_id');
+    }
+
+    public function resourceCollections(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceCollection::class, 'component_associations', 'lab_id', 'resource_collection_id');
+    }
+
+    public function resourceGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceGroup::class, 'component_associations', 'lab_id', 'resource_group_id');
+    }
+
+    public function challengePaths(): BelongsToMany
+    {
+        return $this->belongsToMany(ChallengePath::class, 'component_associations', 'lab_id', 'challenge_path_id');
     }
 }

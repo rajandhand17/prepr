@@ -30,7 +30,7 @@ class ProfileResource extends JsonResource
                 $profile_privacy = 'null';
                 break;
         }
-        if (!auth()->check() && $profile_privacy == 'private' || $profile_privacy == 'private' && auth()->user()->id != $this->id) {
+        if (!auth('api')->check() && $profile_privacy == 'private' || $profile_privacy == 'private' && auth('api')->user()->id != $this->id) {
             return [
                 'profile_privacy'       => $profile_privacy,
             ];
@@ -184,63 +184,69 @@ class ProfileResource extends JsonResource
                 // Map over the collection to format the data
                 $formattedExternalLinks = $this->external_links->map(function ($link) {
                     return [
-                        'social_media_link' => $link->social_media_link,
-                        'social_link_id'    => $link->social_link_id,
+                        'id'        => $link->id,
+                        'link_id'   => $link->social_link_id,
+                        'link'      => $link->social_media_link,
+                        'title'     => optional($link->social_link)->title,
+                        'image'     => optional($link->social_link)->icon,
                     ];
                 });
             } else {
                 $formattedExternalLinks = null;
             }
+            $userPersonalFiles = $this->userPersonalFiles;
+            $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); });
+            $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
 
             return [
-                'id'                     => $this->id,
-                'first_name'             => $this->first_name,
-                'last_name'              => $this->last_name,
-                'full_name'              => $this->full_name,
-                'username'               => $this->username,
-                'email'                  => $this->email,
-                'country_code'           => $this->country_code,
-                'address'                => isset($this->userAddress->address) ? $this->userAddress->address : null,
-                'city'                   => isset($this->userAddress->city) ? $this->userAddress->city : null,
-                'state'                  => isset($this->userAddress->state) ? $this->userAddress->state : null,
-                'country'                => isset($this->userAddress->country) ? $this->userAddress->country : null,
-                'zip_code'               => isset($this->userAddress->zip_code) ? $this->userAddress->zip_code : null,
-                'phone_number'           => $this->phone_number,
-                'profile_image'          => $this->profile_image,
-                'pronouns'               => null,
-                'project_count'          => $this->userProjects->count(),
-                'lab_count'              => $this->userLabs->count(),
-                'achievements'           => $this->userAchievements->count(),
-                'achievements_list'      => UserAchievementResource::collection($this->userAchievements),
-                'featured_achievement'   => UserAchievementResource::collection($this->userFeaturedAchievements),
-                'role'                   => 'user',
-                'friends'                => auth()->check() ? FriendsResource::collection($this->userFriends) : null,
-                'tags'                   => $userTag,
-                'about'                  => $about,
-                'age'                    => $age,
-                'learnrank'              => '1',
-                'gender'                 => $gender,
-                'date_of_birth'          => $dob,
-                'purpose'                => $purpose,
-                'user_type'              => $user_type,
-                'recent_immigrant'       => $recent_immigrant,
-                'indigenous_group'       => $indigenous_group,
-                'visible_minority'       => $visible_minority,
-                'disability'             => $disability,
-                'is_friends'             => $this->userFriends()->exists() ? 'Yes' : 'No',
-                'is_follower'            => $this->userFollow()->exists() ? 'Yes' : 'No',
-                'request_sent'           => $this->userRequestSend()->exists() ? 'Yes' : 'No',
-                'request_received'       => $this->requestReceived()->exists() ? 'Yes' : 'No',
-                'user_experiences'       => UserExperienceResource::collection($this->userExperience),
-                'user_educations'        => UserEducationResource::collection($this->userEducation),
-                'user_patents'           => UserPatentResource::collection($this->userPatents),
-                'user_certificates'      => UserCertificateResource::collection($this->userCertificates),
-                'user_skills'            => $skills,
-                'user_pinned_skills'     => $pinnedSkills,
-                'user_personal_files'    => UserPersonalFilesResource::collection($this->userPersonalFiles),
-                'friend_request_privacy' => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
-                'profile_privacy'        => $profile_privacy,
-                'external_link'          => $formattedExternalLinks,
+                'id'                      => $this->id,
+                'first_name'              => $this->first_name,
+                'last_name'               => $this->last_name,
+                'full_name'               => $this->full_name,
+                'username'                => $this->username,
+                'email'                   => $this->email,
+                'country_code'            => $this->country_code,
+                'address'                 => isset($this->userAddress->address) ? $this->userAddress->address : null,
+                'city'                    => isset($this->userAddress->city) ? $this->userAddress->city : null,
+                'state'                   => isset($this->userAddress->state) ? $this->userAddress->state : null,
+                'country'                 => isset($this->userAddress->country) ? $this->userAddress->country : null,
+                'zip_code'                => isset($this->userAddress->zip_code) ? $this->userAddress->zip_code : null,
+                'phone_number'            => $this->phone_number,
+                'profile_image'           => $this->profile_image,
+                'pronouns'                => null,
+                'project_count'           => $this->userProjects->count(),
+                'lab_count'               => $this->userLabs->count(),
+                'achievements'            => $this->userAchievements->count(),
+                'achievements_list'       => UserAchievementResource::collection($this->userAchievements),
+                'featured_achievement'    => UserAchievementResource::collection($this->userFeaturedAchievements),
+                'role'                    => 'user',
+                'friends'                 => auth()->check() ? FriendsResource::collection($this->userFriends) : null,
+                'tags'                    => $userTag,
+                'about'                   => $about,
+                'age'                     => $age,
+                'learnrank'               => '1',
+                'gender'                  => $gender,
+                'date_of_birth'           => $dob,
+                'purpose'                 => $purpose,
+                'user_type'               => $user_type,
+                'recent_immigrant'        => $recent_immigrant,
+                'indigenous_group'        => $indigenous_group,
+                'visible_minority'        => $visible_minority,
+                'disability'              => $disability,
+                'is_friends'              => $this->userFriends()->exists() ? 'Yes' : 'No',
+                'is_follower'             => $this->userFollow()->exists() ? 'Yes' : 'No',
+                'request_sent'            => $this->userRequestSend()->exists() ? 'Yes' : 'No',
+                'request_received'        => $this->requestReceived()->exists() ? 'Yes' : 'No',
+                'user_experiences'        => UserExperienceResource::collection($this->userExperience),
+                'user_educations'         => UserEducationResource::collection($this->userEducation),
+                'user_patents'            => UserPatentResource::collection($this->userPatents),
+                'user_certificates'       => UserCertificateResource::collection($this->userCertificates),
+                'user_skills'             => $skills,
+                'user_pinned_skills'      => $pinnedSkills,
+                'user_personal_files'     => $personalfiles,
+                'friend_request_privacy'  => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
+                'profile_privacy'         => $profile_privacy,
+                'external_links'          => $formattedExternalLinks,
             ];
         }
     }

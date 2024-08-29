@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\FeaturedLabService;
+use App\Services\LabHistoryService;
 use App\Services\Manage\AirmeetEventService;
 use App\Services\Manage\AIService;
 use App\Services\Manage\CampusConnectOpportunityService;
@@ -47,8 +48,9 @@ class LabRepository implements LabInterface
     private $organizationService;
     private $labTypeModesService;
     private $featuredLabService;
+    private $labHistoryService;
 
-    public function __construct(FeaturedLabService $featuredLabService, LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
+    public function __construct(LabHistoryService $labHistoryService, FeaturedLabService $featuredLabService, LabService $labService, MemberManagementService $memberManagementService, LabAddressService $labAddressService, LabExternalLinksService $labExternalLinksService, LabSkillsGroupsStackService $labSkillsGroupsStackService, LabTagsGroupsService $labTagsGroupsService, LabAcheivementService $labAcheivementService, SkillService $skillService, ComponentAssociationService $componentAssociationService, DurationService $durationService, AIService $aiService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, OrganizationService $organizationService, AirmeetEventService $airmeetEventService, LabTypeModesService $labTypeModesService)
     {
         $this->labService = $labService;
         $this->memberManagementService = $memberManagementService;
@@ -67,6 +69,7 @@ class LabRepository implements LabInterface
         $this->organizationService = $organizationService;
         $this->labTypeModesService = $labTypeModesService;
         $this->featuredLabService = $featuredLabService;
+        $this->labHistoryService = $labHistoryService;
     }
 
     public function getLabCountBasedOnOrganization($organizationId)
@@ -236,6 +239,10 @@ class LabRepository implements LabInterface
                 $createdLab['campusConnectStory'] &&
                 $createdLab['labTypeModes']
             ) {
+                $userId = auth()->user()->id;
+                $activity = auth()->user()->full_name.' '.__('responses.lab_created_activity').' '.$createdLab['createdLab']->title;
+                self::storeHistory($createdLab['createdLab']->id, $userId, $activity);
+
                 DB::commit();
                 $groups_for_mixpanel = [];
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
@@ -257,6 +264,17 @@ class LabRepository implements LabInterface
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
             DB::rollBack();
+
+            return false;
+        }
+    }
+
+    public function storeHistory($moduleId, $userId, $activity)
+    {
+        try {
+            return $this->labHistoryService->storeHistory($moduleId, $userId, $activity);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
             return false;
         }
@@ -334,6 +352,10 @@ class LabRepository implements LabInterface
                 $updatedLab['campusConnectStory'] &&
                 $updatedLab['labTypeModes']
             ) {
+                $userId = auth()->user()->id;
+                $activity = auth()->user()->full_name.' '.__('responses.lab_updated_activity').' '.$updatedLab['updatedLab']->title;
+                self::storeHistory($updatedLab['updatedLab']->id, $userId, $activity);
+
                 DB::commit();
                 $groups_for_mixpanel = [];
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
@@ -374,6 +396,11 @@ class LabRepository implements LabInterface
             // Mixpanel tracking code: delete lab
             $lab->skills = LabSkillsGroupsStackService::getSkillsBasedOnLabId($lab->id);
             $lab->tags = LabTagsGroupsService::getTagIdBasedOnLabId($lab->id);
+
+            $userId = auth()->user()->id;
+            $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
+            self::storeHistory($lab->id, $userId, $activity);
+
             MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
             DB::commit();
 
@@ -424,6 +451,7 @@ class LabRepository implements LabInterface
     public function createLabUsingAIPreview($request)
     {
         try {
+            Log::info('createLabUsingAIPreview - about to run this->aiService->createLabUsingAIPreview(request)');
             $createLabUsingAIPreview = $this->aiService->createLabUsingAIPreview($request);
 
             return $createLabUsingAIPreview;
@@ -449,6 +477,10 @@ class LabRepository implements LabInterface
                     'createdLabAssociations'      => $createdLabAssociations,
                 ];
             });
+
+            $userId = auth()->user()->id;
+            $activity = auth()->user()->full_name.' '.__('responses.lab_created_activity').' '.$createdLabUsingAI['createdLabUsingAI']->title;
+            self::storeHistory($createdLabUsingAI['createdLabUsingAI']->id, $userId, $activity);
 
             return $createdLabUsingAI['createdLabUsingAI'];
 

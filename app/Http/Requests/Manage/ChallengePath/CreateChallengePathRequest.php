@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ChallengePath;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateChallengePathRequest extends FormRequest
 {
@@ -28,25 +29,39 @@ class CreateChallengePathRequest extends FormRequest
             'status'                  => 'required|in:draft,publish,archive',
             'title'                   => 'required|max:255|unique:challenge_paths,title',
             'description'             => 'required',
-            'category_id'             => 'required|exists:categories,id',
-            'level_id'                => 'required|exists:levels,id',
-            'duration_id'             => 'required|exists:durations,id',
+            'category_id'             => Rule::exists('categories', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'level_id'                => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'duration_id'             => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'challenge_ids'           => 'required|array',
-            'challenge_ids.*'         => 'exists:challenges,uuid',
+            'challenge_ids.*'         => Rule::exists('challenges', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'is_sequential'           => 'in:yes,no',
             'privacy'                 => 'in:yes,no',
             'is_achievement_enabled'  => 'in:yes,no',
             'is_auto_created'         => 'in:yes,no',
             'skills'                  => 'required|array',
-            'skills.*'                => 'numeric|exists:skills,id',
+            'skills.*'                => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'skill_groups'            => 'nullable|array',
-            'skill_groups.*'          => 'numeric|exists:skill_groups,id',
+            'skill_groups.*'          => 'numeric|'.Rule::exists('skill_groups', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'skill_stacks'            => 'nullable|array',
-            'skill_stacks.*'          => 'numeric|exists:skill_stacks,id',
-            'tags'                    => 'required|array',
-            'tags.*'                  => 'numeric|exists:tags,id',
-            'tag_groups'              => 'nullable|array',
-            'tag_groups.*'            => 'numeric|exists:tag_groups,id',
+            'skill_stacks.*'          => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'type'                   => 'array',
+            'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                   => 'array',
+            'mode.*'                 => 'nullable|in:team,individual',
 
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
@@ -96,11 +111,10 @@ class CreateChallengePathRequest extends FormRequest
             'skill_groups.*.array'           => __('responses.skill_groups_array'),
             'skill_stacks.*.array'           => __('responses.skill_stacks_array'),
             'skill_stacks.*.exists'          => __('responses.skill_stack_not_found'),
-            'tags.required'                  => __('responses.tags_required'),
-            'tags.numeric'                   => __('responses.tags_numeric'),
-            'tag_groups.*.exists'            => __('responses.tag_groups_not_found'),
-            'tag_groups.*.array'             => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'           => __('responses.tag_groups_numeric'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
         ];
     }
 }

@@ -3,13 +3,12 @@
 namespace App\Http\Resources\Manage\ChallengePath;
 
 use App\Helpers\UtilityHelper;
+use App\Http\Resources\Manage\ChallengePathAssociatedChallengeResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Services\Manage\ChallengeService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
-use App\Services\TagGroupService;
-use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,8 +26,6 @@ class ChallengePathResource extends JsonResource
         $skills = [];
         $skill_groups = [];
         $skill_stacks = [];
-        $tags = [];
-        $tag_groups = [];
         $category = null;
         $category_id = null;
         $duration = null;
@@ -38,16 +35,11 @@ class ChallengePathResource extends JsonResource
         $organization = null;
         $organization_id = null;
         if ($this->component_association) {
-            foreach ($this->component_association as $association) {
-                if ($association->challenge_id) {
-                    $challengeData = ChallengeService::getChallengeBasedOnId($association->challenge_id);
-                    if ($challengeData) {
-                        $componentAssociation[$association->challenge_id] = $challengeData->only('id', 'uuid', 'title', 'media', 'slug', 'description');
-                        $componentAssociation[$association->challenge_id]['liked'] = $challengeData->liked();
-                        $componentAssociation[$association->challenge_id]['favourite'] = $challengeData->favourite();
-                        $componentAssociation[$association->challenge_id]['member_count'] = $challengeData->members()->count();
-                    }
-                }
+            $challengeIds = $this->component_association->pluck('challenge_id');
+            $challengeData = ChallengeService::getChallengesBasedOnIds($challengeIds, ['members', 'durations', 'levels', 'challenge_completion_status', 'submitted_projects']);
+
+            if ($challengeData) {
+                $componentAssociation = ChallengePathAssociatedChallengeResource::collection($challengeData);
             }
         }
         if ($this->getOrganization) {
@@ -83,16 +75,6 @@ class ChallengePathResource extends JsonResource
             $associatedSkillStacks = $this->skill_stacks->pluck('foreign_id');
             $skill_stacks = SkillStackService::getSkillStacksBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
         }
-        if ($this->tags) {
-            $associatedSkillStacks = $this->tags->pluck('foreign_id');
-            $tags = TagService::getTagsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
-        if ($this->tag_groups) {
-            $associatedSkillStacks = $this->tag_groups->pluck('foreign_id');
-            $tag_groups = TagGroupService::getTagGroupsBasedOnIds($associatedSkillStacks)->pluck('title', 'id');
-        }
-
         if ($this->achievement) {
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
@@ -124,6 +106,16 @@ class ChallengePathResource extends JsonResource
                 'percentage'    => $this->challenge_path_completion_status->percentage,
             ];
         }
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_challenge_path_cover_image') || $this->media == config('site-settings.aws_url')) {
+            $this->media = null;
+        }
+
+        $type = $this->challenge_path_type->map(function ($item) {
+            return config('constants.resource_types_key.'.$item->value);
+        });
+        $mode = $this->challenge_path_mode->map(function ($item) {
+            return config('constants.resource_mode_type_key.'.$item->value);
+        });
 
         return [
             'id'                            => $this->uuid,
@@ -144,10 +136,10 @@ class ChallengePathResource extends JsonResource
             'level_id'                      => $level_id,
             'level'                         => $level,
             'skills'                        => $skills,
+            'type'                          => $type,
+            'mode'                          => $mode,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,
-            'tags'                          => $tags,
-            'tag_groups'                    => $tag_groups,
             'achievement'                   => $achievement,
             'favourite'                     => $this->favourite(),
             'privacy'                       => ($this->privacy == '1') ? 'yes' : 'no',

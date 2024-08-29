@@ -5,6 +5,7 @@ namespace App\Http\Requests\Profile;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class FriendRequest extends FormRequest
 {
@@ -24,7 +25,9 @@ class FriendRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'user_id'=> 'required|exists:users,id',
+            'user_id'=> 'required|'.Rule::exists('users', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
 
         return $base_rules;

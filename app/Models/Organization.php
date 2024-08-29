@@ -34,7 +34,7 @@ class Organization extends LaratrustTeam
         'business_challenge_tacklings',
         'magnet_community_id',
         'total_employees',
-
+        'views_count',
     ];
 
     public function newEloquentBuilder($query): OrganizationBuilder
@@ -70,6 +70,11 @@ class Organization extends LaratrustTeam
     public function members()
     {
         return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '0', 'invite_status' => '1']);
+    }
+
+    public function allMembers()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '0']);
     }
 
     public function organizationMembers()
@@ -182,5 +187,15 @@ class Organization extends LaratrustTeam
     public function organizationType()
     {
         return $this->hasMany(OrganizationTypeMode::class, 'organization_id', 'id')->where(['type_mode' => '0']);
+    }
+
+    public function getFavouriteCountAttribute(): int
+    {
+        return $this->hasMany(OrganizationSocialActivities::class, 'organization_id', 'id')->where('favourite', '1')->count();
+    }
+
+    public function getInvitationDeclineCountAttribute(): int
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '0', 'invite_status' => '3'])->count();
     }
 }

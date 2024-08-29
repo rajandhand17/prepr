@@ -5,6 +5,7 @@ namespace App\Http\Requests\Project;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateProjectRequest extends FormRequest
 {
@@ -30,8 +31,12 @@ class CreateProjectRequest extends FormRequest
             'is_download_enabled'       => 'required|in:yes,no',
             'media_type'                => 'in:image,embedded,none',
             'privacy'                   => 'required|in:public,private',
-            'challenge_id'              => 'required|exists:challenges,uuid',
-            'lab_id'                    => 'nullable|exists:labs,uuid',
+            'challenge_id'              => 'required|'.Rule::exists('challenges', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'lab_id'                    => 'nullable|'.Rule::exists('labs', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
 
         if ($this->has('media_type') && $this->input('media_type') == 'image') {

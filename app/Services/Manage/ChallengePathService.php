@@ -43,8 +43,8 @@ class ChallengePathService
             if ($request->has('search') && !empty($request->search)) {
                 $getChallengePathList = $getChallengePathList->whereSearchFilter($request->search ?? '');
             }
-            if ($request->has('status') && !empty($request->status) && in_array($request->status, ['draft', 'published'])) {
-                $status = ($request->status == 'draft') ? '0' : '1';
+            if ($request->has('challenge_path_status') && !empty($request->challenge_path_status) && in_array($request->challenge_path_status, ['draft', 'published'])) {
+                $status = ($request->challenge_path_status == 'draft') ? '0' : '1';
                 $getChallengePathList = $getChallengePathList->where('challenge_paths.status', $status);
             }
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -90,16 +90,6 @@ class ChallengePathService
                         ->whereIn('challenge_path_skill_group_stacks.foreign_id', $request->skills)
                         ->where('challenge_path_skill_group_stacks.type', '0')
                         ->whereNull('challenge_path_skill_group_stacks.deleted_at')
-                        ->distinct();
-                })->distinct('challenge_paths.uuid');
-            }
-            if ($request->has('tags') && !empty($request->tags) && is_array($request->tags)) {
-                $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
-                    $query->select('challenge_path_tag_groups.challenge_path_id')
-                        ->from('challenge_path_tag_groups')
-                        ->whereIn('challenge_path_tag_groups.foreign_id', $request->tags)
-                        ->where('challenge_path_tag_groups.type', '0')
-                        ->whereNull('challenge_path_tag_groups.deleted_at')
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }

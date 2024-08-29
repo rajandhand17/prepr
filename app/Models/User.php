@@ -8,6 +8,7 @@ use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Models\Accessor\UserAccessor;
 use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
@@ -16,6 +17,7 @@ use App\Services\UserExperienceService;
 use Carbon\Carbon;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +35,7 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
     use Notifiable;
+    use UserAccessor;
 
     /**
      * The attributes that are mass assignable.
@@ -915,6 +918,107 @@ class User extends Authenticatable
     public function routeNotificationForFcm()
     {
         return $this->fcm_token;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function moduleCompletionStatus(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function socialActivityLabs(): HasMany
+    {
+        return $this->hasMany(LabSocialActivity::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function socialActivityChallenges(): HasMany
+    {
+        return $this->hasMany(ChallengeSocialActivity::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function labsProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '0');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function labProgramsProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '1');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function challengesProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '2');
+    }
+
+    public function challengeAssessmentUsers()
+    {
+        return $this->hasMany(ChallengeAssessmentUser::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function challengePathsProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '3');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function resourcesModulesProgresses(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '4');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function resourcesCollectionsProgresses(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '5');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function resourcesGroupsProgresses(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'user_id', 'id')->where('module_type', '=', '6');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function challengeDiscussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class)->where('module_type', '=', '2');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function userActivities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class, 'user_id');
     }
 
     public function external_links()

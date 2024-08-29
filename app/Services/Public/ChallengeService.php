@@ -124,7 +124,7 @@ class ChallengeService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
-                    $status_array = ['accepted', 'pending', 'declined'];
+                    $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
                             ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
@@ -155,6 +155,9 @@ class ChallengeService
                 $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
                     $query->where('value', config('constants.resource_types.'.$request->type));
                 });
+            }
+            if ($request->has('challenge_uuid') && !empty($request->challenge_uuid)) {
+                $challenge_list = $challenge_list->where('uuid', $request->challenge_uuid);
             }
 
             return $challenge_list;
@@ -515,6 +518,19 @@ class ChallengeService
 
             return $invitedChallenges->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            $challenge->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

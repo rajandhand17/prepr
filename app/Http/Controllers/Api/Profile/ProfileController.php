@@ -75,10 +75,10 @@ class ProfileController extends AppBaseController
         try {
             $fileprivate = $this->profileRepository->updateFilePrivacy($fileId);
             if ($fileprivate) {
-                return $this->sendResponse(__('responses.add_user_personal_created'), 200);
+                return $this->sendResponse(null, __('responses.updated_file_privacy'));
             }
 
-            return $this->sendError(__('responses.add_user_personal_failed'), 400);
+            return $this->sendError(__('responses.updated_file_privacy_failed'), 400);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

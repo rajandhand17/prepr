@@ -78,12 +78,14 @@ class ProjectController extends AppBaseController
                 $project = $this->projectRepository->getProjectList($getProjectIds, $request);
                 if ($project !== false) {
                     $response = [
-                        'total_count'  => $project->total(),
-                        'per_page'     => $project->perPage(),
-                        'count'        => $project->count(),
-                        'current_page' => $project->currentPage(),
-                        'total_pages'  => $project->lastPage(),
-                        'list'         => ProjectResource::collection($project),
+                        'total_count'           => $project->total(),
+                        'per_page'              => $project->perPage(),
+                        'count'                 => $project->count(),
+                        'current_page'          => $project->currentPage(),
+                        'total_pages'           => $project->lastPage(),
+                        'pending_invites'       => $this->projectRepository->getPendingInvitesProjectIds(auth()->user())->count(),
+                        'pending_assessments'   => $this->projectRepository->getPendingProjectIds(auth()->user())->count(),
+                        'list'                  => ProjectResource::collection($project),
                     ];
 
                     return $this->sendResponse($response, __('responses.found_projects_list'));
@@ -387,7 +389,7 @@ class ProjectController extends AppBaseController
         }
     }
 
-    public function submitProject($slug)
+    public function submitProject(Request $request, $slug)
     {
         try {
             $checkProjectSlugExistsOrNot = $this->projectRepository->getProjectBasedOnSlug($slug);
@@ -404,8 +406,13 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_requirements_pending'), 400);
             }
 
-            $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot);
-            if ($submitProject) {
+            $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
+            $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
+
+            if ($submitProject === 'no') {
+                return $this->sendError(__('responses.late_submission_reason_required'), 400);
+            }
+            if ($submitProject === true) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
             }
 

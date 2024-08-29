@@ -141,7 +141,7 @@ class AIService
                     $updatedSkills = array_values($updatedSkills);
                     $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
 
-                    // Making sure each challenge has more than 5 verified skill
+                    // Making sure each challenge has more than 5 verified skills
                     if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                         Log::info('Skipping challenge due to insufficient skills or missing title', ['challenge' => $challenge]);
                         continue;
@@ -437,7 +437,7 @@ class AIService
                     $updatedSkills = $this->processSkills($challenge['skills']);
                     $updatedSkills = array_values($updatedSkills);
 
-                    // Making sure each challenge has more than 5 verified skill
+                    // Making sure each challenge has more than 5 verified skills
                     if (count($updatedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                         Log::info('Skipping challenge due to insufficient skills or missing title');
                         continue;
@@ -527,11 +527,14 @@ class AIService
 
             $categoryTitles = Category::pluck('title')->implode(', ');
 
+            Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done extracting details from request');
+
             while ($attempt < 3 && count($validLabs) < 2) {
                 $attempt++;
                 Log::info('Attempting to fetch labs from OpenAI', ['attempt' => $attempt]);
 
                 $openAIResponse = $this->fetchChallengesForLabByOpenAI($jobTitles, $skillTitles, $durationTitle, $levelTitle, $additionalInformation, $categoryTitles);
+                Log::info('app\Services\Manage\AIService.php:createLabUsingAIPreview() done fetching labs from OpenAI');
 
                 if (!$openAIResponse || empty($openAIResponse['choices'])) {
                     Log::warning('OpenAI response is empty or invalid', ['attempt' => $attempt]);
@@ -566,7 +569,7 @@ class AIService
                             $updatedSkills = array_values($updatedSkills);
                             $mergedSkills = array_merge($skillTitlesArray, $updatedSkills);
 
-                            // Making sure each challenge has more than 5 verified skill
+                            // Making sure each challenge has more than 5 verified skills
                             if (count($mergedSkills) < 5 || !isset($challenge['challengeTitle'])) {
                                 continue;
                             }
@@ -658,7 +661,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -726,7 +729,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -803,7 +806,7 @@ class AIService
             $categoryTitlesStr = is_array($categoryTitles) ? implode(', ', $categoryTitles) : $categoryTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 10,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -882,7 +885,7 @@ class AIService
             $skillTitlesStr = is_array($skillTitles) ? implode(', ', $skillTitles) : $skillTitles;
 
             $payload = [
-                'model'           => 'gpt-4o',
+                'model'           => 'gpt-4o-mini',
                 'n'               => 1,
                 'response_format' => ['type' => 'json_object'],
                 'messages'        => [
@@ -1255,7 +1258,7 @@ class AIService
                             ' Example json format: {"results": [{"title": "Title 1", "description": "Description 1"}, {"title": "Title 2", "description": "Description 2"}]}';
 
                         $payload = [
-                            'model'           => 'gpt-4o',
+                            'model'           => 'gpt-4o-mini',
                             'n'               => 1,
                             'response_format' => ['type' => 'json_object'],
                             'messages'        => [
@@ -1425,7 +1428,7 @@ class AIService
 
                 $fullQueryString = implode(', ', $queryParts).'.';
                 $payload = [
-                    'model'           => 'gpt-4o',
+                    'model'           => 'gpt-4o-mini',
                     'n'               => 1,
                     'response_format' => ['type' => 'json_object'],
                     'messages'        => [
@@ -1710,7 +1713,7 @@ class AIService
         $request = new Request('POST', '', [], json_encode($data));
 
         try {
-            $response = $this->projectAssessorClient->send($request);
+            $this->projectAssessorClient->send($request);
             Log::info('Done calling projectAssessor');
         } catch (Exception $e) {
             UtilityHelper::logError($e);

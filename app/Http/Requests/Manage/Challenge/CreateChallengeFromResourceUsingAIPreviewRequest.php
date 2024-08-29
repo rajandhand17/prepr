@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\Challenge;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateChallengeFromResourceUsingAIPreviewRequest extends FormRequest
 {
@@ -25,8 +26,9 @@ class CreateChallengeFromResourceUsingAIPreviewRequest extends FormRequest
     {
         $base_rules = [
             'resource_modules'                      => 'required|array',
-            'resource_modules.*'                    => 'exists:resource_modules,uuid',
-            'organization_id'                       => 'required|exists:organizations,uuid',
+            'resource_modules.*'                    => Rule::exists('resource_modules', 'uuid')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'additional_information'                => 'nullable',
             'is_ai_created'                         => 'required|boolean',
         ];
@@ -49,8 +51,6 @@ class CreateChallengeFromResourceUsingAIPreviewRequest extends FormRequest
             'resource_modules.required'             => __('responses.resource_modules_required'),
             'resource_modules.array'                => __('responses.resource_modules_array'),
             'resource_modules.*.exists'             => __('responses.resource_modules_exists'),
-            'organization_id.required'              => __('responses.organization_id_required'),
-            'organization_id.exists'                => __('responses.organization_not_found'),
             'is_ai_created.required'                => __('responses.is_ai_created_required'),
             'is_ai_created.boolean'                 => __('responses.true_or_false'),
         ];

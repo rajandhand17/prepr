@@ -8,6 +8,7 @@ use App\Helpers\UtilityHelper;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
+use App\Services\LabHistoryService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -341,10 +342,6 @@ class MemberManagementService
                     $module_type = config('constants.member_management_component_type.lab_program');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
-                default:
-                    $module_type = null;
-                    $addedMemberResponse = null;
-                    break;
             }
             $auto_invite = config('constants.member_management_auto_invite.no');
             switch ($request->auto_invite) {
@@ -392,7 +389,7 @@ class MemberManagementService
                             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                             $organization->load('chargebee_details');
                             $userInviteLimit = $organization->chargebee_details->user_invite_limits;
-                            // dd($userInviteLimit, $totalInvitationSent);
+
                             $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
                             if (!$isWithinInviteLimit) {
                                 throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
@@ -459,6 +456,14 @@ class MemberManagementService
                                 'subject_line'  => $subject,
                                 'email_body'    => $emailBody,
                             ]);
+
+                            if ($component == 'lab' && $member['type'] == '1' && $module_type == '1') {
+                                $userId = auth()->user()->id;
+                                $activity = auth()->user()->full_name.' '.__('responses.lab_joined_activity').' '.$componentCollectionObject->title;
+                                $labHistoryService = new LabHistoryService();
+                                $labHistoryService->storeHistory($componentCollectionObject->id, $userId, $activity);
+                            }
+
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
@@ -490,9 +495,12 @@ class MemberManagementService
                                         }
                                     }
                                 }
+                                $emailResendCount = $checkMemberExists->email_resend_count + 1;
                                 MemberManagement::where('id', $checkMemberExists['id'])
                                     ->update([
-                                        'invite_status' => config('constants.member_management_invite_status.invited'),
+                                        'invite_status'      => config('constants.member_management_invite_status.invited'),
+                                        'email_status'       => '0',
+                                        'email_resend_count' => $emailResendCount,
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                                 $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
@@ -518,6 +526,9 @@ class MemberManagementService
                                 break;
                             case 'challenge':
                                 $addedMemberResponse = __('responses.create_member_manger_error_cha');
+                                break;
+                            case 'lab-program':
+                                $addedMemberResponse = __('responses.create_member_manger_error_lab_program');
                                 break;
                             default:
                                 $addedMemberResponse = __('responses.create_member_manger_error');
@@ -572,16 +583,26 @@ class MemberManagementService
         try {
             $module_type = self::getModuleType($component);
             $member = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->first();
-            $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
-            if ($module_type == '1') {
-                $lab = LabService::getLabBasedOnId($member->module_id);
-                $request->organization_id = $lab->organization_id;
-                $request->privacy = $lab->privacy;
-                $request->title = $lab->title;
-                $request->category = $lab->category_id;
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
-            }
-            if ($member_manger) {
+            if ($member) {
+                $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
+                if ($module_type == '1') {
+                    $lab = LabService::getLabBasedOnId($member->module_id);
+                    $request = \Illuminate\Http\Request::capture();
+                    $request->organization_id = $lab->organization_id;
+                    $request->privacy = $lab->privacy;
+                    $request->title = $lab->title;
+                    $request->category = $lab->category_id;
+
+                    if ($component == 'lab') {
+                        $userId = auth()->user()->id;
+                        $activity = auth()->user()->full_name.' '.__('responses.lab_un_joined_activity').' '.$lab->title;
+                        $labHistoryService = new LabHistoryService();
+                        $labHistoryService->storeHistory($lab->id, $userId, $activity);
+                    }
+
+                    MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                }
+
                 return true;
             }
 

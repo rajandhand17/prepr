@@ -6,6 +6,7 @@ use App\Models\ChallengeAssessmentCriteria;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddProjectAssessmentRequest extends FormRequest
 {
@@ -26,7 +27,9 @@ class AddProjectAssessmentRequest extends FormRequest
     {
         $base_rules = [
             'criteria_id'       => 'array|required',
-            'criteria_id.*'     => 'numeric|exists:challenge_assessment_criterias,id',
+            'criteria_id.*'     => 'numeric|'.Rule::exists('challenge_assessment_criterias', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'score'             => 'array|required',
             'score.*'           => 'numeric',
             'comment'           => 'array',

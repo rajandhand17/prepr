@@ -5,6 +5,7 @@ namespace App\Http\Requests\Manage\ResourceModule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
 {
@@ -35,16 +36,25 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
         $base_rules = [
             'challengeTitle'                        => 'nullable',
             'labTitle'                              => 'nullable',
-            'organization_id'                       => 'required|exists:organizations,uuid',
             'challengeDescription'                  => 'nullable',
             'labDescription'                        => 'nullable',
-            'category_id'                           => 'nullable|exists:categories,id',
-            'duration_id'                           => 'required|exists:durations,id',
-            'level_id'                              => 'required|exists:levels,id',
+            'category_id'                           => 'nullable|'.Rule::exists('categories', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'duration_id'                           => 'required|'.Rule::exists('durations', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
+            'level_id'                              => 'required|'.Rule::exists('levels', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'skills'                                => 'required|array',
-            'skills.*'                              => 'numeric|exists:skills,id',
+            'skills.*'                              => 'numeric|'.Rule::exists('skills', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'jobs'                                  => 'nullable|array',
-            'jobs.*'                                => 'nullable|numeric|exists:job_titles,id',
+            'jobs.*'                                => 'nullable|numeric|'.Rule::exists('job_titles', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
             'steps'                                 => 'nullable|array',
             'reflections'                           => 'nullable|array',
             'is_ai_created'                         => 'required|boolean',
@@ -66,8 +76,6 @@ class CreateResourceModuleUsingAIPreviewRequest extends FormRequest
     public function messages()
     {
         return [
-            'organization_id.required'              => __('responses.organization_id_required'),
-            'organization_id.exists'                => __('responses.organization_not_found'),
             'category_id.exists'                    => __('responses.category_not_found'),
             'duration_id.required'                  => __('responses.duration_id_required'),
             'duration_id.exists'                    => __('responses.duration_id_exists'),

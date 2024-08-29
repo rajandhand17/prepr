@@ -62,6 +62,7 @@ class ChallengeResource extends JsonResource
         $jobs = null;
         $challenge_flexible_announcement = null;
         $module_progress = null;
+        $is_authenticated_user = auth('api')->check();
 
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -272,7 +273,9 @@ class ChallengeResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-
+        if ($media == config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
+        }
         $joined_status = $this->joined();
         $join_status = 'No';
         if ($joined_status != 'NA' && $joined_status != null) {
@@ -371,8 +374,8 @@ class ChallengeResource extends JsonResource
             'slug'                              => $this->slug,
             'title'                             => $this->title,
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
-            'description'                       => $this->description,
-            'scorm'                             => new ScormResource($this->scorm),
+            'description'                       => $is_authenticated_user ? $this->description : 'N/A',
+            'scorm'                             => $is_authenticated_user ? new ScormResource($this->scorm) : 'N/A',
             'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
             'media_type'                        => $this->media_type,
             'media'                             => $media,
@@ -420,6 +423,7 @@ class ChallengeResource extends JsonResource
             'resource_modules'                  => $resource_modules,
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
+            'is_auth_user'                      => $is_authenticated_user,
         ];
     }
 }

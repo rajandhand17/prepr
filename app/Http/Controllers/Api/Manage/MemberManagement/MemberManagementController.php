@@ -88,8 +88,11 @@ class MemberManagementController extends AppBaseController
             if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
+            if ((int) $checkComponentBasedOnSlug->status === 0) {
+                return $this->sendError(__('responses.request_component_draft_stage', ['component' => $component]), 404);
+            }
 
-            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, $request);
+            $memberManagementListing = $this->memberManagementRepository->getMembers($checkComponentBasedOnSlug, $component, new Request());
             $invitationSentUser = $memberManagementListing->total();
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request, $invitationSentUser);
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Builder\LabProgramBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class LabProgram extends Model
@@ -142,6 +143,14 @@ class LabProgram extends Model
         return 'N/A';
     }
 
+    /**
+     * @return HasMany
+     */
+    public function labProgramProgress(): HasMany
+    {
+        return $this->hasMany(ModuleCompletionStatus::class, 'module_id')->where('module_type', '=', '1');
+    }
+
     public function labProgramType()
     {
         return $this->hasMany(LabProgramTypeModes::class, 'lab_program_id', 'id')->where('type_mode', '0')->pluck('value');
@@ -159,5 +168,10 @@ class LabProgram extends Model
         }
 
         return 'NA';
+    }
+
+    public function members()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '3', 'invite_status' => '1']);
     }
 }

@@ -114,7 +114,7 @@ class ChallengeService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
-                    $status_array = ['accepted', 'pending', 'declined'];
+                    $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
                              ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
@@ -554,6 +554,17 @@ class ChallengeService
     {
         try {
             return Challenge::where(['id' => $id, 'is_accessible' => '1'])->first();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getChallengesBasedOnIds($ids, $relations = ['*'])
+    {
+        try {
+            return Challenge::with($relations)->whereIn('id', $ids)->where('is_accessible', '1')->get();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

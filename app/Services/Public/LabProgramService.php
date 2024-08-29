@@ -14,7 +14,7 @@ class LabProgramService
             $labProgramList = LabProgram::where('is_accessible', '1');
             $labProgramList = self::filterLabProgramList($request, $labProgramList);
 
-            return $labProgramList->paginate(config('site-settings.pagination_per_page'));
+            return $labProgramList->paginate(config('site-settings.association_pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -39,6 +39,21 @@ class LabProgramService
             if ($request->has('organization_id') && !empty($request->organization_id)) {
                 $getOrganizationIds = OrganizationService::getOrganizationExistBasedOnUuidArray($request->organization_id)->pluck('id');
                 $labProgramList = $labProgramList->whereIn('organization_id', $getOrganizationIds);
+            }
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $labProgramIds = null;
+                $userData = auth('api')->user();
+                switch ($request->request_status) {
+                    case 'accepted':
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '1');
+                        break;
+                    case 'pending':
+                        $labProgramIds = MemberManagementService::getModuleIdsBasedOnParam($userData, '3', '2');
+                        break;
+                }
+                if ($labProgramIds) {
+                    $labProgramList = $labProgramList->whereIn('lab_programs.id', $labProgramIds);
+                }
             }
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {

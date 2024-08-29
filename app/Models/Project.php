@@ -28,13 +28,8 @@ class Project extends Model
         'recruiting_status',
         'challenge_id',
         'lab_id',
-        'category_id',
-        'type_id',
-        'industry_id',
-        'stage_id',
-        'vertical_id',
-        'status_id',
         'is_submitted',
+        'late_submission_reason',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -142,6 +137,28 @@ class Project extends Model
     public function getProjectAssessment()
     {
         return $this->hasOne(ChallengeAssessment::class, 'challenge_id', 'challenge_id');
+    }
+
+    public function createdBy()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function challengeAssessmentUsers()
+    {
+        return $this->hasMany(ChallengeAssessmentUser::class, 'project_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->hasManyThrough(
+            User::class,                         // Final related model (User)
+            ChallengeAssessmentUser::class,     // Intermediate model (ChallengeAssessmentUser)
+            'project_id',                       // Foreign key on ChallengeAssessmentUser that references this model's id
+            'id',                            // Foreign key on User that references ChallengeAssessmentUser's user_id
+            'id',                               // Local key on this model
+            'user_id'                     // Local key on ChallengeAssessmentUser that references User's id
+        )->distinct();
     }
 
     public function skills()

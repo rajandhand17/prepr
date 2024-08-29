@@ -5,6 +5,7 @@ namespace App\Http\Requests\Profile;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class AddTagsRequest extends FormRequest
 {
@@ -25,7 +26,9 @@ class AddTagsRequest extends FormRequest
     {
         return [
             'tag_id'   => 'required|array',
-            'tag_id.*' => 'exists:tags,id',
+            'tag_id.*' => Rule::exists('tags', 'id')->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),
         ];
     }
 
