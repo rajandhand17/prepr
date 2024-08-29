@@ -238,12 +238,16 @@ class ProjectController extends AppBaseController
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
                 if (auth('api')->check()) {
-                    $userId = auth()->user()->id;
+                    $userId = auth('api')->user()->id;
                     if ($userId == $project->user_id) {
                         // For last visited activity tracking
                         $moduleType = config('constants.module_type.projects');
                         LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
                     }
+                }
+
+                if (!auth('api')->check() && $project->privacy == '1') {
+                    return $this->sendError(__('responses.project_set_private'), 403);
                 }
 
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
