@@ -45,7 +45,7 @@ class ProjectResource extends JsonResource
                 $privacy = 'no';
                 break;
         }
-        if (!auth('api')->check() && $privacy == 'yes' || $privacy == 'yes' && auth('api')->user()->id != $this->id) {
+        if (!auth('api')->check() && $privacy == 'yes' || $privacy == 'yes' && auth('api')->user()->id != $this->user_id) {
             return [
                 'privacy'       => $privacy,
             ];
