@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('member-management:member-assign-from-associated-component')->everyMinute();
         $schedule->command('challenges:close-challenge-for-passed-dates')->everyMinute();
         $schedule->command('challenges:update-challenge-passed-winner-date')->everyMinute();
         $schedule->command('member-manger:send-email')->everyMinute();

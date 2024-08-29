@@ -32,6 +32,9 @@ class MemberManagement extends Model
         'email_resend_count',
         'subject_line',
         'email_body',
+        'is_associated_member',
+        'associated_component',
+        'associated_component_id',
     ];
 
     public function user(): BelongsTo

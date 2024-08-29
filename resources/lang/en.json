@@ -953,6 +953,7 @@
     "responses.project_name_not_available": "This Project title is not available!",
     "responses.project_name_available": "This Project title is available!",
     "responses.project_not_found": "The Project(s) which you are looking doesn't exist in our system.",
+    "responses.project_set_private": "Sorry! The Project(s) which you are looking is set to private.",
     "responses.project_pitch_stored_success": "You have successfully added the Project Pitch.",
     "responses.project_pitch_stored_failed": "Oops! The Creation Project Pitch has failed.",
     "responses.project_file_stored_success": "You have successfully uploaded the Project file.",

@@ -1079,4 +1079,51 @@ class MemberManagementService
             return false;
         }
     }
+
+    public static function autoAssignedMemberFromAssociatedComponent($memberObj)
+    {
+        try {
+            $member = MemberManagement::where(['module_id' => $memberObj['module_id'], 'email' => $memberObj['email'], 'module_type' => $memberObj['module_type']])->first();
+            if ($member) {
+                $member->type = $memberObj['type'];
+                $member->invite_type = $memberObj['invite_type'];
+                $member->inviter_id = $memberObj['inviter_id'];
+                $member->auto_invite = $memberObj['auto_invite'];
+                $member->invite_status = $memberObj['invite_status'];
+                $member->invitee_name = $memberObj['invitee_name'];
+                $member->email_status = $memberObj['email_status'];
+                $member->is_associated_member = $memberObj['is_associated_member'];
+                $member->associated_component = $memberObj['associated_component'];
+                $member->associated_component_id = $memberObj['associated_component_id'];
+                $member->save();
+            } else {
+                MemberManagement::create([
+                    'uuid'                     => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                    'type'                     => $memberObj['type'],
+                    'invite_type'              => $memberObj['invite_type'],
+                    'module_id'                => $memberObj['module_id'],
+                    'module_type'              => $memberObj['module_type'],
+                    'inviter_id'               => $memberObj['inviter_id'],
+                    'role'                     => $memberObj['role'],
+                    'email'                    => $memberObj['email'],
+                    'auto_invite'              => $memberObj['auto_invite'],
+                    'invite_status'            => $memberObj['invite_status'],
+                    'invitee_name'             => $memberObj['invitee_name'],
+                    'email_status'             => $memberObj['email_status'],
+                    'subject_line'             => $memberObj['subject_line'],
+                    'email_body'               => $memberObj['email_body'],
+                    'email_resend_status'      => $memberObj['email_resend_status'],
+                    'is_associated_member'     => $memberObj['is_associated_member'],
+                    'associated_component'     => $memberObj['associated_component'],
+                    'associated_component_id'  => $memberObj['associated_component_id'],
+                ]);
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
