@@ -34,7 +34,7 @@ class MemberManagement extends Model
         'email_body',
         'is_associated_member',
         'associated_component',
-        'associated_component_id'
+        'associated_component_id',
     ];
 
     public function user(): BelongsTo
