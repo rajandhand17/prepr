@@ -172,7 +172,7 @@ class LabProgramResource extends JsonResource
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'module_progress'               => $module_progress,
-            'member_count'                  => '0', //Static for temporary basis
+            'member_count'                  => $this->members()->count(),
             'last_updated'                  => $this->updated_at,
         ];
     }
