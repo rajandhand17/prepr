@@ -352,7 +352,7 @@ class UserDashboardController extends AppBaseController
                     }
                     break;
                 case 'friend':
-                    $dashboardFriendList = $this->userDashboardRepository->dashboardFriendList($userData);
+                    $dashboardFriendList = $this->userDashboardRepository->userDashboardFriendList($userData);
                     if ($dashboardFriendList != false) {
                         return $this->sendResponse(FriendsResource::collection($dashboardFriendList), __('responses.friends_listing_retrieved'));
                     }
