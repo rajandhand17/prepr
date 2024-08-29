@@ -214,6 +214,14 @@ class ProjectResource extends JsonResource
             // Counting total files
             $files_count = count($videosCollection) + count($audiosCollection) + count($docsCollection);
 
+            if ($this->is_submitted == '0') {
+                $project_status = 'In Progress';
+            } elseif ($this->is_submitted == '1') {
+                $project_status = 'Submitted';
+            } else {
+                $project_status = 'Late Submitted';
+            }
+
             return [
                 'id'                    => $this->uuid,
                 'language'              => $this->language,
@@ -236,6 +244,7 @@ class ProjectResource extends JsonResource
                 'favourite'             => $this->favourite(),
                 'access_level'          => $access_level,
                 'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
+                'project_status'        => $project_status,
                 'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
                 'project_role'          => $project_role,
                 'recruiting_status'     => $this->recruiting_status !== '0' ? 'no' : 'yes',
