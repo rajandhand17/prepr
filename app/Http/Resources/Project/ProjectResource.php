@@ -221,7 +221,6 @@ class ProjectResource extends JsonResource
             case '2':
                 $project_status = 'Late Submitted';
                 break;
-
         }
 
         return [
@@ -262,8 +261,8 @@ class ProjectResource extends JsonResource
             'project_task'          => auth('api')->check() ? $challenge_task : null,
             'docs'                  => auth('api')->check() ? $docsCollection : null,
             'images'                => auth('api')->check() ? $imagesCollection : null,
-            'images_count'          => "You've " . $images_count . ' ' . ($images_count > 1 ? 'images uploaded' : 'image uploaded'), // Adding image count
-            'files_count'           => "You've " . $files_count . ' ' . ($files_count > 1 ? 'files uploaded' : 'file uploaded'),
+            'images_count'          => "You've ".$images_count.' '.($images_count > 1 ? 'images uploaded' : 'image uploaded'), // Adding image count
+            'files_count'           => "You've ".$files_count.' '.($files_count > 1 ? 'files uploaded' : 'file uploaded'),
             'videos'                => auth('api')->check() ? $videosCollection : null,
             'audios'                => auth('api')->check() ? $audiosCollection : null,
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
