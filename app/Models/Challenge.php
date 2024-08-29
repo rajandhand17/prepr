@@ -263,17 +263,17 @@ class Challenge extends Model
 
     public function challenge_completion_status()
     {
-    $relation = $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id');
+        $relation = $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id');
 
-    if (auth('api')->check()) {
-        return $relation->where([
-            'user_id' => auth('api')->user()->id,
-            'module_type' => '2'
-        ]);
-    }
+        if (auth('api')->check()) {
+            return $relation->where([
+                'user_id'     => auth('api')->user()->id,
+                'module_type' => '2',
+            ]);
+        }
 
-    // Return the relation with a condition that will never be true, effectively returning an empty result
-    return $relation->whereRaw('1 = 0');
+        // Return the relation with a condition that will never be true, effectively returning an empty result
+        return $relation->whereRaw('1 = 0');
     }
 
     public function challengeType()
