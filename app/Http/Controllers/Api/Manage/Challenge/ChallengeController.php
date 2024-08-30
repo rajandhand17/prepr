@@ -786,7 +786,6 @@ class ChallengeController extends AppBaseController
 
     public function projectAssessed($slug, Request $request)
     {
-
         try {
             $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
 
@@ -799,7 +798,6 @@ class ChallengeController extends AppBaseController
             }
 
             $fetchAssessedProjects = $this->challengeRepository->fetchAssessedProjectBasedOnChallenge($checkComponentBasedOnSlug->id);
-
 
             if ($fetchAssessedProjects !== false) {
                 $response = [
