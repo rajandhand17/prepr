@@ -42,6 +42,20 @@ class ResourceModuleService
         }
     }
 
+    public static function getResourceModuleDashboardList($request, $organization)
+    {
+        try {
+            $resourceModule = ResourceModule::select()->where('organization_id', '=', $organization->id);
+            $resourceModule = self::filterResourceModuleList($request, $resourceModule);
+
+            return $resourceModule->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterResourceModuleList($request, $resourceModule)
     {
         try {
