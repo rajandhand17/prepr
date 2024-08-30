@@ -352,7 +352,7 @@ class UserDashboardController extends AppBaseController
                     }
                     break;
                 case 'friend':
-                    $dashboardFriendList = $this->userDashboardRepository->dashboardFriendList($userData);
+                    $dashboardFriendList = $this->userDashboardRepository->userDashboardFriendList($userData);
                     if ($dashboardFriendList != false) {
                         return $this->sendResponse(FriendsResource::collection($dashboardFriendList), __('responses.friends_listing_retrieved'));
                     }
@@ -391,7 +391,7 @@ class UserDashboardController extends AppBaseController
                     case '2':
                         $fetchComponentData = ChallengeService::getChallengeBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(LabProgramResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
+                            return $this->sendResponse(ChallengeResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
                         }
                         break;
                     case '3':
@@ -429,6 +429,7 @@ class UserDashboardController extends AppBaseController
 
             return $this->sendError(__('responses.last_visited_not_found'), 404);
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

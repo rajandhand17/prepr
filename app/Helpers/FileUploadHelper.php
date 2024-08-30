@@ -14,7 +14,7 @@ class FileUploadHelper
             $image_cover = Image::make($request->getRealPath());
             $image_cover->encode('webp', 75);
             $image_contents_cover = $image_cover->__toString();
-            $webp_path_cover = $pathsarray[$type].time().'.webp';
+            $webp_path_cover = $pathsarray[$type].time().uniqid().'.webp';
             Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
 
             return $webp_path_cover;

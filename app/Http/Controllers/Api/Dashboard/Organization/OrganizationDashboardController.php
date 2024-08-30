@@ -57,7 +57,7 @@ class OrganizationDashboardController extends AppBaseController
                     $message = __('responses.retrieve_resource_report');
                     break;
                 case 'projects':
-                    $fetchReport = $this->organizationDashboardRepository->fetchProjectReportBasedOnOrganization($organization);
+                    $fetchReport = $this->organizationDashboardRepository->fetchProjectReportBasedOnOrganization($organization->id);
                     $message = __('responses.retrieve_project_report');
                     break;
             }
