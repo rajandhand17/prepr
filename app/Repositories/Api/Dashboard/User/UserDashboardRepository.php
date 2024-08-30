@@ -82,10 +82,10 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function getChallengeList($challengeIds)
+    public function getChallengeDashboardList($challengeIds)
     {
         try {
-            return $this->challengeService->getChallengeList($challengeIds);
+            return $this->challengeService->getChallengeDashboardList($challengeIds);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -115,10 +115,10 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function getLabList($labIds)
+    public function getLabDashboardList($labIds)
     {
         try {
-            return $this->labService->getLabList($labIds);
+            return $this->labService->getLabDashboardList($labIds);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

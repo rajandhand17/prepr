@@ -41,6 +41,21 @@ class LabService
         }
     }
 
+    public static function getLabDashboardList($request, $organization)
+    {
+        try {
+            $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
+
+            $lab_list = self::filterLabList($lab_list, $request);
+
+            return $lab_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterLabList($lab_list, $request)
     {
         try {
