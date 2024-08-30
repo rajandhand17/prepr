@@ -14,6 +14,7 @@ use App\Services\Manage\LabService;
 use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProjectService
@@ -1010,4 +1011,20 @@ class ProjectService
             return false;
         }
     }
+
+    public function fetchAssessedProjectBasedOnChallenge($challengeId)
+    {
+        try {
+            return Project::with('getProjectAssessment')->whereHas('challengeAssessmentUsers', function (Builder $query) {
+                return $query->whereStatus('1');
+            })->where('challenge_id', $challengeId)
+                ->where('is_submitted', '!=', '0')
+                ->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
 }

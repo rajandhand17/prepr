@@ -783,4 +783,42 @@ class ChallengeController extends AppBaseController
             return $this->sendError(__('responses.server_failed'), 500);
         }
     }
+
+    public function projectAssessed($slug, Request $request)
+    {
+
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 404);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            $fetchAssessedProjects = $this->challengeRepository->fetchAssessedProjectBasedOnChallenge($checkComponentBasedOnSlug->id);
+
+
+            if ($fetchAssessedProjects !== false) {
+                $response = [
+                    'total_count'  => $fetchAssessedProjects->total(),
+                    'per_page'     => $fetchAssessedProjects->perPage(),
+                    'count'        => $fetchAssessedProjects->count(),
+                    'current_page' => $fetchAssessedProjects->currentPage(),
+                    'total_pages'  => $fetchAssessedProjects->lastPage(),
+                    'list'         => ProjectResource::collection($fetchAssessedProjects),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
 }
