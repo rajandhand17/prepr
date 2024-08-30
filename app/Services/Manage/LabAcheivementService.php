@@ -63,7 +63,7 @@ class LabAcheivementService
                 $labAchievement->achievement_name = $request->achievement_name;
                 $labAchievement->achievement_points = $request->achievement_points;
                 $labAchievement->achievement_condition = $request->achievement_conditions;
-                $labAchievement->achievement_image = $upload_achievement_image;
+                $labAchievement->achievement_image = ($upload_achievement_image!=null) ? $upload_achievement_image : 'none';
                 $labAchievement->save();
 
                 return true;
