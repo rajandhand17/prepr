@@ -45,6 +45,21 @@ class ChallengeService
         }
     }
 
+    public static function getChallengeDashboardList($request, $organization)
+    {
+        try {
+            $challenge_list = Challenge::select()->where('organization_id', '=', $organization->id);
+
+            $challenge_list = self::filterChallengeList($challenge_list, $request);
+
+            return $challenge_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterChallengeList($challenge_list, $request)
     {
         try {
