@@ -52,8 +52,8 @@ class Skills extends Command
                         'id'          => $skill->id,
                         'title'       => $skill->skill,
                         'fr_CA_title' => $skill->fr_CA_skill,
-                        'created_at'  => Carbon::now(),
-                        'updated_at'  => Carbon::now(),
+                        'created_at'  => $skill->created_at,
+                        'updated_at'  => $skill->updated_at,
                     ];
                     $check_skills = Skill::find($skill->id);
                     if (!$check_skills) {

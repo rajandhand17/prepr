@@ -5,16 +5,22 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge;
+use App\Models\ChallengePitch;
+use App\Models\ChallengeTask;
 use App\Models\Lab;
+use App\Models\PitchTemplate;
 use App\Models\Project as ModelsProject;
 use App\Models\ProjectAdditionalInfo;
 use App\Models\ProjectExternalLink;
 use App\Models\ProjectFile;
 use App\Models\ProjectIndustry;
 use App\Models\ProjectMemberManagement;
+use App\Models\ProjectPitchValue;
 use App\Models\ProjectSkill;
 use App\Models\ProjectStage;
 use App\Models\ProjectStatus;
+use App\Models\ProjectTaskValue;
+use App\Models\ProjectTemplate;
 use App\Models\ProjectType;
 use App\Models\ProjectVertical;
 use App\Models\Skill;
@@ -449,6 +455,83 @@ class Project extends Command
                                 $newProjectFile->updated_at = $updatedAt;
                                 $newProjectFile->deleted_at = $deletedAt;
                                 $newProjectFile->save();
+                            }
+                        }
+                    }
+
+                    // For project template id
+                    if ($newProject->challenge_id != null) {
+                        $challengePitchId = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $newProject->challenge_id)->value('pitch_template_id');
+                        if ($challengePitchId != '0') {
+                            $pitchtemplateData = DB::connection('mysql2')->table('pitch_templates')->where('id', $challengePitchId)->select('id', 'title')->first();
+                        } else {
+                            $pitchtemplateData = DB::connection('mysql2')->table('pitch_templates')->whereNull('challenge_id')->select('id', 'title')->first();
+                        }
+
+                        if ($pitchtemplateData) {
+                            $pitchtemplate = DB::connection('mysql2')->table('project_pitch_values')->where(['pitch_template_id' => $pitchtemplateData->id, 'project_id' => $project->id])->first();
+                            if (!$pitchtemplate) {
+                                $pitchtemplate = DB::connection('mysql2')->table('project_task_values')->where(['pitch_template_id' => $pitchtemplateData->id, 'project_id' => $project->id])->first();
+                            }
+
+                            if ($pitchtemplate && $pitchtemplate->pitch_template_id) {
+                                $checkPitchTemplate = PitchTemplate::find($pitchtemplate->pitch_template_id);
+                                if ($checkPitchTemplate) {
+                                    $projectTemplate = new ProjectTemplate();
+                                    $projectTemplate->project_id = $project->id;
+                                    $projectTemplate->template_id = $checkPitchTemplate->id;
+                                    $projectTemplate->save();
+
+                                    // For project pitch values
+                                    $projectPitchValues = DB::connection('mysql2')->table('project_pitch_values')->where(['pitch_template_id' => $checkPitchTemplate->id, 'project_id' => $project->id])->whereNull('deleted_at')->get();
+                                    if ($projectPitchValues->isNotEmpty()) {
+                                        foreach ($projectPitchValues as $pitchValue) {
+                                            $getPitchData = ChallengePitch::find($pitchValue->pitch_id);
+                                            if ($getPitchData) {
+                                                $createdAt = $pitchValue->created_at != null ? Carbon::createFromTimestamp($pitchValue->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                                $updatedAt = $pitchValue->updated_at != null ? Carbon::createFromTimestamp($pitchValue->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                                $deletedAt = $pitchValue->deleted_at != null ? Carbon::createFromTimestamp($pitchValue->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                                                $newProjectPitchValue = new ProjectPitchValue();
+                                                $newProjectPitchValue->id = $pitchValue->id;
+                                                $newProjectPitchValue->project_id = $project->id;
+                                                $newProjectPitchValue->pitch_template_id = $getPitchData->template_id;
+                                                $newProjectPitchValue->project_pitch_id = $getPitchData->id;
+                                                $newProjectPitchValue->description = $pitchValue->description ?? null;
+                                                $newProjectPitchValue->created_at = $createdAt;
+                                                $newProjectPitchValue->updated_at = $updatedAt;
+                                                $newProjectPitchValue->deleted_at = $deletedAt;
+                                                $newProjectPitchValue->save();
+                                            }
+                                        }
+                                    }
+
+                                    // For project task values
+                                    $projectTaskValues = DB::connection('mysql2')->table('project_task_values')->where(['pitch_template_id' => $checkPitchTemplate->id, 'project_id' => $project->id])->whereNull('deleted_at')->get();
+                                    if ($projectTaskValues->isNotEmpty()) {
+                                        foreach ($projectTaskValues as $taskValue) {
+                                            $getTaskData = ChallengeTask::find($taskValue->project_task_id);
+                                            if ($getTaskData) {
+                                                $completedAt = $taskValue->complete_datetime != null ? Carbon::createFromTimestamp($taskValue->complete_datetime)->translatedFormat('Y-m-d H:i:s') : null;
+                                                $createdAt = $taskValue->created_at != null ? Carbon::createFromTimestamp($taskValue->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                                $updatedAt = $taskValue->updated_at != null ? Carbon::createFromTimestamp($taskValue->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                                                $deletedAt = $taskValue->deleted_at != null ? Carbon::createFromTimestamp($taskValue->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                                                $newProjectTaskValue = new ProjectTaskValue();
+                                                $newProjectTaskValue->id = $taskValue->id;
+                                                $newProjectTaskValue->project_id = $project->id;
+                                                $newProjectTaskValue->task_template_id = $getTaskData->template_id;
+                                                $newProjectTaskValue->project_task_id = $getTaskData->id;
+                                                $newProjectTaskValue->status = $taskValue->is_completed == '1' ? '1' : '0';
+                                                $newProjectTaskValue->completed_date = $completedAt;
+                                                $newProjectTaskValue->created_at = $createdAt;
+                                                $newProjectTaskValue->updated_at = $updatedAt;
+                                                $newProjectTaskValue->deleted_at = $deletedAt;
+                                                $newProjectTaskValue->save();
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

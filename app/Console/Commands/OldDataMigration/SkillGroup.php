@@ -77,6 +77,8 @@ class SkillGroup extends Command
                     $newSkillGroup->fr_CA_description = $skill_group->fr_CA_description;
                     $newSkillGroup->skills = $skills;
                     $newSkillGroup->skill_stacks = $skill_stacks;
+                    $newSkillGroup->created_at  = $skill_group->created_at;
+                    $newSkillGroup->updated_at  = $skill_group->updated_at;
                     $newSkillGroup->save();
                 }
                 DB::commit();

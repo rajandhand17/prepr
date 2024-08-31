@@ -66,6 +66,8 @@ class SkillStack extends Command
                     $newSkillStack->fr_CA_title = $single_skill_stack->fr_CA_title;
                     $newSkillStack->description = $single_skill_stack->description;
                     $newSkillStack->fr_CA_description = $single_skill_stack->fr_CA_description;
+                    $newSkillStack->created_at  = $single_skill_stack->created_at;
+                    $newSkillStack->updated_at  = $single_skill_stack->updated_at;
                     $newSkillStack->skills = $skills;
                     $newSkillStack->save();
                 }
