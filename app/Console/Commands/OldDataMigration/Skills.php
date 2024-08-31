@@ -4,7 +4,6 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
 use App\Models\Skill;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
 
