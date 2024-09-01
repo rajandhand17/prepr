@@ -8,11 +8,12 @@ use App\Models\ResourceModule as ResourceModules;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleRating as ResourceModuleRatings;
 use App\Models\ResourceModuleSkillsGroupsStack;
-use App\Models\ResourceModuleTagsGroups;
 use App\Models\ResourceModuleTypeModes;
+use App\Models\ResourceModuleVisit;
+use App\Models\Scorm;
+use App\Models\ScormSco;
 use App\Models\Skill;
 use App\Models\SocialLink;
-use App\Models\Tag;
 use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -186,23 +187,9 @@ class ResourceModule extends Command
                     $newResourceModule->is_global = $is_global;
                     $newResourceModule->is_auto_created = $is_auto_created_module;
                     $newResourceModule->is_accessible = $single_resource->is_accessable;
+                    $newResourceModule->go1_course_id = $single_resource->go1_course_id;
+                    $newResourceModule->go1_metadata = $single_resource->go1_metadata;
                     $newResourceModule->save();
-
-                    // For Resource Module Skills
-                    $resourceSkillIdArray = json_decode($single_resource->resource_skills, true);
-                    if (!empty($resourceSkillIdArray)) {
-                        ResourceModuleSkillsGroupsStack::where(['id' => $single_resource->id, 'type' => '0'])->delete();
-                        foreach ($resourceSkillIdArray as $resourceSkillId) {
-                            $checkSkill = Skill::find($resourceSkillId);
-                            if ($checkSkill) {
-                                $newModuleSkill = new ResourceModuleSkillsGroupsStack();
-                                $newModuleSkill->resource_module_id = $single_resource->id;
-                                $newModuleSkill->foreign_id = $resourceSkillId;
-                                $newModuleSkill->type = '0';
-                                $newModuleSkill->save();
-                            }
-                        }
-                    }
 
                     //for mode and type
                     $getMode = clone $getTagGroups;
@@ -250,6 +237,23 @@ class ResourceModule extends Command
                             }
                         }
                     }
+
+                    // For Resource Module Skills
+                    $resourceSkillIdArray = json_decode($single_resource->resource_skills, true);
+                    if (!empty($resourceSkillIdArray)) {
+                        ResourceModuleSkillsGroupsStack::where(['id' => $single_resource->id, 'type' => '0'])->delete();
+                        foreach ($resourceSkillIdArray as $resourceSkillId) {
+                            $checkSkill = Skill::find($resourceSkillId);
+                            if ($checkSkill) {
+                                $newModuleSkill = new ResourceModuleSkillsGroupsStack();
+                                $newModuleSkill->resource_module_id = $single_resource->id;
+                                $newModuleSkill->foreign_id = (int) $resourceSkillId;
+                                $newModuleSkill->type = '0';
+                                $newModuleSkill->save();
+                            }
+                        }
+                    }
+
                     // For Resource Module Skill Stacks
                     $resourceSkillStacks = $single_resource->skill_stacks;
                     if (!empty($resourceSkillStacks)) {
@@ -257,7 +261,7 @@ class ResourceModule extends Command
                         foreach (explode(',', $resourceSkillStacks) as $resourceSkillStackId) {
                             $newModuleSkillStack = new ResourceModuleSkillsGroupsStack();
                             $newModuleSkillStack->resource_module_id = $single_resource->id;
-                            $newModuleSkillStack->foreign_id = $resourceSkillStackId;
+                            $newModuleSkillStack->foreign_id = (int) $resourceSkillStackId;
                             $newModuleSkillStack->type = '1';
                             $newModuleSkillStack->save();
                         }
@@ -270,25 +274,9 @@ class ResourceModule extends Command
                         foreach (explode(',', $resourceSkillGroups) as $resourceSkillGroupId) {
                             $newModuleSkillGroup = new ResourceModuleSkillsGroupsStack();
                             $newModuleSkillGroup->resource_module_id = $single_resource->id;
-                            $newModuleSkillGroup->foreign_id = $resourceSkillGroupId;
+                            $newModuleSkillGroup->foreign_id = (int) $resourceSkillGroupId;
                             $newModuleSkillGroup->type = '2';
                             $newModuleSkillGroup->save();
-                        }
-                    }
-
-                    // For Resource Module Tags
-                    $resourceTagIdArray = json_decode($single_resource->resource_tags, true);
-                    if (!empty($resourceTagIdArray)) {
-                        ResourceModuleTagsGroups::where(['id' => $single_resource->id, 'type' => '0'])->delete();
-                        foreach ($resourceTagIdArray as $resourceTagId) {
-                            $checkTag = Tag::find($resourceTagId);
-                            if ($checkTag) {
-                                $newModuleTag = new ResourceModuleSkillsGroupsStack();
-                                $newModuleTag->resource_module_id = $single_resource->id;
-                                $newModuleTag->foreign_id = $resourceTagId;
-                                $newModuleTag->type = '0';
-                                $newModuleTag->save();
-                            }
                         }
                     }
 
@@ -338,6 +326,55 @@ class ResourceModule extends Command
                             $newModuleAttachment->path = $moduleData->path;
                             $newModuleAttachment->social_link_id = $linkId;
                             $newModuleAttachment->save();
+
+                            // For resource module visit
+                            $checkResourceModuleVisits = DB::connection('mysql2')->table('resourece_module_visits')->where(['res_id' => $moduleData->id, 'res_parent_id' => $single_resource->id])->get();
+                            if ($checkResourceModuleVisits->isNotEmpty()) {
+                                foreach ($checkResourceModuleVisits as $resourceModuleVisit) {
+                                    $checkUserData = User::find($resourceModuleVisit->user_id);
+                                    if ($checkUserData) {
+                                        $assetType = null;
+                                        switch ($resourceModuleVisit->filetype) {
+                                            case 'doc':
+                                                $assetType = config('constants.visit_type_id.document');
+                                                break;
+
+                                            case 'video':
+                                                $assetType = config('constants.visit_type_id.video');
+                                                break;
+
+                                            case 'audio':
+                                                $assetType = config('constants.visit_type_id.audio');
+                                                break;
+
+                                            case 'web':
+                                                $assetType = config('constants.visit_type_id.url');
+                                                break;
+
+                                            case 'embedded':
+                                                $assetType = config('constants.visit_type_id.embedded');
+                                                break;
+
+                                            case 'scrom':
+                                                $assetType = config('constants.visit_type_id.scrom');
+                                                break;
+                                        }
+
+                                        if ($assetType != null) {
+                                            $newResourceModuleVisit = new ResourceModuleVisit();
+                                            $newResourceModuleVisit->id = $resourceModuleVisit->id;
+                                            $newResourceModuleVisit->user_id = $resourceModuleVisit->user_id;
+                                            $newResourceModuleVisit->module_id = $resourceModuleVisit->res_parent_id;
+                                            $newResourceModuleVisit->module_asset_id = $resourceModuleVisit->res_id;
+                                            $newResourceModuleVisit->asset_type = $assetType;
+                                            $newResourceModuleVisit->created_at = $resourceModuleVisit->created_at;
+                                            $newResourceModuleVisit->updated_at = $resourceModuleVisit->updated_at;
+                                            $newResourceModuleVisit->save();
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                     }
 
@@ -355,6 +392,49 @@ class ResourceModule extends Command
                             $newResourceModuleRating->user_id = $resourceRating->user_id;
                             $newResourceModuleRating->rating = $resourceRating->ratting;
                             $newResourceModuleRating->save();
+                        }
+                    }
+
+                    // For Scorm
+                    $checkScrom = DB::connection('mysql2')->table('scorm')->where(['resource_id' => $single_resource->id])->where('resource_type', '!=', 'App\Models\Challange')->first();
+                    if ($checkScrom) {
+                        $newScorm = new Scorm();
+                        $newScorm->model_type = ResourceModules::class;
+                        $newScorm->id = $checkScrom->id;
+                        $newScorm->model_id = $checkScrom->resource_id;
+                        $newScorm->title = $checkScrom->title;
+                        $newScorm->origin_file = $checkScrom->origin_file;
+                        $newScorm->version = $checkScrom->version;
+                        $newScorm->uuid = $checkScrom->uuid;
+                        $newScorm->identifier = $checkScrom->identifier;
+                        $newScorm->entry_url = $checkScrom->entry_url;
+                        $newScorm->created_at = $checkScrom->created_at;
+                        $newScorm->updated_at = $checkScrom->updated_at;
+                        $newScorm->save();
+
+                        $checkScromSco = DB::connection('mysql2')->table('scorm_sco')->where(['scorm_id' => $checkScrom->id])->first();
+                        if ($checkScromSco) {
+                            $newScormSco = new ScormSco();
+                            $newScormSco->id = $checkScromSco->id;
+                            $newScormSco->scorm_id = $checkScromSco->scorm_id;
+                            $newScormSco->uuid = $checkScromSco->uuid;
+                            $newScormSco->sco_parent_id = $checkScromSco->sco_parent_id;
+                            $newScormSco->entry_url = $checkScromSco->entry_url;
+                            $newScormSco->identifier = $checkScromSco->identifier;
+                            $newScormSco->title = $checkScromSco->title;
+                            $newScormSco->visible = $checkScromSco->visible;
+                            $newScormSco->sco_parameters = $checkScromSco->sco_parameters;
+                            $newScormSco->launch_data = $checkScromSco->launch_data;
+                            $newScormSco->max_time_allowed = $checkScromSco->max_time_allowed;
+                            $newScormSco->time_limit_action = $checkScromSco->time_limit_action;
+                            $newScormSco->block = $checkScromSco->block;
+                            $newScormSco->score_int = $checkScromSco->score_int;
+                            $newScormSco->score_decimal = $checkScromSco->score_decimal;
+                            $newScormSco->completion_threshold = $checkScromSco->completion_threshold;
+                            $newScormSco->prerequisites = $checkScromSco->prerequisites;
+                            $newScormSco->created_at = $checkScromSco->created_at;
+                            $newScormSco->updated_at = $checkScromSco->updated_at;
+                            $newScormSco->save();
                         }
                     }
                 }

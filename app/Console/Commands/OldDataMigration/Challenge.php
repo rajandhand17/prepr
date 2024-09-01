@@ -20,6 +20,7 @@ use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\Scorm;
+use App\Models\ScormSco;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -263,6 +264,7 @@ class Challenge extends Command
                     if ($checkScrom) {
                         $newScorm = new Scorm();
                         $newScorm->model_type = ModelChallenge::class;
+                        $newScorm->id = $checkScrom->id;
                         $newScorm->model_id = $checkScrom->resource_id;
                         $newScorm->title = $checkScrom->title;
                         $newScorm->origin_file = $checkScrom->origin_file;
@@ -270,7 +272,34 @@ class Challenge extends Command
                         $newScorm->uuid = $checkScrom->uuid;
                         $newScorm->identifier = $checkScrom->identifier;
                         $newScorm->entry_url = $checkScrom->entry_url;
+                        $newScorm->created_at = $checkScrom->created_at;
+                        $newScorm->updated_at = $checkScrom->updated_at;
                         $newScorm->save();
+
+                        $checkScromSco = DB::connection('mysql2')->table('scorm_sco')->where(['scorm_id' => $checkScrom->id])->first();
+                        if ($checkScromSco) {
+                            $newScormSco = new ScormSco();
+                            $newScormSco->id = $checkScromSco->id;
+                            $newScormSco->scorm_id = $checkScromSco->scorm_id;
+                            $newScormSco->uuid = $checkScromSco->uuid;
+                            $newScormSco->sco_parent_id = $checkScromSco->sco_parent_id;
+                            $newScormSco->entry_url = $checkScromSco->entry_url;
+                            $newScormSco->identifier = $checkScromSco->identifier;
+                            $newScormSco->title = $checkScromSco->title;
+                            $newScormSco->visible = $checkScromSco->visible;
+                            $newScormSco->sco_parameters = $checkScromSco->sco_parameters;
+                            $newScormSco->launch_data = $checkScromSco->launch_data;
+                            $newScormSco->max_time_allowed = $checkScromSco->max_time_allowed;
+                            $newScormSco->time_limit_action = $checkScromSco->time_limit_action;
+                            $newScormSco->block = $checkScromSco->block;
+                            $newScormSco->score_int = $checkScromSco->score_int;
+                            $newScormSco->score_decimal = $checkScromSco->score_decimal;
+                            $newScormSco->completion_threshold = $checkScromSco->completion_threshold;
+                            $newScormSco->prerequisites = $checkScromSco->prerequisites;
+                            $newScormSco->created_at = $checkScromSco->created_at;
+                            $newScormSco->updated_at = $checkScromSco->updated_at;
+                            $newScormSco->save();
+                        }
                     }
 
                     // For Challenge Sponsers table
