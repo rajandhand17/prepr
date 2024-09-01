@@ -39,6 +39,7 @@ class SqlCommandExecution extends Command
             DB::table('project_templates')->truncate();
             DB::table('project_pitch_values')->truncate();
             DB::table('project_task_values')->truncate();
+            DB::table('project_social_activities')->truncate();
             Schema::enableForeignKeyConstraints();
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
