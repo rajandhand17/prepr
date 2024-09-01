@@ -41,4 +41,5 @@ php artisan migrate-old-data:users-address
 php artisan migrate-old-data:users-friends
 php artisan migrate-old-data:users-tags
 php artisan migrate-old-data:users-setting
+php artisan migrate-old-data:project
 php artisan migrate:feed-chargebee-data-to-data-base
