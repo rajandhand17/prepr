@@ -327,18 +327,22 @@ class MemberManagementService
             $invited_emails = [];
             switch ($component) {
                 case 'organization':
+                    $module_name = "Organization";
                     $module_type = config('constants.member_management_component_type.organization');
                     $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
+                    $module_name = "Lab";
                     $module_type = config('constants.member_management_component_type.lab');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
+                    $module_name = "Challenge";
                     $module_type = config('constants.member_management_component_type.challenge');
                     $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 case 'lab-program':
+                    $module_name = "Lab Program";
                     $module_type = config('constants.member_management_component_type.lab_program');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
@@ -466,7 +470,7 @@ class MemberManagementService
 
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role];
                             if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
                                 $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));
@@ -555,6 +559,7 @@ class MemberManagementService
         } catch (InvitationQuotaExceededException $e) {
             throw $e;
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
             DB::rollBack();
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>password reset</title>
+    <title>Invitation Email</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
     <style>
         * {
@@ -82,13 +82,14 @@
 <body>
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
-        <div class="title">Password Reset Successfully</div>
-        <img class="image-container" src="CDN::asset('email/images/resetpassword.png')" alt="Image"><br>
+        <div class="title">You have been invited to join an {{$emailData['module_name']}}</div>
+        <img class="image-container" src="{{ $emailData['comp_image'] }}" alt="Image"><br>
+        <a href="{{ $emailData['slug'] }} " class="cta-button">Join Now</a>
         <div class="message">
-			Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }}
+            Dear {{ $emailData['invitee_name'] }},
             <br><br>
-			You are receiving this email because your PreprLabs password is changed. If you have not requested this reset, please email us at support@prepr.org for assistance.
-			<br><br>
+            {{$emailData['inviter_name']}} has invited you to join an organization on the Prepr Network as {{$emailData['role']}} : {{$emailData['comp_title']}} Feel free to write to us at support@prepr.org for any assistance. We will be happy to help. 
+            <br><br>
             Regards,
             <br>
             Prepr team
@@ -101,4 +102,3 @@
     </div>
 </body>
 </html>
-
