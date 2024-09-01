@@ -374,7 +374,6 @@ class ResourceModule extends Command
                                     }
                                 }
                             }
-
                         }
                     }
 
