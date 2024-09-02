@@ -3,12 +3,12 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
-use Carbon\Carbon;
-use App\Models\User;
 use App\Models\MemberManagement;
 use App\Models\Organization;
-use HiFolks\RandoPhp\Randomize;
+use App\Models\User;
+use Carbon\Carbon;
 use DB;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 
 class Role extends Command
@@ -72,9 +72,9 @@ class Role extends Command
                             ->select('oiu.*')
                             ->where('oiu.email', $user->email)
                             ->whereIn('oiu.role', $roleOrder)
-                            ->orderByRaw("FIELD(oiu.role, " . implode(',', array_map(function ($role) {
+                            ->orderByRaw('FIELD(oiu.role, '.implode(',', array_map(function ($role) {
                                 return "'$role'";
-                            }, $roleOrder)) . ")")
+                            }, $roleOrder)).')')
                             ->get()
                             ->groupBy('organisation_id')
                             ->map(function ($group) {
@@ -84,7 +84,6 @@ class Role extends Command
                             foreach ($orgRoles as $orgRole) {
                                 if ($orgRole->role) {
                                     if (Organization::where('id', $orgRole->organisation_id)->exists()) {
-
                                         switch ($orgRole->role) {
                                             case 'organisation_manager':
                                                 $role = 'organization_manager';
@@ -128,26 +127,26 @@ class Role extends Command
                                         }
 
                                         $conditions = [
-                                            'type' => '0',
+                                            'type'      => '0',
                                             'module_id' => $orgRole->organisation_id,
-                                            'email' => $orgRole->email,
-                                            'role' => $roleName,
+                                            'email'     => $orgRole->email,
+                                            'role'      => $roleName,
                                         ];
 
                                         $data = [
-                                            'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                                            'invite_type' => $inviteType ?? '0',
-                                            'module_type' => '0',
-                                            'inviter_id' => $orgRole->inviter_id,
-                                            'auto_invite' => '2',
-                                            'invite_status' => '1',
-                                            'invitee_name' => $user->full_name ?? null,
-                                            'email_status' => '1',
-                                            'subject_line' => $orgRole->subject_line ?? null,
-                                            'email_body' => $orgRole->email_message ?? null,
+                                            'uuid'                => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                                            'invite_type'         => $inviteType ?? '0',
+                                            'module_type'         => '0',
+                                            'inviter_id'          => $orgRole->inviter_id,
+                                            'auto_invite'         => '2',
+                                            'invite_status'       => '1',
+                                            'invitee_name'        => $user->full_name ?? null,
+                                            'email_status'        => '1',
+                                            'subject_line'        => $orgRole->subject_line ?? null,
+                                            'email_body'          => $orgRole->email_message ?? null,
                                             'email_resend_status' => '0',
-                                            'created_at' => Carbon::createFromTimestamp($orgRole->created_at)->format('Y-m-d H:i:s'),
-                                            'updated_at' => Carbon::createFromTimestamp($orgRole->updated_at)->format('Y-m-d H:i:s'),
+                                            'created_at'          => Carbon::createFromTimestamp($orgRole->created_at)->format('Y-m-d H:i:s'),
+                                            'updated_at'          => Carbon::createFromTimestamp($orgRole->updated_at)->format('Y-m-d H:i:s'),
                                         ];
                                         $existingRecord = MemberManagement::where($conditions)->first();
                                         if ($existingRecord) {
@@ -175,7 +174,6 @@ class Role extends Command
         }
     }
 }
-
 
 // Note : This command should be execute after migrate user and organization tables from legacy to learnlab.
 // If user associated only one organization with multiple role in this scenario ,user get role based on higher order.
