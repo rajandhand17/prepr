@@ -38,7 +38,7 @@ class LeaderboardController extends AppBaseController
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
-            return $this->sendError('responses.send_error', 500);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 
@@ -67,7 +67,7 @@ class LeaderboardController extends AppBaseController
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
-            return $this->sendError('responses.send_error', 500);
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }
