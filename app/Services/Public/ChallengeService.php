@@ -470,7 +470,7 @@ class ChallengeService
                 });
             }
 
-            return $userDeadlineChallenges->take(5);
+            return $userDeadlineChallenges->take(3);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
