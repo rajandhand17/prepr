@@ -44,7 +44,6 @@ class DiscussionController extends AppBaseController
 
             return $this->sendResponse([], __('responses.comments_lists_successfully'));
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
