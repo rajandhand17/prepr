@@ -93,7 +93,7 @@ class ResourceGroupController extends AppBaseController
             // Cloning resource groups based on title and resource group id
             $cloneResourceModule = $this->resourceGroupRepository->cloneResourceGroup($getResourceGroup->id);
             if ($cloneResourceModule) {
-                return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_collection_successfully'));
+                return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_group_successfully'));
             }
 
             return $this->sendError(__('responses.clone_responses_group_failed'), 400);
