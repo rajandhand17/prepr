@@ -39,7 +39,8 @@ class Discussion extends Command
             $this->error($e->getMessage());
         }
     }
-// Migrating the comments tables.
+
+    // Migrating the comments tables.
     private function migrateComments()
     {
         $comments = DB::connection('mysql2')->table('comments')->get();
@@ -73,7 +74,8 @@ class Discussion extends Command
             $this->handleLikes($comment->id, $comment->u_unlike, '2');
         }
     }
-// Migrating comment reply tables
+
+    // Migrating comment reply tables
     private function migrateCommentReplies()
     {
         $commentReplies = DB::connection('mysql2')->table('comment_replies')->get();
@@ -101,7 +103,8 @@ class Discussion extends Command
             $this->handleLikes($reply->id, $reply->u_unlike, '2');
         }
     }
-// Getting Model base on type
+
+    // Getting Model base on type
     private function getModelForType($type)
     {
         return match ($type) {
@@ -121,11 +124,13 @@ class Discussion extends Command
             default     => '',
         };
     }
+
     // Converted Value to json
     private function convertToJson($value)
     {
         return empty($value) ? null : json_encode($value);
     }
+
     // Saved data in table
     private function handleLikes($commentId, $likes, $likeDislike)
     {
