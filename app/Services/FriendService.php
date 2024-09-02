@@ -323,7 +323,7 @@ class FriendService
     public function dashboardFriendList($userData)
     {
         try {
-            $dashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->get();
+            $dashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->take(5)->get();
 
             return $dashboardFriendList;
         } catch (\Exception $e) {
