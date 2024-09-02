@@ -45,23 +45,28 @@ class Discussion extends Command
         $comments = DB::connection('mysql2')->table('comments')->get();
         if ($comments->isEmpty()) {
             $this->error('No comments found.');
+
             return;
         }
 
         foreach ($comments as $comment) {
-            if (!User::find($comment->user_id)) continue;
+            if (!User::find($comment->user_id)) {
+                continue;
+            }
 
             $model = $this->getModelForType($comment->type);
-            if (!$model::find($comment->reference_id)) continue;
+            if (!$model::find($comment->reference_id)) {
+                continue;
+            }
 
             $discussion = new Discussions();
             $discussion->fill([
-                'id' => $comment->id,
-                'user_id' => $comment->user_id,
-                'module_id' => $comment->reference_id,
+                'id'          => $comment->id,
+                'user_id'     => $comment->user_id,
+                'module_id'   => $comment->reference_id,
                 'module_type' => $this->getModuleType($comment->type),
-                'comments' => $comment->comment,
-                'attachment' => $this->convertToJson($comment->attachement),
+                'comments'    => $comment->comment,
+                'attachment'  => $this->convertToJson($comment->attachement),
             ])->save();
 
             $this->handleLikes($comment->id, $comment->u_like, '1');
@@ -73,19 +78,23 @@ class Discussion extends Command
     {
         $commentReplies = DB::connection('mysql2')->table('comment_replies')->get();
         foreach ($commentReplies as $reply) {
-            if (!User::find($reply->user_id)) continue;
+            if (!User::find($reply->user_id)) {
+                continue;
+            }
 
             $parentComment = Discussions::find($reply->comment_id);
-            if (!$parentComment) continue;
+            if (!$parentComment) {
+                continue;
+            }
 
             $discussion = new Discussions();
             $discussion->fill([
-                'user_id' => $reply->user_id,
-                'module_id' => $parentComment->module_id,
+                'user_id'     => $reply->user_id,
+                'module_id'   => $parentComment->module_id,
                 'module_type' => $parentComment->module_type,
-                'comments' => $reply->comment,
-                'attachment' => $this->convertToJson($reply->attachement),
-                'comment_id' => $reply->comment_id,
+                'comments'    => $reply->comment,
+                'attachment'  => $this->convertToJson($reply->attachement),
+                'comment_id'  => $reply->comment_id,
             ])->save();
 
             $this->handleLikes($reply->id, $reply->u_like, '1');
@@ -96,20 +105,20 @@ class Discussion extends Command
     private function getModelForType($type)
     {
         return match ($type) {
-            'labs' => Lab::class,
-            'project' => Project::class,
+            'labs'      => Lab::class,
+            'project'   => Project::class,
             'challenge' => Challenge::class,
-            default => null,
+            default     => null,
         };
     }
 
     private function getModuleType($type)
     {
         return match ($type) {
-            'labs' => '0',
-            'project' => '1',
+            'labs'      => '0',
+            'project'   => '1',
             'challenge' => '2',
-            default => '',
+            default     => '',
         };
     }
     // Converted Value to json
@@ -123,8 +132,8 @@ class Discussion extends Command
         if (!empty($likes)) {
             foreach (json_decode($likes) as $userId) {
                 (new DiscussionSocialActivity([
-                    'comment_id' => $commentId,
-                    'user_id' => $userId,
+                    'comment_id'    => $commentId,
+                    'user_id'       => $userId,
                     'like_dislikes' => $likeDislike,
                 ]))->save();
             }
