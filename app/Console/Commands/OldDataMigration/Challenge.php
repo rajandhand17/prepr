@@ -13,6 +13,7 @@ use App\Models\ChallengeFlexibleAnnouncement;
 use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
+use App\Models\ChallengeSocialActivity;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTimelines;
 use App\Models\ChallengeTypeMode;
@@ -720,6 +721,40 @@ class Challenge extends Command
                     $challengeTimelines->automatic_alert = $challengeAutoAlert;
                     $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
                     $challengeTimelines->save();
+
+                    // for challenge social activities
+                    $challengeSocialActivities = DB::connection('mysql2')->table('favorites')->where(['ref_id' => $challenge->id, 'ref_type' => 'challange'])->get();
+                    if ($challengeSocialActivities->isNotEmpty()) {
+                        foreach ($challengeSocialActivities as $challengeSocialActivity) {
+                            $createdAt = $challengeSocialActivity->created_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                            $updatedAt = $challengeSocialActivity->updated_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                            $deletedAt = $challengeSocialActivity->deleted_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                            $checkUserData = User::find($challengeSocialActivity->user_id);
+
+                            if ($checkUserData) {
+                                $favAction = '0';
+                                if ($challengeSocialActivity->is_follow == '1') {
+                                    $favAction = '1';
+                                }
+
+                                $likeAction = '0';
+                                if ($challengeSocialActivity->likeit == '1') {
+                                    $likeAction = '1';
+                                }
+
+                                $newChallengePathSocialActivity = new ChallengeSocialActivity();
+                                $newChallengePathSocialActivity->user_id = $challengeSocialActivity->user_id;
+                                $newChallengePathSocialActivity->challenge_id = $challenge->id;
+                                $newChallengePathSocialActivity->favourite = $favAction;
+                                $newChallengePathSocialActivity->like_dislike = $likeAction;
+                                $newChallengePathSocialActivity->created_at = $createdAt;
+                                $newChallengePathSocialActivity->updated_at = $updatedAt;
+                                $newChallengePathSocialActivity->deleted_at = $deletedAt;
+                                $newChallengePathSocialActivity->save();
+                            }
+                        }
+                    }
                 }
             });
 

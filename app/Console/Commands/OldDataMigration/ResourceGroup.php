@@ -138,6 +138,9 @@ class ResourceGroup extends Command
                     $newResourceGroup->status = $status;
                     $newResourceGroup->is_auto_created = $is_auto_created_resourceGroup;
                     $newResourceGroup->is_accessible = $singleResourceGroup->is_accessable;
+                    $newResourceGroup->created_at = $singleResourceGroup->created_at;
+                    $newResourceGroup->updated_at = $singleResourceGroup->updated_at;
+                    $newResourceGroup->deleted_at = $singleResourceGroup->deleted_at;
                     $newResourceGroup->save();
 
                     //for mode and type
@@ -147,17 +150,20 @@ class ResourceGroup extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ResourceGroupTypeModes::where(['resource_group_id' => $singleResourceGroup->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $resourceGroupMode = new ResourceGroupTypeModes();
-                                $resourceGroupMode->resource_group_id = $singleResourceGroup->id;
-                                $resourceGroupMode->type_mode = '1';
-                                $resourceGroupMode->value = $mode_id;
-                                $resourceGroupMode->save();
+                                if ($mode_id != null) {
+                                    $resourceGroupMode = new ResourceGroupTypeModes();
+                                    $resourceGroupMode->resource_group_id = $singleResourceGroup->id;
+                                    $resourceGroupMode->type_mode = '1';
+                                    $resourceGroupMode->value = $mode_id;
+                                    $resourceGroupMode->save();
+                                }
                             }
                         }
                     }
@@ -168,6 +174,7 @@ class ResourceGroup extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ResourceGroupTypeModes::where(['resource_group_id' => $singleResourceGroup->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -178,11 +185,13 @@ class ResourceGroup extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $resourceGroupType = new ResourceGroupTypeModes();
-                                $resourceGroupType->resource_group_id = $singleResourceGroup->id;
-                                $resourceGroupType->type_mode = '0';
-                                $resourceGroupType->value = $type_id;
-                                $resourceGroupType->save();
+                                if ($type_id != null) {
+                                    $resourceGroupType = new ResourceGroupTypeModes();
+                                    $resourceGroupType->resource_group_id = $singleResourceGroup->id;
+                                    $resourceGroupType->type_mode = '0';
+                                    $resourceGroupType->value = $type_id;
+                                    $resourceGroupType->save();
+                                }
                             }
                         }
                     }
