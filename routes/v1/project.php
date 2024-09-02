@@ -3,10 +3,13 @@
 use App\Http\Controllers\Api\Project\ProjectController;
 use Illuminate\Support\Facades\Route;
 
+Route::middleware(['language'])->group(function () {
+    Route::get('{slug}', [ProjectController::class, 'show']);
+});
+
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/', [ProjectController::class, 'index']);
     Route::post('/create', [ProjectController::class, 'create']);
-    Route::get('{slug}', [ProjectController::class, 'show']);
     Route::post('/{slug}/update', [ProjectController::class, 'update']);
     Route::get('{slug}/requirements', [ProjectController::class, 'projectRequirements']);
     Route::post('/{slug}/pitch-task', [ProjectController::class, 'projectPitchTask']);

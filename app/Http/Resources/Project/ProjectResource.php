@@ -34,6 +34,17 @@ class ProjectResource extends JsonResource
         $project_role = 'none';
         $is_assess_enabled = 'yes';
 
+        switch ($this->privacy) {
+            case '0':
+                $privacy = 'no';
+                break;
+            case '1':
+                $privacy = 'yes';
+                break;
+            default:
+                $privacy = 'no';
+                break;
+        }
         if ($this->getProjectTemplate) {
             if ($this->getProjectTemplate->template_id == '0') {
                 $templateData = $this->getProjectIdBasedTemplate ?? $this->getProjectTemplate;
@@ -106,9 +117,7 @@ class ProjectResource extends JsonResource
                 $media_type = 'image';
                 break;
         }
-        if ($media == config('site-settings.aws_url').config('site-settings.default_project_cover_image') || $media == config('site-settings.aws_url')) {
-            $media = null;
-        }
+
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
@@ -174,18 +183,6 @@ class ProjectResource extends JsonResource
             }
         }
 
-        switch ($this->privacy) {
-            case '0':
-                $privacy = 'no';
-                break;
-            case '1':
-                $privacy = 'yes';
-                break;
-            default:
-                $privacy = 'no';
-                break;
-        }
-
         if ($this->likes()) {
             $liked = $this->likes() > 0 ? 'yes' : 'no';
         }
@@ -212,10 +209,24 @@ class ProjectResource extends JsonResource
         // Counting total files
         $files_count = count($videosCollection) + count($audiosCollection) + count($docsCollection);
 
+        switch ($this->is_submitted) {
+            case '0':
+                $project_status = 'In Progress';
+                break;
+
+            case '1':
+                $project_status = 'Submitted';
+                break;
+
+            case '2':
+                $project_status = 'Late Submitted';
+                break;
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
-            'user_id'               => $this->user_id,
+            'user_id'               => auth('api')->check() ? $this->user_id : null,
             'title'                 => $this->title,
             'slug'                  => $this->slug,
             'description'           => $this->description,
@@ -226,38 +237,39 @@ class ProjectResource extends JsonResource
             'media_type'            => $media_type,
             'media'                 => $media,
             'privacy'               => $privacy,
-            'liked'                 => $liked,
-            'likes'                 => $this->likes(),
-            'voted'                 => $voted,
-            'votes'                 => $this->votes(),
-            'shares'                => $this->shares(),
-            'favourite'             => $this->favourite(),
-            'access_level'          => $access_level,
-            'is_submitted'          => $this->is_submitted !== '0' ? 'yes' : 'no',
-            'submit_enabled'        => $submit_enabled !== false ? 'yes' : 'no',
-            'project_role'          => $project_role,
-            'recruiting_status'     => $this->recruiting_status !== '0' ? 'no' : 'yes',
+            'liked'                 => auth('api')->check() ? $liked : null,
+            'likes'                 => auth('api')->check() ? $this->likes() : null,
+            'voted'                 => auth('api')->check() ? $voted : null,
+            'votes'                 => auth('api')->check() ? $this->votes() : null,
+            'shares'                => auth('api')->check() ? $this->shares() : null,
+            'favourite'             => auth('api')->check() ? $this->favourite() : null,
+            'access_level'          => auth('api')->check() ? $access_level : null,
+            'is_submitted'          => auth('api')->check() ? ($this->is_submitted !== '0' ? 'yes' : 'no') : null,
+            'project_status'        => auth('api')->check() ? $project_status : null,
+            'submit_enabled'        => auth('api')->check() ? ($submit_enabled !== false ? 'yes' : 'no') : null,
+            'project_role'          => auth('api')->check() ? $project_role : null,
+            'recruiting_status'     => auth('api')->check() ? ($this->recruiting_status !== '0' ? 'no' : 'yes') : null,
             'member_count'          => $this->getMembersCount(),
-            'joined_status'         => $joined_status,
+            'joined_status'         => auth('api')->check() ? $joined_status : null,
             'members'               => ProjectMemberResource::collection($this->members),
             'skills'                => $skills,
             'challenge_details'     => $challenge_details,
-            'challenge_achievement' => $achievement,
+            'challenge_achievement' => auth('api')->check() ? $achievement : null,
             'lab_details'           => $lab_details,
             'requirement_status'    => ProjectRequirementResource::make($this),
-            'project_pitch'         => $challenge_pitch,
-            'project_task'          => $challenge_task,
-            'docs'                  => $docsCollection,
-            'images'                => $imagesCollection,
+            'project_pitch'         => auth('api')->check() ? $challenge_pitch : null,
+            'project_task'          => auth('api')->check() ? $challenge_task : null,
+            'docs'                  => auth('api')->check() ? $docsCollection : null,
+            'images'                => auth('api')->check() ? $imagesCollection : null,
             'images_count'          => "You've ".$images_count.' '.($images_count > 1 ? 'images uploaded' : 'image uploaded'), // Adding image count
             'files_count'           => "You've ".$files_count.' '.($files_count > 1 ? 'files uploaded' : 'file uploaded'),
-            'videos'                => $videosCollection,
-            'audios'                => $audiosCollection,
+            'videos'                => auth('api')->check() ? $videosCollection : null,
+            'audios'                => auth('api')->check() ? $audiosCollection : null,
             'external_links'        => ProjectExternalLinkResource::collection($this->external_links),
-            'is_assess_enabled'     => $is_assess_enabled,
-            'additional_info'       => ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo),
-            'assessment_data'       => AssessedProjectResource::make($this),
-            'history'               => ProjectHistoryResource::collection($this->history),
+            'is_assess_enabled'     => auth('api')->check() ? $is_assess_enabled : null,
+            'additional_info'       => auth('api')->check() ? ProjectAdditionalInfoResource::make($this->getProjectAdditionalInfo) : null,
+            'assessment_data'       => auth('api')->check() ? AssessedProjectResource::make($this) : null,
+            'history'               => auth('api')->check() ? ProjectHistoryResource::collection($this->history) : null,
             'updated_at'            => $this->updated_at,
         ];
     }

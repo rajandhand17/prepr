@@ -45,6 +45,19 @@ class ChallengeService
         }
     }
 
+    public function getChallengeDashboardList($challengeIds)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $challengeIds)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+
+            return $challenge_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function filterChallengeList($request, $challenge_list)
     {
         try {
@@ -148,7 +161,7 @@ class ChallengeService
 
             if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
                 $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
-                    $query->where('is_submitted', '1');
+                    $query->where('user_id', auth('api')->user()->id)->where('is_submitted', '1');
                 });
             }
             if ($request->has('type') && $request->type) {
