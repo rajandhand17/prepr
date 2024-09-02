@@ -198,17 +198,20 @@ class ResourceModule extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $resourceMode = new ResourceModuleTypeModes();
-                                $resourceMode->resource_module_id = $single_resource->id;
-                                $resourceMode->type_mode = '1';
-                                $resourceMode->value = $mode_id;
-                                $resourceMode->save();
+                                if ($mode_id != null) {
+                                    $resourceMode = new ResourceModuleTypeModes();
+                                    $resourceMode->resource_module_id = $single_resource->id;
+                                    $resourceMode->type_mode = '1';
+                                    $resourceMode->value = $mode_id;
+                                    $resourceMode->save();
+                                }
                             }
                         }
                     }
@@ -219,6 +222,7 @@ class ResourceModule extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -229,11 +233,13 @@ class ResourceModule extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $resourceType = new ResourceModuleTypeModes();
-                                $resourceType->resource_module_id = $single_resource->id;
-                                $resourceType->type_mode = '0';
-                                $resourceType->value = $type_id;
-                                $resourceType->save();
+                                if ($type_id != null) {
+                                    $resourceType = new ResourceModuleTypeModes();
+                                    $resourceType->resource_module_id = $single_resource->id;
+                                    $resourceType->type_mode = '0';
+                                    $resourceType->value = $type_id;
+                                    $resourceType->save();
+                                }
                             }
                         }
                     }

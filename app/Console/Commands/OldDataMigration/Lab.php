@@ -240,17 +240,20 @@ class Lab extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $labMode = new LabTypeModes();
-                                $labMode->lab_id = $lab->id;
-                                $labMode->type_mode = '1';
-                                $labMode->value = $mode_id;
-                                $labMode->save();
+                                if ($mode_id != null) {
+                                    $labMode = new LabTypeModes();
+                                    $labMode->lab_id = $lab->id;
+                                    $labMode->type_mode = '1';
+                                    $labMode->value = $mode_id;
+                                    $labMode->save();
+                                }
                             }
                         }
                     }
@@ -261,6 +264,7 @@ class Lab extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -271,11 +275,13 @@ class Lab extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $labMode = new LabTypeModes();
-                                $labMode->lab_id = $lab->id;
-                                $labMode->type_mode = '0';
-                                $labMode->value = $type_id;
-                                $labMode->save();
+                                if ($type_id != null) {
+                                    $labMode = new LabTypeModes();
+                                    $labMode->lab_id = $lab->id;
+                                    $labMode->type_mode = '0';
+                                    $labMode->value = $type_id;
+                                    $labMode->save();
+                                }
                             }
                         }
                     }
