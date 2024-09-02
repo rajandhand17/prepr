@@ -276,7 +276,7 @@ class MemberManagementService
         try {
             $memberList = [];
             $inviteStatus = null;
-            $type = config('constants.member_management_type.' . $request->type);
+            $type = config('constants.member_management_type.'.$request->type);
 
             if ($request->type === 'auto_created' && $request->auto_invite === 'yes') {
                 $inviteStatus = config('constants.member_management_invite_status.accepted');
@@ -287,7 +287,7 @@ class MemberManagementService
                     $user = UserService::getUserByEmail($email);
                     $name = null;
                     if ($user) {
-                        $name = $user->first_name . ' ' . $user->last_name;
+                        $name = $user->first_name.' '.$user->last_name;
                     }
                     $member = [
                         'type'          => $type,
