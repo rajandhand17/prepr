@@ -327,22 +327,22 @@ class MemberManagementService
             $invited_emails = [];
             switch ($component) {
                 case 'organization':
-                    $module_name = "Organization";
+                    $module_name = 'Organization';
                     $module_type = config('constants.member_management_component_type.organization');
                     $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
-                    $module_name = "Lab";
+                    $module_name = 'Lab';
                     $module_type = config('constants.member_management_component_type.lab');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
-                    $module_name = "Challenge";
+                    $module_name = 'Challenge';
                     $module_type = config('constants.member_management_component_type.challenge');
                     $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 case 'lab-program':
-                    $module_name = "Lab Program";
+                    $module_name = 'Lab Program';
                     $module_type = config('constants.member_management_component_type.lab_program');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
