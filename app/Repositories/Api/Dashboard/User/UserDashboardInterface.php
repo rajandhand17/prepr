@@ -8,13 +8,13 @@ interface UserDashboardInterface
 
     public function challengeFavouriteIds($userData);
 
-    public function getChallengeList($challengeIds);
+    public function getChallengeDashboardList($challengeIds);
 
     public function labRequestIds($userData, $inviteStatus);
 
     public function labFavouriteIds($userData);
 
-    public function getLabList($labIds);
+    public function getLabDashboardList($labIds);
 
     public function myProjectDashboardRequestIds($userData, $inviteStatus);
 
