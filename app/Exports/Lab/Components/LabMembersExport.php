@@ -46,19 +46,20 @@ class LabMembersExport implements FromCollection, withColumnWidths, WithStrictNu
     public function map($row): array
     {
         $user = $row->user;
+
         return [
-            data_get($user,'full_name'),
-            data_get($user,'username'),
-            data_get($user,'email', data_get($row,'email')),
+            data_get($user, 'full_name'),
+            data_get($user, 'username'),
+            data_get($user, 'email', data_get($row, 'email')),
             $this->getInvitationStatusName($row->invite_status),
-            data_get($user,'formatted_login_status'),
-            data_get($user,'labProgressName'),
-            data_get($user,'userAchievements')->first() ? $user->userAchievements->first()->title : '-',
-            data_get($user,'challenges_progress_count', 0),
-            data_get($user,'challenge_paths_progress_count', 0),
-            data_get($user,'resources_modules_progresses_count', 0),
-            data_get($user,'resources_groups_progresses_count', 0),
-            data_get($user,'resources_collections_progresses_count', 0),
+            data_get($user, 'formatted_login_status'),
+            data_get($user, 'labProgressName'),
+            data_get($user, 'userAchievements')->first() ? $user->userAchievements->first()->title : '-',
+            data_get($user, 'challenges_progress_count', 0),
+            data_get($user, 'challenge_paths_progress_count', 0),
+            data_get($user, 'resources_modules_progresses_count', 0),
+            data_get($user, 'resources_groups_progresses_count', 0),
+            data_get($user, 'resources_collections_progresses_count', 0),
         ];
     }
 
