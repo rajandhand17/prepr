@@ -43,10 +43,11 @@ class ProjectAdditionalInfoResource extends JsonResource
             $verticals_id = $this->getVerticals->id;
         }
 
-        // if ($this->type_id) {
-        //     $type = $this->getType->title;
-        //     $type_id = $this->gettype->id;
-        // }
+        if ($this->type_id) {
+            $type = $this->getType->title;
+            $type_id = $this->gettype->id;
+        }
+
 
         if ($this->stage_id) {
             $stage = $this->getStage->title;
@@ -57,7 +58,7 @@ class ProjectAdditionalInfoResource extends JsonResource
             $status = $this->getStatus->title;
             $status_id = $this->getStatus->id;
         }
-
+        // returning data with columns
         return [
             'category'              => $category,
             'category_id'           => $category_id,
