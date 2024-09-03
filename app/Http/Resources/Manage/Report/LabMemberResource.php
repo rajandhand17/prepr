@@ -23,7 +23,7 @@ class LabMemberResource extends JsonResource
             'email'                      => data_get($user, 'email', $this->email),
             'username'                   => data_get($user, 'username', ''),
             'invitation_status'          => $this->formatInvitationStatus($this->invite_status) ?? '-',
-            'activity'                   => data_get($user, 'last_login_date'),
+            'activity'                   => data_get($user, 'formatted_login_status', __('In Active')),
             'lab_progress'               => $user ? $this->formatLabProgress($user->labProgresses?->first()->status) : '-',
             'achievement'                => $user ? $user->userAchievements->first()->title ?? '-' : '-',
             'completion_count_by_module' => [

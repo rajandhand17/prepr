@@ -298,6 +298,7 @@ class ChallengeReportController extends AppBaseController
                 $data = $this->challengeReportRepository->getPaginatedMembers($challenge);
 
                 if ($data !== false) {
+                    request()->merge(['challenge' => $challenge]); // For resource
                     return $this->sendResponse([
                         ...$data,
                         'list' => ChallengeMemberResource::collection(data_get($data, 'list')),
@@ -309,8 +310,6 @@ class ChallengeReportController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_slug_not_found'), Response::HTTP_NOT_FOUND);
         } catch (\Exception $exception) {
-            UtilityHelper::logError($exception);
-
             return $this->sendError(__('responses.failed_to_fetch_challenge_members'), Response::HTTP_BAD_REQUEST);
         }
     }

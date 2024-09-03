@@ -29,7 +29,7 @@ class OrganizationMemberResource extends JsonResource
             'role'                       => $this->role,
             'email'                      => $this->email,
             'invitation_status'          => $inviteStatus[$this->invite_status],
-            'account_activity'           => 'active', //todo
+            'account_activity'           =>  data_get($this->organizationUser, 'formatted_login_status', __('In Active')),
             'learning_points'            => data_get($this->organizationUser, 'user_points'),
             'learning_rank'              => data_get($this->organizationUser, 'user_rank'),
             'achievement_count'          => data_get($this->organizationUser, 'achievement_count'),

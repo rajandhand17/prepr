@@ -55,7 +55,7 @@ class ChallengeMembersExport implements FromCollection, withColumnWidths, WithSt
             $user ? $user->username : '-',
             $user ? $user->email : '-',
             $this->getInvitationStatusName($row->invite_status),
-            $user->login_status,
+            $user->formatted_login_status,
             $project ? $project->title : '-',
             $project ? $project->created_at : '-',
             $project ? $this->getProjectSubmitStatus($challenge, $project) : '-',
