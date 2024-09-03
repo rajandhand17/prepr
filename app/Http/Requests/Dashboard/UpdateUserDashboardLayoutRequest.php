@@ -24,14 +24,12 @@ class UpdateUserDashboardLayoutRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'card_type'         => 'required|array',
-            'card_type.*'       => 'in:reports,deadlines,leaderboard,my-challenges,my-labs,my-projects,my-resources,inbox-friends,recommendations,continue-left,achievement',
-            'is_active'         => 'required|array',
-            'is_active.*'       => 'in:yes,no',
-            'position_x'        => 'nullable|array',
-            'position_x.*'      => 'in:0,1,2,3',
-            'position_y'        => 'nullable|array',
-            'position_y.*'      => 'in:0,1,2,3',
+            'card_type'     => 'required|array',
+            'card_type.*'   => 'required|in:reports,deadlines,leaderboard,my-challenges,my-labs,my-projects,my-resources,inbox-friends,recommendations,continue-left,achievement',
+            'is_active'     => 'required|array',
+            'is_active.*'   => 'required|in:yes,no',
+            'position_index' => 'nullable|array',
+            'position_index.*' => 'integer|min:0|max:10', // Optional basic validation for position_index
         ];
 
         return array_merge($base_rules, [
@@ -39,38 +37,58 @@ class UpdateUserDashboardLayoutRequest extends FormRequest
                 'required',
                 'array',
                 function ($attribute, $value, $fail) {
-                    $count = count($value);
-                    $is_active = $this->input('is_active', []);
-                    $position_x = $this->input('position_x', []);
-                    $position_y = $this->input('position_y', []);
+                    $requiredCardTypes = [
+                        'reports',
+                        'deadlines',
+                        'leaderboard',
+                        'my-challenges',
+                        'my-labs',
+                        'my-projects',
+                        'my-resources',
+                        'inbox-friends',
+                        'recommendations',
+                        'continue-left',
+                        'achievement'
+                    ];
 
-                    // Check that the count of all arrays matches
-                    if (
-                        count($is_active) !== $count ||
-                        count($position_x) !== $count ||
-                        count($position_y) !== $count
-                    ) {
-                        $fail('The number of items for '.$attribute.' must match the number of items for is_active, position_x, and position_y.');
+                    $missingCardTypes = array_diff($requiredCardTypes, $value);
+
+                    if (!empty($missingCardTypes)) {
+                        $fail('All card types must be present: ' . implode(', ', $missingCardTypes));
                     }
 
-                    // Check that position_x and position_y combinations are unique, except when is_active is "no"
-                    $combinations = [];
+                    $count = count($value);
+                    $is_active = $this->input('is_active', []);
+                    $position_index = $this->input('position_index', []);
+
+                    // Check that the count of all arrays matches
+                    if (count($is_active) !== $count) {
+                        $fail('The number of items for ' . $attribute . ' must match the number of items for is_active.');
+
+                        return;
+                    }
+
+                    // Check that position_index is distinct when is_active is "yes"
+                    $positionIndices = [];
                     for ($i = 0; $i < $count; $i++) {
                         if ($is_active[$i] === 'yes') {
-                            $combination = $position_x[$i].'-'.$position_y[$i];
-                            if (in_array($combination, $combinations)) {
-                                $fail('The combination of position_x and position_y must be unique when is_active is "yes".');
+                            if (!isset($position_index[$i])) {
+                                $fail('Position index is required when is_active is "yes".');
 
                                 return;
                             }
-                            $combinations[] = $combination;
+
+                            if (in_array($position_index[$i], $positionIndices)) {
+                                $fail('The position_index must be unique when is_active is "yes".');
+
+                                return;
+                            }
+                            $positionIndices[] = $position_index[$i];
                         }
                     }
                 },
             ],
         ]);
-
-        return $base_rules;
     }
 
     public function failedValidation(Validator $validator)
