@@ -27,9 +27,10 @@ class ChallengeReportController extends AppBaseController
 {
     public function __construct(
         protected ChallengeReportRepository $challengeReportRepository,
-        protected ChallengeRepository $challengeRepository,
-        protected ProjectRepository $projectRepository
-    ) {
+        protected ChallengeRepository       $challengeRepository,
+        protected ProjectRepository         $projectRepository
+    )
+    {
     }
 
     /**
@@ -365,10 +366,15 @@ class ChallengeReportController extends AppBaseController
                 $data = $this->challengeReportRepository->getChallengeAssessmentDetail($challenge, $project->id);
 
                 if ($data !== false) {
-                    return $this->sendResponse([
-                        ...$data,
-                        'users' => ChallengeAssessmentDetailResource::collection(data_get($data, 'users')),
-                    ], __('Challenge Assessment'));
+                    if (data_get($data, 'success')) {
+                        $response = data_get($data, 'data');
+                        return $this->sendResponse([
+                            ...$response,
+                            'users' => ChallengeAssessmentDetailResource::collection(data_get($response, 'users')),
+                        ], __('Challenge Assessment'));
+                    } else {
+                        return $this->sendError(__('responses.no_assessments_found'), Response::HTTP_NOT_FOUND);
+                    }
                 }
 
                 return $this->sendResponse($data, __('Challenge Assessment.'));
