@@ -24,11 +24,11 @@ class UpdateManagerDashboardLayoutRequest extends FormRequest
     public function rules(): array
     {
         $base_rules = [
-            'card_type'     => 'required|array',
-            'card_type.*'   => 'required|in:reports,deadlines,leaderboard,my-challenges,my-labs,my-projects,my-resources,inbox-friends,recommendations,my-organizations,subscription',
-            'is_active'     => 'required|array',
-            'is_active.*'   => 'required|in:yes,no',
-            'position_index' => 'nullable|array',
+            'card_type'        => 'required|array',
+            'card_type.*'      => 'required|in:reports,deadlines,leaderboard,my-challenges,my-labs,my-projects,my-resources,inbox-friends,recommendations,my-organizations,subscription',
+            'is_active'        => 'required|array',
+            'is_active.*'      => 'required|in:yes,no',
+            'position_index'   => 'nullable|array',
             'position_index.*' => 'integer|min:0|max:10', // Optional basic validation for position_index
         ];
 
@@ -48,13 +48,13 @@ class UpdateManagerDashboardLayoutRequest extends FormRequest
                         'inbox-friends',
                         'recommendations',
                         'my-organizations',
-                        'subscription'
+                        'subscription',
                     ];
 
                     $missingCardTypes = array_diff($requiredCardTypes, $value);
 
                     if (!empty($missingCardTypes)) {
-                        $fail('All card types must be present: ' . implode(', ', $missingCardTypes));
+                        $fail('All card types must be present: '.implode(', ', $missingCardTypes));
                     }
 
                     $count = count($value);
@@ -63,7 +63,7 @@ class UpdateManagerDashboardLayoutRequest extends FormRequest
 
                     // Check that the count of all arrays matches
                     if (count($is_active) !== $count) {
-                        $fail('The number of items for ' . $attribute . ' must match the number of items for is_active.');
+                        $fail('The number of items for '.$attribute.' must match the number of items for is_active.');
 
                         return;
                     }
