@@ -216,7 +216,7 @@ class MemberManagementService
             $memberList = [];
             $inviteStatus = null;
 
-            if ($request->type === 'auto_created' && $request->auto_invite === 'yes') {
+            if ($request->auto_invite === 'yes') {
                 $inviteStatus = config('constants.member_management_invite_status.accepted');
             }
 
@@ -278,7 +278,7 @@ class MemberManagementService
             $inviteStatus = null;
             $type = config('constants.member_management_type.'.$request->type);
 
-            if ($request->type === 'auto_created' && $request->auto_invite === 'yes') {
+            if ($request->auto_invite === 'yes') {
                 $inviteStatus = config('constants.member_management_invite_status.accepted');
             }
 
