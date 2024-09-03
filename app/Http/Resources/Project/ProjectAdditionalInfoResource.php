@@ -43,10 +43,10 @@ class ProjectAdditionalInfoResource extends JsonResource
             $verticals_id = $this->getVerticals->id;
         }
 
-        if ($this->type_id) {
-            $type = $this->getType->title;
-            $type_id = $this->gettype->id;
-        }
+        // if ($this->type_id) {
+        //     $type = $this->getType->title;
+        //     $type_id = $this->gettype->id;
+        // }
 
         if ($this->stage_id) {
             $stage = $this->getStage->title;
