@@ -48,7 +48,6 @@ class ProjectAdditionalInfoResource extends JsonResource
             $type_id = $this->gettype->id;
         }
 
-
         if ($this->stage_id) {
             $stage = $this->getStage->title;
             $stage_id = $this->getStage->id;
@@ -58,7 +57,7 @@ class ProjectAdditionalInfoResource extends JsonResource
             $status = $this->getStatus->title;
             $status_id = $this->getStatus->id;
         }
-        
+
         return [
             'category'              => $category,
             'category_id'           => $category_id,
