@@ -66,7 +66,6 @@ class LabResource extends JsonResource
                 if ($check_achievement_condition !== null) {
                     $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
                 }
-                
             }
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
