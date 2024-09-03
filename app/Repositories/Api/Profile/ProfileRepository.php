@@ -458,7 +458,7 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getFriendsListing($user = null )
+    public function getFriendsListing($user = null)
     {
         try {
             return $this->friendService->getFriendsListing($user);
