@@ -19,4 +19,5 @@ Route::middleware(['language'])->group(function () {
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     Route::get('/get-otp-for-automation/{email}', [AuthController::class, 'getOTPForAutomation']);
     Route::get('/organization/{custom_url}', [AuthController::class, 'organizationCustomLoginRegistration']);
+    Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken'])->middleware('auth:api');
 });
