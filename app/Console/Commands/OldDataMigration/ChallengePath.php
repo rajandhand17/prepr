@@ -112,7 +112,7 @@ class ChallengePath extends Command
 
                     $getDuration = clone $getTagGroups;
                     $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
-                    $duration_id = 1;
+                    $duration_id = null;
                     if ($duration) {
                         if ($duration == '["169"]') {
                             $duration_id = '1';
@@ -130,7 +130,7 @@ class ChallengePath extends Command
                     }
                     $getLevel = clone $getTagGroups;
                     $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
-                    $level_id = 1;
+                    $level_id = null;
                     if ($level) {
                         if ($level == '["157"]') {
                             $level_id = '1';
@@ -262,17 +262,20 @@ class ChallengePath extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ChallengePathsTypeMode::where(['challenge_path_id' => $challengePath->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $resourceMode = new ChallengePathsTypeMode();
-                                $resourceMode->challenge_path_id = $challengePath->id;
-                                $resourceMode->type_mode = '1';
-                                $resourceMode->value = $mode_id;
-                                $resourceMode->save();
+                                if ($mode_id != null) {
+                                    $resourceMode = new ChallengePathsTypeMode();
+                                    $resourceMode->challenge_path_id = $challengePath->id;
+                                    $resourceMode->type_mode = '1';
+                                    $resourceMode->value = $mode_id;
+                                    $resourceMode->save();
+                                }
                             }
                         }
                     }

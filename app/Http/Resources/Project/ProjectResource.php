@@ -221,6 +221,10 @@ class ProjectResource extends JsonResource
             case '2':
                 $project_status = 'Late Submitted';
                 break;
+
+            default:
+                $project_status = 'In Progress';
+                break;
         }
 
         return [

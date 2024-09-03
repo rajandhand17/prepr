@@ -12,6 +12,7 @@ use App\Models\ResourceModuleTypeModes;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
 use App\Models\ScormSco;
+use App\Models\ScormScoTracking;
 use App\Models\Skill;
 use App\Models\SocialLink;
 use App\Models\User;
@@ -198,17 +199,20 @@ class ResourceModule extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $resourceMode = new ResourceModuleTypeModes();
-                                $resourceMode->resource_module_id = $single_resource->id;
-                                $resourceMode->type_mode = '1';
-                                $resourceMode->value = $mode_id;
-                                $resourceMode->save();
+                                if ($mode_id != null) {
+                                    $resourceMode = new ResourceModuleTypeModes();
+                                    $resourceMode->resource_module_id = $single_resource->id;
+                                    $resourceMode->type_mode = '1';
+                                    $resourceMode->value = $mode_id;
+                                    $resourceMode->save();
+                                }
                             }
                         }
                     }
@@ -219,6 +223,7 @@ class ResourceModule extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ResourceModuleTypeModes::where(['resource_module_id' => $single_resource->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -229,11 +234,13 @@ class ResourceModule extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $resourceType = new ResourceModuleTypeModes();
-                                $resourceType->resource_module_id = $single_resource->id;
-                                $resourceType->type_mode = '0';
-                                $resourceType->value = $type_id;
-                                $resourceType->save();
+                                if ($type_id != null) {
+                                    $resourceType = new ResourceModuleTypeModes();
+                                    $resourceType->resource_module_id = $single_resource->id;
+                                    $resourceType->type_mode = '0';
+                                    $resourceType->value = $type_id;
+                                    $resourceType->save();
+                                }
                             }
                         }
                     }
@@ -434,6 +441,43 @@ class ResourceModule extends Command
                             $newScormSco->created_at = $checkScromSco->created_at;
                             $newScormSco->updated_at = $checkScromSco->updated_at;
                             $newScormSco->save();
+
+                            if ($newScormSco) {
+                                $checkScromProgressDatas = DB::connection('mysql2')->table('user_resource_progress_tracking')->where(['scorm_id' => $checkScrom->id])->get();
+                                if ($checkScromProgressDatas->isNotEmpty()) {
+                                    foreach ($checkScromProgressDatas as $scromProgressData) {
+                                        $checkUserProgressScorm = User::find($scromProgressData->user_id);
+                                        if ($checkUserProgressScorm) {
+                                            $newUserScormProgress = new ScormScoTracking();
+                                            $newUserScormProgress->id = $scromProgressData->id;
+                                            $newUserScormProgress->user_id = $scromProgressData->user_id;
+                                            $newUserScormProgress->sco_id = $newScormSco->id;
+                                            $newUserScormProgress->progression = null;
+                                            $newUserScormProgress->score_raw = $scromProgressData->score_raw;
+                                            $newUserScormProgress->score_min = $scromProgressData->score_min;
+                                            $newUserScormProgress->score_max = $scromProgressData->score_max;
+                                            $newUserScormProgress->score_scaled = null;
+                                            $newUserScormProgress->lesson_status = $scromProgressData->lesson_status;
+                                            $newUserScormProgress->completion_status = $scromProgressData->completion_status;
+                                            $newUserScormProgress->session_time = $scromProgressData->session_time;
+                                            $newUserScormProgress->total_time_int = $scromProgressData->total_time;
+                                            $newUserScormProgress->total_time_string = $scromProgressData->total_time_string;
+                                            $newUserScormProgress->entry = null;
+                                            $newUserScormProgress->suspend_data = $scromProgressData->suspend_data;
+                                            $newUserScormProgress->credit = null;
+                                            $newUserScormProgress->exit_mode = null;
+                                            $newUserScormProgress->lesson_location = $scromProgressData->lesson_location;
+                                            $newUserScormProgress->lesson_mode = $scromProgressData->lesson_mode;
+                                            $newUserScormProgress->is_locked = null;
+                                            $newUserScormProgress->details = $scromProgressData->details;
+                                            $newUserScormProgress->latest_date = null;
+                                            $newUserScormProgress->created_at = $scromProgressData->created_at;
+                                            $newUserScormProgress->updated_at = $scromProgressData->updated_at;
+                                            $newUserScormProgress->save();
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
