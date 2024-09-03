@@ -457,7 +457,7 @@ class ChallengeReportController extends AppBaseController
             if ($challenge) {
                 $filename = sprintf('challenge-report/%s-challenge-excel.xlsx', $challenge->slug);
 
-                $download = Excel::store(
+                 Excel::store(
                     new ChallengeExport($challenge),
                     $filename,
                     's3'

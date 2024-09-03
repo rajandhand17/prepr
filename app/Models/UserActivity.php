@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Helpers\LearningPointsHelper;
+use App\Notifications\LearningPointNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +21,20 @@ class UserActivity extends Model
         'user_id',
         'activity_type',
     ];
+
+    protected static function booted(): void
+    {
+        static::created(function (UserActivity $activity) {
+            /**
+             * @var User|null $user
+             */
+            $user = $activity->user;
+            $user?->notify(new LearningPointNotification(
+                data_get(LearningPointsHelper::LOGIN, 'type'),
+                data_get(LearningPointsHelper::LOGIN, 'points'),
+            ));
+        });
+    }
 
     /**
      * The attributes that should be cast to native types.
@@ -62,4 +78,6 @@ class UserActivity extends Model
             return false;
         }
     }
+
+
 }

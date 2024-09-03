@@ -197,6 +197,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api/v1/public/achievement/')->middleware('api')->group(base_path('routes/v1/public/achievement.php'));
         Route::prefix('api/v1/public/skills/')->middleware('api')->group(base_path('routes/v1/public/skills.php'));
         Route::prefix('api/v1/public/advance-search/')->middleware('api')->group(base_path('routes/v1/public/advance-search.php'));
+        Route::prefix('api/v1/public/notifications/')->middleware('api')->group(base_path('routes/v1/public/notification.php'));
+
     }
 
     public function mapDashboardRoutes()
