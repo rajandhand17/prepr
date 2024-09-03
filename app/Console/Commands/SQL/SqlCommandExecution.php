@@ -31,15 +31,17 @@ class SqlCommandExecution extends Command
     {
         try {
             Schema::disableForeignKeyConstraints();
-            DB::table('projects')->truncate();
-            DB::table('project_additional_info')->truncate();
-            DB::table('project_skills')->truncate();
-            DB::table('project_member_management')->truncate();
-            DB::table('project_external_links')->truncate();
-            DB::table('project_templates')->truncate();
-            DB::table('project_pitch_values')->truncate();
-            DB::table('project_task_values')->truncate();
-            DB::table('project_social_activities')->truncate();
+            DB::table('resource_modules')->truncate();
+            DB::table('resource_module_details')->truncate();
+            DB::table('resource_module_ratings')->truncate();
+            DB::table('resource_module_skills_groups_stacks')->truncate();
+            DB::table('resource_module_social_activities')->truncate();
+            DB::table('resource_module_tags_groups')->truncate();
+            DB::table('resource_module_type_modes')->truncate();
+            DB::table('resource_module_visits')->truncate();
+            DB::table('scorm')->truncate();
+            DB::table('scorm_sco')->truncate();
+            DB::table('scorm_sco_tracking')->truncate();
             Schema::enableForeignKeyConstraints();
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
