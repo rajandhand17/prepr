@@ -315,7 +315,7 @@ class LabController extends AppBaseController
         try {
             $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
-                return $this->sendError(__('responses.Lab_not_found'), 403);
+                return $this->sendError(__('responses.lab_not_found'), 403);
             }
 
             $fetchHistory = $this->labRepository->fetchHistory($checkLabExistsOrNot->id);
