@@ -19,9 +19,9 @@ return new class() extends Migration {
             $table->longText('description')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('duration_id');
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('duration_id')->nullable();
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->string('media_type')->default('image')->nullable();
             $table->string('media')->nullable();
             $table->enum('privacy', ['0', '1'])->default('0')->comment('0->no,1->yes')->nullable();
@@ -34,6 +34,8 @@ return new class() extends Migration {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
         });
     }
 
