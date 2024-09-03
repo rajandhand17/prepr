@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class ChallengeTemplateCustomTimeLine extends Model
+{
+    use HasFactory;
+    use SoftDeletes;
+
+    protected $table = 'challenge_template_custom_timelines';
+    protected $fillable = [
+        'challenge_template_id',
+        'custom_timelines_title',
+        'custom_timelines_number',
+        'custom_timelines_description',
+        'custom_timelines_duration',
+        'schedule_custom_notify',
+    ];
+}

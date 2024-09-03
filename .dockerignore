@@ -1,0 +1,8 @@
+.git
+scripts
+QA_Scripts
+POM_QA_Scripts
+tests
+reports
+.gitignore
+.env

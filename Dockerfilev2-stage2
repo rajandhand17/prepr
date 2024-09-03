@@ -1,0 +1,22 @@
+FROM 889115542356.dkr.ecr.ca-central-1.amazonaws.com/preprlabsvendor:1.0
+
+WORKDIR /var/www/html
+
+FROM 889115542356.dkr.ecr.ca-central-1.amazonaws.com/centosdpreprlabsbase
+
+COPY . /var/www/html
+COPY --from=0 /var/www/html/ .
+
+RUN mkdir -p storage/app/public && \
+mkdir -p storage/app/certificate && \
+mkdir -p storage/framework/cache/data && \
+mkdir -p storage/framework/{sessions,testing,views} && \
+mkdir -p storage/logs && \
+mkdir -p bootstrap/cache && \
+chmod -R 777 /var/www/html/bootstrap/cache/ && \
+chmod 777 -R /var/www/html/storage/ && \
+chown -R apache:apache /var/www/ && \
+mkdir /opt/preprfiles
+
+ENTRYPOINT ["/usr/sbin/init"]
+
