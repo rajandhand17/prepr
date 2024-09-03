@@ -27,10 +27,9 @@ class ChallengeReportController extends AppBaseController
 {
     public function __construct(
         protected ChallengeReportRepository $challengeReportRepository,
-        protected ChallengeRepository       $challengeRepository,
-        protected ProjectRepository         $projectRepository
-    )
-    {
+        protected ChallengeRepository $challengeRepository,
+        protected ProjectRepository $projectRepository
+    ) {
     }
 
     /**
@@ -299,6 +298,7 @@ class ChallengeReportController extends AppBaseController
 
                 if ($data !== false) {
                     request()->merge(['challenge' => $challenge]); // For resource
+
                     return $this->sendResponse([
                         ...$data,
                         'list' => ChallengeMemberResource::collection(data_get($data, 'list')),
@@ -367,6 +367,7 @@ class ChallengeReportController extends AppBaseController
                 if ($data !== false) {
                     if (data_get($data, 'success')) {
                         $response = data_get($data, 'data');
+
                         return $this->sendResponse([
                             ...$response,
                             'users' => ChallengeAssessmentDetailResource::collection(data_get($response, 'users')),

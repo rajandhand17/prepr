@@ -38,10 +38,10 @@ class ChallengeReportService
             })->count();
 
             return [
-                'not_started' => $notStarted,
-                'in_progress' => $inProgress,
-                'completed' => $completed,
-                'total' => $challenge->challenge_progress_count,
+                'not_started'     => $notStarted,
+                'in_progress'     => $inProgress,
+                'completed'       => $completed,
+                'total'           => $challenge->challenge_progress_count,
                 'late_submission' => $late_submission,
                 'deadline_missed' => $deadline_missed,
             ];
@@ -93,13 +93,13 @@ class ChallengeReportService
             })->count();
 
             return [
-                'views' => $challenge->views_count,
+                'views'            => $challenge->views_count,
                 'discussion_posts' => $challenge->discussions_count,
-                'saves' => $challenge->favourite_count,
-                'share' => $challenge->shares_count,
-                'saved_started' => $savedAndStarted,
-                'shared_started' => $sharedAndStarted,
-                'skills_verified' => $challenge->skills_count,
+                'saves'            => $challenge->favourite_count,
+                'share'            => $challenge->shares_count,
+                'saved_started'    => $savedAndStarted,
+                'shared_started'   => $sharedAndStarted,
+                'skills_verified'  => $challenge->skills_count,
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -383,8 +383,8 @@ class ChallengeReportService
             $totalUsers = $members->count();
 
             return [
-                'last_7_days' => $this->getMemberActivityLast7Days($userActivities, $totalUsers),
-                'last_4_weeks' => $this->getMemberActivityLast4Weeks($userActivities, $totalUsers),
+                'last_7_days'   => $this->getMemberActivityLast7Days($userActivities, $totalUsers),
+                'last_4_weeks'  => $this->getMemberActivityLast4Weeks($userActivities, $totalUsers),
                 'last_6_months' => $this->getMemberActivityLast6Months($userActivities, $totalUsers),
             ];
         } catch (\Exception $exception) {
@@ -410,15 +410,15 @@ class ChallengeReportService
                 $inactiveCount = $totalUsers - $activeCount;
 
                 $allDates->push([
-                    'label' => $label,
-                    'active' => $activeCount,
+                    'label'    => $label,
+                    'active'   => $activeCount,
                     'inactive' => $inactiveCount,
                 ]);
             }
 
             return [
-                'active' => $allDates->map(fn($item) => ['label' => $item['label'], 'value' => $item['active']])->values(),
-                'inactive' => $allDates->map(fn($item) => ['label' => $item['label'], 'value' => $item['inactive']])->values(),
+                'active'   => $allDates->map(fn ($item) => ['label' => $item['label'], 'value' => $item['active']])->values(),
+                'inactive' => $allDates->map(fn ($item) => ['label' => $item['label'], 'value' => $item['inactive']])->values(),
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -444,15 +444,15 @@ class ChallengeReportService
                 $inactiveCount = $totalUsers - $activeCount;
 
                 $allDates->push([
-                    'label' => $label,
-                    'active' => $activeCount,
+                    'label'    => $label,
+                    'active'   => $activeCount,
                     'inactive' => $inactiveCount,
                 ]);
             }
 
             return [
-                'active' => $allDates->map(fn($item) => ['label' => $item['label'], 'value' => $item['active']])->values(),
-                'inactive' => $allDates->map(fn($item) => ['label' => $item['label'], 'value' => $item['inactive']])->values(),
+                'active'   => $allDates->map(fn ($item) => ['label' => $item['label'], 'value' => $item['active']])->values(),
+                'inactive' => $allDates->map(fn ($item) => ['label' => $item['label'], 'value' => $item['inactive']])->values(),
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -484,7 +484,7 @@ class ChallengeReportService
             });
 
             $inactiveUsersData6Months = $activeUsersData6Months->map(function ($item) use ($totalUsers) {
-                $activeCount = (int)$item['value'];
+                $activeCount = (int) $item['value'];
                 $inactiveCount = max($totalUsers - $activeCount, 0);
 
                 return [
@@ -494,7 +494,7 @@ class ChallengeReportService
             })->values()->all();
 
             return [
-                'active' => $activeUsersData6Months,
+                'active'   => $activeUsersData6Months,
                 'inactive' => $inactiveUsersData6Months,
             ];
         } catch (\Exception $exception) {
@@ -533,7 +533,7 @@ class ChallengeReportService
                 })
                 ->map(function ($activities, $month) {
                     return [
-                        'label' => Carbon::parse($month . '-01')->format('M'),
+                        'label' => Carbon::parse($month.'-01')->format('M'),
                         'value' => $activities->count(),
                     ];
                 })->values();
@@ -555,11 +555,11 @@ class ChallengeReportService
         try {
             if (!$challenge->challenge_assessment) {
                 return [
-                    'assessor' => null,
-                    'project_assessed' => 0,
+                    'assessor'                   => null,
+                    'project_assessed'           => 0,
                     'project_pending_assignment' => 0,
-                    'winner_selected' => 0,
-                    'list' => [],
+                    'winner_selected'            => 0,
+                    'list'                       => [],
                 ];
             }
 
@@ -581,11 +581,11 @@ class ChallengeReportService
 
             return [
                 ...$metadata,
-                'assessor' => $counts->assessed_count + $counts->need_to_assess_count,
-                'project_assessed' => $counts->assessed_count,
+                'assessor'                   => $counts->assessed_count + $counts->need_to_assess_count,
+                'project_assessed'           => $counts->assessed_count,
                 'project_pending_assignment' => $counts->need_to_assess_count,
-                'winner_selected' => 0,
-                'list' => $data,
+                'winner_selected'            => 0,
+                'list'                       => $data,
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -692,19 +692,19 @@ class ChallengeReportService
     {
         try {
             $components = [
-                'Labs' => $this->getPaginatedLabs($challenge, false),
-                'Lab Programs' => $this->getPaginatedLabPrograms($challenge, false),
-                'Resource Modules' => $this->getPaginatedResourceModules($challenge, false),
+                'Labs'                 => $this->getPaginatedLabs($challenge, false),
+                'Lab Programs'         => $this->getPaginatedLabPrograms($challenge, false),
+                'Resource Modules'     => $this->getPaginatedResourceModules($challenge, false),
                 'Resource Collections' => $this->getPaginatedResourceCollections($challenge, false),
-                'Resource Groups' => $this->getPaginatedResourceGroups($challenge, false),
+                'Resource Groups'      => $this->getPaginatedResourceGroups($challenge, false),
             ];
 
             $values = [
-                'Labs' => 'lab',
-                'Lab Programs' => 'lab-program',
-                'Resource Modules' => 'resource',
+                'Labs'                 => 'lab',
+                'Lab Programs'         => 'lab-program',
+                'Resource Modules'     => 'resource',
                 'Resource Collections' => 'resource-collection',
-                'Resource Groups' => 'resource-group',
+                'Resource Groups'      => 'resource-group',
             ];
 
             $arr = [];
@@ -757,19 +757,20 @@ class ChallengeReportService
             if (!$data) {
                 return [
                     'success' => false,
-                    'message' => __('No assessments found.')
+                    'message' => __('No assessments found.'),
                 ];
             }
+
             return [
                 'success' => true,
-                'data' => [
-                    'title' => $data->projects->first() ? $data->projects->first()->title : '-',
-                    'score' => '0/0',
-                    'weight' => '',
+                'data'    => [
+                    'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
+                    'score'        => '0/0',
+                    'weight'       => '',
                     'team_members' => $data->member_names,
-                    'achievement' => 'no achievements',
-                    'users' => $data->projects->first()?->users ?? [],
-                ]
+                    'achievement'  => 'no achievements',
+                    'users'        => $data->projects->first()?->users ?? [],
+                ],
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -801,8 +802,8 @@ class ChallengeReportService
 
             //ProjectService::834
             $counts = [
-                'submitted' => $data->projects->where('is_submitted', 0)->count(),
-                'in_progress' => $data->projects->where('is_submitted', 1)->count(),
+                'submitted'       => $data->projects->where('is_submitted', 0)->count(),
+                'in_progress'     => $data->projects->where('is_submitted', 1)->count(),
                 'late_submission' => $data->projects->filter(function ($project) use ($challengeDates) {
                     return !$project->is_submitted && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now());
                 })->count(),
@@ -817,9 +818,9 @@ class ChallengeReportService
                     'total' => $counts['submitted'] + $counts['in_progress'],
                 ],
                 'project_assess_status' => [
-                    'assessed' => $data->assessed_count,
+                    'assessed'       => $data->assessed_count,
                     'need_to_assess' => $data->need_to_assess_count,
-                    'total' => $data->assessed_count + $data->need_to_assess_count,
+                    'total'          => $data->assessed_count + $data->need_to_assess_count,
                 ],
             ];
         } catch (\Exception $exception) {
@@ -838,11 +839,11 @@ class ChallengeReportService
     {
         try {
             return [
-                'total_count' => $resource->total(),
-                'per_page' => $resource->perPage(),
-                'count' => $resource->count(),
+                'total_count'  => $resource->total(),
+                'per_page'     => $resource->perPage(),
+                'count'        => $resource->count(),
                 'current_page' => $resource->currentPage(),
-                'total_pages' => $resource->lastPage(),
+                'total_pages'  => $resource->lastPage(),
             ];
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
