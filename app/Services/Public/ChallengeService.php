@@ -45,6 +45,19 @@ class ChallengeService
         }
     }
 
+    public function getChallengeDashboardList($challengeIds)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $challengeIds)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+
+            return $challenge_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function filterChallengeList($request, $challenge_list)
     {
         try {
@@ -457,7 +470,7 @@ class ChallengeService
                 });
             }
 
-            return $userDeadlineChallenges->take(5);
+            return $userDeadlineChallenges->take(3);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

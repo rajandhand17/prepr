@@ -249,7 +249,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $challengeList = $this->organizationDashboardRepository->getChallengeList($request, $organization);
+            $challengeList = $this->organizationDashboardRepository->getChallengeDashboardList($request, $organization);
             if ($challengeList) {
                 $response = [
                     'total_count'  => $challengeList->total(),
@@ -280,7 +280,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $labList = $this->organizationDashboardRepository->getLabList($request, $organization);
+            $labList = $this->organizationDashboardRepository->getLabDashboardList($request, $organization);
             if ($labList) {
                 $response = [
                     'total_count'  => $labList->total(),
@@ -311,7 +311,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $resourceModuleList = $this->organizationDashboardRepository->getResourceModuleList($request, $organization);
+            $resourceModuleList = $this->organizationDashboardRepository->getResourceModuleDashboardList($request, $organization);
             if ($resourceModuleList) {
                 $response = [
                     'total_count'  => $resourceModuleList->total(),
