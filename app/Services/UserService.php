@@ -239,10 +239,14 @@ class UserService
             }
             $userIds = $users->prepend($authUserId)->all();
             $userRecords = User::whereIn('id', $userIds)
-                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
-                ->paginate(config('site-settings.pagination_per_page'));
+                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')');
 
-            return $userRecords;
+            // Determine the pagination setting based on the request's list_type
+            $paginationPerPage = $request->list_type == 'dashboard'
+            ? config('site-settings.dashboard_pagination_per_page')
+            : config('site-settings.pagination_per_page');
+
+            return $userRecords->paginate($paginationPerPage);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
