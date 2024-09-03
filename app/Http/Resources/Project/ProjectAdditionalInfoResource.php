@@ -58,7 +58,7 @@ class ProjectAdditionalInfoResource extends JsonResource
             $status = $this->getStatus->title;
             $status_id = $this->getStatus->id;
         }
-        // returning data with columns
+        
         return [
             'category'              => $category,
             'category_id'           => $category_id,
