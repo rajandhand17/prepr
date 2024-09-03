@@ -137,7 +137,7 @@ class FriendService
 
             $friends = Friend::where(function ($query) use ($getUser) {
                 $query->where(['reference_id' => $getUser->id, 'status' => '1'])
-                    ->orWhere(function ($query) use($getUser){
+                    ->orWhere(function ($query) use ($getUser) {
                         $query->where(['user_id' => $getUser->id, 'status' => '1']);
                     });
             })->get();
