@@ -553,6 +553,16 @@ class ChallengeReportService
     public function getPaginatedAssessments($challenge, bool $paginate = true): false|array
     {
         try {
+            if (!$challenge->challenge_assessment) {
+                return [
+                    'assessor'                   => null,
+                    'project_assessed'           => 0,
+                    'project_pending_assignment' => 0,
+                    'winner_selected'            => 0,
+                    'list'                       => [],
+                ];
+            }
+
             $query = $challenge->challenge_assessment->projects()
                 ->whereAssessment(request()->input('assessment_type') ?? '');
 
@@ -744,14 +754,23 @@ class ChallengeReportService
                         }, 'getProjectAssessment']);
                 }])
                 ->first();
+            if (!$data) {
+                return [
+                    'success' => false,
+                    'message' => __('No assessments found.'),
+                ];
+            }
 
             return [
-                'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
-                'score'        => '0/0',
-                'weight'       => '',
-                'team_members' => $data->member_names,
-                'achievement'  => 'no achievements',
-                'users'        => $data->projects->first()?->users ?? [],
+                'success' => true,
+                'data'    => [
+                    'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
+                    'score'        => '0/0',
+                    'weight'       => '',
+                    'team_members' => $data->member_names,
+                    'achievement'  => 'no achievements',
+                    'users'        => $data->projects->first()?->users ?? [],
+                ],
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
