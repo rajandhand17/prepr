@@ -251,6 +251,12 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if ($request->hasFile('invite_email')) {
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
@@ -270,12 +276,18 @@ class MemberManagementService
                     }
                     /**getting data from csv and convert in array */
                     while (($csv_get_data = fgetcsv($handle, 1000, ',')) !== false) {
-                        $memberList[] = [
+                        $member = [
                             'type'          => config('constants.member_management_type.invite'),
                             'invite_type'   => config('constants.member_management_invite_type.csv'),
                             'invitee_name'  => $csv_get_data[$name_column],
                             'invitee_email' => $csv_get_data[$email_column],
                         ];
+
+                        if (!empty($inviteStatus)) {
+                            $member['invite_status'] = $inviteStatus;
+                        }
+
+                        $memberList[] = $member;
                     }
                     fclose($handle);
                     if (!empty($memberList)) {
@@ -300,6 +312,13 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+            $type = config('constants.member_management_type.'.$request->type);
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if (is_array($request->invite_email)) {
                 foreach ($request->invite_email as $email) {
                     $user = UserService::getUserByEmail($email);
@@ -307,13 +326,20 @@ class MemberManagementService
                     if ($user) {
                         $name = $user->first_name.' '.$user->last_name;
                     }
-                    $memberList[] = [
-                        'type'          => config('constants.member_management_type.invite'),
+                    $member = [
+                        'type'          => $type,
                         'invite_type'   => config('constants.member_management_invite_type.email'),
                         'invitee_name'  => $name,
                         'invitee_email' => $email,
                     ];
+
+                    if (!empty($inviteStatus)) {
+                        $member['invite_status'] = $inviteStatus;
+                    }
+
+                    $memberList[] = $member;
                 }
+
                 if (!empty($memberList)) {
                     return $memberList;
                 }
