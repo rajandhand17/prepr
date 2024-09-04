@@ -36,7 +36,7 @@ class ChallengeAssessment extends Model
             return null;
         }
 
-        return config('site-settings.aws_url').$value;
+        return config('site-settings.aws_url') . $value;
     }
 
     public function getAssessmentCriterias()
@@ -52,6 +52,9 @@ class ChallengeAssessment extends Model
     public function getMemberNamesAttribute()
     {
         $emails = $this->members_email;
+        if (!$emails || count($emails) === 0) {
+            return '';
+        }
         $names = User::whereIn('email', $emails)->pluck('full_name');
 
         return $names->implode(', ');

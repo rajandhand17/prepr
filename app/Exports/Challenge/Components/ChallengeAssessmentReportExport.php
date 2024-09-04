@@ -44,32 +44,38 @@ class ChallengeAssessmentReportExport implements FromCollection, withColumnWidth
 
         foreach ($assessments['list'] as $project) {
             $details = $this->challengeReportService->getChallengeAssessmentDetail($this->challenge, $project->id);
+            if (data_get($details, 'success')) {
+                $projectArr = [
+                    [sprintf('Assessment Results - %s', $project->title)],
+                    ['Project Title', 'Creator', 'Project Members', 'Assessor', 'Overall Score', 'Overall Comment', 'Criteria', 'Weight', 'Score', 'Comments', 'Achievement'],
+                ];
 
-            $projectArr = [
-                [sprintf('Assessment Results - %s', $project->title)],
-                ['Project Title', 'Creator', 'Project Members', 'Assessor', 'Overall Score', 'Overall Comment', 'Criteria', 'Weight', 'Score', 'Comments', 'Achievement'],
-            ];
+                $arr2 = [data_get($project, 'title'), data_get($project, 'createdBy.full_name'), data_get($details, 'team_members')];
 
-            $arr2 = [$project->title, $project->createdBy->full_name, data_get($details, 'team_members')];
+                if (data_get($details, 'users')) {
+                    $userAssessments = ChallengeAssessmentDetailResource::collection(data_get($details, 'users'))->toArray(request());
 
-            $userAssessments = ChallengeAssessmentDetailResource::collection(data_get($details, 'users'))->toArray(request());
+                    for ($i = 0; $i < count($userAssessments); $i++) {
+                        if ($i == 0 && $userAssessments[$i]['assessments']) {
+                            $arr2 = array_merge($arr2, [data_get($userAssessments[$i], 'full_name'), '0/0', data_get($userAssessments[$i], 'comments'), data_get($userAssessments[$i], 'assessments.0.criteria'), data_get($userAssessments[$i], 'assessments.0.weight'), data_get($userAssessments[$i], 'assessments.0.comment'), 'Participation Award']);
+                            $projectArr[] = $arr2;
+                        }
 
-            for ($i = 0; $i < count($userAssessments); $i++) {
-                if ($i == 0 && $userAssessments[$i]['assessments']) {
-                    $arr2 = array_merge($arr2, [$userAssessments[$i]['full_name'], '0/0', $userAssessments[$i]['comments'], $userAssessments[$i]['assessments'][0]['criteria'], $userAssessments[$i]['assessments'][0]['weight'], $userAssessments[$i]['assessments'][0]['score'], $userAssessments[$i]['assessments'][0]['comment'], 'Participation Award']);
-                    $projectArr[] = $arr2;
+                        for ($j = 1; $j < count($userAssessments[$i]['assessments']); $j++) {
+                            $arr2 = ['', '', '', '', '', '', data_get($userAssessments[$i], "assessments.$j.criteria")
+                                , data_get($userAssessments[$i], "assessments.$j.weight"),
+                                data_get($userAssessments[$i], "assessments.$j.score"),
+                                data_get($userAssessments[$i], "assessments.$j.comment"), 'Participation Award'];
+                            $projectArr[] = $arr2;
+                        }
+                    }
                 }
 
-                for ($j = 1; $j < count($userAssessments[$i]['assessments']); $j++) {
-                    $arr2 = ['', '', '', '', '', '', $userAssessments[$i]['assessments'][$j]['criteria'], $userAssessments[$i]['assessments'][$j]['weight'], $userAssessments[$i]['assessments'][$j]['score'], $userAssessments[$i]['assessments'][$j]['comment'], 'Participation Award'];
-                    $projectArr[] = $arr2;
-                }
+                $projectArr[] = [''];
+                $projectArr[] = [''];
+
+                $arr = array_merge($arr, $projectArr);
             }
-
-            $projectArr[] = [''];
-            $projectArr[] = [''];
-
-            $arr = array_merge($arr, $projectArr);
         }
 
         return collect($arr);
