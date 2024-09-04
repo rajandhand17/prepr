@@ -16,6 +16,8 @@ class ProjectHistory extends Model
         'project_id',
         'user_id',
         'activity',
+        'created_at',
+        'updated_at'
     ];
 
     public function history()
