@@ -4,7 +4,6 @@ namespace App\Exports\Organization\Components;
 
 use App\Models\Organization;
 use App\Services\Manage\Report\OrganizationReportService;
-use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -54,7 +53,7 @@ class OrganizationMembersExport implements FromCollection, withColumnWidths, Wit
             data_get($row, 'role'),
             data_get($user, 'email', data_get($row, 'email')),
             $this->getInvitationStatusName($row->invite_status),
-            data_get($user, 'formatted_login_status') ? Carbon::parse(data_get($user, 'user_rank'))->diffForHumans() : '-',
+            data_get($user, 'formatted_login_status'),
             data_get($user, 'user_points', 0),
             data_get($user, 'user_rank'),
             data_get($user, 'achievement_count', 0),
