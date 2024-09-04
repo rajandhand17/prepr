@@ -1034,19 +1034,18 @@ class ProjectService
             if (empty($challengeIds) || empty($userIds)) {
                 return null;
             }
-    
+
             // Fetch user projects with matching criteria
             $userProjects = Project::whereIn('user_id', $userIds)
                 ->whereIn('challenge_id', $challengeIds)
                 ->where('is_submitted', $status)
                 ->get();
-    
+
             return $userProjects;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-    
-    
 }
