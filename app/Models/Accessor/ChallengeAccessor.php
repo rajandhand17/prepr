@@ -113,14 +113,6 @@ trait ChallengeAccessor
         })->filter()->values()->toArray();
     }
 
-    /**
-     * @return int
-     */
-    public function getFormattedFavouriteCountAttribute(): int
-    {
-        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('favourite', '1')->count();
-    }
-
     public function getFormattedAchievementPointsAttribute(): int
     {
         return $this->achievements()->sum('achievement_points');

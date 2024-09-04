@@ -337,4 +337,12 @@ class Challenge extends Model
     {
         return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '2');
     }
+
+    /**
+     * @return int
+     */
+    public function favouriteCount(): int
+    {
+        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('favourite', '1')->count();
+    }
 }

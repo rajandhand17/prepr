@@ -95,7 +95,7 @@ class ChallengeReportService
             return [
                 'views'            => $challenge->views_count,
                 'discussion_posts' => $challenge->discussions_count,
-                'saves'            => $challenge->favourite_count,
+                'saves'            => $challenge->favouriteCount(),
                 'share'            => $challenge->shares_count,
                 'saved_started'    => $savedAndStarted,
                 'shared_started'   => $sharedAndStarted,
