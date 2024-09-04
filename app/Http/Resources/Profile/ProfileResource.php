@@ -199,19 +199,19 @@ class ProfileResource extends JsonResource
             $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
 
             $isFriend = false;
-            if(auth('api')->user() && auth('api')->user()->id !== $this->id) {
-                $isFriend = $this->friends->where(function($query) {
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
+                $isFriend = $this->friends->where(function ($query) {
                     $query->where('user_id', auth('api')->user()->id)->orWhere('reference_id', auth('api')->user()->id);
                 })->count() === 1;
             }
 
             $isRequestReceived = false;
-            if(auth('api')->user() && auth('api')->user()->id !== $this->id) {
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
                 $isRequestReceived = $this->friend_request_received->where('user_id', auth('api')->user()->id)->count() === 1;
             }
 
             $isRequestSent = false;
-            if(auth('api')->user() && auth('api')->user()->id !== $this->id) {
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
                 $isRequestSent = $this->friend_request_sent->where('reference_id', auth('api')->user()->id)->count() === 1;
             }
 
