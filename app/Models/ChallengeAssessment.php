@@ -36,7 +36,7 @@ class ChallengeAssessment extends Model
             return null;
         }
 
-        return config('site-settings.aws_url') . $value;
+        return config('site-settings.aws_url').$value;
     }
 
     public function getAssessmentCriterias()

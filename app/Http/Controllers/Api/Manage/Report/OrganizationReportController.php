@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Manage\Report;
 
-use App\Exports\Organization\OrganizationExport;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Report\Components\ChallengePathResource;

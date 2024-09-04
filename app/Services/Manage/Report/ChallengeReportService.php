@@ -31,7 +31,7 @@ class ChallengeReportService
             $inProgress = $allProgress->where('status', '=', '1')->count();
             $completed = $allProgress->where('status', '=', '2')->count();
             $late_submission = $allProgress->filter(function ($project) use ($challengeDates) {
-                return $project->is_submitted && (data_get($challengeDates, 'submission_deadline_date')  && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now()));
+                return $project->is_submitted && (data_get($challengeDates, 'submission_deadline_date') && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now()));
             })->count();
             $deadline_missed = $allProgress->filter(function ($project) use ($challengeDates) {
                 return !$project->is_submitted && (data_get($challengeDates, 'flexible_expire_deadline') && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now()));
@@ -761,6 +761,7 @@ class ChallengeReportService
                     'message' => __('No assessments found.'),
                 ];
             }
+
             return [
                 'success' => true,
                 'data'    => [
@@ -769,7 +770,7 @@ class ChallengeReportService
                     'weight'       => '',
                     'team_members' => $data->member_names,
                     'achievement'  => 'Participation award',
-                    'users'        => data_get( $data->projects()->first(),'users', []),
+                    'users'        => data_get($data->projects()->first(), 'users', []),
                 ],
             ];
         } catch (\Exception $exception) {
@@ -808,7 +809,7 @@ class ChallengeReportService
                     return !$project->is_submitted && (data_get($challengeDates, 'submission_deadline_date') && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now()));
                 })->count(),
                 'deadline_missed' => $data->projects->filter(function ($project) use ($challengeDates) {
-                    return !$project->is_submitted && (data_get($challengeDates, 'flexible_expire_deadline')  && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now()));
+                    return !$project->is_submitted && (data_get($challengeDates, 'flexible_expire_deadline') && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now()));
                 })->count(),
             ];
 

@@ -62,8 +62,7 @@ class ChallengeAssessmentReportExport implements FromCollection, withColumnWidth
                         }
 
                         for ($j = 1; $j < count($userAssessments[$i]['assessments']); $j++) {
-                            $arr2 = ['', '', '', '', '', '', data_get($userAssessments[$i], "assessments.$j.criteria")
-                                , data_get($userAssessments[$i], "assessments.$j.weight"),
+                            $arr2 = ['', '', '', '', '', '', data_get($userAssessments[$i], "assessments.$j.criteria"), data_get($userAssessments[$i], "assessments.$j.weight"),
                                 data_get($userAssessments[$i], "assessments.$j.score"),
                                 data_get($userAssessments[$i], "assessments.$j.comment"), 'Participation Award'];
                             $projectArr[] = $arr2;
