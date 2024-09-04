@@ -774,7 +774,6 @@ class ChallengeReportService
                 ],
             ];
         } catch (\Exception $exception) {
-
             UtilityHelper::logError($exception);
 
             return false;
