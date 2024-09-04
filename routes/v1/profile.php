@@ -24,6 +24,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/tags/add', [ProfileController::class, 'addTags']);
     Route::delete('/tags/{id}/delete', [ProfileController::class, 'deleteProfileTag']);
     Route::post('/file/upload', [ProfileController::class, 'fileUpload']);
+    Route::delete('/file/delete/{id}', [ProfileController::class, 'deleteFile']);
     Route::post('/{id}/update-privacy', [ProfileController::class, 'updateFilePrivacy']);
     Route::post('/resume/upload', [ProfileController::class, 'resumeUpload']);
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequestActivity']);

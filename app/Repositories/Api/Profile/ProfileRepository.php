@@ -193,6 +193,17 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function fileDelete($request)
+    {
+        try {
+            return $this->userExperienceService->deleteFile($request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function resumeUpload($request)
     {
         try {
