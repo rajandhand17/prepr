@@ -20,7 +20,7 @@ class ChallengeReportDetailsResource extends JsonResource
             'title'              => $this->title,
             'slug'               => $this->slug,
             'user_id'            => $this->user_id,
-            'submission_date'    => Carbon::parse($this->challenge_timelines->submission_deadline_date)->toIso8601String(),
+            'submission_date'    => Carbon::parse($this->formatted_submission_deadline_date)->toIso8601String(),
             'duration'           => $this->formatted_challenge_duration,
             'level'              => $this->formatted_challenge_level,
             'privacy'            => $this->formatted_challenge_privacy,

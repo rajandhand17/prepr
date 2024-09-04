@@ -409,7 +409,7 @@ class ChallengeReportController extends AppBaseController
                     ], __('Challenge Assessment'));
                 }
 
-                return $this->sendResponse($data, __('Challenge Assessment.'));
+                return $this->sendResponse($data, __('Challenge Assessment Projects.'));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), Response::HTTP_NOT_FOUND);
