@@ -157,7 +157,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             $userData = auth()->user();
-            $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData);
+            $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData)->unique();
             $getProjectsPendingList = $this->projectMemberManagementService->getMatchedTeams();
 
             return ['pending_requests' => $getProjectsIds ? $getProjectsIds->count() : 0, 'matched_items' => $getProjectsPendingList ? $getProjectsPendingList->count() : 0];
