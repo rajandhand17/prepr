@@ -29,33 +29,45 @@ class ProjectAdditionalInfoResource extends JsonResource
         $status_id = null;
 
         if ($this->category_id) {
-            $category = $this->getCategory->title;
-            $category_id = $this->getCategory->id;
+            if ($this->getCategory) {
+                $category = $this->getCategory->title;
+                $category_id = $this->getCategory->id;
+            }
         }
 
         if ($this->industry_id) {
-            $industry = $this->getIndustry->title;
-            $industry_id = $this->getIndustry->id;
+            if ($this->getIndustry) {
+                $industry = $this->getIndustry->title;
+                $industry_id = $this->getIndustry->id;
+            }
         }
 
         if ($this->verticals_id) {
-            $verticals = $this->getVerticals->title;
-            $verticals_id = $this->getVerticals->id;
+            if ($this->getVerticals){
+                $verticals = $this->getVerticals->title;
+                $verticals_id = $this->getVerticals->id;
+            }
         }
 
         if ($this->type_id) {
-            $type = $this->getType->title;
-            $type_id = $this->gettype->id;
+            if ($this->getType) {
+                $type = $this->getType->title;
+                $type_id = $this->gettype->id;
+            }
         }
 
         if ($this->stage_id) {
-            $stage = $this->getStage->title;
-            $stage_id = $this->getStage->id;
+            if ($this->getStage) {
+                $stage = $this->getStage->title;
+                $stage_id = $this->getStage->id;
+            }
         }
 
         if ($this->status_id) {
-            $status = $this->getStatus->title;
-            $status_id = $this->getStatus->id;
+            if ($this->getStatus){
+                $status = $this->getStatus->title;
+                $status_id = $this->getStatus->id;
+            }
         }
 
         return [
