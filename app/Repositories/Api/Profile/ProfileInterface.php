@@ -62,7 +62,7 @@ interface ProfileInterface
 
     public function checkFollowRequests($request);
 
-    public function getFriendsListing();
+    public function getFriendsListing($user = null);
 
     public function getFollowersListing();
 

@@ -16,9 +16,10 @@ return [
     ],
 
     'discussion_module_type' => [
-        'lab'       => '0',
-        'challenge' => '1',
-        'project'   => '2',
+        'lab'               => '0',
+        'challenge'         => '1',
+        'project'           => '2',
+        'challenge-path'    => '3',
     ],
 
     'member_management_type' => [
