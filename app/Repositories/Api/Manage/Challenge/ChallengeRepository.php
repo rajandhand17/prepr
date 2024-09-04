@@ -758,4 +758,15 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function fetchAssessedProjectBasedOnChallenge($challengeId)
+    {
+        try {
+            return $this->projectService->fetchAssessedProjectBasedOnChallenge($challengeId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

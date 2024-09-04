@@ -8,16 +8,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChallengeMemberResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         $user = $this->user;
         $userProject = $this->user?->userProjects->first() ?? null;
-        $challenge = ChallengeService::getChallengeBasedOnId($user->challengeDiscussions->first()->module_id);
+        $challenge = $request->challenge;
 
         return [
             'id'                 => data_get($user, 'id'),
@@ -26,10 +21,10 @@ class ChallengeMemberResource extends JsonResource
             'username'           => data_get($user, 'username'),
             'email'              => data_get($user, 'email', $this->email),
             'invitation_status'  => $this->formatInvitationStatus($this->invite_status) ?? null,
-            'activity'           => data_get($user, 'last_login_date', null),
-            'project_title'      => $userProject ? $userProject->title : null,
-            'project_start_date' => $userProject ? $userProject->created_at : null,
-            'project_progress'   => $this->getProjectSubmitStatus($challenge, $userProject) ?? null,
+            'activity'           => data_get($user, 'formatted_login_status', __('In Active')),
+            'project_title'      => $userProject ? data_get($userProject, 'title') : null,
+            'project_start_date' => $userProject ? data_get($userProject, 'created_at') : null,
+            'project_progress'   => $userProject ? $this->getProjectSubmitStatus($challenge, $userProject) : null,
             'achievement'        => $user ? $user->userAchievements->first()?->title ?? null : null,
             'project_item_count' => [
                 'images_videos' => $userProject ? $userProject->get_project_images_count + $userProject->get_project_videos_count : 0,

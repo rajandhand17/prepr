@@ -46,6 +46,7 @@ class Challenge extends Model
         'allow_winner_change',
         'winner_select_date',
         'views_count',
+        'total_share',
     ];
 
     public function newEloquentBuilder($query): ChallengeBuilder
@@ -263,11 +264,17 @@ class Challenge extends Model
 
     public function challenge_completion_status()
     {
+        $relation = $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id');
+
         if (auth('api')->check()) {
-            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '2']);
+            return $relation->where([
+                'user_id'     => auth('api')->user()->id,
+                'module_type' => '2',
+            ]);
         }
 
-        return 'N/A';
+        // Return the relation with a condition that will never be true, effectively returning an empty result
+        return $relation->whereRaw('1 = 0');
     }
 
     public function challengeType()

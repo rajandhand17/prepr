@@ -63,7 +63,9 @@ class LabResource extends JsonResource
             $achievement_conditions = [];
             foreach ($this->achievement->achievement_condition as $achievement_condition) {
                 $check_achievement_condition = AchievementConditionListService::getAchievementConditionByID($this->language, $achievement_condition);
-                $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                if ($check_achievement_condition !== null) {
+                    $achievement_conditions[$check_achievement_condition->id] = $check_achievement_condition->title;
+                }
             }
             $achievement = [
                 'achievement_name'      => $this->achievement->achievement_name,
@@ -103,7 +105,9 @@ class LabResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-
+        if ($media == config('site-settings.aws_url').config('site-settings.default_lab_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
+        }
         $campusConnectOpportunity = in_array($this->campus_connect_status, ['both', 'job']) ? data_get($this, 'campusConnectOpportunity.metadata') : null;
         $campusConnectStory = in_array($this->campus_connect_status, ['both', 'story']) ? data_get($this, 'campusConnectStory.metadata') : null;
 

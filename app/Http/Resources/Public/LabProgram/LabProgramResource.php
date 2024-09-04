@@ -131,6 +131,9 @@ class LabProgramResource extends JsonResource
             $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
+        if ($this->media == config('site-settings.aws_url').config('site-settings.default_lab_program_profile_image') || $this->media == config('site-settings.aws_url')) {
+            $this->media = null;
+        }
 
         return [
             'id'                            => $this->uuid,
@@ -169,7 +172,7 @@ class LabProgramResource extends JsonResource
             'likes'                         => $this->likes()->count(),
             'shares'                        => $this->shares()->count(),
             'module_progress'               => $module_progress,
-            'member_count'                  => '0', //Static for temporary basis
+            'member_count'                  => $this->members()->count(),
             'last_updated'                  => $this->updated_at,
         ];
     }

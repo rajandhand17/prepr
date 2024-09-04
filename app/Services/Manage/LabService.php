@@ -41,6 +41,21 @@ class LabService
         }
     }
 
+    public static function getLabDashboardList($request, $organization)
+    {
+        try {
+            $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
+
+            $lab_list = self::filterLabList($lab_list, $request);
+
+            return $lab_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function filterLabList($lab_list, $request)
     {
         try {
@@ -67,6 +82,13 @@ class LabService
             if ($request->has('source') && !empty($request->source)) {
                 $sourceLabIds = self::getLabBaseOnSource($request->source);
                 $lab_list = $lab_list->whereIn('labs.id', $sourceLabIds);
+            }
+
+            if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
+                $lab_list = $lab_list->whereIn('duration_id', $request->duration_id);
+            }
+            if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
+                $lab_list = $lab_list->whereIn('level_id', $request->level_id);
             }
 
             if ($request->has('sort_by') && !empty($request->sort_by)) {

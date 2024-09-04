@@ -43,6 +43,19 @@ class LabService
         }
     }
 
+    public function getLabDashboardList($labIds)
+    {
+        try {
+            $lab_list = Lab::whereIn('labs.id', $labIds)->where(['labs.status' => '1', 'labs.is_accessible' => '1']);
+
+            return $lab_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function filterLabList($request, $lab_list)
     {
         try {

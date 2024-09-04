@@ -6,17 +6,21 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Dashboard\UpdateUserDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
+use App\Http\Resources\Dashboard\ChallengeDashboardResource;
+use App\Http\Resources\Dashboard\ChallengePathDashboardResource;
 use App\Http\Resources\Dashboard\DashboardLayoutResource;
+use App\Http\Resources\Dashboard\LabDashboardResource;
+use App\Http\Resources\Dashboard\LabProgramDashboardResource;
+use App\Http\Resources\Dashboard\ProjectDashboardResource;
+use App\Http\Resources\Dashboard\ResourceCollectionDashboardResource;
+use App\Http\Resources\Dashboard\ResourceGroupDashboardResource;
+use App\Http\Resources\Dashboard\ResourceModuleDashboardResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
 use App\Http\Resources\Profile\FriendsResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Public\Achievement\AchievementResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
-use App\Http\Resources\Public\ChallengePath\ChallengePathResource;
 use App\Http\Resources\Public\Lab\LabResource;
-use App\Http\Resources\Public\LabProgram\LabProgramResource;
-use App\Http\Resources\Public\ResourceCollection\ResourceCollectionResource;
-use App\Http\Resources\Public\ResourceGroup\ResourceGroupResource;
 use App\Http\Resources\Public\ResourceModule\ResourceModuleResource;
 use App\Repositories\Api\Dashboard\User\UserDashboardRepository;
 use App\Services\ProjectService;
@@ -63,7 +67,7 @@ class UserDashboardController extends AppBaseController
                     break;
             }
 
-            $challenges = $this->userDashboardRepository->getChallengeList($challengeIds);
+            $challenges = $this->userDashboardRepository->getChallengeDashboardList($challengeIds);
             if ($challenges !== false) {
                 $response = [
                     'total_count'  => $challenges->total(),
@@ -109,7 +113,7 @@ class UserDashboardController extends AppBaseController
                     break;
             }
 
-            $labs = $this->userDashboardRepository->getLabList($labIds);
+            $labs = $this->userDashboardRepository->getLabDashboardList($labIds);
             if ($labs !== false) {
                 $response = [
                     'total_count'  => $labs->total(),
@@ -352,7 +356,7 @@ class UserDashboardController extends AppBaseController
                     }
                     break;
                 case 'friend':
-                    $dashboardFriendList = $this->userDashboardRepository->dashboardFriendList($userData);
+                    $dashboardFriendList = $this->userDashboardRepository->userDashboardFriendList($userData);
                     if ($dashboardFriendList != false) {
                         return $this->sendResponse(FriendsResource::collection($dashboardFriendList), __('responses.friends_listing_retrieved'));
                     }
@@ -379,49 +383,49 @@ class UserDashboardController extends AppBaseController
                     case '0':
                         $fetchComponentData = LabService::getLabBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(LabResource::make($fetchComponentData), __('responses.last_visited_lab'), 200);
+                            return $this->sendResponse(LabDashboardResource::make($fetchComponentData), __('responses.last_visited_lab'), 200);
                         }
                         break;
                     case '1':
                         $fetchComponentData = LabProgramService::getLabProgramBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(LabProgramResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
+                            return $this->sendResponse(LabProgramDashboardResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
                         }
                         break;
                     case '2':
                         $fetchComponentData = ChallengeService::getChallengeBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(LabProgramResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
+                            return $this->sendResponse(ChallengeDashboardResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
                         }
                         break;
                     case '3':
                         $fetchComponentData = ChallengePathService::getChallengePathBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(ChallengePathResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
+                            return $this->sendResponse(ChallengePathDashboardResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
                         }
                         break;
                     case '4':
                         $fetchComponentData = ResourceModuleService::getResourceModuleBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(ResourceModuleResource::make($fetchComponentData), __('responses.last_visited_resource_module'), 200);
+                            return $this->sendResponse(ResourceModuleDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_module'), 200);
                         }
                         break;
                     case '5':
                         $fetchComponentData = ResourceCollectionService::getResourceCollectionBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(ResourceCollectionResource::make($fetchComponentData), __('responses.last_visited_resource_collection'), 200);
+                            return $this->sendResponse(ResourceCollectionDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_collection'), 200);
                         }
                         break;
                     case '6':
                         $fetchComponentData = ResourceGroupService::getResourceGroupBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(ResourceGroupResource::make($fetchComponentData), __('responses.last_visited_resource_group'), 200);
+                            return $this->sendResponse(ResourceGroupDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_group'), 200);
                         }
                         break;
                     case '7':
                         $fetchComponentData = ProjectService::getProjectBasedOnId($fetchLastVisited->module_id);
                         if ($fetchComponentData) {
-                            return $this->sendResponse(ProjectResource::make($fetchComponentData), __('responses.last_visited_project'), 200);
+                            return $this->sendResponse(ProjectDashboardResource::make($fetchComponentData), __('responses.last_visited_project'), 200);
                         }
                         break;
                 }

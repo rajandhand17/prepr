@@ -599,7 +599,7 @@ class LabReportService
                 [''],
                 ['Associated Achievements'],
                 ['Badges', '1'],
-                ['Points', $labAchievement->achievement_points],
+                ['Points', $labAchievement?->achievement_points ?? 0],
                 [''],
                 ['Achievements Details'],
                 ['Title', 'Badges', 'Points'],

@@ -20,6 +20,7 @@ php artisan migrate-old-data:project-tasks
 php artisan migrate-old-data:users
 php artisan db:seed --class=ChannelApiOrganizationSeeder
 php artisan migrate-old-data:organizations
+php artisan migrate-old-data:role
 php artisan migrate-old-data:labs
 php artisan migrate-old-data:lab-program
 php artisan migrate-old-data:challenge
@@ -41,4 +42,7 @@ php artisan migrate-old-data:users-address
 php artisan migrate-old-data:users-friends
 php artisan migrate-old-data:users-tags
 php artisan migrate-old-data:users-setting
+php artisan migrate-old-data:project
+php artisan migrate-old-data:discussion
+php artisan migrate-old-data:project-history
 php artisan migrate:feed-chargebee-data-to-data-base

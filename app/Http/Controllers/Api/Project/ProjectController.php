@@ -237,11 +237,17 @@ class ProjectController extends AppBaseController
         try {
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
-                $userId = auth()->user()->id;
-                if ($userId == $project->user_id) {
-                    // For last visited activity tracking
-                    $moduleType = config('constants.module_type.projects');
-                    LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    if ($userId == $project->user_id) {
+                        // For last visited activity tracking
+                        $moduleType = config('constants.module_type.projects');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                    }
+                }
+
+                if (!auth('api')->check() && $project->privacy == '1') {
+                    return $this->sendError(__('responses.project_set_private'), 403);
                 }
 
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
@@ -408,10 +414,11 @@ class ProjectController extends AppBaseController
 
             $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
             $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
-            if ($submitProject == 'no') {
+
+            if ($submitProject === 'no') {
                 return $this->sendError(__('responses.late_submission_reason_required'), 400);
             }
-            if ($submitProject == 'true') {
+            if ($submitProject === true) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
             }
 

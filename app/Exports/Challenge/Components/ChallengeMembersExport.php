@@ -48,21 +48,21 @@ class ChallengeMembersExport implements FromCollection, withColumnWidths, WithSt
     {
         $user = $row->user;
         $project = $user->userProjects->first();
-        $challenge = ChallengeService::getChallengeBasedOnId($user->challengeDiscussions->first()->module_id);
+        $challenge = ChallengeService::getChallengeBasedOnId(data_get($row, 'module_id'));
 
         return [
             $user ? $user->full_name : '-',
             $user ? $user->username : '-',
             $user ? $user->email : '-',
             $this->getInvitationStatusName($row->invite_status),
-            $user->login_status,
+            $user ? $user->formatted_login_status : null,
             $project ? $project->title : '-',
             $project ? $project->created_at : '-',
             $project ? $this->getProjectSubmitStatus($challenge, $project) : '-',
-            $user->userAchievements->first() ? $user->userAchievements->first()->title : 0,
+            $user ? $user->userAchievements->first() ? $user->userAchievements->first()->title : 0 : 0,
             $project ? $project->get_project_images_count + $project->get_project_videos_count : 0,
             $project ? $project->get_project_docs_count : 0,
-            $user->challenge_discussions_count,
+            $user ? $user->challenge_discussions_count : 0,
         ];
     }
 

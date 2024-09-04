@@ -158,4 +158,22 @@ class ChallengePath extends Model
     {
         return $this->belongsToMany(Lab::class, 'component_associations', 'challenge_path_id', 'lab_id');
     }
+
+    public function challenge_path_type()
+    {
+        return $this->hasMany(ChallengePathsTypeMode::class, 'challenge_path_id', 'id')->where('type_mode', '0');
+    }
+
+    public function challenge_path_mode()
+    {
+        return $this->hasMany(ChallengePathsTypeMode::class, 'challenge_path_id', 'id')->where('type_mode', '1');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '3');
+    }
 }

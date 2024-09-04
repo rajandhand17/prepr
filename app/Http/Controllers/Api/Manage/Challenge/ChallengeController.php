@@ -119,8 +119,11 @@ class ChallengeController extends AppBaseController
             }
 
             $createChallenge = $this->challengeRepository->createChallenge($request, $uploaded_challenge_cover, $uploaded_achievement_image, $uploaded_assessment_attachment, $organization);
+
+            $successResponse = $request->request_type === 'draft' ? 'responses.challenge_stored_draft' : 'responses.challenge_stored_success';
+
             if ($createChallenge != false) {
-                return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
+                return $this->sendResponse(ChallengeResource::make($createChallenge), __($successResponse), 200);
             }
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);
@@ -771,6 +774,42 @@ class ChallengeController extends AppBaseController
                     'current_page' => $fetchProjectIds->currentPage(),
                     'total_pages'  => $fetchProjectIds->lastPage(),
                     'list'         => ProjectResource::collection($fetchProjectIds),
+                ];
+
+                return $this->sendResponse($response, __('responses.found_projects_list'));
+            }
+
+            return $this->sendError(__('responses.not_found_projects_list'), 404);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.server_failed'), 500);
+        }
+    }
+
+    public function projectAssessed($slug, Request $request)
+    {
+        try {
+            $checkComponentBasedOnSlug = $this->challengeRepository->getChallengeBasedOnSlug($slug);
+
+            if (!$checkComponentBasedOnSlug) {
+                return $this->sendError(__('responses.challenge_not_found'), 404);
+            }
+
+            if ($checkComponentBasedOnSlug->is_accessible === '0') {
+                return $this->sendError(__('responses.challenge_not_accessible'), 403);
+            }
+
+            $fetchAssessedProjects = $this->challengeRepository->fetchAssessedProjectBasedOnChallenge($checkComponentBasedOnSlug->id);
+
+            if ($fetchAssessedProjects !== false) {
+                $response = [
+                    'total_count'  => $fetchAssessedProjects->total(),
+                    'per_page'     => $fetchAssessedProjects->perPage(),
+                    'count'        => $fetchAssessedProjects->count(),
+                    'current_page' => $fetchAssessedProjects->currentPage(),
+                    'total_pages'  => $fetchAssessedProjects->lastPage(),
+                    'list'         => ProjectResource::collection($fetchAssessedProjects),
                 ];
 
                 return $this->sendResponse($response, __('responses.found_projects_list'));

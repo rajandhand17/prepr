@@ -17,8 +17,7 @@ class DashboardLayout extends Model
         'user_id',
         'dashboard_type',
         'card_type',
-        'position_x',
-        'position_y',
         'is_active',
+        'position_index',
     ];
 }

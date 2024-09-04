@@ -214,6 +214,12 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if ($request->hasFile('invite_email')) {
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
@@ -233,12 +239,18 @@ class MemberManagementService
                     }
                     /**getting data from csv and convert in array */
                     while (($csv_get_data = fgetcsv($handle, 1000, ',')) !== false) {
-                        $memberList[] = [
+                        $member = [
                             'type'          => config('constants.member_management_type.invite'),
                             'invite_type'   => config('constants.member_management_invite_type.csv'),
                             'invitee_name'  => $csv_get_data[$name_column],
                             'invitee_email' => $csv_get_data[$email_column],
                         ];
+
+                        if (!empty($inviteStatus)) {
+                            $member['invite_status'] = $inviteStatus;
+                        }
+
+                        $memberList[] = $member;
                     }
                     fclose($handle);
                     if (!empty($memberList)) {
@@ -263,6 +275,13 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+            $type = config('constants.member_management_type.'.$request->type);
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if (is_array($request->invite_email)) {
                 foreach ($request->invite_email as $email) {
                     $user = UserService::getUserByEmail($email);
@@ -270,13 +289,20 @@ class MemberManagementService
                     if ($user) {
                         $name = $user->first_name.' '.$user->last_name;
                     }
-                    $memberList[] = [
-                        'type'          => config('constants.member_management_type.invite'),
+                    $member = [
+                        'type'          => $type,
                         'invite_type'   => config('constants.member_management_invite_type.email'),
                         'invitee_name'  => $name,
                         'invitee_email' => $email,
                     ];
+
+                    if (!empty($inviteStatus)) {
+                        $member['invite_status'] = $inviteStatus;
+                    }
+
+                    $memberList[] = $member;
                 }
+
                 if (!empty($memberList)) {
                     return $memberList;
                 }
@@ -495,9 +521,12 @@ class MemberManagementService
                                         }
                                     }
                                 }
+                                $emailResendCount = $checkMemberExists->email_resend_count + 1;
                                 MemberManagement::where('id', $checkMemberExists['id'])
                                     ->update([
-                                        'invite_status' => config('constants.member_management_invite_status.invited'),
+                                        'invite_status'      => config('constants.member_management_invite_status.invited'),
+                                        'email_status'       => '0',
+                                        'email_resend_count' => $emailResendCount,
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                                 $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
@@ -1070,6 +1099,53 @@ class MemberManagementService
             $fetchMemberOrganizationIds = MemberManagement::where(['email' => $userEmail, 'role' => $role, 'invite_status' => $inviteStatus])->pluck('module_id');
 
             return $fetchMemberOrganizationIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function autoAssignedMemberFromAssociatedComponent($memberObj)
+    {
+        try {
+            $member = MemberManagement::where(['module_id' => $memberObj['module_id'], 'email' => $memberObj['email'], 'module_type' => $memberObj['module_type']])->first();
+            if ($member) {
+                $member->type = $memberObj['type'];
+                $member->invite_type = $memberObj['invite_type'];
+                $member->inviter_id = $memberObj['inviter_id'];
+                $member->auto_invite = $memberObj['auto_invite'];
+                $member->invite_status = $memberObj['invite_status'];
+                $member->invitee_name = $memberObj['invitee_name'];
+                $member->email_status = $memberObj['email_status'];
+                $member->is_associated_member = $memberObj['is_associated_member'];
+                $member->associated_component = $memberObj['associated_component'];
+                $member->associated_component_id = $memberObj['associated_component_id'];
+                $member->save();
+            } else {
+                MemberManagement::create([
+                    'uuid'                     => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                    'type'                     => $memberObj['type'],
+                    'invite_type'              => $memberObj['invite_type'],
+                    'module_id'                => $memberObj['module_id'],
+                    'module_type'              => $memberObj['module_type'],
+                    'inviter_id'               => $memberObj['inviter_id'],
+                    'role'                     => $memberObj['role'],
+                    'email'                    => $memberObj['email'],
+                    'auto_invite'              => $memberObj['auto_invite'],
+                    'invite_status'            => $memberObj['invite_status'],
+                    'invitee_name'             => $memberObj['invitee_name'],
+                    'email_status'             => $memberObj['email_status'],
+                    'subject_line'             => $memberObj['subject_line'],
+                    'email_body'               => $memberObj['email_body'],
+                    'email_resend_status'      => $memberObj['email_resend_status'],
+                    'is_associated_member'     => $memberObj['is_associated_member'],
+                    'associated_component'     => $memberObj['associated_component'],
+                    'associated_component_id'  => $memberObj['associated_component_id'],
+                ]);
+            }
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

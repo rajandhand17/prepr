@@ -110,7 +110,7 @@ class DashboardLayoutService
 
                 switch ($request['is_active'][$key]) {
                     case 'yes':
-                        $isActive = '1';
+                        $isActive = '0';
                         break;
 
                     case 'no':
@@ -122,9 +122,8 @@ class DashboardLayoutService
                 $updateLayout->user_id = $userData->id;
                 $updateLayout->dashboard_type = $dashboardValue;
                 $updateLayout->card_type = $cardType;
-                $updateLayout->position_x = $request['position_x'][$key];
-                $updateLayout->position_y = $request['position_y'][$key];
                 $updateLayout->is_active = $isActive;
+                $updateLayout->position_index = $request['position_index'][$key] ?? null;
                 $updateLayout->save();
             }
 

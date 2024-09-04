@@ -280,6 +280,7 @@
     "responses.handler_not_found_404": "404! not found",
     "responses.handler_access_denied_403": "403! Access Denied. Please login.",
     "responses.handler_illegal_request_403": "403! Illegal Request.",
+    "responses.handler_post_too_large_413": "413! The Request size is large.",
     "responses.handler_bad_request": "402! Bad Request.",
     "responses.already_follow_organization": "The Organization is already being followed by you!",
     "responses.follow_organization_successfully": "The Organization have been followed successfully by you!",
@@ -396,6 +397,7 @@
     "responses.project_submission_requirement_ids_required": "This project submission requirement field is required",
     "responses.project_submission_requirement_ids_array": "The project submission requirement should be an array",
     "responses.challenge_stored_success": "Congratulations! You have successfully created a Challenge.",
+    "responses.challenge_stored_draft": "The Challenge has been saved as draft.",
     "responses.challenge_stored_failed": "Oops! The creation Challenge has failed.",
     "responses.found_challenge_detail": "The Challenge has been successfully retrieved",
     "responses.found_not_challenge_detail": "The Challenge has been not successfully retrieved",
@@ -952,6 +954,7 @@
     "responses.project_name_not_available": "This Project title is not available!",
     "responses.project_name_available": "This Project title is available!",
     "responses.project_not_found": "The Project(s) which you are looking doesn't exist in our system.",
+    "responses.project_set_private": "Sorry! The Project(s) which you are looking is set to private.",
     "responses.project_pitch_stored_success": "You have successfully added the Project Pitch.",
     "responses.project_pitch_stored_failed": "Oops! The Creation Project Pitch has failed.",
     "responses.project_file_stored_success": "You have successfully uploaded the Project file.",
@@ -1436,5 +1439,6 @@
     "responses.lab_updated_activity": "updated the Lab:-",
     "responses.lab_deleted_activity": "deleted the Lab:-",
     "responses.lab_joined_activity": "joined the Lab:-",
-    "responses.lab_un_joined_activity": "unjoined the Lab:-"
+    "responses.lab_un_joined_activity": "unjoined the Lab:-",
+    "responses.invite_switcher_error": "Please change the Organization in the switcher toggle in the upper left-hand corner of the page to perform this action."
 }

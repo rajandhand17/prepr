@@ -21,7 +21,7 @@ class OrganizationCustomizationService
             }
 
             $checkExisitingCustomDetails = OrganizationCustomization::where('organization_id', $organizationData->id)->first();
-            if ($request->enable_custom_login_and_registration == 'yes') {
+            if ($request->enable_custom_login_and_registration !== 'none') {
                 if ($checkExisitingCustomDetails) {
                     $organizationCustomization = $checkExisitingCustomDetails;
                 } else {
@@ -49,9 +49,9 @@ class OrganizationCustomizationService
                         $useMainOrgLogo = config('constants.use_main_org_logo.no');
                         break;
                 }
-
+                $enableCustomLoginRegistration = $request->enable_custom_login_and_registration == 'yes' ? '1' : '0';
                 $organizationCustomization->organization_id = $organizationData->id;
-                $organizationCustomization->enable_custom_login_and_registration = '1';
+                $organizationCustomization->enable_custom_login_and_registration = $enableCustomLoginRegistration;
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
