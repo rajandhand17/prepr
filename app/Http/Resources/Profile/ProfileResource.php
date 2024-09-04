@@ -224,7 +224,7 @@ class ProfileResource extends JsonResource
                 'tags'                    => $userTag,
                 'about'                   => $about,
                 'age'                     => $age,
-                'learnrank'               => '1',
+                'learnrank'               => $this->user_rank ?? 0,
                 'gender'                  => $gender,
                 'date_of_birth'           => $dob,
                 'purpose'                 => $purpose,
