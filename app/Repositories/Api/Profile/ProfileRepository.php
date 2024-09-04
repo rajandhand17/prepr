@@ -458,10 +458,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getFriendsListing()
+    public function getFriendsListing($user = null)
     {
         try {
-            return $this->friendService->getFriendsListing();
+            return $this->friendService->getFriendsListing($user);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

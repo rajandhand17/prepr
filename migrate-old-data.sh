@@ -20,6 +20,7 @@ php artisan migrate-old-data:project-tasks
 php artisan migrate-old-data:users
 php artisan db:seed --class=ChannelApiOrganizationSeeder
 php artisan migrate-old-data:organizations
+php artisan migrate-old-data:role
 php artisan migrate-old-data:labs
 php artisan migrate-old-data:lab-program
 php artisan migrate-old-data:challenge
