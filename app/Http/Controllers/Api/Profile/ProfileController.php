@@ -465,7 +465,7 @@ class ProfileController extends AppBaseController
                     $friendsListing = $this->profileRepository->getFollowListing();
                     break;
                 default:
-                    $friendsListing = ($getUserByName->id == auth()->user()->id) || ($getUserByName->userSetting->profile_privacy != 1) ?
+                    $friendsListing = ($getUserByName->id == auth('api')->check() ? auth('api')->user()->id : null) || ($getUserByName->userSetting->profile_privacy != 1) ?
                                         $this->profileRepository->getFriendsListing($getUserByName) : false;
                     break;
             }

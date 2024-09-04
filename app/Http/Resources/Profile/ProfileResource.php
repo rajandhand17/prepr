@@ -220,7 +220,6 @@ class ProfileResource extends JsonResource
                 'achievements_list'       => UserAchievementResource::collection($this->userAchievements),
                 'featured_achievement'    => UserAchievementResource::collection($this->userFeaturedAchievements),
                 'role'                    => 'user',
-                'friends'                 => auth()->check() ? FriendsResource::collection($this->userFriends) : null,
                 'tags'                    => $userTag,
                 'about'                   => $about,
                 'age'                     => $age,
