@@ -28,6 +28,7 @@ use App\Http\Resources\Profile\UserSkillsResource;
 use App\Http\Resources\Profile\UserTagsResource;
 use App\Http\Resources\User\UserResource;
 use App\Repositories\Api\Profile\ProfileRepository;
+use App\Services\UserService;
 
 class ProfileController extends AppBaseController
 {
@@ -446,6 +447,13 @@ class ProfileController extends AppBaseController
             if (!in_array($activity, ['follow', 'pending', 'followers', null])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+
+            $getUserByName = UserService::getUserByUsername($username);
+
+            if (!$getUserByName) {
+                return $this->sendError(__('responses.user_not_found'), 404);
+            }
+
             switch ($activity) {
                 case 'pending':
                     $friendsListing = $this->profileRepository->getFriendRequestList();
@@ -457,7 +465,8 @@ class ProfileController extends AppBaseController
                     $friendsListing = $this->profileRepository->getFollowListing();
                     break;
                 default:
-                    $friendsListing = $this->profileRepository->getFriendsListing();
+                    $friendsListing = ($getUserByName->id == auth()->user()->id) || ($getUserByName->userSetting->profile_privacy != 1) ?
+                                        $this->profileRepository->getFriendsListing($getUserByName) : false;
                     break;
             }
             if ($friendsListing) {
