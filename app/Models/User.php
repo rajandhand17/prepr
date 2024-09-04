@@ -273,7 +273,7 @@ class User extends Authenticatable
                         $user->save();
                         DB::commit();
                         /**sending otp on registeres number */
-                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
+                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'body' => __('responses.two_factor_otp'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
                             return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
@@ -318,7 +318,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email, 'otp' => $request->otp])->first();
             if ($user) {
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
-                $response = ['success' => true, 'token' => $token];
+                $response = ['user' => $user, 'success' => true, 'token' => $token, 'code' => 3, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {

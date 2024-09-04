@@ -51,7 +51,7 @@
     "responses.verify_email": "Please verify your email address to proceed with the login!",
     "responses.verify_success_already": "Your account has already been verified. Please continue to log in into your account!",
     "responses.email_subject_two_factor_verification": "Two Factor Verification",
-    "responses.two_factor_otp": "We have sent OTP to your registered email, Please verify your email to continue.",
+    "responses.two_factor_otp": "Please provide the OTP sent to your registered email address to complete the two-factor authentication.",
     "responses.failed_email": "Sorry! we are unable to send email, Please try again later.",
     "responses.otp_required": "This otp field is required",
     "responses.user_login_success": "Welcome to your account!",
