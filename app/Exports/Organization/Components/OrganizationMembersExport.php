@@ -4,7 +4,6 @@ namespace App\Exports\Organization\Components;
 
 use App\Models\Organization;
 use App\Services\Manage\Report\OrganizationReportService;
-use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithHeadings;
