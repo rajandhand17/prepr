@@ -4,6 +4,7 @@ namespace App\Http\Resources\Manage\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Services\ModuleCompletionStatusService;
+use App\Services\ProjectService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -64,6 +65,38 @@ class MemberManagementResource extends JsonResource
                     }
 
                     $module_progress = [
+                        'status'        => $module_status,
+                        'percentage'    => $moduleProgress->percentage,
+                    ];
+                }
+            }
+        }
+
+        if ($request->component == 'challenge') {
+            $moduleId = $this->module_id;
+            $moduleType = '0';
+            $userData = UserService::getUserByEmail($this->email);
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($userData) {
+                $moduleProgress = ProjectService::checkUserChallengeStatus($moduleId, $userData->id);
+                if ($moduleProgress) {
+                    switch ($moduleProgress->is_submitted) {
+                        case '0':
+                            $module_status = 'not_submitted';
+                            break;
+                        case '1':
+                            $module_status = 'submitted';
+                            break;
+                        case '2':
+                            $module_status = 'late_submitted';
+                            break;
+                    }
+                    $module_progress = [
+                        'title'         => $moduleProgress->title,
                         'status'        => $module_status,
                         'percentage'    => $moduleProgress->percentage,
                     ];

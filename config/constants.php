@@ -622,6 +622,11 @@ return [
         'lab'           => '1',
         'organization'  => '2',
     ],
+    'project_is_submitted' => [
+        'not_submitted'  => '0',
+        'submitted'      => '1',
+        'late_submitted' => '2',
+    ],
     'dashboard_card_type' => [
         'reports'           => '0',
         'deadlines'         => '1',
