@@ -119,8 +119,11 @@ class ChallengeController extends AppBaseController
             }
 
             $createChallenge = $this->challengeRepository->createChallenge($request, $uploaded_challenge_cover, $uploaded_achievement_image, $uploaded_assessment_attachment, $organization);
+
+            $successResponse = $request->request_type === 'draft' ? 'responses.challenge_stored_draft' : 'responses.challenge_stored_success';
+
             if ($createChallenge != false) {
-                return $this->sendResponse(ChallengeResource::make($createChallenge), __('responses.challenge_stored_success'), 200);
+                return $this->sendResponse(ChallengeResource::make($createChallenge), __($successResponse), 200);
             }
 
             return $this->sendError(__('responses.challenge_stored_failed'), 400);

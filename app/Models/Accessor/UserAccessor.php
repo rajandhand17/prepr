@@ -39,7 +39,7 @@ trait UserAccessor
     {
         $lastLogin = $this->userActivities()
             ->where('activity_type', 'login')
-            ->latest('created_at')
+            ->latest()
             ->value('created_at');
 
         if (!$lastLogin) {

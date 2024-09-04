@@ -53,7 +53,7 @@ class DiscussionController extends AppBaseController
     public function addComment($component, $slug, AddCommentRequest $request)
     {
         try {
-            if (!in_array($component, ['lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);

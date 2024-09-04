@@ -168,4 +168,12 @@ class ChallengePath extends Model
     {
         return $this->hasMany(ChallengePathsTypeMode::class, 'challenge_path_id', 'id')->where('type_mode', '1');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '3');
+    }
 }

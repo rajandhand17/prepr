@@ -24,12 +24,17 @@ class LabAddressService
     public function updateLabAddress($request, $lab_id)
     {
         try {
-            $labaddress = LabAddress::where('lab_id', $lab_id)->first();
-            $labaddress->latitude = ($request->has('latitude')) ? $request->latitude : $labaddress->latitude;
-            $labaddress->longitude = ($request->has('longitude')) ? $request->longitude : $labaddress->longitude;
-            $labaddress->address = ($request->has('address')) ? $request->address : $labaddress->address;
-            $labaddress->city = ($request->has('city')) ? $request->city : $labaddress->city;
-            $labaddress->country = ($request->has('country')) ? $request->country : $labaddress->country;
+            // Attempt to find the lab address or create a new instance if it doesn't exist
+            $labaddress = LabAddress::firstOrNew(['lab_id' => $lab_id]);
+
+            // Update the fields only if they are present in the request
+            $labaddress->latitude = $request->get('latitude', $labaddress->latitude);
+            $labaddress->longitude = $request->get('longitude', $labaddress->longitude);
+            $labaddress->address = $request->get('address', $labaddress->address);
+            $labaddress->city = $request->get('city', $labaddress->city);
+            $labaddress->country = $request->get('country', $labaddress->country);
+
+            // Save the updated or newly created lab address
             $labaddress->save();
 
             return true;
