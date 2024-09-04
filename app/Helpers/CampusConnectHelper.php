@@ -139,19 +139,17 @@ class CampusConnectHelper
     {
         try {
             $response = self::post('/curatedContent', $data);
-            if ($response != false) {
-                if ($response->status() === 409) {
-                    $updateResponse = self::put('/curatedContent', $data);
-                    if ($updateResponse->status() >= 400) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if ($response->status() >= 400) {
+            if ($response->status() === 409) {
+                $updateResponse = self::put('/curatedContent', $data);
+                if ($updateResponse->status() >= 400) {
                     return false;
                 }
+
+                return true;
+            }
+
+            if ($response->status() >= 400) {
+                return false;
             }
 
             return true;
