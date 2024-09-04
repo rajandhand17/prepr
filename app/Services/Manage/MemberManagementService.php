@@ -166,30 +166,30 @@ class MemberManagementService
                     $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
                 }
             }
-            
+
             if ($request->has('project_status') && !empty($request->project_status)) {
-                 // Define the allowed statuses
+                // Define the allowed statuses
                 $allowedStatuses = ['not_submitted', 'submitted', 'late_submitted'];
 
                 if (in_array($request->project_status, $allowedStatuses)) {
                     // Extract module IDs and emails from the collection
                     $moduleIds = $componentCollectionObject->pluck('module_id');
                     $emails = $componentCollectionObject->pluck('email');
-                
+
                     // Get user IDs based on the emails
                     $userIds = UserService::getUserIdsByEmail($emails);
-                
+
                     // Retrieve the appropriate status from the config based on the project status
-                    $status = config('constants.project_is_submitted.' . $request->project_status);
-                
+                    $status = config('constants.project_is_submitted.'.$request->project_status);
+
                     // Get projects filtered by challenge status and user IDs
                     $projects = ProjectService::checkUserChallengeStatusFilterByStatus($moduleIds->toArray(), $userIds->toArray(), $status);
-                
+
                     if ($projects->isNotEmpty()) {
                         // Extract challenge IDs and user emails from the filtered projects
                         $challengeIds = $projects->pluck('challenge_id');
                         $userEmails = UserService::getUsersByIds($projects->pluck('user_id'))->pluck('email');
-                
+
                         // Filter the original collection based on the challenge IDs and user emails
                         $componentCollectionObject = $componentCollectionObject->whereIn('module_id', $challengeIds)
                             ->whereIn('email', $userEmails);
@@ -201,7 +201,7 @@ class MemberManagementService
                     $componentCollectionObject = collect();
                 }
             }
-            
+
             return $componentCollectionObject;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
