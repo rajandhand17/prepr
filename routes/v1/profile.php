@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['language'])->group(function () {
     Route::get('/{username}', [ProfileController::class, 'show']);
+    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getFriendListingBasedOnActivity']);
 });
 
 Route::middleware(['language', 'auth:api'])->group(function () {
@@ -28,5 +29,4 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/friends/request/{activity}', [ProfileController::class, 'friendRequestActivity']);
     Route::get('/{user_id}/projects', [ProfileController::class, 'getUserProjects']);
     Route::get('/{user_id}/challenges', [ProfileController::class, 'getUserChallenges']);
-    Route::get('/{username}/friends/{activity?}', [ProfileController::class, 'getFriendListingBasedOnActivity']);
 });
