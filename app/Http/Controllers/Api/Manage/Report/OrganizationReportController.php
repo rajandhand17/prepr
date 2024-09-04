@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\Report;
 
+use App\Exports\Organization\OrganizationExport;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Report\Components\ChallengePathResource;
@@ -292,7 +293,7 @@ class OrganizationReportController extends AppBaseController
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
 
             if ($organization) {
-                return Excel::download(new OrganizaionExport($organization), sprintf('%s-organization-excel.xlsx', $organization->slug));
+                return Excel::download(new OrganizationExport($organization), sprintf('%s-organization-excel.xlsx', $organization->slug));
             }
 
             return $this->sendError(__('responses.organization_slug_not_found'), 404);
