@@ -43,7 +43,7 @@ class ProjectAdditionalInfoResource extends JsonResource
         }
 
         if ($this->verticals_id) {
-            if ($this->getVerticals){
+            if ($this->getVerticals) {
                 $verticals = $this->getVerticals->title;
                 $verticals_id = $this->getVerticals->id;
             }
@@ -64,7 +64,7 @@ class ProjectAdditionalInfoResource extends JsonResource
         }
 
         if ($this->status_id) {
-            if ($this->getStatus){
+            if ($this->getStatus) {
                 $status = $this->getStatus->title;
                 $status_id = $this->getStatus->id;
             }
