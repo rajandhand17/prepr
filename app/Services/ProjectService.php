@@ -170,6 +170,12 @@ class ProjectService
                                 }
                                 break;
 
+                            case 'late_submitted':
+                                if ($projectData->is_submitted === '2') {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
                             case 'challenge_closed':
                                 $getChallenge = Challenge::find($projectData->challenge_id)->is_open;
                                 if ($getChallenge !== '0') {
