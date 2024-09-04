@@ -44,6 +44,10 @@ class InviteMemberNotification extends Notification implements ShouldQueue
             return (new MailMessage())
             ->subject($this->emailData['subject'])
             ->view('email.member_manager_invite_in_organisation', ['emailData' => $this->emailData]);
+        } elseif ($this->emailData['component'] == 'project') {
+            return (new MailMessage())
+            ->subject($this->emailData['subject'])
+            ->view('email.member_manager_invite_project_users', ['emailData' => $this->emailData]);
         } else {
             return (new MailMessage())
             ->subject($this->emailData['subject'])
