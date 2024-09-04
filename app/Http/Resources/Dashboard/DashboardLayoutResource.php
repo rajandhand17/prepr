@@ -83,11 +83,10 @@ class DashboardLayoutResource extends JsonResource
         }
 
         return [
-            'dashboard_type'        => $dashboardType,
-            'card_type'             => $cardType,
             'is_active'             => $this->is_active == '0' ? 'yes' : 'no',
-            'position_x'            => $this->position_x,
-            'position_y'            => $this->position_y,
+            'position_index'        => $this->position_index,
+            'card_type'             => $cardType,
+            'dashboard_type'        => $dashboardType,
         ];
     }
 }

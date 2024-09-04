@@ -68,10 +68,14 @@ class LabAcheivementService
 
                 return true;
             }
+            $uploadImage = ($upload_achievement_image) ? $upload_achievement_image : null;
+            if ($uploadImage == null) {
+                $uploadImage = str_replace(config('site-settings.aws_url'), '', $checkExistsLabAcheivement->achievement_image);
+            }
             $checkExistsLabAcheivement->achievement_name = ($request->has('achievement_name')) ? $request->achievement_name : $checkExistsLabAcheivement->achievement_name;
             $checkExistsLabAcheivement->achievement_points = ($request->has('achievement_points')) ? $request->achievement_points : $checkExistsLabAcheivement->achievement_points;
             $checkExistsLabAcheivement->achievement_condition = ($request->has('achievement_conditions')) ? $request->achievement_conditions : $checkExistsLabAcheivement->achievement_conditions;
-            $checkExistsLabAcheivement->achievement_image = ($upload_achievement_image) ? $upload_achievement_image : $checkExistsLabAcheivement->achievement_image;
+            $checkExistsLabAcheivement->achievement_image = $uploadImage;
             $checkExistsLabAcheivement->save();
 
             return true;
