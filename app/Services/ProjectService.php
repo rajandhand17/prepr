@@ -698,16 +698,16 @@ class ProjectService
         }
     }
 
-    public static function checkProjectRole($projectData)
+    public static function checkProjectRole($projectData, $userData)
     {
         try {
-            $userEmail = auth()->user()->email;
-            $userId = auth()->user()->id;
+            $userEmail = $userData->email;
+            $userId = $userData->id;
 
             $checkProjectMember = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail])->first();
             $checkProjectOwner = Project::where(['id' => $projectData->id, 'user_id' => $userId])->first();
 
-            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds(auth()->user());
+            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds($userData);
             $fetchSubmittedProjectIds = Project::whereIn('challenge_id', $assessedChallengeIds)->where(['id' => $projectData->id, 'is_submitted' => '1'])->first();
 
             if ($checkProjectOwner || $checkProjectMember) {
