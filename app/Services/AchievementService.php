@@ -52,12 +52,12 @@ class AchievementService
                     $user = UserService::getUserById($projectMember);
                     if ($user) {
                         $email_detail = [
-                            'subject' => __('responses.notify_pariticipation_achievement'),
-                            'email' => $user->email,
-                            'name' => $user->full_name,
-                            'project' => $projectData->title,
-                            'challenge' => $fetchChallenge->title,
-                            'achievementImage' => $projectAchievement->achievement_image
+                            'subject'          => __('responses.notify_pariticipation_achievement'),
+                            'email'            => $user->email,
+                            'name'             => $user->full_name,
+                            'project'          => $projectData->title,
+                            'challenge'        => $fetchChallenge->title,
+                            'achievementImage' => $projectAchievement->achievement_image,
                         ];
                         $user->notify(new AddAchievementNotification($email_detail));
                     }
