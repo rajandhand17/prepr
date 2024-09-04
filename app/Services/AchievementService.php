@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
+use App\Notifications\AddAchievementNotification;
 use App\Notifications\AddLabAchievementNotification;
 use App\Notifications\AddLabProgramAchievementNotification;
 use App\Notifications\AddResourceGroupAchivementNotification;
@@ -50,7 +51,15 @@ class AchievementService
                     $certificate_number++;
                     $user = UserService::getUserById($projectMember);
                     if ($user) {
-                        $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_participation_achievement')));
+                        $email_detail = [
+                            'subject' => __('responses.notify_pariticipation_achievement'),
+                            'email' => $user->email,
+                            'name' => $user->full_name,
+                            'project' => $projectData->title,
+                            'challenge' => $fetchChallenge->title,
+                            'achievementImage' => $projectAchievement->achievement_image
+                        ];
+                        $user->notify(new AddAchievementNotification($email_detail));
                     }
                 }
             }

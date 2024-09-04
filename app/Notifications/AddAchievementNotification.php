@@ -15,13 +15,11 @@ class AddAchievementNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    private $title;
-    private $body;
+    private $emailData;
 
-    public function __construct($title, $body)
+    public function __construct($emailData)
     {
-        $this->title = $title;
-        $this->body = $body;
+        $this->emailData = $emailData;
     }
 
     /**
@@ -37,12 +35,11 @@ class AddAchievementNotification extends Notification
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage())
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject($this->emailData['subject'])
+            ->view('email.participation_prize', ['emailData' => $this->emailData]);
     }
 
     /**
@@ -61,12 +58,12 @@ class AddAchievementNotification extends Notification
     {
         return FcmMessage::create()
             ->setData([
-                'title' => $this->title,
-                'body'  => $this->body,
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
             ])
             ->setNotification([
-                'title' => $this->title,
-                'body'  => $this->body,
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
                 'sound' => true,
             ]);
     }

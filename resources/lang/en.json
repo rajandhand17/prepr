@@ -1308,6 +1308,7 @@
     "responses.noti_project_created": "Project Created",
     "responses.noti_project_created_message": "You have succsessfuly created project for the challenge.",
     "responses.noti_congratulations": "Congratulations",
+    "responses.notify_pariticipation_achievement": "Participation Trophy of Challenge",
     "responses.noti_winner_achievement": "You have received an Winner Achievement.",
     "responses.noti_participation_achievement": "You have received an Participation Achievement.",
     "responses.noti_challenge_path_achievement": "You have received an Challenge Path Achievement.",
