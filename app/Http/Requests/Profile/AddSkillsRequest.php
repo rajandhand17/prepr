@@ -24,12 +24,25 @@ class AddSkillsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'skill_id'   => 'required|array',
             'skill_id.*' => Rule::exists('skills', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
         ];
+
+        if ($this->has('pinned')) {
+            $rules['pinned'] = ['array', function ($attribute, $value, $fail) {
+                // Check if the array has more than 3 elements with value 1
+                $countOnes = count(array_filter($value, fn ($pinned_item) => $pinned_item == 1));
+
+                if ($countOnes > 3) {
+                    $fail('You can only add 3 skills in featured skills.');
+                }
+            }];
+        }
+
+        return $rules;
     }
 
     public function messages()
