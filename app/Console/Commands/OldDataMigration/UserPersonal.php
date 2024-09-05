@@ -3,8 +3,10 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\UserPersonal as ModelUserPersonal;
 
 class UserPersonal extends Command
 {
@@ -20,82 +22,120 @@ class UserPersonal extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users personal data';
+    protected $description = 'Migrate old data for users personal data.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        try {
-            $this->info('Migrating old data for users personal table.');
-            DB::beginTransaction();
-            DB::connection('mysql2')->table('user_personals')->chunkById(1000, function ($userPersonals, $key) {
-                foreach ($userPersonals as $key => $userPersonalDetail) {
-                    $checkUsers = \App\Models\User::find($userPersonalDetail->user_id);
+        $this->info('Migrating old data for users personal table.');
 
-                    if ($checkUsers === null) {
+        try {
+            DB::beginTransaction();
+
+            DB::connection('mysql2')->table('user_personals')->chunkById(1000, function ($userPersonals) {
+                $userIds = $userPersonals->pluck('user_id')->unique()->toArray();
+                $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
+
+                foreach ($userPersonals as $userPersonalDetail) {
+                    if (!in_array($userPersonalDetail->user_id, $existingUsers)) {
                         continue;
                     }
 
-                    $userPersonal = \App\Models\UserPersonal::findOrNew($userPersonalDetail->id);
+                    $userPersonal = ModelUserPersonal::findOrNew($userPersonalDetail->id);
 
-                    // Map status
-                    $statusMap = [
-                        'looking_team'      => '0',
-                        'currently_mentor'  => '1',
-                        'looking_employers' => '2',
-                        // ... (add other cases)
-                        'looking_to_build_skills' => '12',
-                        // Default
-                        'default' => '1',
-                    ];
-                    $status = $statusMap[$userPersonalDetail->status] ?? $statusMap['default'];
+                    $userPersonal->fill([
+                        'user_id'          => $userPersonalDetail->user_id,
+                        'about'            => $userPersonalDetail->about ?? null,
+                        'gender'           => $this->mapGender($userPersonalDetail->gender),
+                        'date_of_birth'    => $userPersonalDetail->date_of_birth ?? null,
+                        'age'              => $userPersonalDetail->age,
+                        'purpose'          => $this->mapStatus($userPersonalDetail->status),
+                        'user_type'        => $this->mapUserType($userPersonalDetail->user_type),
+                        'recent_immigrant' => $this->mapBoolean($userPersonalDetail->recent_immigrant),
+                        'indigenous_group' => $this->mapBoolean($userPersonalDetail->indigenous_group),
+                        'visible_minority' => $this->mapBoolean($userPersonalDetail->visible_minority),
+                        'disability'       => $this->mapBoolean($userPersonalDetail->disability),
+                    ]);
 
-                    // Map user_type
-                    $userTypeMap = [
-                        'employee' => '0',
-                        'investor' => '1',
-                        // ... (add other cases)
-                        'community_organization' => '23',
-                        // Default
-                        'default' => null,
-                    ];
-                    $user_type = $userTypeMap[$userPersonalDetail->user_type] ?? $userTypeMap['default'];
-
-                    // Map gender
-                    $genderMap = [
-                        'male'    => '0',
-                        'female'  => '1',
-                        'other'   => '2',
-                        'decline' => '3',
-                        // Default
-                        'default' => '3',
-                    ];
-                    $gender = $genderMap[$userPersonal->gender] ?? $genderMap['default'];
-
-                    $userPersonal->user_id = $userPersonalDetail->user_id;
-                    $userPersonal->about = $userPersonalDetail->about ?? null;
-                    $userPersonal->gender = $gender;
-                    $userPersonal->date_of_birth = $userPersonalDetail->date_of_birth ?? null;
-                    $userPersonal->age = $userPersonalDetail->age;
-                    $userPersonal->purpose = $status;
-                    $userPersonal->user_type = $user_type;
-                    $userPersonal->recent_immigrant = $userPersonalDetail->recent_immigrant == '1' ? '2' : '1';
-                    $userPersonal->indigenous_group = $userPersonalDetail->indigenous_group == '1' ? '2' : '1';
-                    $userPersonal->visible_minority = $userPersonalDetail->visible_minority == '1' ? '2' : '1';
-                    $userPersonal->disability = $userPersonalDetail->disability == '1' ? '2' : '1';
                     $userPersonal->save();
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users personal table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migration of old data for users personal table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Map status to a standardized value.
+     *
+     * @param  string $status
+     * @return string
+     */
+    private function mapStatus($status)
+    {
+        $statusMap = [
+            'looking_team'         => '0',
+            'currently_mentor'     => '1',
+            'looking_employers'    => '2',
+            'looking_to_build_skills' => '12',
+            'default'              => '1',
+        ];
+
+        return $statusMap[$status] ?? $statusMap['default'];
+    }
+
+    /**
+     * Map user type to a standardized value.
+     *
+     * @param  string $userType
+     * @return string|null
+     */
+    private function mapUserType($userType)
+    {
+        $userTypeMap = [
+            'employee'                => '0',
+            'investor'                => '1',
+            'community_organization'  => '23',
+            'default'                 => null,
+        ];
+
+        return $userTypeMap[$userType] ?? $userTypeMap['default'];
+    }
+
+    /**
+     * Map gender to a standardized value.
+     *
+     * @param  string $gender
+     * @return string
+     */
+    private function mapGender($gender)
+    {
+        $genderMap = [
+            'male'   => '0',
+            'female' => '1',
+            'other'  => '2',
+            'decline' => '3',
+            'default' => '3',
+        ];
+
+        return $genderMap[$gender] ?? $genderMap['default'];
+    }
+
+    /**
+     * Map a boolean-like field to a standardized value.
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    private function mapBoolean($value)
+    {
+        return $value == '1' ? '2' : '1';
     }
 }

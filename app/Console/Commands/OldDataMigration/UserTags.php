@@ -4,8 +4,11 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Tag;
+use App\Models\UserTag;
 
 class UserTags extends Command
 {
@@ -21,55 +24,60 @@ class UserTags extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users tags';
+    protected $description = 'Migrate old data for users tags.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        try {
-            $this->info('Migrating old data for users tags table.');
-            DB::beginTransaction();
-            DB::connection('mysql2')->table('user_tags')->chunkById(1000, function ($userTags, $key) {
-                foreach ($userTags as $single_user_tag) {
-                    // Check if the user and tag exist
-                    $checkUser = \App\Models\User::find($single_user_tag->user_id);
-                    $checkTag = \App\Models\Tag::find($single_user_tag->tags_id);
+        $this->info('Migrating old data for users tags table.');
 
-                    if ($checkUser === null || $checkTag === null) {
+        try {
+            DB::beginTransaction();
+
+            DB::connection('mysql2')->table('user_tags')->chunkById(1000, function ($userTags) {
+                $userIds = $userTags->pluck('user_id')->unique()->toArray();
+                $tagIds = $userTags->pluck('tags_id')->unique()->toArray();
+
+                $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
+                $existingTags = Tag::whereIn('id', $tagIds)->pluck('id')->toArray();
+
+                foreach ($userTags as $singleUserTag) {
+                    if (!in_array($singleUserTag->user_id, $existingUsers) || !in_array($singleUserTag->tags_id, $existingTags)) {
                         continue;
                     }
 
-                    // Retrieve an existing UserTag or create a new one
-                    $userTag = \App\Models\UserTag::findOrNew($single_user_tag->id);
-
-                    // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($single_user_tag->created_at) ? Carbon::createFromTimestamp($single_user_tag->created_at) : null;
-                    $updatedAt = !empty($single_user_tag->updated_at) ? Carbon::createFromTimestamp($single_user_tag->updated_at) : null;
-                    $deletedAt = !empty($single_user_tag->deleted_at) ? Carbon::createFromTimestamp($single_user_tag->deleted_at) : null;
-
-                    // Fill the model attributes
-                    $userTag->fill([
-                        'user_id'      => $single_user_tag->user_id,
-                        'tag_id'       => $single_user_tag->tags_id,
-                        'created_at'   => $createdAt,
-                        'updated_at'   => $updatedAt,
-                        'deleted_at'   => $deletedAt,
-                    ]);
-
-                    // Save the model
-                    $userTag->save();
+                    UserTag::updateOrCreate(
+                        ['id' => $singleUserTag->id],
+                        [
+                            'user_id'    => $singleUserTag->user_id,
+                            'tag_id'     => $singleUserTag->tags_id,
+                            'created_at' => $this->parseDate($singleUserTag->created_at),
+                            'updated_at' => $this->parseDate($singleUserTag->updated_at),
+                            'deleted_at' => $this->parseDate($singleUserTag->deleted_at),
+                        ]
+                    );
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users tags table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migration of old data for users tags table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Parse a timestamp or return null if empty.
+     *
+     * @param  mixed $timestamp
+     * @return \Carbon\Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }

@@ -4,8 +4,10 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\UserExperience;
 
 class UserExperiences extends Command
 {
@@ -21,64 +23,65 @@ class UserExperiences extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users experience';
+    protected $description = 'Migrate old data for users experiences.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        try {
-            $this->info('Migrating old data for users personal table.');
-            DB::beginTransaction();
-            DB::connection('mysql2')->table('user_experiences')->chunkById(1000, function ($userExperiences, $key) {
-                foreach ($userExperiences as $experience) {
-                    // Find or create the user
-                    $user = \App\Models\User::findOrNew($experience->user_id);
+        $this->info('Migrating old data for users experiences table.');
 
-                    // Skip if user not found
-                    if (!$user->exists) {
+        try {
+            DB::beginTransaction();
+
+            DB::connection('mysql2')->table('user_experiences')->chunkById(1000, function ($userExperiences) {
+                $userIds = $userExperiences->pluck('user_id')->unique()->toArray();
+                $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
+
+                foreach ($userExperiences as $experience) {
+                    if (!in_array($experience->user_id, $existingUsers)) {
                         continue;
                     }
 
                     // Find or create the user experience
-                    $userExperience = \App\Models\UserExperience::findOrNew($experience->id);
-
-                    // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($experience->created_at) ? Carbon::createFromTimestamp($experience->created_at) : null;
-                    $updatedAt = !empty($experience->updated_at) ? Carbon::createFromTimestamp($experience->updated_at) : null;
-                    $deletedAt = !empty($experience->deleted_at) ? Carbon::createFromTimestamp($experience->deleted_at) : null;
-                    $start_date = !empty($experience->start_Date) ? Carbon::createFromTimestamp($experience->start_date) : null;                    // Fill the model attributes
-                    $end_date = !empty($experience->end_Date) ? Carbon::createFromTimestamp($experience->end_Date) : null;                    // Fill the model attributes
-                    if ($experience->company && $experience->position) {
-                        $userExperience->fill([
+                    $userExperience = UserExperience::updateOrCreate(
+                        ['id' => $experience->id],
+                        [
                             'user_id'     => $experience->user_id,
                             'company'     => $experience->company,
                             'position'    => $experience->position,
-                            'start_date'  => $start_date,
-                            'end_date'    => $end_date,
+                            'start_date'  => $this->parseDate($experience->start_date),
+                            'end_date'    => $this->parseDate($experience->end_date),
                             'address'     => $experience->address,
                             'state'       => $experience->state,
                             'country'     => $experience->country,
                             'description' => $experience->description,
-                            'created_at'  => $createdAt,
-                            'updated_at'  => $updatedAt,
-                            'deleted_at'  => $deletedAt,
-                        ]);
-
-                        // Save the model
-                        $userExperience->save();
-                    }
+                            'created_at'  => $this->parseDate($experience->created_at),
+                            'updated_at'  => $this->parseDate($experience->updated_at),
+                            'deleted_at'  => $this->parseDate($experience->deleted_at),
+                        ]
+                    );
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users experience table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migration of old data for users experiences table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Parse a timestamp or return null if empty.
+     *
+     * @param  mixed $timestamp
+     * @return \Carbon\Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }
