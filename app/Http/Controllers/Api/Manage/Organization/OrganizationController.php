@@ -722,9 +722,9 @@ class OrganizationController extends AppBaseController
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
-            if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
-                return $this->sendError(__('responses.organization_update_access_denied'), 403);
-            }
+            // if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
+            //     return $this->sendError(__('responses.organization_update_access_denied'), 403);
+            // }
             if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
                 $updateOrganizationCustomLoginRegistration = $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $checkOrganization);
                 if ($updateOrganizationCustomLoginRegistration) {
