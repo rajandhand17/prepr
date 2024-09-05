@@ -3,7 +3,6 @@
 namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
-use App\Models\LabSocialActivity;
 
 trait LabAccessor
 {
@@ -56,10 +55,5 @@ trait LabAccessor
         ];
 
         return data_get($privacyMap, $privacy);
-    }
-
-    public function getFormattedFavouriteCountAttribute(): int
-    {
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('favourite', '1')->count();
     }
 }

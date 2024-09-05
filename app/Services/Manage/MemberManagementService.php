@@ -9,6 +9,7 @@ use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\LabHistoryService;
+use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -163,6 +164,41 @@ class MemberManagementService
                 }
                 if ($email_status != null) {
                     $componentCollectionObject = $componentCollectionObject->where('email_status', $email_status);
+                }
+            }
+
+            if ($request->has('project_status') && !empty($request->project_status)) {
+                // Define the allowed statuses
+                $allowedStatuses = ['not_submitted', 'submitted', 'late_submitted'];
+
+                if (in_array($request->project_status, $allowedStatuses)) {
+                    // Extract module IDs and emails from the collection
+                    $moduleIds = $componentCollectionObject->pluck('module_id');
+                    $emails = $componentCollectionObject->pluck('email');
+
+                    // Get user IDs based on the emails
+                    $userIds = UserService::getUserIdsByEmail($emails);
+
+                    // Retrieve the appropriate status from the config based on the project status
+                    $status = config('constants.project_is_submitted.'.$request->project_status);
+
+                    // Get projects filtered by challenge status and user IDs
+                    $projects = ProjectService::checkUserChallengeStatusFilterByStatus($moduleIds->toArray(), $userIds->toArray(), $status);
+
+                    if ($projects->isNotEmpty()) {
+                        // Extract challenge IDs and user emails from the filtered projects
+                        $challengeIds = $projects->pluck('challenge_id');
+                        $userEmails = UserService::getUsersByIds($projects->pluck('user_id'))->pluck('email');
+
+                        // Filter the original collection based on the challenge IDs and user emails
+                        $componentCollectionObject = $componentCollectionObject->whereIn('module_id', $challengeIds)
+                            ->whereIn('email', $userEmails);
+                    } else {
+                        // If no matching projects, clear the collection
+                        $componentCollectionObject = collect();
+                    }
+                } else {
+                    $componentCollectionObject = collect();
                 }
             }
 

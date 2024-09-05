@@ -175,7 +175,10 @@ class AuthController extends AppBaseController
         try {
             $verifytwofactor = $this->authRepository->twoFactorVerification($request);
             if ($verifytwofactor['success'] == true) {
-                return $this->sendResponse($verifytwofactor, __('responses.user_login_success'), 200);
+                UserActivity::logActivity($verifytwofactor['user']->id, 'login');
+                $response = ['token' => LoginResource::make(json_decode(json_encode($verifytwofactor), false)), 'user' => UserResource::make($verifytwofactor['user']), 'code' => $verifytwofactor['code']];
+
+                return $this->sendResponse($response, __('responses.user_login_success'), 200);
             }
             if ($verifytwofactor['success'] == false) {
                 if ($verifytwofactor['code'] === 1) {

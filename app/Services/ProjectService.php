@@ -170,6 +170,12 @@ class ProjectService
                                 }
                                 break;
 
+                            case 'late_submitted':
+                                if ($projectData->is_submitted === '2') {
+                                    $projectIds = $projectData->id;
+                                }
+                                break;
+
                             case 'challenge_closed':
                                 $getChallenge = Challenge::find($projectData->challenge_id)->is_open;
                                 if ($getChallenge !== '0') {
@@ -692,16 +698,16 @@ class ProjectService
         }
     }
 
-    public static function checkProjectRole($projectData)
+    public static function checkProjectRole($projectData, $userData)
     {
         try {
-            $userEmail = auth()->user()->email;
-            $userId = auth()->user()->id;
+            $userEmail = $userData->email;
+            $userId = $userData->id;
 
             $checkProjectMember = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $userEmail])->first();
             $checkProjectOwner = Project::where(['id' => $projectData->id, 'user_id' => $userId])->first();
 
-            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds(auth()->user());
+            $assessedChallengeIds = ChallengeAssessmentService::getAllChallengeIds($userData);
             $fetchSubmittedProjectIds = Project::whereIn('challenge_id', $assessedChallengeIds)->where(['id' => $projectData->id, 'is_submitted' => '1'])->first();
 
             if ($checkProjectOwner || $checkProjectMember) {
@@ -1020,6 +1026,28 @@ class ProjectService
             })->where('challenge_id', $challengeId)
                 ->where('is_submitted', '!=', '0')
                 ->paginate(config('site-settings.pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkUserChallengeStatusFilterByStatus(array $challengeIds, array $userIds, string $status): ?Collection
+    {
+        try {
+            // Validate input arrays are not empty
+            if (empty($challengeIds) || empty($userIds)) {
+                return null;
+            }
+
+            // Fetch user projects with matching criteria
+            $userProjects = Project::whereIn('user_id', $userIds)
+                ->whereIn('challenge_id', $challengeIds)
+                ->where('is_submitted', $status)
+                ->get();
+
+            return $userProjects;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

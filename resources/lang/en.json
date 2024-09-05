@@ -51,7 +51,7 @@
     "responses.verify_email": "Please verify your email address to proceed with the login!",
     "responses.verify_success_already": "Your account has already been verified. Please continue to log in into your account!",
     "responses.email_subject_two_factor_verification": "Two Factor Verification",
-    "responses.two_factor_otp": "We have sent OTP to your registered email, Please verify your email to continue.",
+    "responses.two_factor_otp": "Please provide the OTP sent to your registered email address to complete the two-factor authentication.",
     "responses.failed_email": "Sorry! we are unable to send email, Please try again later.",
     "responses.otp_required": "This otp field is required",
     "responses.user_login_success": "Welcome to your account!",
@@ -1308,6 +1308,7 @@
     "responses.noti_project_created": "Project Created",
     "responses.noti_project_created_message": "You have succsessfuly created project for the challenge.",
     "responses.noti_congratulations": "Congratulations",
+    "responses.notify_pariticipation_achievement": "Participation Trophy of Challenge",
     "responses.noti_winner_achievement": "You have received an Winner Achievement.",
     "responses.noti_participation_achievement": "You have received an Participation Achievement.",
     "responses.noti_challenge_path_achievement": "You have received an Challenge Path Achievement.",
@@ -1440,5 +1441,7 @@
     "responses.lab_deleted_activity": "deleted the Lab:-",
     "responses.lab_joined_activity": "joined the Lab:-",
     "responses.lab_un_joined_activity": "unjoined the Lab:-",
-    "responses.invite_switcher_error": "Please change the Organization in the switcher toggle in the upper left-hand corner of the page to perform this action."
+    "responses.invite_switcher_error": "Please change the Organization in the switcher toggle in the upper left-hand corner of the page to perform this action.",
+    "successfully_deleted_file" : "File deleted successfully",
+    "delete_file_failed" : "File delete failed"
 }

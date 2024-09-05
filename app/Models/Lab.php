@@ -300,4 +300,9 @@ class Lab extends Model
     {
         return $this->belongsToMany(ChallengePath::class, 'component_associations', 'lab_id', 'challenge_path_id');
     }
+
+    public function favouriteCount(): int
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('favourite', '1')->count();
+    }
 }
