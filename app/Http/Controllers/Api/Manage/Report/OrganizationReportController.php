@@ -295,11 +295,14 @@ class OrganizationReportController extends AppBaseController
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
 
             if ($organization) {
-                $download = Excel::download(new OrganizationExport($organization),
-                    sprintf('%s-organization-excel.xlsx', $organization->slug));
+                $download = Excel::download(
+                    new OrganizationExport($organization),
+                    sprintf('%s-organization-excel.xlsx', $organization->slug)
+                );
                 $filename = sprintf('organization-report/%s-organization-excel.xlsx', $organization->slug);
                 Storage::disk('s3')->put($filename, $download);
-                return redirect(Storage::temporaryUrl($filename,Carbon::now()->addMinutes(30)));
+
+                return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.organization_slug_not_found'), 404);
