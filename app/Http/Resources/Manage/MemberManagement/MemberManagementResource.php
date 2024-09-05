@@ -4,7 +4,6 @@ namespace App\Http\Resources\Manage\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Services\ModuleCompletionStatusService;
-use App\Services\RankService;
 use App\Services\ProjectService;
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,15 +20,15 @@ class MemberManagementResource extends JsonResource
     public function toArray($request)
     {
         $user = UserService::getUserByEmail($this->email);
-       
+
         $username = null;
-        $userRank =0;
-        $achievementCount=0;
+        $userRank = 0;
+        $achievementCount = 0;
         if ($user) {
             $this->invitee_name = $user->first_name.' '.$user->last_name;
             $username = $user->username;
-            $userRank=($user->user_rank!=null) ? $user->user_rank : 0;
-            $achievementCount=($user->achievement_count!=null) ? $user->achievement_count : 0;
+            $userRank = ($user->user_rank != null) ? $user->user_rank : 0;
+            $achievementCount = ($user->achievement_count != null) ? $user->achievement_count : 0;
         }
         $type = ($this->type == '0') ? 'Invitation' : (($this->type == '1') ? 'Join Request' : 'Auto Created');
         $invite_types = [
@@ -111,24 +110,24 @@ class MemberManagementResource extends JsonResource
         }
 
         return [
-            'id'              => $this->uuid,
-            'type'            => $type,
-            'invite_type'     => $invite_type,
-            'request_status'  => $this->type == '1' ? $invite_status : null,
-            'name'            => $this->invitee_name,
-            'email'           => $this->email,
-            'username'        => $username,
-            'user_rank'       => $userRank,
+            'id'               => $this->uuid,
+            'type'             => $type,
+            'invite_type'      => $invite_type,
+            'request_status'   => $this->type == '1' ? $invite_status : null,
+            'name'             => $this->invitee_name,
+            'email'            => $this->email,
+            'username'         => $username,
+            'user_rank'        => $userRank,
             'achievement_count'=> $achievementCount,
-            'invited_by'      => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
-            'role'            => $this->role,
-            'invite_status'   => $invite_status,
-            'module_progress' => $module_progress,
-            'auto_invite'     => $auto_invite,
-            'email_status'    => $email_status,
-            'subject'         => $this->subject_line,
-            'email_content'   => $this->email_body,
-            'joined_at'       => !empty($this->updated_at) ? UtilityHelper::formatDateTime($this->updated_at) : null,
+            'invited_by'       => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
+            'role'             => $this->role,
+            'invite_status'    => $invite_status,
+            'module_progress'  => $module_progress,
+            'auto_invite'      => $auto_invite,
+            'email_status'     => $email_status,
+            'subject'          => $this->subject_line,
+            'email_content'    => $this->email_body,
+            'joined_at'        => !empty($this->updated_at) ? UtilityHelper::formatDateTime($this->updated_at) : null,
         ];
     }
 }
