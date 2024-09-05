@@ -47,7 +47,7 @@ class ChallengeMembersExport implements FromCollection, withColumnWidths, WithSt
     public function map($row): array
     {
         $user = $row->user;
-        $project = $user->userProjects->first();
+        $project = $user?->userProjects?->first();
         $challenge = ChallengeService::getChallengeBasedOnId(data_get($row, 'module_id'));
 
         return [
