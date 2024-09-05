@@ -30,6 +30,7 @@ class ChallengeAssessmentDetailResource extends JsonResource
     {
         return $challengeAssessments->map(function ($challengeAssessment) {
             $challengeAssessmentCriteria = $challengeAssessment->challengeAssessmentCriteria;
+
             return [
                 'id'             => $challengeAssessment->id,
                 'criteria'       => $challengeAssessmentCriteria?->title,
