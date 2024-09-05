@@ -46,4 +46,14 @@ class RankService
             return false;
         }
     }
+
+    public static function getRankById($id){
+        try{
+            return Rank::where('id',$id)->first();
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
