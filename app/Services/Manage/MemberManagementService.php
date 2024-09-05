@@ -184,8 +184,7 @@ class MemberManagementService
 
                     // Get projects filtered by challenge status and user IDs
                     $projects = ProjectService::checkUserChallengeStatusFilterByStatus($moduleIds->toArray(), $userIds->toArray(), $status);
-
-                    if ($projects->isNotEmpty()) {
+                    if ($projects!=null && $projects->isNotEmpty()) {
                         // Extract challenge IDs and user emails from the filtered projects
                         $challengeIds = $projects->pluck('challenge_id');
                         $userEmails = UserService::getUsersByIds($projects->pluck('user_id'))->pluck('email');
