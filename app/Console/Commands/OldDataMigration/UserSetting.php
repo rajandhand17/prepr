@@ -48,19 +48,19 @@ class UserSetting extends Command
 
                     // Map user settings to constants
                     $userSetting->fill([
-                        'profile_privacy'                 => $this->mapPrivacy($singleUser->profile, 'user_privacy_options'),
-                        'project_privacy'                 => $this->mapPrivacy($singleUser->project_privacy, 'project_privacy'),
-                        'is_subscribe'                    => $this->mapSubscription($singleUser->is_subscribe),
-                        'fcm_notification_permission'     => $this->mapNotificationPermission($singleUser->fcm_notification_permission),
-                        'email_subscription_notification' => $this->mapNotificationPermission($singleUser->email_subscription_notification),
-                        'email_subscription_network_summary' => $this->mapNotificationPermission($singleUser->email_subscription_network_summary),
+                        'profile_privacy'                      => $this->mapPrivacy($singleUser->profile, 'user_privacy_options'),
+                        'project_privacy'                      => $this->mapPrivacy($singleUser->project_privacy, 'project_privacy'),
+                        'is_subscribe'                         => $this->mapSubscription($singleUser->is_subscribe),
+                        'fcm_notification_permission'          => $this->mapNotificationPermission($singleUser->fcm_notification_permission),
+                        'email_subscription_notification'      => $this->mapNotificationPermission($singleUser->email_subscription_notification),
+                        'email_subscription_network_summary'   => $this->mapNotificationPermission($singleUser->email_subscription_network_summary),
                         'email_subscription_challenge_summary' => $this->mapNotificationPermission($singleUser->email_subscription_challenge_summary),
-                        'email_subscription_lab_summary' => $this->mapNotificationPermission($singleUser->email_subscription_lab_summary),
-                        'display_lab_minionboarding'      => $this->mapNotificationPermission($singleUser->display_lab_minionboarding),
-                        'display_challenge_minionboarding'=> $this->mapNotificationPermission($singleUser->display_challenge_minionboarding),
-                        'display_org_minionboarding'      => $this->mapNotificationPermission($singleUser->display_org_minionboarding),
-                        'manage_alerts'                   => $singleUser->manage_alerts,
-                        'fcm_device_token'                => $singleUser->fcm_device_token,
+                        'email_subscription_lab_summary'       => $this->mapNotificationPermission($singleUser->email_subscription_lab_summary),
+                        'display_lab_minionboarding'           => $this->mapNotificationPermission($singleUser->display_lab_minionboarding),
+                        'display_challenge_minionboarding'     => $this->mapNotificationPermission($singleUser->display_challenge_minionboarding),
+                        'display_org_minionboarding'           => $this->mapNotificationPermission($singleUser->display_org_minionboarding),
+                        'manage_alerts'                        => $singleUser->manage_alerts,
+                        'fcm_device_token'                     => $singleUser->fcm_device_token,
                     ]);
 
                     $userSetting->save();
@@ -72,15 +72,16 @@ class UserSetting extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
         }
     }
 
     /**
      * Map profile or project privacy to constants.
      *
-     * @param  string $value
-     * @param  string $configKey
+     * @param string $value
+     * @param string $configKey
+     *
      * @return mixed
      */
     private function mapPrivacy($value, $configKey)
@@ -91,7 +92,8 @@ class UserSetting extends Command
     /**
      * Map subscription status to constants.
      *
-     * @param  string $value
+     * @param string $value
+     *
      * @return mixed
      */
     private function mapSubscription($value)
@@ -102,7 +104,8 @@ class UserSetting extends Command
     /**
      * Map notification permission value to constants.
      *
-     * @param  string $value
+     * @param string $value
+     *
      * @return mixed
      */
     private function mapNotificationPermission($value)

@@ -3,10 +3,10 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User as UserModel;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
-use App\Models\User as UserModel;
 
 class UserMigration extends Command
 {
@@ -69,6 +69,7 @@ class UserMigration extends Command
      * Map old user data to new user structure.
      *
      * @param object $single_user
+     *
      * @return array
      */
     private function mapUserData($single_user)
@@ -80,35 +81,35 @@ class UserMigration extends Command
         $username = $this->generateUniqueUsername($single_user->username);
 
         return [
-            'id' => $single_user->id,
-            'preferred_language' => $language,
-            'first_name' => $single_user->first_name,
-            'last_name' => $single_user->last_name,
-            'full_name' => $single_user->name,
-            'username' => $username,
-            'email' => $single_user->email,
-            'email_verified_at' => Carbon::createFromTimestamp($single_user->created_at),
-            'password' => $single_user->password,
-            'country_code' => $single_user->country_code,
-            'phone_number' => $single_user->phone_number,
-            'two_factor_verification' => $twoFactor,
-            'otp' => $single_user->two_factor_otp,
-            'profile_image' => $single_user->profile_image ?? config('site-settings.default_user_profile_image'),
-            'referral_code' => $single_user->referal_code,
-            'user_points' => $single_user->point,
-            'user_rank' => $single_user->rank,
-            'achievement_count' => $single_user->achievement_count,
-            'remember_token' => $single_user->remember_token,
-            'display_lab_mini_onboarding' => $single_user->display_lab_minionboarding == '1' ? '0' : '1',
-            'display_challenge_mini_onboarding' => $single_user->display_challenge_minionboarding == '1' ? '0' : '1',
+            'id'                                   => $single_user->id,
+            'preferred_language'                   => $language,
+            'first_name'                           => $single_user->first_name,
+            'last_name'                            => $single_user->last_name,
+            'full_name'                            => $single_user->name,
+            'username'                             => $username,
+            'email'                                => $single_user->email,
+            'email_verified_at'                    => Carbon::createFromTimestamp($single_user->created_at),
+            'password'                             => $single_user->password,
+            'country_code'                         => $single_user->country_code,
+            'phone_number'                         => $single_user->phone_number,
+            'two_factor_verification'              => $twoFactor,
+            'otp'                                  => $single_user->two_factor_otp,
+            'profile_image'                        => $single_user->profile_image ?? config('site-settings.default_user_profile_image'),
+            'referral_code'                        => $single_user->referal_code,
+            'user_points'                          => $single_user->point,
+            'user_rank'                            => $single_user->rank,
+            'achievement_count'                    => $single_user->achievement_count,
+            'remember_token'                       => $single_user->remember_token,
+            'display_lab_mini_onboarding'          => $single_user->display_lab_minionboarding == '1' ? '0' : '1',
+            'display_challenge_mini_onboarding'    => $single_user->display_challenge_minionboarding == '1' ? '0' : '1',
             'display_organization_mini_onboarding' => $single_user->display_org_minionboarding == '1' ? '0' : '1',
-            'created_at' => Carbon::createFromTimestamp($single_user->created_at),
-            'verified_user' => $verified,
-            'is_profile_completed' => $single_user->is_profile_completed === 'no' ? '0' : '1',
-            'go1_id' => $single_user->go1_id,
-            'go1_user_metadata' => $single_user->go1_user_metadata,
-            'magnet_user_id' => $single_user->magnet_user_id,
-            'magnet_user_role' => $single_user->magnet_user_role,
+            'created_at'                           => Carbon::createFromTimestamp($single_user->created_at),
+            'verified_user'                        => $verified,
+            'is_profile_completed'                 => $single_user->is_profile_completed === 'no' ? '0' : '1',
+            'go1_id'                               => $single_user->go1_id,
+            'go1_user_metadata'                    => $single_user->go1_user_metadata,
+            'magnet_user_id'                       => $single_user->magnet_user_id,
+            'magnet_user_role'                     => $single_user->magnet_user_role,
         ];
     }
 
@@ -116,13 +117,14 @@ class UserMigration extends Command
      * Map language ID to language code.
      *
      * @param int $languageId
+     *
      * @return string
      */
     private function mapLanguage($languageId)
     {
         return match ($languageId) {
             1, 0 => 'en',
-            2 => 'fr-CA',
+            2       => 'fr-CA',
             default => 'en',
         };
     }
@@ -131,6 +133,7 @@ class UserMigration extends Command
      * Generate a unique username if needed.
      *
      * @param string|null $username
+     *
      * @return string|null
      */
     private function generateUniqueUsername($username)
@@ -143,8 +146,10 @@ class UserMigration extends Command
                 $username = "{$baseUsername}{$counter}";
                 $counter++;
             }
+
             return $username;
         }
+
         return null;
     }
 }

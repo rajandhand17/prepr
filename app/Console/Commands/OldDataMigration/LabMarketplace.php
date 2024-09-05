@@ -5,8 +5,8 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\LabMarketplace as ModelsLabMarketplace;
-use App\Models\LabMarketplaceAddress;
 use App\Models\LabMarketplaceAchievement;
+use App\Models\LabMarketplaceAddress;
 use App\Models\LabMarketplaceExternalLink;
 use App\Models\LabMarketplaceSkillsGroupsStack;
 use App\Models\LabMarketplaceTagsGroups;
@@ -55,26 +55,26 @@ class LabMarketplace extends Command
 
                     // Set attributes and save newLabMarketplace
                     $newLabMarketplace->fill([
-                        'uuid' => $newLabMarketplace->uuid ?? Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                        'type' => '4',
-                        'language' => $labTemplate->language,
-                        'user_id' => $labTemplate->user_id,
-                        'organization_id' => $labTemplate->organisation,
-                        'category_id' => $this->getCategoryId($labTemplate->category),
-                        'slug' => $labTemplate->slug,
-                        'title' => $labTemplate->title,
-                        'description' => $labTemplate->description,
-                        'privacy' => $this->getPrivacySetting($labTemplate->privacy),
-                        'media_type' => $this->getMediaType($labTemplate->mediaType),
-                        'media' => $labTemplate->image,
-                        'status' => '1',
-                        'total_share' => $labTemplate->total_share,
-                        'is_auto_created' => $this->parseBoolean($labTemplate->is_auto_created),
-                        'is_resource_sequential' => $this->parseBoolean($labTemplate->res_sequence),
-                        'is_sequential' => $this->parseBoolean($labTemplate->cha_sequence),
-                        'is_achievement_enabled' => $this->parseBoolean($labTemplate->enable_achievement),
+                        'uuid'                    => $newLabMarketplace->uuid ?? Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                        'type'                    => '4',
+                        'language'                => $labTemplate->language,
+                        'user_id'                 => $labTemplate->user_id,
+                        'organization_id'         => $labTemplate->organisation,
+                        'category_id'             => $this->getCategoryId($labTemplate->category),
+                        'slug'                    => $labTemplate->slug,
+                        'title'                   => $labTemplate->title,
+                        'description'             => $labTemplate->description,
+                        'privacy'                 => $this->getPrivacySetting($labTemplate->privacy),
+                        'media_type'              => $this->getMediaType($labTemplate->mediaType),
+                        'media'                   => $labTemplate->image,
+                        'status'                  => '1',
+                        'total_share'             => $labTemplate->total_share,
+                        'is_auto_created'         => $this->parseBoolean($labTemplate->is_auto_created),
+                        'is_resource_sequential'  => $this->parseBoolean($labTemplate->res_sequence),
+                        'is_sequential'           => $this->parseBoolean($labTemplate->cha_sequence),
+                        'is_achievement_enabled'  => $this->parseBoolean($labTemplate->enable_achievement),
                         'is_notification_enabled' => '0',
-                        'is_verified' => $this->parseBoolean($labTemplate->verification),
+                        'is_verified'             => $this->parseBoolean($labTemplate->verification),
                     ])->save();
 
                     // Migrate related data
@@ -112,6 +112,7 @@ class LabMarketplace extends Command
         }
 
         $oldCategory = DB::connection('mysql2')->table('categories')->find($oldCategoryId);
+
         return Category::where('title', $oldCategory->name)->value('id') ?? 1;
     }
 
@@ -119,8 +120,8 @@ class LabMarketplace extends Command
     {
         return match ($privacy) {
             'private' => config('constants.lab_privacy.yes'),
-            'public' => config('constants.lab_privacy.no'),
-            default => config('constants.lab_privacy.yes'),
+            'public'  => config('constants.lab_privacy.no'),
+            default   => config('constants.lab_privacy.yes'),
         };
     }
 
@@ -128,7 +129,7 @@ class LabMarketplace extends Command
     {
         return match ($mediaType) {
             'embeddedCode' => 'embedded',
-            default => 'image',
+            default        => 'image',
         };
     }
 
@@ -142,11 +143,11 @@ class LabMarketplace extends Command
         LabMarketplaceAddress::updateOrCreate(
             ['lab_marketplace_id' => $labTemplate->id],
             [
-                'latitude' => $labTemplate->latitute,
+                'latitude'  => $labTemplate->latitute,
                 'longitude' => $labTemplate->longitude,
-                'address' => $labTemplate->address,
-                'city' => $labTemplate->city,
-                'country' => $labTemplate->country,
+                'address'   => $labTemplate->address,
+                'city'      => $labTemplate->city,
+                'country'   => $labTemplate->country,
             ]
         );
     }
@@ -159,8 +160,8 @@ class LabMarketplace extends Command
             foreach ($skills as $skill) {
                 LabMarketplaceSkillsGroupsStack::create([
                     'lab_marketplace_id' => $labTemplate->id,
-                    'foreign_id' => $skill,
-                    'type' => '0',
+                    'foreign_id'         => $skill,
+                    'type'               => '0',
                 ]);
             }
         }
@@ -177,8 +178,8 @@ class LabMarketplace extends Command
             foreach ($skills as $skill) {
                 LabMarketplaceSkillsGroupsStack::create([
                     'lab_marketplace_id' => $labTemplate->id,
-                    'foreign_id' => $skill,
-                    'type' => $type,
+                    'foreign_id'         => $skill,
+                    'type'               => $type,
                 ]);
             }
         }
@@ -192,8 +193,8 @@ class LabMarketplace extends Command
             foreach ($tags as $tag) {
                 LabMarketplaceTagsGroups::create([
                     'lab_marketplace_id' => $labTemplate->id,
-                    'foreign_id' => $tag,
-                    'type' => '0',
+                    'foreign_id'         => $tag,
+                    'type'               => '0',
                 ]);
             }
         }
@@ -214,8 +215,8 @@ class LabMarketplace extends Command
                 if (SocialLink::find($socialLink->social_link_id)) {
                     LabMarketplaceExternalLink::create([
                         'lab_marketplace_id' => $socialLink->lab_id,
-                        'social_media_link' => $socialLink->link_url,
-                        'social_link_id' => $socialLink->social_link_id,
+                        'social_media_link'  => $socialLink->link_url,
+                        'social_link_id'     => $socialLink->social_link_id,
                     ]);
                 }
             }
@@ -233,10 +234,10 @@ class LabMarketplace extends Command
             LabMarketplaceAchievement::updateOrCreate(
                 ['lab_marketplace_id' => $achievement->lab_id],
                 [
-                    'achievement_name' => $achievement->achievement_name,
-                    'achievement_points' => $achievement->achievement_points,
+                    'achievement_name'      => $achievement->achievement_name,
+                    'achievement_points'    => $achievement->achievement_points,
                     'achievement_condition' => json_decode($achievement->achievement_condition),
-                    'achievement_image' => $achievement->achievement_image,
+                    'achievement_image'     => $achievement->achievement_image,
                 ]
             );
         }

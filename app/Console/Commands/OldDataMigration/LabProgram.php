@@ -41,7 +41,7 @@ class LabProgram extends Command
         } catch (Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error("Migration failed: " . $e->getMessage());
+            $this->error('Migration failed: '.$e->getMessage());
         }
     }
 
@@ -73,31 +73,32 @@ class LabProgram extends Command
                 return Category::where('title', $checkOldCategory->name)->first()->id ?? '1';
             }
         }
+
         return '1';
     }
 
     private function populateLabProgram($newLabProgram, $labProgram, $category)
     {
         $newLabProgram->fill([
-            'id' => $labProgram->id,
-            'language' => $labProgram->language,
-            'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-            'title' => $labProgram->title,
-            'slug' => UtilityHelper::generateSlug($labProgram->title, new ModelsLabProgram()),
-            'description' => $labProgram->description,
-            'user_id' => $labProgram->user_id,
-            'organization_id' => $labProgram->organisation,
-            'category_id' => $category,
-            'duration_id' => $this->getTagGroupValue($labProgram, 'duration', ['169' => '1', '170' => '2', '171' => '3', '172' => '4', '173' => '5', '174' => '6']),
-            'level_id' => $this->getTagGroupValue($labProgram, 'level', ['157' => '1', '158' => '2', '159' => '3', '160' => '4']),
-            'media_type' => 'image',
-            'media' => $labProgram->group_image,
-            'privacy' => $labProgram->privacy === 'public' ? '0' : '1',
-            'status' => '1',
-            'is_auto_created' => $labProgram->is_auto_created === '1' ? '1' : '0',
+            'id'                     => $labProgram->id,
+            'language'               => $labProgram->language,
+            'uuid'                   => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+            'title'                  => $labProgram->title,
+            'slug'                   => UtilityHelper::generateSlug($labProgram->title, new ModelsLabProgram()),
+            'description'            => $labProgram->description,
+            'user_id'                => $labProgram->user_id,
+            'organization_id'        => $labProgram->organisation,
+            'category_id'            => $category,
+            'duration_id'            => $this->getTagGroupValue($labProgram, 'duration', ['169' => '1', '170' => '2', '171' => '3', '172' => '4', '173' => '5', '174' => '6']),
+            'level_id'               => $this->getTagGroupValue($labProgram, 'level', ['157' => '1', '158' => '2', '159' => '3', '160' => '4']),
+            'media_type'             => 'image',
+            'media'                  => $labProgram->group_image,
+            'privacy'                => $labProgram->privacy === 'public' ? '0' : '1',
+            'status'                 => '1',
+            'is_auto_created'        => $labProgram->is_auto_created === '1' ? '1' : '0',
             'is_achievement_enabled' => '1',
-            'is_sequential' => '0',
-            'is_accessible' => $labProgram->is_accessable,
+            'is_sequential'          => '0',
+            'is_accessible'          => $labProgram->is_accessable,
         ]);
     }
 
@@ -127,8 +128,8 @@ class LabProgram extends Command
             foreach ($values as $value) {
                 LabProgramTypeModes::create([
                     'lab_program_id' => $labProgram->id,
-                    'type_mode' => $typeMode,
-                    'value' => $value,
+                    'type_mode'      => $typeMode,
+                    'value'          => $value,
                 ]);
             }
         }
@@ -138,9 +139,9 @@ class LabProgram extends Command
     {
         $labProgramAchievement = LabProgramsAchievement::firstOrNew(['lab_program_id' => $labProgram->id]);
         $labProgramAchievement->fill([
-            'achievement_name' => $labProgram->prize,
+            'achievement_name'   => $labProgram->prize,
             'achievement_points' => $labProgram->points,
-            'achievement_image' => $labProgram->trophy,
+            'achievement_image'  => $labProgram->trophy,
         ])->save();
     }
 
@@ -154,8 +155,8 @@ class LabProgram extends Command
                 foreach ($labIds as $sequence => $labId) {
                     ComponentAssociation::create([
                         'lab_program_id' => $labProgram->id,
-                        'lab_id' => $labId,
-                        'sequence' => $sequence + 1,
+                        'lab_id'         => $labId,
+                        'sequence'       => $sequence + 1,
                     ]);
                 }
             }

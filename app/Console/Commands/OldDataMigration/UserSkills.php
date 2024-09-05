@@ -3,12 +3,12 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\Skill;
+use App\Models\User;
+use App\Models\UserSkill;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Skill;
-use App\Models\UserSkill; // Corrected model name to match Laravel naming conventions
+use Illuminate\Support\Facades\DB; // Corrected model name to match Laravel naming conventions
 
 class UserSkills extends Command
 {
@@ -68,14 +68,15 @@ class UserSkills extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
         }
     }
 
     /**
      * Parse a timestamp or return null if empty.
      *
-     * @param  mixed $timestamp
+     * @param mixed $timestamp
+     *
      * @return \Carbon\Carbon|null
      */
     private function parseDate($timestamp)
