@@ -151,6 +151,27 @@ class User extends Authenticatable
             });
     }
 
+    public function getFriendsAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('user_id', $this->id)->orWhere('reference_id', $this->id);
+        })->where('status', '1');
+    }
+
+    public function getFriendRequestReceivedAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('reference_id', $this->id);
+        })->where('status', '0');
+    }
+
+    public function getFriendRequestSentAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('user_id', $this->id);
+        })->where('status', '0');
+    }
+
     public function userRequestSend()
     {
         return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');

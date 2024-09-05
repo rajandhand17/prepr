@@ -319,6 +319,22 @@ class ProfileController extends AppBaseController
         }
     }
 
+    public function deleteFile($id)
+    {
+        try {
+            $deleteFile = $this->profileRepository->fileDelete($id);
+            if ($deleteFile) {
+                return $this->sendResponse(null, __('responses.successfully_deleted_file'));
+            }
+
+            return $this->sendError(__('responses.delete_file_failed'), 400);
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function resumeUpload(ResumeUploadRequest $request)
     {
         try {

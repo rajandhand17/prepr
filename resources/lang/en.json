@@ -1441,5 +1441,7 @@
     "responses.lab_deleted_activity": "deleted the Lab:-",
     "responses.lab_joined_activity": "joined the Lab:-",
     "responses.lab_un_joined_activity": "unjoined the Lab:-",
-    "responses.invite_switcher_error": "Please change the Organization in the switcher toggle in the upper left-hand corner of the page to perform this action."
+    "responses.invite_switcher_error": "Please change the Organization in the switcher toggle in the upper left-hand corner of the page to perform this action.",
+    "successfully_deleted_file" : "File deleted successfully",
+    "delete_file_failed" : "File delete failed"
 }
