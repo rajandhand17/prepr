@@ -3,11 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\Friend;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\Friend;
 
 class UserFriends extends Command
 {
@@ -68,14 +68,15 @@ class UserFriends extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
         }
     }
 
     /**
      * Parse a timestamp or return null if empty.
      *
-     * @param  mixed $timestamp
+     * @param mixed $timestamp
+     *
      * @return \Carbon\Carbon|null
      */
     private function parseDate($timestamp)

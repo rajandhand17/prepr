@@ -3,10 +3,10 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UserPersonal as ModelUserPersonal;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class UserPersonal extends Command
 {
@@ -68,24 +68,25 @@ class UserPersonal extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
         }
     }
 
     /**
      * Map status to a standardized value.
      *
-     * @param  string $status
+     * @param string $status
+     *
      * @return string
      */
     private function mapStatus($status)
     {
         $statusMap = [
-            'looking_team'         => '0',
-            'currently_mentor'     => '1',
-            'looking_employers'    => '2',
+            'looking_team'            => '0',
+            'currently_mentor'        => '1',
+            'looking_employers'       => '2',
             'looking_to_build_skills' => '12',
-            'default'              => '1',
+            'default'                 => '1',
         ];
 
         return $statusMap[$status] ?? $statusMap['default'];
@@ -94,7 +95,8 @@ class UserPersonal extends Command
     /**
      * Map user type to a standardized value.
      *
-     * @param  string $userType
+     * @param string $userType
+     *
      * @return string|null
      */
     private function mapUserType($userType)
@@ -112,15 +114,16 @@ class UserPersonal extends Command
     /**
      * Map gender to a standardized value.
      *
-     * @param  string $gender
+     * @param string $gender
+     *
      * @return string
      */
     private function mapGender($gender)
     {
         $genderMap = [
-            'male'   => '0',
-            'female' => '1',
-            'other'  => '2',
+            'male'    => '0',
+            'female'  => '1',
+            'other'   => '2',
             'decline' => '3',
             'default' => '3',
         ];
@@ -131,7 +134,8 @@ class UserPersonal extends Command
     /**
      * Map a boolean-like field to a standardized value.
      *
-     * @param  mixed $value
+     * @param mixed $value
+     *
      * @return string
      */
     private function mapBoolean($value)

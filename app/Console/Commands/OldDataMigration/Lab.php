@@ -9,10 +9,8 @@ use App\Models\LabAcheivement;
 use App\Models\LabAddress;
 use App\Models\LabExternalLinks;
 use App\Models\LabSkillsGroupsStack;
-use App\Models\LabTagsGroups;
 use App\Models\LabTypeModes;
 use App\Models\Organization;
-use App\Models\SocialLink;
 use App\Models\User;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
@@ -34,7 +32,7 @@ class Lab extends Command
                 foreach ($labs as $lab) {
                     $checkUser = User::find($lab->user_id);
                     $checkOrganization = Organization::find($lab->organisation);
-                    
+
                     if (!$checkUser || !$checkOrganization) {
                         continue;
                     }
@@ -44,11 +42,11 @@ class Lab extends Command
 
                     // Handle new lab creation or fetching existing one
                     $newLab = ModelsLab::firstOrCreate(['id' => $lab->id], [
-                        'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                        'user_id' => $lab->user_id,
+                        'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                        'user_id'         => $lab->user_id,
                         'organization_id' => $lab->organisation,
-                        'type' => '4',
-                        'status' => '1'
+                        'type'            => '4',
+                        'status'          => '1',
                     ]);
 
                     $this->mapLabAttributes($newLab, $lab, $category);
@@ -57,11 +55,11 @@ class Lab extends Command
                     LabAddress::updateOrCreate(
                         ['lab_id' => $lab->id],
                         [
-                            'latitude' => $lab->latitute,
+                            'latitude'  => $lab->latitute,
                             'longitude' => $lab->longitude,
-                            'address' => $lab->address,
-                            'city' => $lab->city,
-                            'country' => $lab->country
+                            'address'   => $lab->address,
+                            'city'      => $lab->city,
+                            'country'   => $lab->country,
                         ]
                     );
 
@@ -75,7 +73,6 @@ class Lab extends Command
 
             DB::commit();
             $this->info('Migration of old Labs data completed.');
-
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             DB::rollback();
@@ -88,33 +85,35 @@ class Lab extends Command
         if ($oldCategoryId) {
             $checkOldCategory = DB::connection('mysql2')->table('categories')->find($oldCategoryId);
             $checkCategory = Category::where('title', $checkOldCategory->name)->first();
+
             return $checkCategory ? $checkCategory->id : '1';
         }
+
         return '1';
     }
 
     private function mapLabAttributes($newLab, $lab, $category)
     {
         $newLab->fill([
-            'category_id' => $category,
-            'slug' => $lab->slug,
-            'title' => $lab->title,
-            'description' => $lab->description,
-            'privacy' => $this->mapPrivacy($lab->privacy),
-            'media_type' => $this->mapMediaType($lab->mediaType),
-            'media' => $lab->image,
-            'is_auto_created' => $this->mapFlag($lab->is_auto_created),
+            'category_id'            => $category,
+            'slug'                   => $lab->slug,
+            'title'                  => $lab->title,
+            'description'            => $lab->description,
+            'privacy'                => $this->mapPrivacy($lab->privacy),
+            'media_type'             => $this->mapMediaType($lab->mediaType),
+            'media'                  => $lab->image,
+            'is_auto_created'        => $this->mapFlag($lab->is_auto_created),
             'is_resource_sequential' => $this->mapFlag($lab->res_sequence),
-            'is_sequential' => $this->mapFlag($lab->cha_sequence),
+            'is_sequential'          => $this->mapFlag($lab->cha_sequence),
             'is_achievement_enabled' => $this->mapFlag($lab->enable_achievement),
-            'is_verified' => $this->mapFlag($lab->verification),
+            'is_verified'            => $this->mapFlag($lab->verification),
         ]);
         $newLab->save();
     }
 
     private function mapPrivacy($privacy)
     {
-        return config('constants.lab_privacy.' . ($privacy ?? 'yes'));
+        return config('constants.lab_privacy.'.($privacy ?? 'yes'));
     }
 
     private function mapMediaType($mediaType)
@@ -131,7 +130,7 @@ class Lab extends Command
     {
         $this->processGroupTags($lab, 'mode', [
             '196' => '4',
-            '197' => '5'
+            '197' => '5',
         ], '1');
     }
 
@@ -166,9 +165,9 @@ class Lab extends Command
             LabExternalLinks::where('lab_id', $lab->id)->delete();
             foreach ($socialLinks as $link) {
                 LabExternalLinks::create([
-                    'lab_id' => $link->lab_id,
+                    'lab_id'            => $link->lab_id,
                     'social_media_link' => $link->link_url,
-                    'social_link_id' => $link->social_link_id
+                    'social_link_id'    => $link->social_link_id,
                 ]);
             }
         }
@@ -181,10 +180,10 @@ class Lab extends Command
             LabAcheivement::updateOrCreate(
                 ['lab_id' => $achievement->lab_id],
                 [
-                    'achievement_name' => $achievement->achievement_name,
-                    'achievement_points' => $achievement->achievement_points,
+                    'achievement_name'      => $achievement->achievement_name,
+                    'achievement_points'    => $achievement->achievement_points,
                     'achievement_condition' => json_decode($achievement->achievement_condition),
-                    'achievement_image' => $achievement->achievement_image
+                    'achievement_image'     => $achievement->achievement_image,
                 ]
             );
         }
@@ -198,7 +197,7 @@ class Lab extends Command
 
         $tagValues = json_decode($groupTags, true) ?: [];
         LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => $typeMode])->delete();
-        
+
         foreach ($tagValues as $tag) {
             $modeValue = $mapping[$tag] ?? null;
             if ($modeValue) {

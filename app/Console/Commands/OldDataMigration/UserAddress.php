@@ -3,11 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User;
+use App\Models\UserAddress as ModelUserAddress;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
-use App\Models\User;
-use App\Models\UserAddress as ModelUserAddress;
 
 class UserAddress extends Command
 {
@@ -74,7 +74,7 @@ class UserAddress extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error during migration: ' . $e->getMessage());
+            $this->error('Error during migration: '.$e->getMessage());
         }
     }
 
@@ -82,6 +82,7 @@ class UserAddress extends Command
      * Parse date from timestamp or return null if invalid.
      *
      * @param mixed $timestamp
+     *
      * @return Carbon|null
      */
     private function parseDate($timestamp)

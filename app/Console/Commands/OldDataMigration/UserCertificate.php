@@ -3,11 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User;
+use App\Models\UserCertificate as ModelUserCertificate;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
-use App\Models\UserCertificate as ModelUserCertificate;
 
 class UserCertificate extends Command
 {
@@ -38,7 +38,7 @@ class UserCertificate extends Command
             DB::connection('mysql2')->table('user_certificates')->chunkById(1000, function ($userCertificates) {
                 $userIds = $userCertificates->pluck('user_id')->unique()->toArray();
                 $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
-                
+
                 foreach ($userCertificates as $singleUserCertificate) {
                     // Skip if the user does not exist
                     if (!in_array($singleUserCertificate->user_id, $existingUsers)) {
@@ -68,14 +68,15 @@ class UserCertificate extends Command
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: '.$e->getMessage());
         }
     }
 
     /**
      * Parse a timestamp or return null if empty.
      *
-     * @param  mixed $timestamp
+     * @param mixed $timestamp
+     *
      * @return \Carbon\Carbon|null
      */
     private function parseDate($timestamp)
