@@ -377,6 +377,7 @@ class OrganizationDashboardController extends AppBaseController
             // Check if we have a layout and return a response
             if ($fetchDashboardLayout && $fetchDashboardLayout->isNotEmpty()) {
                 $response = DashboardLayoutResource::collection($fetchDashboardLayout);
+
                 return $this->sendResponse($response, $message, 200);
             }
 
