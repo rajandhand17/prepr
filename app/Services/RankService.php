@@ -47,9 +47,10 @@ class RankService
         }
     }
 
-    public static function getRankById($id){
-        try{
-            return Rank::where('id',$id)->first();
+    public static function getRankById($id)
+    {
+        try {
+            return Rank::where('id', $id)->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
