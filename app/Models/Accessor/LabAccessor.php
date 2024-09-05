@@ -3,7 +3,6 @@
 namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
-use App\Models\LabSocialActivity;
 
 trait LabAccessor
 {

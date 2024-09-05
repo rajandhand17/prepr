@@ -3,7 +3,6 @@
 namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ChallengeSocialActivity;
 use App\Repositories\Api\Public\Scorm\ScormRepository;
 
 trait ChallengeAccessor
