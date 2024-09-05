@@ -374,6 +374,7 @@ class LabReportController extends AppBaseController
             if ($lab) {
                 $filename = sprintf('lab-report/%s-lab-excel.xlsx', $lab->slug);
                 Excel::store(new LabExport($lab), $filename, 's3');
+
                 return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 

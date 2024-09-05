@@ -462,6 +462,7 @@ class ChallengeReportController extends AppBaseController
                     $filename,
                     's3'
                 );
+
                 return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
