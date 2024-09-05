@@ -19,14 +19,14 @@ class UserExperienceService
             $insertRecords = [];
             foreach ($input['company'] as $key => $value) {
                 $userExperience = UserExperience::create(['user_id' => auth()->user()->id,
-                    'company' => $value,
-                    'position' => $input['position'][$key],
-                    'start_date' => $input['start_date'][$key],
-                    'end_date' => $input['end_date'][$key],
-                    'address' => $input['address'][$key],
-                    'state' => $input['state'][$key],
-                    'country' => $input['country'][$key],
-                    'description' => $input['description'][$key],
+                    'company'                                       => $value,
+                    'position'                                      => $input['position'][$key],
+                    'start_date'                                    => $input['start_date'][$key],
+                    'end_date'                                      => $input['end_date'][$key],
+                    'address'                                       => $input['address'][$key],
+                    'state'                                         => $input['state'][$key],
+                    'country'                                       => $input['country'][$key],
+                    'description'                                   => $input['description'][$key],
                 ]);
                 $insertRecords[] = $userExperience;
             }
@@ -81,14 +81,14 @@ class UserExperienceService
     {
         try {
             $resumeFile = $request->file('file');
-            $resumePath = 'uploads/personal_files/' . auth()->user()->id . '_' . $resumeFile->getClientOriginalName();
+            $resumePath = 'uploads/personal_files/'.auth()->user()->id.'_'.$resumeFile->getClientOriginalName();
             $storeResumePath = Storage::disk('s3')->put($resumePath, file_get_contents($resumeFile));
             $storeData = UserPersonalFile::updateOrCreate(
                 ['user_id' => auth()->user()->id, 'name' => $resumePath],
                 [
                     'original' => $resumeFile->getClientOriginalName(),
-                    'path' => 'uploads/personal_files',
-                    'public' => '1',
+                    'path'     => 'uploads/personal_files',
+                    'public'   => '1',
                 ]
             );
 
@@ -141,23 +141,23 @@ class UserExperienceService
                 foreach ($response['data']['employer'] as $key => $value) {
                     if ($value && isset($value['company_name']) && isset($value['role'])) {
                         $startDate = isset($value['from_year'], $value['from_month'])
-                            ? date('Y-m-d', strtotime($value['from_year'] . '-' . $value['from_month'] . '-01'))
+                            ? date('Y-m-d', strtotime($value['from_year'].'-'.$value['from_month'].'-01'))
                             : now()->toDateString();
 
                         $endDate = isset($value['to_year'], $value['to_month'])
-                            ? date('Y-m-d', strtotime($value['to_year'] . '-' . $value['to_month'] . '-01'))
+                            ? date('Y-m-d', strtotime($value['to_year'].'-'.$value['to_month'].'-01'))
                             : now()->toDateString();
                         $companyName = trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name'])));
                         $checkUserExperience = self::checkUserExperienceBasedOnTitle($companyName);
                         if ($checkUserExperience == null) {
                             UserExperience::create([
-                                'user_id' => $user->id,
-                                'company' => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
-                                'position' => trim(str_replace('&nbsp;', ' ', strip_tags($value['role']))),
-                                'start_date' => $startDate,
-                                'end_date' => $endDate,
-                                'country' => '',
-                                'state' => '',
+                                'user_id'     => $user->id,
+                                'company'     => trim(str_replace('&nbsp;', ' ', strip_tags($value['company_name']))),
+                                'position'    => trim(str_replace('&nbsp;', ' ', strip_tags($value['role']))),
+                                'start_date'  => $startDate,
+                                'end_date'    => $endDate,
+                                'country'     => '',
+                                'state'       => '',
                                 'description' => trim(str_replace('&nbsp;', ' ', strip_tags($value['description']))),
                             ]);
                         }
@@ -180,8 +180,8 @@ class UserExperienceService
             UserExperience::query()->where('user_id', $user->id)->forceDelete();
             foreach ($data as $item) {
                 UserExperience::create([
-                    'user_id' => $user->id,
-                    'company' => data_get($item, 'company', '-'),
+                    'user_id'  => $user->id,
+                    'company'  => data_get($item, 'company', '-'),
                     'position' => data_get($item, 'job_title', '-'),
                 ]);
             }

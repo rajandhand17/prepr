@@ -323,7 +323,7 @@ class ProfileController extends AppBaseController
     {
         try {
             $deleteFile = $this->profileRepository->fileDelete($id);
-            if($deleteFile){
+            if ($deleteFile) {
                 return $this->sendResponse(null, __('responses.successfully_deleted_file'));
             }
 
