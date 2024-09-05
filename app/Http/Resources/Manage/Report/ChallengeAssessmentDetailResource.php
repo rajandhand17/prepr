@@ -30,12 +30,11 @@ class ChallengeAssessmentDetailResource extends JsonResource
     {
         return $challengeAssessments->map(function ($challengeAssessment) {
             $challengeAssessmentCriteria = $challengeAssessment->challengeAssessmentCriteria;
-
             return [
                 'id'             => $challengeAssessment->id,
-                'criteria'       => $challengeAssessmentCriteria->title,
-                'weight'         => $challengeAssessmentCriteria->weight,
-                'score'          => $challengeAssessmentCriteria->score,
+                'criteria'       => $challengeAssessmentCriteria?->title,
+                'weight'         => $challengeAssessmentCriteria?->weight,
+                'score'          => $challengeAssessmentCriteria?->score,
                 'score_received' => $challengeAssessment->score,
                 'comment'        => $challengeAssessment->comment,
             ];
