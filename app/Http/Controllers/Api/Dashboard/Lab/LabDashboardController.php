@@ -338,9 +338,18 @@ class LabDashboardController extends AppBaseController
             $message = ($type != null) ? __('responses.update_lab_dashboard_detail') : __('responses.found_lab_dashboard_detail');
             $userData = auth()->user();
             $dashboardType = 'lab';
+            // Fetch the manager dashboard layout
             $fetchDashboardLayout = $this->labDashboardRepository->fetchDashboardLayout($userData, $dashboardType);
-            if ($fetchDashboardLayout->isNotEmpty()) {
-                return $this->sendResponse(DashboardLayoutResource::collection($fetchDashboardLayout), $message, 200);
+
+            // If layout is empty, store the static default layout
+            if (!$fetchDashboardLayout || $fetchDashboardLayout->isEmpty()) {
+                $fetchDashboardLayout = $this->labDashboardRepository->storeStaticDefaultLayout($userData, $dashboardType);
+            }
+
+            // Check if we have a layout and return a response
+            if ($fetchDashboardLayout && $fetchDashboardLayout->isNotEmpty()) {
+                $response = DashboardLayoutResource::collection($fetchDashboardLayout);
+                return $this->sendResponse($response, $message, 200);
             }
 
             return $this->sendError(__('responses.failed_found_lab_dashboard_detail'), 404);

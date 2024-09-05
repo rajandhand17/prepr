@@ -354,6 +354,17 @@ class OrganizationDashboardRepository implements OrganizationDashboardInterface
         }
     }
 
+    public function storeStaticDefaultLayout($userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->storeStaticDefaultLayout($userData, $dashboardType);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function updateDashboardLayout($request, $userData, $dashboardType)
     {
         try {
