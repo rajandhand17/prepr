@@ -13,6 +13,7 @@ use App\Http\Resources\Public\Scorm\ScormResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
+use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\LabProgramService;
@@ -357,6 +358,32 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        $privacy = ($this->privacy == '1') ? 'yes' : 'no';
+        $isActive = 'none';
+        if (auth('api')->check()) {
+            $isActive = 'yes';
+            if ($privacy == 'yes' && $join_status != 'Yes') {
+                $isActive = 'no';
+            }
+
+            $checkProjectStatus = ProjectService::checkUserChallengeStatus($this->id, auth('api')->user()->id);
+            if ($checkProjectStatus) {
+                switch ($checkProjectStatus->is_submitted) {
+                    case '0':
+                        $isActive = 'in_progress';
+                        break;
+
+                    case '1':
+                        $isActive = 'submitted';
+                        break;
+
+                    case '2':
+                        $isActive = 'late_submitted';
+                        break;
+                }
+            }
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -402,6 +429,7 @@ class ChallengeResource extends JsonResource
             'challenge_flexible_announcement'   => $challenge_flexible_announcement,
             'challenge_template'                => $challenge_template,
             'joined'                            => $join_status,
+            'is_active'                         => $isActive,
             'likes'                             => $this->likes()->count(),
             'shares'                            => $this->shares()->count(),
             'member_count'                      => $this->members()->count(),
