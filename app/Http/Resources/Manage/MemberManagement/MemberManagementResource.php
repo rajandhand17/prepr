@@ -4,11 +4,8 @@ namespace App\Http\Resources\Manage\MemberManagement;
 
 use App\Helpers\UtilityHelper;
 use App\Services\ModuleCompletionStatusService;
-<<<<<<< HEAD
 use App\Services\RankService;
-=======
 use App\Services\ProjectService;
->>>>>>> BetaDevelopment
 use App\Services\UserService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
