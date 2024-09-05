@@ -28,7 +28,7 @@ class MemberManagementResource extends JsonResource
         if ($user) {
             $this->invitee_name = $user->first_name.' '.$user->last_name;
             $username = $user->username;
-            $userRank=($user->user_rank!=null) ? $user->user_rank : null;
+            $userRank=($user->user_rank!=null) ? $user->user_rank : 0;
             $achievementCount=($user->achievement_count!=null) ? $user->achievement_count : 0;
         }
         $type = ($this->type == '0') ? 'Invitation' : (($this->type == '1') ? 'Join Request' : 'Auto Created');
