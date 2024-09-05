@@ -29,7 +29,6 @@ class MemberManagementResource extends JsonResource
             $userRank = ($user->user_rank != null) ? $user->user_rank : 0;
             $achievementCount = ($user->achievement_count != null) ? $user->achievement_count : 0;
         }
-        $type = ($this->type == '0') ? 'Invitation' : (($this->type == '1') ? 'Join Request' : 'Auto Created');
         $invite_types = [
             '0' => 'Email',
             '1' => 'Network',
@@ -107,12 +106,21 @@ class MemberManagementResource extends JsonResource
                 }
             }
         }
-
+        switch ($this->type) {
+            case '0':
+                $request_status = 'invited';
+                break;
+            case '1':
+                $request_status = 'join_request';
+                break;
+            case '2':
+                $request_status = 'auto_created';
+                break;
+        }
         return [
             'id'               => $this->uuid,
-            'type'             => $type,
             'invite_type'      => $invite_type,
-            'request_status'   => $this->type == '1' ? $invite_status : null,
+            'request_status'   => $request_status,
             'name'             => $this->invitee_name,
             'email'            => $this->email,
             'username'         => $username,
