@@ -23,7 +23,7 @@ class MemberManagementResource extends JsonResource
         $user = UserService::getUserByEmail($this->email);
        
         $username = null;
-        $userRank =null;
+        $userRank =0;
         $achievementCount=0;
         if ($user) {
             $this->invitee_name = $user->first_name.' '.$user->last_name;
