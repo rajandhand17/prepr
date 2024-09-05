@@ -446,8 +446,6 @@ class ChallengeReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function challengeExport(string $slug)
     {

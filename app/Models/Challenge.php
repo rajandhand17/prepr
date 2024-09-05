@@ -335,7 +335,7 @@ class Challenge extends Model
      */
     public function discussions(): HasMany
     {
-        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '2');
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '1');
     }
 
     /**

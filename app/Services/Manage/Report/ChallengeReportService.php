@@ -17,7 +17,7 @@ class ChallengeReportService
             /**
              * LAZY LOADING.
              */
-            $challenge->load(['challengeProgress','members.user.moduleCompletionStatus'])->loadCount('members','challengeProgress');
+            $challenge->load(['challengeProgress', 'members.user.moduleCompletionStatus'])->loadCount('members', 'challengeProgress');
             $challengeDates = $challenge->challenge_timelines;
 
             /**
@@ -116,7 +116,7 @@ class ChallengeReportService
             return [
                 'views'            => $challenge->views_count,
                 'discussion_posts' => $challenge->discussions_count,
-                'saves'            => $challenge->favouriteCount(),
+                'saves'            => $challenge->favouriteCount() ?? 0,
                 'share'            => $challenge->shares_count,
                 'saved_started'    => $savedAndStarted,
                 'shared_started'   => $sharedAndStarted,
@@ -576,7 +576,7 @@ class ChallengeReportService
         try {
             if (!$challenge->challenge_assessment) {
                 return [
-                    'assessor'                   => null,
+                    'assessor'                   => 0,
                     'project_assessed'           => 0,
                     'project_pending_assignment' => 0,
                     'winner_selected'            => 0,
@@ -869,7 +869,6 @@ class ChallengeReportService
             return false;
         }
     }
-
 
     public function fetchProjectsBasedOnChallenge($challengeId)
     {

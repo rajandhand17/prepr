@@ -286,8 +286,6 @@ class OrganizationReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function organizationExport(string $slug)
     {
