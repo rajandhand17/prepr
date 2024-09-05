@@ -383,6 +383,7 @@ class ChallengeResource extends JsonResource
                     break;
             }
         $source = "organization";
+        $source = 'organization';
 
         if ($this->is_auto_created == '1') {
             $source = 'onboarding challenge';
@@ -464,7 +465,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_story'              => $campusConnectStory,
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
             'scorm_url'                         => $this->formatted_scorm_url,
-            'source'                            => $source
+            'source'                            => $source,
         ];
     }
 }
