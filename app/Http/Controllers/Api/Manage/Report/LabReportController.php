@@ -372,10 +372,8 @@ class LabReportController extends AppBaseController
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                $download = Excel::download(new LabExport($lab), sprintf('%s-lab-excel.xlsx', $lab->slug));
                 $filename = sprintf('lab-report/%s-lab-excel.xlsx', $lab->slug);
-                Storage::disk('s3')->put($filename, $download);
-
+                Excel::store(new LabExport($lab), $filename, 's3');
                 return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
