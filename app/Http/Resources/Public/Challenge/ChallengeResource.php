@@ -403,7 +403,7 @@ class ChallengeResource extends JsonResource
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $is_authenticated_user ? $this->description : 'N/A',
             'scorm'                             => $is_authenticated_user ? new ScormResource($this->scorm) : 'N/A',
-            'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
+            'privacy'                           => $privacy,
             'media_type'                        => $this->media_type,
             'media'                             => $media,
             'status'                            => ($this->status == '0') ? 'draft' : 'published',
