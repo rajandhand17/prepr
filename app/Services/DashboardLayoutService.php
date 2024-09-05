@@ -139,7 +139,6 @@ class DashboardLayoutService
     public function storeStaticDefaultLayout($userData, $dashboardType)
     {
         try {
-
             switch ($dashboardType) {
                 case 'user':
                     $card_type = ['reports', 'continue-left', 'deadlines', 'leaderboard', 'achievement', 'my-challenges', 'my-labs', 'my-projects'];
@@ -165,6 +164,7 @@ class DashboardLayoutService
             $storeStaticDefaultLayout = self::updateDashboardLayout($request, $userData, $dashboardType);
             if ($storeStaticDefaultLayout) {
                 $fetchDashboardLayout = $this->fetchDashboardLayout($userData, $dashboardType);
+
                 return $fetchDashboardLayout;
             }
 

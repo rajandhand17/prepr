@@ -456,6 +456,7 @@ class UserDashboardController extends AppBaseController
             // Check if we have a layout and return a response
             if ($fetchUserDashboardLayout && $fetchUserDashboardLayout->isNotEmpty()) {
                 $response = DashboardLayoutResource::collection($fetchUserDashboardLayout);
+
                 return $this->sendResponse($response, $message, 200);
             }
 
