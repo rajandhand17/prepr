@@ -44,5 +44,7 @@ interface LabDashboardInterface
 
     public function fetchDashboardLayout($userData, $dashboardType);
 
+    public function storeStaticDefaultLayout($userData, $dashboardType);
+
     public function updateDashboardLayout($request, $userData, $dashboardType);
 }
