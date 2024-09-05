@@ -18,7 +18,9 @@ use App\Http\Resources\Manage\Report\Components\ResourceModuleResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\Report\Challenge\ChallengeReportRepository;
 use App\Repositories\Api\Project\ProjectRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +29,10 @@ class ChallengeReportController extends AppBaseController
 {
     public function __construct(
         protected ChallengeReportRepository $challengeReportRepository,
-        protected ChallengeRepository $challengeRepository,
-        protected ProjectRepository $projectRepository
-    ) {
+        protected ChallengeRepository       $challengeRepository,
+        protected ProjectRepository         $projectRepository
+    )
+    {
     }
 
     /**
@@ -453,13 +456,16 @@ class ChallengeReportController extends AppBaseController
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
 
             if ($challenge) {
-                return Excel::download(new ChallengeExport($challenge), sprintf('%s-challenge-excel.xlsx', $challenge->slug));
+                $download = Excel::download(new ChallengeExport($challenge),
+                    sprintf('%s-challenge-excel.xlsx', $challenge->slug));
+                $filename = sprintf('lab-report/%s-challenge-excel.xlsx', $challenge->slug);
+                Storage::disk('s3')->put($filename, $download);
+                return redirect(Storage::temporaryUrl($filename,Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
-
             return $this->sendError(__('responses.failed_to_export_challenge_details'), Response::HTTP_BAD_REQUEST);
         }
     }
