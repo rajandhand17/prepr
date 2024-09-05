@@ -83,7 +83,7 @@
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
         <div class="title">Password Reset Successfully</div>
-        <img class="image-container" src="CDN::asset('email/images/resetpassword.png')" alt="Image"><br>
+        <img class="image-container" src="{{ config('site-settings.aws_url') }}front/img/resetpassword.png" alt="Image"><br>
         <div class="message">
 			Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }}
             <br><br>

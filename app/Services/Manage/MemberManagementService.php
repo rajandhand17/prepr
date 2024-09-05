@@ -470,7 +470,7 @@ class MemberManagementService
 
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role];
+                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                             if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
                                 $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));
@@ -559,7 +559,6 @@ class MemberManagementService
         } catch (InvitationQuotaExceededException $e) {
             throw $e;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             DB::rollBack();
 

@@ -83,7 +83,7 @@
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
         <div class="title">You have been invited to join an {{$emailData['module_name']}}</div>
-        <img class="image-container" src="{{ $emailData['comp_image'] }}" alt="Image"><br>
+        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image"><br>
         <a href="{{ $emailData['slug'] }} " class="cta-button">Join Now</a>
         <div class="message">
             Dear {{ $emailData['invitee_name'] }},
