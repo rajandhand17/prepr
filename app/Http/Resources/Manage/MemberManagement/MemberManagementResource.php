@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Manage\MemberManagement;
 
-use App\Helpers\UtilityHelper;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\UserService;
