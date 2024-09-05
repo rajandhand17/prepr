@@ -54,7 +54,7 @@ class LabMembersExport implements FromCollection, withColumnWidths, WithStrictNu
             $this->getInvitationStatusName($row->invite_status),
             data_get($user, 'formatted_login_status'),
             data_get($user, 'labProgressName'),
-            data_get($user, 'userAchievements')->first() ? $user->userAchievements->first()->title : '-',
+            data_get($user, 'userAchievements')?->first() ? $user->userAchievements->first()->title : '-',
             data_get($user, 'challenges_progress_count', 0),
             data_get($user, 'challenge_paths_progress_count', 0),
             data_get($user, 'resources_modules_progresses_count', 0),
