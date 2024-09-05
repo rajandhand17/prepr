@@ -455,12 +455,13 @@ class ChallengeReportController extends AppBaseController
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
 
             if ($challenge) {
-                $download = Excel::download(
-                    new ChallengeExport($challenge),
-                    sprintf('%s-challenge-excel.xlsx', $challenge->slug)
-                );
                 $filename = sprintf('challenge-report/%s-challenge-excel.xlsx', $challenge->slug);
-                Storage::disk('s3')->put($filename, $download);
+
+                $download = Excel::store(
+                    new ChallengeExport($challenge),
+                    $filename,
+                    's3'
+                );
 
                 return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
