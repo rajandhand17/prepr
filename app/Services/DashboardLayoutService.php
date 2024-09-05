@@ -26,7 +26,7 @@ class DashboardLayoutService
                     break;
             }
 
-            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->orderby('position_index', 'ASC')->get();
+            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->orderByRaw('ISNULL(position_index), position_index ASC')->get();
 
             return $fetchUserDashboardLayout;
         } catch (Exception $e) {
