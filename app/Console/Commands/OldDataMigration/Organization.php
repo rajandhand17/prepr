@@ -137,7 +137,7 @@ class Organization extends Command
                     $organization_address->organization_id = $newOrganization->id;
                     $organization_address->latitude = isset($organization->latitude) ? $organization->latitude : null;
                     $organization_address->longitude = isset($organization->longitude) ? $organization->longitude : null;
-                    $organization_address->full_address = (isset($organizationDetails->address_one) && isset($organizationDetails->address_one)) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
+                    $organization_address->full_address = isset($organizationDetails->address_one) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
                     $organization_address->address_1 = isset($organizationDetails->address_one) ? $organizationDetails->address_one : null;
                     $organization_address->address_2 = isset($organizationDetails->city) ? $organizationDetails->city : null;
                     $organization_address->city = isset($organizationDetails->city) ? $organizationDetails->city : null;
