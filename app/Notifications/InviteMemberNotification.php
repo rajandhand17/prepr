@@ -40,9 +40,19 @@ class InviteMemberNotification extends Notification implements ShouldQueue
     {
         $fetchDetail = ProjectMemberManagement::where('email', $this->emailData['invitee_email'])->update(['email_status' => '1']);
 
-        return (new MailMessage())
+        if ($this->emailData['component'] == 'organization') {
+            return (new MailMessage())
+            ->subject($this->emailData['subject'])
+            ->view('email.member_manager_invite_in_organisation', ['emailData' => $this->emailData]);
+        } elseif ($this->emailData['component'] == 'project') {
+            return (new MailMessage())
+            ->subject($this->emailData['subject'])
+            ->view('email.member_manager_invite_project_users', ['emailData' => $this->emailData]);
+        } else {
+            return (new MailMessage())
             ->subject($this->emailData['subject'])
             ->view('email.member_manager_invite_users', ['emailData' => $this->emailData]);
+        }
     }
 
     /**

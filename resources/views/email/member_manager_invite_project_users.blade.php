@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>password reset</title>
+    <title>Invitation Email</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
     <style>
         * {
@@ -82,23 +82,22 @@
 <body>
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
-        <div class="title">Password Reset Successfully</div>
-        <img class="image-container" src="{{ config('site-settings.aws_url') }}front/img/resetpassword.png" alt="Image"><br>
+        <div class="title">You've been invited to join a Team Project: {{$emailData['comp_title']}}</div>
+        <img class="image-container" src="{{ $emailData['comp_image'] }}" alt="Project Image"><br>
+        <a href="{{ $emailData['slug'] }} " class="cta-button">Join {{$emailData['module_name']}}</a>
         <div class="message">
-			Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }}
+            Dear {{ $emailData['invitee_name'] }},
             <br><br>
-			You are receiving this email because your PreprLabs password is changed. If you have not requested this reset, please email us at support@prepr.org for assistance.
-			<br><br>
+            You have been invited to join a project on the Prepr Network: {{$emailData['comp_title'] }}. Feel free to write us at support@prepr.org for any assistance. We will be happy to help. 
+           <br><br>
             Regards,
             <br>
             Prepr team
         </div>
         <div class="footer">
-            ©2023 Preprlabs. All rights reserved.
-            <div class="contact">support@prepr.org</div>
-            This email message was auto-generated. If you need assistance please contact us.
+            This email message was auto-generated. If you need assistance please contact  <div class="contact">support@prepr.org</div>.
+			©2023 Preprlabs. All rights reserved.
         </div>
     </div>
 </body>
 </html>
-
