@@ -562,7 +562,7 @@ class OrganizationService
                 'plan_name'                     => $planName,
                 'plan_end_date'                 => UtilityHelper::formatDateTime($organizationData->chargebee_details->trial_end_date),
                 'lab_limit'                     => $labLimit,
-                'lab_count'                     => $organizationData->labs_count->count(),
+                'lab_count'                     => $organizationData->created_labs_count(),
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $organizationData->lab_programs_count->count(),
                 'pre_build_lab_limit'           => $preBuildLab,
