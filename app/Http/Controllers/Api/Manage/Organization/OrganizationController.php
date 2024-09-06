@@ -152,6 +152,7 @@ class OrganizationController extends AppBaseController
             }
             if ($organization) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
+                $this->organizationRepository->incrementView($organization);
 
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }

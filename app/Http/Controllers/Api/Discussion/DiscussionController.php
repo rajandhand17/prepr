@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Discussion;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\AddCommentRequest;
@@ -63,11 +64,18 @@ class DiscussionController extends AppBaseController
             $getComponentId = $checkComponentBasedOnSlug->id;
             $addComment = $this->discussionRepository->addComment($component, $request, $getComponentId);
             if ($addComment) {
+                // LEARNING POINT NOTIFICATION
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    [auth()->id()],
+                    data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'type'),
+                    data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'points')
+                );
+
                 return $this->sendResponse(DiscussionResource::make($addComment), __('responses.add_comment_successfully'));
             }
 
             return $this->sendError(__('responses.add_comment_failed'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -124,7 +132,7 @@ class DiscussionController extends AppBaseController
             }
 
             return $this->sendError(__('responses.handler_bad_request'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
@@ -149,7 +157,7 @@ class DiscussionController extends AppBaseController
             }
 
             return $this->sendError(__('responses.send_error'), 400);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

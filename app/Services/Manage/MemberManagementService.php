@@ -9,6 +9,7 @@ use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\LabHistoryService;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
@@ -115,6 +116,23 @@ class MemberManagementService
                     $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
                 }
             }
+            if ($request->has('request_status') && !empty($request->request_status)) {
+                $request_status = null;
+                switch ($request->request_status) {
+                    case 'invited':
+                        $request_status = config('constants.member_management_request_status.invited');
+                        break;
+                    case 'join_request':
+                        $request_status = config('constants.member_management_request_status.join_request');
+                        break;
+                    case 'auto_created':
+                        $request_status = config('constants.member_management_request_status.auto_created');
+                        break;
+                }
+                if ($request_status != null) {
+                    $componentCollectionObject = $componentCollectionObject->where('type', $request_status);
+                }
+            }
             if ($request->has('invite_type') && !empty($request->invite_type)) {
                 $invite_type = null;
                 switch ($request->invite_type) {
@@ -199,6 +217,34 @@ class MemberManagementService
                 } else {
                     $componentCollectionObject = collect();
                 }
+            }
+
+            if (isset($request->progress_status)) {
+                switch ($request->component) {
+                    case 'lab':
+                        $component = '0';
+                        break;
+                    case 'lab-program':
+                        $component = '1';
+                        break;
+                }
+                switch ($request->progress_status) {
+                    case 'not_started':
+                        $module_status = '0';
+                        break;
+                    case 'in_progress':
+                        $module_status = '1';
+                        break;
+                    case 'completed':
+                        $module_status = '2';
+                        break;
+                }
+                $moduleIds = $componentCollectionObject->pluck('module_id');
+                $emailIds = $componentCollectionObject->pluck('email');
+                $fetchUserIds = UserService::getUserIdsByEmail($emailIds);
+                $getUserIds = ModuleCompletionStatusService::fetchComponentProgressBasedOnIds($moduleIds, $component, $module_status, $fetchUserIds);
+                $userEmails = UserService::getUserEmailsById($getUserIds->pluck('user_id'));
+                $componentCollectionObject = $componentCollectionObject->whereIn('email', $userEmails);
             }
 
             return $componentCollectionObject;
@@ -388,18 +434,22 @@ class MemberManagementService
             $invited_emails = [];
             switch ($component) {
                 case 'organization':
+                    $module_name = 'Organization';
                     $module_type = config('constants.member_management_component_type.organization');
                     $addedMemberResponse = __('responses.create_member_manger_success_organization');
                     break;
                 case 'lab':
+                    $module_name = 'Lab';
                     $module_type = config('constants.member_management_component_type.lab');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab');
                     break;
                 case 'challenge':
+                    $module_name = 'Challenge';
                     $module_type = config('constants.member_management_component_type.challenge');
                     $addedMemberResponse = __('responses.create_member_manger_success_challenge');
                     break;
                 case 'lab-program':
+                    $module_name = 'Lab Program';
                     $module_type = config('constants.member_management_component_type.lab_program');
                     $addedMemberResponse = __('responses.create_member_manger_success_lab_program');
                     break;
@@ -527,7 +577,7 @@ class MemberManagementService
 
                             MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                             if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
                                 $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));

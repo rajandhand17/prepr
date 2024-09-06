@@ -163,6 +163,8 @@ class ChallengeController extends AppBaseController
                     }
                 }
 
+                $this->challengeRepository->incrementView($challenge);
+
                 return $this->sendResponse(ChallengeResource::make($challenge), __('responses.found_challenge_detail'), 200);
             }
 

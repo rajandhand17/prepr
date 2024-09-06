@@ -769,4 +769,15 @@ class ChallengeRepository implements ChallengeInterface
             return false;
         }
     }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            return $this->challengeService->incrementView($challenge);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
