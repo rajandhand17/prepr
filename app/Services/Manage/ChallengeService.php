@@ -180,7 +180,7 @@ class ChallengeService
             if ($request->has('source') && !empty($request->source)) {
                 switch ($request->source) {
                     case 'onboarding_challenges':
-                        $challenge_list = $challenge_list->where('is_auto_created', 1);
+                        $challenge_list = $challenge_list->where('is_auto_created', '1');
                         break;
 
                     case 'created_by_you':
@@ -188,11 +188,11 @@ class ChallengeService
                         break;
 
                     case 'created_by_organizations':
-                        $challenge_list = $challenge_list->where('organization_id', auth()->user()->preferred_organization);
+                        $challenge_list = $challenge_list->where('organization_id', auth()->user()->preferred_organization)->where('user_id', '!=', auth()->user()->id);
                         break;
 
                     case 'cloned_by_you':
-                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', 1);
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', '1');
                         break;
                 }
             }
@@ -675,6 +675,7 @@ class ChallengeService
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->allow_winner_change = '0';
+            $clonedChallenge->is_pre_built = '0';
             $clonedChallenge->save();
 
             return $clonedChallenge;
