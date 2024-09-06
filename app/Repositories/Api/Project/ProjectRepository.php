@@ -454,8 +454,8 @@ class ProjectRepository implements ProjectInterface
                 // SEND NOTIFICATIONS
                 LearningPointsHelper::sendBulkLearningPointNotification(
                     $fetchAcceptedMemberIds,
-                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT,'type'),
-                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT,'points')
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'points')
                 );
 
                 return [

@@ -9,15 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notification extends Model
 {
-    use HasFactory, NotificationAccessor;
+    use HasFactory;
+    use NotificationAccessor;
 
     protected $casts = [
-        'id' => 'string',
-        'data' => 'array'
+        'id'   => 'string',
+        'data' => 'array',
     ];
 
     /**
      * @param $query
+     *
      * @return NotificationBuilder
      */
     public function newEloquentBuilder($query): NotificationBuilder

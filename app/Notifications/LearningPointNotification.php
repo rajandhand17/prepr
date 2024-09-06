@@ -56,7 +56,7 @@ class LearningPointNotification extends Notification implements ShouldQueue
     {
         return [
             'learning_points_obtained' => $this->learningPointObtained,
-            'learning_point_type' => $this->learningPointType,
+            'learning_point_type'      => $this->learningPointType,
         ];
     }
 }

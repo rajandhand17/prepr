@@ -42,13 +42,12 @@ class MemberManagement extends Model
     public static function booted()
     {
         static::created(function (MemberManagement $management) {
-
             if (in_array($management->module_type, ['0', '1', '2'])) { // NOTIFY ONLY FOR CHALLENGE LAB AND ORGANIZATION
                 /** HASH MAP FOR NOTIFICATION */
                 $notificationTypeMapping = [
                     '0' => NotificationTypes::ORGANIZATION,
                     '1' => NotificationTypes::LAB,
-                    '2' => NotificationTypes::CHALLENGE
+                    '2' => NotificationTypes::CHALLENGE,
                 ];
                 /** @var User|null $user */
                 $user = $management->user;
@@ -57,11 +56,10 @@ class MemberManagement extends Model
                     data_get($management, 'module_id'),
                     data_get($management, 'inviter_id'),
                     $management->module_type === '0' ? [
-                        'role' => data_get($management, 'role')
+                        'role' => data_get($management, 'role'),
                     ] : null
                 ));
             }
-
         });
     }
 

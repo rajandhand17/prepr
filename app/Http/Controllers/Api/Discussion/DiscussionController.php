@@ -37,7 +37,7 @@ class DiscussionController extends AppBaseController
             if ($list->count() > 0) {
                 $response = [
                     'total_discussion_count' => UtilityHelper::getComponentTotalDiscussions($component, $getComponentId),
-                    'list' => DiscussionResource::collection($list),
+                    'list'                   => DiscussionResource::collection($list),
                 ];
 
                 return $this->sendResponse($response, __('responses.comments_lists_successfully'));
@@ -70,6 +70,7 @@ class DiscussionController extends AppBaseController
                     data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'type'),
                     data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'points')
                 );
+
                 return $this->sendResponse(DiscussionResource::make($addComment), __('responses.add_comment_successfully'));
             }
 

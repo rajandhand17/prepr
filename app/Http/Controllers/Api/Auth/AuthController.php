@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Helpers\LearningPointsHelper;
 use App\Helpers\MagnetHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -25,7 +24,6 @@ use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Models\UserActivity;
-use App\Notifications\LearningPointNotification;
 use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController

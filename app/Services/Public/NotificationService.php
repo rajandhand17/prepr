@@ -9,7 +9,6 @@ use Exception;
 
 class NotificationService
 {
-
     /**
      * @param $resource
      *
@@ -19,11 +18,11 @@ class NotificationService
     {
         try {
             return [
-                'total_count' => $resource->total(),
-                'per_page' => $resource->perPage(),
-                'count' => $resource->count(),
+                'total_count'  => $resource->total(),
+                'per_page'     => $resource->perPage(),
+                'count'        => $resource->count(),
                 'current_page' => $resource->currentPage(),
-                'total_pages' => $resource->lastPage(),
+                'total_pages'  => $resource->lastPage(),
             ];
         } catch (Exception $exception) {
             return false;
@@ -31,8 +30,9 @@ class NotificationService
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $filters
+     *
      * @return false|array
      */
     public function fetchNotification(User $user, array $filters): false|array
@@ -61,38 +61,45 @@ class NotificationService
             ];
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $ids
+     *
      * @return bool
      */
     public function markAsRead(User $user, array $ids): bool
     {
         try {
             $user->notifications()->whereIn('id', $ids)->read();
+
             return true;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $ids
+     *
      * @return bool
      */
     public function delete(User $user, array $ids): bool
     {
         try {
             $user->notifications()->whereIn('id', $ids)->delete();
+
             return true;
         } catch (Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

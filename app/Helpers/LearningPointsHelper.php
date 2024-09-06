@@ -36,6 +36,7 @@ class LearningPointsHelper
             });
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return false;
         }
     }

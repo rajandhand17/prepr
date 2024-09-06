@@ -426,11 +426,11 @@ class ProjectMemberManagementService
             }
 
             // LEARNING POINT NOTIFICATION
-            if($action === 'accept'){
+            if ($action === 'accept') {
                 LearningPointsHelper::sendBulkLearningPointNotification(
                     $inviterIds,
-                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT,'type'),
-                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT,'points')
+                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'points')
                 );
             }
 
@@ -658,11 +658,11 @@ class ProjectMemberManagementService
                 ProjectHistoryService::storeHistory($projectData->id, auth()->user()->id, $activity);
                 $project_member->update(['inviter_id' => auth()->user()->id, 'invite_status' => $invite_status, 'invitee_name' => $user->full_name]);
                 // LEARNING POINT NOTIFICATION
-                if($action === 'accept'){
+                if ($action === 'accept') {
                     LearningPointsHelper::sendBulkLearningPointNotification(
                         [$project_member->inviter_id],
-                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT,'type'),
-                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT,'points')
+                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'type'),
+                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'points')
                     );
                 }
             }

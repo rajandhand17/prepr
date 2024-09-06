@@ -18,6 +18,7 @@ class NotificationBuilder extends Builder
                 NotificationTypes::LEARNING_POINT,
             ]);
         }
+
         return $this->where('type', '=', $type);
     }
 }

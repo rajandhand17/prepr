@@ -59,7 +59,6 @@ class MemberInvitationNotification extends Notification implements ShouldQueue
         return $this->moduleType;
     }
 
-
     /**
      * Get the array representation of the notification.
      *
@@ -68,10 +67,10 @@ class MemberInvitationNotification extends Notification implements ShouldQueue
     public function toDatabase(): array
     {
         $data = [
-            'module_type' => $this->moduleType,
-            'module_id' => $this->moduleId,
-            'type' => data_get(NotificationTypes::MEMBER_INVITATION, $this->moduleType),
-            'invitation_from_id' => $this->invitationFromId
+            'module_type'        => $this->moduleType,
+            'module_id'          => $this->moduleId,
+            'type'               => data_get(NotificationTypes::MEMBER_INVITATION, $this->moduleType),
+            'invitation_from_id' => $this->invitationFromId,
         ];
 
         if ($this->extra) {

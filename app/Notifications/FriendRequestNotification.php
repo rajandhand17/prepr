@@ -20,7 +20,6 @@ class FriendRequestNotification extends Notification implements ShouldQueue
      */
     protected int $friendRequestId;
 
-
     /**
      * Create a new notification instance.
      */
@@ -48,7 +47,6 @@ class FriendRequestNotification extends Notification implements ShouldQueue
         return NotificationTypes::FRIEND_REQUEST;
     }
 
-
     /**
      * Get the array representation of the notification.
      *
@@ -58,7 +56,7 @@ class FriendRequestNotification extends Notification implements ShouldQueue
     {
         return [
             'friend_request_from' => $this->requestFromId,
-            'friend_request_id' => $this->friendRequestId
+            'friend_request_id'   => $this->friendRequestId,
         ];
     }
 }

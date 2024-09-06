@@ -11,7 +11,6 @@ use App\Notifications\NotificationTypes;
 
 trait NotificationAccessor
 {
-
     public function getFriendRequestFromAttribute(): ?array
     {
         if ($this->type === NotificationTypes::FRIEND_REQUEST) {
@@ -24,21 +23,22 @@ trait NotificationAccessor
                 $requestStatusMap = [
                     '0' => 'pending',
                     '1' => 'accepted',
-                    '2' => 'rejected'
+                    '2' => 'rejected',
                 ];
 
                 return [
                     'friend_request_status' => data_get($requestStatusMap, data_get($friend, 'status')),
-                    'request_from' => ['id' => data_get($user, 'id'),
-                        'full_name' => data_get($user, 'full_name'),
-                        'first_name' => data_get($user, 'first_name'),
-                        'last_name' => data_get($user, 'last_name'),
-                        'username' => data_get($user, 'username'),
-                        'email' => data_get($user, 'email'),
-                        'profile_image' => data_get($user, 'profile_image'),]
+                    'request_from'          => ['id' => data_get($user, 'id'),
+                        'full_name'                  => data_get($user, 'full_name'),
+                        'first_name'                 => data_get($user, 'first_name'),
+                        'last_name'                  => data_get($user, 'last_name'),
+                        'username'                   => data_get($user, 'username'),
+                        'email'                      => data_get($user, 'email'),
+                        'profile_image'              => data_get($user, 'profile_image'), ],
                 ];
             }
         }
+
         return null;
     }
 
@@ -54,19 +54,20 @@ trait NotificationAccessor
                 if ($challenge && $user) {
                     return [
                         'challenge' => ['id' => data_get($challenge, 'id'),
-                            'slug' => data_get($challenge, 'slug'),
-                            'title' => data_get($challenge, 'title')],
+                            'slug'           => data_get($challenge, 'slug'),
+                            'title'          => data_get($challenge, 'title')],
                         'invitation_from' => ['id' => data_get($user, 'id'),
-                            'full_name' => data_get($user, 'full_name'),
-                            'first_name' => data_get($user, 'first_name'),
-                            'last_name' => data_get($user, 'last_name'),
-                            'username' => data_get($user, 'username'),
-                            'email' => data_get($user, 'email'),
-                            'profile_image' => data_get($user, 'profile_image'),]
+                            'full_name'            => data_get($user, 'full_name'),
+                            'first_name'           => data_get($user, 'first_name'),
+                            'last_name'            => data_get($user, 'last_name'),
+                            'username'             => data_get($user, 'username'),
+                            'email'                => data_get($user, 'email'),
+                            'profile_image'        => data_get($user, 'profile_image'), ],
                     ];
                 }
             }
         }
+
         return null;
     }
 
@@ -83,19 +84,20 @@ trait NotificationAccessor
                 if ($organization && $user) {
                     return [
                         'organization' => ['id' => data_get($organization, 'id'),
-                            'slug' => data_get($organization, 'slug'),
-                            'title' => data_get($organization, 'title')],
+                            'slug'              => data_get($organization, 'slug'),
+                            'title'             => data_get($organization, 'title')],
                         'invitation_from' => ['id' => data_get($user, 'id'),
-                            'full_name' => data_get($user, 'full_name'),
-                            'first_name' => data_get($user, 'first_name'),
-                            'last_name' => data_get($user, 'last_name'),
-                            'username' => data_get($user, 'username'),
-                            'email' => data_get($user, 'email'),
-                            'profile_image' => data_get($user, 'profile_image'),]
+                            'full_name'            => data_get($user, 'full_name'),
+                            'first_name'           => data_get($user, 'first_name'),
+                            'last_name'            => data_get($user, 'last_name'),
+                            'username'             => data_get($user, 'username'),
+                            'email'                => data_get($user, 'email'),
+                            'profile_image'        => data_get($user, 'profile_image'), ],
                     ];
                 }
             }
         }
+
         return null;
     }
 
@@ -112,19 +114,20 @@ trait NotificationAccessor
                 if ($lab && $user) {
                     return [
                         'lab' => ['id' => data_get($lab, 'id'),
-                            'slug' => data_get($lab, 'slug'),
-                            'title' => data_get($lab, 'title')],
+                            'slug'     => data_get($lab, 'slug'),
+                            'title'    => data_get($lab, 'title')],
                         'invitation_from' => ['id' => data_get($user, 'id'),
-                            'full_name' => data_get($user, 'full_name'),
-                            'first_name' => data_get($user, 'first_name'),
-                            'username' => data_get($user, 'username'),
-                            'last_name' => data_get($user, 'last_name'),
-                            'email' => data_get($user, 'email'),
-                            'profile_image' => data_get($user, 'profile_image'),]
+                            'full_name'            => data_get($user, 'full_name'),
+                            'first_name'           => data_get($user, 'first_name'),
+                            'username'             => data_get($user, 'username'),
+                            'last_name'            => data_get($user, 'last_name'),
+                            'email'                => data_get($user, 'email'),
+                            'profile_image'        => data_get($user, 'profile_image'), ],
                     ];
                 }
             }
         }
+
         return null;
     }
 }

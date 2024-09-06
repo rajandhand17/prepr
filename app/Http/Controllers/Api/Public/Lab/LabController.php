@@ -172,9 +172,10 @@ class LabController extends AppBaseController
                     // SEND NOTIFICATIONS
                     LearningPointsHelper::sendBulkLearningPointNotification(
                         [auth()->id()],
-                        data_get(LearningPointsHelper::JOIN_A_LAB,'type'),
-                        data_get(LearningPointsHelper::JOIN_A_LAB,'points')
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'type'),
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'points')
                     );
+
                     return $this->sendResponse([], __('responses.join_lab_successfully'));
                 }
 
