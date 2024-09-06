@@ -5,6 +5,7 @@ namespace App\Http\Resources\Manage;
 use App\Http\Resources\Manage\MemberManagement\MemberManagementResource;
 use App\Services\SkillService;
 use Illuminate\Http\Request;
+use App\Http\Resources\Project\SubmittedProjectResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChallengePathAssociatedChallengeResource extends JsonResource
@@ -75,6 +76,7 @@ class ChallengePathAssociatedChallengeResource extends JsonResource
             'liked'                             => $this->liked(),
             'favourite'                         => $this->favourite(),
             'skills'                            => $skills,
+            'project_submitted'                 => SubmittedProjectResource::collection($this->submitted_projects)
         ];
     }
 }
