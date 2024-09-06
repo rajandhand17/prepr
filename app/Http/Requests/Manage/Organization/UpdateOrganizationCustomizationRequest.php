@@ -35,7 +35,7 @@ class UpdateOrganizationCustomizationRequest extends FormRequest
             'enable_custom_login_and_registration'      => 'nullable|in:yes,no,none',
             'use_main_org_logo'                         => 'required_if:enable_custom_login_and_registration,yes|in:yes,no',
             'custom_logo_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|',
-            'custom_hero_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|',
+            'custom_hero_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120|',
             'custom_background_color'                   => ['nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
         ];
 
@@ -62,7 +62,7 @@ class UpdateOrganizationCustomizationRequest extends FormRequest
             'custom_logo_image.max'                             => __('responses.mimes_image_max'),
             'custom_hero_image.image'                           => __('responses.type_image'),
             'custom_hero_image.mimes'                           => __('responses.mimes_image'),
-            'custom_hero_image.max'                             => __('responses.mimes_image_max'),
+            'custom_hero_image.max'                             => __('responses.max_image_5_mb'),
         ];
     }
 }

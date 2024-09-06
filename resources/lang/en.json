@@ -121,6 +121,7 @@
     "responses.cover_image_mimes_image": "Allowed cover image extensions are jpeg,jpg,png, or webp",
     "responses.cover_image_mimes_image_max": "Maximum cover image size allowed is 1 mb",
     "responses.max_image_1_5_mb": "Maximum image size allowed is 1.5 mb",
+    "responses.max_image_5_mb": "Maximum image size allowed is 5 mb",
     "responses.mimes_file_max": "Maximum file size allowed is 1 mb",
     "responses.category_required": "This category field is required",
     "responses.category_numeric": "Category should be in numeric",

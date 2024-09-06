@@ -1352,7 +1352,7 @@ class MasterController extends AppBaseController
         try {
             $getCountryList = $this->masterRepository->getCountries($request);
             if ($getCountryList->isNotEmpty()) {
-                return $this->sendResponse(CountryResource::make($getCountryList), __('responses.country_list_fetched_successfully'));
+                return $this->sendResponse(CountryResource::collection($getCountryList), __('responses.country_list_fetched_successfully'));
             }
 
             return $this->sendError(__('responses.countries_fetched_failed'), 404);
