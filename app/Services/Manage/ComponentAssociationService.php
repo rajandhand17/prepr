@@ -470,7 +470,7 @@ class ComponentAssociationService
                     $sequence = ComponentAssociation::where([
                         ['challenge_path_id', '=', $challengePathId],
                         ['challenge_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first();
+                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
                     foreach ($newComponentAssociation as $challenge_id) {
                         $sequence++;
                         $labSkillsGroupsStack = new ComponentAssociation();
