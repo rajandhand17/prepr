@@ -384,15 +384,15 @@ class ChallengeResource extends JsonResource
             }
         }
 
-            $source = 'Created By Organization';
+        $source = 'Created By Organization';
 
-            if ($this->is_auto_created == '1') {
-                $source = 'Onboarding Challenge';
-            } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
-                $source = 'Cloned By You';
-            } elseif ($this->user_id == auth('api')->user()->id) {
-                $source = 'Created By You';
-            }
+        if ($this->is_auto_created == '1') {
+            $source = 'Onboarding Challenge';
+        } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
+            $source = 'Cloned By You';
+        } elseif ($this->user_id == auth('api')->user()->id) {
+            $source = 'Created By You';
+        }
 
         return [
             'id'                                => $this->uuid,
