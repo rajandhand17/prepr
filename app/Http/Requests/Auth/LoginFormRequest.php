@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rule;
 
 class LoginFormRequest extends FormRequest
 {
@@ -27,9 +27,25 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'    => 'required|email|max:50|'.Rule::exists('users', 'email')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            }),
+            'email' => [
+                'required',
+                'string',
+                'max:50',
+                function ($attribute, $value, $fail) {
+                    // Check if the value is a valid email
+                    if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                        // If it's an email, check if it exists in the `email` field
+                        if (!User::where('email', $value)->whereNull('deleted_at')->exists()) {
+                            $fail(__('responses.not_exists_email'));
+                        }
+                    } else {
+                        // If it's not an email, check if it exists as a username
+                        if (!User::where('username', $value)->whereNull('deleted_at')->exists()) {
+                            $fail(__('responses.not_exists_username'));
+                        }
+                    }
+                },
+            ],
             'password' => 'required|min:6',
         ];
     }
