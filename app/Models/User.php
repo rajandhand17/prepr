@@ -270,7 +270,9 @@ class User extends Authenticatable
     {
         try {
             /**checking user exists or not */
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+            ->orWhere('username', $request->email)
+            ->first();
             if ($user->verified_user == 0) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
@@ -302,7 +304,9 @@ class User extends Authenticatable
 
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
-                    $data = User::where('email', $request->email)->first();
+                    $data =  $user = User::where('email', $request->email)
+                    ->orWhere('username', $request->email)
+                    ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
                     MixpanelHelper::mixpanel_tracking(
                         config('mixpanel.login_success'),
