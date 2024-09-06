@@ -156,8 +156,6 @@ class LabMarketplaceController extends AppBaseController
                 return $this->sendError(__('responses.lab_marketplace_already_redeemed'), 404);
             }
 
-
-
             $labRedeem = $this->labMarketplaceRepository->labRedeem($labMarketplace->id, $organization->id);
             if ($labRedeem) {
                 return $this->sendResponse(LabResource::make($labRedeem), __('responses.lab_marketplace_redeemed'), 200);

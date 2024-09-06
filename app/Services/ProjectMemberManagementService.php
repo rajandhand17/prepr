@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
@@ -289,7 +290,7 @@ class ProjectMemberManagementService
                             self::updateParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
                         }
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
-                        $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                        $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => 'project', 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $projectData->title, 'comp_image' => $projectData->media, 'module_name' => 'Project', 'role' => $member['role'] ?? $request->role];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
 
                         $user = UserService::getUserById(auth()->user()->id);
@@ -410,7 +411,10 @@ class ProjectMemberManagementService
             }
 
             $projectMemberData = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $request->email, 'invite_status' => '2', 'invite_type' => '3'])->get();
+
+            $inviterIds = []; // LEARNING POINT NOTIFICATION
             foreach ($projectMemberData as $projectMember) {
+                $inviterIds[] = $projectMember->inviter_id; // LEARNING POINT NOTIFICATION
                 $user = UserService::getUserByEmail($request->email);
                 $projectMember->invite_status = $invite_status;
                 $projectMember->inviter_id = auth()->user()->id;
@@ -419,6 +423,15 @@ class ProjectMemberManagementService
                 $user = UserService::getUserByEmail($request->email);
                 $activity = auth()->user()->full_name.' '.__('responses.project_updated_member_activity').' '.$user->full_name;
                 ProjectHistoryService::storeHistory($projectData->id, auth()->user()->id, $activity);
+            }
+
+            // LEARNING POINT NOTIFICATION
+            if ($action === 'accept') {
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    $inviterIds,
+                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'points')
+                );
             }
 
             return true;
@@ -644,6 +657,14 @@ class ProjectMemberManagementService
                 $activity = auth()->user()->full_name.' '.__('responses.project_updated_member_activity').' '.$user->full_name;
                 ProjectHistoryService::storeHistory($projectData->id, auth()->user()->id, $activity);
                 $project_member->update(['inviter_id' => auth()->user()->id, 'invite_status' => $invite_status, 'invitee_name' => $user->full_name]);
+                // LEARNING POINT NOTIFICATION
+                if ($action === 'accept') {
+                    LearningPointsHelper::sendBulkLearningPointNotification(
+                        [$project_member->inviter_id],
+                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'type'),
+                        data_get(LearningPointsHelper::INVITE_MEMBER_TO_A_PROJECT, 'points')
+                    );
+                }
             }
 
             return true;

@@ -186,7 +186,8 @@ class LabMarketplaceService
     public function getLabRedeemCountBasedOnOrganization($organizationId)
     {
         try {
-            $redeemedLabsCount =  LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
+            $redeemedLabsCount = LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
+
             return $redeemedLabsCount;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

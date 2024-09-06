@@ -22,7 +22,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ChallengeReportController extends AppBaseController
@@ -409,7 +408,7 @@ class ChallengeReportController extends AppBaseController
                     ], __('Challenge Assessment'));
                 }
 
-                return $this->sendResponse($data, __('Challenge Assessment.'));
+                return $this->sendResponse($data, __('Challenge Assessment Projects.'));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), Response::HTTP_NOT_FOUND);
@@ -446,8 +445,6 @@ class ChallengeReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function challengeExport(string $slug)
     {
@@ -457,7 +454,7 @@ class ChallengeReportController extends AppBaseController
             if ($challenge) {
                 $filename = sprintf('challenge-report/%s-challenge-excel.xlsx', $challenge->slug);
 
-                $download = Excel::store(
+                Excel::store(
                     new ChallengeExport($challenge),
                     $filename,
                     's3'

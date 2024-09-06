@@ -147,7 +147,6 @@ class Organization extends LaratrustTeam
         return $totalLabs - $preBuiltLabs;
     }
 
-
     public function lab_programs_count()
     {
         return $this->hasMany(LabProgram::class, 'organization_id', 'id');

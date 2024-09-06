@@ -384,6 +384,16 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        $source = 'Created By Organization';
+
+        if ($this->is_auto_created == '1') {
+            $source = 'Onboarding Challenge';
+        } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
+            $source = 'Cloned By You';
+        } elseif ($this->user_id == auth('api')->user()->id) {
+            $source = 'Created By You';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -456,6 +466,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_story'              => $campusConnectStory,
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
             'scorm_url'                         => $this->formatted_scorm_url,
+            'source'                            => $source,
         ];
     }
 }

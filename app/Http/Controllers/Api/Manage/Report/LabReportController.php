@@ -16,10 +16,12 @@ use App\Http\Resources\Public\Lab\LabAchievementResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\Report\Lab\LabReportRepository;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
-use Kreait\Firebase\Contract\Storage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class LabReportController extends AppBaseController
@@ -365,7 +367,7 @@ class LabReportController extends AppBaseController
     /**
      * @param string $slug
      *
-     * @return BinaryFileResponse
+     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
      */
     public function labExport(string $slug)
     {
