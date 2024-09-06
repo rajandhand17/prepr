@@ -100,7 +100,7 @@ class LabService
                         $lab_list = $lab_list->where('labs.privacy', '1');
                         break;
                     default:
-                        $lab_list = $lab_list;
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

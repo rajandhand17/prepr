@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 
   <meta charset="utf-8">
@@ -26,7 +26,7 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 800px;">
           <tr>
             <td align="left" valign="middle" style="padding:15px;">
-            
+
             </td>
           </tr>
         </table>
@@ -159,7 +159,7 @@
               <table border="0" cellpadding="0" cellspacing="0" width="100%">
                 <tr>
                     <td align="center" width="10%">
-                     
+
                     </td>
                     <td align="center" width="30%">
                       <span style="font-size: 17px;font-weight: bold;" >{{ $summaryData['completed_module_counts']['learning_points'] }}</span><br>
@@ -170,7 +170,7 @@
                       <span style="font-size: 17px;color: #777986">{{ $summeryContent['verifiedskills'] }}</span>
                     </td>
                     <td align="center" width="10%">
-                      
+
                     </td>
                 </tr>
               </table>
@@ -279,7 +279,7 @@
                 </tr>
               </table>
             </td>
-          </tr> 
+          </tr>
 
           {{-- Most interacted section start --}}
             @if(!empty($summaryData['most_interacted']))
@@ -421,7 +421,7 @@
       </td>
     </tr>
     <!-- mid end -->
-  
+
     <!-- start footer -->
     <tr>
       <td align="center" style="padding:18px 0 0;">

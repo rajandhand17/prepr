@@ -365,10 +365,7 @@ class AIService
                 } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
                     $url = $match[1];
                     $type = 'video';
-                } elseif (preg_match('/<iframe.*src="([^"]+)".*<\/iframe>/i', $url, $match)) {
-                    $url = $match[1];
-                    $type = 'video';
-                } else {
+                }  else {
                     switch ($detail->type) {
                         case 0: // document
                             $type = 'file';

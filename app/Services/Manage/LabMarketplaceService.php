@@ -61,7 +61,6 @@ class LabMarketplaceService
                         $lab_marketplace_list = $lab_marketplace_list->whereNotIn('id', $getLabRedeemedIds);
                         break;
                     default:
-                        $lab_marketplace_list = $lab_marketplace_list;
                         break;
                 }
             }

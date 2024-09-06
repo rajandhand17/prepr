@@ -80,7 +80,7 @@ class ChallengePathService
                         $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '1');
                         break;
                     default:
-                        $getChallengePathList = $getChallengePathList;
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

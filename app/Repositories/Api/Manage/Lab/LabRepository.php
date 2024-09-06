@@ -484,7 +484,6 @@ class LabRepository implements LabInterface
 
             return $createdLabUsingAI['createdLabUsingAI'];
 
-            return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());

@@ -172,7 +172,6 @@ trait LabTrait
                 return [];
             }
 
-            return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
