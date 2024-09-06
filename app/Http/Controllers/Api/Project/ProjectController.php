@@ -177,9 +177,10 @@ class ProjectController extends AppBaseController
                 // SEND NOTIFICATIONS
                 LearningPointsHelper::sendBulkLearningPointNotification(
                     [auth()->id()],
-                    data_get(LearningPointsHelper::CREATE_A_PROJECT,'type'),
-                    data_get(LearningPointsHelper::CREATE_A_PROJECT,'points')
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'points')
                 );
+
                 return $this->sendResponse(ProjectResource::make($createProject), __('responses.project_stored_success'), 200);
             }
 

@@ -16,8 +16,9 @@ class NotificationRepository implements NotificationInterface
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $filters
+     *
      * @return false|array
      */
     public function fetchNotification(User $user, array $filters): false|array
@@ -30,8 +31,9 @@ class NotificationRepository implements NotificationInterface
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $ids
+     *
      * @return bool
      */
     public function markAsRead(User $user, array $ids): bool
@@ -44,8 +46,9 @@ class NotificationRepository implements NotificationInterface
     }
 
     /**
-     * @param User $user
+     * @param User  $user
      * @param array $ids
+     *
      * @return bool
      */
     public function delete(User $user, array $ids): bool

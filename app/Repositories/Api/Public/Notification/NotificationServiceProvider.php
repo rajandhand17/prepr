@@ -24,6 +24,7 @@ class NotificationServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'App\Repositories\Api\Public\Notification\NotificationInterface',
-            'App\Repositories\Api\Public\Notification\NotificationRepository');
+            'App\Repositories\Api\Public\Notification\NotificationRepository'
+        );
     }
 }

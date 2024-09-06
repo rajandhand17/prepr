@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-use App\Helpers\LearningPointsHelper;
 use App\Helpers\MagnetHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -25,7 +24,6 @@ use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use App\Models\UserActivity;
-use App\Notifications\LearningPointNotification;
 use App\Repositories\Api\Auth\AuthRepository;
 
 class AuthController extends AppBaseController
@@ -103,11 +101,7 @@ class AuthController extends AppBaseController
                 if ($login['code'] === 3) {
                     UserActivity::logActivity($login['user']->id, 'login');
 
-                    /** @var User $user */
-                    $user = $login['user'];
-
-                    $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($user), 'code' => $login['code']];
-
+                    $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }

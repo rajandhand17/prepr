@@ -24,7 +24,7 @@ class NotificationMarkAsRequest extends BaseRequest
     public function rules(): array
     {
         return [
-            'notification_ids' => ['array', 'nullable', Rule::exists('notifications', 'id')]
+            'notification_ids' => ['array', 'nullable', Rule::exists('notifications', 'id')],
         ];
     }
 }

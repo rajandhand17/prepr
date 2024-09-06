@@ -30,8 +30,8 @@ class NotificationRequest extends BaseRequest
                 NotificationTypes::FRIEND_REQUEST,
                 NotificationTypes::CHALLENGE,
                 NotificationTypes::ORGANIZATION,
-                NotificationTypes::LAB
-            ])]
+                NotificationTypes::LAB,
+            ])],
         ];
     }
 }

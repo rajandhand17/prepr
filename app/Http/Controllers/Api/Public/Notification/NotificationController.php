@@ -35,6 +35,7 @@ class NotificationController extends AppBaseController
             ], __('responses.notifications_list'));
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_fetch_notifications'));
         }
     }
@@ -52,6 +53,7 @@ class NotificationController extends AppBaseController
             return $this->sendResponse(null, __('responses.notifications_marked_as_read'));
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_mark_as_read'));
         }
     }
@@ -69,6 +71,7 @@ class NotificationController extends AppBaseController
             return $this->sendResponse(null, __('responses.notification_deleted'));
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('responses.failed_to_delete_notification'));
         }
     }

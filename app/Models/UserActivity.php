@@ -78,6 +78,4 @@ class UserActivity extends Model
             return false;
         }
     }
-
-
 }
