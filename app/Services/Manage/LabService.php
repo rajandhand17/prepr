@@ -17,8 +17,9 @@ class LabService
     {
         try {
             $all_lab_count = Lab::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
-            $redeemedLabsCount =  LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
+            $redeemedLabsCount = LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
             $lab_count = $all_lab_count - $redeemedLabsCount;
+
             return $lab_count;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
