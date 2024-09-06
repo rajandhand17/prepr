@@ -131,7 +131,7 @@ class Organization extends LaratrustTeam
 
     public function pre_built_labs_count()
     {
-        return $this->hasMany(LabChallengeRedeem::class, 'organization_id', 'id')->where(['is_redeemed' => '1'])->whereNotNull('lab_id');
+        return $this->hasMany(LabChallengeRedeem::class, 'organization_id', 'id')->where(['is_redeemed' => '1'])->whereNotNull('lab_id')->whereIn('lab_id', $this->labs()->pluck('id'));
     }
 
     public function labs_count()
