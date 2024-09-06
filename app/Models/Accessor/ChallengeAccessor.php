@@ -128,4 +128,20 @@ trait ChallengeAccessor
 
         return null;
     }
+
+    /**
+     * @return string
+     */
+    public function getFormattedSubmissionDeadlineDateAttribute(): string
+    {
+        if ($this->challenge_timelines) {
+            if ($this->challenge_timelines->timeline_type == '0') {
+                return $this->challenge_timelines->flexible_expire_deadline;
+            } elseif ($this->challenge_timelines->timeline_type == '1') {
+                return $this->challenge_timelines->submission_deadline_date;
+            }
+        }
+
+        return '-';
+    }
 }

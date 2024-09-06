@@ -20,6 +20,7 @@ use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
+use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
@@ -360,6 +361,39 @@ class ChallengeResource extends JsonResource
             $media = null;
         }
 
+        $privacy = ($this->privacy == '1') ? 'yes' : 'no';
+        $isActive = 'yes';
+        if ($privacy == 'yes' && $join_status != 'Yes') {
+            $isActive = 'no';
+        }
+
+        $checkProjectStatus = ProjectService::checkUserChallengeStatus($this->id, auth('api')->user()->id);
+        if ($checkProjectStatus) {
+            switch ($checkProjectStatus->is_submitted) {
+                case '0':
+                    $isActive = 'in_progress';
+                    break;
+
+                case '1':
+                    $isActive = 'submitted';
+                    break;
+
+                case '2':
+                    $isActive = 'late_submitted';
+                    break;
+            }
+        }
+
+        $source = 'Created By Organization';
+
+        if ($this->is_auto_created == '1') {
+            $source = 'Onboarding Challenge';
+        } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
+            $source = 'Cloned By You';
+        } elseif ($this->user_id == auth('api')->user()->id) {
+            $source = 'Created By You';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -379,7 +413,7 @@ class ChallengeResource extends JsonResource
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $this->description,
             'scorm'                             => new ScormResource($this->scorm),
-            'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
+            'privacy'                           => $privacy,
             'media_type'                        => $this->media_type,
             'media'                             => $media,
             'status'                            => ($this->status == '0') ? 'draft' : 'published',
@@ -406,6 +440,7 @@ class ChallengeResource extends JsonResource
             'challenge_flexible_announcement'   => $challenge_flexible_announcement,
             'challenge_template'                => $challenge_template,
             'joined'                            => $join_status,
+            'is_active'                         => $isActive,
             'likes'                             => $this->likes()->count(),
             'shares'                            => $this->shares()->count(),
             'member_count'                      => $this->members()->count(),
@@ -431,6 +466,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_story'              => $campusConnectStory,
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
             'scorm_url'                         => $this->formatted_scorm_url,
+            'source'                            => $source,
         ];
     }
 }

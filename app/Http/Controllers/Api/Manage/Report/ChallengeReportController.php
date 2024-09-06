@@ -18,9 +18,10 @@ use App\Http\Resources\Manage\Report\Components\ResourceModuleResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\Report\Challenge\ChallengeReportRepository;
 use App\Repositories\Api\Project\ProjectRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ChallengeReportController extends AppBaseController
@@ -407,7 +408,7 @@ class ChallengeReportController extends AppBaseController
                     ], __('Challenge Assessment'));
                 }
 
-                return $this->sendResponse($data, __('Challenge Assessment.'));
+                return $this->sendResponse($data, __('Challenge Assessment Projects.'));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), Response::HTTP_NOT_FOUND);
@@ -444,8 +445,6 @@ class ChallengeReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function challengeExport(string $slug)
     {
@@ -453,7 +452,15 @@ class ChallengeReportController extends AppBaseController
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
 
             if ($challenge) {
-                return Excel::download(new ChallengeExport($challenge), sprintf('%s-challenge-excel.xlsx', $challenge->slug));
+                $filename = sprintf('challenge-report/%s-challenge-excel.xlsx', $challenge->slug);
+
+                $download = Excel::store(
+                    new ChallengeExport($challenge),
+                    $filename,
+                    's3'
+                );
+
+                return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);

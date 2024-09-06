@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\UtilityHelper;
 use App\Models\DashboardLayout;
 use Exception;
+use Illuminate\Http\Request;
 
 class DashboardLayoutService
 {
@@ -25,7 +26,7 @@ class DashboardLayoutService
                     break;
             }
 
-            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->get();
+            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->orderByRaw('ISNULL(position_index), position_index ASC')->get();
 
             return $fetchUserDashboardLayout;
         } catch (Exception $e) {
@@ -128,6 +129,46 @@ class DashboardLayoutService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function storeStaticDefaultLayout($userData, $dashboardType)
+    {
+        try {
+            switch ($dashboardType) {
+                case 'user':
+                    $card_type = ['reports', 'continue-left', 'deadlines', 'leaderboard', 'achievement', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6', '7'];
+                    break;
+
+                case 'lab':
+                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6'];
+                    break;
+
+                case 'organization':
+                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-organizations', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6', '7'];
+                    break;
+            }
+
+            $staticValue = ['card_type' => $card_type, 'is_active' => $is_active, 'position_index' => $position_index];
+            $request = new Request($staticValue);
+            $storeStaticDefaultLayout = self::updateDashboardLayout($request, $userData, $dashboardType);
+            if ($storeStaticDefaultLayout) {
+                $fetchDashboardLayout = $this->fetchDashboardLayout($userData, $dashboardType);
+
+                return $fetchDashboardLayout;
+            }
+
+            return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
