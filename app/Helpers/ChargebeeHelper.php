@@ -408,6 +408,9 @@ class ChargebeeHelper
                     case 'resourceGroup':
                         $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->resource_group_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->resource_group_limits;
                         break;
+                    case 'preBuildLab':
+                        $fetchOrganizationPlanDetails = ($fetchOrganizationPlan->pre_build_lab_limits === -1) ? 'Unlimited' : $fetchOrganizationPlan->pre_build_lab_limits;
+                        break;
                     default:
                         $fetchOrganizationPlanDetails = 0;
                         break;

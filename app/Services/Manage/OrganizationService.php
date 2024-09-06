@@ -562,10 +562,10 @@ class OrganizationService
                 'plan_name'                     => $planName,
                 'plan_end_date'                 => UtilityHelper::formatDateTime($organizationData->chargebee_details->trial_end_date),
                 'lab_limit'                     => $labLimit,
-                'lab_count'                     => $organizationData->labs_count->count(),
+                'lab_count'                     => $organizationData->created_labs_count(),
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $organizationData->lab_programs_count->count(),
-                'pre_build_lab_limit'           => $preBuildLab,
+                'pre_build_lab_limit'           => $preBuildLab === -1 ? 'Unlimited' : $preBuildLab,
                 'pre_build_lab_count'           => $organizationData->pre_built_labs_count->count(),
                 'challenge_limit'               => $challengeLimit,
                 'challenge_count'               => $organizationData->challenges_count->count(),
@@ -673,6 +673,19 @@ class OrganizationService
             $organization_list = self::filterOrganizationList($request, $fetchOrganizations);
 
             return $organization_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Organization $organization)
+    {
+        try {
+            $organization->increment('views_count');
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -3,6 +3,7 @@
 return [
     'pagination_per_page'                => '10',
     'association_pagination_per_page'    => '6',
+    'notification_pagination_per_page'   => '8',
     'dashboard_pagination_per_page'      => '5',
     'pagination_lab_report'              => '10',
     'pagination_lab_report_achievement'  => '2',
