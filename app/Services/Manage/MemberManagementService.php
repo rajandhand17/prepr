@@ -9,13 +9,13 @@ use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\LabHistoryService;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
-use App\Services\ModuleCompletionStatusService;
 use stdClass;
 
 class MemberManagementService
@@ -219,8 +219,7 @@ class MemberManagementService
                 }
             }
 
-            
-            if(isset($request->progress_status)){
+            if (isset($request->progress_status)) {
                 switch ($request->component) {
                     case 'lab':
                         $component = '0';
@@ -243,9 +242,9 @@ class MemberManagementService
                 $moduleIds = $componentCollectionObject->pluck('module_id');
                 $emailIds = $componentCollectionObject->pluck('email');
                 $fetchUserIds = UserService::getUserIdsByEmail($emailIds);
-                $getUserIds = ModuleCompletionStatusService::fetchComponentProgressBasedOnIds($moduleIds, $component,$module_status,$fetchUserIds);
+                $getUserIds = ModuleCompletionStatusService::fetchComponentProgressBasedOnIds($moduleIds, $component, $module_status, $fetchUserIds);
                 $userEmails = UserService::getUserEmailsById($getUserIds->pluck('user_id'));
-                $componentCollectionObject = $componentCollectionObject->whereIn('email',$userEmails);
+                $componentCollectionObject = $componentCollectionObject->whereIn('email', $userEmails);
             }
 
             return $componentCollectionObject;

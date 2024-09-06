@@ -52,8 +52,8 @@ return [
         'auto_created' => '4',
     ],
     'member_management_request_status' => [
-        'invited'      => '0',
-        'join_request'     => '1',
+        'invited'           => '0',
+        'join_request'      => '1',
         'auto_created'      => '2',
     ],
 
