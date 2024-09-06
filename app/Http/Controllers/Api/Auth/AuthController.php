@@ -102,6 +102,7 @@ class AuthController extends AppBaseController
                     UserActivity::logActivity($login['user']->id, 'login');
 
                     $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
+
                     return $this->sendResponse($response, $login['message'], 200);
                 }
             }
