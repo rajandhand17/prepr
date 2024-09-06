@@ -571,6 +571,7 @@ class ChallengeReportService
      *
      * @return false|array
      */
+
     public function getPaginatedAssessments($challenge, bool $paginate = true): false|array
     {
         try {
@@ -588,6 +589,10 @@ class ChallengeReportService
                 ->whereAssessment(request()->input('assessment_type') ?? '');
 
             $data = $paginate ? $query->paginate(config('site-settings.pagination_lab_report')) : $query->get();
+
+            $data->each(function ($project) {
+                $project->assessment = $project->challengeAssessmentUsers()->exists() ? 'assessed' : 'pending';
+            });
 
             $counts = $challenge->challenge_assessment()->withCount([
                 'projects as assessed_count' => function ($query) {
