@@ -26,4 +26,6 @@ interface LabInterface
     public function sendLiveEventInvitationLinkToMembers(Lab $lab);
 
     public function liveEventDetails(Lab $lab);
+
+    public function incrementView(Lab $lab);
 }

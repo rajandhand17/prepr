@@ -20,6 +20,7 @@ class ChallengeAssessmentResource extends JsonResource
             'description' => $this->description ?? '-',
             'media'       => $this->media ?? '-',
             'created_by'  => data_get($this->createdBy, 'full_name'),
+            'assessment'  => $this->assessment ?? '-',
             'achievement' => 'Participation Achievement',
         ];
     }

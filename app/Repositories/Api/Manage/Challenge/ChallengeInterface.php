@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
+use App\Models\Challenge;
+
 interface ChallengeInterface
 {
     public function getChallengeCountBasedOnOrganization($organizationId);
@@ -57,4 +59,6 @@ interface ChallengeInterface
     public function fetchProjectIdsBasedOnChallenge($challengeId);
 
     public function fetchProjectIds($projectIds, $request);
+
+    public function incrementView(Challenge $challenge);
 }

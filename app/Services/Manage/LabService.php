@@ -721,4 +721,17 @@ class LabService
             return false;
         }
     }
+
+    public function incrementView(Lab $lab)
+    {
+        try {
+            $lab->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
