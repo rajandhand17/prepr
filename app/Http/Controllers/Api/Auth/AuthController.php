@@ -92,14 +92,13 @@ class AuthController extends AppBaseController
         try {
             $login = $this->authRepository->login($request);
             if ($login['success'] == true) {
-                UserActivity::logActivity($login['user']->id, 'login');
-
                 if ($login['code'] === 2) {
                     $response = ['message' => $login['message'], 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
                 }
                 if ($login['code'] === 3) {
+                    UserActivity::logActivity($login['user']->id, 'login');
                     $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
@@ -176,7 +175,10 @@ class AuthController extends AppBaseController
         try {
             $verifytwofactor = $this->authRepository->twoFactorVerification($request);
             if ($verifytwofactor['success'] == true) {
-                return $this->sendResponse($verifytwofactor, __('responses.user_login_success'), 200);
+                UserActivity::logActivity($verifytwofactor['user']->id, 'login');
+                $response = ['token' => LoginResource::make(json_decode(json_encode($verifytwofactor), false)), 'user' => UserResource::make($verifytwofactor['user']), 'code' => $verifytwofactor['code']];
+
+                return $this->sendResponse($response, __('responses.user_login_success'), 200);
             }
             if ($verifytwofactor['success'] == false) {
                 if ($verifytwofactor['code'] === 1) {

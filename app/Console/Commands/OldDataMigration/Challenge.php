@@ -13,6 +13,7 @@ use App\Models\ChallengeFlexibleAnnouncement;
 use App\Models\ChallengeProjectTemplate;
 use App\Models\ChallengeRequirement;
 use App\Models\ChallengeSkillsGroupsStack;
+use App\Models\ChallengeSocialActivity;
 use App\Models\ChallengeSponsor;
 use App\Models\ChallengeTimelines;
 use App\Models\ChallengeTypeMode;
@@ -20,6 +21,7 @@ use App\Models\Host;
 use App\Models\Organization;
 use App\Models\ProjectSubmissionRequirement;
 use App\Models\Scorm;
+use App\Models\ScormSco;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -226,6 +228,10 @@ class Challenge extends Command
                         }
                     }
 
+                    $createdAt = $challenge->created_at != null ? Carbon::createFromTimestamp($challenge->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $updatedAt = $challenge->updated_at != null ? Carbon::createFromTimestamp($challenge->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $deletedAt = $challenge->deleted_at != null ? Carbon::createFromTimestamp($challenge->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
                     $newChallenge->id = $challenge->id;
                     $newChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
                     $newChallenge->language = $challenge->language;
@@ -250,11 +256,16 @@ class Challenge extends Command
                     $newChallenge->is_auto_created = $challengeAutoCreated;
                     $newChallenge->is_ai_created = $challengeAiCreated;
                     $newChallenge->is_accessible = $challenge->is_accessable;
+                    $newChallenge->total_share = $challenge->total_share;
+                    $newChallenge->created_at = $createdAt;
+                    $newChallenge->updated_at = $updatedAt;
+                    $newChallenge->deleted_at = $deletedAt;
                     $newChallenge->save();
 
                     if ($checkScrom) {
                         $newScorm = new Scorm();
                         $newScorm->model_type = ModelChallenge::class;
+                        $newScorm->id = $checkScrom->id;
                         $newScorm->model_id = $checkScrom->resource_id;
                         $newScorm->title = $checkScrom->title;
                         $newScorm->origin_file = $checkScrom->origin_file;
@@ -262,7 +273,34 @@ class Challenge extends Command
                         $newScorm->uuid = $checkScrom->uuid;
                         $newScorm->identifier = $checkScrom->identifier;
                         $newScorm->entry_url = $checkScrom->entry_url;
+                        $newScorm->created_at = $checkScrom->created_at;
+                        $newScorm->updated_at = $checkScrom->updated_at;
                         $newScorm->save();
+
+                        $checkScromSco = DB::connection('mysql2')->table('scorm_sco')->where(['scorm_id' => $checkScrom->id])->first();
+                        if ($checkScromSco) {
+                            $newScormSco = new ScormSco();
+                            $newScormSco->id = $checkScromSco->id;
+                            $newScormSco->scorm_id = $checkScromSco->scorm_id;
+                            $newScormSco->uuid = $checkScromSco->uuid;
+                            $newScormSco->sco_parent_id = $checkScromSco->sco_parent_id;
+                            $newScormSco->entry_url = $checkScromSco->entry_url;
+                            $newScormSco->identifier = $checkScromSco->identifier;
+                            $newScormSco->title = $checkScromSco->title;
+                            $newScormSco->visible = $checkScromSco->visible;
+                            $newScormSco->sco_parameters = $checkScromSco->sco_parameters;
+                            $newScormSco->launch_data = $checkScromSco->launch_data;
+                            $newScormSco->max_time_allowed = $checkScromSco->max_time_allowed;
+                            $newScormSco->time_limit_action = $checkScromSco->time_limit_action;
+                            $newScormSco->block = $checkScromSco->block;
+                            $newScormSco->score_int = $checkScromSco->score_int;
+                            $newScormSco->score_decimal = $checkScromSco->score_decimal;
+                            $newScormSco->completion_threshold = $checkScromSco->completion_threshold;
+                            $newScormSco->prerequisites = $checkScromSco->prerequisites;
+                            $newScormSco->created_at = $checkScromSco->created_at;
+                            $newScormSco->updated_at = $checkScromSco->updated_at;
+                            $newScormSco->save();
+                        }
                     }
 
                     // For Challenge Sponsers table
@@ -290,17 +328,20 @@ class Challenge extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $challengeMode = new ChallengeTypeMode();
-                                $challengeMode->challenge_id = $challenge->id;
-                                $challengeMode->type_mode = '1';
-                                $challengeMode->value = $mode_id;
-                                $challengeMode->save();
+                                if ($mode_id != null) {
+                                    $challengeMode = new ChallengeTypeMode();
+                                    $challengeMode->challenge_id = $challenge->id;
+                                    $challengeMode->type_mode = '1';
+                                    $challengeMode->value = $mode_id;
+                                    $challengeMode->save();
+                                }
                             }
                         }
                     }
@@ -311,6 +352,7 @@ class Challenge extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ChallengeTypeMode::where(['challenge_id' => $challenge->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -321,11 +363,13 @@ class Challenge extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $challengeMode = new ChallengeTypeMode();
-                                $challengeMode->challenge_id = $challenge->id;
-                                $challengeMode->type_mode = '0';
-                                $challengeMode->value = $type_id;
-                                $challengeMode->save();
+                                if ($type_id != null) {
+                                    $challengeMode = new ChallengeTypeMode();
+                                    $challengeMode->challenge_id = $challenge->id;
+                                    $challengeMode->type_mode = '0';
+                                    $challengeMode->value = $type_id;
+                                    $challengeMode->save();
+                                }
                             }
                         }
                     }
@@ -337,7 +381,7 @@ class Challenge extends Command
                         foreach (array_filter($arraySkills) as $skill) {
                             $challengeSkill = new ChallengeSkillsGroupsStack();
                             $challengeSkill->challenge_id = $challenge->id;
-                            $challengeSkill->foreign_id = $skill;
+                            $challengeSkill->foreign_id = (int) $skill;
                             $challengeSkill->type = '0';
                             $challengeSkill->save();
                         }
@@ -350,7 +394,7 @@ class Challenge extends Command
                         foreach (explode(',', $skillStacks) as $skillStack) {
                             $challengeSkillStack = new ChallengeSkillsGroupsStack();
                             $challengeSkillStack->challenge_id = $challenge->id;
-                            $challengeSkillStack->foreign_id = $skillStack;
+                            $challengeSkillStack->foreign_id = (int) $skillStack;
                             $challengeSkillStack->type = '2';
                             $challengeSkillStack->save();
                         }
@@ -363,7 +407,7 @@ class Challenge extends Command
                         foreach (explode(',', $skillGroups) as $skillGroup) {
                             $challengeSkillGroup = new ChallengeSkillsGroupsStack();
                             $challengeSkillGroup->challenge_id = $challenge->id;
-                            $challengeSkillGroup->foreign_id = $skillGroup;
+                            $challengeSkillGroup->foreign_id = (int) $skillGroup;
                             $challengeSkillGroup->type = '1';
                             $challengeSkillGroup->save();
                         }
@@ -677,6 +721,40 @@ class Challenge extends Command
                     $challengeTimelines->automatic_alert = $challengeAutoAlert;
                     $challengeTimelines->flexible_expire_deadline = date('Y-m-d H:i:s', strtotime($challenge->flexibleExpireDate));
                     $challengeTimelines->save();
+
+                    // for challenge social activities
+                    $challengeSocialActivities = DB::connection('mysql2')->table('favorites')->where(['ref_id' => $challenge->id, 'ref_type' => 'challange'])->get();
+                    if ($challengeSocialActivities->isNotEmpty()) {
+                        foreach ($challengeSocialActivities as $challengeSocialActivity) {
+                            $createdAt = $challengeSocialActivity->created_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                            $updatedAt = $challengeSocialActivity->updated_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                            $deletedAt = $challengeSocialActivity->deleted_at != null ? Carbon::createFromTimestamp($challengeSocialActivity->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
+                            $checkUserData = User::find($challengeSocialActivity->user_id);
+
+                            if ($checkUserData) {
+                                $favAction = '0';
+                                if ($challengeSocialActivity->is_follow == '1') {
+                                    $favAction = '1';
+                                }
+
+                                $likeAction = '0';
+                                if ($challengeSocialActivity->likeit == '1') {
+                                    $likeAction = '1';
+                                }
+
+                                $newChallengePathSocialActivity = new ChallengeSocialActivity();
+                                $newChallengePathSocialActivity->user_id = $challengeSocialActivity->user_id;
+                                $newChallengePathSocialActivity->challenge_id = $challenge->id;
+                                $newChallengePathSocialActivity->favourite = $favAction;
+                                $newChallengePathSocialActivity->like_dislike = $likeAction;
+                                $newChallengePathSocialActivity->created_at = $createdAt;
+                                $newChallengePathSocialActivity->updated_at = $updatedAt;
+                                $newChallengePathSocialActivity->deleted_at = $deletedAt;
+                                $newChallengePathSocialActivity->save();
+                            }
+                        }
+                    }
                 }
             });
 

@@ -16,9 +16,10 @@ return [
     ],
 
     'discussion_module_type' => [
-        'lab'       => '0',
-        'challenge' => '1',
-        'project'   => '2',
+        'lab'               => '0',
+        'challenge'         => '1',
+        'project'           => '2',
+        'challenge-path'    => '3',
     ],
 
     'member_management_type' => [
@@ -621,6 +622,11 @@ return [
         'user'          => '0',
         'lab'           => '1',
         'organization'  => '2',
+    ],
+    'project_is_submitted' => [
+        'not_submitted'  => '0',
+        'submitted'      => '1',
+        'late_submitted' => '2',
     ],
     'dashboard_card_type' => [
         'reports'           => '0',

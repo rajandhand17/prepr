@@ -9,6 +9,7 @@ use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\LabHistoryService;
+use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -166,6 +167,40 @@ class MemberManagementService
                 }
             }
 
+            if ($request->has('project_status') && !empty($request->project_status)) {
+                // Define the allowed statuses
+                $allowedStatuses = ['not_submitted', 'submitted', 'late_submitted'];
+
+                if (in_array($request->project_status, $allowedStatuses)) {
+                    // Extract module IDs and emails from the collection
+                    $moduleIds = $componentCollectionObject->pluck('module_id');
+                    $emails = $componentCollectionObject->pluck('email');
+
+                    // Get user IDs based on the emails
+                    $userIds = UserService::getUserIdsByEmail($emails);
+
+                    // Retrieve the appropriate status from the config based on the project status
+                    $status = config('constants.project_is_submitted.'.$request->project_status);
+
+                    // Get projects filtered by challenge status and user IDs
+                    $projects = ProjectService::checkUserChallengeStatusFilterByStatus($moduleIds->toArray(), $userIds->toArray(), $status);
+                    if (!empty($projects)) {
+                        // Extract challenge IDs and user emails from the filtered projects
+                        $challengeIds = $projects->pluck('challenge_id');
+                        $userEmails = UserService::getUsersByIds($projects->pluck('user_id'))->pluck('email');
+
+                        // Filter the original collection based on the challenge IDs and user emails
+                        $componentCollectionObject = $componentCollectionObject->whereIn('module_id', $challengeIds)
+                            ->whereIn('email', $userEmails);
+                    } else {
+                        // If no matching projects, clear the collection
+                        $componentCollectionObject = collect();
+                    }
+                } else {
+                    $componentCollectionObject = collect();
+                }
+            }
+
             return $componentCollectionObject;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -214,6 +249,12 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if ($request->hasFile('invite_email')) {
                 if (($handle = fopen($request->invite_email, 'r')) !== false) {
                     $header = fgetcsv($handle, 0, ',');
@@ -233,12 +274,18 @@ class MemberManagementService
                     }
                     /**getting data from csv and convert in array */
                     while (($csv_get_data = fgetcsv($handle, 1000, ',')) !== false) {
-                        $memberList[] = [
+                        $member = [
                             'type'          => config('constants.member_management_type.invite'),
                             'invite_type'   => config('constants.member_management_invite_type.csv'),
                             'invitee_name'  => $csv_get_data[$name_column],
                             'invitee_email' => $csv_get_data[$email_column],
                         ];
+
+                        if (!empty($inviteStatus)) {
+                            $member['invite_status'] = $inviteStatus;
+                        }
+
+                        $memberList[] = $member;
                     }
                     fclose($handle);
                     if (!empty($memberList)) {
@@ -263,6 +310,13 @@ class MemberManagementService
     {
         try {
             $memberList = [];
+            $inviteStatus = null;
+            $type = config('constants.member_management_type.'.$request->type);
+
+            if ($request->auto_invite === 'yes') {
+                $inviteStatus = config('constants.member_management_invite_status.accepted');
+            }
+
             if (is_array($request->invite_email)) {
                 foreach ($request->invite_email as $email) {
                     $user = UserService::getUserByEmail($email);
@@ -270,13 +324,20 @@ class MemberManagementService
                     if ($user) {
                         $name = $user->first_name.' '.$user->last_name;
                     }
-                    $memberList[] = [
-                        'type'          => config('constants.member_management_type.invite'),
+                    $member = [
+                        'type'          => $type,
                         'invite_type'   => config('constants.member_management_invite_type.email'),
                         'invitee_name'  => $name,
                         'invitee_email' => $email,
                     ];
+
+                    if (!empty($inviteStatus)) {
+                        $member['invite_status'] = $inviteStatus;
+                    }
+
+                    $memberList[] = $member;
                 }
+
                 if (!empty($memberList)) {
                     return $memberList;
                 }

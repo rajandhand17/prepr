@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('project_pitch_values', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('pitch_template_id');
-            $table->unsignedBigInteger('project_pitch_id');
+            $table->unsignedBigInteger('pitch_template_id')->nullable();
+            $table->unsignedBigInteger('project_pitch_id')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -193,6 +193,17 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
+    public function fileDelete($request)
+    {
+        try {
+            return $this->userExperienceService->deleteFile($request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function resumeUpload($request)
     {
         try {
@@ -458,10 +469,10 @@ class ProfileRepository implements ProfileInterface
         }
     }
 
-    public function getFriendsListing()
+    public function getFriendsListing($user = null)
     {
         try {
-            return $this->friendService->getFriendsListing();
+            return $this->friendService->getFriendsListing($user);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -48,18 +48,18 @@ class LabMembersExport implements FromCollection, withColumnWidths, WithStrictNu
         $user = $row->user;
 
         return [
-            $user->full_name,
-            $user->username,
-            $user->email,
+            data_get($user, 'full_name'),
+            data_get($user, 'username'),
+            data_get($user, 'email', data_get($row, 'email')),
             $this->getInvitationStatusName($row->invite_status),
-            $user->login_status,
-            $user->labProgressName,
-            $user->userAchievements->first() ? $user->userAchievements->first()->title : '-',
-            $user->challenges_progress_count,
-            $user->challenge_paths_progress_count,
-            $user->resources_modules_progresses_count,
-            $user->resources_groups_progresses_count,
-            $user->resources_collections_progresses_count,
+            data_get($user, 'formatted_login_status'),
+            data_get($user, 'labProgressName'),
+            data_get($user, 'userAchievements')?->first() ? $user->userAchievements->first()->title : '-',
+            data_get($user, 'challenges_progress_count', 0),
+            data_get($user, 'challenge_paths_progress_count', 0),
+            data_get($user, 'resources_modules_progresses_count', 0),
+            data_get($user, 'resources_groups_progresses_count', 0),
+            data_get($user, 'resources_collections_progresses_count', 0),
         ];
     }
 

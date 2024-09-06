@@ -198,7 +198,10 @@ class ProjectResource extends JsonResource
 
         $submit_enabled = ProjectService::checkProjectRequirementCompleted($this);
 
-        $project_role = ProjectService::checkProjectRole($this);
+        $project_role = 'none';
+        if (auth('api')->check()) {
+            $project_role = ProjectService::checkProjectRole($this, auth('api')->user());
+        }
         // Extracting media collections from resources
         $imagesCollection = ProjectImageResource::make($this)->toArray(request());
         $videosCollection = ProjectVideoResource::make($this)->toArray(request());
@@ -220,6 +223,10 @@ class ProjectResource extends JsonResource
 
             case '2':
                 $project_status = 'Late Submitted';
+                break;
+
+            default:
+                $project_status = 'In Progress';
                 break;
         }
 

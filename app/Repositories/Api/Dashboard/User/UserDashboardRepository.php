@@ -356,4 +356,15 @@ class UserDashboardRepository implements UserDashboardInterface
             return false;
         }
     }
+
+    public function storeStaticDefaultLayout($userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->storeStaticDefaultLayout($userData, $dashboardType);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

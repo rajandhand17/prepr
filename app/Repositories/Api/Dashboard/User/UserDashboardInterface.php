@@ -57,4 +57,6 @@ interface UserDashboardInterface
     public function fetchUserDashboardLayout($userData, $dashboardType);
 
     public function updateUserDashboardLayout($request, $userData, $dashboardType);
+
+    public function storeStaticDefaultLayout($userData, $dashboardType);
 }

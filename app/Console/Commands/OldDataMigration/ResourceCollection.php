@@ -5,7 +5,6 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\Organization;
 use App\Models\ResourceCollection as ResourceCollectionModule;
-use App\Models\ResourceCollectionTagsGroups;
 use App\Models\ResourceCollectionTypeModes;
 use App\Models\User;
 use DB;
@@ -101,6 +100,7 @@ class ResourceCollection extends Command
                         $resourceCollection = new ResourceCollectionModule();
                     }
                     $resourceCollection->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                    $resourceCollection->id = $singleResourceCollection->id;
                     $resourceCollection->language = $singleResourceCollection->language;
                     $resourceCollection->user_id = $singleResourceCollection->user_id;
                     $resourceCollection->organization_id = $singleResourceCollection->org_id;
@@ -114,6 +114,9 @@ class ResourceCollection extends Command
                     $resourceCollection->privacy = $privacy;
                     $resourceCollection->status = $status;
                     $resourceCollection->is_accessible = $singleResourceCollection->is_accessable;
+                    $resourceCollection->created_at = $singleResourceCollection->created_at;
+                    $resourceCollection->updated_at = $singleResourceCollection->updated_at;
+                    $resourceCollection->deleted_at = $singleResourceCollection->deleted_at;
                     $resourceCollection->save();
 
                     //for mode and type
@@ -123,17 +126,20 @@ class ResourceCollection extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             ResourceCollectionTypeModes::where(['resource_collection_id' => $singleResourceCollection->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $resourceCollectionMode = new ResourceCollectionTypeModes();
-                                $resourceCollectionMode->resource_collection_id = $singleResourceCollection->id;
-                                $resourceCollectionMode->type_mode = '1';
-                                $resourceCollectionMode->value = $mode_id;
-                                $resourceCollectionMode->save();
+                                if ($mode_id != null) {
+                                    $resourceCollectionMode = new ResourceCollectionTypeModes();
+                                    $resourceCollectionMode->resource_collection_id = $singleResourceCollection->id;
+                                    $resourceCollectionMode->type_mode = '1';
+                                    $resourceCollectionMode->value = $mode_id;
+                                    $resourceCollectionMode->save();
+                                }
                             }
                         }
                     }
@@ -144,6 +150,7 @@ class ResourceCollection extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             ResourceCollectionTypeModes::where(['resource_collection_id' => $singleResourceCollection->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -154,25 +161,14 @@ class ResourceCollection extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $resourceCollectionType = new ResourceCollectionTypeModes();
-                                $resourceCollectionType->resource_collection_id = $singleResourceCollection->id;
-                                $resourceCollectionType->type_mode = '0';
-                                $resourceCollectionType->value = $type_id;
-                                $resourceCollectionType->save();
+                                if ($type_id != null) {
+                                    $resourceCollectionType = new ResourceCollectionTypeModes();
+                                    $resourceCollectionType->resource_collection_id = $singleResourceCollection->id;
+                                    $resourceCollectionType->type_mode = '0';
+                                    $resourceCollectionType->value = $type_id;
+                                    $resourceCollectionType->save();
+                                }
                             }
-                        }
-                    }
-
-                    /*Add tags*/
-                    $resourceCollectionTags = json_decode($singleResourceCollection->tag, true);
-                    if ($resourceCollectionTags) {
-                        ResourceCollectionTagsGroups::where(['resource_collection_id' => $singleResourceCollection->id, 'foreign_id' => '0'])->delete();
-                        foreach (array_filter($resourceCollectionTags) as $tag) {
-                            $resourceGroupTag = new ResourceCollectionTagsGroups();
-                            $resourceGroupTag->resource_collection_id = $singleResourceCollection->id;
-                            $resourceGroupTag->foreign_id = $tag;
-                            $resourceGroupTag->type = '0';
-                            $resourceGroupTag->save();
                         }
                     }
                 }

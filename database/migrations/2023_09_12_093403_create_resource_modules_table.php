@@ -16,8 +16,8 @@ return new class() extends Migration {
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('duration_id');
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('duration_id')->nullable();
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->string('title');
             $table->string('slug');
             $table->longText('description')->nullable();
@@ -29,6 +29,8 @@ return new class() extends Migration {
             $table->enum('is_global', ['0', '1'])->comment('0-> no, 1-> yes')->default('0');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -403,7 +403,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectSlugExistsOrNot->is_submitted == '1') {
+            if (in_array($checkProjectSlugExistsOrNot->is_submitted, ['1', '2'])) {
                 return $this->sendError(__('responses.project_already_submitted'), 400);
             }
 

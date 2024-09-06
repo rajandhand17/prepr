@@ -18,7 +18,9 @@ use App\Http\Resources\Manage\Report\Components\ResourceModuleResource;
 use App\Repositories\Api\Manage\Challenge\ChallengeRepository;
 use App\Repositories\Api\Manage\Report\Challenge\ChallengeReportRepository;
 use App\Repositories\Api\Project\ProjectRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -297,6 +299,8 @@ class ChallengeReportController extends AppBaseController
                 $data = $this->challengeReportRepository->getPaginatedMembers($challenge);
 
                 if ($data !== false) {
+                    request()->merge(['challenge' => $challenge]); // For resource
+
                     return $this->sendResponse([
                         ...$data,
                         'list' => ChallengeMemberResource::collection(data_get($data, 'list')),
@@ -308,8 +312,6 @@ class ChallengeReportController extends AppBaseController
 
             return $this->sendError(__('responses.challenge_slug_not_found'), Response::HTTP_NOT_FOUND);
         } catch (\Exception $exception) {
-            UtilityHelper::logError($exception);
-
             return $this->sendError(__('responses.failed_to_fetch_challenge_members'), Response::HTTP_BAD_REQUEST);
         }
     }
@@ -365,10 +367,16 @@ class ChallengeReportController extends AppBaseController
                 $data = $this->challengeReportRepository->getChallengeAssessmentDetail($challenge, $project->id);
 
                 if ($data !== false) {
-                    return $this->sendResponse([
-                        ...$data,
-                        'users' => ChallengeAssessmentDetailResource::collection(data_get($data, 'users')),
-                    ], __('Challenge Assessment'));
+                    if (data_get($data, 'success')) {
+                        $response = data_get($data, 'data');
+
+                        return $this->sendResponse([
+                            ...$response,
+                            'users' => ChallengeAssessmentDetailResource::collection(data_get($response, 'users')),
+                        ], __('Challenge Assessment'));
+                    } else {
+                        return $this->sendError(__('responses.no_assessments_found'), Response::HTTP_NOT_FOUND);
+                    }
                 }
 
                 return $this->sendResponse($data, __('Challenge Assessment.'));
@@ -447,7 +455,15 @@ class ChallengeReportController extends AppBaseController
             $challenge = $this->challengeRepository->getChallengeBasedOnSlug($slug);
 
             if ($challenge) {
-                return Excel::download(new ChallengeExport($challenge), sprintf('%s-challenge-excel.xlsx', $challenge->slug));
+                $filename = sprintf('challenge-report/%s-challenge-excel.xlsx', $challenge->slug);
+
+                $download = Excel::store(
+                    new ChallengeExport($challenge),
+                    $filename,
+                    's3'
+                );
+
+                return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.challenge_slug_not_found'), 404);

@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('project_task_values', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->unsignedBigInteger('task_template_id');
-            $table->unsignedBigInteger('project_task_id');
+            $table->unsignedBigInteger('task_template_id')->nullable();
+            $table->unsignedBigInteger('project_task_id')->nullable();
             $table->enum('status', ['0', '1'])->default('0')->comment('0 -> Imcompleted, 1 -> Completed');
             $table->string('completed_date')->nullable();
             $table->timestamps();
