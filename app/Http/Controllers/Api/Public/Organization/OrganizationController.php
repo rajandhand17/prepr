@@ -50,10 +50,10 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if ($organization) {
+                $this->organizationRepository->incrementView($organization);
+
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
             }
-
-            $this->organizationRepository->incrementView($organization);
 
             return $this->sendError(__('responses.organization_not_exists'), 404);
         } catch (\Exception $e) {
