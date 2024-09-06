@@ -589,6 +589,7 @@ class UserService
             return false;
         }
     }
+
     public static function getUserEmailsById($userIds)
     {
         try {

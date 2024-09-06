@@ -117,6 +117,7 @@ class MemberManagementResource extends JsonResource
                 $request_status = 'auto_created';
                 break;
         }
+
         return [
             'id'               => $this->uuid,
             'invite_type'      => $invite_type,

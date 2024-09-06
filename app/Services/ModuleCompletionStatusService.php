@@ -302,7 +302,8 @@ class ModuleCompletionStatusService
             return false;
         }
     }
-    public static function fetchComponentProgressBasedOnIds($componentIds,$moduleType,$moduleStatus, $userIds)
+
+    public static function fetchComponentProgressBasedOnIds($componentIds, $moduleType, $moduleStatus, $userIds)
     {
         try {
             $checkResourceGroupProgress = ModuleCompletionStatus::where([
