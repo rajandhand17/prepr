@@ -19,7 +19,6 @@ use App\Repositories\Api\Manage\Report\Organization\OrganizationReportRepository
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganizationReportController extends AppBaseController
@@ -286,8 +285,6 @@ class OrganizationReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function organizationExport(string $slug)
     {
