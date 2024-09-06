@@ -512,7 +512,7 @@ class LabService
     public function getLabListName($request, $organization)
     {
         try {
-            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $lab_list = self::filterLabList($lab_list, $request);
             $limit = config('site-settings.listing_limit');
 
