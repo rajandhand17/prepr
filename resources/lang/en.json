@@ -7,6 +7,7 @@
     "responses.valid_email_pattern": "Please enter valid email!",
     "responses.max_content_50": "Maximum character limit for this is 50.",
     "responses.not_exists_email": "The provided email is not exists!",
+    "responses.not_exists_username":"The provided username is not exists!",
     "responses.password_required_field": "This password field is required",
     "responses.min_content_6": "Minimum character limit for this is 6.",
     "responses.found_category_list": "The categories list has been successfully retrieved",

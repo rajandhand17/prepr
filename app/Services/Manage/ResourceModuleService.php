@@ -483,7 +483,7 @@ class ResourceModuleService
     public static function getListName($request, $organization)
     {
         try {
-            $resourceModule = ResourceModule::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $resourceModule = ResourceModule::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $resourceModule = self::filterResourceModuleList($request, $resourceModule);
 
             return $resourceModule->paginate(config('site-settings.pagination_per_page'));

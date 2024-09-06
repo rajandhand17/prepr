@@ -202,7 +202,7 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1')
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where(['status' => '1', 'is_accessible' => '1', 'is_open' => '0'])
                 ->whereHas('challenge_timelines', function ($query) {
                     $query->where(function ($q) {
                         $q->where('timeline_type', '1')
