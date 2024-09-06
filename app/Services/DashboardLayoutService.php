@@ -26,7 +26,7 @@ class DashboardLayoutService
                     break;
             }
 
-            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->get();
+            $fetchUserDashboardLayout = DashboardLayout::where(['user_id' => $userData->id, 'dashboard_type' => $dashboardValue])->orderByRaw('ISNULL(position_index), position_index ASC')->get();
 
             return $fetchUserDashboardLayout;
         } catch (Exception $e) {
@@ -141,21 +141,21 @@ class DashboardLayoutService
         try {
             switch ($dashboardType) {
                 case 'user':
-                    $card_type = ['reports', 'continue-left', 'deadlines', 'leaderboard', 'achievement', 'my-challenges', 'my-labs', 'my-projects'];
-                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes'];
-                    $position_index = ['1', '2', '3', '4', '5', '6', '7', '8'];
+                    $card_type = ['reports', 'continue-left', 'deadlines', 'leaderboard', 'achievement', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6', '7'];
                     break;
 
                 case 'lab':
-                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-challenges', 'my-labs', 'my-projects'];
-                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes'];
-                    $position_index = ['1', '2', '3', '4', '5', '6', '7'];
+                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6'];
                     break;
 
                 case 'organization':
-                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-organizations', 'my-challenges', 'my-labs', 'my-projects'];
-                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes'];
-                    $position_index = ['1', '2', '3', '4', '5', '6', '7', '8'];
+                    $card_type = ['reports', 'subscription', 'deadlines', 'leaderboard', 'my-organizations', 'my-challenges', 'my-labs', 'my-projects', 'my-resources', 'inbox-friends', 'recommendations'];
+                    $is_active = ['yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'no', 'no', 'no'];
+                    $position_index = ['0', '1', '2', '3', '4', '5', '6', '7'];
                     break;
             }
 
