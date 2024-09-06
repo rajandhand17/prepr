@@ -679,4 +679,17 @@ class OrganizationService
             return false;
         }
     }
+
+    public function incrementView(Organization $organization)
+    {
+        try {
+            $organization->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

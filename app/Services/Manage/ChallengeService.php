@@ -1105,4 +1105,17 @@ class ChallengeService
             return false;
         }
     }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            $challenge->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
