@@ -571,7 +571,6 @@ class ChallengeReportService
      *
      * @return false|array
      */
-
     public function getPaginatedAssessments($challenge, bool $paginate = true): false|array
     {
         try {
