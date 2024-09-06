@@ -75,6 +75,38 @@ class MemberManagementResource extends JsonResource
             }
         }
 
+        if ($request->component == 'lab-program') {
+            $moduleId = $this->module_id;
+            $moduleType = '1';
+            $userData = UserService::getUserByEmail($this->email);
+            $module_status = 'not_started';
+            $module_progress = [
+                'status'        => $module_status,
+                'percentage'    => '0',
+            ];
+            if ($userData) {
+                $moduleProgress = ModuleCompletionStatusService::fetchModuleIdBasedProgress($moduleId, $moduleType, $userData->id);
+                if ($moduleProgress) {
+                    switch ($moduleProgress->status) {
+                        case '0':
+                            $module_status = 'not_started';
+                            break;
+                        case '1':
+                            $module_status = 'in_progress';
+                            break;
+                        case '2':
+                            $module_status = 'completed';
+                            break;
+                    }
+
+                    $module_progress = [
+                        'status'        => $module_status,
+                        'percentage'    => $moduleProgress->percentage,
+                    ];
+                }
+            }
+        }
+
         if ($request->component == 'challenge') {
             $moduleId = $this->module_id;
             $moduleType = '0';
