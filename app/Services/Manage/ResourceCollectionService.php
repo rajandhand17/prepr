@@ -405,7 +405,7 @@ class ResourceCollectionService
     public function getListName($request, $organization)
     {
         try {
-            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $resourceCollectionList = ResourceCollection::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $resourceCollectionList = self::filterResourceCollectionList($resourceCollectionList, $request);
 
             return $resourceCollectionList->paginate(config('site-settings.pagination_per_page'));

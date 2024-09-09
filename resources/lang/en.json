@@ -1164,6 +1164,7 @@
     "responses.reached_challenge_limit": "You have reached the limit to create the Challenge.",
     "responses.reached_challenge_path_limit": "You have reached the limit to create the Challenge Path.",
     "responses.reached_lab_limit": "You have reached the limit to create the Lab.",
+    "responses.reached_redeem_lab_limit": "You have reached the limit to Redeem the Lab.",
     "responses.reached_lab_program_limit": "You have reached the limit to create the Lab Program.",
     "responses.reached_resource_module_limit": "You have reached the limit to create the Resource Module.",
     "responses.reached_resource_collection_limit": "You have reached the limit to create the Resource Collection.",

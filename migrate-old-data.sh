@@ -42,7 +42,13 @@ php artisan migrate-old-data:users-address
 php artisan migrate-old-data:users-friends
 php artisan migrate-old-data:users-tags
 php artisan migrate-old-data:users-setting
-php artisan migrate-old-data:project
+php artisan migrate-old-data:projects-and-related-data
+php artisan migrate-old-data:project-files-galleries
+php artisan migrate-old-data:project-external-links
+php artisan migrate-old-data:project-template-data
+php artisan migrate-old-data:project-pitch-value-data
+php artisan migrate-old-data:project-task-value-data
+php artisan migrate-old-data:project-vote-data
 php artisan migrate-old-data:discussion
 php artisan migrate-old-data:project-history
 php artisan migrate:feed-chargebee-data-to-data-base
