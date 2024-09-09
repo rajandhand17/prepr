@@ -157,7 +157,7 @@ class MemberManagementResource extends JsonResource
             'name'             => $this->invitee_name,
             'email'            => $this->email,
             'username'         => $username,
-            'user_rank'        => $userRank,
+            'learn_rank'       => $userRank,
             'achievement_count'=> $achievementCount,
             'invited_by'       => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
             'role'             => $this->role,
