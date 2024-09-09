@@ -995,7 +995,7 @@
     "responses.found_projects_list": "The project list has been successfully retrieved",
     "responses.not_found_projects_list": "The list of projects has not been retrieved with success.",
     "responses.share_project_successfully": "The Project have been shared successfully by you!",
-    "responses.favourite_project_successfully": "You have successfully saved this Project!",
+    "responses.favourite_project_successfully": "You have successfully marked this Project as favourite!",
     "responses.un_favourite_project_successfully": "You have successfully un-saved this Project!",
     "responses.like_project_successfully": "The Project have been liked successfully by you!",
     "responses.un_like_project_successfully": "The Project have been dis-liked successfully by you!",
