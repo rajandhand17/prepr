@@ -453,7 +453,7 @@ class ProjectRepository implements ProjectInterface
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
                 // SEND NOTIFICATIONS
                 LearningPointsHelper::sendBulkLearningPointNotification(
-                    $fetchAcceptedMemberIds,
+                    $fetchAcceptedMemberIds->toArray(),
                     data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'type'),
                     data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'points')
                 );
