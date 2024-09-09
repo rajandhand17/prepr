@@ -9,6 +9,7 @@ use App\Models\OrganizationMember;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class Organization extends Command
 {
@@ -155,6 +156,8 @@ class Organization extends Command
                         if ($organizationCustomizations->use_main_org_logo == '1') {
                             $use_main_org_logo = '1';
                         }
+                        $custom_url = Str::contains($organization->vanity_link, '/org/') ? Str::after($organization->vanity_link, '/org/') : $organization->vanity_link;
+
                         $oldOrganizationCustomizations = new OrganizationCustomization();
                         $oldOrganizationCustomizations->organization_id = $newOrganization->id;
                         $oldOrganizationCustomizations->enable_custom_login_and_registration = $enable_custom_login_and_registration;
@@ -162,7 +165,7 @@ class Organization extends Command
                         $oldOrganizationCustomizations->custom_logo_image = $organizationCustomizations->custom_logo_image;
                         $oldOrganizationCustomizations->custom_hero_image = $organizationCustomizations->custom_hero_image;
                         $oldOrganizationCustomizations->custom_background_color = $organizationCustomizations->custom_background_color;
-                        $oldOrganizationCustomizations->custom_url = $organization->vanity_link ?? null;
+                        $oldOrganizationCustomizations->custom_url = $custom_url;
                         $oldOrganizationCustomizations->save();
                     }
 
