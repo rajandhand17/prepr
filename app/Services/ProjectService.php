@@ -1054,4 +1054,17 @@ class ProjectService
             return false;
         }
     }
+
+    public static function getProjects($getProjectIds)
+    {
+        try {
+            $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
+
+            return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
