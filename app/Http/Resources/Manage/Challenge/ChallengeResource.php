@@ -394,16 +394,16 @@ class ChallengeResource extends JsonResource
             $source = 'Created By You';
         }
 
-        $challenge_status = "Closed";
+        $challenge_status = 'Closed';
 
         if ($this->status == '0' && $this->is_open == '0') {
-            $challenge_status = "Draft";
+            $challenge_status = 'Draft';
         } elseif ($this->status == '1' && $this->is_open == '0') {
-            $challenge_status = "Active";
+            $challenge_status = 'Active';
         } elseif ($this->is_open == '1') {
-            $challenge_status = "Closed";
+            $challenge_status = 'Closed';
         } elseif ($this->is_open == '2') {
-            $challenge_status = "Completed";
+            $challenge_status = 'Completed';
         }
 
         return [
