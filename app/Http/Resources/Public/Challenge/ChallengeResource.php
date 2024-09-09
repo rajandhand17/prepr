@@ -384,6 +384,18 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        $challenge_status = 'Closed';
+
+        if ($this->status == '0' && $this->is_open == '0') {
+            $challenge_status = 'Draft';
+        } elseif ($this->status == '1' && $this->is_open == '0') {
+            $challenge_status = 'Active';
+        } elseif ($this->is_open == '1') {
+            $challenge_status = 'Closed';
+        } elseif ($this->is_open == '2') {
+            $challenge_status = 'Completed';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -451,7 +463,7 @@ class ChallengeResource extends JsonResource
             'resource_modules'                  => $resource_modules,
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
-            'is_auth_user'                      => $is_authenticated_user,
+            'challenge_status'                  => $challenge_status,
         ];
     }
 }
