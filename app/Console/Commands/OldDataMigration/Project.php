@@ -5,27 +5,17 @@ namespace App\Console\Commands\OldDataMigration;
 use App\Helpers\UtilityHelper;
 use App\Models\Category;
 use App\Models\Challenge;
-use App\Models\ChallengePitch;
-use App\Models\ChallengeTask;
 use App\Models\Lab;
-use App\Models\PitchTemplate;
 use App\Models\Project as ModelsProject;
 use App\Models\ProjectAdditionalInfo;
-use App\Models\ProjectExternalLink;
-use App\Models\ProjectFile;
 use App\Models\ProjectIndustry;
 use App\Models\ProjectMemberManagement;
-use App\Models\ProjectPitchValue;
 use App\Models\ProjectSkill;
-use App\Models\ProjectSocialActivity;
 use App\Models\ProjectStage;
 use App\Models\ProjectStatus;
-use App\Models\ProjectTaskValue;
-use App\Models\ProjectTemplate;
 use App\Models\ProjectType;
 use App\Models\ProjectVertical;
 use App\Models\Skill;
-use App\Models\SocialLink;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -40,14 +30,14 @@ class Project extends Command
      *
      * @var string
      */
-    protected $signature = 'migrate-old-data:project';
+    protected $signature = 'migrate-old-data:projects-and-related-data';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command is use to migrate old Projects table data to new db structure.';
+    protected $description = 'This command is use to migrate old projects, additional info, skills, member management table data to new db structure.';
 
     /**
      * Execute the console command.
@@ -55,7 +45,7 @@ class Project extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating of old data for Projects table started.');
+            $this->info('Migrating of old data for projects, additional info, skills, member management table started.');
             DB::beginTransaction();
 
             // Fetch Projects from Legacy Database in chucks of 1000 data
@@ -354,222 +344,11 @@ class Project extends Command
                             $newProjectMember->save();
                         }
                     }
-
-                    // For project external links
-                    $projectExternalLinks = DB::connection('mysql2')->table('user_sociallink')->where('project_id', $project->id)->get();
-                    if ($projectExternalLinks->isNotEmpty()) {
-                        ProjectExternalLink::where('project_id', $project->id)->delete();
-                        foreach ($projectExternalLinks as $projectLink) {
-                            if ($projectLink->link_url != null) {
-                                $createdAt = $projectLink->created_at != null ? Carbon::createFromTimestamp($projectLink->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $updatedAt = $projectLink->updated_at != null ? Carbon::createFromTimestamp($projectLink->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $deletedAt = $projectLink->deleted_at != null ? Carbon::createFromTimestamp($projectLink->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $checkSocialLink = SocialLink::find($projectLink->social_link_id);
-
-                                $newProjectExternalLink = new ProjectExternalLink();
-                                $newProjectExternalLink->id = $projectLink->id;
-                                $newProjectExternalLink->project_id = $project->id;
-                                $newProjectExternalLink->social_media_link = $projectLink->link_url;
-                                $newProjectExternalLink->social_link_id = $checkSocialLink != null ? $projectLink->social_link_id : '15';
-                                $newProjectExternalLink->created_at = $createdAt;
-                                $newProjectExternalLink->updated_at = $updatedAt;
-                                $newProjectExternalLink->deleted_at = $deletedAt;
-                                $newProjectExternalLink->save();
-                            }
-                        }
-                    }
-
-                    // For project files from 2(project_files, project_galleries) table to single one
-                    $projectFiles = DB::connection('mysql2')->table('project_files')->where('project_id', $project->id)->get();
-                    if ($projectFiles->isNotEmpty()) {
-                        foreach ($projectFiles as $fileData) {
-                            $extensionFetch = strtolower(pathinfo($fileData->original, PATHINFO_EXTENSION));
-                            $fileType = $this->getFileType($extensionFetch);
-                            if ($fileType != null) {
-                                $createdAt = $fileData->created_at != null ? Carbon::createFromTimestamp($fileData->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $updatedAt = $fileData->updated_at != null ? Carbon::createFromTimestamp($fileData->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $deletedAt = $fileData->deleted_at != null ? Carbon::createFromTimestamp($fileData->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-
-                                switch ($fileType) {
-                                    case 'image':
-                                        $file_type = config('constants.project_file_type.image');
-                                        break;
-
-                                    case 'audio':
-                                        $file_type = config('constants.project_file_type.audio');
-                                        break;
-
-                                    case 'document':
-                                        $file_type = config('constants.project_file_type.docs');
-                                        break;
-
-                                    case 'video':
-                                        $file_type = config('constants.project_file_type.video');
-                                        break;
-                                }
-                                $newProjectFile = new ProjectFile();
-                                $newProjectFile->project_id = $project->id;
-                                $newProjectFile->title = $fileData->original;
-                                $newProjectFile->path = $fileData->name;
-                                $newProjectFile->type = $file_type;
-                                $newProjectFile->created_at = $createdAt;
-                                $newProjectFile->updated_at = $updatedAt;
-                                $newProjectFile->deleted_at = $deletedAt;
-                                $newProjectFile->save();
-                            }
-                        }
-                    }
-
-                    $projectGalleries = DB::connection('mysql2')->table('project_galleries')->where('project_id', $project->id)->get();
-                    if ($projectGalleries->isNotEmpty()) {
-                        foreach ($projectGalleries as $galleryData) {
-                            $extensionFetch = strtolower(pathinfo($galleryData->original, PATHINFO_EXTENSION));
-                            $fileType = $this->getFileType($extensionFetch);
-                            if ($fileType != null) {
-                                $createdAt = $galleryData->created_at != null ? Carbon::createFromTimestamp($galleryData->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $updatedAt = $galleryData->updated_at != null ? Carbon::createFromTimestamp($galleryData->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $deletedAt = $galleryData->deleted_at != null ? Carbon::createFromTimestamp($galleryData->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-
-                                switch ($fileType) {
-                                    case 'image':
-                                        $file_type = config('constants.project_file_type.image');
-                                        break;
-
-                                    case 'audio':
-                                        $file_type = config('constants.project_file_type.audio');
-                                        break;
-
-                                    case 'document':
-                                        $file_type = config('constants.project_file_type.docs');
-                                        break;
-
-                                    case 'video':
-                                        $file_type = config('constants.project_file_type.video');
-                                        break;
-                                }
-                                $newProjectFile = new ProjectFile();
-                                $newProjectFile->project_id = $project->id;
-                                $newProjectFile->title = $galleryData->original;
-                                $newProjectFile->path = $galleryData->name;
-                                $newProjectFile->type = $file_type;
-                                $newProjectFile->created_at = $createdAt;
-                                $newProjectFile->updated_at = $updatedAt;
-                                $newProjectFile->deleted_at = $deletedAt;
-                                $newProjectFile->save();
-                            }
-                        }
-                    }
-
-                    // For project template id
-                    if ($newProject->challenge_id != null) {
-                        $challengePitchId = DB::connection('mysql2')->table('challenge_pitches')->where('challenge_id', $newProject->challenge_id)->value('pitch_template_id');
-                        if ($challengePitchId != '0') {
-                            $pitchtemplateData = DB::connection('mysql2')->table('pitch_templates')->where('id', $challengePitchId)->select('id', 'title')->first();
-                        } else {
-                            $pitchtemplateData = DB::connection('mysql2')->table('pitch_templates')->whereNull('challenge_id')->select('id', 'title')->first();
-                        }
-
-                        if ($pitchtemplateData) {
-                            $pitchtemplate = DB::connection('mysql2')->table('project_pitch_values')->where(['pitch_template_id' => $pitchtemplateData->id, 'project_id' => $project->id])->first();
-                            if (!$pitchtemplate) {
-                                $pitchtemplate = DB::connection('mysql2')->table('project_task_values')->where(['pitch_template_id' => $pitchtemplateData->id, 'project_id' => $project->id])->first();
-                            }
-
-                            if ($pitchtemplate && $pitchtemplate->pitch_template_id) {
-                                $checkPitchTemplate = PitchTemplate::find($pitchtemplate->pitch_template_id);
-                                if ($checkPitchTemplate) {
-                                    $projectTemplate = new ProjectTemplate();
-                                    $projectTemplate->project_id = $project->id;
-                                    $projectTemplate->template_id = $checkPitchTemplate->id;
-                                    $projectTemplate->save();
-                                }
-                            }
-                        }
-                    }
-
-                    // For project pitch values
-                    $projectPitchValues = DB::connection('mysql2')->table('project_pitch_values')->where(['project_id' => $project->id])->get();
-                    if ($projectPitchValues->isNotEmpty()) {
-                        foreach ($projectPitchValues as $pitchValue) {
-                            $checkPitchTemplate = PitchTemplate::find($pitchValue->pitch_template_id);
-                            if ($checkPitchTemplate) {
-                                $getPitchData = ChallengePitch::find($pitchValue->pitch_id);
-                                if ($getPitchData) {
-                                    $createdAt = $pitchValue->created_at != null ? Carbon::createFromTimestamp($pitchValue->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                    $updatedAt = $pitchValue->updated_at != null ? Carbon::createFromTimestamp($pitchValue->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                    $deletedAt = $pitchValue->deleted_at != null ? Carbon::createFromTimestamp($pitchValue->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-
-                                    $newProjectPitchValue = new ProjectPitchValue();
-                                    $newProjectPitchValue->id = $pitchValue->id;
-                                    $newProjectPitchValue->project_id = $project->id;
-                                    $newProjectPitchValue->pitch_template_id = $getPitchData->template_id;
-                                    $newProjectPitchValue->project_pitch_id = $getPitchData->id;
-                                    $newProjectPitchValue->description = $pitchValue->description ?? null;
-                                    $newProjectPitchValue->created_at = $createdAt;
-                                    $newProjectPitchValue->updated_at = $updatedAt;
-                                    $newProjectPitchValue->deleted_at = $deletedAt;
-                                    $newProjectPitchValue->save();
-                                }
-                            }
-                        }
-                    }
-
-                    // For project task values
-                    $projectTaskValues = DB::connection('mysql2')->table('project_task_values')->where(['project_id' => $project->id])->get();
-                    if ($projectTaskValues->isNotEmpty()) {
-                        foreach ($projectTaskValues as $taskValue) {
-                            $checkPitchTemplate = PitchTemplate::find($taskValue->pitch_template_id);
-                            if ($checkPitchTemplate) {
-                                $getTaskData = ChallengeTask::find($taskValue->project_task_id);
-                                if ($getTaskData) {
-                                    $completedAt = $taskValue->complete_datetime != null ? Carbon::createFromTimestamp($taskValue->complete_datetime)->translatedFormat('Y-m-d H:i:s') : null;
-                                    $createdAt = $taskValue->created_at != null ? Carbon::createFromTimestamp($taskValue->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                    $updatedAt = $taskValue->updated_at != null ? Carbon::createFromTimestamp($taskValue->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                    $deletedAt = $taskValue->deleted_at != null ? Carbon::createFromTimestamp($taskValue->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-
-                                    $newProjectTaskValue = new ProjectTaskValue();
-                                    $newProjectTaskValue->id = $taskValue->id;
-                                    $newProjectTaskValue->project_id = $project->id;
-                                    $newProjectTaskValue->task_template_id = $getTaskData->template_id;
-                                    $newProjectTaskValue->project_task_id = $getTaskData->id;
-                                    $newProjectTaskValue->status = $taskValue->is_completed == '1' ? '1' : '0';
-                                    $newProjectTaskValue->completed_date = $completedAt;
-                                    $newProjectTaskValue->created_at = $createdAt;
-                                    $newProjectTaskValue->updated_at = $updatedAt;
-                                    $newProjectTaskValue->deleted_at = $deletedAt;
-                                    $newProjectTaskValue->save();
-                                }
-                            }
-                        }
-                    }
-
-                    // For project votes
-                    $projectVotes = DB::connection('mysql2')->table('project_votes')->where(['project_id' => $project->id])->get();
-                    if ($projectVotes->isNotEmpty()) {
-                        foreach ($projectVotes as $projectVote) {
-                            $checkUser = User::find($projectVote->user_id);
-                            if ($checkUser && $projectVote->vote == '1') {
-                                $createdAt = $projectVote->created_at != null ? Carbon::createFromTimestamp($projectVote->created_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $updatedAt = $projectVote->updated_at != null ? Carbon::createFromTimestamp($projectVote->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
-                                $deletedAt = $projectVote->deleted_at != null ? Carbon::createFromTimestamp($projectVote->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
-
-                                $newProjectVote = new ProjectSocialActivity();
-                                $newProjectVote->id = $projectVote->id;
-                                $newProjectVote->user_id = $projectVote->user_id;
-                                $newProjectVote->project_id = $project->id;
-                                $newProjectVote->vote = '1';
-                                $newProjectVote->created_at = $createdAt;
-                                $newProjectVote->updated_at = $updatedAt;
-                                $newProjectVote->deleted_at = $deletedAt;
-                                $newProjectVote->save();
-                            }
-                        }
-                    }
                 }
             });
 
             DB::commit();
-            $this->info('Migrating of old data for Challanges table completed.');
+            $this->info('Migrating of old data for projects, additional info, skills, member management table completed.');
 
             // return;
         } catch (Exception $e) {
@@ -578,33 +357,6 @@ class Project extends Command
             $this->error($e->getMessage());
 
             return;
-        }
-    }
-
-    private function getFileType($extension)
-    {
-        try {
-            $imageExtensions = ['jpg', 'jpeg', 'webp', 'png'];
-            $audioExtensions = ['mp3'];
-            $docExtensions = ['pdf', 'doc', 'docx', 'xlsx', 'xls', 'pptx', 'pptm', 'odp', 'ppt'];
-            $videoExtensions = ['mp4', 'mov', 'wmv', 'avi', 'webm', 'mkv', 'mpeg-2'];
-
-            if (in_array($extension, $imageExtensions)) {
-                return 'image';
-            } elseif (in_array($extension, $audioExtensions)) {
-                return 'audio';
-            } elseif (in_array($extension, $docExtensions)) {
-                return 'document';
-            } elseif (in_array($extension, $videoExtensions)) {
-                return 'video';
-            }
-
-            return null; // Return null if no valid type is found
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-            $this->error($e->getMessage());
-
-            return null;
         }
     }
 }

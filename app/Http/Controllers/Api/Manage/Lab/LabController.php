@@ -92,6 +92,7 @@ class LabController extends AppBaseController
                         LastVisitedActivityModuleService::lastVisitedActivityModule($lab->id, $userId, $moduleType);
                     }
                 }
+                $this->labRepository->incrementView($lab);
 
                 return $this->sendResponse(LabResource::make($lab), __('responses.found_labs_list'), 200);
             }

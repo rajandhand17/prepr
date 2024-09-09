@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
@@ -215,6 +216,7 @@ class ProjectRepository implements ProjectInterface
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
                 $user = UserService::getUserById(auth()->user()->id);
                 $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
+
                 DB::commit();
 
                 return $createProject['createProject'];
@@ -449,6 +451,12 @@ class ProjectRepository implements ProjectInterface
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
+                // SEND NOTIFICATIONS
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    $fetchAcceptedMemberIds,
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'points')
+                );
 
                 return [
                     'submitProject'  => $submitProject,

@@ -358,7 +358,7 @@ class LabProgramService
     public function getLabProgramListName($request, $organization)
     {
         try {
-            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $labProgramList = self::filterLabProgramList($labProgramList, $request);
             $limit = config('site-settings.listing_limit');
 

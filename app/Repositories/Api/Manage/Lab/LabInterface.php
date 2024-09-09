@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
+use App\Models\Lab;
+
 interface LabInterface
 {
     public function getLabCountBasedOnOrganization($organizationId);
@@ -27,4 +29,6 @@ interface LabInterface
     public function createLabUsingAIPreview($request);
 
     public function createLabUsingAI($request, $upload_profile_image, $upload_achievements_image, $organization);
+
+    public function incrementView(Lab $lab);
 }

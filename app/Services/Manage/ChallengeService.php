@@ -689,7 +689,7 @@ class ChallengeService
     public function getChallengeListName($request, $organization)
     {
         try {
-            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $challenge_list = self::filterChallengeList($challenge_list, $request);
 
             return $challenge_list->get();
@@ -1100,6 +1100,19 @@ class ChallengeService
 
             return $restrictedDeadlineCollection->take(5);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            $challenge->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

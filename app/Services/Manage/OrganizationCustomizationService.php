@@ -55,13 +55,14 @@ class OrganizationCustomizationService
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
-                $organizationCustomization->custom_background_color = $request->has('custom_background_color') ? $request->custom_background_color : $checkExisitingCustomDetails->custom_background_color;
+                $organizationCustomization->custom_background_color = $request->has('custom_background_color') ? $request->custom_background_color : null;
                 $organizationCustomization->save();
             }
             DB::commit();
 
             return true;
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
             DB::rollback();
 
