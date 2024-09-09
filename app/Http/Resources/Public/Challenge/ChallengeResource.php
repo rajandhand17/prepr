@@ -411,7 +411,7 @@ class ChallengeResource extends JsonResource
             'agreement'                         => $this->agreement,
             'is_notification_enabled'           => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'project_privacy'                   => ($this->project_privacy == '1') ? 'yes' : 'no',
-            'is_open'                           => ($this->is_open == '1') ? 'yes' : 'no',
+            'is_open'                           => ($this->is_open == '0') ? 'yes' : 'no',
             'is_auto_created'                   => ($this->is_auto_created == '1') ? 'yes' : 'no',
             'is_accessible'                     => ($this->is_accessible == '1') ? 'yes' : 'no',
             'skills'                            => $skills,
