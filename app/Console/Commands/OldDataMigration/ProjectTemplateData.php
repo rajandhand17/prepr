@@ -66,7 +66,7 @@ class ProjectTemplateData extends Command
 
                     if ($pitchTemplateData) {
                         // Check for pitch template data in project_pitch_values or project_task_values
-                        $pitchTemplate = DB::connection('mysql2')->table('project_pitch_values')->where(['pitch_template_id' => $pitchTemplateData->id, 'project_id' => $project->id])->first() ?? DB::connection('mysql2')->table('project_task_values')->where(['pitch_template_id' => $pitchTemplateData->id,'project_id' => $project->id])->first();
+                        $pitchTemplate = DB::connection('mysql2')->table('project_pitch_values')->where(['pitch_template_id' => $pitchTemplateData->id, 'project_id' => $project->id])->first() ?? DB::connection('mysql2')->table('project_task_values')->where(['pitch_template_id' => $pitchTemplateData->id, 'project_id' => $project->id])->first();
 
                         if ($pitchTemplate && $pitchTemplate->pitch_template_id) {
                             // Check if the pitch template exists
@@ -74,8 +74,8 @@ class ProjectTemplateData extends Command
                             if ($existingPitchTemplate) {
                                 // Create and save new project template entry
                                 ProjectTemplate::create([
-                                    'project_id' => $project->id,
-                                    'template_id' => $existingPitchTemplate->id
+                                    'project_id'  => $project->id,
+                                    'template_id' => $existingPitchTemplate->id,
                                 ]);
                             }
                         }
@@ -91,5 +91,4 @@ class ProjectTemplateData extends Command
             $this->error($e->getMessage());
         }
     }
-
 }

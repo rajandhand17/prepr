@@ -71,11 +71,11 @@ class ProjectFiles extends Command
 
                         // Fetch the file type from constants
                         $file_type = match ($fileType) {
-                            'image' => config('constants.project_file_type.image'),
-                            'audio' => config('constants.project_file_type.audio'),
+                            'image'    => config('constants.project_file_type.image'),
+                            'audio'    => config('constants.project_file_type.audio'),
                             'document' => config('constants.project_file_type.docs'),
-                            'video' => config('constants.project_file_type.video'),
-                            default => null
+                            'video'    => config('constants.project_file_type.video'),
+                            default    => null
                         };
 
                         if ($file_type !== null) {
