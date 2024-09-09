@@ -248,7 +248,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
-                    'schedule_custom_notify'       => $item->schedule_custom_notify,
+                    'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
                 ];
             });
         }
