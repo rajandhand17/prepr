@@ -196,7 +196,7 @@ class OrganizationService
             $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
             $organization->profile_image = $profile_image_path;
-            $organization->custom_url = $request->custom_url;
+            $organization->vanity_slug = $request->vanity_slug;
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
@@ -230,7 +230,7 @@ class OrganizationService
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
                 $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
                 $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
-                $organization->custom_url = ($request->has('custom_url')) ? $request->custom_url : $organization->custom_url;
+                $organization->vanity_slug = ($request->has('vanity_slug')) ? $request->vanity_slug : $organization->vanity_slug;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;

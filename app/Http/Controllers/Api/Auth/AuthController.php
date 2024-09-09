@@ -1052,15 +1052,16 @@ class AuthController extends AppBaseController
     public function organizationCustomLoginRegistration($custom_url)
     {
         try {
-            $checkOrganizationCustomizationData = UtilityHelper::checkComponentSlugExistOrNot('organization', $custom_url);
+            $checkOrganizationCustomizationData = UtilityHelper::checkOrganizationCustomizationData($custom_url);
             if ($checkOrganizationCustomizationData) {
-                if ($checkOrganizationCustomizationData->customization_login_register) {
+                if ($checkOrganizationCustomizationData->organization != null) {
                     return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
                 }
             }
 
             return $this->sendError(__('responses.not_found_organization_customization'), 404);
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

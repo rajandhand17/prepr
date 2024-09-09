@@ -40,6 +40,12 @@ class OrganizationDetailResource extends JsonResource
             $this->profile_image = null;
         }
 
+        $custom_url = null;
+        if($this->customization_login_register)
+        {
+            $custom_url = $this->customization_login_register->custom_url;
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -49,7 +55,8 @@ class OrganizationDetailResource extends JsonResource
             'cover_image'                   => $this->cover_image,
             'profile_image'                 => $this->profile_image,
             'website'                       => $this->website,
-            'custom_url'                    => $this->custom_url,
+            'vanity_slug'                   => $this->vanity_slug,
+            'custom_url'                    => $custom_url,
             'about'                         => $this->about,
             'status'                        => $status,
             'total_employees'               => $this->total_employees,
