@@ -1132,7 +1132,7 @@
     "responses.job_listing_successfully": "The job listing has been successfully retrieved",
     "responses.already_added_job": "This job has been already added into your profile",
     "responses.added_job_pinned_successfully": "This Job has been successfully pinned",
-    "responses.delete_job_successfully": "This Job has been successfully deleted",
+    "responses.delete_job_successfully": "This job has been successfully deleted",
     "responses.delete_job_failed": "This Job has been failed to be deleted",
     "responses.pinned_jobs_successfully": "You have successfully pinned this job",
     "responses.pinned_jobs_successfully_removed": "You have successfully removed pinned job",
