@@ -233,4 +233,19 @@ class ResourceModuleSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getResourceModuleIdBasedOnSkills($skills)
+    {
+        try {
+            $getResourceModuleIds = ResourceModuleSkillsGroupsStack::where('type', '0')
+                ->whereIn('foreign_id', $skills)
+                ->pluck('resource_module_id');
+
+            return $getResourceModuleIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
