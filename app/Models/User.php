@@ -304,7 +304,7 @@ class User extends Authenticatable
 
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
-                    $data =  $user = User::where('email', $request->email)
+                    $data = $user = User::where('email', $request->email)
                     ->orWhere('username', $request->email)
                     ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
