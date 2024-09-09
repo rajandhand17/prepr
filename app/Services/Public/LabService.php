@@ -377,7 +377,7 @@ class LabService
     public function fetchRecommendedLabs($fetchUserSkills, $userData)
     {
         try {
-            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($fetchUserSkills);
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasedOnSkills($fetchUserSkills);
             $labIds = $getLabsIdsBasedOnSKills->unique();
             $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 

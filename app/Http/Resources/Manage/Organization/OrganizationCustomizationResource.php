@@ -47,6 +47,7 @@ class OrganizationCustomizationResource extends JsonResource
             'custom_logo_image'                             => $custom_logo_image,
             'custom_hero_image'                             => $custom_hero_image,
             'custom_background_color'                       => $this->custom_background_color,
+            'custom_url'                                    => $this->custom_url,
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
+use App\Models\Project;
 use App\Models\ProjectAccessLevel;
 use App\Models\ProjectMemberManagement;
 use App\Notifications\InviteMemberNotification;
@@ -568,8 +569,9 @@ class ProjectMemberManagementService
             $getMyProjectIds = self::getProjectIdsBasedOnTeamLead($userData->email);
             // Preparing the query to fetch project ids where requests are pending
             $projectIds = ProjectMemberManagement::where('invite_status', '2')->whereIn('project_id', $getMyProjectIds)->pluck('project_id');
+            $checkProjectsExistsOrNot = ProjectService::getProjects($projectIds);
 
-            return $projectIds;
+            return $checkProjectsExistsOrNot;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

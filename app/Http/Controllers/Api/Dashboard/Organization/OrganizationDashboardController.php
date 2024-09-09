@@ -228,7 +228,7 @@ class OrganizationDashboardController extends AppBaseController
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->organizationDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.resource_module_recommended_found'), 200);
                     break;
             }
 
