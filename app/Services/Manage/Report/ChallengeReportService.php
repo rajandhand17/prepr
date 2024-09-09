@@ -585,12 +585,16 @@ class ChallengeReportService
             }
 
             $query = $challenge->challenge_assessment->projects()
-                ->whereAssessment(request()->input('assessment_type') ?? '');
+                ->whereAssessment(request()->input('assessment_type') ?? '')
+                ->with([
+                    'challengeAssessmentUsers.challengeAssessmentCriteria'
+                ]);
 
             $data = $paginate ? $query->paginate(config('site-settings.pagination_lab_report')) : $query->get();
 
             $data->each(function ($project) {
                 $project->assessment = $project->challengeAssessmentUsers()->exists() ? 'assessed' : 'pending';
+                $project->criteria = $this->getProjectScoreAndWeight($project);
             });
 
             $counts = $challenge->challenge_assessment()->withCount([
@@ -791,11 +795,10 @@ class ChallengeReportService
                 'success' => true,
                 'data'    => [
                     'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
-                    'score'        => '0/0',
-                    'weight'       => '',
                     'team_members' => $data->member_names,
                     'achievement'  => 'Participation award',
                     'users'        => data_get($data->projects()->first(), 'users', []),
+                    ...$this->getProjectScoreAndWeight($data->projects->first() ?? null)
                 ],
             ];
         } catch (\Exception $exception) {
@@ -803,6 +806,27 @@ class ChallengeReportService
 
             return false;
         }
+    }
+
+    private function getProjectScoreAndWeight(Project $project)
+    {
+        if(!$project){
+            return ['score' => 0, 'weight' => 0];
+        }
+
+        $score = 0;
+        $weight = 0;
+
+        if($project->challengeAssessmentUsers){
+            foreach ($project->challengeAssessmentUsers as $challengeAssessmentUser) {
+                $score += $challengeAssessmentUser->score;
+                if($challengeAssessmentUser->challengeAssessmentCriteria){
+                    $weight += $challengeAssessmentUser->challengeAssessmentCriteria->weight;
+                }
+            }
+        }
+
+        return ['score' => $score, 'weight' => $weight];
     }
 
     /**
