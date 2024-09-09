@@ -394,6 +394,18 @@ class ChallengeResource extends JsonResource
             $source = 'Created By You';
         }
 
+        $challenge_status = "Closed";
+
+        if ($this->status == '0' && $this->is_open == '0') {
+            $challenge_status = "Draft";
+        } elseif ($this->status == '1' && $this->is_open == '0') {
+            $challenge_status = "Active";
+        } elseif ($this->is_open == '1') {
+            $challenge_status = "Closed";
+        } elseif ($this->is_open == '2') {
+            $challenge_status = "Completed";
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -467,6 +479,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
             'scorm_url'                         => $this->formatted_scorm_url,
             'source'                            => $source,
+            'challenge_status'                  => $challenge_status,
         ];
     }
 }
