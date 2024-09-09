@@ -71,13 +71,13 @@ class ProjectExternalLink extends Command
 
                         // Create and save the new project external link
                         ModelsProjectExternalLink::create([
-                            'id' => $externalLink->id,
-                            'project_id' => $externalLink->project_id,
+                            'id'                => $externalLink->id,
+                            'project_id'        => $externalLink->project_id,
                             'social_media_link' => $externalLink->link_url,
-                            'social_link_id' => $checkSocialLink ? $externalLink->social_link_id : '15',
-                            'created_at' => $createdAt,
-                            'updated_at' => $updatedAt,
-                            'deleted_at' => $deletedAt
+                            'social_link_id'    => $checkSocialLink ? $externalLink->social_link_id : '15',
+                            'created_at'        => $createdAt,
+                            'updated_at'        => $updatedAt,
+                            'deleted_at'        => $deletedAt,
                         ]);
                     }
                 }
