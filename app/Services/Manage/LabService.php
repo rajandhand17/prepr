@@ -16,7 +16,9 @@ class LabService
     public function getLabCountBasedOnOrganization($organizationId)
     {
         try {
-            $lab_count = Lab::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->count();
+            $all_lab_count = Lab::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+            $redeemedLabsCount = LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
+            $lab_count = $all_lab_count - $redeemedLabsCount;
 
             return $lab_count;
         } catch (Exception $e) {
@@ -512,7 +514,7 @@ class LabService
     public function getLabListName($request, $organization)
     {
         try {
-            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $lab_list = self::filterLabList($lab_list, $request);
             $limit = config('site-settings.listing_limit');
 
