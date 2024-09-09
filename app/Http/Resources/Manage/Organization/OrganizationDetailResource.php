@@ -41,8 +41,7 @@ class OrganizationDetailResource extends JsonResource
         }
 
         $custom_url = null;
-        if($this->customization_login_register)
-        {
+        if ($this->customization_login_register) {
             $custom_url = $this->customization_login_register->custom_url;
         }
 
