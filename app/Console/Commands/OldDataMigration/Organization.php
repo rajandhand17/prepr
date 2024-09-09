@@ -162,7 +162,7 @@ class Organization extends Command
                         $oldOrganizationCustomizations->custom_logo_image = $organizationCustomizations->custom_logo_image;
                         $oldOrganizationCustomizations->custom_hero_image = $organizationCustomizations->custom_hero_image;
                         $oldOrganizationCustomizations->custom_background_color = $organizationCustomizations->custom_background_color;
-                        $oldOrganizationCustomizations->custom = $organization->custom ?? null;
+                        $oldOrganizationCustomizations->custom_url = $organization->vanity_link ?? null;
                         $oldOrganizationCustomizations->save();
                     }
 
