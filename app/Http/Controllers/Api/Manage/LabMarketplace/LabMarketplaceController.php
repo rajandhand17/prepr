@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Manage\LabMarketplace;
 
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\Manage\Lab\LabResource;
@@ -134,6 +135,15 @@ class LabMarketplaceController extends AppBaseController
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
+            }
+
+            // checks creation limits of the Lab
+            $checkLabLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'preBuildLab');
+            if ($checkLabLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkLabCount = $this->labMarketplaceRepository->getLabRedeemCountBasedOnOrganization($checkLabLimit['organizationId']);
+                if ($checkLabLimit['fetchOrganizationPlanDetails'] <= $checkLabCount) {
+                    return $this->sendError(__('responses.reached_redeem_lab_limit'), 400);
+                }
             }
 
             $labMarketplace = $this->labMarketplaceRepository->getLabMarketplaceBasedOnSlug($slug);

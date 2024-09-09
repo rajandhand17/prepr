@@ -198,7 +198,7 @@ class ResourceModuleService
     public function fetchRecommendedResourceModules($fetchUserSkills, $userData)
     {
         try {
-            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasesOnSKillsId($fetchUserSkills);
+            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasedOnSkills($fetchUserSkills);
             $resourceModuleIds = $getResourceModulesIdsBasedOnSKills->unique();
             $fetchRecommendedResourceModules = ResourceModule::whereIn('id', $resourceModuleIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 
