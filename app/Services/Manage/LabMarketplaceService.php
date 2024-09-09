@@ -185,7 +185,7 @@ class LabMarketplaceService
 
     public function getLabRedeemCountBasedOnOrganization($organizationId)
     {
-        try {  
+        try {
             // Use a join to filter based on labs that belong to the organization
             $redeemedLabsCount = LabChallengeRedeem::where('lab_challenge_redeems.organization_id', $organizationId)
                 ->where('lab_challenge_redeems.is_redeemed', '1')
@@ -193,6 +193,7 @@ class LabMarketplaceService
                 ->join('labs', 'labs.id', '=', 'lab_challenge_redeems.lab_id') // Join with the labs table
                 ->where('labs.organization_id', $organizationId) // Ensure labs belong to the same organization
                 ->count();
+
             return $redeemedLabsCount;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
