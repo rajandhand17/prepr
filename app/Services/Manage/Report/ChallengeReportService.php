@@ -4,6 +4,7 @@ namespace App\Services\Manage\Report;
 
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
+use App\Models\Project;
 use App\Models\User;
 use Carbon\Carbon;
 use SebastianBergmann\ObjectEnumerator\Exception;
@@ -16,7 +17,7 @@ class ChallengeReportService
             /**
              * LAZY LOADING.
              */
-            $challenge->load('challengeProgress')->loadCount('challengeProgress');
+            $challenge->load(['challengeProgress', 'members.user.moduleCompletionStatus'])->loadCount('members', 'challengeProgress');
             $challengeDates = $challenge->challenge_timelines;
 
             /**
@@ -24,17 +25,37 @@ class ChallengeReportService
              */
             $allProgress = $challenge->challengeProgress()->get();
 
-            /**
-             * FILTERING AND COUNTING.
-             */
-            $notStarted = $allProgress->where('status', '=', '0')->count();
-            $inProgress = $allProgress->where('status', '=', '1')->count();
-            $completed = $allProgress->where('status', '=', '2')->count();
+            $notStarted = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
+                $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
+                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                        $query->where('status', '=', '0');
+                    });
+                })->orWhereDoesntHave('moduleCompletionStatus', function ($query) use ($challenge) {
+                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id);
+                });
+            })->count();
+
+            $inProgress = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
+                $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
+                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                        $query->where('status', '=', '1');
+                    });
+                });
+            })->count();
+
+            $completed = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
+                $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
+                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                        $query->where('status', '=', '2');
+                    });
+                });
+            })->count();
+
             $late_submission = $allProgress->filter(function ($project) use ($challengeDates) {
-                return $project->is_submitted && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now());
+                return $project->is_submitted && (data_get($challengeDates, 'submission_deadline_date') && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now()));
             })->count();
             $deadline_missed = $allProgress->filter(function ($project) use ($challengeDates) {
-                return !$project->is_submitted && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now());
+                return !$project->is_submitted && (data_get($challengeDates, 'flexible_expire_deadline') && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now()));
             })->count();
 
             return [
@@ -95,7 +116,7 @@ class ChallengeReportService
             return [
                 'views'            => $challenge->views_count,
                 'discussion_posts' => $challenge->discussions_count,
-                'saves'            => $challenge->favourite_count,
+                'saves'            => $challenge->favouriteCount() ?? 0,
                 'share'            => $challenge->shares_count,
                 'saved_started'    => $savedAndStarted,
                 'shared_started'   => $sharedAndStarted,
@@ -553,10 +574,24 @@ class ChallengeReportService
     public function getPaginatedAssessments($challenge, bool $paginate = true): false|array
     {
         try {
+            if (!$challenge->challenge_assessment) {
+                return [
+                    'assessor'                   => 0,
+                    'project_assessed'           => 0,
+                    'project_pending_assignment' => 0,
+                    'winner_selected'            => 0,
+                    'list'                       => [],
+                ];
+            }
+
             $query = $challenge->challenge_assessment->projects()
                 ->whereAssessment(request()->input('assessment_type') ?? '');
 
             $data = $paginate ? $query->paginate(config('site-settings.pagination_lab_report')) : $query->get();
+
+            $data->each(function ($project) {
+                $project->assessment = $project->challengeAssessmentUsers()->exists() ? 'assessed' : 'pending';
+            });
 
             $counts = $challenge->challenge_assessment()->withCount([
                 'projects as assessed_count' => function ($query) {
@@ -602,7 +637,7 @@ class ChallengeReportService
             $arr = [
                 ['Challenge Title', $challenge->title],
                 ['Status', $challenge->formattedChallengeStatus],
-                ['Deadline', $challenge->challenge_timelines->submission_deadline_date],
+                ['Deadline', $challenge->formatted_submission_deadline_date],
                 ['Level', data_get($challenge->formattedChallengeLevel, 'title')],
                 ['Duration', data_get($challenge->formattedChallengeDuration, 'title')],
                 ['Privacy', $challenge->formattedChallengePrivacy],
@@ -745,13 +780,23 @@ class ChallengeReportService
                 }])
                 ->first();
 
+            if (!$data) {
+                return [
+                    'success' => false,
+                    'message' => __('No assessments found.'),
+                ];
+            }
+
             return [
-                'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
-                'score'        => '0/0',
-                'weight'       => '',
-                'team_members' => $data->member_names,
-                'achievement'  => 'no achievements',
-                'users'        => $data->projects->first()?->users ?? [],
+                'success' => true,
+                'data'    => [
+                    'title'        => $data->projects->first() ? $data->projects->first()->title : '-',
+                    'score'        => '0/0',
+                    'weight'       => '',
+                    'team_members' => $data->member_names,
+                    'achievement'  => 'Participation award',
+                    'users'        => data_get($data->projects()->first(), 'users', []),
+                ],
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -762,7 +807,6 @@ class ChallengeReportService
 
     /**
      * @param $challenge
-     * @param $project_id
      *
      * @return false|array
      */
@@ -770,26 +814,45 @@ class ChallengeReportService
     {
         try {
             $challengeDates = $challenge->challenge_timelines;
-            $data = $challenge->challenge_assessment()->with('projects')
-                ->withCount([
-                    'projects as assessed_count' => function ($query) {
-                        $query->whereHas('challengeAssessmentUsers');
-                    },
-                    'projects as need_to_assess_count' => function ($query) {
-                        $query->whereDoesntHave('challengeAssessmentUsers');
-                    },
-                ])
-                ->first();
+            $projects = $this->fetchProjectsBasedOnChallenge($challenge->id);
 
-            //ProjectService::834
+            if (empty($projects)) {
+                return [
+                    'submitted_status' => [
+                        'submitted'       => 0,
+                        'in_progress'     => 0,
+                        'late_submission' => 0,
+                        'deadline_missed' => 0,
+                        'total'           => 0,
+                    ],
+                    'project_assess_status' => [
+                        'assessed'       => 0,
+                        'need_to_assess' => 0,
+                        'total'          => 0,
+                    ],
+                ];
+            }
+
+            $assessedCount = $projects->filter(function ($project) {
+                return $project->challengeAssessmentUsers()->exists();
+            })->count();
+
+            $needToAssessCount = $projects->filter(function ($project) {
+                return !$project->challengeAssessmentUsers()->exists();
+            })->count();
+
             $counts = [
-                'submitted'       => $data->projects->where('is_submitted', 0)->count(),
-                'in_progress'     => $data->projects->where('is_submitted', 1)->count(),
-                'late_submission' => $data->projects->filter(function ($project) use ($challengeDates) {
-                    return !$project->is_submitted && Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now());
+                'submitted'       => $projects->where('is_submitted', 1)->count(),
+                'in_progress'     => $projects->where('is_submitted', 0)->count(),
+                'late_submission' => $projects->filter(function ($project) use ($challengeDates) {
+                    return !$project->is_submitted &&
+                        ($challengeDates?->submission_deadline_date &&
+                            Carbon::parse($challengeDates->submission_deadline_date)->lessThanOrEqualTo(now()));
                 })->count(),
-                'deadline_missed' => $data->projects->filter(function ($project) use ($challengeDates) {
-                    return !$project->is_submitted && Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now());
+                'deadline_missed' => $projects->filter(function ($project) use ($challengeDates) {
+                    return !$project->is_submitted &&
+                        ($challengeDates?->flexible_expire_deadline &&
+                            Carbon::parse($challengeDates->flexible_expire_deadline)->lessThanOrEqualTo(now()));
                 })->count(),
             ];
 
@@ -799,13 +862,24 @@ class ChallengeReportService
                     'total' => $counts['submitted'] + $counts['in_progress'],
                 ],
                 'project_assess_status' => [
-                    'assessed'       => $data->assessed_count,
-                    'need_to_assess' => $data->need_to_assess_count,
-                    'total'          => $data->assessed_count + $data->need_to_assess_count,
+                    'assessed'       => $assessedCount,
+                    'need_to_assess' => $needToAssessCount,
+                    'total'          => $assessedCount + $needToAssessCount,
                 ],
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
+    public function fetchProjectsBasedOnChallenge($challengeId)
+    {
+        try {
+            return Project::where('challenge_id', $challengeId)->get();
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
             return false;
         }

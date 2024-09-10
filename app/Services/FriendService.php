@@ -130,13 +130,15 @@ class FriendService
         }
     }
 
-    public function getFriendsListing()
+    public function getFriendsListing($user = null)
     {
         try {
-            $friends = Friend::where(function ($query) {
-                $query->where(['reference_id' => auth()->user()->id, 'status' => '1'])
-                    ->orWhere(function ($query) {
-                        $query->where(['user_id' => auth()->user()->id, 'status' => '1']);
+            $getUser = $user ?? auth()->user();
+
+            $friends = Friend::where(function ($query) use ($getUser) {
+                $query->where(['reference_id' => $getUser->id, 'status' => '1'])
+                    ->orWhere(function ($query) use ($getUser) {
+                        $query->where(['user_id' => $getUser->id, 'status' => '1']);
                     });
             })->get();
             if ($friends) {
@@ -323,7 +325,7 @@ class FriendService
     public function dashboardFriendList($userData)
     {
         try {
-            $dashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->get();
+            $dashboardFriendList = Friend::where(['user_id' => $userData->id, 'status' => '0'])->take(5)->get();
 
             return $dashboardFriendList;
         } catch (\Exception $e) {

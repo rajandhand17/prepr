@@ -88,6 +88,15 @@ class MemberManagementController extends AppBaseController
             if ($component != 'organization' && $request->role != 'User') {
                 return $this->sendError(__('responses.select_valid_role_error'), 422);
             }
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+
+            if ($checkComponentBasedOnSlug->organization_id != $organization->id && $component != 'organization') {
+                return $this->sendError(__('responses.invite_switcher_error'), 403);
+            }
+            if ($checkComponentBasedOnSlug->id != $organization->id && $component == 'organization') {
+                return $this->sendError(__('responses.invite_switcher_error'), 403);
+            }
             if ((int) $checkComponentBasedOnSlug->status === 0) {
                 return $this->sendError(__('responses.request_component_draft_stage', ['component' => $component]), 404);
             }

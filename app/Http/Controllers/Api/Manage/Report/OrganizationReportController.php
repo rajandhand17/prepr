@@ -16,8 +16,9 @@ use App\Http\Resources\Manage\Report\OrganizationMemberResource;
 use App\Http\Resources\Manage\Report\OrganizationReportDetailResource;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use App\Repositories\Api\Manage\Report\Organization\OrganizationReportRepository;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganizationReportController extends AppBaseController
@@ -284,8 +285,6 @@ class OrganizationReportController extends AppBaseController
 
     /**
      * @param string $slug
-     *
-     * @return BinaryFileResponse
      */
     public function organizationExport(string $slug)
     {
@@ -293,7 +292,14 @@ class OrganizationReportController extends AppBaseController
             $organization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
 
             if ($organization) {
-                return Excel::download(new OrganizationExport($organization), sprintf('%s-organization-excel.xlsx', $organization->slug));
+                $filename = sprintf('organization-report/%s-organization-excel.xlsx', $organization->slug);
+                Excel::store(
+                    new OrganizationExport($organization),
+                    $filename,
+                    's3'
+                );
+
+                return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.organization_slug_not_found'), 404);

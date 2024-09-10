@@ -1,57 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Reset your password</title>
-	<style>
-		*{ margin:0; padding: 0; }
-		body{ background: #fff; margin: 0; padding: 0; font-family: 'Arial'; }
-
-		@media only screen and (max-width: 640px)  {
-					body[yahoo] .deviceWidth {width:100%!important; padding:0; }
-					body[yahoo] .center {text-align: center!important;}
-					body[yahoo] .banners {width:100% !important;}
-			}
-
-	@media only screen and (max-width: 479px) {
-		body[yahoo] .deviceWidth {width:100%!important; padding:0; }
-	}
-
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>password reset</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+            background-color: #F3F7FC;
+            font-family: 'Poppins', sans-serif;
+            color: #101223;
+        }
+        .content-container {
+            width: 100%;
+            max-width: 600px;
+            background: #F3F7FC;;
+            margin: 40px auto;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header-logo {
+            width: 150px;
+            height: auto;
+            margin: 0 auto 20px;
+        }
+        .title {
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+        .image-container {
+            width: 100%;
+            max-width: 347px;
+            height: auto;
+            margin: 0 auto 20px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #2D9CDB;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 40px;
+        }
+        .message {
+            width: 100%;
+            max-width: 550px;
+            color: #7A7A7A;
+            font-weight: 400;
+            font-size: 16px;
+            text-align: left;
+            margin: 0 auto 50px;
+            line-height: 1.5;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #7A7A7A;
+            margin-top: 40px;
+        }
+        .footer .contact {
+            color: #4992CE;
+            margin-top: 10px;
+        }
+    </style>
 </head>
-<body yahoo="fix">
-	<table width="100%" bgcolor="#ffffff" cellpadding="0" cellspacing="0" align="center">
-		<tr>
-			<td width="100%" align="center">
-				<table width="650" bgcolor="#F6F6F6" cellpadding="0" cellspacing="0" align="center" class="deviceWidth">
-					<tr>
-						<td align="center" style="padding: 10px 0;"><img src="/" alt=""></td>
-					</tr>
-					<tr>
-						<td style="font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: #585858; padding: 20px;line-height:150%;">Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }},<br>
-						  <br>
-						  {{__("responses.reset_password_email")}}</td>
-                    </tr>
-					<tr>
-						<td style="border-bottom: 1px #cecece solid;">&nbsp;</td>
-					</tr>
 
-					<tr>
-	                    <td bgcolor="#dbdada" style="font-family:Helvetica, Arial, sans-serif; font-size:11px; color:#7b7b7b; padding:5px 20px 15px; vertical-align:middle; text-align:center;" width="100%">
-	                        You received this email to inform / update you about your
-	                        product or account.<br>
-	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/contact/">
-	                            Click here
-	                        </a>
-	                            to view our contact details | Read our
-	                        <a style="text-decoration:underline; color:#7b7b7b;" target="_blank" href="https://prepr.org/privacy-policy/">
-	                            Privacy Policy
-	                        </a>
-	                    </td>
-                	</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+<body>
+    <div class="content-container">
+        <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
+        <div class="title">Password Reset Successfully</div>
+        <img class="image-container" src="{{ config('site-settings.aws_url') }}front/img/resetpassword.png" alt="Image"><br>
+        <div class="message">
+			Dear {{ ucfirst($data['first_name']); }} {{ ucfirst($data['last_name']); }}
+            <br><br>
+			You are receiving this email because your PreprLabs password is changed. If you have not requested this reset, please email us at support@prepr.org for assistance.
+			<br><br>
+            Regards,
+            <br>
+            Prepr team
+        </div>
+        <div class="footer">
+            ©2023 Preprlabs. All rights reserved.
+            <div class="contact">support@prepr.org</div>
+            This email message was auto-generated. If you need assistance please contact us.
+        </div>
+    </div>
 </body>
 </html>
+

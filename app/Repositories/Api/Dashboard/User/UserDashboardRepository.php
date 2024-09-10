@@ -82,10 +82,10 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function getChallengeList($challengeIds)
+    public function getChallengeDashboardList($challengeIds)
     {
         try {
-            return $this->challengeService->getChallengeList($challengeIds);
+            return $this->challengeService->getChallengeDashboardList($challengeIds);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -115,10 +115,10 @@ class UserDashboardRepository implements UserDashboardInterface
         }
     }
 
-    public function getLabList($labIds)
+    public function getLabDashboardList($labIds)
     {
         try {
-            return $this->labService->getLabList($labIds);
+            return $this->labService->getLabDashboardList($labIds);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -338,7 +338,7 @@ class UserDashboardRepository implements UserDashboardInterface
     public function fetchUserDashboardLayout($userData, $dashboardType)
     {
         try {
-            return $this->dashboardLayoutService->fetchUserDashboardLayout($userData, $dashboardType);
+            return $this->dashboardLayoutService->fetchDashboardLayout($userData, $dashboardType);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -350,6 +350,17 @@ class UserDashboardRepository implements UserDashboardInterface
     {
         try {
             return $this->dashboardLayoutService->updateDashboardLayout($request, $userData, $dashboardType);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function storeStaticDefaultLayout($userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->storeStaticDefaultLayout($userData, $dashboardType);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

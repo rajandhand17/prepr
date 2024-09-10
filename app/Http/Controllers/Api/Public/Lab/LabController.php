@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Public\Lab;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -168,6 +169,13 @@ class LabController extends AppBaseController
                 }
                 $joinLab = $this->labRepository->joinLab($lab, $component, $requestedData, $memberList);
                 if ($joinLab) {
+                    // SEND NOTIFICATIONS
+                    LearningPointsHelper::sendBulkLearningPointNotification(
+                        [auth()->id()],
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'type'),
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'points')
+                    );
+
                     return $this->sendResponse([], __('responses.join_lab_successfully'));
                 }
 
@@ -315,7 +323,7 @@ class LabController extends AppBaseController
         try {
             $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
-                return $this->sendError(__('responses.Lab_not_found'), 403);
+                return $this->sendError(__('responses.lab_not_found'), 403);
             }
 
             $fetchHistory = $this->labRepository->fetchHistory($checkLabExistsOrNot->id);

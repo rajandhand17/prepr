@@ -100,18 +100,34 @@ class UserExperienceService
         }
     }
 
+    public static function deleteFile($id)
+    {
+        try {
+            $deleteFile = UserPersonalFile::query()->where('id', $id)->delete();
+            if ($deleteFile) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
     public static function updateFilePrivacy($id)
     {
         try {
             $isPublic = UserPersonalFile::where('id', $id)->first();
             if ($isPublic->public == 1) {
-                UserPersonalFile::where('id', $id)->update(['public'=> 0]);
+                UserPersonalFile::where('id', $id)->update(['public' => 0]);
             } else {
-                UserPersonalFile::where('id', $id)->update(['public'=> 1]);
+                UserPersonalFile::where('id', $id)->update(['public' => 1]);
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

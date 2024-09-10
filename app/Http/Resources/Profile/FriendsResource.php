@@ -14,7 +14,7 @@ class FriendsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $profile = $this->reference_id == auth()->user()->id ? $this->getFriendsProfileBasedOnUserId : $this->getFriendsProfilebasedOnReference;
+        $profile = $this->reference_id == auth('api')->id() ? $this->getFriendsProfileBasedOnUserId : $this->getFriendsProfilebasedOnReference;
         $data = [];
         if ($profile) {
             $data = [
@@ -28,7 +28,8 @@ class FriendsResource extends JsonResource
                 'country_code'  => $profile->country_code,
                 'phone_number'  => $profile->phone_number,
                 'profile_image' => $profile->profile_image,
-                'learnrank'     => '1',
+                'learnrank'     => $profile->user_rank,
+                'updated_at'    => $profile->updated_at,
             ];
         }
 

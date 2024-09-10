@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Project;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
@@ -173,6 +174,13 @@ class ProjectController extends AppBaseController
             }
             $createProject = $this->projectRepository->createProject($request, $upload_project_cover_media);
             if ($createProject) {
+                // SEND NOTIFICATIONS
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    [auth()->id()],
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'points')
+                );
+
                 return $this->sendResponse(ProjectResource::make($createProject), __('responses.project_stored_success'), 200);
             }
 
@@ -237,11 +245,17 @@ class ProjectController extends AppBaseController
         try {
             $project = $this->projectRepository->getProjectBasedOnSlug($slug);
             if ($project) {
-                $userId = auth()->user()->id;
-                if ($userId == $project->user_id) {
-                    // For last visited activity tracking
-                    $moduleType = config('constants.module_type.projects');
-                    LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                if (auth('api')->check()) {
+                    $userId = auth('api')->user()->id;
+                    if ($userId == $project->user_id) {
+                        // For last visited activity tracking
+                        $moduleType = config('constants.module_type.projects');
+                        LastVisitedActivityModuleService::lastVisitedActivityModule($project->id, $userId, $moduleType);
+                    }
+                }
+
+                if (!auth('api')->check() && $project->privacy == '1') {
+                    return $this->sendError(__('responses.project_set_private'), 403);
                 }
 
                 return $this->sendResponse(ProjectResource::make($project), __('responses.found_project_detail'), 200);
@@ -397,7 +411,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectSlugExistsOrNot->is_submitted == '1') {
+            if (in_array($checkProjectSlugExistsOrNot->is_submitted, ['1', '2'])) {
                 return $this->sendError(__('responses.project_already_submitted'), 400);
             }
 
@@ -408,10 +422,11 @@ class ProjectController extends AppBaseController
 
             $checkLateSubmission = $this->projectRepository->checkSubmisstionDate($checkProjectSlugExistsOrNot);
             $submitProject = $this->projectRepository->submitProject($checkProjectSlugExistsOrNot, $checkLateSubmission, $request);
-            if ($submitProject == 'no') {
+
+            if ($submitProject === 'no') {
                 return $this->sendError(__('responses.late_submission_reason_required'), 400);
             }
-            if ($submitProject == 'true') {
+            if ($submitProject === true) {
                 return $this->sendResponse(ProjectResource::make($checkProjectSlugExistsOrNot), __('responses.project_submitted'), 200);
             }
 

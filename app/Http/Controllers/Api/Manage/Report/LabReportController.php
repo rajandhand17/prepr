@@ -15,9 +15,13 @@ use App\Http\Resources\Manage\Report\LabReportDetailsResource;
 use App\Http\Resources\Public\Lab\LabAchievementResource;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\Report\Lab\LabReportRepository;
+use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class LabReportController extends AppBaseController
@@ -363,14 +367,17 @@ class LabReportController extends AppBaseController
     /**
      * @param string $slug
      *
-     * @return BinaryFileResponse
+     * @return Application|\Illuminate\Foundation\Application|RedirectResponse|Redirector
      */
     public function labExport(string $slug)
     {
         try {
             $lab = $this->labRepository->getLabBasedOnSlug($slug);
             if ($lab) {
-                return Excel::download(new LabExport($lab), sprintf('%s-lab-excel.xlsx', $lab->slug));
+                $filename = sprintf('lab-report/%s-lab-excel.xlsx', $lab->slug);
+                Excel::store(new LabExport($lab), $filename, 's3');
+
+                return redirect(Storage::temporaryUrl($filename, Carbon::now()->addMinutes(30)));
             }
 
             return $this->sendError(__('responses.lab_slug_not_found'), Response::HTTP_NOT_FOUND);
