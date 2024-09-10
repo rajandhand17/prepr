@@ -91,48 +91,25 @@ class MemberManagementService
             if ($request->has('role') && !empty($request->role)) {
                 $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
-            if ($request->has('invite_status') && !empty($request->invite_status)) {
-                $invite_status = null;
-                switch ($request->invite_status) {
-                    case 'invited':
-                        $invite_status = config('constants.member_management_invite_status.invited');
-                        break;
-                    case 'accepted':
-                        $invite_status = config('constants.member_management_invite_status.accepted');
-                        break;
-                    case 'pending':
-                        $invite_status = config('constants.member_management_invite_status.pending');
-                        break;
-                    case 'declined':
-                        $invite_status = config('constants.member_management_invite_status.declined');
-                        break;
-                    case 'auto_created':
-                        $invite_status = config('constants.member_management_invite_status.auto_created');
-                        break;
-                    default:
-                        $invite_status = null;
+
+            if (isset($request->request_status) && isset($request->invite_status)) {
+                $requestAndInviteStatus = $request->request_status.','.$request->invite_status;
+                $statusIds = self::getInviteAndRequestStatus($requestAndInviteStatus, 'combine');
+                if ($statusIds != null) {
+                    $componentCollectionObject = $componentCollectionObject->whereIn('invite_status', $statusIds);
                 }
+            } elseif (isset($request->request_status)) {
+                $request_status = self::getInviteAndRequestStatus($request->request_status, 'single');
+                if ($request_status != null) {
+                    $componentCollectionObject = $componentCollectionObject->where('invite_status', $request_status);
+                }
+            } elseif (isset($request->invite_status)) {
+                $invite_status = self::getInviteAndRequestStatus($request->invite_status, 'single');
                 if ($invite_status != null) {
                     $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
                 }
             }
-            if ($request->has('request_status') && !empty($request->request_status)) {
-                $request_status = null;
-                switch ($request->request_status) {
-                    case 'invited':
-                        $request_status = config('constants.member_management_request_status.invited');
-                        break;
-                    case 'join_request':
-                        $request_status = config('constants.member_management_request_status.join_request');
-                        break;
-                    case 'auto_created':
-                        $request_status = config('constants.member_management_request_status.auto_created');
-                        break;
-                }
-                if ($request_status != null) {
-                    $componentCollectionObject = $componentCollectionObject->where('type', $request_status);
-                }
-            }
+
             if ($request->has('invite_type') && !empty($request->invite_type)) {
                 $invite_type = null;
                 switch ($request->invite_type) {
@@ -248,6 +225,66 @@ class MemberManagementService
             }
 
             return $componentCollectionObject;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getInviteAndRequestStatus($inviteAndRequestStatus, $statusType)
+    {
+        try {
+            $statusData = null;
+            if ($statusType == 'single') {
+                switch ($inviteAndRequestStatus) {
+                    case 'invited':
+                        $statusData = config('constants.member_management_invite_status.invited');
+                        break;
+                    case 'accepted':
+                        $statusData = config('constants.member_management_invite_status.accepted');
+                        break;
+                    case 'pending':
+                        $statusData = config('constants.member_management_invite_status.pending');
+                        break;
+                    case 'declined':
+                        $statusData = config('constants.member_management_invite_status.declined');
+                        break;
+                    case 'auto_created':
+                        $statusData = config('constants.member_management_invite_status.auto_created');
+                        break;
+                }
+
+                return $statusData;
+            } elseif ($statusType == 'combine') {
+                $statusData = [];
+                foreach (explode(',', $inviteAndRequestStatus) as $statusIdData) {
+                    switch ($statusIdData) {
+                        case 'invited':
+                            $statusId = config('constants.member_management_invite_status.invited');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'accepted':
+                            $statusId = config('constants.member_management_invite_status.accepted');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'pending':
+                            $statusId = config('constants.member_management_invite_status.pending');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'declined':
+                            $statusId = config('constants.member_management_invite_status.declined');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'auto_created':
+                            $statusId = config('constants.member_management_invite_status.auto_created');
+                            $statusData[] = $statusId;
+                            break;
+                    }
+                }
+
+                return $statusData;
+            }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

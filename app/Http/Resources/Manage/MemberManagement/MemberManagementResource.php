@@ -138,22 +138,11 @@ class MemberManagementResource extends JsonResource
                 }
             }
         }
-        switch ($this->type) {
-            case '0':
-                $request_status = 'invited';
-                break;
-            case '1':
-                $request_status = 'join_request';
-                break;
-            case '2':
-                $request_status = 'auto_created';
-                break;
-        }
 
         return [
             'id'               => $this->uuid,
             'invite_type'      => $invite_type,
-            'request_status'   => $request_status,
+            'request_status'   => $invite_status,
             'name'             => $this->invitee_name,
             'email'            => $this->email,
             'username'         => $username,

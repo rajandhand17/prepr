@@ -27,6 +27,7 @@ class ScormResource extends JsonResource
             'origin_file_mime' => $this->whenHas('origin_file_mime'),
             'entry_url'        => $this->whenHas('scorm_entry_url'),
             'scos'             => ScormScoResource::collection($this->whenLoaded('scos')),
+            'completed'        => $this->whenHas('completed'),
         ];
     }
 }
