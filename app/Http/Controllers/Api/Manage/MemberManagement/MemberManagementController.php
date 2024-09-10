@@ -50,7 +50,7 @@ class MemberManagementController extends AppBaseController
                 'id'                          => $checkComponentBasedOnSlug->uuid,
                 'title'                       => $checkComponentBasedOnSlug->title,
                 'slug'                        => $checkComponentBasedOnSlug->slug,
-                'invitation_email'            => EmailTemplateResource::make($getTemplate),
+                'invitation_email'            => !empty($getTemplate) ? EmailTemplateResource::make($getTemplate) : null,
             ];
             if ($memberManagementListing) {
                 $response['total_user_count'] = $memberManagementListing->total();

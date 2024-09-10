@@ -63,7 +63,7 @@ class UpdateLabProgramRequest extends FormRequest
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required';
-            $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
+            $base_rules['achievement_image'] = 'mimes:jpeg,jpg,png,webp|max:1024';
         }
 
         // Lab Program cover image validation
@@ -152,7 +152,6 @@ class UpdateLabProgramRequest extends FormRequest
             'achievement_name.required'      => __('responses.achievement_name_required'),
             'achievement_points.required'    => __('responses.achievement_points_required'),
             'achievement_condition.required' => __('responses.achievement_conditions_required'),
-            'achievement_image.required'     => __('responses.achievement_image_required'),
             'achievement_image.mimes'        => __('responses.mimes_image'),
             'achievement_image.max'          => __('responses.mimes_image_max'),
             'type.required'                  => __('responses.type_required'),
