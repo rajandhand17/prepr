@@ -49,7 +49,8 @@ class MemberMangerSendEmail extends Command
                 $data = ['subject' => 'Invite Users', 'first_name' =>'first_name', 'last_name' =>'last_name', 'otp' =>'otp'];
                 $mail = SendMailHelper::sendMail($user, 'email.member_manager_invite_users', $data);
                 if ($mail) {
-                    $update_member_management = MemberManagement::where('email', $list->email)->update(['email_status'=>'1', 'invite_status'=>'2']);
+                    $inviteStatus = $list->auto_invite != '1' ? '2' : '1';
+                    $update_member_management = MemberManagement::where('email', $list->email)->update(['email_status'=>'1', 'invite_status'=>$inviteStatus]);
                     if ($update_member_management) {
                         DB::commit();
                         $this->info('Member manger emails send');
