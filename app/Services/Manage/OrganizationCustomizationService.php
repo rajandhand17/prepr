@@ -94,8 +94,7 @@ class OrganizationCustomizationService
     public static function checkOrganizationCustomizationData($custom_url)
     {
         try {
-            $checkOrganizationCustomizationData = OrganizationCustomization::where('custom_url', $custom_url)->first();
-
+            $checkOrganizationCustomizationData = OrganizationCustomization::where('custom_url', $custom_url)->orWhereRelation('organization','slug',$custom_url)->first();
             return $checkOrganizationCustomizationData;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
