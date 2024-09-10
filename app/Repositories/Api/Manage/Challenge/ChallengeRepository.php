@@ -129,60 +129,100 @@ class ChallengeRepository implements ChallengeInterface
     public function createChallenge($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData)
     {
         try {
-            DB::beginTransaction();
-            $updateChallengeDescription = true;
-            $createChallenge = $this->challengeService->createChallenge($request, $uploaded_cover_image, $organizationData->id);
-            if ($request->description_type === 'scorm') {
-                $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $createChallenge->id, $request->file('scorm_file'), $createChallenge->scorm);
+            $createChallenge = DB::transaction(function () use ($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData) {
+                $updateChallengeDescription = true;
+                $createChallenge = $this->challengeService->createChallenge($request, $uploaded_cover_image, $organizationData->id);
+                if ($request->description_type == 'scorm') {
+                    $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $createChallenge->id, $request->file('scorm_file'), $createChallenge->scorm);
+                }
+                $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $uploaded_achievement_image);
+                $createChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $createChallenge->id);
+                $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
+                $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
+                $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
+                $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
+                $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $uploaded_assessment_attachment);
+                $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
+                $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
+                $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
+                $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
+                $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
+                $createChallengeComponentAssociation = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
+
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($createChallenge, 'id'),
+                        data_get($createChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organizationData,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($createChallenge, 'id'),
+                        data_get($createChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organizationData,
+                    );
+                }
+
+                if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception('Failed to create challenge');
+                }
+
+                return [
+                    'createChallenge'                     => $createChallenge,
+                    'updateChallengeDescription'          => $updateChallengeDescription,
+                    'createChallengeAchievement'          => $createChallengeAchievement,
+                    'createChallengeTypeMode'             => $createChallengeTypeMode,
+                    'createChallengeSponsor'              => $createChallengeSponsor,
+                    'createChallengeJobs'                 => $createChallengeJobs,
+                    'createChallengeSkillsGroupsStack'    => $createChallengeSkillsGroupsStack,
+                    'createChallengeRequirement'          => $createChallengeRequirement,
+                    'createChallengeAssessmentCriteria'   => $createChallengeAssessmentCriteria,
+                    'createChallengeAssessment'           => $createChallengeAssessment,
+                    'createChallengeProjectTemplate'      => $createChallengeProjectTemplate,
+                    'createChallengeTimelines'            => $createChallengeTimelines,
+                    'createChallengeCustomTimelines'      => $createChallengeCustomTimelines,
+                    'createChallengeExternalLink'         => $createChallengeExternalLink,
+                    'createChallengeComponentAssociation' => $createChallengeComponentAssociation,
+                    'campusConnectOpportunity'            => $campusConnectOpportunity,
+                    'campusConnectStory'                  => $campusConnectStory,
+                ];
+            });
+            if (
+                $createChallenge['createChallenge'] &&
+                $createChallenge['updateChallengeDescription'] &&
+                $createChallenge['createChallengeAchievement'] &&
+                $createChallenge['createChallengeTypeMode'] &&
+                $createChallenge['createChallengeSponsor'] &&
+                $createChallenge['createChallengeJobs'] &&
+                $createChallenge['createChallengeSkillsGroupsStack'] &&
+                $createChallenge['createChallengeRequirement'] &&
+                $createChallenge['createChallengeAssessmentCriteria'] &&
+                $createChallenge['createChallengeAssessment'] &&
+                $createChallenge['createChallengeProjectTemplate'] &&
+                $createChallenge['createChallengeTimelines'] &&
+                $createChallenge['createChallengeCustomTimelines'] &&
+                $createChallenge['createChallengeExternalLink'] &&
+                $createChallenge['createChallengeComponentAssociation'] &&
+                $createChallenge['campusConnectOpportunity'] &&
+                $createChallenge['campusConnectStory']
+            ) {
+                // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
+
+                return $createChallenge['createChallenge'];
             }
-            $createChallengeAchievement = $this->challengeAchievementService->createChallengeAchievement($request, $createChallenge->id, $uploaded_achievement_image);
-            $createChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $createChallenge->id);
-            $createChallengeSponsor = $this->challengeSponsorService->createChallengeSponsor($request, $createChallenge->id);
-            $createChallengeJobs = $this->challengeJobsService->createChallengeJobs($request, $createChallenge->id);
-            $createChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->createChallengeSkillsGroupsStack($request, $createChallenge->id);
-            $createChallengeRequirement = $this->challengeRequirementService->createChallengeRequirement($request, $createChallenge->id);
-            $createChallengeAssessment = $this->challengeAssessmentService->createChallengeAssessment($request, $createChallenge->id, $uploaded_assessment_attachment);
-            $createChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->createChallengeAssessmentCriteria($request, $createChallenge->id, $createChallengeAssessment);
-            $createChallengeProjectTemplate = $this->challengeProjectTemplateService->createChallengeProjectTemplate($request, $createChallenge->id);
-            $createChallengeTimelines = $this->challengeTimelinesService->createChallengeTimelines($request, $createChallenge->id);
-            $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
-            $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
-            $createChallengeComponentAssociation = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
 
-            $campusConnectOpportunity = true;
-            $campusConnectStory = true;
-            if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
-                $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
-                    data_get($createChallenge, 'id'),
-                    data_get($createChallenge, 'slug', '-'),
-                    Challenge::class,
-                    $request->all(),
-                    $organizationData,
-                    auth()->user(),
-                    $request->get('skills', [])
-                );
-            }
-
-            if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
-                $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
-                    data_get($createChallenge, 'id'),
-                    data_get($createChallenge, 'slug', '-'),
-                    Challenge::class,
-                    $request->all(),
-                    $organizationData,
-                );
-            }
-
-            if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
-                throw new Exception('Failed to create challenge');
-            }
-
-            DB::commit();
-            // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
-
-            return $createChallenge;
+            return false;
         } catch (Exception $e) {
-            DB::rollBack();
             UtilityHelper::logError($e);
             Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
 
@@ -321,69 +361,110 @@ class ChallengeRepository implements ChallengeInterface
     public function updateChallenge($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData)
     {
         try {
-            DB::beginTransaction();
-            $updateChallengeDescription = true;
-            $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image, $organizationData->id);
-            if ($request->description_type == 'scorm' && $request->file('scorm_file')) {
-                $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
+            $updateChallenge = DB::transaction(function () use ($slug, $request, $update_cover_image, $update_participation_achievement_image, $update_assessment_attachment, $organizationData) {
+                $updateChallengeDescription = true;
+                $updateChallenge = $this->challengeService->updateChallenge($slug, $request, $update_cover_image, $organizationData->id);
+                if ($request->description_type == 'scorm' && $request->file('scorm_file')) {
+                    $updateChallengeDescription = $this->scormRepository->upload(Challenge::class, $updateChallenge->id, $request->file('scorm_file'), $updateChallenge->scorm);
+                }
+                $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
+                $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
+                $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
+                $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
+                $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
+                $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
+                $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
+                $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
+
+                $updateChallengeAchievement = true;
+                $updateChallengeRequirement = true;
+                $updateChallengeAssessment = true;
+                $updateChallengeAssessmentCriteria = true;
+                $updateChallengeProjectTemplate = true;
+
+                if (!Challenge::query()->whereHas('submitted_projects')->where('slug', $slug)->exists()) {
+                    $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
+                    $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
+                    $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
+                    $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
+                    $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
+                }
+
+                $campusConnectOpportunity = true;
+                $campusConnectStory = true;
+                if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
+                    $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
+                        data_get($updateChallenge, 'id'),
+                        data_get($updateChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organizationData,
+                        auth()->user(),
+                        $request->get('skills', [])
+                    );
+                }
+
+                if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
+                    $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
+                        data_get($updateChallenge, 'id'),
+                        data_get($updateChallenge, 'slug', '-'),
+                        Challenge::class,
+                        $request->all(),
+                        $organizationData,
+                    );
+                }
+
+                if (!$updateChallenge || !$updateChallengeDescription || !$updateChallengeTypeMode || !$updateChallengeAchievement || !$updateChallengeSponsor || !$updateChallengeJobs || !$updateChallengeSkillsGroupsStack || !$updateChallengeRequirement || !$updateChallengeAssessmentCriteria || !$updateChallengeAssessment || !$updateChallengeProjectTemplate || !$updateChallengeTimelines || !$updateChallengeCustomTimelines || !$updateChallengeExternalLinks || !$updateChallengeAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                    throw new Exception('Failed to update challenge');
+                }
+
+                return [
+                    'updateChallenge'                   => $updateChallenge,
+                    'updateChallengeDescription'        => $updateChallengeDescription,
+                    'updateChallengeTypeMode'           => $updateChallengeTypeMode,
+                    'updateChallengeAchievement'        => $updateChallengeAchievement,
+                    'updateChallengeSponsor'            => $updateChallengeSponsor,
+                    'updateChallengeJobs'               => $updateChallengeJobs,
+                    'updateChallengeSkillsGroupsStack'  => $updateChallengeSkillsGroupsStack,
+                    'updateChallengeRequirement'        => $updateChallengeRequirement,
+                    'updateChallengeAssessmentCriteria' => $updateChallengeAssessmentCriteria,
+                    'updateChallengeAssessment'         => $updateChallengeAssessment,
+                    'updateChallengeProjectTemplate'    => $updateChallengeProjectTemplate,
+                    'updateChallengeTimelines'          => $updateChallengeTimelines,
+                    'updateChallengeCustomTimelines'    => $updateChallengeCustomTimelines,
+                    'updateChallengeExternalLinks'      => $updateChallengeExternalLinks,
+                    'updateChallengeAssociation'        => $updateChallengeAssociation,
+                    'campusConnectOpportunity'          => $campusConnectOpportunity,
+                    'campusConnectStory'                => $campusConnectStory,
+                ];
+            });
+
+            if (
+                $updateChallenge['updateChallenge'] &&
+                $updateChallenge['updateChallengeDescription'] &&
+                $updateChallenge['updateChallengeTypeMode'] &&
+                $updateChallenge['updateChallengeAchievement'] &&
+                $updateChallenge['updateChallengeSponsor'] &&
+                $updateChallenge['updateChallengeJobs'] &&
+                $updateChallenge['updateChallengeSkillsGroupsStack'] &&
+                $updateChallenge['updateChallengeRequirement'] &&
+                $updateChallenge['updateChallengeAssessmentCriteria'] &&
+                $updateChallenge['updateChallengeAssessment'] &&
+                $updateChallenge['updateChallengeProjectTemplate'] &&
+                $updateChallenge['updateChallengeTimelines'] &&
+                $updateChallenge['updateChallengeCustomTimelines'] &&
+                $updateChallenge['updateChallengeExternalLinks'] &&
+                $updateChallenge['updateChallengeAssociation'] &&
+                $updateChallenge['campusConnectOpportunity'] &&
+                $updateChallenge['campusConnectStory']
+            ) {
+                // MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
+
+                return $updateChallenge['updateChallenge'];
             }
-            $updateChallengeTypeMode = $this->challengeTypeModeService->storeChallengeTypeMode($request, $updateChallenge->id);
-            $updateChallengeSponsor = $this->challengeSponsorService->updateChallengeSponsor($updateChallenge->id, $request);
-            $updateChallengeJobs = $this->challengeJobsService->updateChallengeJobs($request, $updateChallenge->id);
-            $updateChallengeSkillsGroupsStack = $this->challengeSkillsGroupsStackService->updateChallengeSkillsGroupsStack($request, $updateChallenge->id);
-            $updateChallengeTimelines = $this->challengeTimelinesService->updateChallengeTimelines($request, $updateChallenge->id);
-            $updateChallengeCustomTimelines = $this->challengeCustomTimelinesService->updateChallengeCustomTimelines($request, $updateChallenge->id);
-            $updateChallengeExternalLinks = $this->challengeExternalLinkService->updateChallengeExternalLink($request, $updateChallenge->id);
-            $updateChallengeAssociation = $this->componentAssociationService->updateChallengeComponentAssociation($request, $updateChallenge->id);
 
-            $updateChallengeAchievement = true;
-            $updateChallengeRequirement = true;
-            $updateChallengeAssessment = true;
-            $updateChallengeAssessmentCriteria = true;
-            $updateChallengeProjectTemplate = true;
-
-            if (!Challenge::query()->whereHas('submitted_projects')->where('slug', $slug)->exists()) {
-                $updateChallengeAchievement = $this->challengeAchievementService->updateChallengeAchievement($updateChallenge->id, $request, $update_participation_achievement_image);
-                $updateChallengeRequirement = $this->challengeRequirementService->updateChallengeRequirement($request, $updateChallenge->id);
-                $updateChallengeAssessment = $this->challengeAssessmentService->updateChallengeAssessment($request, $updateChallenge->id, $update_assessment_attachment);
-                $updateChallengeAssessmentCriteria = $this->challengeAssessmentCriteriaService->updateChallengeAssessmentCriteria($request, $updateChallenge->id, $updateChallengeAssessment);
-                $updateChallengeProjectTemplate = $this->challengeProjectTemplateService->updateChallengeProjectTemplate($request, $updateChallenge->id);
-            }
-
-            $campusConnectOpportunity = true;
-            $campusConnectStory = true;
-            if (in_array($request->integrate_campus_connect, ['job', 'both'])) {
-                $campusConnectOpportunity = $this->campusConnectOpportunityService->updateOrCreate(
-                    data_get($updateChallenge, 'id'),
-                    data_get($updateChallenge, 'slug', '-'),
-                    Challenge::class,
-                    $request->all(),
-                    $organizationData,
-                    auth()->user(),
-                    $request->get('skills', [])
-                );
-            }
-
-            if (in_array($request->integrate_campus_connect, ['story', 'both'])) {
-                $campusConnectStory = $this->campusConnectStoryService->UpdateOrCreate(
-                    data_get($updateChallenge, 'id'),
-                    data_get($updateChallenge, 'slug', '-'),
-                    Challenge::class,
-                    $request->all(),
-                    $organizationData,
-                );
-            }
-
-            if (!$updateChallenge || !$updateChallengeDescription || !$updateChallengeTypeMode || !$updateChallengeAchievement || !$updateChallengeSponsor || !$updateChallengeJobs || !$updateChallengeSkillsGroupsStack || !$updateChallengeRequirement || !$updateChallengeAssessmentCriteria || !$updateChallengeAssessment || !$updateChallengeProjectTemplate || !$updateChallengeTimelines || !$updateChallengeCustomTimelines || !$updateChallengeExternalLinks || !$updateChallengeAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
-                throw new Exception('Failed to update challenge');
-            }
-
-            DB::commit();
-            // MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
-
-            return $updateChallenge;
+            return false;
         } catch (Exception $e) {
-            DB::rollBack();
             UtilityHelper::logError($e);
 
             return false;
