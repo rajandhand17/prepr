@@ -27,6 +27,7 @@ class PendingRequestsResources extends JsonResource
             $userDetails['id'] = $getUsersDetails['id'];
             $userDetails['full_name'] = $getUsersDetails['full_name'];
             $userDetails['username'] = $getUsersDetails['username'];
+            $userDetails['email'] = $getUsersDetails['email'];
             $userDetails['profile_image'] = $getUsersDetails['profile_image'];
             $userDetails['user_points'] = $getUsersDetails['user_points'];
             $userDetails['user_rank'] = $getUsersDetails['user_rank'];
