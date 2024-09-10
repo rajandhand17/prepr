@@ -43,7 +43,7 @@ class ChallengeAchievementService
                     $upload_incentive_achievement_image = isset($request->winner_achievement_image[$key]) ? self::uploadChallengeIncentiveAchievementImage($request->winner_achievement_image[$key]) : config('site-settings.default_challenge_achievement_image');
                     $incentive_achievement_name = isset($request->winner_achievement_name[$key]) ? $request->winner_achievement_name[$key] : null;
                     $incentive_achievement_prize = isset($request->winner_achievement_prize[$key]) ? $request->winner_achievement_prize[$key] : null;
-                    $incentive_achievement_points = isset($request->winner_achievement_point[$key]) ? $request->winner_achievement_point[$key] : null;
+                    $incentive_achievement_points = isset($request->winner_achievement_points[$key]) ? $request->winner_achievement_points[$key] : null;
 
                     $challengeIncentiveAchievement = new ChallengeAchievement();
                     $challengeIncentiveAchievement->challenge_id = $challenge;

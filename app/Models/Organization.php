@@ -24,7 +24,7 @@ class Organization extends LaratrustTeam
         'slug',
         'cover_image',
         'profile_image',
-        'custom_url',
+        'vanity_slug',
         'website',
         'about',
         'category',
@@ -131,12 +131,20 @@ class Organization extends LaratrustTeam
 
     public function pre_built_labs_count()
     {
-        return $this->hasMany(Lab::class, 'organization_id', 'id')->where(['is_pre_built' => '1']);
+        return $this->hasMany(LabChallengeRedeem::class, 'organization_id', 'id')->where(['is_redeemed' => '1'])->whereNotNull('lab_id')->whereIn('lab_id', $this->labs()->pluck('id'));
     }
 
     public function labs_count()
     {
         return $this->hasMany(Lab::class, 'organization_id', 'id');
+    }
+
+    public function created_labs_count()
+    {
+        $totalLabs = $this->labs_count()->count();
+        $preBuiltLabs = $this->pre_built_labs_count()->count();
+
+        return $totalLabs - $preBuiltLabs;
     }
 
     public function lab_programs_count()

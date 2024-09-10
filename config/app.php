@@ -254,7 +254,7 @@ return [
         App\Repositories\Api\Public\Scorm\ScormTracking\ScormTrackingServiceProvider::class,
         App\Repositories\Api\Public\AirmeetEvent\AirmeetEventServiceProvider::class,
         App\Repositories\Api\Public\AdvanceSearch\AdvanceSearchServiceProvider::class,
-
+        App\Repositories\Api\Public\Notification\NotificationServiceProvider::class,
         /* GO1 */
         App\Repositories\Api\GO1\GO1ServiceProvider::class,
 

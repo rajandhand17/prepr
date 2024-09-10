@@ -13,6 +13,7 @@ use App\Http\Resources\Public\Scorm\ScormResource;
 use App\Services\JobTitleService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeSponsorService;
+use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\Public\ChallengeService;
 use App\Services\Public\LabProgramService;
@@ -246,7 +247,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
-                    'schedule_custom_notify'       => $item->schedule_custom_notify,
+                    'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
                 ];
             });
         }
@@ -273,7 +274,9 @@ class ChallengeResource extends JsonResource
                 $media = $this->media;
                 break;
         }
-
+        if ($media == config('site-settings.aws_url').config('site-settings.default_challenge_cover_image') || $media == config('site-settings.aws_url')) {
+            $media = null;
+        }
         $joined_status = $this->joined();
         $join_status = 'No';
         if ($joined_status != 'NA' && $joined_status != null) {
@@ -355,6 +358,44 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        $privacy = ($this->privacy == '1') ? 'yes' : 'no';
+        $isActive = 'none';
+        if (auth('api')->check()) {
+            $isActive = 'yes';
+            if ($privacy == 'yes' && $join_status != 'Yes') {
+                $isActive = 'no';
+            }
+
+            $checkProjectStatus = ProjectService::checkUserChallengeStatus($this->id, auth('api')->user()->id);
+            if ($checkProjectStatus) {
+                switch ($checkProjectStatus->is_submitted) {
+                    case '0':
+                        $isActive = 'in_progress';
+                        break;
+
+                    case '1':
+                        $isActive = 'submitted';
+                        break;
+
+                    case '2':
+                        $isActive = 'late_submitted';
+                        break;
+                }
+            }
+        }
+
+        $challenge_status = 'Closed';
+
+        if ($this->status == '0' && $this->is_open == '0') {
+            $challenge_status = 'Draft';
+        } elseif ($this->status == '1' && $this->is_open == '0') {
+            $challenge_status = 'Active';
+        } elseif ($this->is_open == '1') {
+            $challenge_status = 'Closed';
+        } elseif ($this->is_open == '2') {
+            $challenge_status = 'Completed';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -374,7 +415,7 @@ class ChallengeResource extends JsonResource
             'description_type'                  => $this->description_type == '1' ? 'scorm' : 'text',
             'description'                       => $is_authenticated_user ? $this->description : 'N/A',
             'scorm'                             => $is_authenticated_user ? new ScormResource($this->scorm) : 'N/A',
-            'privacy'                           => ($this->privacy == '1') ? 'yes' : 'no',
+            'privacy'                           => $privacy,
             'media_type'                        => $this->media_type,
             'media'                             => $media,
             'status'                            => ($this->status == '0') ? 'draft' : 'published',
@@ -382,7 +423,7 @@ class ChallengeResource extends JsonResource
             'agreement'                         => $this->agreement,
             'is_notification_enabled'           => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'project_privacy'                   => ($this->project_privacy == '1') ? 'yes' : 'no',
-            'is_open'                           => ($this->is_open == '1') ? 'yes' : 'no',
+            'is_open'                           => ($this->is_open == '0') ? 'yes' : 'no',
             'is_auto_created'                   => ($this->is_auto_created == '1') ? 'yes' : 'no',
             'is_accessible'                     => ($this->is_accessible == '1') ? 'yes' : 'no',
             'skills'                            => $skills,
@@ -400,6 +441,7 @@ class ChallengeResource extends JsonResource
             'challenge_flexible_announcement'   => $challenge_flexible_announcement,
             'challenge_template'                => $challenge_template,
             'joined'                            => $join_status,
+            'is_active'                         => $isActive,
             'likes'                             => $this->likes()->count(),
             'shares'                            => $this->shares()->count(),
             'member_count'                      => $this->members()->count(),
@@ -421,7 +463,7 @@ class ChallengeResource extends JsonResource
             'resource_modules'                  => $resource_modules,
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
-            'is_auth_user'                      => $is_authenticated_user,
+            'challenge_status'                  => $challenge_status,
         ];
     }
 }

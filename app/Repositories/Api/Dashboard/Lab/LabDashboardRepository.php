@@ -277,10 +277,10 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function getChallengeList($request, $organization)
+    public function getChallengeDashboardList($request, $organization)
     {
         try {
-            return $this->challengeService->getChallengeList($request, $organization);
+            return $this->challengeService->getChallengeDashboardList($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -288,10 +288,10 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function getLabList($request, $organization)
+    public function getLabDashboardList($request, $organization)
     {
         try {
-            return $this->labService->getLabList($request, $organization);
+            return $this->labService->getLabDashboardList($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -299,10 +299,10 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function getResourceModuleList($request, $organization)
+    public function getResourceModuleDashboardList($request, $organization)
     {
         try {
-            return  $this->resourceModuleService->getResourceModuleList($request, $organization);
+            return  $this->resourceModuleService->getResourceModuleDashboardList($request, $organization);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -314,6 +314,17 @@ class LabDashboardRepository implements LabDashboardInterface
     {
         try {
             return $this->dashboardLayoutService->fetchDashboardLayout($userData, $dashboardType);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function storeStaticDefaultLayout($userData, $dashboardType)
+    {
+        try {
+            return $this->dashboardLayoutService->storeStaticDefaultLayout($userData, $dashboardType);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

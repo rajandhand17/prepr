@@ -33,9 +33,9 @@ class ChallengeAssessmentDetailResource extends JsonResource
 
             return [
                 'id'             => $challengeAssessment->id,
-                'criteria'       => $challengeAssessmentCriteria->title,
-                'weight'         => $challengeAssessmentCriteria->weight,
-                'score'          => $challengeAssessmentCriteria->score,
+                'criteria'       => $challengeAssessmentCriteria?->title,
+                'weight'         => $challengeAssessmentCriteria?->weight,
+                'score'          => $challengeAssessmentCriteria?->score,
                 'score_received' => $challengeAssessment->score,
                 'comment'        => $challengeAssessment->comment,
             ];

@@ -254,6 +254,19 @@ class ResourceModuleResource extends JsonResource
         $mode = $this->resource_module_mode->map(function ($item) {
             return config('constants.resource_mode_type_key.'.$item->value);
         });
+        if ($this->media == config('site-settings.aws_url') || $this->media == config('site-settings.aws_url').config('site-settings.default_resource_module_cover_image')) {
+            $this->media = null;
+        }
+
+        $scorm = $this->scorm?->select(['uuid', 'title', 'version'])->first();
+
+        if (!empty($scorm) && auth('api')->check()) {
+            $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $this->id);
+
+            if ($checkResourceScormCompletedOrNot) {
+                $scorm->completed = 'yes';
+            }
+        }
 
         return [
             'id'                    => $this->uuid,
@@ -274,7 +287,7 @@ class ResourceModuleResource extends JsonResource
             'privacy'               => $privacy,
             'status'                => $status,
             'is_global'             => $is_global,
-            'scorm'                 => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                 => new ScormResource($scorm),
             'skills'                => $skills,
             'skill_groups'          => $skill_groups,
             'skill_stacks'          => $skill_stacks,

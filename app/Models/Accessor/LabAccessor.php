@@ -3,14 +3,13 @@
 namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
-use App\Models\LabSocialActivity;
 
 trait LabAccessor
 {
     /**
      * @return array|null
      */
-    public function getLabDurationAttribute(): ?array
+    public function getFormattedLabDurationAttribute(): ?array
     {
         $duration = $this->durations;
 
@@ -27,7 +26,7 @@ trait LabAccessor
     /**
      * @return array|null
      */
-    public function getLabLevelAttribute(): ?array
+    public function getFormattedLabLevelAttribute(): ?array
     {
         $level = $this->levels;
         if (!$level) {
@@ -43,7 +42,7 @@ trait LabAccessor
     /**
      * @return array|mixed|null
      */
-    public function getLabPrivacyAttribute(): mixed
+    public function getFormattedLabPrivacyAttribute(): mixed
     {
         $privacy = $this->privacy;
         if (!$privacy) {
@@ -56,10 +55,5 @@ trait LabAccessor
         ];
 
         return data_get($privacyMap, $privacy);
-    }
-
-    public function getFavouriteCountAttribute(): int
-    {
-        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('favourite', '1')->count();
     }
 }

@@ -227,7 +227,7 @@ class LabDashboardController extends AppBaseController
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->labDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.resource_module_recommended_found'), 200);
                     break;
             }
 
@@ -248,7 +248,7 @@ class LabDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $challengeList = $this->labDashboardRepository->getChallengeList($request, $organization);
+            $challengeList = $this->labDashboardRepository->getChallengeDashboardList($request, $organization);
             if ($challengeList) {
                 $response = [
                     'total_count'  => $challengeList->total(),
@@ -279,7 +279,7 @@ class LabDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $labList = $this->labDashboardRepository->getLabList($request, $organization);
+            $labList = $this->labDashboardRepository->getLabDashboardList($request, $organization);
             if ($labList) {
                 $response = [
                     'total_count'  => $labList->total(),
@@ -310,7 +310,7 @@ class LabDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $resourceModuleList = $this->labDashboardRepository->getResourceModuleList($request, $organization);
+            $resourceModuleList = $this->labDashboardRepository->getResourceModuleDashboardList($request, $organization);
             if ($resourceModuleList) {
                 $response = [
                     'total_count'  => $resourceModuleList->total(),
@@ -338,9 +338,19 @@ class LabDashboardController extends AppBaseController
             $message = ($type != null) ? __('responses.update_lab_dashboard_detail') : __('responses.found_lab_dashboard_detail');
             $userData = auth()->user();
             $dashboardType = 'lab';
+            // Fetch the manager dashboard layout
             $fetchDashboardLayout = $this->labDashboardRepository->fetchDashboardLayout($userData, $dashboardType);
-            if ($fetchDashboardLayout->isNotEmpty()) {
-                return $this->sendResponse(DashboardLayoutResource::collection($fetchDashboardLayout), $message, 200);
+
+            // If layout is empty, store the static default layout
+            if (!$fetchDashboardLayout || $fetchDashboardLayout->isEmpty()) {
+                $fetchDashboardLayout = $this->labDashboardRepository->storeStaticDefaultLayout($userData, $dashboardType);
+            }
+
+            // Check if we have a layout and return a response
+            if ($fetchDashboardLayout && $fetchDashboardLayout->isNotEmpty()) {
+                $response = DashboardLayoutResource::collection($fetchDashboardLayout);
+
+                return $this->sendResponse($response, $message, 200);
             }
 
             return $this->sendError(__('responses.failed_found_lab_dashboard_detail'), 404);

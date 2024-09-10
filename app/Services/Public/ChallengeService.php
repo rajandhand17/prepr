@@ -45,6 +45,19 @@ class ChallengeService
         }
     }
 
+    public function getChallengeDashboardList($challengeIds)
+    {
+        try {
+            $challenge_list = Challenge::whereIn('challenges.id', $challengeIds)->where(['challenges.status' => '1', 'challenges.is_accessible' => '1']);
+
+            return $challenge_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function filterChallengeList($request, $challenge_list)
     {
         try {
@@ -55,13 +68,11 @@ class ChallengeService
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
                     $status = ($request->status == 'draft') ? '0' : '1';
-                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                    $challenge_list = $challenge_list->where('challenges.status', $status)->where('challenges.is_open', '0');
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '2';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
-            } else {
-                $challenge_list = $challenge_list->where('challenges.status', '1');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -124,7 +135,7 @@ class ChallengeService
 
             if ($request->has('request_status') && !empty($request->request_status)) {
                 if (auth('api')->check()) {
-                    $status_array = ['accepted', 'pending', 'declined'];
+                    $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
                             ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
@@ -148,13 +159,16 @@ class ChallengeService
 
             if ($request->has('submissions') && !empty($request->submissions) && $request->submissions === 'yes') {
                 $challenge_list = $challenge_list->whereHas('submitted_projects', function ($query) {
-                    $query->where('is_submitted', '1');
+                    $query->where('user_id', auth('api')->user()->id)->where('is_submitted', '1');
                 });
             }
             if ($request->has('type') && $request->type) {
                 $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
                     $query->where('value', config('constants.resource_types.'.$request->type));
                 });
+            }
+            if ($request->has('challenge_uuid') && !empty($request->challenge_uuid)) {
+                $challenge_list = $challenge_list->where('uuid', $request->challenge_uuid);
             }
 
             return $challenge_list;
@@ -186,7 +200,7 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1')
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where(['status' => '1', 'is_accessible' => '1', 'is_open' => '0'])
                 ->whereHas('challenge_timelines', function ($query) {
                     $query->where(function ($q) {
                         $q->where('timeline_type', '1')
@@ -454,7 +468,7 @@ class ChallengeService
                 });
             }
 
-            return $userDeadlineChallenges->take(5);
+            return $userDeadlineChallenges->take(3);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

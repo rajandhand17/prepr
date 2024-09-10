@@ -18,10 +18,7 @@ class UserService
     public static function getUserByEmail($email)
     {
         try {
-            $user = User::select([
-                'id', 'preferred_language', 'first_name', 'last_name', 'full_name', 'username', 'email', 'country_code', 'phone_number',
-                'profile_image', 'user_points', 'user_rank', 'verified_user', 'is_profile_completed', 'created_at',
-            ])->where('email', $email)->first();
+            $user = User::where('email', $email)->first();
             if ($user != null) {
                 return $user;
             }
@@ -68,6 +65,7 @@ class UserService
                 'id', 'preferred_language', 'first_name', 'last_name', 'full_name', 'username', 'email', 'country_code', 'phone_number',
                 'profile_image', 'user_points', 'user_rank', 'verified_user', 'is_profile_completed', 'created_at',
             ])->where('username', $username)->first();
+
             if ($user != null) {
                 return $user;
             }
@@ -239,10 +237,14 @@ class UserService
             }
             $userIds = $users->prepend($authUserId)->all();
             $userRecords = User::whereIn('id', $userIds)
-                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')')
-                ->paginate(config('site-settings.pagination_per_page'));
+                ->orderByRaw('FIELD(id, '.implode(',', $userIds).')');
 
-            return $userRecords;
+            // Determine the pagination setting based on the request's list_type
+            $paginationPerPage = $request->list_type == 'dashboard'
+            ? config('site-settings.dashboard_pagination_per_page')
+            : config('site-settings.pagination_per_page');
+
+            return $userRecords->paginate($paginationPerPage);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -584,6 +586,17 @@ class UserService
 
             return $user;
         } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getUserEmailsById($userIds)
+    {
+        try {
+            return User::whereIn('id', $userIds)->pluck('email');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

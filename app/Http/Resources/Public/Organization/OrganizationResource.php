@@ -35,6 +35,17 @@ class OrganizationResource extends JsonResource
             $created_by['email'] = $userDetails->email;
             $created_by['profile_image'] = $userDetails->profile_image;
         }
+        if ($this->cover_image == config('site-settings.aws_url').config('site-settings.default_organization_cover_image')) {
+            $this->cover_image = null;
+        }
+        if ($this->profile_image == config('site-settings.aws_url').config('site-settings.default_organization_profile_image')) {
+            $this->profile_image = null;
+        }
+
+        $custom_url = null;
+        if ($this->customization_login_register) {
+            $custom_url = $this->customization_login_register->custom_url;
+        }
 
         return [
             'id'                           => $this->uuid,
@@ -44,7 +55,8 @@ class OrganizationResource extends JsonResource
             'description'                  => $this->description,
             'cover_image'                  => $this->cover_image,
             'profile_image'                => $this->profile_image,
-            'custom_url'                   => $this->custom_url,
+            'vanity_slug'                  => $this->vanity_slug,
+            'custom_url'                   => $custom_url,
             'website'                      => $this->website,
             'about'                        => $this->about,
             'total_employees'              => $this->total_employees,

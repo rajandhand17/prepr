@@ -19,7 +19,7 @@ class ScormUserIdentifier
     {
         $tracking_id = $request->get('tracking_id');
         if (!$tracking_id) {
-            return $this->handleMiddlewareVerificationFail($request);
+            return $next($request);
         }
 
         $scormUserTokenService = $this->getScormServiceInstance();

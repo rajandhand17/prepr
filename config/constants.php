@@ -16,9 +16,10 @@ return [
     ],
 
     'discussion_module_type' => [
-        'lab'       => '0',
-        'challenge' => '1',
-        'project'   => '2',
+        'lab'               => '0',
+        'challenge'         => '1',
+        'project'           => '2',
+        'challenge-path'    => '3',
     ],
 
     'member_management_type' => [
@@ -49,6 +50,11 @@ return [
         'pending'      => '2',
         'declined'     => '3',
         'auto_created' => '4',
+    ],
+    'member_management_request_status' => [
+        'invited'           => '0',
+        'join_request'      => '1',
+        'auto_created'      => '2',
     ],
 
     'member_management_auto_invite' => [
@@ -621,6 +627,11 @@ return [
         'user'          => '0',
         'lab'           => '1',
         'organization'  => '2',
+    ],
+    'project_is_submitted' => [
+        'not_submitted'  => '0',
+        'submitted'      => '1',
+        'late_submitted' => '2',
     ],
     'dashboard_card_type' => [
         'reports'           => '0',

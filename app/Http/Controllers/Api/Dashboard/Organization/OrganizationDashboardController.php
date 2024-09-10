@@ -57,7 +57,7 @@ class OrganizationDashboardController extends AppBaseController
                     $message = __('responses.retrieve_resource_report');
                     break;
                 case 'projects':
-                    $fetchReport = $this->organizationDashboardRepository->fetchProjectReportBasedOnOrganization($organization);
+                    $fetchReport = $this->organizationDashboardRepository->fetchProjectReportBasedOnOrganization($organization->id);
                     $message = __('responses.retrieve_project_report');
                     break;
             }
@@ -228,7 +228,7 @@ class OrganizationDashboardController extends AppBaseController
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->organizationDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.resource_module_recommended_found'), 200);
                     break;
             }
 
@@ -249,7 +249,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $challengeList = $this->organizationDashboardRepository->getChallengeList($request, $organization);
+            $challengeList = $this->organizationDashboardRepository->getChallengeDashboardList($request, $organization);
             if ($challengeList) {
                 $response = [
                     'total_count'  => $challengeList->total(),
@@ -280,7 +280,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $labList = $this->organizationDashboardRepository->getLabList($request, $organization);
+            $labList = $this->organizationDashboardRepository->getLabDashboardList($request, $organization);
             if ($labList) {
                 $response = [
                     'total_count'  => $labList->total(),
@@ -311,7 +311,7 @@ class OrganizationDashboardController extends AppBaseController
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
 
-            $resourceModuleList = $this->organizationDashboardRepository->getResourceModuleList($request, $organization);
+            $resourceModuleList = $this->organizationDashboardRepository->getResourceModuleDashboardList($request, $organization);
             if ($resourceModuleList) {
                 $response = [
                     'total_count'  => $resourceModuleList->total(),
@@ -366,9 +366,19 @@ class OrganizationDashboardController extends AppBaseController
             $message = ($type != null) ? __('responses.update_organization_dashboard_detail') : __('responses.found_organization_dashboard_detail');
             $userData = auth()->user();
             $dashboardType = 'organization';
+            // Fetch the manager dashboard layout
             $fetchDashboardLayout = $this->organizationDashboardRepository->fetchDashboardLayout($userData, $dashboardType);
-            if ($fetchDashboardLayout->isNotEmpty()) {
-                return $this->sendResponse(DashboardLayoutResource::collection($fetchDashboardLayout), $message, 200);
+
+            // If layout is empty, store the static default layout
+            if (!$fetchDashboardLayout || $fetchDashboardLayout->isEmpty()) {
+                $fetchDashboardLayout = $this->organizationDashboardRepository->storeStaticDefaultLayout($userData, $dashboardType);
+            }
+
+            // Check if we have a layout and return a response
+            if ($fetchDashboardLayout && $fetchDashboardLayout->isNotEmpty()) {
+                $response = DashboardLayoutResource::collection($fetchDashboardLayout);
+
+                return $this->sendResponse($response, $message, 200);
             }
 
             return $this->sendError(__('responses.failed_found_organization_dashboard_detail'), 404);

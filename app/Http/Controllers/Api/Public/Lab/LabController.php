@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Public\Lab;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Public\Lab\LabHistoryResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\Lab\LabResource;
 use App\Models\AirmeetEvent;
@@ -167,6 +169,13 @@ class LabController extends AppBaseController
                 }
                 $joinLab = $this->labRepository->joinLab($lab, $component, $requestedData, $memberList);
                 if ($joinLab) {
+                    // SEND NOTIFICATIONS
+                    LearningPointsHelper::sendBulkLearningPointNotification(
+                        [auth()->id()],
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'type'),
+                        data_get(LearningPointsHelper::JOIN_A_LAB, 'points')
+                    );
+
                     return $this->sendResponse([], __('responses.join_lab_successfully'));
                 }
 
@@ -306,6 +315,27 @@ class LabController extends AppBaseController
             UtilityHelper::logError($exception);
 
             return $this->sendError(__('responses.failed_to_get_live_event_details'), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function labHistory($slug)
+    {
+        try {
+            $checkLabExistsOrNot = $this->labRepository->getLabBasedOnSlug($slug);
+            if (!$checkLabExistsOrNot) {
+                return $this->sendError(__('responses.lab_not_found'), 403);
+            }
+
+            $fetchHistory = $this->labRepository->fetchHistory($checkLabExistsOrNot->id);
+            if ($fetchHistory) {
+                return $this->sendResponse(LabHistoryResource::collection($fetchHistory), __('responses.lab_history_retrived'), 200);
+            }
+
+            return $this->sendError(__('responses.lab_history_not_retrived'), 400);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
         }
     }
 }

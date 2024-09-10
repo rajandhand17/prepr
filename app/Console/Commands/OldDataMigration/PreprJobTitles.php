@@ -62,8 +62,8 @@ class PreprJobTitles extends Command
                         'fr_CA_title'       => $job->fr_CA_name,
                         'lightcast_id'      => $job->lc_id,
                         'pathway_id'        => null,
-                        'created_at'        => Carbon::now(),
-                        'updated_at'        => Carbon::now(),
+                        'created_at'        => $job->created_at,
+                        'updated_at'        => $job->updated_at,
                     ];
 
                     $insertArr[] = $jobs_details;

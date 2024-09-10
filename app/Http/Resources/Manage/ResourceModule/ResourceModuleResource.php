@@ -182,6 +182,10 @@ class ResourceModuleResource extends JsonResource
             return config('constants.resource_mode_type_key.'.$item->value);
         });
 
+        if ($this->media == config('site-settings.aws_url') || $this->media == config('site-settings.aws_url').config('site-settings.default_resource_module_cover_image')) {
+            $this->media = null;
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,

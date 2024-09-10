@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\Project;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
@@ -12,6 +13,7 @@ use App\Services\Manage\ChallengeAchievementService;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\EmailTemplateService;
+use App\Services\Manage\MemberManagementService;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectExternalLinksService;
 use App\Services\ProjectFileService;
@@ -43,8 +45,9 @@ class ProjectRepository implements ProjectInterface
     private $projectSkillsService;
     private $projectHistoryService;
     private $userService;
+    private $memberManagementService;
 
-    public function __construct(ProjectService $projectService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, UserService $userService)
+    public function __construct(ProjectService $projectService, MemberManagementService $memberManagementService, ChallengeService $challengeService, ProjectPitchService $projectPitchService, ProjectFileService $projectFileService, ProjectExternalLinksService $projectExternalLinksService, ProjectAdditionalInfoService $projectAdditionalInfoService, ProjectMemberManagementService $projectMemberManagementService, ProjectSocialActivitiesService $projectSocialActivitiesService, ChallengeAchievementService $challengeAchievementService, AchievementService $achievementService, ChallengeAssessmentService $challengeAssessmentService, ChallengeAssessmentUserService $challengeAssessmentUserService, ProjectSkillsService $projectSkillsService, ProjectHistoryService $projectHistoryService, UserService $userService)
     {
         $this->projectService = $projectService;
         $this->challengeService = $challengeService;
@@ -61,6 +64,7 @@ class ProjectRepository implements ProjectInterface
         $this->projectSkillsService = $projectSkillsService;
         $this->projectHistoryService = $projectHistoryService;
         $this->userService = $userService;
+        $this->memberManagementService = $memberManagementService;
     }
 
     public function getMyProjectIds($userId)
@@ -193,6 +197,12 @@ class ProjectRepository implements ProjectInterface
                 $subject = $getTemplate->subject;
                 $emailBody = $getTemplate->body_content;
                 $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
+                $challenge = $this->challengeService->getChallengeBasedOnId($createProject->challenge_id);
+                if ($challenge) {
+                    if ($challenge->privacy == '0') {
+                        $this->memberManagementService->autoAssignedMemberFromAssociatedComponent(['type' => '1', 'invite_type' => '1', 'module_id' => $challenge->id, 'module_type' => '2', 'inviter_id' => $userId, 'role' => 'user', 'invite_status' => '1', 'email' => $userEmail, 'auto_invite' => '2', 'invitee_name' => $userFullName, 'email_status' => '3', 'email_resend_status' => '0', 'subject_line' => $subject, 'email_body' => $emailBody, 'is_associated_member' => 'yes', 'associated_component' => 'project', 'associated_component_id' => $createProject->id]);
+                    }
+                }
 
                 return [
                     'createProject'         => $createProject,
@@ -206,6 +216,7 @@ class ProjectRepository implements ProjectInterface
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
                 $user = UserService::getUserById(auth()->user()->id);
                 $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
+
                 DB::commit();
 
                 return $createProject['createProject'];
@@ -440,6 +451,12 @@ class ProjectRepository implements ProjectInterface
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
+                // SEND NOTIFICATIONS
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    $fetchAcceptedMemberIds->toArray(),
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::SUBMIT_A_PROJECT, 'points')
+                );
 
                 return [
                     'submitProject'  => $submitProject,

@@ -198,6 +198,23 @@ class ProfileResource extends JsonResource
             $filteredFiles = $userPersonalFiles->filter(function ($file) { return !empty(UserPersonalFilesResource::make($file)->toArray(request())); });
             $personalfiles = UserPersonalFilesResource::collection($filteredFiles);
 
+            $isFriend = false;
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
+                $isFriend = $this->friends->where(function ($query) {
+                    $query->where('user_id', auth('api')->user()->id)->orWhere('reference_id', auth('api')->user()->id);
+                })->count() === 1;
+            }
+
+            $isRequestReceived = false;
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
+                $isRequestReceived = $this->friend_request_received->where('user_id', auth('api')->user()->id)->count() === 1;
+            }
+
+            $isRequestSent = false;
+            if (auth('api')->user() && auth('api')->user()->id !== $this->id) {
+                $isRequestSent = $this->friend_request_sent->where('reference_id', auth('api')->user()->id)->count() === 1;
+            }
+
             return [
                 'id'                      => $this->id,
                 'first_name'              => $this->first_name,
@@ -220,11 +237,10 @@ class ProfileResource extends JsonResource
                 'achievements_list'       => UserAchievementResource::collection($this->userAchievements),
                 'featured_achievement'    => UserAchievementResource::collection($this->userFeaturedAchievements),
                 'role'                    => 'user',
-                'friends'                 => auth()->check() ? FriendsResource::collection($this->userFriends) : null,
                 'tags'                    => $userTag,
                 'about'                   => $about,
                 'age'                     => $age,
-                'learnrank'               => '1',
+                'learnrank'               => $this->user_rank ?? 0,
                 'gender'                  => $gender,
                 'date_of_birth'           => $dob,
                 'purpose'                 => $purpose,
@@ -233,10 +249,10 @@ class ProfileResource extends JsonResource
                 'indigenous_group'        => $indigenous_group,
                 'visible_minority'        => $visible_minority,
                 'disability'              => $disability,
-                'is_friends'              => $this->userFriends()->exists() ? 'Yes' : 'No',
+                'is_friends'              => $isFriend ? 'Yes' : 'No',
                 'is_follower'             => $this->userFollow()->exists() ? 'Yes' : 'No',
-                'request_sent'            => $this->userRequestSend()->exists() ? 'Yes' : 'No',
-                'request_received'        => $this->requestReceived()->exists() ? 'Yes' : 'No',
+                'request_sent'            => $isRequestSent ? 'Yes' : 'No',
+                'request_received'        => $isRequestReceived ? 'Yes' : 'No',
                 'user_experiences'        => UserExperienceResource::collection($this->userExperience),
                 'user_educations'         => UserEducationResource::collection($this->userEducation),
                 'user_patents'            => UserPatentResource::collection($this->userPatents),

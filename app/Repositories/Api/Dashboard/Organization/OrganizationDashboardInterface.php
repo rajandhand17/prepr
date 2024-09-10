@@ -36,13 +36,19 @@ interface OrganizationDashboardInterface
 
     public function fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-    public function getChallengeList($request, $organization);
+    public function getChallengeDashboardList($request, $organization);
 
-    public function getLabList($request, $organization);
+    public function getLabDashboardList($request, $organization);
 
-    public function getResourceModuleList($request, $organization);
+    public function getResourceModuleDashboardList($request, $organization);
 
     public function fetchOrganizationIds($userData);
 
     public function fetchOrganizations($request, $fetchOrganizationIds);
+
+    public function fetchDashboardLayout($userData, $dashboardType);
+
+    public function storeStaticDefaultLayout($userData, $dashboardType);
+
+    public function updateDashboardLayout($request, $userData, $dashboardType);
 }

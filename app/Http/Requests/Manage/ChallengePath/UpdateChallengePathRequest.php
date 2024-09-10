@@ -64,15 +64,10 @@ class UpdateChallengePathRequest extends FormRequest
             'skill_stacks.*'          => 'numeric|'.Rule::exists('skill_stacks', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
-            'tags'                    => 'required|array',
-            'tags.*'                  => 'numeric|'.Rule::exists('tags', 'id')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            }),
-            'tag_groups'              => 'nullable|array',
-            'tag_groups.*'            => 'numeric|'.Rule::exists('tag_groups', 'id')->where(function ($query) {
-                $query->whereNull('deleted_at');
-            }),
-
+            'type'                   => 'array',
+            'type.*'                 => 'nullable|in:assess,onboard,engage,grow',
+            'mode'                   => 'array',
+            'mode.*'                 => 'nullable|in:team,individual',
         ];
         if ($achievement_en_switch == 'Yes' || $achievement_en_switch == 'yes') {
             $base_rules['achievement_name'] = 'required';
@@ -122,11 +117,10 @@ class UpdateChallengePathRequest extends FormRequest
             'skill_groups.*.array'           => __('responses.skill_groups_array'),
             'skill_stacks.*.array'           => __('responses.skill_stacks_array'),
             'skill_stacks.*.exists'          => __('responses.skill_stack_not_found'),
-            'tags.required'                  => __('responses.tags_required'),
-            'tags.numeric'                   => __('responses.tags_numeric'),
-            'tag_groups.*.exists'            => __('responses.tag_groups_not_found'),
-            'tag_groups.*.array'             => __('responses.tag_groups_array'),
-            'tag_groups.*.numeric'           => __('responses.tag_groups_numeric'),
+            'type.array'                     => __('responses.type_array'),
+            'type.*.in'                      => __('responses.resource_type_in'),
+            'mode.array'                     => __('responses.mode_array'),
+            'mode.*.in'                      => __('responses.resource_mode_in'),
         ];
     }
 }

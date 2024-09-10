@@ -7,6 +7,7 @@ use App\Services\Manage\ChallengePathService;
 use App\Services\Manage\ChallengeService;
 use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabService;
+use App\Services\Manage\OrganizationCustomizationService;
 use App\Services\Manage\OrganizationService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
@@ -236,5 +237,30 @@ class UtilityHelper
     public static function isEngLocale(): bool
     {
         return app()->getLocale() === 'en';
+    }
+
+    public static function generateURL($component, $slug)
+    {
+        try {
+            $frontEndUrl = self::sanitizeUrl(config('site-settings.frontend_site_url'));
+            $componentFrontEndUrl = sprintf('%s/'.$component.'/%s', $frontEndUrl, $slug);
+
+            return $componentFrontEndUrl;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkOrganizationCustomizationData($custom_url)
+    {
+        try {
+            return OrganizationCustomizationService::checkOrganizationCustomizationData($custom_url);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
     }
 }

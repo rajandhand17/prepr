@@ -3,14 +3,14 @@
 namespace App\Models\Accessor;
 
 use App\Helpers\UtilityHelper;
-use App\Models\ChallengeSocialActivity;
+use App\Repositories\Api\Public\Scorm\ScormRepository;
 
 trait ChallengeAccessor
 {
     /**
      * @return array|null
      */
-    public function getChallengeDurationAttribute(): ?array
+    public function getFormattedChallengeDurationAttribute(): ?array
     {
         $duration = $this->durations;
 
@@ -27,7 +27,7 @@ trait ChallengeAccessor
     /**
      * @return string
      */
-    public function getChallengeStatusAttribute(): string
+    public function getFormattedChallengeStatusAttribute(): string
     {
         $status = $this->status;
 
@@ -37,7 +37,7 @@ trait ChallengeAccessor
     /**
      * @return array|null
      */
-    public function getChallengeLevelAttribute(): ?array
+    public function getFormattedChallengeLevelAttribute(): ?array
     {
         $level = $this->levels;
 
@@ -54,7 +54,7 @@ trait ChallengeAccessor
     /**
      * @return array|mixed|null
      */
-    public function getChallengePrivacyAttribute(): mixed
+    public function getFormattedChallengePrivacyAttribute(): mixed
     {
         $privacy = $this->privacy;
 
@@ -69,7 +69,7 @@ trait ChallengeAccessor
     /**
      * @return array|mixed|null
      */
-    public function getChallengeTypeAttribute(): mixed
+    public function getFormattedChallengeTypeAttribute(): mixed
     {
         $types = $this->challengeType()->get(); //$this->challengeType gives error
 
@@ -94,7 +94,7 @@ trait ChallengeAccessor
     /**
      * @return array|mixed|null
      */
-    public function getChallengeModeAttribute(): mixed
+    public function getFormattedChallengeModeAttribute(): mixed
     {
         $modes = $this->challengeMode()->get(); //$this->challengeMode gives error
 
@@ -112,16 +112,36 @@ trait ChallengeAccessor
         })->filter()->values()->toArray();
     }
 
-    /**
-     * @return int
-     */
-    public function getFavouriteCountAttribute(): int
-    {
-        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('favourite', '1')->count();
-    }
-
-    public function getAchievementPointsAttribute(): int
+    public function getFormattedAchievementPointsAttribute(): int
     {
         return $this->achievements()->sum('achievement_points');
+    }
+
+    public function getFormattedScormUrlAttribute(): false|string|null
+    {
+        /** @var ScormRepository $scormRepository */
+        $scormRepository = app()->make(ScormRepository::class);
+        $scorm = $this->scorm;
+        if ($scorm) {
+            return $scormRepository->generateScormPlayerUrl($scorm, false);
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormattedSubmissionDeadlineDateAttribute(): string
+    {
+        if ($this->challenge_timelines) {
+            if ($this->challenge_timelines->timeline_type == '0') {
+                return $this->challenge_timelines->flexible_expire_deadline;
+            } elseif ($this->challenge_timelines->timeline_type == '1') {
+                return $this->challenge_timelines->submission_deadline_date;
+            }
+        }
+
+        return '-';
     }
 }

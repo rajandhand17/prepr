@@ -151,6 +151,27 @@ class User extends Authenticatable
             });
     }
 
+    public function getFriendsAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('user_id', $this->id)->orWhere('reference_id', $this->id);
+        })->where('status', '1');
+    }
+
+    public function getFriendRequestReceivedAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('reference_id', $this->id);
+        })->where('status', '0');
+    }
+
+    public function getFriendRequestSentAttribute()
+    {
+        return Friend::query()->where(function ($query) {
+            $query->where('user_id', $this->id);
+        })->where('status', '0');
+    }
+
     public function userRequestSend()
     {
         return $this->hasMany(Friend::class, 'user_id', 'id')->where('status', '0');
@@ -249,7 +270,9 @@ class User extends Authenticatable
     {
         try {
             /**checking user exists or not */
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+            ->orWhere('username', $request->email)
+            ->first();
             if ($user->verified_user == 0) {
                 MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
@@ -273,7 +296,7 @@ class User extends Authenticatable
                         $user->save();
                         DB::commit();
                         /**sending otp on registeres number */
-                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
+                        $data = ['subject' => __('responses.email_subject_two_factor_verification'), 'body' => __('responses.two_factor_otp'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name'], 'otp' => $user['otp']];
                         $mail = SendMailHelper::sendMail($user, 'email.two_factor_otp', $data);
                         if ($mail) {
                             return ['success' => true, 'message' => __('responses.two_factor_otp'), 'code' => 2];
@@ -281,7 +304,9 @@ class User extends Authenticatable
 
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
-                    $data = User::where('email', $request->email)->first();
+                    $data = $user = User::where('email', $request->email)
+                    ->orWhere('username', $request->email)
+                    ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
                     MixpanelHelper::mixpanel_tracking(
                         config('mixpanel.login_success'),
@@ -318,7 +343,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email, 'otp' => $request->otp])->first();
             if ($user) {
                 $token = $user->createToken(env('APP_NAME'))->accessToken;
-                $response = ['success' => true, 'token' => $token];
+                $response = ['user' => $user, 'success' => true, 'token' => $token, 'code' => 3, 'message' => __('responses.user_login_success')];
 
                 return $response;
             } else {

@@ -25,7 +25,7 @@ const ScormPlayer = () => {
      */
     const trackProgress = useMutation(
         [{scormVersion, activeSco: activeSco?.uuid, trackingId}], function (data) {
-            if (activeSco?.uuid) {
+            if (activeSco?.uuid && trackingId) {
                 return ScormService.trackProgress(activeSco?.uuid, scormVersion, data, trackingId)
             }
         }, {

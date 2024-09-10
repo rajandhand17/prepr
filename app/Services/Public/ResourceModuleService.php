@@ -198,7 +198,7 @@ class ResourceModuleService
     public function fetchRecommendedResourceModules($fetchUserSkills, $userData)
     {
         try {
-            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasesOnSKillsId($fetchUserSkills);
+            $getResourceModulesIdsBasedOnSKills = ResourceModuleSkillsGroupsStackService::getResourceModuleIdBasedOnSkills($fetchUserSkills);
             $resourceModuleIds = $getResourceModulesIdsBasedOnSKills->unique();
             $fetchRecommendedResourceModules = ResourceModule::whereIn('id', $resourceModuleIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 
@@ -232,7 +232,7 @@ class ResourceModuleService
         try {
             $resourceModule = ResourceModule::whereIn('id', $resourceModuleIds)->where('is_accessible', '1');
 
-            return $resourceModule->paginate(config('site-settings.pagination_per_page'));
+            return $resourceModule->paginate(config('site-settings.dashboard_pagination_per_page'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

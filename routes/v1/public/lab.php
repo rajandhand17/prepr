@@ -20,4 +20,5 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/{activity}', [LabController::class, 'socialActivity']);
     Route::get('/{slug}/live-event-details', [LabController::class, 'getLiveEventDetails']);
     Route::get('/{slug}/live-event-url', [LabController::class, 'getLiveEventUrl']);
+    Route::get('/{slug}/history', [LabController::class, 'labHistory']);
 });

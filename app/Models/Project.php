@@ -26,9 +26,11 @@ class Project extends Model
         'media',
         'privacy',
         'recruiting_status',
+        'late_submission_reason',
         'challenge_id',
         'lab_id',
         'is_submitted',
+        'total_share',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
