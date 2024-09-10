@@ -1441,6 +1441,7 @@
     "responses.lab_history_retrived": "The Lab(s) history has been retrieved.",
     "responses.lab_created_activity": "created the Lab:-",
     "responses.lab_updated_activity": "updated the Lab:-",
+    "responses.lab_add_comment_activity": "added a comment on the Lab:-",
     "responses.lab_deleted_activity": "deleted the Lab:-",
     "responses.lab_joined_activity": "joined the Lab:-",
     "responses.lab_un_joined_activity": "unjoined the Lab:-",

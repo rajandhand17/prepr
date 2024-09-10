@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Discussion;
+use App\Services\Manage\LabService;
 use DB;
 
 class DiscussionService
@@ -90,6 +91,12 @@ class DiscussionService
                 'user_commented_on' => $component,
             ];
             MixpanelHelper::mixpanel_tracking(config('mixpanel.user_comment'), $comment_data, auth()->user(), request()->ip());
+            if ($component == 'lab') {
+                $getLabDetails = LabService::getLabBasedOnId($getComponentId);
+                $activity = auth()->user()->full_name.' '.__('responses.lab_add_comment_activity').' '.$getLabDetails->title;
+
+                LabHistoryService::storeHistory($getComponentId, auth()->user()->id, $activity);
+            }
             DB::commit();
 
             return $addComment;
