@@ -138,17 +138,6 @@ class MemberManagementResource extends JsonResource
                 }
             }
         }
-        // switch ($this->type) {
-        //     case '0':
-        //         $request_status = 'invited';
-        //         break;
-        //     case '1':
-        //         $request_status = 'join_request';
-        //         break;
-        //     case '2':
-        //         $request_status = 'auto_created';
-        //         break;
-        // }
 
         return [
             'id'               => $this->uuid,
