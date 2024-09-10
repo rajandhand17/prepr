@@ -178,7 +178,7 @@ class ChallengeRepository implements ChallengeInterface
             }
 
             DB::commit();
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
+            // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
 
             return $createChallenge;
         } catch (Exception $e) {
@@ -379,7 +379,7 @@ class ChallengeRepository implements ChallengeInterface
             }
 
             DB::commit();
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
+            // MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
 
             return $updateChallenge;
         } catch (Exception $e) {
