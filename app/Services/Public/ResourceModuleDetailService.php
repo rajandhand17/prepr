@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
+use App\Models\GO1UserResourceProgress;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use Exception;
@@ -119,6 +120,24 @@ class ResourceModuleDetailService
             }
 
             return 'no';
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkResourceScormCompletedOrNot($userId, $resourceModuleId)
+    {
+        try {
+            return GO1UserResourceProgress::query()
+                ->where('user_id', $userId)
+                ->where('resource_module_id', $resourceModuleId)
+                ->where(function ($query) {
+                    return  $query->where('lesson_status', 'pass')
+                    ->orWhere('completion_status', 'completed');
+                })
+                ->exists();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
