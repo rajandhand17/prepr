@@ -243,6 +243,17 @@ class LabMarketplaceRepository implements LabMarketplaceInterface
         }
     }
 
+    public function getLabRedeemCountBasedOnOrganization($organizationId)
+    {
+        try {
+            return $this->labMarketplaceService->getLabRedeemCountBasedOnOrganization($organizationId);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function addLabRedeemed($labMarketplaceId, $organizationId, $labId)
     {
         try {

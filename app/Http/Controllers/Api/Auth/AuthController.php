@@ -22,6 +22,7 @@ use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
+use App\Models\User;
 use App\Models\UserActivity;
 use App\Repositories\Api\Auth\AuthRepository;
 
@@ -99,6 +100,7 @@ class AuthController extends AppBaseController
                 }
                 if ($login['code'] === 3) {
                     UserActivity::logActivity($login['user']->id, 'login');
+
                     $response = ['token' => LoginResource::make(json_decode(json_encode($login), false)), 'user' => UserResource::make($login['user']), 'code' => $login['code']];
 
                     return $this->sendResponse($response, $login['message'], 200);
@@ -1050,9 +1052,9 @@ class AuthController extends AppBaseController
     public function organizationCustomLoginRegistration($custom_url)
     {
         try {
-            $checkOrganizationCustomizationData = UtilityHelper::checkComponentSlugExistOrNot('organization', $custom_url);
+            $checkOrganizationCustomizationData = UtilityHelper::checkOrganizationCustomizationData($custom_url);
             if ($checkOrganizationCustomizationData) {
-                if ($checkOrganizationCustomizationData->customization_login_register) {
+                if ($checkOrganizationCustomizationData->organization != null) {
                     return $this->sendResponse(OrganizationCustomizationResource::make($checkOrganizationCustomizationData), __('responses.found_organization_customization'));
                 }
             }
