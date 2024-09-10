@@ -8,7 +8,7 @@ use Exception;
 
 class LabHistoryService
 {
-    public function storeHistory($moduleId, $userId, $activity)
+    public static function storeHistory($moduleId, $userId, $activity)
     {
         try {
             $storeLabHistory = LabHistory::create(['module_id' => $moduleId, 'user_id' => $userId, 'activity' => $activity]);
