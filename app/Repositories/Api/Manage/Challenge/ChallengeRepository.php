@@ -184,7 +184,7 @@ class ChallengeRepository implements ChallengeInterface
         } catch (Exception $e) {
             DB::rollBack();
             UtilityHelper::logError($e);
-            Log::error('Error in createChallenge in ChallengeRepository.php: ' . $e->getMessage());
+            Log::error('Error in createChallenge in ChallengeRepository.php: '.$e->getMessage());
 
             return false;
         }
