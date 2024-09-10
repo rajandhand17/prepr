@@ -52,6 +52,7 @@ class OrganizationCustomizationService
                 $enableCustomLoginRegistration = $request->enable_custom_login_and_registration == 'yes' ? '1' : '0';
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = $enableCustomLoginRegistration;
+                $organizationCustomization->custom_url = $request->custom_url;
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
@@ -62,7 +63,6 @@ class OrganizationCustomizationService
 
             return true;
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             DB::rollback();
 
@@ -84,6 +84,19 @@ class OrganizationCustomizationService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkOrganizationCustomizationData($custom_url)
+    {
+        try {
+            $checkOrganizationCustomizationData = OrganizationCustomization::where('custom_url', $custom_url)->first();
+
+            return $checkOrganizationCustomizationData;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

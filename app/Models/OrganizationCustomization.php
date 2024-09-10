@@ -19,6 +19,7 @@ class OrganizationCustomization extends Model
         'custom_logo_image',
         'custom_hero_image',
         'custom_background_color',
+        'custom_url',
     ];
 
     public function getCustomLogoImageAttribute($value)
@@ -29,5 +30,10 @@ class OrganizationCustomization extends Model
     public function getCustomHeroImageAttribute($value)
     {
         return config('site-settings.aws_url').$value;
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 }

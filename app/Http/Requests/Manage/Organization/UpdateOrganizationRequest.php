@@ -40,7 +40,7 @@ class UpdateOrganizationRequest extends FormRequest
             'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
-            'custom_url'                            => 'required|max:255|unique:organizations,custom_url,'.$organization->id,
+            'vanity_slug'                           => 'required|max:255|unique:organizations,vanity_slug,'.$organization->id,
             'website'                               => 'required|url',
             'status'                                => 'required|in:draft,publish,archive',
             'total_employees'                       => 'integer',
