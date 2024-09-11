@@ -112,7 +112,7 @@ class CareerController extends AppBaseController
             }
             $deleteJob = $this->careerRepository->deleteJob($jobId);
             if ($deleteJob) {
-                return  $this->sendResponse([], __('responses.delete_job_successfully'));
+                return  $this->sendResponse([], __('responses.unsaved_job_successfully'));
             }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
