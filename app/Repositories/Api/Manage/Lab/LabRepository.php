@@ -292,7 +292,7 @@ class LabRepository implements LabInterface
                 $labTypeModes = $this->labTypeModesService->labTypeModes($request, $updateLab->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
-                } else if($request->is_achievement_enabled == 'no') {
+                } elseif ($request->is_achievement_enabled == 'no') {
                     $this->labAcheivementService->deleteLabAchievement($updateLab->id);
                 }
                 $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
