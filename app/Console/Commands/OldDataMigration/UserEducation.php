@@ -3,9 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User;
+use App\Models\UserEducation as ModelUserEducation;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class UserEducation extends Command
 {
@@ -21,56 +23,63 @@ class UserEducation extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users educations';
+    protected $description = 'Migrate old data for users education.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        $this->info('Migrating old data for users education table.');
+
         try {
-            $this->info('Migrating old data for users educations table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_educations')->chunkById(1000, function ($userEducations, $key) {
-                foreach ($userEducations as $single_user_education) {
-                    // Check if the user exists
-                    $checkUser = \App\Models\User::find($single_user_education->user_id);
-                    if ($checkUser === null) {
+
+            DB::connection('mysql2')->table('user_educations')->chunkById(1000, function ($userEducations) {
+                $userIds = $userEducations->pluck('user_id')->unique()->toArray();
+                $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
+
+                foreach ($userEducations as $singleUserEducation) {
+                    if (!in_array($singleUserEducation->user_id, $existingUsers)) {
                         continue;
                     }
-                    // Retrieve an existing UserEducation or create a new one
-                    $userEducation = \App\Models\UserEducation::firstOrNew(['id' => $single_user_education->id]);
-                    // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($single_user_education->created_at) ? Carbon::createFromTimestamp($single_user_education->created_at) : null;
-                    $updatedAt = !empty($single_user_education->updated_at) ? Carbon::createFromTimestamp($single_user_education->updated_at) : null;
-                    $deletedAt = !empty($single_user_education->deleted_at) ? Carbon::createFromTimestamp($single_user_education->deleted_at) : null;
-                    $startAt = !empty($single_user_education->start_date) ? Carbon::createFromTimestamp($single_user_education->start_date) : null;
-                    $endAt = !empty($single_user_education->end_date) ? Carbon::createFromTimestamp($single_user_education->end_date) : null;
-                    // Fill the model attributes
-                    $userEducation->fill([
-                        'user_id'      => $single_user_education->user_id,
-                        'university'   => $single_user_education->university,
-                        'degree'       => $single_user_education->degree,
-                        'start_date'   => $startAt,
-                        'end_date'     => $endAt,
-                        'address'      => $single_user_education->address,
-                        'description'  => $single_user_education->description,
-                        'created_at'   => $createdAt,
-                        'updated_at'   => $updatedAt,
-                        'deleted_at'   => $deletedAt,
-                    ]);
-                    // Save the model
-                    $userEducation->save();
+
+                    $userEducation = ModelUserEducation::updateOrCreate(
+                        ['id' => $singleUserEducation->id],
+                        [
+                            'user_id'      => $singleUserEducation->user_id,
+                            'university'   => $singleUserEducation->university,
+                            'degree'       => $singleUserEducation->degree,
+                            'start_date'   => $this->parseDate($singleUserEducation->start_date),
+                            'end_date'     => $this->parseDate($singleUserEducation->end_date),
+                            'address'      => $singleUserEducation->address,
+                            'description'  => $singleUserEducation->description,
+                            'created_at'   => $this->parseDate($singleUserEducation->created_at),
+                            'updated_at'   => $this->parseDate($singleUserEducation->updated_at),
+                            'deleted_at'   => $this->parseDate($singleUserEducation->deleted_at),
+                        ]
+                    );
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users educations table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migration of old data for users education table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Parse a timestamp or return null if empty.
+     *
+     * @param mixed $timestamp
+     *
+     * @return \Carbon\Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }
