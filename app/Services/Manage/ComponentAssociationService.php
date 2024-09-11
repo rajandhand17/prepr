@@ -167,7 +167,7 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->sequence = $sequence;
                         $labSkillsGroupsStack->save();
                     }
-                } 
+                }
             } else {
                 ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('lab_program_id')->delete();
             }
