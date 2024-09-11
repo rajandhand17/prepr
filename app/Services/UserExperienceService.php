@@ -34,7 +34,7 @@ class UserExperienceService
                 'type' => 'experience',
                 'info' => $input,
             ];
-            MixPenalJob::dispatch(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+            MixPenalJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), $request->ip());
 
             return $insertRecords;
         } catch (\Exception $e) {
