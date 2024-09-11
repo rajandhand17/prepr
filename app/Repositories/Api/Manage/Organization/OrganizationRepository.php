@@ -253,4 +253,15 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
+
+    public function incrementView(Organization $organization)
+    {
+        try {
+            return $this->organizationService->incrementView($organization);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

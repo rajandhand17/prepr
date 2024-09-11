@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Project;
 
+use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Project\AddAdditionalInfoProjectRequest;
@@ -173,6 +174,13 @@ class ProjectController extends AppBaseController
             }
             $createProject = $this->projectRepository->createProject($request, $upload_project_cover_media);
             if ($createProject) {
+                // SEND NOTIFICATIONS
+                LearningPointsHelper::sendBulkLearningPointNotification(
+                    [auth()->id()],
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'type'),
+                    data_get(LearningPointsHelper::CREATE_A_PROJECT, 'points')
+                );
+
                 return $this->sendResponse(ProjectResource::make($createProject), __('responses.project_stored_success'), 200);
             }
 
@@ -403,7 +411,7 @@ class ProjectController extends AppBaseController
                 return $this->sendError(__('responses.project_not_found'), 403);
             }
 
-            if ($checkProjectSlugExistsOrNot->is_submitted == '1') {
+            if (in_array($checkProjectSlugExistsOrNot->is_submitted, ['1', '2'])) {
                 return $this->sendError(__('responses.project_already_submitted'), 400);
             }
 

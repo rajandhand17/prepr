@@ -3,9 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\Friend;
+use App\Models\User;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class UserFriends extends Command
 {
@@ -21,58 +23,64 @@ class UserFriends extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users friends';
+    protected $description = 'Migrate old data for users friends.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        try {
-            $this->info('Migrating old data for users friends table started.');
-            DB::beginTransaction();
-            DB::connection('mysql2')->table('friends')->chunkById(1000, function ($friends, $key) {
-                foreach ($friends as $single_user_friends) {
-                    // Check if both users exist
-                    $checkUser = \App\Models\User::find($single_user_friends->user_id);
-                    $checkUserReference = \App\Models\User::find($single_user_friends->ref_id);
+        $this->info('Migrating old data for users friends table started.');
 
-                    if ($checkUser === null || $checkUserReference === null) {
+        try {
+            DB::beginTransaction();
+
+            DB::connection('mysql2')->table('friends')->chunkById(1000, function ($friends) {
+                $userIds = $friends->pluck('user_id')->unique()->toArray();
+                $refIds = $friends->pluck('ref_id')->unique()->toArray();
+
+                $existingUsers = User::whereIn('id', array_merge($userIds, $refIds))->pluck('id')->toArray();
+
+                foreach ($friends as $singleUserFriend) {
+                    if (!in_array($singleUserFriend->user_id, $existingUsers) || !in_array($singleUserFriend->ref_id, $existingUsers)) {
                         continue;
                     }
 
-                    // Retrieve an existing Friend or create a new one
-                    $userFriends = \App\Models\Friend::firstOrNew(['id' => $single_user_friends->id]);
-
-                    // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($single_user_friends->created_at) ? Carbon::createFromTimestamp($single_user_friends->created_at) : null;
-                    $updatedAt = !empty($single_user_friends->updated_at) ? Carbon::createFromTimestamp($single_user_friends->updated_at) : null;
-                    $deletedAt = !empty($single_user_friends->deleted_at) ? Carbon::createFromTimestamp($single_user_friends->deleted_at) : null;
-
-                    // Fill the model attributes
-                    $userFriends->fill([
-                        'user_id'        => $single_user_friends->user_id,
-                        'reference_id'   => $single_user_friends->ref_id,
-                        'status'         => $single_user_friends->status,
-                        'user_follow'    => $single_user_friends->follow,
-                        'newsfeed'       => $single_user_friends->newsfeed,
-                        'created_at'     => $createdAt,
-                        'updated_at'     => $updatedAt,
-                        'deleted_at'     => $deletedAt,
-                    ]);
-
-                    // Save the model
-                    $userFriends->save();
+                    // Use updateOrCreate for more efficient operations
+                    Friend::updateOrCreate(
+                        ['id' => $singleUserFriend->id],
+                        [
+                            'user_id'        => $singleUserFriend->user_id,
+                            'reference_id'   => $singleUserFriend->ref_id,
+                            'status'         => $singleUserFriend->status,
+                            'user_follow'    => $singleUserFriend->follow,
+                            'newsfeed'       => $singleUserFriend->newsfeed,
+                            'created_at'     => $this->parseDate($singleUserFriend->created_at),
+                            'updated_at'     => $this->parseDate($singleUserFriend->updated_at),
+                            'deleted_at'     => $this->parseDate($singleUserFriend->deleted_at),
+                        ]
+                    );
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users friends table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migrating old data for users friends table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Parse a timestamp or return null if empty.
+     *
+     * @param mixed $timestamp
+     *
+     * @return \Carbon\Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }

@@ -14,6 +14,7 @@ use App\Models\LabTypeModes;
 use App\Models\Organization;
 use App\Models\SocialLink;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -192,6 +193,10 @@ class Lab extends Command
                         }
                     }
 
+                    $createdAt = $lab->created_at != null ? Carbon::createFromTimestamp($lab->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $updatedAt = $lab->updated_at != null ? Carbon::createFromTimestamp($lab->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $deletedAt = $lab->deleted_at != null ? Carbon::createFromTimestamp($lab->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
                     $newLab->id = $lab->id;
                     $newLab->type = '4';
                     $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -215,6 +220,9 @@ class Lab extends Command
                     $newLab->is_achievement_enabled = $enable_achievement;
                     $newLab->is_notification_enabled = '0';
                     $newLab->is_verified = $lab_verfied;
+                    $newLab->created_at = $createdAt;
+                    $newLab->updated_at = $updatedAt;
+                    $newLab->deleted_at = $deletedAt;
                     $newLab->save();
 
                     // For Lab Address
@@ -240,17 +248,20 @@ class Lab extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $labMode = new LabTypeModes();
-                                $labMode->lab_id = $lab->id;
-                                $labMode->type_mode = '1';
-                                $labMode->value = $mode_id;
-                                $labMode->save();
+                                if ($mode_id != null) {
+                                    $labMode = new LabTypeModes();
+                                    $labMode->lab_id = $lab->id;
+                                    $labMode->type_mode = '1';
+                                    $labMode->value = $mode_id;
+                                    $labMode->save();
+                                }
                             }
                         }
                     }
@@ -261,6 +272,7 @@ class Lab extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             LabTypeModes::where(['lab_id' => $lab->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -271,11 +283,13 @@ class Lab extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $labMode = new LabTypeModes();
-                                $labMode->lab_id = $lab->id;
-                                $labMode->type_mode = '0';
-                                $labMode->value = $type_id;
-                                $labMode->save();
+                                if ($type_id != null) {
+                                    $labMode = new LabTypeModes();
+                                    $labMode->lab_id = $lab->id;
+                                    $labMode->type_mode = '0';
+                                    $labMode->value = $type_id;
+                                    $labMode->save();
+                                }
                             }
                         }
                     }

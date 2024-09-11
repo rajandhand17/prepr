@@ -52,7 +52,7 @@ class LabReportService
             return [
                 'views'            => $lab->views_count,
                 'discussion_posts' => $lab->discussions_count,
-                'saves'            => $lab->favourite_count,
+                'saves'            => $lab->favouriteCount() ?? 0,
                 'share'            => $lab->shares_count,
                 'saved_started'    => $savedAndStarted,
                 'shared_started'   => $sharedAndStarted,

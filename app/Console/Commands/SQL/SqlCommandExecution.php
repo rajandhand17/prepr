@@ -6,6 +6,7 @@ use App\Helpers\UtilityHelper;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class SqlCommandExecution extends Command
 {
@@ -29,7 +30,9 @@ class SqlCommandExecution extends Command
     public function handle()
     {
         try {
-            DB::table('project_verticals')->whereNotNull('deleted_at')->update(['deleted_at' => null]);
+            Schema::disableForeignKeyConstraints();
+            DB::table('email_templates')->whereNotNull('deleted_at')->update(['deleted_at' => null]);
+            Schema::enableForeignKeyConstraints();
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
             UtilityHelper::logError($e);

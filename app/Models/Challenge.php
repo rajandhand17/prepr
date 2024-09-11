@@ -46,6 +46,7 @@ class Challenge extends Model
         'allow_winner_change',
         'winner_select_date',
         'views_count',
+        'total_share',
     ];
 
     public function newEloquentBuilder($query): ChallengeBuilder
@@ -334,6 +335,14 @@ class Challenge extends Model
      */
     public function discussions(): HasMany
     {
-        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '2');
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '1');
+    }
+
+    /**
+     * @return int
+     */
+    public function favouriteCount(): int
+    {
+        return $this->hasMany(ChallengeSocialActivity::class, 'challenge_id', 'id')->where('favourite', '1')->count();
     }
 }

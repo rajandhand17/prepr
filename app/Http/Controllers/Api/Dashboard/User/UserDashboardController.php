@@ -269,7 +269,7 @@ class UserDashboardController extends AppBaseController
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->userDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.resource_module_recommended_found'), 200);
                     break;
             }
 
@@ -445,9 +445,19 @@ class UserDashboardController extends AppBaseController
             $message = ($type != null) ? __('responses.update_user_dashboard_detail') : __('responses.found_user_dashboard_detail');
             $userData = auth()->user();
             $dashboardType = 'user';
+            // Fetch the user dashboard layout
             $fetchUserDashboardLayout = $this->userDashboardRepository->fetchUserDashboardLayout($userData, $dashboardType);
-            if ($fetchUserDashboardLayout->isNotEmpty()) {
-                return $this->sendResponse(DashboardLayoutResource::collection($fetchUserDashboardLayout), $message, 200);
+
+            // If layout is empty, store the static default layout
+            if (!$fetchUserDashboardLayout || $fetchUserDashboardLayout->isEmpty()) {
+                $fetchUserDashboardLayout = $this->userDashboardRepository->storeStaticDefaultLayout($userData, $dashboardType);
+            }
+
+            // Check if we have a layout and return a response
+            if ($fetchUserDashboardLayout && $fetchUserDashboardLayout->isNotEmpty()) {
+                $response = DashboardLayoutResource::collection($fetchUserDashboardLayout);
+
+                return $this->sendResponse($response, $message, 200);
             }
 
             return $this->sendError(__('responses.failed_found_user_dashboard_detail'), 404);

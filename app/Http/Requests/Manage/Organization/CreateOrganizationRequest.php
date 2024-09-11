@@ -34,7 +34,7 @@ class CreateOrganizationRequest extends FormRequest
             'category'                              => 'required|numeric|'.Rule::exists('categories', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             }),
-            'custom_url'                            => 'required|max:255|unique:organizations,custom_url',
+            'vanity_slug'                           => 'required|max:255|unique:organizations,vanity_slug',
             'website'                               => 'required|url',
             'slug'                                  => 'required|max:255|unique:organizations,slug',
             'status'                                => 'required|in:draft,publish,archive',

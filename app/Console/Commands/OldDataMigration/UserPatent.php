@@ -3,9 +3,11 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User;
+use App\Models\UserPatent as ModelUserPatent;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class UserPatent extends Command
 {
@@ -21,46 +23,61 @@ class UserPatent extends Command
      *
      * @var string
      */
-    protected $description = 'This command will migrate all users patents';
+    protected $description = 'Migrate old data for users patents.';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        $this->info('Migrating old data for users patents table.');
+
         try {
-            $this->info('Migrating old data for users patents table.');
             DB::beginTransaction();
-            DB::connection('mysql2')->table('user_patents')->chunkById(1000, function ($userPatents, $key) {
-                foreach ($userPatents as $single_user_patents) {
-                    // Check if the user exists
-                    $checkUser = \App\Models\User::find($single_user_patents->user_id);
-                    if ($checkUser === null) {
+
+            DB::connection('mysql2')->table('user_patents')->chunkById(1000, function ($userPatents) {
+                $userIds = $userPatents->pluck('user_id')->unique()->toArray();
+                $existingUsers = User::whereIn('id', $userIds)->pluck('id')->toArray();
+
+                foreach ($userPatents as $singleUserPatent) {
+                    if (!in_array($singleUserPatent->user_id, $existingUsers)) {
                         continue;
                     }
-                    // Find an existing UserPatent or create a new one
-                    $userPatent = \App\Models\UserPatent::findOrNew($single_user_patents->id);
-                    $userPatent->fill([
-                        'user_id'      => $single_user_patents->user_id,
-                        'title'        => $single_user_patents->title,
-                        'name'         => $single_user_patents->name,
-                        'patent_date'  => $single_user_patents->patent_date,
-                        'description'  => $single_user_patents->description,
-                        'created_at'   => !empty($single_user_patents->created_at) ? Carbon::createFromTimestamp($single_user_patents->created_at) : null,
-                        'updated_at'   => !empty($single_user_patents->updated_at) ? Carbon::createFromTimestamp($single_user_patents->updated_at) : null,
-                        'deleted_at'   => !empty($single_user_patents->deleted_at) ? Carbon::createFromTimestamp($single_user_patents->deleted_at) : null,
-                    ]);
-                    $userPatent->save();
+
+                    ModelUserPatent::updateOrCreate(
+                        ['id' => $singleUserPatent->id],
+                        [
+                            'user_id'      => $singleUserPatent->user_id,
+                            'title'        => $singleUserPatent->title,
+                            'name'         => $singleUserPatent->name,
+                            'patent_date'  => $this->parseDate($singleUserPatent->patent_date),
+                            'description'  => $singleUserPatent->description,
+                            'created_at'   => $this->parseDate($singleUserPatent->created_at),
+                            'updated_at'   => $this->parseDate($singleUserPatent->updated_at),
+                            'deleted_at'   => $this->parseDate($singleUserPatent->deleted_at),
+                        ]
+                    );
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users patents table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+            $this->info('Migration of old data for users patents table completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Parse a timestamp or return null if empty.
+     *
+     * @param mixed $timestamp
+     *
+     * @return \Carbon\Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }

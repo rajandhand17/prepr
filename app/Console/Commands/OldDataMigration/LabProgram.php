@@ -150,6 +150,9 @@ class LabProgram extends Command
                     $newLabProgram->is_achievement_enabled = '1';
                     $newLabProgram->is_sequential = '0';
                     $newLabProgram->is_accessible = $labProgram->is_accessable;
+                    $newLabProgram->created_at = $labProgram->created_at;
+                    $newLabProgram->updated_at = $labProgram->updated_at;
+                    $newLabProgram->deleted_at = $labProgram->deleted_at;
                     $newLabProgram->save();
 
                     //for mode and type
@@ -159,17 +162,20 @@ class LabProgram extends Command
                         $modes = json_decode($mode, true);
                         if (!empty($modes)) {
                             LabProgramTypeModes::where(['lab_program_id' => $labProgram->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
                             foreach ($modes as $single_mode) {
                                 if ($single_mode == '196') {
                                     $mode_id = '4';
                                 } elseif ($single_mode == '197') {
                                     $mode_id = '5';
                                 }
-                                $labProgramModes = new LabProgramTypeModes();
-                                $labProgramModes->lab_program_id = $labProgram->id;
-                                $labProgramModes->type_mode = '1';
-                                $labProgramModes->value = $mode_id;
-                                $labProgramModes->save();
+                                if ($mode_id != null) {
+                                    $labProgramModes = new LabProgramTypeModes();
+                                    $labProgramModes->lab_program_id = $labProgram->id;
+                                    $labProgramModes->type_mode = '1';
+                                    $labProgramModes->value = $mode_id;
+                                    $labProgramModes->save();
+                                }
                             }
                         }
                     }
@@ -180,6 +186,7 @@ class LabProgram extends Command
                         $types = json_decode($type, true);
                         if (!empty($types)) {
                             LabProgramTypeModes::where(['lab_program_id' => $labProgram->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
                             foreach ($types as $single_type) {
                                 if ($single_type == '192') {
                                     $type_id = '0';
@@ -190,11 +197,13 @@ class LabProgram extends Command
                                 } elseif ($single_type == '195') {
                                     $type_id = '3';
                                 }
-                                $labProgramType = new LabProgramTypeModes();
-                                $labProgramType->lab_program_id = $labProgram->id;
-                                $labProgramType->type_mode = '0';
-                                $labProgramType->value = $type_id;
-                                $labProgramType->save();
+                                if ($type_id != null) {
+                                    $labProgramType = new LabProgramTypeModes();
+                                    $labProgramType->lab_program_id = $labProgram->id;
+                                    $labProgramType->type_mode = '0';
+                                    $labProgramType->value = $type_id;
+                                    $labProgramType->save();
+                                }
                             }
                         }
                     }

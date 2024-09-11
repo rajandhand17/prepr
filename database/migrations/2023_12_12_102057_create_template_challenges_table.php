@@ -16,9 +16,9 @@ return new class() extends Migration {
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('duration_id');
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->unsignedBigInteger('duration_id')->nullable();
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->string('slug')->nullable();
             $table->string('title')->nullable();
             $table->enum('description_type', ['0', '1'])->comment('0->text,1->scorm')->default('0');
@@ -38,6 +38,9 @@ return new class() extends Migration {
             $table->string('winner_select_date', 255)->nullable()->comment('Date of start challenge winner selection');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('duration_id')->references('id')->on('durations')->onDelete('cascade');
+            $table->foreign('level_id')->references('id')->on('levels')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

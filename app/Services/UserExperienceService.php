@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixPenalJob;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +34,7 @@ class UserExperienceService
                 'type' => 'experience',
                 'info' => $input,
             ];
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+            MixPenalJob::dispatch(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
 
             return $insertRecords;
         } catch (\Exception $e) {
@@ -100,18 +100,34 @@ class UserExperienceService
         }
     }
 
+    public static function deleteFile($id)
+    {
+        try {
+            $deleteFile = UserPersonalFile::query()->where('id', $id)->delete();
+            if ($deleteFile) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return false;
+        }
+    }
+
     public static function updateFilePrivacy($id)
     {
         try {
             $isPublic = UserPersonalFile::where('id', $id)->first();
             if ($isPublic->public == 1) {
-                UserPersonalFile::where('id', $id)->update(['public'=> 0]);
+                UserPersonalFile::where('id', $id)->update(['public' => 0]);
             } else {
-                UserPersonalFile::where('id', $id)->update(['public'=> 1]);
+                UserPersonalFile::where('id', $id)->update(['public' => 1]);
             }
 
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

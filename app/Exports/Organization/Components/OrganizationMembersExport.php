@@ -48,22 +48,22 @@ class OrganizationMembersExport implements FromCollection, withColumnWidths, Wit
         $user = $row->user;
 
         return [
-            $user->full_name,
-            $user->username,
-            $row->role,
-            $user->email,
+            data_get($user, 'full_name'),
+            data_get($user, 'username'),
+            data_get($row, 'role'),
+            data_get($user, 'email', data_get($row, 'email')),
             $this->getInvitationStatusName($row->invite_status),
-            $user->login_status,
-            $user->user_points,
-            $user->user_rank,
-            $user->achievement_count,
-            $user->challenges_progress_count,
-            $user->challenge_paths_progress_count,
-            $user->labs_progress_count,
-            $user->lab_programs_progress_count,
-            $user->resources_modules_progresses_count,
-            $user->resources_groups_progresses_count,
-            $user->resources_collections_progresses_count,
+            data_get($user, 'formatted_login_status'),
+            data_get($user, 'user_points', 0),
+            data_get($user, 'user_rank'),
+            data_get($user, 'achievement_count', 0),
+            data_get($user, 'challenges_progress_count', 0),
+            data_get($user, 'challenge_paths_progress_count', 0),
+            data_get($user, 'labs_progress_count', 0),
+            data_get($user, 'lab_programs_progress_count', 0),
+            data_get($user, 'resources_modules_progresses_count', 0),
+            data_get($user, 'resources_groups_progresses_count', 0),
+            data_get($user, 'resources_collections_progresses_count', 0),
         ];
     }
 
