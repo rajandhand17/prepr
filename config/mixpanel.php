@@ -125,6 +125,10 @@ return [
         'event_name'    => 'Update Profile',
         'variable_name' => 'total_profile_updates',
     ],
+    'add_experience' => [
+        'event_name'    => 'Add Experience',
+        'variable_name' => 'total_add_experience',
+    ],
     'complete_profile' => [
         'event_name'    => 'Complete Profile',
         'variable_name' => null,
