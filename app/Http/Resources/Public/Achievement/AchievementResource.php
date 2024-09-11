@@ -177,7 +177,7 @@ class AchievementResource extends JsonResource
         //Receiver name
         $issue_to = UserService::joinName($this->user->first_name, $this->user->last_name);
 
-        $request = [
+        return [
             'id'                    => $this->certificate_number,
             'issue_to'              => $issue_to,
             'award_name'            => $this->module_title,
@@ -197,7 +197,5 @@ class AchievementResource extends JsonResource
             'promo_code'            => $this->promo_code,
             'achievement_type'      => $activity,
         ];
-
-        return $request;
     }
 }

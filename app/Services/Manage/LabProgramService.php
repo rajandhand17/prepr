@@ -73,7 +73,8 @@ class LabProgramService
                         $labProgramList = $labProgramList->where('lab_programs.privacy', '1');
                         break;
                     default:
-                        $labProgramList = $labProgramList;
+                        $labProgramList = [];
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

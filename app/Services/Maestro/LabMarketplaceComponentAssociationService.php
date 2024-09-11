@@ -13,13 +13,13 @@ use Exception;
 
 class LabMarketplaceComponentAssociationService
 {
-    private $challengeTemplateRepository;
-    protected $challengePathTemplateRepository;
+    private static $challengeTemplateRepository;
+    protected static $challengePathTemplateRepository;
 
     public function __construct(ChallengeTemplateTrait $challengeTemplateRepository, ChallengePathTemplateRepository $challengePathTemplateRepository)
     {
-        $this->challengeTemplateRepository = $challengeTemplateRepository;
-        $this->challengePathTemplateRepository = $challengePathTemplateRepository;
+        self::$challengeTemplateRepository = $challengeTemplateRepository;
+        self::$challengePathTemplateRepository = $challengePathTemplateRepository;
     }
 
     public static function addLabMarketplaceComponentAssociation($labMarketplaceId, $labId)
@@ -31,14 +31,14 @@ class LabMarketplaceComponentAssociationService
                     $getChallenges = Challenge::where('id', $componentAssociation->challenge_id)->first();
                     $checkChallengeTemplate = ChallengeTemplateService::getCheckChallengeUuid($getChallenges->uuid);
                     if (!$checkChallengeTemplate) {
-                        $challengesTemplate = $this->challengeTemplateRepository->createChallengeTemplate($getChallenges->id);
+                        $challengesTemplate = self::$challengeTemplateRepository->createChallengeTemplate($getChallenges->id);
                         self::createLabMarketplaceChallenge($labMarketplaceId, $challengesTemplate->id, $componentAssociation->sequence);
                     }
                 }
 
                 if ($componentAssociation->challenge_path_id !== null) {
                     $getChallengePaths = ChallengePath::where('id', $componentAssociation->challenge_path_id)->first();
-                    $challengesPathTemplate = $this->challengePathTemplateRepository->addChallengePathToTemplate($getChallengePaths->id);
+                    $challengesPathTemplate = self::$challengePathTemplateRepository->addChallengePathToTemplate($getChallengePaths->id);
                     self::createLabMarketplaceChallengePath($labMarketplaceId, $challengesPathTemplate->id, $componentAssociation->sequence);
                 }
 

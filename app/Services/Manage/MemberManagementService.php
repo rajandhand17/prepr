@@ -652,7 +652,7 @@ class MemberManagementService
                                         'email_resend_count' => $emailResendCount,
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                                $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                                $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                                 Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                                 $invited_emails[] = $member['invitee_email'];
                             } else {
@@ -686,8 +686,6 @@ class MemberManagementService
                     } else {
                         $addedMemberResponse = __('responses.create_member_manger_error_certain');
                     }
-                } elseif (count($invited_emails) > 0) {
-                    $addedMemberResponse = $addedMemberResponse;
                 }
                 $data = [
                     'invalid_emails'      => $invalid_emails,

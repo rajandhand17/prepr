@@ -16,12 +16,15 @@ class ChallengeAssessmentResource extends JsonResource
     {
         return [
             'id'          => $this->id,
+            'slug'        => $this->slug,
             'title'       => $this->title ?? '-',
             'description' => $this->description ?? '-',
             'media'       => $this->media ?? '-',
             'created_by'  => data_get($this->createdBy, 'full_name'),
             'assessment'  => $this->assessment ?? '-',
             'achievement' => 'Participation Achievement',
+            'score'       => data_get($this->criteria, 'score', 0),
+            'weight'      => data_get($this->criteria, 'weight', 0),
         ];
     }
 }

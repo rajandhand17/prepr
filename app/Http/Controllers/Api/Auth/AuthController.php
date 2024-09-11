@@ -470,8 +470,6 @@ class AuthController extends AppBaseController
             } else {
                 return $this->sendError(__('responses.username_not_available'), 403);
             }
-
-            return $this->sendError(__('responses.send_error'), 500);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
