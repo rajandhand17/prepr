@@ -197,7 +197,6 @@ class Lab extends Command
                     $updatedAt = $lab->updated_at != null ? Carbon::createFromTimestamp($lab->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
                     $deletedAt = $lab->deleted_at != null ? Carbon::createFromTimestamp($lab->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
 
-
                     $newLab->id = $lab->id;
                     $newLab->type = '4';
                     $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
