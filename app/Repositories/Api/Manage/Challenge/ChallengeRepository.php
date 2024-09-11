@@ -216,7 +216,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectOpportunity'] &&
                 $createChallenge['campusConnectStory']
             ) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
+                // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
 
                 return $createChallenge['createChallenge'];
             }
@@ -458,7 +458,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
+                // MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
 
                 return $updateChallenge['updateChallenge'];
             }

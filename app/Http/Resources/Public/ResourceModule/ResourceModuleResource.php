@@ -258,6 +258,16 @@ class ResourceModuleResource extends JsonResource
             $this->media = null;
         }
 
+        $scorm = $this->scorm?->select(['uuid', 'title', 'version'])->first();
+
+        if (!empty($scorm) && auth('api')->check()) {
+            $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $this->id);
+
+            if ($checkResourceScormCompletedOrNot) {
+                $scorm->completed = 'yes';
+            }
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -277,7 +287,7 @@ class ResourceModuleResource extends JsonResource
             'privacy'               => $privacy,
             'status'                => $status,
             'is_global'             => $is_global,
-            'scorm'                 => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                 => new ScormResource($scorm),
             'skills'                => $skills,
             'skill_groups'          => $skill_groups,
             'skill_stacks'          => $skill_stacks,
