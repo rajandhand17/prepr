@@ -134,7 +134,7 @@ class ResourceModuleDetailService
                 ->where('user_id', $userId)
                 ->where('resource_module_id', $resourceModuleId)
                 ->where(function ($query) {
-                    return  $query->where('lesson_status', 'pass')
+                    return  $query->where('lesson_status', 'passed')
                     ->orWhere('completion_status', 'completed');
                 })
                 ->exists();
