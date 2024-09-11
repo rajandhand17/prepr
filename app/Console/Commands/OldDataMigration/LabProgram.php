@@ -18,148 +18,247 @@ use Illuminate\Support\Facades\DB;
 
 class LabProgram extends Command
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'migrate-old-data:lab-program';
-    protected $description = 'Migrate old Lab Programs table data to new database structure.';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This command is use to migrate old Lab Programs table data to new db structure.';
+
+    /**
+     * Execute the console command.
+     */
     public function handle()
     {
-        $this->info('Starting migration of old Lab Program data...');
-
-        DB::beginTransaction();
-
         try {
-            DB::connection('mysql2')->table('groups')
-                ->where('type', 'lab')
-                ->chunkById(1000, function ($labPrograms) {
-                    foreach ($labPrograms as $labProgram) {
-                        $this->processLabProgram($labProgram);
+            $this->info('Migrating of old data for Lab Program table started.');
+            DB::beginTransaction();
+
+            DB::connection('mysql2')->table('groups')->where('type', 'lab')->chunkById(1000, function ($labPrograms) {
+                foreach ($labPrograms as $labProgram) {
+                    $checkUser = User::find($labProgram->user_id);
+                    if (!$checkUser) {
+                        continue;
                     }
-                });
 
-            DB::commit();
-            $this->info('Migration completed successfully.');
-        } catch (Exception $e) {
-            DB::rollback();
-            UtilityHelper::logError($e);
-            $this->error('Migration failed: '.$e->getMessage());
-        }
-    }
+                    $checkOrganization = Organization::find($labProgram->organisation);
+                    if (!$checkOrganization) {
+                        continue;
+                    }
 
-    private function processLabProgram($labProgram)
-    {
-        $checkUser = User::find($labProgram->user_id);
-        $checkOrganization = Organization::find($labProgram->organisation);
+                    $category = '1';
+                    if ($labProgram->category != '0' && $labProgram->category != null) {
+                        $checkOldCategory = DB::connection('mysql2')->table('categories')->find($labProgram->category);
+                        $checkCategory = Category::where('title', $checkOldCategory->name)->first();
+                        if ($checkCategory) {
+                            $category = $checkCategory->id;
+                        }
+                    }
 
-        if (!$checkUser || !$checkOrganization) {
-            return;
-        }
+                    $checkLabProgram = ModelsLabProgram::where('id', $labProgram->id)->first();
+                    if ($checkLabProgram) {
+                        $newLabProgram = $checkLabProgram;
+                    } else {
+                        $newLabProgram = new ModelsLabProgram();
+                    }
 
-        $category = $this->getCategory($labProgram->category);
-        $newLabProgram = ModelsLabProgram::find($labProgram->id) ?? new ModelsLabProgram();
+                    switch ($labProgram->privacy) {
+                        case 'public':
+                            $labProgramPrivacy = '0';
+                            break;
+                        case 'private':
+                            $labProgramPrivacy = '1';
+                            break;
+                        default:
+                            $labProgramPrivacy = '1';
+                            break;
+                    }
 
-        $this->populateLabProgram($newLabProgram, $labProgram, $category);
-        $newLabProgram->save();
+                    switch ($labProgram->is_auto_created) {
+                        case '0':
+                            $is_auto_created_labProgram = '0';
+                            break;
+                        case '1':
+                            $is_auto_created_labProgram = '1';
+                            break;
+                        default:
+                            $is_auto_created_labProgram = '0';
+                            break;
+                    }
 
-        $this->processModesAndTypes($labProgram, $newLabProgram);
-        $this->processLabProgramAchievement($labProgram);
-        $this->processLabProgramAssociation($labProgram);
-    }
+                    $getTagGroups = DB::connection('mysql2')->table('manage_tag_group')->where(['module_id' => $labProgram->id, 'module_type' => 'lab_program']);
 
-    private function getCategory($category)
-    {
-        if ($category != '0' && $category != null) {
-            $checkOldCategory = DB::connection('mysql2')->table('categories')->find($category);
-            if ($checkOldCategory) {
-                return Category::where('title', $checkOldCategory->name)->first()->id ?? '1';
-            }
-        }
+                    // Clone the query to avoid modifying the original
+                    $getDuration = clone $getTagGroups;
+                    $duration = $getDuration->where('group_type', 'duration')->pluck('group_tag_id')->first();
+                    $duration_id = null;
+                    if ($duration) {
+                        if ($duration == '["169"]') {
+                            $duration_id = '1';
+                        } elseif ($duration == '["170"]') {
+                            $duration_id = '2';
+                        } elseif ($duration == '["171"]') {
+                            $duration_id = '3';
+                        } elseif ($duration == '["172"]') {
+                            $duration_id = '4';
+                        } elseif ($duration == '["173"]') {
+                            $duration_id = '5';
+                        } elseif ($duration == '["174"]') {
+                            $duration_id = '6';
+                        }
+                    }
+                    $getLevel = clone $getTagGroups;
+                    $level = $getLevel->where('group_type', 'level')->pluck('group_tag_id')->first();
+                    $level_id = null;
+                    if ($level) {
+                        if ($level == '["157"]') {
+                            $level_id = '1';
+                        } elseif ($level == '["158"]') {
+                            $level_id = '2';
+                        } elseif ($level == '["159"]') {
+                            $level_id = '3';
+                        } elseif ($level == '["160"]') {
+                            $level_id = '4';
+                        }
+                    }
 
-        return '1';
-    }
+                    $labProgramModel = new ModelsLabProgram();
 
-    private function populateLabProgram($newLabProgram, $labProgram, $category)
-    {
-        $newLabProgram->fill([
-            'id'                     => $labProgram->id,
-            'language'               => $labProgram->language,
-            'uuid'                   => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-            'title'                  => $labProgram->title,
-            'slug'                   => UtilityHelper::generateSlug($labProgram->title, new ModelsLabProgram()),
-            'description'            => $labProgram->description,
-            'user_id'                => $labProgram->user_id,
-            'organization_id'        => $labProgram->organisation,
-            'category_id'            => $category,
-            'duration_id'            => $this->getTagGroupValue($labProgram, 'duration', ['169' => '1', '170' => '2', '171' => '3', '172' => '4', '173' => '5', '174' => '6']),
-            'level_id'               => $this->getTagGroupValue($labProgram, 'level', ['157' => '1', '158' => '2', '159' => '3', '160' => '4']),
-            'media_type'             => 'image',
-            'media'                  => $labProgram->group_image,
-            'privacy'                => $labProgram->privacy === 'public' ? '0' : '1',
-            'status'                 => '1',
-            'is_auto_created'        => $labProgram->is_auto_created === '1' ? '1' : '0',
-            'is_achievement_enabled' => '1',
-            'is_sequential'          => '0',
-            'is_accessible'          => $labProgram->is_accessable,
-        ]);
-    }
+                    $newLabProgram->id = $labProgram->id;
+                    $newLabProgram->language = $labProgram->language;
+                    $newLabProgram->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+                    $newLabProgram->title = $labProgram->title;
+                    $newLabProgram->slug = UtilityHelper::generateSlug($labProgram->title, $labProgramModel);
+                    $newLabProgram->description = $labProgram->description;
+                    $newLabProgram->user_id = $labProgram->user_id;
+                    $newLabProgram->organization_id = $labProgram->organisation;
+                    $newLabProgram->category_id = $category;
+                    $newLabProgram->duration_id = $duration_id;
+                    $newLabProgram->level_id = $level_id;
+                    $newLabProgram->media_type = 'image';
+                    $newLabProgram->media = $labProgram->group_image;
+                    $newLabProgram->privacy = $labProgramPrivacy;
+                    $newLabProgram->status = '1';
+                    $newLabProgram->is_auto_created = $is_auto_created_labProgram;
+                    $newLabProgram->is_achievement_enabled = '1';
+                    $newLabProgram->is_sequential = '0';
+                    $newLabProgram->is_accessible = $labProgram->is_accessable;
+                    $newLabProgram->created_at = $labProgram->created_at;
+                    $newLabProgram->updated_at = $labProgram->updated_at;
+                    $newLabProgram->deleted_at = $labProgram->deleted_at;
+                    $newLabProgram->save();
 
-    private function getTagGroupValue($labProgram, $groupType, $map)
-    {
-        $tagGroup = DB::connection('mysql2')->table('manage_tag_group')
-            ->where(['module_id' => $labProgram->id, 'module_type' => 'lab_program', 'group_type' => $groupType])
-            ->pluck('group_tag_id')
-            ->first();
+                    //for mode and type
+                    $getMode = clone $getTagGroups;
+                    $mode = $getMode->where('group_type', 'mode')->pluck('group_tag_id')->first();
+                    if ($mode) {
+                        $modes = json_decode($mode, true);
+                        if (!empty($modes)) {
+                            LabProgramTypeModes::where(['lab_program_id' => $labProgram->id, 'type_mode' => '1'])->delete();
+                            $mode_id = null;
+                            foreach ($modes as $single_mode) {
+                                if ($single_mode == '196') {
+                                    $mode_id = '4';
+                                } elseif ($single_mode == '197') {
+                                    $mode_id = '5';
+                                }
+                                if ($mode_id != null) {
+                                    $labProgramModes = new LabProgramTypeModes();
+                                    $labProgramModes->lab_program_id = $labProgram->id;
+                                    $labProgramModes->type_mode = '1';
+                                    $labProgramModes->value = $mode_id;
+                                    $labProgramModes->save();
+                                }
+                            }
+                        }
+                    }
 
-        $tagGroup = json_decode($tagGroup, true);
+                    $getType = clone $getTagGroups;
+                    $type = $getType->where('group_type', 'type')->pluck('group_tag_id')->first();
+                    if ($type) {
+                        $types = json_decode($type, true);
+                        if (!empty($types)) {
+                            LabProgramTypeModes::where(['lab_program_id' => $labProgram->id, 'type_mode' => '0'])->delete();
+                            $type_id = null;
+                            foreach ($types as $single_type) {
+                                if ($single_type == '192') {
+                                    $type_id = '0';
+                                } elseif ($single_type == '193') {
+                                    $type_id = '1';
+                                } elseif ($single_type == '194') {
+                                    $type_id = '2';
+                                } elseif ($single_type == '195') {
+                                    $type_id = '3';
+                                }
+                                if ($type_id != null) {
+                                    $labProgramType = new LabProgramTypeModes();
+                                    $labProgramType->lab_program_id = $labProgram->id;
+                                    $labProgramType->type_mode = '0';
+                                    $labProgramType->value = $type_id;
+                                    $labProgramType->save();
+                                }
+                            }
+                        }
+                    }
 
-        return $map[$tagGroup[0]] ?? null;
-    }
+                    // For Lab Program Achievement
+                    $checkLabProgramAchievement = LabProgramsAchievement::where('lab_program_id', $labProgram->id)->first();
+                    if ($checkLabProgramAchievement) {
+                        $newLabProgramAchievement = $checkLabProgramAchievement;
+                    } else {
+                        $newLabProgramAchievement = new LabProgramsAchievement();
+                    }
+                    $newLabProgramAchievement->lab_program_id = $labProgram->id;
+                    $newLabProgramAchievement->achievement_name = $labProgram->prize;
+                    $newLabProgramAchievement->achievement_points = $labProgram->points;
+                    $newLabProgramAchievement->achievement_image = $labProgram->trophy;
+                    $newLabProgramAchievement->save();
 
-    private function processModesAndTypes($labProgram, $newLabProgram)
-    {
-        $this->processTypeMode($labProgram, 'mode', '1', ['196' => '4', '197' => '5']);
-        $this->processTypeMode($labProgram, 'type', '0', ['192' => '0', '193' => '1', '194' => '2', '195' => '3']);
-    }
-
-    private function processTypeMode($labProgram, $groupType, $typeMode, $map)
-    {
-        $values = $this->getTagGroupValue($labProgram, $groupType, $map);
-        if ($values) {
-            LabProgramTypeModes::where('lab_program_id', $labProgram->id)->where('type_mode', $typeMode)->delete();
-            foreach ($values as $value) {
-                LabProgramTypeModes::create([
-                    'lab_program_id' => $labProgram->id,
-                    'type_mode'      => $typeMode,
-                    'value'          => $value,
-                ]);
-            }
-        }
-    }
-
-    private function processLabProgramAchievement($labProgram)
-    {
-        $labProgramAchievement = LabProgramsAchievement::firstOrNew(['lab_program_id' => $labProgram->id]);
-        $labProgramAchievement->fill([
-            'achievement_name'   => $labProgram->prize,
-            'achievement_points' => $labProgram->points,
-            'achievement_image'  => $labProgram->trophy,
-        ])->save();
-    }
-
-    private function processLabProgramAssociation($labProgram)
-    {
-        if (!empty($labProgram->lab_id)) {
-            $labIds = LabService::getLabIdBasedOnId(explode(',', $labProgram->lab_id));
-            if ($labIds) {
-                ComponentAssociation::where('lab_program_id', $labProgram->id)->whereIn('lab_id', $labIds)->delete();
-
-                foreach ($labIds as $sequence => $labId) {
-                    ComponentAssociation::create([
-                        'lab_program_id' => $labProgram->id,
-                        'lab_id'         => $labId,
-                        'sequence'       => $sequence + 1,
-                    ]);
+                    // For Lab Program Association
+                    if (!empty($labProgram->lab_id)) {
+                        $labIdArray = explode(',', $labProgram->lab_id);
+                        $sequence = 1;
+                        $getLabId = LabService::getLabIdBasedOnId($labIdArray);
+                        if (!empty($getLabId)) {
+                            $existComponentAssociation = ComponentAssociation::where([
+                                ['lab_program_id', '=', $labProgram->id],
+                                ['lab_id', '!=', null],
+                            ])->pluck('lab_id')->all();
+                            $newComponentAssociation = array_diff($getLabId, $existComponentAssociation);
+                            ComponentAssociation::where('lab_program_id', $labProgram->id)->whereIn('lab_id', $newComponentAssociation)->delete();
+                            $sequence = ComponentAssociation::where([
+                                ['lab_program_id', '=', $labProgram->id],
+                                ['lab_id', '!=', null],
+                            ])->select('sequence')->orderBy('id', 'desc')->first();
+                            foreach ($newComponentAssociation as $lab_id) {
+                                $sequence++;
+                                $labProgramAssociation = new ComponentAssociation();
+                                $labProgramAssociation->lab_program_id = $labProgram->id;
+                                $labProgramAssociation->lab_id = $lab_id;
+                                $labProgramAssociation->sequence = $sequence;
+                                $labProgramAssociation->save();
+                            }
+                        }
+                    }
                 }
-            }
+            });
+            DB::commit();
+            $this->info('Migrating of old data for Lab Programs table completed.');
+
+            return;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            DB::rollback();
+            $this->error($e->getMessage());
+
+            return;
         }
     }
 }
