@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\Lab;
 
 use App\Helpers\ChargebeeHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -13,6 +12,7 @@ use App\Http\Requests\Manage\Lab\CreateLabUsingAIRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
+use App\Jobs\MixpenalJob;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\LastVisitedActivityModuleService;
@@ -81,8 +81,7 @@ class LabController extends AppBaseController
                 // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
-
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
+                MixpenalJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
 
                 // For last visited activity tracking
                 $joined_status = $lab->joined();

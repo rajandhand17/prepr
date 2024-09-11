@@ -129,6 +129,18 @@ return [
         'event_name'    => 'Add Experience',
         'variable_name' => 'total_add_experience',
     ],
+    'add_skills' => [
+        'event_name'    => 'Add Skills',
+        'variable_name' => 'total_add_skills',
+    ],
+    'add_education' => [
+        'event_name'    => 'Add Experience',
+        'variable_name' => 'total_add_education',
+    ],
+    'add_education' => [
+        'event_name'    => 'Add Patent',
+        'variable_name' => 'total_add_patent',
+    ],
     'complete_profile' => [
         'event_name'    => 'Complete Profile',
         'variable_name' => null,

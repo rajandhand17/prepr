@@ -4,6 +4,7 @@ namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpenalJob;
 use App\Models\TrophyAwards;
 use App\Models\User;
 use Exception;
@@ -91,10 +92,12 @@ class TrophyAwardsService
                             }
                         }
                     }
-                    // if (!empty($trophy_data)) {
-                    //     // Mixpanel tracking code: update trophy (only triggered if the userlist changes)
-                    //     MixpanelHelper::mixpanel_tracking(config('mixpanel.update_sent_trophy'), $trophy_data, Auth::user(), $request->ip());
-                    // }
+                    if (!empty($trophy_data)) {
+                        // Mixpanel tracking code: update trophy (only triggered if the userlist changes)
+                        MixpenalJob::dispatch(
+                            config('mixpanel.update_sent_trophy'), $trophy_data, Auth::user(), $request->ip()
+                        );
+                    }
                 }
 
                 return true;
@@ -191,10 +194,12 @@ class TrophyAwardsService
                             }
                         }
                     }
-                    // if (!empty($trophy_data)) {
-                    //     // Mixpanel tracking code: send trophy (via maestro)
-                    //     MixpanelHelper::mixpanel_tracking(config('mixpanel.send_trophy'), $trophy_data, Auth::user(), $request->ip());
-                    // }
+                    if (!empty($trophy_data)) {
+                        // Mixpanel tracking code: send trophy (via maestro)
+                        MixpenalJob::dispatch(
+                            config('mixpanel.send_trophy'), $trophy_data, Auth::user(), $request->ip()
+                        );
+                    }
                 }
 
                 return true;

@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpenalJob;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\FeaturedLabService;
@@ -248,14 +248,13 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpanelHelper::mixpanel_tracking(
+                MixpenalJob::dispatch(
                     config('mixpanel.create_lab'),
                     $request,
                     auth()->user(),
                     $request->ip(),
                     $groups_for_mixpanel
                 );
-
                 return $createdLab['createdLab'];
             }
             DB::rollBack();
@@ -361,14 +360,13 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpanelHelper::mixpanel_tracking(
+                MixpenalJob::dispatch(
                     config('mixpanel.edit_lab'),
                     $request,
                     auth()->user(),
                     $request->ip(),
                     $groups_for_mixpanel
                 );
-
                 return $updatedLab['updatedLab'];
             }
             DB::rollBack();
@@ -400,8 +398,9 @@ class LabRepository implements LabInterface
             $userId = auth()->user()->id;
             $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
             self::storeHistory($lab->id, $userId, $activity);
-
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
+            MixpenalJob::dispatch(
+                config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip()
+            );
             DB::commit();
 
             return true;

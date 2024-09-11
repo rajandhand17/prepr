@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Challenge;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpenalJob;
 use App\Models\Challenge;
 use App\Repositories\Api\Manage\Scorm\ScormRepository;
 use App\Services\AchievementService;
@@ -216,8 +216,12 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectOpportunity'] &&
                 $createChallenge['campusConnectStory']
             ) {
-                // MixpanelHelper::mixpanel_tracking(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
-
+                MixpenalJob::dispatch(
+                    config('mixpanel.create_challenge'),
+                    $request,
+                    auth()->user(),
+                    $request->ip()
+                );
                 return $createChallenge['createChallenge'];
             }
 
@@ -458,8 +462,12 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                // MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
-
+                MixpenalJob::dispatch(
+                    config('mixpanel.edit_challenge'), 
+                    $request, 
+                    auth()->user(), 
+                    $request->ip()
+                );
                 return $updateChallenge['updateChallenge'];
             }
 
@@ -495,7 +503,8 @@ class ChallengeRepository implements ChallengeInterface
 
                 return false;
             }
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
+            MixpenalJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip()
+            );
             DB::commit();
 
             return true;

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Manage\Organization;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
@@ -11,6 +10,7 @@ use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
+use App\Jobs\MixpenalJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
 
@@ -151,7 +151,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
+                MixpenalJob::dispatch(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
                 $this->organizationRepository->incrementView($organization);
 
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));
