@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\MixPenalJob;
 use App\Models\UserExperience;
@@ -36,6 +35,7 @@ class UserExperienceService
                 'info' => $input,
             ];
             MixPenalJob::dispatch(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+
             return $insertRecords;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

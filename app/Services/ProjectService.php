@@ -152,14 +152,14 @@ class ProjectService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status_array = ['in_progress', 'submitted', 'challenge_closed', 'assessment_details_available'];
+                $status_array = ['in_progress', 'submitted', 'late_submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
                     $projectStatusIds = $project_list->get()->map(function ($projectData) use ($request) {
                         $projectIds = [];
                         switch ($request->status) {
                             case 'in_progress':
-                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
-                                if ($projectRequirementData === false) {
+
+                                if ($projectData->is_submitted === '0') {
                                     $projectIds = $projectData->id;
                                 }
                                 break;

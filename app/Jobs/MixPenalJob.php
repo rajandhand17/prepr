@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Jobs;
 
 use App\Helpers\MixpanelHelper; // Import your helper here
@@ -10,7 +11,10 @@ use Illuminate\Queue\SerializesModels;
 
 class MixpenalJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     protected $event;
     protected $profileData;
