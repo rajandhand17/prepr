@@ -744,6 +744,7 @@ class OrganizationController extends AppBaseController
             return $this->sendError(__('responses.organization_customization_not_update'), 409);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
