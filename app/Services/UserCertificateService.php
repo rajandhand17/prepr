@@ -29,8 +29,7 @@ class UserCertificateService
                 'type' => 'certificate',
                 'info' => $inputs,
             ];
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
-
+            $mixpenal=MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
             return $allCertificates;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

@@ -132,7 +132,8 @@ class MixpanelHelper
                     ];
                     break;
                 case config('mixpanel.complete_challenge_path'): // Mixpanel data: complete challenge path
-                    $organization = $data->organisation;
+                    $organization = $data->organisation_id;
+                    dd($data);
                     $path_challenges = [];
                     $all_path_challenges = explode(',', $data->challenge_id);
                     foreach ($all_path_challenges as $path_challenge) {
