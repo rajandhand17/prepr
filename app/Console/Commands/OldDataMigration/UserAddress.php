@@ -3,6 +3,8 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Models\User;
+use App\Models\UserAddress as ModelUserAddress;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -29,52 +31,62 @@ class UserAddress extends Command
     public function handle()
     {
         try {
-            $this->info('Migrating old data for users addresses table.');
+            $this->info('Starting migration of user addresses.');
+
             DB::beginTransaction();
-            DB::connection('mysql2')->table('users')->chunkById(1000, function ($users, $key) {
-                foreach ($users as $single_user_address) {
-                    // Check if the user exists
-                    $checkUser = \App\Models\User::find($single_user_address->id);
-                    if ($checkUser === null) {
+
+            DB::connection('mysql2')->table('users')->chunkById(1000, function ($users) {
+                foreach ($users as $user) {
+                    // Check if the user exists in the main DB and skip if not
+                    if (!User::where('id', $user->id)->exists()) {
                         continue;
                     }
-                    // Check if a UserAddress already exists for the user
-                    if (\App\Models\UserAddress::where('user_id', $single_user_address->id)->exists()) {
-                        continue;
-                    }
+
                     // Retrieve an existing UserAddress or create a new one
-                    $userAddress = \App\Models\UserAddress::firstOrNew(['user_id' => $single_user_address->id]);
+                    $userAddress = ModelUserAddress::firstOrNew(['user_id' => $user->id]);
 
-                    // Parse date fields with Carbon or set them to null if empty
-                    $createdAt = !empty($single_user_address->created_at) ? Carbon::createFromTimestamp($single_user_address->created_at) : null;
-                    $updateAt = !empty($single_user_address->updated_at) ? Carbon::createFromTimestamp($single_user_address->updated_at) : null;
-                    $deletedAt = !empty($single_user_address->deleted_at) ? Carbon::createFromTimestamp($single_user_address->deleted_at) : null;
+                    // Check if UserAddress already exists, skip if it does
+                    if ($userAddress->exists) {
+                        continue;
+                    }
 
-                    // Fill the model attributes
+                    // Parse dates using Carbon or set to null
                     $userAddress->fill([
-                        'user_id'      => $single_user_address->id,
-                        'latitude'     => $single_user_address->latitude,
-                        'longitude'    => $single_user_address->longitude,
-                        'city'         => $single_user_address->city,
-                        'address'      => $single_user_address->address,
-                        'state'        => $single_user_address->states,
-                        'country'      => $single_user_address->country,
-                        'created_at'   => $createdAt,
-                        'updated_at'   => $updateAt,
-                        'deleted_at'   => $deletedAt,
+                        'user_id'    => $user->id,
+                        'latitude'   => $user->latitude,
+                        'longitude'  => $user->longitude,
+                        'city'       => $user->city,
+                        'address'    => $user->address,
+                        'state'      => $user->states,
+                        'country'    => $user->country,
+                        'created_at' => $this->parseDate($user->created_at),
+                        'updated_at' => $this->parseDate($user->updated_at),
+                        'deleted_at' => $this->parseDate($user->deleted_at),
                     ]);
-                    // Save the model
+
                     $userAddress->save();
                 }
             });
-            DB::commit();
-            $this->info('Migrating of old data for users table completed.');
-        } catch(\Exception $e) {
-            UtilityHelper::logError($e);
-            DB::rollback();
-            $this->error($e->getMessage());
 
-            return;
+            DB::commit();
+
+            $this->info('Migration of user addresses completed.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            UtilityHelper::logError($e);
+            $this->error('Error during migration: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Parse date from timestamp or return null if invalid.
+     *
+     * @param mixed $timestamp
+     *
+     * @return Carbon|null
+     */
+    private function parseDate($timestamp)
+    {
+        return !empty($timestamp) ? Carbon::createFromTimestamp($timestamp) : null;
     }
 }

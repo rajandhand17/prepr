@@ -18,7 +18,7 @@ return new class() extends Migration {
             $table->string('language')->default('en');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('organization_id');
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('duration_id')->nullable();
             $table->unsignedBigInteger('level_id')->nullable();
             $table->enum('type', ['0', '1', '2', '3', '4'])->comment('0-> assess, 1-> onboard, 2-> engage, 3-> grow, 4-> na ')->default('4');

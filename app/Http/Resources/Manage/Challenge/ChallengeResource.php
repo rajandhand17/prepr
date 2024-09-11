@@ -248,7 +248,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_number'      => $item->custom_timelines_number,
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
-                    'schedule_custom_notify'       => $item->schedule_custom_notify,
+                    'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
                 ];
             });
         }
@@ -394,6 +394,18 @@ class ChallengeResource extends JsonResource
             $source = 'Created By You';
         }
 
+        $challenge_status = 'Closed';
+
+        if ($this->status == '0' && $this->is_open == '0') {
+            $challenge_status = 'Draft';
+        } elseif ($this->status == '1' && $this->is_open == '0') {
+            $challenge_status = 'Active';
+        } elseif ($this->is_open == '1') {
+            $challenge_status = 'Closed';
+        } elseif ($this->is_open == '2') {
+            $challenge_status = 'Completed';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -421,7 +433,7 @@ class ChallengeResource extends JsonResource
             'agreement'                         => $this->agreement,
             'is_notification_enabled'           => ($this->is_notification_enabled == '1') ? 'yes' : 'no',
             'project_privacy'                   => ($this->project_privacy == '1') ? 'yes' : 'no',
-            'is_open'                           => ($this->is_open == '1') ? 'yes' : 'no',
+            'is_open'                           => ($this->is_open == '0') ? 'yes' : 'no',
             'is_auto_created'                   => ($this->is_auto_created == '1') ? 'yes' : 'no',
             'is_ai_created'                     => ($this->is_ai_created) ? 'yes' : 'no',
             'is_accessible'                     => ($this->is_accessible == '1') ? 'yes' : 'no',
@@ -467,6 +479,7 @@ class ChallengeResource extends JsonResource
             'campus_connect_status'             => data_get($this, 'campus_connect_status'),
             'scorm_url'                         => $this->formatted_scorm_url,
             'source'                            => $source,
+            'challenge_status'                  => $challenge_status,
         ];
     }
 }

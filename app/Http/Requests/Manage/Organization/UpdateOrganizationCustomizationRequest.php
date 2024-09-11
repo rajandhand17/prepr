@@ -6,7 +6,9 @@ use App\Services\Manage\OrganizationService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use League\Container\Exception\NotFoundException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class UpdateOrganizationCustomizationRequest extends FormRequest
 {
@@ -31,15 +33,30 @@ class UpdateOrganizationCustomizationRequest extends FormRequest
         if (!$organization) {
             throw new NotFoundException();
         }
-        $base_rules = [
-            'enable_custom_login_and_registration'      => 'nullable|in:yes,no,none',
-            'use_main_org_logo'                         => 'required_if:enable_custom_login_and_registration,yes|in:yes,no',
-            'custom_logo_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|',
-            'custom_hero_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120|',
-            'custom_background_color'                   => ['nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-        ];
 
-        return $base_rules;
+        // Allow only GET and POST methods, throw error for others
+        if (!in_array(request()->method(), ['GET', 'POST'])) {
+            throw new MethodNotAllowedHttpException();
+        }
+
+        // Handle POST method
+        if (request()->isMethod('POST')) {
+            $orgId = $organization->customization_login_register ? $organization->customization_login_register->organization_id : null;
+
+            $base_rules = [
+                'enable_custom_login_and_registration'      => 'nullable|in:yes,no,none',
+                'use_main_org_logo'                         => 'required_if:enable_custom_login_and_registration,yes|in:yes,no',
+                'custom_url'                                => ['required_if:enable_custom_login_and_registration,yes', 'string', Rule::unique('organization_customizations', 'custom_url')->ignore($orgId, 'organization_id')],
+                'custom_logo_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:1024|',
+                'custom_hero_image'                         => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120|',
+                'custom_background_color'                   => ['nullable', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
+            ];
+
+            return $base_rules;
+        }
+
+        // No rules needed for GET requests
+        return [];
     }
 
     public function failedValidation(Validator $validator)

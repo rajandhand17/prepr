@@ -28,7 +28,7 @@ class OrganizationCustomizationService
                     $organizationCustomization = new OrganizationCustomization();
                 }
                 $customLogoImage = ($checkExisitingCustomDetails != null) ? str_replace(config('site-settings.aws_url'), '', $checkExisitingCustomDetails->custom_logo_image) : null;
-                if ($request->has('custom_logo_image') && $request->use_main_org_logo == 'yes') {
+                if ($request->has('custom_logo_image') && $request->use_main_org_logo == 'no') {
                     $customLogoImage = FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization');
                 }
 
@@ -52,15 +52,16 @@ class OrganizationCustomizationService
                 $enableCustomLoginRegistration = $request->enable_custom_login_and_registration == 'yes' ? '1' : '0';
                 $organizationCustomization->organization_id = $organizationData->id;
                 $organizationCustomization->enable_custom_login_and_registration = $enableCustomLoginRegistration;
+                $organizationCustomization->custom_url = $request->custom_url;
                 $organizationCustomization->use_main_org_logo = $useMainOrgLogo;
                 $organizationCustomization->custom_logo_image = $customLogoImage;
                 $organizationCustomization->custom_hero_image = $customHeroImage;
-                $organizationCustomization->custom_background_color = $request->has('custom_background_color') ? $request->custom_background_color : $checkExisitingCustomDetails->custom_background_color;
+                $organizationCustomization->custom_background_color = $request->has('custom_background_color') ? $request->custom_background_color : null;
                 $organizationCustomization->save();
             }
             DB::commit();
 
-            return true;
+            return $organizationCustomization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             DB::rollback();
@@ -83,6 +84,19 @@ class OrganizationCustomizationService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkOrganizationCustomizationData($custom_url)
+    {
+        try {
+            $checkOrganizationCustomizationData = OrganizationCustomization::where('custom_url', $custom_url)->orWhereRelation('organization', 'slug', $custom_url)->first();
+
+            return $checkOrganizationCustomizationData;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
