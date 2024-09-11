@@ -291,7 +291,7 @@ class ProjectMemberManagementService
                             self::updateParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
                         }
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
-                        $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => 'project', 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $projectData->title, 'comp_image' => $projectData->media, 'module_name' => 'Project', 'role' => $member['role'] ?? $request->role];
+                        $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => 'project', 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $projectData->title, 'comp_image' => $projectData->media, 'module_name' => 'Project', 'role' => $pariticipateData['role'] ?? $request->role];
                         Notification::route('mail', $pariticipateData['invitee_email'])->notify(new InviteMemberNotification($email_detail));
 
                         $user = UserService::getUserById(auth()->user()->id);
@@ -316,8 +316,6 @@ class ProjectMemberManagementService
                 } else {
                     $addedMemberResponse = __('responses.create_member_manger_error_certain');
                 }
-            } elseif (count($invited_emails) > 0) {
-                $addedMemberResponse = $addedMemberResponse;
             }
             $data = [
                 'invalid_emails'            => $invalid_emails,

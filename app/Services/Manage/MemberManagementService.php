@@ -685,8 +685,6 @@ class MemberManagementService
                     } else {
                         $addedMemberResponse = __('responses.create_member_manger_error_certain');
                     }
-                } elseif (count($invited_emails) > 0) {
-                    $addedMemberResponse = $addedMemberResponse;
                 }
                 $data = [
                     'invalid_emails'      => $invalid_emails,
