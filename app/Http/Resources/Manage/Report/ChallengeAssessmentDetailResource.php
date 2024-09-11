@@ -20,13 +20,13 @@ class ChallengeAssessmentDetailResource extends JsonResource
         $challengeAssessments = $this->challengeAssessmentUsers;
 
         return [
-            'id'               => $this->id,
-            'full_name'        => $this->full_name,
-            'profile'          => $this->profile_image,
-            'comments'         => '',
-            'criteria_comment' => $challengeAssessments->first()->criteria_comment,
-            'assessments'      => $this->formatAssessments($challengeAssessments),
-            'score'            => $this->user_score,
+            'id'                => $this->id,
+            'full_name'         => $this->full_name,
+            'profile'           => $this->profile_image,
+            'comments'          => '',
+            'criteria_comment'  => $challengeAssessments->first()->criteria_comment,
+            'assessments'       => $this->formatAssessments($challengeAssessments),
+            'score'             => $this->user_score,
             'weight'            => $this->user_weight,
         ];
     }
@@ -41,7 +41,7 @@ class ChallengeAssessmentDetailResource extends JsonResource
 
             if (is_null($challengeAssessmentCriteria?->title)) {
                 return null;
-            }else{
+            } else {
                 $this->user_score += $challengeAssessment?->score ?? 0;
                 $this->user_weight += $challengeAssessmentCriteria?->weight ?? 0;
             }

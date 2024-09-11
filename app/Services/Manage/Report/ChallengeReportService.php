@@ -587,7 +587,7 @@ class ChallengeReportService
             $query = $challenge->challenge_assessment->projects()
                 ->whereAssessment(request()->input('assessment_type') ?? '')
                 ->with([
-                    'challengeAssessmentUsers.challengeAssessmentCriteria'
+                    'challengeAssessmentUsers.challengeAssessmentCriteria',
                 ]);
 
             $data = $paginate ? $query->paginate(config('site-settings.pagination_lab_report')) : $query->get();
@@ -798,7 +798,7 @@ class ChallengeReportService
                     'team_members' => $data->member_names,
                     'achievement'  => 'Participation award',
                     'users'        => data_get($data->projects()->first(), 'users', []),
-                    ...$this->getProjectScoreAndWeight($data->projects->first() ?? null)
+                    ...$this->getProjectScoreAndWeight($data->projects->first() ?? null),
                 ],
             ];
         } catch (\Exception $exception) {
@@ -810,17 +810,17 @@ class ChallengeReportService
 
     private function getProjectScoreAndWeight(Project $project)
     {
-        if(!$project){
+        if (!$project) {
             return ['score' => 0, 'weight' => 0];
         }
 
         $score = 0;
         $weight = 0;
 
-        if($project->challengeAssessmentUsers){
+        if ($project->challengeAssessmentUsers) {
             foreach ($project->challengeAssessmentUsers as $challengeAssessmentUser) {
                 $score += $challengeAssessmentUser->score;
-                if($challengeAssessmentUser->challengeAssessmentCriteria){
+                if ($challengeAssessmentUser->challengeAssessmentCriteria) {
                     $weight += $challengeAssessmentUser->challengeAssessmentCriteria->weight;
                 }
             }
