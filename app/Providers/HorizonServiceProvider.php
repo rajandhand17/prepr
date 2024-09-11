@@ -27,6 +27,7 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
             if ($user) {
                 return true;
             }
+
             return false;
         });
     }

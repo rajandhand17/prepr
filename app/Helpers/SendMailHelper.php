@@ -17,7 +17,6 @@ class SendMailHelper
             UtilityHelper::logError($e);
 
             return $e;
-
         }
     }
 }

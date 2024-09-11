@@ -115,7 +115,6 @@ class UserSkillsService
             } else {
                 return 'already';
             }
-
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 
