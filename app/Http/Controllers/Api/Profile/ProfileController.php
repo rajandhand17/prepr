@@ -509,10 +509,9 @@ class ProfileController extends AppBaseController
             $profile_privacy = $getUserById->userSetting->profile_privacy;
 
             if (!auth('api')->check() && $profile_privacy == '1' || $profile_privacy == '1' && auth('api')->user()->id != $userid) {
-
                 return $this->sendResponse([
                     'profile_privacy'       => 'private',
-                ],  __('responses.found_projects_list'));
+                ], __('responses.found_projects_list'));
             }
 
             $userProjects = $this->profileRepository->getUserProjects($userid);
@@ -549,10 +548,9 @@ class ProfileController extends AppBaseController
             $profile_privacy = $getUserById->userSetting->profile_privacy;
 
             if (!auth('api')->check() && $profile_privacy == '1' || $profile_privacy == '1' && auth('api')->user()->id != $userid) {
-
                 return $this->sendResponse([
                     'profile_privacy'       => 'private',
-                ],  __('responses.found_challenges_list'));
+                ], __('responses.found_challenges_list'));
             }
 
             $userChallenges = $this->profileRepository->getUserChallenges($userid);
