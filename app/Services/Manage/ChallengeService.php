@@ -470,7 +470,7 @@ class ChallengeService
                     }
                 }
 
-                if ($request->is_ai_created &&$request->is_ai_created == 'yes') {
+                if ($request->is_ai_created && $request->is_ai_created == 'yes') {
                     $is_open = config('constants.challenge_open_close.yes');
                 } else {
                     switch ($request->is_open) {
