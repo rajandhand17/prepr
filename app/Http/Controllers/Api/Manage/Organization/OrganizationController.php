@@ -8,6 +8,7 @@ use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Manage\Organization\CreateOrganizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationCustomizationRequest;
 use App\Http\Requests\Manage\Organization\UpdateOrganizationRequest;
+use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
@@ -719,25 +720,57 @@ class OrganizationController extends AppBaseController
     public function organizationCustomization($slug, UpdateOrganizationCustomizationRequest $request)
     {
         try {
+            // Check if organization exists
             $checkOrganization = $this->organizationRepository->getOrganizationBasedOnSlug($slug);
             if (!$checkOrganization) {
                 return $this->sendError(__('responses.organization_not_found'), 404);
             }
+
             if (!auth()->user()->isAbleTo('edit_organization', $checkOrganization)) {
                 return $this->sendError(__('responses.organization_update_access_denied'), 403);
             }
-            if ($request->has('enable_custom_login_and_registration') && !empty($request->enable_custom_login_and_registration)) {
-                $updateOrganizationCustomLoginRegistration = $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $checkOrganization);
-                if ($updateOrganizationCustomLoginRegistration) {
-                    return $this->sendResponse(OrganizationResource::make($checkOrganization), __('responses.organization_customization_update_successfully'), 200);
-                }
+
+            // Handle GET request - Fetch customization data
+            if ($request->isMethod('get')) {
+                return $this->fetchOrganizationCustomizationData($slug);
             }
 
+            // Handle POST request - Update customization data
+            if ($request->isMethod('post') && $request->filled('enable_custom_login_and_registration')) {
+                return $this->updateOrganizationCustomizationData($slug, $request, $checkOrganization);
+            }
+
+            // In case of missing parameters or invalid conditions
             return $this->sendError(__('responses.organization_customization_not_update'), 409);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
-
             return $this->sendError(__('responses.send_error'), 500);
         }
+    }
+
+    /**
+     * Fetches organization customization data.
+     */
+    protected function fetchOrganizationCustomizationData($slug)
+    {
+        $customizationData = $this->organizationRepository->checkOrganizationCustomizationData($slug);
+        if ($customizationData && $customizationData->organization) {
+            return $this->sendResponse(OrganizationCustomizationResource::make($customizationData), __('responses.found_organization_customization'));
+        }
+
+        return $this->sendError(__('responses.not_found_organization_customization'), 404);
+    }
+
+    /**
+     * Updates organization customization data.
+     */
+    protected function updateOrganizationCustomizationData($slug, $request, $organization)
+    {
+        $isUpdated = $this->organizationRepository->updateOrganizationCustomLoginRegistration($request, $organization);
+        if ($isUpdated) {
+            return $this->fetchOrganizationCustomizationData($slug);
+        }
+
+        return $this->sendError(__('responses.organization_customization_not_update'), 409);
     }
 }
