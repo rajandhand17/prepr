@@ -105,7 +105,7 @@ class MemberManagementController extends AppBaseController
             $invitationSentUser = $memberManagementListing->total();
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request, $invitationSentUser);
 
-            if ((count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
+            if (is_array($memberLists) && (count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
                 return $this->sendError($memberLists['add_member_response'], 422);
             } elseif ($memberLists) {
                 return $this->sendResponse($memberLists, $memberLists['add_member_response']);
