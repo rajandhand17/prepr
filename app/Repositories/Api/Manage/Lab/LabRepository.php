@@ -485,8 +485,6 @@ class LabRepository implements LabInterface
             self::storeHistory($createdLabUsingAI['createdLabUsingAI']->id, $userId, $activity);
 
             return $createdLabUsingAI['createdLabUsingAI'];
-
-            return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());

@@ -277,7 +277,7 @@ abstract class SolrBaseHelper
      */
     public function migrate(): void
     {
-        $schemaDefinition = require base_path(sprintf('/app/Helpers/Solr/Schema/%s.php', $this->getSchemaName()));
+        $schemaDefinition = require_once base_path(sprintf('/app/Helpers/Solr/Schema/%s.php', $this->getSchemaName()));
         $schema = data_get($schemaDefinition, 'schema');
         $this->post(sprintf('solr/%s/schema', $this->solrCollection), [
             'add-field' => $schema,

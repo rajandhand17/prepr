@@ -273,32 +273,32 @@ class Lab extends Model
 
     public function challenges(): BelongsToMany
     {
-        return $this->belongsToMany(Challenge::class, 'component_associations', 'lab_id', 'challenge_id');
+        return $this->belongsToMany(Challenge::class, 'component_associations', 'lab_id', 'challenge_id')->whereNull('component_associations.deleted_at');
     }
 
     public function labPrograms(): BelongsToMany
     {
-        return $this->belongsToMany(LabProgram::class, 'component_associations', 'lab_id', 'lab_program_id');
+        return $this->belongsToMany(LabProgram::class, 'component_associations', 'lab_id', 'lab_program_id')->whereNull('component_associations.deleted_at');
     }
 
     public function resourceModules(): BelongsToMany
     {
-        return $this->belongsToMany(ResourceModule::class, 'component_associations', 'lab_id', 'resource_module_id');
+        return $this->belongsToMany(ResourceModule::class, 'component_associations', 'lab_id', 'resource_module_id')->whereNull('component_associations.deleted_at');
     }
 
     public function resourceCollections(): BelongsToMany
     {
-        return $this->belongsToMany(ResourceCollection::class, 'component_associations', 'lab_id', 'resource_collection_id');
+        return $this->belongsToMany(ResourceCollection::class, 'component_associations', 'lab_id', 'resource_collection_id')->whereNull('component_associations.deleted_at');
     }
 
     public function resourceGroups(): BelongsToMany
     {
-        return $this->belongsToMany(ResourceGroup::class, 'component_associations', 'lab_id', 'resource_group_id');
+        return $this->belongsToMany(ResourceGroup::class, 'component_associations', 'lab_id', 'resource_group_id')->whereNull('component_associations.deleted_at');
     }
 
     public function challengePaths(): BelongsToMany
     {
-        return $this->belongsToMany(ChallengePath::class, 'component_associations', 'lab_id', 'challenge_path_id');
+        return $this->belongsToMany(ChallengePath::class, 'component_associations', 'lab_id', 'challenge_path_id')->whereNull('component_associations.deleted_at');
     }
 
     public function favouriteCount(): int

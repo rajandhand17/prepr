@@ -481,7 +481,7 @@ class ProfileController extends AppBaseController
                     $friendsListing = $this->profileRepository->getFollowListing();
                     break;
                 default:
-                    $friendsListing = ($getUserByName->id == auth('api')->check() ? auth('api')->user()->id : null) || ($getUserByName->userSetting->profile_privacy != 1) ?
+                    $friendsListing = ($getUserByName->id == auth('api')->check() ? auth('api')->user()->id : null) || ($getUserByName->userSetting->profile_privacy != '1') ?
                                         $this->profileRepository->getFriendsListing($getUserByName) : false;
                     break;
             }
@@ -500,6 +500,20 @@ class ProfileController extends AppBaseController
     public function getUserProjects($userid)
     {
         try {
+            $getUserById = UserService::getUserById($userid);
+
+            if (!$getUserById) {
+                return $this->sendError(__('responses.user_not_found'), 404);
+            }
+
+            $profile_privacy = $getUserById->userSetting->profile_privacy;
+
+            if (!auth('api')->check() && $profile_privacy == '1' || $profile_privacy == '1' && auth('api')->user()->id != $userid) {
+                return $this->sendResponse([
+                    'profile_privacy'       => 'private',
+                ], __('responses.found_projects_list'));
+            }
+
             $userProjects = $this->profileRepository->getUserProjects($userid);
             if ($userProjects) {
                 $response = [
@@ -525,6 +539,20 @@ class ProfileController extends AppBaseController
     public function getUserChallenges($userid)
     {
         try {
+            $getUserById = UserService::getUserById($userid);
+
+            if (!$getUserById) {
+                return $this->sendError(__('responses.user_not_found'), 404);
+            }
+
+            $profile_privacy = $getUserById->userSetting->profile_privacy;
+
+            if (!auth('api')->check() && $profile_privacy == '1' || $profile_privacy == '1' && auth('api')->user()->id != $userid) {
+                return $this->sendResponse([
+                    'profile_privacy'       => 'private',
+                ], __('responses.found_challenges_list'));
+            }
+
             $userChallenges = $this->profileRepository->getUserChallenges($userid);
             if ($userChallenges) {
                 $response = [

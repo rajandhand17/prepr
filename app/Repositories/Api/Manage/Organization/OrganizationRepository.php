@@ -264,4 +264,15 @@ class OrganizationRepository implements OrganizationInterface
             return false;
         }
     }
+
+    public function checkOrganizationCustomizationData($slug)
+    {
+        try {
+            return $this->organizationCustomizationService->checkOrganizationCustomizationData($slug);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -67,7 +67,6 @@ class ChallengeTemplateService
                         $challenge_template_list = $challenge_template_list->whereNotIn('id', $getChallengeRedeemedIds);
                         break;
                     default:
-                        $challenge_template_list = $challenge_template_list;
                         break;
                 }
             }
