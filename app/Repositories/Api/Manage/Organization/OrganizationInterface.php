@@ -47,4 +47,6 @@ interface OrganizationInterface
     public function updateOrganizationCustomLoginRegistration($request, $organizationData);
 
     public function incrementView(Organization $organization);
+
+    public function checkOrganizationCustomizationData($slug);
 }
