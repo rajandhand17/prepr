@@ -28,7 +28,7 @@ class OrganizationCustomizationService
                     $organizationCustomization = new OrganizationCustomization();
                 }
                 $customLogoImage = ($checkExisitingCustomDetails != null) ? str_replace(config('site-settings.aws_url'), '', $checkExisitingCustomDetails->custom_logo_image) : null;
-                if ($request->has('custom_logo_image') && $request->use_main_org_logo == 'yes') {
+                if ($request->has('custom_logo_image') && $request->use_main_org_logo == 'no') {
                     $customLogoImage = FileUploadHelper::uploadImageToS3($request->custom_logo_image, 'organization');
                 }
 
@@ -61,7 +61,7 @@ class OrganizationCustomizationService
             }
             DB::commit();
 
-            return true;
+            return $organizationCustomization;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             DB::rollback();
