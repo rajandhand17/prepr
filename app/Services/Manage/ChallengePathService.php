@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\ChallengePath;
 use App\Services\AchievementService;
 use App\Services\ModuleCompletionStatusService;
@@ -475,6 +476,8 @@ class ChallengePathService
                                         $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
                                         if ($addChallengePathAchievement) {
                                             $markChallengePathCompleted = ModuleCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
+                                            MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted,auth()->user(),request()->ip());
+
                                         }
                                     }
                                 }

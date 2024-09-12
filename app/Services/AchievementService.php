@@ -60,6 +60,8 @@ class AchievementService
                             'achievementImage' => $projectAchievement->achievement_image,
                         ];
                         $user->notify(new AddAchievementNotification($email_detail));
+                        
+
                     }
                 }
             }

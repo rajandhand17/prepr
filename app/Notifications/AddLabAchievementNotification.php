@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Jobs\MixpanelJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -51,7 +52,13 @@ class AddLabAchievementNotification extends Notification
      * @return array<string, mixed>
      */
     public function toFcm($notifiable)
-    {
+    {   
+        $notification_data = [
+            "title" => $this->title,
+            "body"  => $this->body,
+            "url"   => '',
+        ];
+        MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data,auth()->user());
         return FcmMessage::create()
             ->setData([
                 'title' => $this->title,
