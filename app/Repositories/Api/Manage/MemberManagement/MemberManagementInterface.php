@@ -18,7 +18,7 @@ interface MemberManagementInterface
 
     public function checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
 
-    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
 
     public function changeRole($request, $component);
 }

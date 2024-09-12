@@ -85,7 +85,7 @@ class DiscussionController extends AppBaseController
     public function socialActivity($component, $slug, $id, $activity = null)
     {
         try {
-            if (!in_array($component, ['lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             if (!in_array($activity, ['like', 'dislike'])) {

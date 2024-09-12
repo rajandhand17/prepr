@@ -3,9 +3,9 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Models\GO1UserResourceProgress;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
+use App\Models\ScormScoTracking;
 use Exception;
 
 class ResourceModuleDetailService
@@ -127,12 +127,12 @@ class ResourceModuleDetailService
         }
     }
 
-    public static function checkResourceScormCompletedOrNot($userId, $resourceModuleId)
+    public static function checkResourceScormCompletedOrNot($userId, $scoId)
     {
         try {
-            return GO1UserResourceProgress::query()
+            return ScormScoTracking::query()
                 ->where('user_id', $userId)
-                ->where('resource_module_id', $resourceModuleId)
+                ->where('sco_id', $scoId)
                 ->where(function ($query) {
                     return  $query->where('lesson_status', 'passed')
                     ->orWhere('completion_status', 'completed');

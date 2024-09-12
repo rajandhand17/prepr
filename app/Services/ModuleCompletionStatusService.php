@@ -318,4 +318,17 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function deleteUsersProgressBasedOnComponent($moduleId, $component)
+    {
+        try {
+            $deleteUsersProgressBasedOnComponent = ModuleCompletionStatus::where(['module_id' => $moduleId, 'module_type' => $component])->delete();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
