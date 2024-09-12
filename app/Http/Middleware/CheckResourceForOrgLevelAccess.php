@@ -9,7 +9,7 @@ use InfyOm\Generator\Utils\ResponseUtil;
 use App\Helpers\UtilityHelper;
 use Response;
 
-class CheckLabForOrgLevelAccess
+class CheckResourceForOrgLevelAccess
 {
     /**
      * Handle an incoming request.
@@ -20,7 +20,7 @@ class CheckLabForOrgLevelAccess
     public function handle(Request $request, Closure $next)
     {
         try {
-            if(auth()->user()->isAbleTo(['view_lab','create_lab','edit_lab','delete_lab','view_lab_programs','create_lab_programs','edit_lab_programs','delete_lab_programs'], (int) auth()->user()->preferred_organization, true)) {
+            if(auth()->user()->isAbleTo(['create_resource_module','view_resource_module','edit_resource_module','delete_resource_module','view_resource_group','create_resource_group','delete_resource_group','edit_resource_group','view_resource_collection','create_resource_collection','edit_resource_collection','delete_resource_collection'], (int) auth()->user()->preferred_organization, true)) {
                 return $next($request);
             }
             return Response::json(ResponseUtil::makeError(__('responses.org_level_permission_error')), 403);
