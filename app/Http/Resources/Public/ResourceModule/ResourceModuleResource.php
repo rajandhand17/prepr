@@ -258,10 +258,11 @@ class ResourceModuleResource extends JsonResource
             $this->media = null;
         }
 
-        $scorm = $this->scorm?->select(['uuid', 'title', 'version'])->first();
+        $scorm = $this->scorm?->select(['id','uuid', 'title', 'version'])->first();
 
         if (!empty($scorm) && auth('api')->check()) {
-            $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $this->id);
+
+            $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scorm->id);
 
             if ($checkResourceScormCompletedOrNot) {
                 $scorm->completed = 'yes';
