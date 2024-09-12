@@ -5,7 +5,6 @@ namespace App\Console\Commands\ModuleProgressStatus;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Services\Manage\LabProgramService;
-use App\Services\Manage\LabService;
 use App\Services\ModuleCompletionStatusService;
 use Exception;
 use Illuminate\Console\Command;
