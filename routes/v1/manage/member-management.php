@@ -10,7 +10,7 @@ Route::middleware(['language', 'auth:api'])->group(function () {
     Route::get('/{component}/{slug}', [MemberManagementController::class, 'index'])->middleware('check.component');
     Route::post('/{component}/{slug}/create ', [MemberManagementController::class, 'create'])->middleware('check.component');
     Route::delete('/{component}/{slug}/delete ', [MemberManagementController::class, 'delete'])->middleware('check.component');
-    Route::post('/{component}/{slug}/request/{action}', [MemberManagementController::class, 'acceptOrRejectLabJoinRequest']);
+    Route::post('/{component}/{slug}/request/{action}', [MemberManagementController::class, 'acceptOrRejectComponentJoinRequest']);
     Route::delete('/{component}/{slug}/delete-all-members', [MemberManagementController::class, 'deleteAllMember'])->middleware('check.component');
     Route::put('/{component}/{slug}/approve-all-pending-join-requests', [MemberManagementController::class, 'approveAllPendingJoinRequests'])->middleware('check.component');
 });
