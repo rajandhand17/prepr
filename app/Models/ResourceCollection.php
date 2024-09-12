@@ -55,7 +55,7 @@ class ResourceCollection extends Model
 
     public function resource_modules()
     {
-        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('resource_module_id', '!=', null);
+        return $this->hasMany(ComponentAssociation::class, 'resource_collection_id', 'id')->where('resource_module_id', '!=', null)->whereNull('deleted_at');
     }
 
     /* Fetching all the component associated data*/

@@ -385,7 +385,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($Id)
     {
         try {
-            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return LabProgram::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
