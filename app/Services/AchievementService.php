@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\ChallengeAchievement;
 use App\Models\UserAchievement;
 use App\Notifications\AddAchievementNotification;
@@ -60,7 +61,19 @@ class AchievementService
                             'achievementImage' => $projectAchievement->achievement_image,
                         ];
                         $user->notify(new AddAchievementNotification($email_detail));
-                        
+                        $mixpanel_data = [
+                            'achievement_type' => 'challenge_participation',
+                            'name' => $user->full_name,
+                            'points' => $user->user_points,
+                            'org' => $user->preferred_organization,
+                            'challenge' => $fetchChallenge->id,
+                            'lab' => null,
+                            'resource' => null,
+                            'challenge_path' => null,
+                            'lab_program' => null,
+                            'resource_group' => null
+                        ];
+                        MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data,auth()->user());
 
                     }
                 }
