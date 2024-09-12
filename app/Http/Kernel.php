@@ -6,6 +6,10 @@ use App\Http\Middleware\ChannelApiAuthentication;
 use App\Http\Middleware\ScormUserIdentifier;
 use App\Http\Middleware\VerifyGO1Access;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use App\Http\Middleware\CheckLabForOrgLevelAccess;
+use App\Http\Middleware\CheckChallengeForOrgLevelAccess;
+use App\Http\Middleware\CheckResourceForOrgLevelAccess;
+use App\Http\Middleware\CheckOrganizationForOrgLevelAccess;
 
 class Kernel extends HttpKernel
 {
@@ -73,5 +77,6 @@ class Kernel extends HttpKernel
         'scorm.userIdentifier'    => ScormUserIdentifier::class,
         'auth-check'              => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
         'channel-api-auth'        => ChannelApiAuthentication::class,
+        'check-lab-org-level-access'            => CheckLabForOrgLevelAccess::class,
     ];
 }

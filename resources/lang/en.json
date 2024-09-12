@@ -274,7 +274,7 @@
     "responses.lab_not_delete": "The lab was not deleted!",
     "responses.lab_name_not_available": "This lab name is not available!",
     "responses.lab_name_available": "This lab name is available!",
-    "responses.valid_component_error": "Please provide the valid component!",
+    "responses.org_level_permission_error": "You do not have the necessary permissions.",
     "responses.getting_component_error": "Something went wrong getting the component.",
     "responses.receiver_required": "This receiver field is required",
     "responses.receiver_numeric": "This receiver should be in numeric!",
