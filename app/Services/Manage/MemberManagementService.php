@@ -740,9 +740,9 @@ class MemberManagementService
                     $request = Request::capture();
                     $request->merge([
                         'organization_id' => $lab->organization_id,
-                        'privacy' => $lab->privacy,
-                        'title' => $lab->title,
-                        'category' => $lab->category_id,
+                        'privacy'         => $lab->privacy,
+                        'title'           => $lab->title,
+                        'category'        => $lab->category_id,
                     ]);
 
                     if ($component == 'lab') {
