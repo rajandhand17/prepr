@@ -692,15 +692,4 @@ class OrganizationService
             return false;
         }
     }
-
-    public function CheckOrganizationLevelActionPermission()
-    {
-        try {
-            
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
 }

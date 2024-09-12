@@ -78,5 +78,8 @@ class Kernel extends HttpKernel
         'auth-check'              => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
         'channel-api-auth'        => ChannelApiAuthentication::class,
         'check-lab-org-level-access'            => CheckLabForOrgLevelAccess::class,
+        'check-challenge-org-level-access'      => CheckChallengeForOrgLevelAccess::class,
+        'check-resource-org-level-access'       => CheckResourceForOrgLevelAccess::class,
+        'check-organization-org-level-access'   => CheckOrganizationForOrgLevelAccess::class,
     ];
 }
