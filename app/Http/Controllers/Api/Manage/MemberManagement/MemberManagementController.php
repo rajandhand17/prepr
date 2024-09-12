@@ -181,7 +181,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function acceptOrRejectLabJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
+    public function acceptOrRejectComponentJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
@@ -190,7 +190,7 @@ class MemberManagementController extends AppBaseController
             }
             $checkLabStatus = $this->memberManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
             if ($checkLabStatus) {
-                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+                $member_management = $this->memberManagementRepository->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }
