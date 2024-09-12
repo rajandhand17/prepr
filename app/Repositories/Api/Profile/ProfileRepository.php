@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Profile;
 
 use App\Helpers\ResumeParserHelper;
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Services\FriendService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengeService;
@@ -112,7 +112,7 @@ class ProfileRepository implements ProfileInterface
                     'type' => 'certificate',
                     'info' => $request->all(),
                 ];
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip()
                 );
                 return $personalDetail['updateUser'];

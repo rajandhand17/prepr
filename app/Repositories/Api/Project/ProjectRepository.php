@@ -4,7 +4,7 @@ namespace App\Repositories\Api\Project;
 
 use App\Helpers\LearningPointsHelper;
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Jobs\UserAchievement\ProcessChallengePathAchievementJob;
 use App\Notifications\ProjectCreatedNotification;
 use App\Services\AchievementService;
@@ -213,7 +213,7 @@ class ProjectRepository implements ProjectInterface
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip()
                 );
                 $user = UserService::getUserById(auth()->user()->id);
@@ -449,7 +449,7 @@ class ProjectRepository implements ProjectInterface
                 }
 
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip()
                 );
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);

@@ -15,7 +15,7 @@ use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\LastVisitedActivityModuleService;
 use Exception;
@@ -87,7 +87,7 @@ class ResourceModuleController extends AppBaseController
                 // For last visited activity tracking
                 $moduleType = config('constants.module_type.resource_modules');
                 LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
-                MixpenalJob::dispatch(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }

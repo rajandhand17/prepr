@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Skill;
 use App\Models\UserSkills;
 use stdClass;
@@ -32,7 +32,7 @@ class UserSkillsService
                 'type' => 'skills',
                 'info' => $inputAllSkills,
             ];
-            MixpenalJob::dispatch(
+            MixpanelJob::dispatch(
                 config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip()
             );
             return $allSkills;

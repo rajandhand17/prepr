@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Challenge;
 use App\Models\ProjectSocialActivity;
 use Exception;
@@ -113,12 +113,12 @@ class ProjectSocialActivitiesService
                         'associated_challenge' => Challenge::where('id', $project->challenge_id)->first()->title,
                     ];
                     if ($action !== '0') {
-                        MixpenalJob::dispatch(
+                        MixpanelJob::dispatch(
                             config('mixpanel.vote_project'),
                             $vote_data, auth()->user(), request()->ip()
                         );
                     } else {
-                        MixpenalJob::dispatch(
+                        MixpanelJob::dispatch(
                             config('mixpanel.unvote_project'), $vote_data, auth()->user(), request()->ip()
                         );
                     }

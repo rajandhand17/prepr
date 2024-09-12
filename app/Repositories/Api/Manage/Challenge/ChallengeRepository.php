@@ -3,7 +3,7 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Challenge;
 use App\Repositories\Api\Manage\Scorm\ScormRepository;
 use App\Services\AchievementService;
@@ -216,7 +216,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectOpportunity'] &&
                 $createChallenge['campusConnectStory']
             ) {
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.create_challenge'),
                     $request,
                     auth()->user(),
@@ -462,7 +462,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.edit_challenge'), 
                     $request, 
                     auth()->user(), 
@@ -503,7 +503,7 @@ class ChallengeRepository implements ChallengeInterface
 
                 return false;
             }
-            MixpenalJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip()
+            MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip()
             );
             DB::commit();
 

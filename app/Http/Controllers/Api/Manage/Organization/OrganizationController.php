@@ -11,7 +11,7 @@ use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\Manage\Organization\OrganizationChargebeeLimitResource;
 use App\Http\Resources\Manage\Organization\OrganizationDetailResource;
 use App\Http\Resources\Manage\Organization\OrganizationResource;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\Organization\OrganizationRepository;
 use Illuminate\Http\Request;
 
@@ -152,7 +152,7 @@ class OrganizationController extends AppBaseController
                 return $this->sendError(__('responses.permission_forbidden'), 403);
             }
             if ($organization) {
-                MixpenalJob::dispatch(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_lab'), $organization, auth()->user(), request()->ip());
                 $this->organizationRepository->incrementView($organization);
 
                 return $this->sendResponse(OrganizationDetailResource::make($organization), __('responses.found_organization_list'));

@@ -4,7 +4,7 @@ namespace App\Services\Manage;
 
 use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
@@ -611,7 +611,7 @@ class MemberManagementService
                                 $labHistoryService = new LabHistoryService();
                                 $labHistoryService->storeHistory($componentCollectionObject->id, $userId, $activity);
                             }
-                            MixpenalJob::dispatch(
+                            MixpanelJob::dispatch(
                                 config('mixpanel.send_invite'), $invitedMember->id,auth()->user(), $request->ip()
                             );
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
@@ -746,7 +746,7 @@ class MemberManagementService
                         $labHistoryService = new LabHistoryService();
                         $labHistoryService->storeHistory($lab->id, $userId, $activity);
                     }
-                    MixpenalJob::dispatch(
+                    MixpanelJob::dispatch(
                         config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip()
                     );
                 }
@@ -768,7 +768,7 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip()
                 );
                 return true;
@@ -788,7 +788,7 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip()
                 );
                 return true;
@@ -869,7 +869,7 @@ class MemberManagementService
                     $request->privacy = $lab->privacy;
                     $request->title = $lab->title;
                     $request->category = $lab->category_id;
-                    MixpenalJob::dispatch(
+                    MixpanelJob::dispatch(
                         config('mixpanel.join_lab'), $request, auth()->user(), $request->ip()
                     );
                 }

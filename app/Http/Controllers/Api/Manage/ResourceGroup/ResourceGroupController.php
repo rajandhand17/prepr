@@ -10,7 +10,7 @@ use App\Http\Requests\Manage\ResourceGroup\CreateResourceGroupRequest;
 use App\Http\Requests\Manage\ResourceGroup\UpdateResourceGroupRequest;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupListNameResource;
 use App\Http\Resources\Manage\ResourceGroup\ResourceGroupResource;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\ResourceGroup\ResourceGroupRepository;
 use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
@@ -127,7 +127,7 @@ class ResourceGroupController extends AppBaseController
                 // For last visited activity tracking
                 $moduleType = config('constants.module_type.resource_group');
                 LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceGroupExistsOrNot->id, $userId, $moduleType);
-                MixpenalJob::dispatch(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 

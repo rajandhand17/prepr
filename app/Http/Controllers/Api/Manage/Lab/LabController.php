@@ -12,7 +12,7 @@ use App\Http\Requests\Manage\Lab\CreateLabUsingAIRequest;
 use App\Http\Requests\Manage\Lab\UpdateLabRequest;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\Lab\LabResource;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\Lab\LabRepository;
 use App\Repositories\Api\Manage\LabAchievement\LabAchievementRepository;
 use App\Services\LastVisitedActivityModuleService;
@@ -81,7 +81,7 @@ class LabController extends AppBaseController
                 // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
-                MixpenalJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
 
                 // For last visited activity tracking
                 $joined_status = $lab->joined();

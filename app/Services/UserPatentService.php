@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\UserPatent;
 
 class UserPatentService
@@ -28,7 +28,7 @@ class UserPatentService
                 'type' => 'patent',
                 'info' => $input,
             ];
-            MixpenalJob::dispatch(config('mixpanel.add_patent'), $profile_data, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.add_patent'), $profile_data, auth()->user(), $request->ip());
 
             return $allPatents;
         } catch(\Exception $e) {

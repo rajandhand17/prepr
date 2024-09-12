@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\UserCertificate;
 
 class UserCertificateService
@@ -29,7 +29,7 @@ class UserCertificateService
                 'type' => 'certificate',
                 'info' => $inputs,
             ];
-            MixpenalJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
             return $allCertificates;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

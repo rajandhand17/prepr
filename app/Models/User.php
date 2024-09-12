@@ -7,7 +7,7 @@ use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Accessor\UserAccessor;
 use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
@@ -274,14 +274,14 @@ class User extends Authenticatable
             ->orWhere('username', $request->email)
             ->first();
             if ($user->verified_user == 0) {
-                MixpenalJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
 
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
             if ($user->is_deactivated == 1) {
-                MixpenalJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -309,7 +309,7 @@ class User extends Authenticatable
                     ->orWhere('username', $request->email)
                     ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
-                    MixpenalJob::dispatch(
+                    MixpanelJob::dispatch(
                         config('mixpanel.login_success'),
                         'successful',
                         $data,
@@ -318,7 +318,7 @@ class User extends Authenticatable
 
                     return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    MixpenalJob::dispatch(
+                    MixpanelJob::dispatch(
                         config('mixpanel.login_fail'),
                         'wrong_credentials', 
                         null,
@@ -327,7 +327,7 @@ class User extends Authenticatable
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.login_fail'), 'user_not_found', null, $request->ip()
                 );
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
@@ -426,14 +426,14 @@ class User extends Authenticatable
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
                         if ($request->register_type == 'organization') {
-                            MixpenalJob::dispatch(
+                            MixpanelJob::dispatch(
                                 config('mixpanel.org_sign_up'),
                                 $request,
                                 $user,
                                 $request->ip()
                             );
                         } else {
-                            MixpenalJob::dispatch(
+                            MixpanelJob::dispatch(
                                 config('mixpanel.sign_up'),
                                 $request,
                                 $user,

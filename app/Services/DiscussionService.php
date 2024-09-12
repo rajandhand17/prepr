@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Discussion;
 use App\Services\Manage\LabService;
 use DB;
@@ -90,7 +90,7 @@ class DiscussionService
                 'comment'           => $request->comment,
                 'user_commented_on' => $component,
             ];
-            MixpenalJob::dispatch(
+            MixpanelJob::dispatch(
                 config('mixpanel.user_comment'), $comment_data, auth()->user(), request()->ip()
             );
             if ($component == 'lab') {

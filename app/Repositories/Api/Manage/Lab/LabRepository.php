@@ -3,7 +3,7 @@
 namespace App\Repositories\Api\Manage\Lab;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\FeaturedLabService;
@@ -248,7 +248,7 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.create_lab'),
                     $request,
                     auth()->user(),
@@ -362,7 +362,7 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpenalJob::dispatch(
+                MixpanelJob::dispatch(
                     config('mixpanel.edit_lab'),
                     $request,
                     auth()->user(),
@@ -400,7 +400,7 @@ class LabRepository implements LabInterface
             $userId = auth()->user()->id;
             $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
             self::storeHistory($lab->id, $userId, $activity);
-            MixpenalJob::dispatch(
+            MixpanelJob::dispatch(
                 config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip()
             );
             DB::commit();

@@ -3,7 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixpenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\ChallengeSocialActivity;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,7 +51,7 @@ class ChallengeSocialActivitiesService
                         'fav_or_unfav' => $fav_or_unfav,
                         'fav_type'     => 'challenge',
                     ];
-                    MixpenalJob::dispatch(
+                    MixpanelJob::dispatch(
                         config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip()
                     );
                 }
