@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\UtilityHelper;
-use App\Jobs\MixPenalJob;
+use App\Jobs\MixpanelJob;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +34,7 @@ class UserExperienceService
                 'type' => 'experience',
                 'info' => $input,
             ];
-            MixPenalJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), $request->ip());
 
             return $insertRecords;
         } catch (\Exception $e) {

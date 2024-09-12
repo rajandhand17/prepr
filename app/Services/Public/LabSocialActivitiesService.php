@@ -2,8 +2,8 @@
 
 namespace App\Services\Public;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\LabSocialActivity;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,7 +51,12 @@ class LabSocialActivitiesService
                         'fav_or_unfav' => $fav_or_unfav,
                         'fav_type'     => 'lab',
                     ];
-                    MixpanelHelper::mixpanel_tracking(config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip());
+                    MixpanelJob::dispatch(
+                        config('mixpanel.fav_or_unfav'),
+                        $fav_data,
+                        auth()->user(),
+                        request()->ip()
+                    );
                 }
 
                 return true;
