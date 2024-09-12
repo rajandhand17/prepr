@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
+use App\Jobs\ProcessUserModuleProgressData;
 use App\Models\MemberManagement;
 
 class MemberManagementService
@@ -71,6 +72,10 @@ class MemberManagementService
             $member_manager = MemberManagement::where(['email' => $request->email, 'module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type, 'invite_status'=>'2'])->first();
             if ($member_manager) {
                 $member_manager->update(['inviter_id' => auth()->user()->id, 'invite_status' => $invite_status]);
+                // Job for User Progress updating in table
+                if ($invite_status === config('constants.member_management_invite_status.accepted') && in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessUserModuleProgressData($request->email, $checkComponentBasedOnSlug->id, $module_type));
+                }
             }
 
             return true;

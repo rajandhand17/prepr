@@ -4,6 +4,7 @@ namespace App\Http\Resources\Manage\ResourceModule;
 
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
 use App\Http\Resources\Manage\Scorm\ScormResource;
+use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\SkillGroupService;
 use App\Services\SkillService;
 use App\Services\SkillStackService;
@@ -186,6 +187,21 @@ class ResourceModuleResource extends JsonResource
             $this->media = null;
         }
 
+        $scorm = $this->scorm;
+
+        if (!empty($scorm) && auth('api')->check()) {
+            $checkResourceScormCompletedOrNot = false;
+            $scormScoId = $scorm->scos()->first()?->id;
+
+            if (!empty($scormScoId)) {
+                $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormScoId);
+            }
+
+            if ($checkResourceScormCompletedOrNot) {
+                $scorm->completed = 'yes';
+            }
+        }
+
         return [
             'id'                            => $this->uuid,
             'language'                      => $this->language,
@@ -208,7 +224,7 @@ class ResourceModuleResource extends JsonResource
             'status'                        => $status,
             'is_global'                     => $is_global,
             'is_go1_resource'               => $this->is_go1 ? 'yes' : 'no',
-            'scorm'                         => new ScormResource($this->scorm),
+            'scorm'                         => new ScormResource($scorm),
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,

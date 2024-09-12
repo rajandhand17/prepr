@@ -5,9 +5,9 @@ namespace App\Services\Manage;
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\FileUploadHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Organization;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -205,8 +205,12 @@ class OrganizationService
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
             $request->name = $request->title;
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
-
+            MixpanelJob::dispatch(
+                config('mixpanel.create_org'),
+                $request,
+                auth()->user(),
+                $request->ip()
+            );
             DB::commit();
 
             return $organization;
@@ -254,7 +258,12 @@ class OrganizationService
     public static function deleteOrganization($organizationData, $request)
     {
         try {
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(
+                config('mixpanel.delete_organization'),
+                $organizationData,
+                auth()->user(),
+                $request->ip()
+            );
             $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
                 event(new DeleteOrganizationAssociatedData($organizationData->id));

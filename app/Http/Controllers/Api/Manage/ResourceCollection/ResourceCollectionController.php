@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\ResourceCollection;
 
 use App\Helpers\ChargebeeHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -11,6 +10,7 @@ use App\Http\Requests\Manage\ResourceCollection\CreateResourceCollectionRequest;
 use App\Http\Requests\Manage\ResourceCollection\UpdateResourceCollectionRequest;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionListNameResource;
 use App\Http\Resources\Manage\ResourceCollection\ResourceCollectionResource;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\ResourceCollection\ResourceCollectionRepository;
 use App\Services\LastVisitedActivityModuleService;
 use Illuminate\Http\Request;
@@ -135,7 +135,8 @@ class ResourceCollectionController extends AppBaseController
         try {
             $checkResourceCollectionExistsOrNot = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if ($checkResourceCollectionExistsOrNot) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_resource_collection'), $checkResourceCollectionExistsOrNot, auth()->user(), request()->ip());
+
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 if (!$organization) {

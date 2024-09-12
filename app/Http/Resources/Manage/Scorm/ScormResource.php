@@ -23,6 +23,7 @@ class ScormResource extends JsonResource
             'title'       => $this->title,
             'version'     => $this->version,
             'origin_file' => $this->origin_file,
+            'completed'   => $this->whenHas('completed'),
         ];
     }
 }
