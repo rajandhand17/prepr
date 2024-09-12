@@ -3,7 +3,6 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
-use App\Models\GO1UserResourceProgress;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\ScormScoTracking;
