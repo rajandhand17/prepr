@@ -274,7 +274,7 @@
     "responses.lab_not_delete": "The lab was not deleted!",
     "responses.lab_name_not_available": "This lab name is not available!",
     "responses.lab_name_available": "This lab name is available!",
-    "responses.org_level_permission_error": "You do not have the necessary permissions.",
+    "responses.valid_component_error": "Please provide the valid component!",
     "responses.getting_component_error": "Something went wrong getting the component.",
     "responses.receiver_required": "This receiver field is required",
     "responses.receiver_numeric": "This receiver should be in numeric!",
@@ -1454,5 +1454,6 @@
     "responses.failed_to_mark_as_read": "Failed to mark notification as read.",
     "responses.notifications_marked_as_read": "Notifications marked as read",
     "responses.failed_to_delete_notification": "Failed to delete notification.",
-    "responses.notification_deleted": "Notification deleted."
+    "responses.notification_deleted": "Notification deleted.",
+    "responses.org_level_permission_error": "You do not have the necessary permissions."
 }
