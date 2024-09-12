@@ -105,7 +105,7 @@ class ChallengePathService
 
             if ($request->has('type') && $request->type) {
                 $getChallengePathList = $getChallengePathList->whereHas('challenge_path_type', function ($query) use ($request) {
-                    $query->where('value', config('constants.resource_types.' . $request->type));
+                    $query->where('value', config('constants.resource_types.'.$request->type));
                 });
             }
 
