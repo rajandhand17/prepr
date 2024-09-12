@@ -485,8 +485,7 @@ class ChallengePathService
                                         $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
                                         if ($addChallengePathAchievement) {
                                             $markChallengePathCompleted = ModuleCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
-                                            MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted,auth()->user(),request()->ip());
-
+                                            MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted, auth()->user(), request()->ip());
                                         }
                                     }
                                 }
