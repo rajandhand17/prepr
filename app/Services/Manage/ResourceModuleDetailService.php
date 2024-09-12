@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
+use App\Models\ScormScoTracking;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -242,6 +243,24 @@ class ResourceModuleDetailService
             ResourceModuleVisit::where(['module_id' => $resource_module_id, 'module_asset_id' => $assetId])->delete();
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkResourceScormCompletedOrNot($userId, $scoId)
+    {
+        try {
+            return ScormScoTracking::query()
+                ->where('user_id', $userId)
+                ->where('sco_id', $scoId)
+                ->where(function ($query) {
+                    return  $query->where('lesson_status', 'passed')
+                    ->orWhere('completion_status', 'completed');
+                })
+                ->exists();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

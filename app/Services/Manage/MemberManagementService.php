@@ -5,6 +5,8 @@ namespace App\Services\Manage;
 use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\UtilityHelper;
 use App\Jobs\MixpanelJob;
+use App\Jobs\ProcessBulkUserModuleProgressData;
+use App\Jobs\ProcessUserModuleProgressData;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
@@ -14,6 +16,7 @@ use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
@@ -737,11 +740,14 @@ class MemberManagementService
                 $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
                 if ($module_type == '1') {
                     $lab = LabService::getLabBasedOnId($member->module_id);
-                    $request = \Illuminate\Http\Request::capture();
-                    $request->organization_id = $lab->organization_id;
-                    $request->privacy = $lab->privacy;
-                    $request->title = $lab->title;
-                    $request->category = $lab->category_id;
+                    // Merge the new data into the request object
+                    $request = Request::capture();
+                    $request->merge([
+                        'organization_id' => $lab->organization_id,
+                        'privacy'         => $lab->privacy,
+                        'title'           => $lab->title,
+                        'category'        => $lab->category_id,
+                    ]);
 
                     if ($component == 'lab') {
                         $userId = auth()->user()->id;
@@ -781,6 +787,12 @@ class MemberManagementService
                     $request->ip()
                 );
 
+                // Job for Bulk User Progress updating in table
+                $processType = 'delete';
+                if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
+                }
+
                 return true;
             }
 
@@ -804,6 +816,12 @@ class MemberManagementService
                     auth()->user(),
                     $request->ip()
                 );
+
+                // Job for Bulk User Progress updating in table
+                $processType = 'insert';
+                if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
+                }
 
                 return true;
             }
@@ -860,7 +878,7 @@ class MemberManagementService
         }
     }
 
-    public static function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    public static function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
             $module_type = self::getModuleType($component);
@@ -877,6 +895,10 @@ class MemberManagementService
                 $member->invite_status = $invite_status;
                 $member->inviter_id = auth()->user()->id;
                 $member->save();
+                // Job for User Progress updating in table
+                if ($invite_status === config('constants.member_management_invite_status.accepted') && in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessUserModuleProgressData($request->email, $checkComponentBasedOnSlug->id, $module_type));
+                }
                 if ($invite_status == '1' && $component == 'lab') {
                     $lab = LabService::getLabBasedOnId($member->module_id);
                     $request->organization_id = $lab->organization_id;
@@ -1289,6 +1311,19 @@ class MemberManagementService
             }
 
             return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getComponentAcceptedMembersBasedOnModuleId($moduleId, $component)
+    {
+        try {
+            $memberManagement = MemberManagement::withTrashed()->where(['module_id' => $moduleId, 'module_type' => $component, 'invite_status' => config('constants.member_management_invite_status.accepted')])->pluck('email');
+
+            return $memberManagement;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

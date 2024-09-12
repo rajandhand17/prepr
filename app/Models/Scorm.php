@@ -50,7 +50,7 @@ class Scorm extends Model
      */
     public function scos(): HasMany
     {
-        return $this->hasMany(ScormSco::class, '');
+        return $this->hasMany(ScormSco::class, 'scorm_id');
     }
 
     public function getScormEntryUrlAttribute(): ?string
