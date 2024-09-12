@@ -792,6 +792,7 @@ class MemberManagementService
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
                     dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
                 }
+
                 return true;
             }
 
@@ -821,6 +822,7 @@ class MemberManagementService
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
                     dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
                 }
+
                 return true;
             }
 
