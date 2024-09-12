@@ -91,7 +91,10 @@ class DiscussionService
                 'user_commented_on' => $component,
             ];
             MixpanelJob::dispatch(
-                config('mixpanel.user_comment'), $comment_data, auth()->user(), request()->ip()
+                config('mixpanel.user_comment'),
+                $comment_data,
+                auth()->user(),
+                request()->ip()
             );
             if ($component == 'lab') {
                 $getLabDetails = LabService::getLabBasedOnId($getComponentId);

@@ -52,7 +52,10 @@ class LabSocialActivitiesService
                         'fav_type'     => 'lab',
                     ];
                     MixpanelJob::dispatch(
-                        config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip()
+                        config('mixpanel.fav_or_unfav'),
+                        $fav_data,
+                        auth()->user(),
+                        request()->ip()
                     );
                 }
 

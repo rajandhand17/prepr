@@ -206,7 +206,10 @@ class OrganizationService
             auth()->user()->attachRole('organization_owner', $organization);
             $request->name = $request->title;
             MixpanelJob::dispatch(
-                config('mixpanel.create_org'), $request, auth()->user(), $request->ip()
+                config('mixpanel.create_org'),
+                $request,
+                auth()->user(),
+                $request->ip()
             );
             DB::commit();
 
@@ -256,7 +259,10 @@ class OrganizationService
     {
         try {
             MixpanelJob::dispatch(
-                config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip()
+                config('mixpanel.delete_organization'),
+                $organizationData,
+                auth()->user(),
+                $request->ip()
             );
             $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {

@@ -222,6 +222,7 @@ class ChallengeRepository implements ChallengeInterface
                     auth()->user(),
                     $request->ip()
                 );
+
                 return $createChallenge['createChallenge'];
             }
 
@@ -463,11 +464,12 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectStory']
             ) {
                 MixpanelJob::dispatch(
-                    config('mixpanel.edit_challenge'), 
-                    $request, 
-                    auth()->user(), 
+                    config('mixpanel.edit_challenge'),
+                    $request,
+                    auth()->user(),
                     $request->ip()
                 );
+
                 return $updateChallenge['updateChallenge'];
             }
 
@@ -503,7 +505,11 @@ class ChallengeRepository implements ChallengeInterface
 
                 return false;
             }
-            MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip()
+            MixpanelJob::dispatch(
+                config('mixpanel.delete_challenge'),
+                $challenge_data,
+                auth()->user(),
+                $request->ip()
             );
             DB::commit();
 

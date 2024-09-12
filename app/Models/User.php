@@ -320,15 +320,19 @@ class User extends Authenticatable
                 } else {
                     MixpanelJob::dispatch(
                         config('mixpanel.login_fail'),
-                        'wrong_credentials', 
+                        'wrong_credentials',
                         null,
                         $request->ip()
                     );
+
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
                 MixpanelJob::dispatch(
-                    config('mixpanel.login_fail'), 'user_not_found', null, $request->ip()
+                    config('mixpanel.login_fail'),
+                    'user_not_found',
+                    null,
+                    $request->ip()
                 );
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 

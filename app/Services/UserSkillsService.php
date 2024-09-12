@@ -33,8 +33,12 @@ class UserSkillsService
                 'info' => $inputAllSkills,
             ];
             MixpanelJob::dispatch(
-                config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip()
+                config('mixpanel.add_skills'),
+                $profile_data,
+                auth()->user(),
+                $request->ip()
             );
+
             return $allSkills;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
