@@ -4,12 +4,9 @@ namespace App\Services\Manage;
 
 use App\Exceptions\InvitationQuotaExceededException;
 use App\Helpers\UtilityHelper;
-<<<<<<< HEAD
 use App\Jobs\MixpanelJob;
-=======
 use App\Jobs\ProcessBulkUserModuleProgressData;
 use App\Jobs\ProcessUserModuleProgressData;
->>>>>>> BetaDevelopment
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
@@ -783,21 +780,18 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
-<<<<<<< HEAD
                 MixpanelJob::dispatch(
                     config('mixpanel.leave_lab'),
                     $request,
                     auth()->user(),
                     $request->ip()
                 );
-=======
+
                 // Job for Bulk User Progress updating in table
                 $processType = 'delete';
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
                     dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
                 }
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
->>>>>>> BetaDevelopment
 
                 return true;
             }
@@ -816,21 +810,18 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
-<<<<<<< HEAD
                 MixpanelJob::dispatch(
                     config('mixpanel.leave_lab'),
                     $request,
                     auth()->user(),
                     $request->ip()
                 );
-=======
+
                 // Job for Bulk User Progress updating in table
                 $processType = 'insert';
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
                     dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
                 }
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
->>>>>>> BetaDevelopment
 
                 return true;
             }
