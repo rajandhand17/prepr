@@ -113,8 +113,12 @@ class ProfileRepository implements ProfileInterface
                     'info' => $request->all(),
                 ];
                 MixpanelJob::dispatch(
-                    config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip()
+                    config('mixpanel.update_profile'),
+                    $profile_data,
+                    auth()->user(),
+                    $request->ip()
                 );
+
                 return $personalDetail['updateUser'];
             }
             DB::rollBack();

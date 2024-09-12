@@ -115,11 +115,16 @@ class ProjectSocialActivitiesService
                     if ($action !== '0') {
                         MixpanelJob::dispatch(
                             config('mixpanel.vote_project'),
-                            $vote_data, auth()->user(), request()->ip()
+                            $vote_data,
+                            auth()->user(),
+                            request()->ip()
                         );
                     } else {
                         MixpanelJob::dispatch(
-                            config('mixpanel.unvote_project'), $vote_data, auth()->user(), request()->ip()
+                            config('mixpanel.unvote_project'),
+                            $vote_data,
+                            auth()->user(),
+                            request()->ip()
                         );
                     }
                 }
