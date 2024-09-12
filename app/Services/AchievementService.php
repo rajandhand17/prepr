@@ -63,18 +63,17 @@ class AchievementService
                         $user->notify(new AddAchievementNotification($email_detail));
                         $mixpanel_data = [
                             'achievement_type' => 'challenge_participation',
-                            'name' => $user->full_name,
-                            'points' => $user->user_points,
-                            'org' => $user->preferred_organization,
-                            'challenge' => $fetchChallenge->id,
-                            'lab' => null,
-                            'resource' => null,
-                            'challenge_path' => null,
-                            'lab_program' => null,
-                            'resource_group' => null
+                            'name'             => $user->full_name,
+                            'points'           => $user->user_points,
+                            'org'              => $user->preferred_organization,
+                            'challenge'        => $fetchChallenge->id,
+                            'lab'              => null,
+                            'resource'         => null,
+                            'challenge_path'   => null,
+                            'lab_program'      => null,
+                            'resource_group'   => null,
                         ];
-                        MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data,auth()->user());
-
+                        MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
                     }
                 }
             }
