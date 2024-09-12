@@ -51,12 +51,7 @@ class ChallengeSocialActivitiesService
                         'fav_or_unfav' => $fav_or_unfav,
                         'fav_type'     => 'challenge',
                     ];
-                    MixpanelJob::dispatch(
-                        config('mixpanel.fav_or_unfav'),
-                        $fav_data,
-                        auth()->user(),
-                        request()->ip()
-                    );
+                    // MixpanelJob::dispatch(config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip());
                 }
 
                 return true;
