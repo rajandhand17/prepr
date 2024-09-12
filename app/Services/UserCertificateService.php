@@ -30,6 +30,7 @@ class UserCertificateService
                 'info' => $inputs,
             ];
             MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
+
             return $allCertificates;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
