@@ -324,6 +324,7 @@ class User extends Authenticatable
                 return $response;
             }
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
             $response = ['success' => false, 'message' => __('responses.send_error'), 'code' => 6];
 
