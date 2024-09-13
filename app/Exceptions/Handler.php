@@ -55,8 +55,8 @@ class Handler extends ExceptionHandler
     }
 
     public function render($request, Throwable $e)
-    {  
-         dd($e);
+    {
+        dd($e);
         if ($this->shouldReport($e)) {
             UtilityHelper::logError($e);
         }

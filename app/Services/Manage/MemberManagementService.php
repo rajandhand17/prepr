@@ -774,7 +774,7 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
-                MixpanelJob::dispatch(config('mixpanel.leave_lab'),$request->only(['lab_id', 'category']), auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request->only(['lab_id', 'category']), auth()->user(), $request->ip());
 
                 // Job for Bulk User Progress updating in table
                 $processType = 'delete';
@@ -799,13 +799,14 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
-               // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
 
                 // Job for Bulk User Progress updating in table
                 $processType = 'insert';
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
                     dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
                 }
+
                 return true;
             }
 
@@ -888,7 +889,7 @@ class MemberManagementService
                     $request->privacy = $lab->privacy;
                     $request->title = $lab->title;
                     $request->category = $lab->category_id;
-                    MixpanelJob::dispatch(config('mixpanel.join_lab'),$request->only(['lab_id', 'title', 'privacy']), auth()->user(), $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.join_lab'), $request->only(['lab_id', 'title', 'privacy']), auth()->user(), $request->ip());
                 }
             }
 
