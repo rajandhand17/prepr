@@ -255,6 +255,7 @@ class LabRepository implements LabInterface
                     $request->ip(),                              // IP address
                     $groups_for_mixpanel                         // Ensure this is a serializable array
                 );
+
                 return $createdLab['createdLab'];
             }
             DB::rollBack();
@@ -371,6 +372,7 @@ class LabRepository implements LabInterface
                     $request->ip(),                              // IP address
                     $groups_for_mixpanel                         // Ensure this is a serializable array
                 );
+
                 return $updatedLab['updatedLab'];
             }
             DB::rollBack();
@@ -403,7 +405,7 @@ class LabRepository implements LabInterface
             $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
             self::storeHistory($lab->id, $userId, $activity);
             MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
-            
+
             DB::commit();
 
             return true;
