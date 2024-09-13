@@ -49,6 +49,7 @@ environments:
     build:
       - "composer install"
       - "php artisan event:cache"
+      - "chmod -R 777 storage/"
     firewall:
       rate-limit: 1000
       bot-control:
