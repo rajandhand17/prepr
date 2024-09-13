@@ -38,7 +38,6 @@ class LabProgramResource extends JsonResource
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
             $organization_slug = $this->getOrganization->slug;
-
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
