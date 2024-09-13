@@ -81,7 +81,7 @@ class LabController extends AppBaseController
                 // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
-                // MixpanelJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
+                MixpanelJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
 
                 // For last visited activity tracking
                 $joined_status = $lab->joined();
@@ -155,6 +155,7 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_stored_failed'), 400);
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

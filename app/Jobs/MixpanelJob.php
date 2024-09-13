@@ -40,7 +40,7 @@ class MixpanelJob implements ShouldQueue
      * @return void
      */
     public function handle()
-    {
+    {   
         // Call the helper method with the stored data
         MixpanelHelper::mixpanel_tracking($this->event, $this->profileData, $this->user, $this->ip);
     }

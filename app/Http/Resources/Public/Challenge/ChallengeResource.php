@@ -395,13 +395,12 @@ class ChallengeResource extends JsonResource
         } elseif ($this->is_open == '2') {
             $challenge_status = 'Completed';
         }
-
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization_id'                   => $this->organization->uuid,
-            'organization'                      => $this->organization->title,
+            'organization_id'                   => $this->organization!=null ? $this->organization->uuid : 'N/A',
+            'organization'                      => $this->organization!=null ? $this->organization->title : 'N/A',
             'category_id'                       => $category_id,
             'category'                          => $category,
             'hosted_by'                         => OrganizationHostResource::make($this->organization),

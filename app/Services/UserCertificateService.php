@@ -29,7 +29,7 @@ class UserCertificateService
                 'type' => 'certificate',
                 'info' => $inputs,
             ];
-            // MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
 
             return $allCertificates;
         } catch(\Exception $e) {

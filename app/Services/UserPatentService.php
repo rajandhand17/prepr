@@ -28,7 +28,7 @@ class UserPatentService
                 'type' => 'patent',
                 'info' => $input,
             ];
-            // MixpanelJob::dispatch(config('mixpanel.add_patent'), $profile_data, auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.add_patent'), $profile_data, auth()->user(), $request->ip());
 
             return $allPatents;
         } catch(\Exception $e) {

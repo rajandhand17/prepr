@@ -274,14 +274,14 @@ class User extends Authenticatable
             ->orWhere('username', $request->email)
             ->first();
             if ($user->verified_user == 0) {
-                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
 
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
             if ($user->is_deactivated == 1) {
-                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -309,16 +309,16 @@ class User extends Authenticatable
                     ->orWhere('username', $request->email)
                     ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
-                    // MixpanelJob::dispatch(config('mixpanel.login_success'), 'successful', $data, $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.login_success'), 'successful', $data, $request->ip());
 
                     return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
 
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
-                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
