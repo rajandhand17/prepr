@@ -112,8 +112,10 @@ class ProfileRepository implements ProfileInterface
                     'type' => 'certificate',
                     'info' => $request->all(),
                 ];
+                
+                if (config('app.isMixPanelEnable')) {
                 MixpanelJob::dispatch(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
-
+                }
                 return $personalDetail['updateUser'];
             }
             DB::rollBack();

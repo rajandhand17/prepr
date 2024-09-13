@@ -127,8 +127,9 @@ class ResourceGroupController extends AppBaseController
                 // For last visited activity tracking
                 $moduleType = config('constants.module_type.resource_group');
                 LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceGroupExistsOrNot->id, $userId, $moduleType);
+                if (config('app.isMixPanelEnable')) {
                 MixpanelJob::dispatch(config('mixpanel.view_resource_group'), $checkResourceGroupExistsOrNot, $userData, request()->ip());
-
+                }
                 return $this->sendResponse(ResourceGroupResource::make($checkResourceGroupExistsOrNot), __('responses.found_resource_group_list'));
             }
 

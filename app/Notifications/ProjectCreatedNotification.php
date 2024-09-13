@@ -65,8 +65,10 @@ class ProjectCreatedNotification extends Notification
             'body'  => $this->body,
             'url'   => '',
         ];
+        
+        if (config('app.isMixPanelEnable')) {
         MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data, auth()->user());
-
+        }
         return FcmMessage::create()
             ->setData([
                 'title' => $this->title,

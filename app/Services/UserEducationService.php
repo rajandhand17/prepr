@@ -37,8 +37,10 @@ class UserEducationService
                 'type' => 'education',
                 'info' => $input,
             ];
-            MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), $request->ip());
-
+            
+            if (config('app.isMixPanelEnable')) {
+              MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), $request->ip());
+            }
             return $allEducation;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

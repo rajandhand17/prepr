@@ -125,6 +125,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'isMixPanelEnable' => env('MIXPANEL_ENABLE', false),
+
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver

@@ -62,8 +62,10 @@ class AddAchievementNotification extends Notification
             'body'  => $this->emailData['body'],
             'url'   => '',
         ];
+        
+        if (config('app.isMixPanelEnable')) {
         MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data, auth()->user());
-
+        }
         return FcmMessage::create()
             ->setData([
                 'title' => $this->emailData['subject'],

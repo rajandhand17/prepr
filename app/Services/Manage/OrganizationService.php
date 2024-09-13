@@ -205,7 +205,10 @@ class OrganizationService
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
             $request->name = $request->title;
+            
+            if (config('app.isMixPanelEnable')) {
             MixpanelJob::dispatch(config('mixpanel.create_org'), $request->only(['organization_name', 'category']), auth()->user(), $request->ip());
+            }
             DB::commit();
 
             return $organization;
@@ -253,7 +256,10 @@ class OrganizationService
     public static function deleteOrganization($organizationData, $request)
     {
         try {
+            
+            if (config('app.isMixPanelEnable')) {
             MixpanelJob::dispatch(config('mixpanel.delete_organization'), $organizationData->only(['id', 'name']), auth()->user(), $request->ip());
+            }
             $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
                 event(new DeleteOrganizationAssociatedData($organizationData->id));

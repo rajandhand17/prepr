@@ -28,8 +28,10 @@ class UserPatentService
                 'type' => 'patent',
                 'info' => $input,
             ];
+            
+            if (config('app.isMixPanelEnable')) {
             MixpanelJob::dispatch(config('mixpanel.add_patent'), $profile_data, auth()->user(), $request->ip());
-
+            }
             return $allPatents;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

@@ -81,8 +81,9 @@ class LabController extends AppBaseController
                 // For user progress tracking
                 $userId = $userData->id;
                 TrackUserProgressHelper::trackLabUserProgress($lab, $userId);
+                if (config('app.isMixPanelEnable')) {
                 MixpanelJob::dispatch(config('mixpanel.view_lab'), $lab, auth()->user(), request()->ip());
-
+                }
                 // For last visited activity tracking
                 $joined_status = $lab->joined();
                 if ($joined_status != 'NA' && $joined_status != null) {
