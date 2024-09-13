@@ -136,7 +136,7 @@ trait ChallengeAccessor
     {
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
-                return $this->challenge_timelines->flexible_expire_deadline;
+                return $this->challenge_timelines->flexible_expire_deadline ?? "N/A";
             } elseif ($this->challenge_timelines->timeline_type == '1') {
                 return $this->challenge_timelines->submission_deadline_date;
             }
