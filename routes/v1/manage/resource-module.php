@@ -4,7 +4,7 @@ use App\Http\Controllers\Api\Manage\ResourceModule\ResourceModuleController;
 use App\Http\Controllers\Api\Manage\ResourceModule\ResourceModuleScormController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api','check-resource-org-level-access'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check-resource-org-level-access'])->group(function () {
     Route::get('/', [ResourceModuleController::class, 'index'])->middleware('permission:view_resource_module');
     Route::get('/get-list', [ResourceModuleController::class, 'getList'])->middleware('permission:view_resource_module');
     Route::get('/{slug}', [ResourceModuleController::class, 'show'])->middleware('permission:view_resource_module');
