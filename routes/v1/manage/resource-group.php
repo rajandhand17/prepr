@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Manage\ResourceGroup\ResourceGroupController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check-resource-org-level-access'])->group(function () {
     Route::get('/', [ResourceGroupController::class, 'index'])->middleware('permission:view_resource_group');
     Route::get('/get-list', [ResourceGroupController::class, 'getList'])->middleware('permission:view_resource_group');
     Route::get('{slug}', [ResourceGroupController::class, 'show'])->middleware('permission:view_resource_group');

@@ -138,8 +138,9 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
-                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type', 'member_management.deleted_at')
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email])
+                            ->whereNull('member_management.deleted_at');
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');

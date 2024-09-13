@@ -161,10 +161,10 @@ class MemberManagementRepository implements MemberManagementInterface
         }
     }
 
-    public function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    public function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
-            return $this->memberManagementService->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+            return $this->memberManagementService->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

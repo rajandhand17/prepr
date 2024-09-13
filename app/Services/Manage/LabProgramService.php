@@ -73,7 +73,8 @@ class LabProgramService
                         $labProgramList = $labProgramList->where('lab_programs.privacy', '1');
                         break;
                     default:
-                        $labProgramList = $labProgramList;
+                        $labProgramList = [];
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -384,7 +385,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($Id)
     {
         try {
-            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return LabProgram::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
