@@ -1,0 +1,32 @@
+{
+  "_axios-C8DqakIB.js": {
+    "file": "assets/axios-C8DqakIB.js",
+    "name": "axios"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-89dAujd0.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_axios-C8DqakIB.js"
+    ]
+  },
+  "resources/js/scorm-player/app.jsx": {
+    "file": "assets/app-ByN2omo0.js",
+    "name": "app",
+    "src": "resources/js/scorm-player/app.jsx",
+    "isEntry": true,
+    "imports": [
+      "_axios-C8DqakIB.js"
+    ],
+    "css": [
+      "assets/app-Dcw0cTzH.css"
+    ]
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app-D-sv12UV.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  }
+}

@@ -1,0 +1,120 @@
+<?php
+
+use App\Helpers\Solr\Constants\SolrCollection;
+
+return [
+    'collection' => SolrCollection::CHALLENGES,
+    'schema'     => [
+        [
+            'name'        => 'challenge_title',
+            'type'        => 'text_edge_ngram',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_language',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'multiValued' => false,
+            'stored'      => true,
+        ],
+        [
+            'name'        => 'challenge_slug',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_organization_id',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_user_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'    => 'challenge_is_accessible',
+            'type'    => 'boolean',
+            'indexed' => true,
+            'stored'  => true,
+        ],
+        [
+            'name'        => 'challenge_status',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_privacy',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_description',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_category',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_category_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => false,
+        ],
+        [
+            'name'        => 'challenge_skills_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => true,
+        ],
+        [
+            'name'        => 'challenge_tags_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'stored'      => true,
+            'multiValued' => true,
+        ],
+        [
+            'name'        => 'challenge_duration_id',
+            'type'        => 'text_general',
+            'indexed'     => true,
+            'multiValued' => true,
+            'stored'      => true,
+        ],
+        [
+            'name'        => 'challenge_level_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'multiValued' => true,
+            'stored'      => true,
+        ],
+        [
+            'name'        => 'challenge_jobs_id',
+            'type'        => 'string',
+            'indexed'     => true,
+            'multiValued' => true,
+            'stored'      => true,
+        ],
+    ],
+];

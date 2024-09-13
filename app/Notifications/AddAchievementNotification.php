@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+
+class AddAchievementNotification extends Notification
+{
+    use Queueable;
+
+    /**
+     * Create a new notification instance.
+     */
+    private $emailData;
+
+    public function __construct($emailData)
+    {
+        $this->emailData = $emailData;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
+    public function via(object $notifiable): array
+    {
+        return ['mail', FcmChannel::class];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail($notifiable): MailMessage
+    {
+        return (new MailMessage())
+            ->subject($this->emailData['subject'])
+            ->view('email.participation_prize', ['emailData' => $this->emailData]);
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(object $notifiable): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public function toFcm($notifiable)
+    {
+        return FcmMessage::create()
+            ->setData([
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
+            ])
+            ->setNotification([
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
+                'sound' => true,
+            ]);
+    }
+}

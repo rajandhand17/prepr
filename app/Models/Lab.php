@@ -1,0 +1,308 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Accessor\LabAccessor;
+use App\Models\Builder\LabBuilder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Lab extends Model
+{
+    use HasFactory;
+    use LabAccessor;
+    use SoftDeletes;
+
+    protected $table = 'labs';
+    protected $fillable = [
+        'type',
+        'uuid',
+        'language',
+        'is_pre_built',
+        'user_id',
+        'organization_id',
+        'category_id',
+        'duration_id',
+        'level_id',
+        'slug',
+        'title',
+        'description',
+        'privacy',
+        'media_type',
+        'media',
+        'status',
+        'total_share',
+        'is_auto_created',
+        'is_ai_created',
+        'is_resource_sequential',
+        'is_sequential',
+        'is_achievement_enabled',
+        'is_notification_enabled',
+        'is_verified',
+        'campus_connect_status',
+        'is_accessible',
+        'is_live_event_enabled',
+        'views_count',
+    ];
+
+    /**
+     * @param $query
+     *
+     * @return LabBuilder
+     */
+    public function newEloquentBuilder($query): LabBuilder
+    {
+        return new LabBuilder($query);
+    }
+
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
+    public function address()
+    {
+        return $this->hasOne(LabAddress::class, 'lab_id', 'id');
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function getCategory()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    public function achievement()
+    {
+        return $this->hasOne(LabAcheivement::class, 'lab_id', 'id');
+    }
+
+    public function external_links()
+    {
+        return $this->hasMany(LabExternalLinks::class, 'lab_id', 'id');
+    }
+
+    public function skills()
+    {
+        return $this->hasMany(LabSkillsGroupsStack::class, 'lab_id', 'id')->where('type', '0');
+    }
+
+    public function skill_groups()
+    {
+        return $this->hasMany(LabSkillsGroupsStack::class, 'lab_id', 'id')->where('type', '1');
+    }
+
+    public function skill_stacks()
+    {
+        return $this->hasMany(LabSkillsGroupsStack::class, 'lab_id', 'id')->where('type', '2');
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '0');
+    }
+
+    public function tag_groups()
+    {
+        return $this->hasMany(LabTagsGroups::class, 'lab_id', 'id')->where('type', '1');
+    }
+
+    public function component_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
+    }
+
+    public function liked()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('like_dislike', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function joined()
+    {
+        if (auth('api')->check()) {
+            return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'email' => auth('api')->user()->email])->first();
+        }
+
+        return 'NA';
+    }
+
+    public function favourite()
+    {
+        if (auth('api')->check()) {
+            return ($this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('user_id', auth('api')->user()->id)->where('favourite', '1')->count() > 0) ? 'Yes' : 'No';
+        }
+
+        return 'NA';
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('like_dislike', '1');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('share', '1');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1', 'invite_status' => '1']);
+    }
+
+    public function allMembers()
+    {
+        return $this->hasMany(MemberManagement::class, 'module_id', 'id')->where(['module_type' => '1']);
+    }
+
+    public function durations()
+    {
+        return $this->belongsTo(Duration::class, 'duration_id', 'id');
+    }
+
+    public function levels()
+    {
+        return $this->belongsTo(Levels::class, 'level_id', 'id');
+    }
+
+    public function lab_type_mode()
+    {
+        return $this->hasMany(LabTypeModes::class, 'lab_id', 'id');
+    }
+
+    public function labType()
+    {
+        return $this->hasMany(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '0')->pluck('value');
+    }
+
+    public function labMode()
+    {
+        return $this->hasOne(LabTypeModes::class, 'lab_id', 'id')->where('type_mode', '1')->pluck('value');
+    }
+
+    /**
+     * @return MorphOne
+     */
+    public function airMeet(): MorphOne
+    {
+        return $this->morphOne(AirmeetEvent::class, 'model')->latest();
+    }
+
+    public function campusConnectOpportunity(): MorphOne
+    {
+        return $this->morphOne(CampusConnectOpportunity::class, 'model')->latest();
+    }
+
+    public function campusConnectStory(): MorphOne
+    {
+        return $this->morphOne(CampusConnectStory::class, 'model')->latest();
+    }
+
+    public function getCampusConnectStatusAttribute($value)
+    {
+        return config('constants.campus_connect_status_id.'.$value);
+    }
+
+    public function component_associations()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id');
+    }
+
+    public function lab_challenge_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_challenge_path_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('challenge_path_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_resource_module_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_module_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_resource_collection_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_collection_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_resource_group_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('resource_group_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_lab_program_association()
+    {
+        return $this->hasMany(ComponentAssociation::class, 'lab_id', 'id')->where('lab_program_id', '!=', null)->whereNull('deleted_at');
+    }
+
+    public function lab_completion_status()
+    {
+        if (auth('api')->check()) {
+            return $this->hasOne(ModuleCompletionStatus::class, 'module_id', 'id')->where(['user_id' => auth('api')->user()->id, 'module_type' => '0']);
+        }
+
+        return 'N/A';
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function discussions(): HasMany
+    {
+        return $this->hasMany(Discussion::class, 'module_id')->where('module_type', '=', '0');
+    }
+
+    public function challenges(): BelongsToMany
+    {
+        return $this->belongsToMany(Challenge::class, 'component_associations', 'lab_id', 'challenge_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function labPrograms(): BelongsToMany
+    {
+        return $this->belongsToMany(LabProgram::class, 'component_associations', 'lab_id', 'lab_program_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function resourceModules(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceModule::class, 'component_associations', 'lab_id', 'resource_module_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function resourceCollections(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceCollection::class, 'component_associations', 'lab_id', 'resource_collection_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function resourceGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(ResourceGroup::class, 'component_associations', 'lab_id', 'resource_group_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function challengePaths(): BelongsToMany
+    {
+        return $this->belongsToMany(ChallengePath::class, 'component_associations', 'lab_id', 'challenge_path_id')->whereNull('component_associations.deleted_at');
+    }
+
+    public function favouriteCount(): int
+    {
+        return $this->hasMany(LabSocialActivity::class, 'lab_id', 'id')->where('favourite', '1')->count();
+    }
+}

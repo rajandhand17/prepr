@@ -1,0 +1,5 @@
+FROM alpine
+
+RUN mkdir -p /var/www/html/vendor
+WORKDIR /var/www/html
+COPY vendor ./vendor
