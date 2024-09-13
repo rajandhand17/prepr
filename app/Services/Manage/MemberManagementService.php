@@ -3,6 +3,7 @@
 namespace App\Services\Manage;
 
 use App\Exceptions\InvitationQuotaExceededException;
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\MixpanelJob;
 use App\Jobs\ProcessBulkUserModuleProgressData;
@@ -526,6 +527,11 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization->chargebee_details) {
+                    ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                }
                 DB::beginTransaction();
                 foreach ($memberList as $member) {
                     if (UtilityHelper::validEmail($member['invitee_email'])) {
@@ -536,8 +542,6 @@ class MemberManagementService
                         ])->first();
                         if ($checkMemberExists == null) {
                             //check user email limit here
-                            $userData = auth()->user();
-                            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                             $organization->load('chargebee_details');
                             $userInviteLimit = $organization->chargebee_details->user_invite_limits;
 
