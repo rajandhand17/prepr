@@ -209,6 +209,7 @@ class ResourceModuleResource extends JsonResource
             'user'                          => $this->users->first_name.' '.$this->users->last_name,
             'organization_id'               => $this->organization->uuid,
             'organization'                  => $this->organization->title,
+            'organization_slug'             => $this->organization->slug,
             'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,

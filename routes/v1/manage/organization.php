@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Manage\Organization\OrganizationController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api','check-organization-org-level-access'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check-organization-org-level-access'])->group(function () {
     Route::get('/', [OrganizationController::class, 'index'])->middleware('permission:view_organization');
     Route::get('/get-list', [OrganizationController::class, 'getOrganizationList']);
     Route::get('/{slug}/subscription-details', [OrganizationController::class, 'subscriptionDetails']);
