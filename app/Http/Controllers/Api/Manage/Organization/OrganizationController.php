@@ -153,7 +153,7 @@ class OrganizationController extends AppBaseController
             }
             if ($organization) {
                 if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.view_org'), $organization, auth()->user(), request()->ip());
+                    MixpanelJob::dispatch(config('mixpanel.view_org'), $organization, auth()->user(), request()->ip());
                 }
                 $this->organizationRepository->incrementView($organization);
 

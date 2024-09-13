@@ -51,9 +51,9 @@ class LabSocialActivitiesService
                         'fav_or_unfav' => $fav_or_unfav,
                         'fav_type'     => 'lab',
                     ];
-                    
+
                     if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip());
+                        MixpanelJob::dispatch(config('mixpanel.fav_or_unfav'), $fav_data, auth()->user(), request()->ip());
                     }
                 }
 

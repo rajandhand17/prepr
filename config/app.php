@@ -127,7 +127,6 @@ return [
 
     'isMixPanelEnable' => env('MIXPANEL_ENABLE', false),
 
-
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver

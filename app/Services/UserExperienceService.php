@@ -37,6 +37,7 @@ class UserExperienceService
             if (config('app.isMixPanelEnable')) {
                 MixpanelJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), $request->ip());
             }
+
             return $insertRecords;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
