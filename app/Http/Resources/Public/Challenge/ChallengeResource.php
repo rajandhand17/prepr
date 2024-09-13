@@ -402,6 +402,7 @@ class ChallengeResource extends JsonResource
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                   => $this->organization->uuid,
             'organization'                      => $this->organization->title,
+            'organization_slug'                 => $this->organization->slug,
             'category_id'                       => $category_id,
             'category'                          => $category,
             'hosted_by'                         => OrganizationHostResource::make($this->organization),

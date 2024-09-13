@@ -280,6 +280,7 @@ class ResourceModuleResource extends JsonResource
             'user'                  => $this->users != null ? $this->users->first_name.' '.$this->users->last_name : null,
             'organization_id'       => $this->organization != null ? $this->organization->uuid : null,
             'organization'          => $this->organization != null ? $this->organization->title : null,
+            'organization_slug'     => $this->organization != null ? $this->organization->slug : null,
             'duration'              => $duration,
             'duration_id'           => $duration_id,
             'hosted_by'             => OrganizationHostResource::make($this->organization),
