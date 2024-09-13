@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Manage\ChallengePath\ChallengePathController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api','check-challenge-org-level-access'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check-challenge-org-level-access'])->group(function () {
     Route::get('/', [ChallengePathController::class, 'index'])->middleware('permission:view_challenges_path');
     Route::get('/get-list', [ChallengePathController::class, 'getList'])->middleware('permission:view_challenges_path');
     Route::get('{slug}', [ChallengePathController::class, 'show'])->middleware('permission:view_challenges_path');
