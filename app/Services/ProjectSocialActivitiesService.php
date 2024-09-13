@@ -113,14 +113,12 @@ class ProjectSocialActivitiesService
                         'associated_challenge' => Challenge::where('id', $project->challenge_id)->first()->title,
                     ];
                     if ($action !== '0') {
-                        
                         if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.vote_project'), $vote_data, auth()->user(), request()->ip());
+                            MixpanelJob::dispatch(config('mixpanel.vote_project'), $vote_data, auth()->user(), request()->ip());
                         }
                     } else {
-                        
                         if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.unvote_project'), $vote_data, auth()->user(), request()->ip());
+                            MixpanelJob::dispatch(config('mixpanel.unvote_project'), $vote_data, auth()->user(), request()->ip());
                         }
                     }
                 }

@@ -73,9 +73,9 @@ class AchievementService
                             'lab_program'      => null,
                             'resource_group'   => null,
                         ];
-                        
+
                         if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
+                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
                         }
                     }
                 }

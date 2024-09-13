@@ -248,16 +248,16 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                
+
                 if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(
-                    config('mixpanel.create_lab'),               // Event
-                    $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
-                    auth()->id(),                                // Pass the user ID instead of the user object
-                    $request->ip(),                              // IP address
-                    $groups_for_mixpanel                         // Ensure this is a serializable array
-                );
-            }
+                    MixpanelJob::dispatch(
+                        config('mixpanel.create_lab'),               // Event
+                        $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
+                        auth()->id(),                                // Pass the user ID instead of the user object
+                        $request->ip(),                              // IP address
+                        $groups_for_mixpanel                         // Ensure this is a serializable array
+                    );
+                }
 
                 return $createdLab['createdLab'];
             }
@@ -366,16 +366,16 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-              
+
                 if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(
-                    config('mixpanel.edit_lab'),               // Event
-                    $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
-                    auth()->user(),                                // Pass the user ID instead of the user object
-                    $request->ip(),                              // IP address
-                    $groups_for_mixpanel                         // Ensure this is a serializable array
-                );
-            }
+                    MixpanelJob::dispatch(
+                        config('mixpanel.edit_lab'),               // Event
+                        $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
+                        auth()->user(),                                // Pass the user ID instead of the user object
+                        $request->ip(),                              // IP address
+                        $groups_for_mixpanel                         // Ensure this is a serializable array
+                    );
+                }
 
                 return $updatedLab['updatedLab'];
             }
@@ -408,9 +408,9 @@ class LabRepository implements LabInterface
             $userId = auth()->user()->id;
             $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
             self::storeHistory($lab->id, $userId, $activity);
-            
+
             if (config('app.isMixPanelEnable')) {
-            MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
             }
             DB::commit();
 

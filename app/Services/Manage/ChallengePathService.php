@@ -485,10 +485,10 @@ class ChallengePathService
                                         $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
                                         if ($addChallengePathAchievement) {
                                             $markChallengePathCompleted = ModuleCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
-                                            
-                                        if (config('app.isMixPanelEnable')) {
-                                            MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted, auth()->user(), request()->ip());
-                                        }
+
+                                            if (config('app.isMixPanelEnable')) {
+                                                MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted, auth()->user(), request()->ip());
+                                            }
                                         }
                                     }
                                 }

@@ -449,9 +449,9 @@ class ProjectRepository implements ProjectInterface
                 }
 
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
-               
+
                 if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
+                    MixpanelJob::dispatch(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
                 }
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
                 // SEND NOTIFICATIONS
