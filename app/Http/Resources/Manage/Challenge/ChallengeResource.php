@@ -406,6 +406,11 @@ class ChallengeResource extends JsonResource
             $challenge_status = 'Completed';
         }
 
+        // For not allowing to create project from start button
+        if (in_array($challenge_status, ['Draft', 'Closed', 'Completed']) && $isActive === 'yes') {
+            $isActive = 'no';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
