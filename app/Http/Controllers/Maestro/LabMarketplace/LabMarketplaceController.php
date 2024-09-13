@@ -88,7 +88,7 @@ class LabMarketplaceController extends Controller
             }
             // Deleting lab marketplace based on id
             if ($this->deleteLabMarketplaceById($id)) {
-                return response()->json(['status' => 'success', 'message' => 'Lab Marketplace deleted successfully']);
+                return response()->json(['status' => 'success', 'message' => 'Lab Template deleted successfully from Lab Marketplace ']);
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);

@@ -32,9 +32,11 @@ class LabProgramResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $organization_slug = null;
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $organization_slug = $this->getOrganization->slug;
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -130,6 +132,7 @@ class LabProgramResource extends JsonResource
             'media'                         => $this->media,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
+            'organization_slug'             => $organization_slug,
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration_id'                   => $duration_id,
