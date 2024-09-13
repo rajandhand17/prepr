@@ -33,9 +33,9 @@ class SkillGroupController extends Controller
                 return DataTables::eloquent($groups)
                 ->addColumn('action', static function ($group) {
                     $html = '';
-                    $html .= '<a href="'.route('skill-group.show',  $group->id).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="'.route('skill-group.edit',  $group->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skill-group.destroy',  $group->id).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skill-group.show', $group->id).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skill-group.edit', $group->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skill-group.destroy', $group->id).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
