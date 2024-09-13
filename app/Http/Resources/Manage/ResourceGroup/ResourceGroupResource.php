@@ -32,6 +32,7 @@ class ResourceGroupResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $organization_slug = null;
         $category = null;
         $category_id = null;
         if ($this->getDuration) {
@@ -49,6 +50,8 @@ class ResourceGroupResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $organization_slug = $this->getOrganization->slug;
+
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -169,6 +172,7 @@ class ResourceGroupResource extends JsonResource
             'resource_modules'              => $resourceModules,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
+            'organization_slug'             => $organization_slug,
             'category'                      => $category,
             'category_id'                   => $category_id,
             'skills'                        => $skills,

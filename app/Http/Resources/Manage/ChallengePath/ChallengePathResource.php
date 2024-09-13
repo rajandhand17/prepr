@@ -34,6 +34,8 @@ class ChallengePathResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $organization_slug = null;
+
         if ($this->component_association) {
             $challengeIds = $this->component_association->pluck('challenge_id');
             $challengeData = ChallengeService::getChallengesBasedOnIds($challengeIds, ['members', 'durations', 'levels', 'challenge_completion_status', 'submitted_projects']);
@@ -45,6 +47,7 @@ class ChallengePathResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $organization_slug = $this->getOrganization->slug;
         }
         if ($this->getCategory) {
             $category = $this->getCategory->title;
@@ -129,6 +132,7 @@ class ChallengePathResource extends JsonResource
             'media'                         => $this->media,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
+            'organization_slug'             => $organization_slug,
             'category_id'                   => $category_id,
             'category'                      => $category,
             'duration_id'                   => $duration_id,
