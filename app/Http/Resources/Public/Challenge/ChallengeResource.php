@@ -385,7 +385,6 @@ class ChallengeResource extends JsonResource
         }
 
         $challenge_status = 'Closed';
-
         if ($this->status == '0' && $this->is_open == '0') {
             $challenge_status = 'Draft';
         } elseif ($this->status == '1' && $this->is_open == '0') {
@@ -396,12 +395,18 @@ class ChallengeResource extends JsonResource
             $challenge_status = 'Completed';
         }
 
+        // For not allowing to create project from start button
+        if (in_array($challenge_status, ['Draft', 'Closed', 'Completed']) && $isActive === 'yes') {
+            $isActive = 'no';
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
             'organization_id'                   => $this->organization->uuid,
             'organization'                      => $this->organization->title,
+            'organization_slug'                 => $this->organization->slug,
             'category_id'                       => $category_id,
             'category'                          => $category,
             'hosted_by'                         => OrganizationHostResource::make($this->organization),

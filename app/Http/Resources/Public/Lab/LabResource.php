@@ -169,6 +169,7 @@ class LabResource extends JsonResource
             'category'                      => $category,
             'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
             'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
+            'organization_slug'             => isset($this->organization->slug) ? $this->organization->slug : null,
             'duration'                      => $duration,
             'duration_id'                   => $duration_id,
             'level'                         => $level,
