@@ -33,7 +33,7 @@ class SkillStackController extends Controller
                     $html = '';
                     $html .= '<a href="'.route('skill-stack.show', $stack->id).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
                     $html .= '<a href="'.route('skill-stack.edit', $stack->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skill-stack.destroy',$stack->id).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skill-stack.destroy', $stack->id).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
