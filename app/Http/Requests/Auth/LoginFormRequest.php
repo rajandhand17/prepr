@@ -26,6 +26,7 @@ class LoginFormRequest extends FormRequest
      */
     public function rules()
     {
+        dd("in");
         return [
             'email' => [
                 'required',
