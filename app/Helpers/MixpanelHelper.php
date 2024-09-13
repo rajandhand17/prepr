@@ -151,9 +151,9 @@ class MixpanelHelper
                     $final_challenge_skills = [];
                     $final_challenge_tags = [];
                     if (isset($data->skills)) {
-                           // Get the skills based on IDs
+                        // Get the skills based on IDs
                         $skills = SkillService::getSkillBasedOnIds($data->skills);
-                        
+
                         // Check if the result is not false before calling pluck
                         if ($skills !== false) {
                             $final_challenge_skills = $skills->pluck('title');

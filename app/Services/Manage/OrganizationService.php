@@ -205,7 +205,7 @@ class OrganizationService
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
             $request->name = $request->title;
-            MixpanelJob::dispatch(config('mixpanel.create_org'), $request->only(['organization_name', 'category']),auth()->user(), $request->ip());
+            MixpanelJob::dispatch(config('mixpanel.create_org'), $request->only(['organization_name', 'category']), auth()->user(), $request->ip());
             DB::commit();
 
             return $organization;

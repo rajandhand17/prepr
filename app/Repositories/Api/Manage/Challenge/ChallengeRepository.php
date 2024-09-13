@@ -458,7 +458,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                MixpanelJob::dispatch(config('mixpanel.edit_challenge'),$request->only(['title', 'category', 'tags']), auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.edit_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), $request->ip());
 
                 return $updateChallenge['updateChallenge'];
             }
