@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.321.9",
+            "version": "3.321.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5de5099cfe0e17cb3eb2fe51de0101c99bc9442a"
+                "reference": "a81a9a2cb5f451e03f8ef68b02ebfecfbf1fa7f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5de5099cfe0e17cb3eb2fe51de0101c99bc9442a",
-                "reference": "5de5099cfe0e17cb3eb2fe51de0101c99bc9442a",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a81a9a2cb5f451e03f8ef68b02ebfecfbf1fa7f2",
+                "reference": "a81a9a2cb5f451e03f8ef68b02ebfecfbf1fa7f2",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.321.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.321.10"
             },
-            "time": "2024-09-11T18:15:49+00:00"
+            "time": "2024-09-12T18:08:32+00:00"
         },
         {
             "name": "barryvdh/laravel-dompdf",
@@ -13441,16 +13441,16 @@
         },
         {
             "name": "jetbrains/phpstorm-stubs",
-            "version": "v2024.1",
+            "version": "v2024.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JetBrains/phpstorm-stubs.git",
-                "reference": "78d64a0d0c338fdb07eb53c72f91a86a3b2819c6"
+                "reference": "cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/78d64a0d0c338fdb07eb53c72f91a86a3b2819c6",
-                "reference": "78d64a0d0c338fdb07eb53c72f91a86a3b2819c6",
+                "url": "https://api.github.com/repos/JetBrains/phpstorm-stubs/zipball/cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c",
+                "reference": "cf7e447ddfa7f0cbab0c1dd38392f0cb05f9881c",
                 "shasum": ""
             },
             "require-dev": {
@@ -13482,9 +13482,9 @@
                 "type"
             ],
             "support": {
-                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2024.1"
+                "source": "https://github.com/JetBrains/phpstorm-stubs/tree/v2024.2"
             },
-            "time": "2024-03-07T11:03:05+00:00"
+            "time": "2024-06-17T19:18:18+00:00"
         },
         {
             "name": "laravel/pint",
@@ -14822,21 +14822,21 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.41.0",
+            "version": "6.42.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "8a8ca7303e6353091868c06377deeffaa720eb7c"
+                "reference": "33da7cb86d659329fea6a3c31d00bd45dd37d83f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/8a8ca7303e6353091868c06377deeffaa720eb7c",
-                "reference": "8a8ca7303e6353091868c06377deeffaa720eb7c",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/33da7cb86d659329fea6a3c31d00bd45dd37d83f",
+                "reference": "33da7cb86d659329fea6a3c31d00bd45dd37d83f",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "jetbrains/phpstorm-stubs": "2024.1",
+                "jetbrains/phpstorm-stubs": "2024.2",
                 "nikic/php-parser": "^5.1.0",
                 "php": "~8.2.0 || ~8.3.2"
             },
@@ -14845,7 +14845,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.3.1",
-                "phpunit/phpunit": "^11.3.0"
+                "phpunit/phpunit": "^11.3.4"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -14885,9 +14885,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.41.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.42.0"
             },
-            "time": "2024-08-03T12:28:06+00:00"
+            "time": "2024-09-12T14:43:53+00:00"
         },
         {
             "name": "sebastian/cli-parser",
