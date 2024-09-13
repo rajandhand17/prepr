@@ -3,13 +3,13 @@
 namespace App\Http;
 
 use App\Http\Middleware\ChannelApiAuthentication;
+use App\Http\Middleware\CheckChallengeForOrgLevelAccess;
+use App\Http\Middleware\CheckLabForOrgLevelAccess;
+use App\Http\Middleware\CheckOrganizationForOrgLevelAccess;
+use App\Http\Middleware\CheckResourceForOrgLevelAccess;
 use App\Http\Middleware\ScormUserIdentifier;
 use App\Http\Middleware\VerifyGO1Access;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\CheckLabForOrgLevelAccess;
-use App\Http\Middleware\CheckChallengeForOrgLevelAccess;
-use App\Http\Middleware\CheckResourceForOrgLevelAccess;
-use App\Http\Middleware\CheckOrganizationForOrgLevelAccess;
 
 class Kernel extends HttpKernel
 {
@@ -61,22 +61,22 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
-        'auth'                    => \App\Http\Middleware\Authenticate::class,
-        'auth.basic'              => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'auth.session'            => \Illuminate\Session\Middleware\AuthenticateSession::class,
-        'cache.headers'           => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can'                     => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest'                   => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm'        => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed'                  => \App\Http\Middleware\ValidateSignature::class,
-        'throttle'                => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified'                => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'language'                => \App\Http\Middleware\Language::class,
-        'check.component'         => \App\Http\Middleware\CheckComponentMiddleware::class,
-        'verify-go1-access'       => VerifyGO1Access::class,
-        'scorm.userIdentifier'    => ScormUserIdentifier::class,
-        'auth-check'              => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
-        'channel-api-auth'        => ChannelApiAuthentication::class,
+        'auth'                                  => \App\Http\Middleware\Authenticate::class,
+        'auth.basic'                            => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session'                          => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers'                         => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can'                                   => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest'                                 => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm'                      => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed'                                => \App\Http\Middleware\ValidateSignature::class,
+        'throttle'                              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified'                              => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'language'                              => \App\Http\Middleware\Language::class,
+        'check.component'                       => \App\Http\Middleware\CheckComponentMiddleware::class,
+        'verify-go1-access'                     => VerifyGO1Access::class,
+        'scorm.userIdentifier'                  => ScormUserIdentifier::class,
+        'auth-check'                            => \App\Http\Middleware\CheckMaestroLoginMiddleware::class,
+        'channel-api-auth'                      => ChannelApiAuthentication::class,
         'check-lab-org-level-access'            => CheckLabForOrgLevelAccess::class,
         'check-challenge-org-level-access'      => CheckChallengeForOrgLevelAccess::class,
         'check-resource-org-level-access'       => CheckResourceForOrgLevelAccess::class,
