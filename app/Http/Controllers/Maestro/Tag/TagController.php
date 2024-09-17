@@ -66,9 +66,9 @@ class TagController extends Controller
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Tag Title'];
                 array_push($tableColumns, $singleLangCol);
             }
-            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category','orderable' => false, 'searchable' => false]);
-            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image', 'width' => '10%','orderable' => false, 'searchable' => false]);
-           
+            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category', 'orderable' => false, 'searchable' => false]);
+            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image', 'width' => '10%', 'orderable' => false, 'searchable' => false]);
+
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
             view()->share('module_name', 'Challenge');

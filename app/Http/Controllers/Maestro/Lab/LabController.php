@@ -80,7 +80,7 @@ class LabController extends Controller
                 ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title'],
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category','orderable' => false, 'searchable' => false],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);
