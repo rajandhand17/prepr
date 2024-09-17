@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
+class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -1239,6 +1239,7 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
         'App\\Console\\Commands\\OldDataMigration\\Host' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/Host.php',
         'App\\Console\\Commands\\OldDataMigration\\Lab' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/Lab.php',
         'App\\Console\\Commands\\OldDataMigration\\LabMarketplace' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/LabMarketplace.php',
+        'App\\Console\\Commands\\OldDataMigration\\LabMemberManagement' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/LabMemberManagement.php',
         'App\\Console\\Commands\\OldDataMigration\\LabProgram' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/LabProgram.php',
         'App\\Console\\Commands\\OldDataMigration\\Languages' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/Languages.php',
         'App\\Console\\Commands\\OldDataMigration\\Organization' => __DIR__ . '/../..' . '/app/Console/Commands/OldDataMigration/Organization.php',
@@ -1486,7 +1487,8 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
         'App\\Http\\Requests\\Career\\AddMultipleJobsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Career/AddMultipleJobsRequest.php',
         'App\\Http\\Requests\\Chat\\CreateConversationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Chat/CreateConversationRequest.php',
         'App\\Http\\Requests\\Chat\\CreateMessageRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Chat/CreateMessageRequest.php',
-        'App\\Http\\Requests\\Dashboard\\UpdateManagerDashboardLayoutRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Dashboard/UpdateManagerDashboardLayoutRequest.php',
+        'App\\Http\\Requests\\Dashboard\\UpdateLabDashboardLayoutRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Dashboard/UpdateLabDashboardLayoutRequest.php',
+        'App\\Http\\Requests\\Dashboard\\UpdateOrganizationDashboardLayoutRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Dashboard/UpdateOrganizationDashboardLayoutRequest.php',
         'App\\Http\\Requests\\Dashboard\\UpdateUserDashboardLayoutRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Dashboard/UpdateUserDashboardLayoutRequest.php',
         'App\\Http\\Requests\\Discussion\\AddCommentRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Discussion/AddCommentRequest.php',
         'App\\Http\\Requests\\GO1\\CreateResourceModuleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/GO1/CreateResourceModuleRequest.php',
@@ -11436,12 +11438,14 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
         'PhpParser\\JsonDecoder' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/JsonDecoder.php',
         'PhpParser\\Lexer' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer.php',
         'PhpParser\\Lexer\\Emulative' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/Emulative.php',
+        'PhpParser\\Lexer\\TokenEmulator\\AsymmetricVisibilityTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/AsymmetricVisibilityTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\AttributeEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/AttributeEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\EnumTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/EnumTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ExplicitOctalEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ExplicitOctalEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\KeywordEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/KeywordEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\MatchTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/MatchTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\NullsafeTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/NullsafeTokenEmulator.php',
+        'PhpParser\\Lexer\\TokenEmulator\\PropertyTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/PropertyTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReadonlyFunctionTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReadonlyFunctionTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReadonlyTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReadonlyTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReverseEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReverseEmulator.php',
@@ -11575,6 +11579,7 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
         'PhpParser\\Node\\Name\\Relative' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Name/Relative.php',
         'PhpParser\\Node\\NullableType' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/NullableType.php',
         'PhpParser\\Node\\Param' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Param.php',
+        'PhpParser\\Node\\PropertyHook' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/PropertyHook.php',
         'PhpParser\\Node\\PropertyItem' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/PropertyItem.php',
         'PhpParser\\Node\\Scalar' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar.php',
         'PhpParser\\Node\\Scalar\\Float_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/Float_.php',
@@ -11588,6 +11593,7 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
         'PhpParser\\Node\\Scalar\\MagicConst\\Line' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Line.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Method' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Method.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Namespace_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Namespace_.php',
+        'PhpParser\\Node\\Scalar\\MagicConst\\Property' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Property.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Trait_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Trait_.php',
         'PhpParser\\Node\\Scalar\\String_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/String_.php',
         'PhpParser\\Node\\StaticVar' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/StaticVar.php',
@@ -17923,10 +17929,10 @@ class ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit0fff448d60e53fd00c2f2e7897ceeafb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -27,12 +27,12 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                {!!Form::model($data,array('method'=>'PUT','files'=>true,'route'=>array('skillgroup.update',$data->id)))!!}
+                {!!Form::model($data,array('method'=>'PUT','files'=>true,'route'=>array('skill-group.update',$data->id)))!!}
                    
                 @include('maestro.skillgroup.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('skillgroup.index') }}">
+                        <a class="btn btn-danger mr-1" href="{{ route('skill-group.index') }}">
                             <i class="icon-cross2"></i> Cancel
                         </a>
                     </div>
