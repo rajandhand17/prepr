@@ -257,7 +257,7 @@ class ResourceModuleService
             }
             $overAllJoinedResourceModules = ($inProgressResourceModulesCount + $completedResourceModulesCount);
 
-            $fetchMyResourceModuleProgress = ['overAllJoined' => $overAllJoinedResourceModules, 'completedCount' => $completedResourceModulesCount, 'inProgressCount' => $inProgressResourceModulesCount];
+            $fetchMyResourceModuleProgress = ['overAllJoined' => $overAllJoinedResourceModules, 'completedCount' => $completedResourceModulesCount, 'inProgressCount' => $inProgressResourceModulesCount, 'joined_date' => $userData->created_at];
 
             return $fetchMyResourceModuleProgress;
         } catch (\Exception $e) {
