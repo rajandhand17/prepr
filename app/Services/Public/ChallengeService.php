@@ -68,13 +68,11 @@ class ChallengeService
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
                     $status = ($request->status == 'draft') ? '0' : '1';
-                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                    $challenge_list = $challenge_list->where('challenges.status', $status)->where('challenges.is_open', '0');
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '2';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
-            } else {
-                $challenge_list = $challenge_list->where('challenges.status', '1');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -140,8 +138,9 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
-                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type', 'member_management.deleted_at')
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email])
+                            ->whereNull('member_management.deleted_at');
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -202,7 +201,7 @@ class ChallengeService
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
-            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where('is_accessible', '1')
+            $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where(['status' => '1', 'is_accessible' => '1', 'is_open' => '0'])
                 ->whereHas('challenge_timelines', function ($query) {
                     $query->where(function ($q) {
                         $q->where('timeline_type', '1')

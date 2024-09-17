@@ -168,6 +168,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('lab_program_id')->delete();
             }
             if ($request->has('challenges')) {
                 $sequence = 1;
@@ -198,6 +200,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('challenge_id')->delete();
             }
 
             if ($request->has('challenge_paths')) {
@@ -229,6 +233,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('challenge_path_id')->delete();
             }
 
             if ($request->has('resource_modules')) {
@@ -260,6 +266,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('resource_module_id')->delete();
             }
 
             if ($request->has('resource_collections')) {
@@ -291,6 +299,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('resource_collection_id')->delete();
             }
 
             if ($request->has('resource_groups')) {
@@ -322,6 +332,8 @@ class ComponentAssociationService
                         $labSkillsGroupsStack->save();
                     }
                 }
+            } else {
+                ComponentAssociation::where('lab_id', $lab_id)->whereNotNull('resource_group_id')->delete();
             }
 
             return true;
@@ -470,7 +482,7 @@ class ComponentAssociationService
                     $sequence = ComponentAssociation::where([
                         ['challenge_path_id', '=', $challengePathId],
                         ['challenge_id', '!=', null],
-                    ])->select('sequence')->orderBy('id', 'desc')->first()->sequence;
+                    ])->select('sequence')->orderBy('id', 'desc')->first()?->sequence ?? $sequence;
                     foreach ($newComponentAssociation as $challenge_id) {
                         $sequence++;
                         $labSkillsGroupsStack = new ComponentAssociation();

@@ -589,4 +589,15 @@ class UserService
             return false;
         }
     }
+
+    public static function getUserEmailsById($userIds)
+    {
+        try {
+            return User::whereIn('id', $userIds)->pluck('email');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

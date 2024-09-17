@@ -258,6 +258,21 @@ class ResourceModuleResource extends JsonResource
             $this->media = null;
         }
 
+        $scorm = $this->scorm;
+
+        if (!empty($scorm) && auth('api')->check()) {
+            $checkResourceScormCompletedOrNot = false;
+            $scormScoId = $scorm->scos()->first()?->id;
+
+            if (!empty($scormScoId)) {
+                $checkResourceScormCompletedOrNot = ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormScoId);
+            }
+
+            if ($checkResourceScormCompletedOrNot) {
+                $scorm->completed = 'yes';
+            }
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
@@ -265,6 +280,7 @@ class ResourceModuleResource extends JsonResource
             'user'                  => $this->users != null ? $this->users->first_name.' '.$this->users->last_name : null,
             'organization_id'       => $this->organization != null ? $this->organization->uuid : null,
             'organization'          => $this->organization != null ? $this->organization->title : null,
+            'organization_slug'     => $this->organization != null ? $this->organization->slug : null,
             'duration'              => $duration,
             'duration_id'           => $duration_id,
             'hosted_by'             => OrganizationHostResource::make($this->organization),
@@ -277,7 +293,7 @@ class ResourceModuleResource extends JsonResource
             'privacy'               => $privacy,
             'status'                => $status,
             'is_global'             => $is_global,
-            'scorm'                 => new ScormResource($this->scorm?->select(['uuid', 'title', 'version'])->first()),
+            'scorm'                 => new ScormResource($scorm),
             'skills'                => $skills,
             'skill_groups'          => $skill_groups,
             'skill_stacks'          => $skill_stacks,

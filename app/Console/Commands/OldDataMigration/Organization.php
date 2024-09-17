@@ -9,6 +9,7 @@ use App\Models\OrganizationMember;
 use DB;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class Organization extends Command
 {
@@ -116,7 +117,7 @@ class Organization extends Command
                     $newOrganization->slug = $organization->slug;
                     $newOrganization->cover_image = (!empty($organization->cover_image)) ? $organization->cover_image : config('site-settings.default_organization_cover_image');
                     $newOrganization->profile_image = (!empty($organization->profile_image)) ? $organization->profile_image : config('site-settings.default_organization_profile_image');
-                    $newOrganization->custom_url = isset($organization->vanity_slug) ? $organization->vanity_slug : null;
+                    $newOrganization->vanity_slug = isset($organization->vanity_slug) ? $organization->vanity_slug : null;
                     $newOrganization->website = isset($organization->website) ? $organization->website : null;
                     $newOrganization->about = isset($organization->about) ? $organization->about : null;
                     $newOrganization->category = $category;
@@ -137,7 +138,7 @@ class Organization extends Command
                     $organization_address->organization_id = $newOrganization->id;
                     $organization_address->latitude = isset($organization->latitude) ? $organization->latitude : null;
                     $organization_address->longitude = isset($organization->longitude) ? $organization->longitude : null;
-                    $organization_address->full_address = (isset($organizationDetails->address_one) && isset($organizationDetails->address_one)) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
+                    $organization_address->full_address = isset($organizationDetails->address_one) ? $organizationDetails->address_one.', '.$organizationDetails->address_two : null;
                     $organization_address->address_1 = isset($organizationDetails->address_one) ? $organizationDetails->address_one : null;
                     $organization_address->address_2 = isset($organizationDetails->city) ? $organizationDetails->city : null;
                     $organization_address->city = isset($organizationDetails->city) ? $organizationDetails->city : null;
@@ -155,6 +156,8 @@ class Organization extends Command
                         if ($organizationCustomizations->use_main_org_logo == '1') {
                             $use_main_org_logo = '1';
                         }
+                        $custom_url = Str::contains($organization->vanity_link, '/org/') ? Str::after($organization->vanity_link, '/org/') : $organization->vanity_link;
+
                         $oldOrganizationCustomizations = new OrganizationCustomization();
                         $oldOrganizationCustomizations->organization_id = $newOrganization->id;
                         $oldOrganizationCustomizations->enable_custom_login_and_registration = $enable_custom_login_and_registration;
@@ -162,6 +165,7 @@ class Organization extends Command
                         $oldOrganizationCustomizations->custom_logo_image = $organizationCustomizations->custom_logo_image;
                         $oldOrganizationCustomizations->custom_hero_image = $organizationCustomizations->custom_hero_image;
                         $oldOrganizationCustomizations->custom_background_color = $organizationCustomizations->custom_background_color;
+                        $oldOrganizationCustomizations->custom_url = $custom_url;
                         $oldOrganizationCustomizations->save();
                     }
 

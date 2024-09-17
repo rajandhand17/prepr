@@ -3,16 +3,21 @@
 namespace App\Services\Manage;
 
 use App\Exceptions\InvitationQuotaExceededException;
-use App\Helpers\MixpanelHelper;
+use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
+use App\Jobs\ProcessBulkUserModuleProgressData;
+use App\Jobs\ProcessUserModuleProgressData;
 use App\Models\MemberManagement;
 use App\Notifications\ComponentJoinedNotification;
 use App\Notifications\InviteMemberNotification;
 use App\Services\LabHistoryService;
+use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\UserService;
 use DB;
 use HiFolks\RandoPhp\Randomize;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Notification;
 use stdClass;
@@ -90,31 +95,25 @@ class MemberManagementService
             if ($request->has('role') && !empty($request->role)) {
                 $componentCollectionObject = $componentCollectionObject->where('role', $request->role);
             }
-            if ($request->has('invite_status') && !empty($request->invite_status)) {
-                $invite_status = null;
-                switch ($request->invite_status) {
-                    case 'invited':
-                        $invite_status = config('constants.member_management_invite_status.invited');
-                        break;
-                    case 'accepted':
-                        $invite_status = config('constants.member_management_invite_status.accepted');
-                        break;
-                    case 'pending':
-                        $invite_status = config('constants.member_management_invite_status.pending');
-                        break;
-                    case 'declined':
-                        $invite_status = config('constants.member_management_invite_status.declined');
-                        break;
-                    case 'auto_created':
-                        $invite_status = config('constants.member_management_invite_status.auto_created');
-                        break;
-                    default:
-                        $invite_status = null;
+
+            if (isset($request->request_status) && isset($request->invite_status)) {
+                $requestAndInviteStatus = $request->request_status.','.$request->invite_status;
+                $statusIds = self::getInviteAndRequestStatus($requestAndInviteStatus, 'combine');
+                if ($statusIds != null) {
+                    $componentCollectionObject = $componentCollectionObject->whereIn('invite_status', $statusIds);
                 }
+            } elseif (isset($request->request_status)) {
+                $request_status = self::getInviteAndRequestStatus($request->request_status, 'single');
+                if ($request_status != null) {
+                    $componentCollectionObject = $componentCollectionObject->where('invite_status', $request_status);
+                }
+            } elseif (isset($request->invite_status)) {
+                $invite_status = self::getInviteAndRequestStatus($request->invite_status, 'single');
                 if ($invite_status != null) {
                     $componentCollectionObject = $componentCollectionObject->where('invite_status', $invite_status);
                 }
             }
+
             if ($request->has('invite_type') && !empty($request->invite_type)) {
                 $invite_type = null;
                 switch ($request->invite_type) {
@@ -201,7 +200,95 @@ class MemberManagementService
                 }
             }
 
+            if (isset($request->progress_status)) {
+                switch ($request->component) {
+                    case 'lab':
+                        $component = '0';
+                        break;
+                    case 'lab-program':
+                        $component = '1';
+                        break;
+                }
+                switch ($request->progress_status) {
+                    case 'not_started':
+                        $module_status = '0';
+                        break;
+                    case 'in_progress':
+                        $module_status = '1';
+                        break;
+                    case 'completed':
+                        $module_status = '2';
+                        break;
+                }
+                $moduleIds = $componentCollectionObject->pluck('module_id');
+                $emailIds = $componentCollectionObject->pluck('email');
+                $fetchUserIds = UserService::getUserIdsByEmail($emailIds);
+                $getUserIds = ModuleCompletionStatusService::fetchComponentProgressBasedOnIds($moduleIds, $component, $module_status, $fetchUserIds);
+                $userEmails = UserService::getUserEmailsById($getUserIds->pluck('user_id'));
+                $componentCollectionObject = $componentCollectionObject->whereIn('email', $userEmails);
+            }
+
             return $componentCollectionObject;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getInviteAndRequestStatus($inviteAndRequestStatus, $statusType)
+    {
+        try {
+            $statusData = null;
+            if ($statusType == 'single') {
+                switch ($inviteAndRequestStatus) {
+                    case 'invited':
+                        $statusData = config('constants.member_management_invite_status.invited');
+                        break;
+                    case 'accepted':
+                        $statusData = config('constants.member_management_invite_status.accepted');
+                        break;
+                    case 'pending':
+                        $statusData = config('constants.member_management_invite_status.pending');
+                        break;
+                    case 'declined':
+                        $statusData = config('constants.member_management_invite_status.declined');
+                        break;
+                    case 'auto_created':
+                        $statusData = config('constants.member_management_invite_status.auto_created');
+                        break;
+                }
+
+                return $statusData;
+            } elseif ($statusType == 'combine') {
+                $statusData = [];
+                foreach (explode(',', $inviteAndRequestStatus) as $statusIdData) {
+                    switch ($statusIdData) {
+                        case 'invited':
+                            $statusId = config('constants.member_management_invite_status.invited');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'accepted':
+                            $statusId = config('constants.member_management_invite_status.accepted');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'pending':
+                            $statusId = config('constants.member_management_invite_status.pending');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'declined':
+                            $statusId = config('constants.member_management_invite_status.declined');
+                            $statusData[] = $statusId;
+                            break;
+                        case 'auto_created':
+                            $statusId = config('constants.member_management_invite_status.auto_created');
+                            $statusData[] = $statusId;
+                            break;
+                    }
+                }
+
+                return $statusData;
+            }
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -440,6 +527,11 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
+                $userData = auth()->user();
+                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                if (!$organization->chargebee_details) {
+                    ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                }
                 DB::beginTransaction();
                 foreach ($memberList as $member) {
                     if (UtilityHelper::validEmail($member['invitee_email'])) {
@@ -450,8 +542,6 @@ class MemberManagementService
                         ])->first();
                         if ($checkMemberExists == null) {
                             //check user email limit here
-                            $userData = auth()->user();
-                            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                             $organization->load('chargebee_details');
                             $userInviteLimit = $organization->chargebee_details->user_invite_limits;
 
@@ -528,8 +618,7 @@ class MemberManagementService
                                 $labHistoryService = new LabHistoryService();
                                 $labHistoryService->storeHistory($componentCollectionObject->id, $userId, $activity);
                             }
-
-                            MixpanelHelper::mixpanel_tracking(config('mixpanel.send_invite'), $invitedMember->id);
+                            // MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), $request->ip());
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                             if ($member['invite_type'] === 'join_request') {
@@ -568,7 +657,7 @@ class MemberManagementService
                                         'email_resend_count' => $emailResendCount,
                                     ]);
                                 $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                                $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url')];
+                                $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                                 Notification::route('mail', $member['invitee_email'])->notify(new InviteMemberNotification($email_detail));
                                 $invited_emails[] = $member['invitee_email'];
                             } else {
@@ -602,8 +691,6 @@ class MemberManagementService
                     } else {
                         $addedMemberResponse = __('responses.create_member_manger_error_certain');
                     }
-                } elseif (count($invited_emails) > 0) {
-                    $addedMemberResponse = $addedMemberResponse;
                 }
                 $data = [
                     'invalid_emails'      => $invalid_emails,
@@ -652,11 +739,14 @@ class MemberManagementService
                 $member_manger = MemberManagement::whereIn('email', $request->email)->where(['module_id'=>$checkComponentBasedOnSlug->id, 'module_type'=>$module_type])->delete();
                 if ($module_type == '1') {
                     $lab = LabService::getLabBasedOnId($member->module_id);
-                    $request = \Illuminate\Http\Request::capture();
-                    $request->organization_id = $lab->organization_id;
-                    $request->privacy = $lab->privacy;
-                    $request->title = $lab->title;
-                    $request->category = $lab->category_id;
+                    // Merge the new data into the request object
+                    $request = Request::capture();
+                    $request->merge([
+                        'organization_id' => $lab->organization_id,
+                        'privacy'         => $lab->privacy,
+                        'title'           => $lab->title,
+                        'category'        => $lab->category_id,
+                    ]);
 
                     if ($component == 'lab') {
                         $userId = auth()->user()->id;
@@ -664,8 +754,7 @@ class MemberManagementService
                         $labHistoryService = new LabHistoryService();
                         $labHistoryService->storeHistory($lab->id, $userId, $activity);
                     }
-
-                    MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                    // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
                 }
 
                 return true;
@@ -685,7 +774,13 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
+                // Job for Bulk User Progress updating in table
+                $processType = 'delete';
+                if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
+                }
 
                 return true;
             }
@@ -704,7 +799,13 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
+                // Job for Bulk User Progress updating in table
+                $processType = 'insert';
+                if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessBulkUserModuleProgressData($checkComponentBasedOnSlug->id, $module_type, $processType));
+                }
 
                 return true;
             }
@@ -761,7 +862,7 @@ class MemberManagementService
         }
     }
 
-    public static function acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
+    public static function acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action)
     {
         try {
             $module_type = self::getModuleType($component);
@@ -778,13 +879,17 @@ class MemberManagementService
                 $member->invite_status = $invite_status;
                 $member->inviter_id = auth()->user()->id;
                 $member->save();
+                // Job for User Progress updating in table
+                if ($invite_status === config('constants.member_management_invite_status.accepted') && in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
+                    dispatch(new ProcessUserModuleProgressData($request->email, $checkComponentBasedOnSlug->id, $module_type));
+                }
                 if ($invite_status == '1' && $component == 'lab') {
                     $lab = LabService::getLabBasedOnId($member->module_id);
                     $request->organization_id = $lab->organization_id;
                     $request->privacy = $lab->privacy;
                     $request->title = $lab->title;
                     $request->category = $lab->category_id;
-                    MixpanelHelper::mixpanel_tracking(config('mixpanel.join_lab'), $request, auth()->user(), $request->ip());
+                    // MixpanelJob::dispatch(config('mixpanel.join_lab'), $request, auth()->user(), $request->ip());
                 }
             }
 
@@ -1185,6 +1290,19 @@ class MemberManagementService
             }
 
             return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getComponentAcceptedMembersBasedOnModuleId($moduleId, $component)
+    {
+        try {
+            $memberManagement = MemberManagement::withTrashed()->where(['module_id' => $moduleId, 'module_type' => $component, 'invite_status' => config('constants.member_management_invite_status.accepted')])->pluck('email');
+
+            return $memberManagement;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

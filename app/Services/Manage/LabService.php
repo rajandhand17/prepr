@@ -16,7 +16,9 @@ class LabService
     public function getLabCountBasedOnOrganization($organizationId)
     {
         try {
-            $lab_count = Lab::where(['organization_id' => $organizationId, 'is_pre_built' => '0', 'is_auto_created' => '0'])->count();
+            $all_lab_count = Lab::where(['organization_id' => $organizationId, 'is_auto_created' => '0'])->count();
+            $redeemedLabsCount = LabChallengeRedeem::where(['organization_id' => $organizationId, 'is_redeemed' => '1'])->whereNotNull('lab_id')->count();
+            $lab_count = $all_lab_count - $redeemedLabsCount;
 
             return $lab_count;
         } catch (Exception $e) {
@@ -137,16 +139,16 @@ class LabService
         try {
             $createdByYouLabIds = collect([]);
             $onboardingLabIds = collect([]);
-            $clonedByYouLabIds = collect([]);
+            $redeemedByYouLabIds = collect([]);
             $createdByOrgLabIds = collect([]);
             if (in_array('created_by_you', $source)) {
                 $createdByYouLabIds = Lab::where(['user_id' => auth('api')->user()->id])->pluck('id');
             }
-            if (in_array('onboarding_challenges', $source)) {
+            if (in_array('onboarding_labs', $source)) {
                 $onboardingLabIds = Lab::where(['is_auto_created' => '1'])->pluck('id');
             }
-            if (in_array('cloned_by_you', $source)) {
-                $clonedByYouLabIds = Lab::where(['is_pre_built' => '1'])->pluck('id');
+            if (in_array('redeemed_labs', $source)) {
+                $redeemedByYouLabIds = LabChallengeRedeem::where(['is_redeemed' => '1'])->whereNotNull('lab_id')->whereIn('lab_id', Lab::pluck('id'))->pluck('lab_id');
             }
             if (in_array('created_by_organizations', $source)) {
                 $userData = auth()->user();
@@ -157,7 +159,7 @@ class LabService
             $labsCollection = new Collection();
             $labsCollection = $labsCollection->concat($createdByYouLabIds);
             $labsCollection = $labsCollection->concat($onboardingLabIds);
-            $labsCollection = $labsCollection->concat($clonedByYouLabIds);
+            $labsCollection = $labsCollection->concat($redeemedByYouLabIds);
             $labsCollection = $labsCollection->concat($createdByOrgLabIds);
 
             return $labsCollection;
@@ -185,9 +187,9 @@ class LabService
             if (Lab::where(['id' => $labId, 'user_id' => auth('api')->user()->id])->exists()) {
                 $source = 'created_by_you';
             } elseif (Lab::where(['id' => $labId, 'is_auto_created' => '1'])->exists()) {
-                $source = 'onboarding_challenges';
-            } elseif (Lab::where(['id' => $labId, 'is_pre_built' => '1', 'user_id' => auth('api')->user()->id])->exists()) {
-                $source = 'cloned_by_you';
+                $source = 'onboarding_labs';
+            } elseif (LabChallengeRedeem::where(['is_redeemed' => '1', 'lab_id' => $labId])->whereNotNull('lab_id')->whereIn('lab_id', Lab::pluck('id'))->exists()) {
+                $source = 'redeemed_by_you';
             } else {
                 $source = 'created_by_organizations';
             }
@@ -512,7 +514,7 @@ class LabService
     public function getLabListName($request, $organization)
     {
         try {
-            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $lab_list = Lab::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $lab_list = self::filterLabList($lab_list, $request);
             $limit = config('site-settings.listing_limit');
 
@@ -716,6 +718,19 @@ class LabService
 
             return $clonedLab;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Lab $lab)
+    {
+        try {
+            $lab->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

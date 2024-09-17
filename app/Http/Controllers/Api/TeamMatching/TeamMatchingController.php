@@ -36,11 +36,11 @@ class TeamMatchingController extends AppBaseController
                     break;
                 case 'pending':
                     // Getting all project's ids in which users requested to join
-                    $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData);
+                    $getProjectIds = $this->teamMatchingRepository->getPendingRequests($userData)->unique();
                     break;
                 case 'matched':
                     // Getting project's ids in which users are invited
-                    $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
+                    $getProjectIds = $this->teamMatchingRepository->getMatchingTeams()->unique();
                     break;
             }
             if ($getProjectIds) {

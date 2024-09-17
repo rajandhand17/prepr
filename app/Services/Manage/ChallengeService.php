@@ -70,13 +70,11 @@ class ChallengeService
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
                     $status = ($request->status == 'draft') ? '0' : '1';
-                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                    $challenge_list = $challenge_list->where('challenges.status', $status)->where('challenges.is_open', '0');
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '2';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
-            } else {
-                $challenge_list = $challenge_list->where('challenges.status', '1');
             }
 
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
@@ -281,7 +279,7 @@ class ChallengeService
             }
 
             $is_open = config('constants.challenge_open_close.no');
-            if ($request->is_ai_created) {
+            if ($request->is_ai_created && $request->is_ai_created == 'yes') {
                 $is_open = config('constants.challenge_open_close.yes');
             } else {
                 switch ($request->is_open) {
@@ -472,7 +470,7 @@ class ChallengeService
                     }
                 }
 
-                if ($request->is_ai_created) {
+                if ($request->is_ai_created && $request->is_ai_created == 'yes') {
                     $is_open = config('constants.challenge_open_close.yes');
                 } else {
                     switch ($request->is_open) {
@@ -689,7 +687,7 @@ class ChallengeService
     public function getChallengeListName($request, $organization)
     {
         try {
-            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $challenge_list = Challenge::select('uuid', 'title', 'media_type', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $challenge_list = self::filterChallengeList($challenge_list, $request);
 
             return $challenge_list->get();
@@ -1100,6 +1098,19 @@ class ChallengeService
 
             return $restrictedDeadlineCollection->take(5);
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Challenge $challenge)
+    {
+        try {
+            $challenge->increment('views_count');
+
+            return true;
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Organization;
 
+use App\Models\Organization;
+
 interface OrganizationInterface
 {
     public function getOrganizationList($request);
@@ -43,4 +45,8 @@ interface OrganizationInterface
     public function planData($organizationData);
 
     public function updateOrganizationCustomLoginRegistration($request, $organizationData);
+
+    public function incrementView(Organization $organization);
+
+    public function checkOrganizationCustomizationData($slug);
 }

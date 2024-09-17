@@ -59,7 +59,7 @@ class UserDashboardController extends AppBaseController
                     $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.member_management_invite_status.invited');
+                    $inviteStatus = config('constants.member_management_invite_status.pending');
                     $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -105,7 +105,7 @@ class UserDashboardController extends AppBaseController
                     $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.member_management_invite_status.invited');
+                    $inviteStatus = config('constants.member_management_invite_status.pending');
                     $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -151,7 +151,7 @@ class UserDashboardController extends AppBaseController
                     $projectIds = $this->userDashboardRepository->myProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.project_member_management_invite_status.invited');
+                    $inviteStatus = config('constants.project_member_management_invite_status.pending');
                     $projectIds = $this->userDashboardRepository->invitesProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -269,7 +269,7 @@ class UserDashboardController extends AppBaseController
                 case 'resource_modules':
                     $fetchRecommendedResourceModules = $this->userDashboardRepository->fetchRecommendedResourceModules($fetchUserSkills, $userData);
 
-                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.lab_recommended_found'), 200);
+                    return $this->sendResponse(ResourceModuleResource::collection($fetchRecommendedResourceModules), __('responses.resource_module_recommended_found'), 200);
                     break;
             }
 

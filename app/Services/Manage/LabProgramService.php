@@ -73,7 +73,8 @@ class LabProgramService
                         $labProgramList = $labProgramList->where('lab_programs.privacy', '1');
                         break;
                     default:
-                        $labProgramList = $labProgramList;
+                        $labProgramList = [];
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -358,7 +359,7 @@ class LabProgramService
     public function getLabProgramListName($request, $organization)
     {
         try {
-            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $labProgramList = LabProgram::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $labProgramList = self::filterLabProgramList($labProgramList, $request);
             $limit = config('site-settings.listing_limit');
 
@@ -384,7 +385,7 @@ class LabProgramService
     public static function getLabProgramBasedOnId($Id)
     {
         try {
-            return LabProgram::select('id', 'uuid', 'title', 'media', 'slug', 'description')->where(['id' => $Id, 'is_accessible' => '1'])->first();
+            return LabProgram::where(['id' => $Id, 'is_accessible' => '1'])->first();
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

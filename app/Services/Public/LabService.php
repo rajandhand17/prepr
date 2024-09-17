@@ -100,7 +100,7 @@ class LabService
                         $lab_list = $lab_list->where('labs.privacy', '1');
                         break;
                     default:
-                        $lab_list = $lab_list;
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
@@ -134,7 +134,8 @@ class LabService
                     $status_array = ['accepted', 'pending', 'declined'];
                     if (in_array($request->request_status, $status_array)) {
                         $lab_list = $lab_list->join('member_management', 'labs.id', '=', 'member_management.module_id')
-                            ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email]);
+                            ->where(['member_management.module_type' => '1', 'member_management.email' => auth('api')->user()->email])
+                            ->whereNull('member_management.deleted_at');
                         switch ($request->request_status) {
                             case 'invited':
                                 $lab_list->where('member_management.invite_status', '0');
@@ -377,7 +378,7 @@ class LabService
     public function fetchRecommendedLabs($fetchUserSkills, $userData)
     {
         try {
-            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasesOnSKillsId($fetchUserSkills);
+            $getLabsIdsBasedOnSKills = LabSkillsGroupsStackService::getLabIdBasedOnSkills($fetchUserSkills);
             $labIds = $getLabsIdsBasedOnSKills->unique();
             $fetchRecommendedLabs = Lab::whereIn('id', $labIds)->where('user_id', '!=', $userData->id)->take(config('site-settings.dashboard_page_limit_max'))->get();
 

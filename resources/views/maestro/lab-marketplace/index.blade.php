@@ -68,5 +68,52 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
+
+    function deleteLabMarketplace(url) {
+        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    success: function (result) {
+                        Swal.fire(
+                            'Deleted!',
+                            result.message,
+                            'success'
+                        );
+                        setTimeout(
+                        function () {
+                            window.location.reload(true);
+                        }, 1500);
+                    },
+                    error: function (error) {
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the Lab Template from marketplace.',
+                            'error'
+                        );
+                    }
+                });
+            }else {
+                Swal.fire(
+                    'Canceled!',
+                    'You are safe , Record is not deleted!',
+                    'error'
+                );
+            }
+        });
+    }
 </script>
 @endsection

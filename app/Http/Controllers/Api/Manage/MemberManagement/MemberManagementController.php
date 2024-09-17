@@ -50,7 +50,7 @@ class MemberManagementController extends AppBaseController
                 'id'                          => $checkComponentBasedOnSlug->uuid,
                 'title'                       => $checkComponentBasedOnSlug->title,
                 'slug'                        => $checkComponentBasedOnSlug->slug,
-                'invitation_email'            => EmailTemplateResource::make($getTemplate),
+                'invitation_email'            => !empty($getTemplate) ? EmailTemplateResource::make($getTemplate) : null,
             ];
             if ($memberManagementListing) {
                 $response['total_user_count'] = $memberManagementListing->total();
@@ -105,7 +105,7 @@ class MemberManagementController extends AppBaseController
             $invitationSentUser = $memberManagementListing->total();
             $memberLists = $this->memberManagementRepository->addMembers($checkComponentBasedOnSlug, $component, $request, $invitationSentUser);
 
-            if ((count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
+            if (is_array($memberLists) && (count($memberLists['invalid_emails']) > 0 || count($memberLists['already_members']) > 0) && count($memberLists['invited_emails']) < 1) {
                 return $this->sendError($memberLists['add_member_response'], 422);
             } elseif ($memberLists) {
                 return $this->sendResponse($memberLists, $memberLists['add_member_response']);
@@ -181,7 +181,7 @@ class MemberManagementController extends AppBaseController
         }
     }
 
-    public function acceptOrRejectLabJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
+    public function acceptOrRejectComponentJoinRequest(MemberManagementRequest $request, $component, $slug, $action)
     {
         try {
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
@@ -190,7 +190,7 @@ class MemberManagementController extends AppBaseController
             }
             $checkLabStatus = $this->memberManagementRepository->checkLabJoinUnjoinStatus($request, $checkComponentBasedOnSlug, $component);
             if ($checkLabStatus) {
-                $member_management = $this->memberManagementRepository->acceptOrRejectLabJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
+                $member_management = $this->memberManagementRepository->acceptOrRejectComponentJoinRequest($request, $checkComponentBasedOnSlug, $component, $action);
                 if ($member_management) {
                     return $this->sendResponse(null, __('responses.join_request_'.$action.'_successfully'));
                 }

@@ -5,9 +5,9 @@ namespace App\Services\Manage;
 use App\Events\Organization\DeleteOrganizationAssociatedData;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\FileUploadHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Organization;
 use DB;
 use HiFolks\RandoPhp\Randomize;
@@ -196,7 +196,7 @@ class OrganizationService
             $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
             $organization->cover_image = $cover_image_path;
             $organization->profile_image = $profile_image_path;
-            $organization->custom_url = $request->custom_url;
+            $organization->vanity_slug = $request->vanity_slug;
             $organization->website = isset($request->website) ? $request->website : null;
             $organization->about = isset($request->about) ? $request->about : null;
             $organization->category = $request->category;
@@ -205,8 +205,7 @@ class OrganizationService
             $organization->save();
             auth()->user()->attachRole('organization_owner', $organization);
             $request->name = $request->title;
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
-
+            // MixpanelJob::dispatch(config('mixpanel.create_org'), $request, auth()->user(), $request->ip());
             DB::commit();
 
             return $organization;
@@ -230,7 +229,7 @@ class OrganizationService
                 $organization->description = ($request->has('description')) ? $request->description : $organization->description;
                 $organization->cover_image = ($cover_images_path != null) ? $cover_images_path : $organization->cover_image;
                 $organization->profile_image = ($profile_images_path != null) ? $profile_images_path : $organization->profile_image;
-                $organization->custom_url = ($request->has('custom_url')) ? $request->custom_url : $organization->custom_url;
+                $organization->vanity_slug = ($request->has('vanity_slug')) ? $request->vanity_slug : $organization->vanity_slug;
                 $organization->website = ($request->has('website')) ? $request->website : $organization->website;
                 $organization->about = ($request->has('about')) ? $request->about : $organization->about;
                 $organization->category = ($request->has('category')) ? $request->category : $organization->category;
@@ -254,7 +253,7 @@ class OrganizationService
     public static function deleteOrganization($organizationData, $request)
     {
         try {
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
+            // MixpanelJob::dispatch(config('mixpanel.delete_organization'), $organizationData, auth()->user(), $request->ip());
             $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
                 event(new DeleteOrganizationAssociatedData($organizationData->id));
@@ -562,10 +561,10 @@ class OrganizationService
                 'plan_name'                     => $planName,
                 'plan_end_date'                 => UtilityHelper::formatDateTime($organizationData->chargebee_details->trial_end_date),
                 'lab_limit'                     => $labLimit,
-                'lab_count'                     => $organizationData->labs_count->count(),
+                'lab_count'                     => $organizationData->created_labs_count(),
                 'lab_program_limit'             => $labProgramLimit,
                 'lab_program_count'             => $organizationData->lab_programs_count->count(),
-                'pre_build_lab_limit'           => $preBuildLab,
+                'pre_build_lab_limit'           => $preBuildLab === -1 ? 'Unlimited' : $preBuildLab,
                 'pre_build_lab_count'           => $organizationData->pre_built_labs_count->count(),
                 'challenge_limit'               => $challengeLimit,
                 'challenge_count'               => $organizationData->challenges_count->count(),
@@ -673,6 +672,19 @@ class OrganizationService
             $organization_list = self::filterOrganizationList($request, $fetchOrganizations);
 
             return $organization_list->paginate(config('site-settings.dashboard_pagination_per_page'));
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function incrementView(Organization $organization)
+    {
+        try {
+            $organization->increment('views_count');
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

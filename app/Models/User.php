@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Helpers\MagnetHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\SendMailHelper;
 use App\Helpers\UtilityHelper;
 use App\Jobs\Chargebee\CreateCustomerJob;
 use App\Jobs\Chargebee\SubscribePlanJob;
+use App\Jobs\MixpanelJob;
 use App\Models\Accessor\UserAccessor;
 use App\Models\Builder\UserBuilder;
 use App\Services\Manage\MemberManagementService;
@@ -270,15 +270,18 @@ class User extends Authenticatable
     {
         try {
             /**checking user exists or not */
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)
+            ->orWhere('username', $request->email)
+            ->first();
             if ($user->verified_user == 0) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
                 return $response;
             }
             if ($user->is_deactivated == 1) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'not_active', $user, $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
                 return $response;
@@ -302,23 +305,20 @@ class User extends Authenticatable
 
                         return ['success' => false, 'message' => __('responses.failed_email'), 'code' => null];
                     }
-                    $data = User::where('email', $request->email)->first();
+                    $data = $user = User::where('email', $request->email)
+                    ->orWhere('username', $request->email)
+                    ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
-                    MixpanelHelper::mixpanel_tracking(
-                        config('mixpanel.login_success'),
-                        'successful',
-                        $data,
-                        $request->ip()
-                    );
+                    // MixpanelJob::dispatch(config('mixpanel.login_success'), 'successful', $data, $request->ip());
 
                     return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
-                    MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
+                    // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
 
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
                 return $response;
@@ -415,19 +415,9 @@ class User extends Authenticatable
                         $userresponse = User::get()->where('email', $user->email);
                         $success = ['success' => true, 'user' => $userresponse];
                         if ($request->register_type == 'organization') {
-                            MixpanelHelper::mixpanel_tracking(
-                                config('mixpanel.org_sign_up'),
-                                $request,
-                                $user,
-                                $request->ip()
-                            );
+                            // MixpanelJob::dispatch(config('mixpanel.org_sign_up'), $request, $user, $request->ip());
                         } else {
-                            MixpanelHelper::mixpanel_tracking(
-                                config('mixpanel.sign_up'),
-                                $request,
-                                $user,
-                                $request->ip()
-                            );
+                            // MixpanelJob::dispatch(config('mixpanel.sign_up'), $request, $user, $request->ip());
                         }
 
                         return $success;

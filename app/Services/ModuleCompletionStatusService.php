@@ -302,4 +302,33 @@ class ModuleCompletionStatusService
             return false;
         }
     }
+
+    public static function fetchComponentProgressBasedOnIds($componentIds, $moduleType, $moduleStatus, $userIds)
+    {
+        try {
+            $checkResourceGroupProgress = ModuleCompletionStatus::where([
+                'status'        => $moduleStatus,
+                'module_type'   => $moduleType,
+            ])->whereIn('module_id', $componentIds)->whereIn('user_id', $userIds)->get();
+
+            return $checkResourceGroupProgress;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function deleteUsersProgressBasedOnComponent($moduleId, $component)
+    {
+        try {
+            $deleteUsersProgressBasedOnComponent = ModuleCompletionStatus::where(['module_id' => $moduleId, 'module_type' => $component])->delete();
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

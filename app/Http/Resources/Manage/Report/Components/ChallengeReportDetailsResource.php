@@ -15,12 +15,14 @@ class ChallengeReportDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $submission_date = $this->formatted_submission_deadline_date;
+
         return [
             'uuid'               => $this->uuid,
             'title'              => $this->title,
             'slug'               => $this->slug,
             'user_id'            => $this->user_id,
-            'submission_date'    => Carbon::parse($this->challenge_timelines->submission_deadline_date)->toIso8601String(),
+            'submission_date'    => $submission_date !== 'N/A' ? Carbon::parse($submission_date)->toIso8601String() : $submission_date,
             'duration'           => $this->formatted_challenge_duration,
             'level'              => $this->formatted_challenge_level,
             'privacy'            => $this->formatted_challenge_privacy,

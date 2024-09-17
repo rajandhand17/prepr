@@ -80,9 +80,10 @@ class ChallengePathService
                         $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '1');
                         break;
                     default:
-                        $getChallengePathList = $getChallengePathList;
+                        break;
                 }
             }
+
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
                     $query->select('challenge_path_skill_group_stacks.challenge_path_id')
@@ -93,11 +94,19 @@ class ChallengePathService
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }
+
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $getChallengePathList = $getChallengePathList->whereIn('duration_id', $request->duration_id);
             }
+
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $getChallengePathList = $getChallengePathList->whereIn('level_id', $request->level_id);
+            }
+
+            if ($request->has('type') && $request->type) {
+                $getChallengePathList = $getChallengePathList->whereHas('challenge_path_type', function ($query) use ($request) {
+                    $query->where('value', config('constants.resource_types.'.$request->type));
+                });
             }
 
             return $getChallengePathList;
@@ -380,7 +389,7 @@ class ChallengePathService
     public function getChallengePathListName($request, $organization)
     {
         try {
-            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'is_accessible' => '1']);
+            $challengePathList = ChallengePath::select('uuid', 'title', 'media')->where(['organization_id' => $organization->id, 'status' => '1', 'is_accessible' => '1']);
             $challengePathList = self::filterChallengePathList($challengePathList, $request);
             $limit = config('site-settings.listing_limit');
 

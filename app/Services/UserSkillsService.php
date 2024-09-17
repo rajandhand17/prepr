@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
 use App\Helpers\WikipediaHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\Skill;
 use App\Models\UserSkills;
 use stdClass;
@@ -32,7 +32,7 @@ class UserSkillsService
                 'type' => 'skills',
                 'info' => $inputAllSkills,
             ];
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+            // MixpanelJob::dispatch(config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip());
 
             return $allSkills;
         } catch(\Exception $e) {
@@ -115,8 +115,6 @@ class UserSkillsService
             } else {
                 return 'already';
             }
-
-            return false;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 
