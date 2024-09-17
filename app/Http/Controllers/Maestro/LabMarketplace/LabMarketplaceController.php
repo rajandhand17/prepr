@@ -65,8 +65,8 @@ class LabMarketplaceController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Title', 'width' => '5%'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '10%'],
-                ['data' => 'username', 'name' => 'username', 'title' => 'Username', 'width' => '10%'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'width' => '10%'],
+                ['data' => 'username', 'name' => 'username', 'title' => 'Username', 'width' => '10%','orderable' => false, 'searchable' => false],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'width' => '10%','orderable' => false, 'searchable' => false],
                 ['data' => 'action', 'name' => 'action', 'title' => 'Action', 'width' => '10%'],
             ])->parameters(['order' => [0, 'desc']]);
 
