@@ -8,9 +8,9 @@ use App\Models\MemberManagement;
 use App\Models\User;
 use App\Services\UserService;
 use Exception;
+use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use HiFolks\RandoPhp\Randomize;
 
 class LabMemberManagement extends Command
 {
@@ -110,22 +110,22 @@ class LabMemberManagement extends Command
 
                     // Prepare lab member data for batch insertion
                     $labMembersBatch[] = [
-                        'uuid' => Randomize::chars(10)->alphanumeric()->unique()->generate(),
-                        'type' => $labMemberDataType,
-                        'invite_type' => $labMemberDataInviteType,
-                        'module_id' => $labMemberData->module_id,
-                        'module_type' => config('constants.member_management_component_type.lab'),
-                        'inviter_id' => $checkInviterUser,
-                        'role' => 'User',
-                        'invite_status' => $labMemberDataInviteStatus,
-                        'email' => $checkInviteeUserEmail,
-                        'auto_invite' => $labMemberDataAutoStatus,
-                        'invitee_name' => ($checkInviteeUserName != null) ? $checkInviteeUserName->full_name : null,
-                        'email_status' => $labMemberDataEmailStatus,
-                        'email_response' => $labMemberData->email_responce,
+                        'uuid'                => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                        'type'                => $labMemberDataType,
+                        'invite_type'         => $labMemberDataInviteType,
+                        'module_id'           => $labMemberData->module_id,
+                        'module_type'         => config('constants.member_management_component_type.lab'),
+                        'inviter_id'          => $checkInviterUser,
+                        'role'                => 'User',
+                        'invite_status'       => $labMemberDataInviteStatus,
+                        'email'               => $checkInviteeUserEmail,
+                        'auto_invite'         => $labMemberDataAutoStatus,
+                        'invitee_name'        => ($checkInviteeUserName != null) ? $checkInviteeUserName->full_name : null,
+                        'email_status'        => $labMemberDataEmailStatus,
+                        'email_response'      => $labMemberData->email_responce,
                         'email_resend_status' => ($labMemberData->email_resend_status == 'yes') ? '1' : '0',
-                        'subject_line' => $labMemberData->subject_line,
-                        'email_body' => $labMemberData->email_message,
+                        'subject_line'        => $labMemberData->subject_line,
+                        'email_body'          => $labMemberData->email_message,
                     ];
 
                     // Batch insert when we reach the batch size
@@ -147,6 +147,7 @@ class LabMemberManagement extends Command
             DB::rollBack();
             UtilityHelper::logError($e);
             $this->error($e->getMessage());
+
             return false;
         }
     }
