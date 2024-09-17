@@ -41,9 +41,9 @@ environments:
     warm: 4
     concurrency: 50
     # queue-timeout: 10
-    queues: false
-    #   - default
-    #   - chat
+    queues:
+      - default
+      - chat
     timeout: 600
     cli-timeout: 900
     build:
