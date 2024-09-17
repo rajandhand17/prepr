@@ -40,7 +40,7 @@ class TeamMatchingController extends AppBaseController
                     break;
                 case 'matched':
                     // Getting project's ids in which users are invited
-                    $getProjectIds = $this->teamMatchingRepository->getMatchingTeams();
+                    $getProjectIds = $this->teamMatchingRepository->getMatchingTeams()->unique();
                     break;
             }
             if ($getProjectIds) {

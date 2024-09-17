@@ -32,6 +32,7 @@ class ResourceCollectionResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $organization_slug = null;
         if (count($this->resource_modules) > 0) {
             foreach ($this->resource_modules as $resource_module) {
                 $resourceModuleData = ResourceModuleService::getResourceModuleBasedOnId($resource_module->resource_module_id);
@@ -79,6 +80,7 @@ class ResourceCollectionResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $organization_slug = $this->getOrganization->slug;
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
@@ -184,6 +186,7 @@ class ResourceCollectionResource extends JsonResource
             'challenges'                    => $challenges,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
+            'organization_slug'             => $organization_slug,
             'skills'                        => $skills,
             'skill_groups'                  => $skill_groups,
             'skill_stacks'                  => $skill_stacks,

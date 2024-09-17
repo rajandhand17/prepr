@@ -31,6 +31,7 @@ class ResourceGroupResource extends JsonResource
         $level_id = null;
         $organization = null;
         $organization_id = null;
+        $organization_slug = null;
         $module_progress = null;
         $category = null;
         $category_id = null;
@@ -50,6 +51,7 @@ class ResourceGroupResource extends JsonResource
         if ($this->getOrganization) {
             $organization = $this->getOrganization->title;
             $organization_id = $this->getOrganization->uuid;
+            $organization_slug = $this->getOrganization->slug;
         }
         if ($this->skills) {
             $associatedSkills = $this->skills->pluck('foreign_id');
@@ -164,6 +166,7 @@ class ResourceGroupResource extends JsonResource
             'resource_modules'              => $resourceModules,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
+            'organization_slug'             => $organization_slug,
             'skills'                        => $skills,
             'achievement'                   => $achievements,
             'skill_groups'                  => $skill_groups,
