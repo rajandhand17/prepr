@@ -86,7 +86,6 @@ class LabController extends AppBaseController
 
             return $this->sendError(__('responses.lab_slug_not_found'), 404);
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
