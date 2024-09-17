@@ -326,8 +326,13 @@ class UserDashboardController extends AppBaseController
             $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
 
             $fetchUpComingDeadlineChallenges = $this->userDashboardRepository->fetchUpComingDeadlineChallenges($challengeIds, $userData);
-            if (!empty($fetchUpComingDeadlineChallenges)) {
-                return $this->sendResponse(UpComingDeadlineResource::collection($fetchUpComingDeadlineChallenges), __('responses.user_upcomming_deadline_retrieved'), 200);
+            if ($fetchUpComingDeadlineChallenges != false) {
+                $response = [
+                    'joined_date'   => $userData->created_at,
+                    'list'          => UpComingDeadlineResource::collection($fetchUpComingDeadlineChallenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.user_upcomming_deadline_retrieved'));
             }
 
             return $this->sendError(__('responses.not_user_upcomming_deadline_retrieved'), 404);

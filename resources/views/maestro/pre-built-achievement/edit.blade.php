@@ -123,18 +123,24 @@
                             @endphp
                             <div>
                               <div class="icheck-primary d-inline">
-                                <input type="checkbox" id="challenge" name="challenge" {{ $challenge }}> 
+                                <input type="checkbox" id="challenge" name="challenge" {{ $challenge }} onclick="enableDesableRedio()"> 
                                 <label for="challenge">Challenge</label>
                               </div>
                             </div>
-                            <div style="padding-left:30px"><b style="padding-right: 18px; padding-left: 18px;"> Achivement Type: </b>
-                              <div class="radio radio-success d-inline-block p-l-5" style="padding: 5px 5px 5px 0px;">
-                                <input type="radio" id="achievement_type" value="participation" class="achievement_type" name="achievement_type" {{ $achievement->achievement_type == '1' ? 'checked' : '' }}>
-                                <label for="achievement_type">Participation Achievement</label>
+                            <div style="padding-left:30px">
+                              <b style="padding-right: 18px; padding-left: 18px;">Achivement Type:</b>
+                              
+                              <div class="radio radio-success d-inline" style="padding: 5px 5px 5px 0px;">
+                                  <input type="hidden" value="{{ $achievement->achievement_type }}" id="isCheckEnable">
+                                  <input type="radio" id="achievement_type_participation" value="participation" 
+                                         class="achievement_type enable-disable" name="achievement_type" {{ $achievement->achievement_type == '1' ? 'checked' : '' }}>
+                                  <label for="achievement_type_participation">Participation Achievement</label>
                               </div>
-                              <div class="radio radio-success d-inline-block">
-                                  <input type="radio" id="achievement_type" value="winner" class="achievement_type" name="achievement_type" {{ $achievement->achievement_type == '2' ? 'checked' : '' }}>
-                                  <label for="achievement_type">Winner Achievement</label>
+              
+                              <div class="radio radio-success d-inline">
+                                  <input type="radio" id="achievement_type_winner" value="winner" 
+                                         class="achievement_type enable-disable" name="achievement_type" {{ $achievement->achievement_type == '2' ? 'checked' : '' }}>
+                                  <label for="achievement_type_winner">Winner Achievement</label>
                               </div>
                             </div>
 
@@ -194,3 +200,21 @@
       </section>
       <!-- /.content -->
 @stop
+@section('scripts')
+  <script>
+    var challengeCheck = '{{ $challenge }}';
+    if(challengeCheck == ''){
+      $('.enable-disable').attr("disabled",true);
+    }
+    function enableDesableRedio() {
+      if ($('#challenge').is(":checked"))
+      {
+        $('.enable-disable').attr("disabled",false);
+        $("#achievement_type_participation").prop('checked', true);
+      } else {
+        $('.enable-disable').attr("disabled",true);
+        $("#achievement_type_winner,#achievement_type_participation").prop('checked', false);
+      }
+    }
+  </script>
+@endsection

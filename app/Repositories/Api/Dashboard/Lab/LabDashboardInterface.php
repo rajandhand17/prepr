@@ -4,13 +4,13 @@ namespace App\Repositories\Api\Dashboard\Lab;
 
 interface LabDashboardInterface
 {
-    public function fetchChallengeReportBasedOnOrganization($organizationId);
+    public function fetchChallengeReportBasedOnOrganization($organizationId, $userData);
 
-    public function fetchLabReportBasedOnOrganization($organizationId);
+    public function fetchLabReportBasedOnOrganization($organizationId, $userData);
 
-    public function fetchResourceReportBasedOnOrganization($organizationId);
+    public function fetchResourceReportBasedOnOrganization($organizationId, $userData);
 
-    public function fetchProjectReportBasedOnOrganization($organizationId);
+    public function fetchProjectReportBasedOnOrganization($organizationId, $userData);
 
     public function checkOrganizationPlan($organizationData);
 
