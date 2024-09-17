@@ -32,7 +32,7 @@
                     @include('maestro.email-template.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('emailTemplates.index') }}">
+                        <a class="btn btn-danger mr-1" href="{{ route('email-templates.index') }}">
                             <i class="icon-cross2"></i> Cancel
                         </a>
                     </div>
