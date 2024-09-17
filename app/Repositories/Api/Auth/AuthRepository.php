@@ -22,7 +22,6 @@ class AuthRepository implements AuthInterface
         try {
             return $this->user->login($request);
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;

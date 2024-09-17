@@ -31,7 +31,7 @@ class SqlCommandExecution extends Command
     {
         try {
             Schema::disableForeignKeyConstraints();
-            DB::table('email_templates')->whereNotNull('deleted_at')->update(['deleted_at' => null]);
+            DB::table('categories')->truncate();
             Schema::enableForeignKeyConstraints();
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
