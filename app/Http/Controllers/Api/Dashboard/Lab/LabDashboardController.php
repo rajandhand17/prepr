@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Dashboard\UpdateManagerDashboardLayoutRequest;
+use App\Http\Requests\Dashboard\UpdateLabDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
@@ -361,7 +361,7 @@ class LabDashboardController extends AppBaseController
         }
     }
 
-    public function updateManagerDashboardLayout(UpdateManagerDashboardLayoutRequest $request)
+    public function updateManagerDashboardLayout(UpdateLabDashboardLayoutRequest $request)
     {
         try {
             $userData = auth()->user();

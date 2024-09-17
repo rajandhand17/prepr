@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Organization;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Dashboard\UpdateManagerDashboardLayoutRequest;
+use App\Http\Requests\Dashboard\UpdateOrganizationDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
@@ -389,7 +389,7 @@ class OrganizationDashboardController extends AppBaseController
         }
     }
 
-    public function updateManagerDashboardLayout(UpdateManagerDashboardLayoutRequest $request)
+    public function updateManagerDashboardLayout(UpdateOrganizationDashboardLayoutRequest $request)
     {
         try {
             $userData = auth()->user();
