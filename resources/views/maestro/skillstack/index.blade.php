@@ -30,7 +30,7 @@
                     <div class="card-header">
                         <h3 class="card-title"></h3>
                         <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('skillstack.create')}}" role="menuitem">Create Skill Stack</a>
+                            href="{{route('skill-stack.create')}}" role="menuitem">Create Skill Stack</a>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
