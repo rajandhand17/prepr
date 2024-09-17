@@ -10,7 +10,7 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('skillstack.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('skill-stack.index') }}">Home</a></li>
                 <li class="breadcrumb-item active">Create Skill Stack</li>
               </ol>
             </div>
@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'skillstack.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'skill-stack.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
                         @include('maestro.skillstack.form')
                         <div class="form-actions mt-10">
                             {!!Form::submit('Save',array('class'=>'btn btn-primary mr-10'))!!}
