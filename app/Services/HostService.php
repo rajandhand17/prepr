@@ -12,7 +12,7 @@ class HostService
     public function getHosts($language = 'en', $search = null)
     {
         try {
-            $host = Host::where('status','1')->select('id', 'title', 'link', 'image', 'status');
+            $host = Host::where('status', '1')->select('id', 'title', 'link', 'image', 'status');
             if ($search != null) {
                 $host = $host->where('title', 'like', '%'.$search.'%');
             }
