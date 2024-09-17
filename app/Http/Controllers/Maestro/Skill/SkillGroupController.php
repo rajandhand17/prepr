@@ -33,9 +33,9 @@ class SkillGroupController extends Controller
                 return DataTables::eloquent($groups)
                 ->addColumn('action', static function ($group) {
                     $html = '';
-                    $html .= '<a href="'.route('skill-group.show', ['skillgroup' => $group->id]).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="'.route('skill-group.edit', ['skillgroup' =>  $group->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skillgroup.destroy', ['skill-group' => $group->id]).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skill-group.show', $group->id).'" class="mr-25 showUser" data-id="'.$group->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skill-group.edit', $group->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$group->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillGroup(\''.route('skill-group.destroy', $group->id).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
@@ -86,7 +86,7 @@ class SkillGroupController extends Controller
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skill-group.index', compact('html', 'languages'));
+            return view('maestro.skillgroup.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -103,7 +103,7 @@ class SkillGroupController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $selectedSkills = $selectedStacks = [];
 
-            return view('maestro.skill-group.create', compact('languages', 'selectedSkills', 'selectedStacks'));
+            return view('maestro.skillgroup.create', compact('languages', 'selectedSkills', 'selectedStacks'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
