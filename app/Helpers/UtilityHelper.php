@@ -202,7 +202,6 @@ class UtilityHelper
 
     public static function logError($exception)
     {
-        dd($exception);
         $userId = (Auth::id()) ? Auth::id() : null;
         $route = request()->path();
         $ip = request()->ip();
