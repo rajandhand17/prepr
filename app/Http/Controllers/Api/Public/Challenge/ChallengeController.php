@@ -42,6 +42,7 @@ class ChallengeController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_challenges_list'), 404);
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
