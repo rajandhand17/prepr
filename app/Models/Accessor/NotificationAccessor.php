@@ -3,9 +3,11 @@
 namespace App\Models\Accessor;
 
 use App\Models\Challenge;
+use App\Models\ChallengePath;
 use App\Models\Friend;
 use App\Models\Lab;
 use App\Models\Organization;
+use App\Models\Project;
 use App\Models\User;
 use App\Notifications\NotificationTypes;
 
@@ -117,6 +119,56 @@ trait NotificationAccessor
                             'slug'     => data_get($lab, 'slug'),
                             'title'    => data_get($lab, 'title')],
                         'invitation_from' => ['id' => data_get($user, 'id'),
+                            'full_name'            => data_get($user, 'full_name'),
+                            'first_name'           => data_get($user, 'first_name'),
+                            'username'             => data_get($user, 'username'),
+                            'last_name'            => data_get($user, 'last_name'),
+                            'email'                => data_get($user, 'email'),
+                            'profile_image'        => data_get($user, 'profile_image'), ],
+                    ];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function getFormattedModuleAttribute(): ?array
+    {
+        if ($this->type === NotificationTypes::COMMENT) {
+            $moduleId = data_get($this->data, 'module_id');
+            $moduleType = data_get($this->data, 'module_type');
+            $userId = data_get($this->data, 'user_id');
+
+            if ($moduleId && $moduleType) {
+                $module = null;
+                switch ($moduleType) {
+                    case 'lab':
+                        $module = Lab::query()->where('id', '=', $moduleId)->first();
+                        break;
+
+                    case 'project':
+                        $module = Project::query()->where('id', '=', $moduleId)->first();
+                        break;
+
+                    case 'challenge':
+                        $module = Challenge::query()->where('id', '=', $moduleId)->first();
+                        break;
+
+                    case 'challenge-path':
+                        $module = ChallengePath::query()->where('id', '=', $moduleId)->first();
+                        break;
+                }
+
+                $user = User::query()->where('id', '=', $userId)->first();
+
+                if ($module && $user) {
+                    return [
+                        'module' => ['id' => data_get($module, 'id'),
+                            'slug'     => data_get($module, 'slug'),
+                            'type'     => $moduleType,
+                            'title'    => data_get($module, 'title')],
+                        'commented_by' => ['id' => data_get($user, 'id'),
                             'full_name'            => data_get($user, 'full_name'),
                             'first_name'           => data_get($user, 'first_name'),
                             'username'             => data_get($user, 'username'),
