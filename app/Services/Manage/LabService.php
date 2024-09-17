@@ -62,10 +62,9 @@ class LabService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-            $lab_list=$lab_list->when($request->search, function ($query, $searchTerm) {
-                return $query->where('title', 'like', '%' . $searchTerm . '%');
-            });
+                $lab_list = $lab_list->whereSearchFilter($request->search ?? '');
             }
+
             if ($request->has('status') && !empty($request->status)) {
                 $status = ($request->status == 'draft') ? '0' : (($request->status == 'published') ? '1' : (($request->status == 'deactivated' || $request->status == 'archived') ? '2' : '3'));
                 $lab_list = $lab_list->where('labs.status', $status);
