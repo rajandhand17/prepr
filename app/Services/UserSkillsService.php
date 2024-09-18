@@ -32,7 +32,10 @@ class UserSkillsService
                 'type' => 'skills',
                 'info' => $inputAllSkills,
             ];
-            // MixpanelJob::dispatch(config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip());
+
+            if (config('app.isMixPanelEnable')) {
+                MixpanelJob::dispatch(config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip());
+            }
 
             return $allSkills;
         } catch(\Exception $e) {
