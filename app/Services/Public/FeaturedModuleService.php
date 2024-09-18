@@ -3,6 +3,7 @@
 namespace App\Services\Public;
 
 use App\Helpers\UtilityHelper;
+use App\Models\ExplorePageData;
 use App\Models\FeaturedModule;
 
 class FeaturedModuleService
@@ -10,10 +11,10 @@ class FeaturedModuleService
     public static function getFeaturedLabs()
     {
         try {
-            $featuredLabList = FeaturedModule::where('module_type', '0')->take(config('site-settings.explore_page_limit_min'))->pluck('module_id');
-            $getLabs = LabService::getLabsBasedOnIds($featuredLabList);
-
-            return $getLabs;
+            $roles = auth()->user()->roles;
+            $role = $roles->pluck('name')->first(); // Get the first role
+            $featuredModules = FeaturedModule::where('role', $role)->get();
+            return $featuredModules;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 

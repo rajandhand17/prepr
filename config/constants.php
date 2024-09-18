@@ -550,6 +550,17 @@ return [
         'resource_group'          => '6',
         'projects'                => '7',
     ],
+    
+    'module_type_id' => [
+        '0'            => 'labs',
+        '1'            => 'lab_programs',
+        '2'            => 'challenges',
+        '3'            => 'challenge_paths',
+        '4'            => 'resource_modules',
+        '5'            => 'resource_collections',
+        '6'            => 'resource_group',
+        '7'            => 'projects',
+    ],
 
     'assessment_type' => [
         'no_evaluation'         => 'noEvAttachments',
