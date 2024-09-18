@@ -1455,5 +1455,7 @@
     "responses.notifications_marked_as_read": "Notifications marked as read",
     "responses.failed_to_delete_notification": "Failed to delete notification.",
     "responses.notification_deleted": "Notification deleted.",
-    "responses.org_level_permission_error": "You do not have the necessary permissions."
+    "responses.org_level_permission_error": "You do not have the necessary permissions.",
+    "responses.title_available": "Great news! The title you have chosen is available.",
+    "responses.valid_type":"Please upload a valid file type"
 }
