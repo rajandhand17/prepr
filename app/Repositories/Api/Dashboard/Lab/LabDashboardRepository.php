@@ -66,7 +66,7 @@ class LabDashboardRepository implements LabDashboardInterface
         $this->dashboardLayoutService = $dashboardLayoutService;
     }
 
-    public function fetchChallengeReportBasedOnOrganization($organizationId)
+    public function fetchChallengeReportBasedOnOrganization($organizationId, $userData)
     {
         try {
             $fetchChallenges = $this->challengeService->fetchChallengeReportBasedOnOrganization($organizationId);
@@ -77,7 +77,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $moduleType = config('constants.module_component_type.challenge');
             $totalActiveMembersCountBasedOnChallengeIds = $this->memberManagementService->totalActiveMembersCountBasedOnModuleIds($fetchChallenges->pluck('id'), $moduleType)->count();
 
-            $fetchChallengeReportBasedOnOrganization = ['totalChallenges' => $totalChallengesCount, 'totalActiveChallenges' => $totalActiveChallengesCount, 'totalCloseChallenges' => $totalCloseChallengesCount, 'totalCompletedChallenges' => $totalCompletedChallengesCount, 'totalActiveMembers' => $totalActiveMembersCountBasedOnChallengeIds];
+            $fetchChallengeReportBasedOnOrganization = ['totalChallenges' => $totalChallengesCount, 'totalActiveChallenges' => $totalActiveChallengesCount, 'totalCloseChallenges' => $totalCloseChallengesCount, 'totalCompletedChallenges' => $totalCompletedChallengesCount, 'totalActiveMembers' => $totalActiveMembersCountBasedOnChallengeIds, 'joined_date' => $userData->created_at];
 
             return $fetchChallengeReportBasedOnOrganization;
         } catch (Exception $e) {
@@ -87,7 +87,7 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function fetchLabReportBasedOnOrganization($organizationId)
+    public function fetchLabReportBasedOnOrganization($organizationId, $userData)
     {
         try {
             $fetchLabs = $this->labService->fetchLabReportBasedOnOrganization($organizationId);
@@ -96,7 +96,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $totalActiveMembersCountBasedOnLabIds = $this->memberManagementService->totalActiveMembersCountBasedOnModuleIds($fetchLabs->pluck('id'), $moduleType)->count();
             $totalLabProgramsCount = $this->labProgramService->fetchLabProgramReportBasedOnOrganization($organizationId);
 
-            $fetchLabReportBasedOnOrganization = ['totalLabs' => $totalLabsCount, 'totalLabPrograms' => $totalLabProgramsCount->count(), 'totalActiveMembers' => $totalActiveMembersCountBasedOnLabIds];
+            $fetchLabReportBasedOnOrganization = ['totalLabs' => $totalLabsCount, 'totalLabPrograms' => $totalLabProgramsCount->count(), 'totalActiveMembers' => $totalActiveMembersCountBasedOnLabIds, 'joined_date' => $userData->created_at];
 
             return $fetchLabReportBasedOnOrganization;
         } catch (Exception $e) {
@@ -106,7 +106,7 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function fetchResourceReportBasedOnOrganization($organizationId)
+    public function fetchResourceReportBasedOnOrganization($organizationId, $userData)
     {
         try {
             $fetchResourceModuleBasedOnOrganizationId = $this->resourceModuleService->fetchResourceModuleReportBasedOnOrganization($organizationId);
@@ -115,7 +115,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $fetchResourceCollectionBasedOnOrganizationId = $this->resourceCollectionService->fetchResourceCollectionReportBasedOnOrganization($organizationId);
             $fetchResourceGroupBasedOnOrganizationId = $this->resourceGroupService->fetchResourceGroupReportBasedOnOrganization($organizationId);
 
-            $fetchResourceReportBasedOnOrganization = ['totalResourceModule' => $fetchResourceModuleBasedOnOrganizationId->count(), 'totalResourceCollection' => $fetchResourceCollectionBasedOnOrganizationId->count(), 'totalResourceGroup' => $fetchResourceGroupBasedOnOrganizationId->count(), 'totalViewers' => $totalViewersCountBasedOnResourceModuleIds];
+            $fetchResourceReportBasedOnOrganization = ['totalResourceModule' => $fetchResourceModuleBasedOnOrganizationId->count(), 'totalResourceCollection' => $fetchResourceCollectionBasedOnOrganizationId->count(), 'totalResourceGroup' => $fetchResourceGroupBasedOnOrganizationId->count(), 'totalViewers' => $totalViewersCountBasedOnResourceModuleIds, 'joined_date' => $userData->created_at];
 
             return $fetchResourceReportBasedOnOrganization;
         } catch (Exception $e) {
@@ -125,7 +125,7 @@ class LabDashboardRepository implements LabDashboardInterface
         }
     }
 
-    public function fetchProjectReportBasedOnOrganization($organizationId)
+    public function fetchProjectReportBasedOnOrganization($organizationId, $userData)
     {
         try {
             $fetchChallenges = $this->challengeService->fetchChallengeReportBasedOnOrganization($organizationId);
@@ -135,7 +135,7 @@ class LabDashboardRepository implements LabDashboardInterface
             $totalAssessedProjectsBasedOnProjectIds = $this->challengeAssessmentUserService->totalAssessedProjectsBasedOnProjectIds($fetchProjectBasedOnChallengeIds->pluck('id'))->unique()->count();
             $totalNonAssessedProjectsBasedOnProjectIds = $totalSubmittedProjects - $totalAssessedProjectsBasedOnProjectIds;
 
-            $fetchProjectReportBasedOnOrganization = ['totalInProgressProjects' => $totalInProgressProjects, 'totalSubmittedProjects' => $totalSubmittedProjects, 'totalAssessedProjects' => $totalAssessedProjectsBasedOnProjectIds, 'totalNonAssessedProjects' => $totalNonAssessedProjectsBasedOnProjectIds];
+            $fetchProjectReportBasedOnOrganization = ['totalInProgressProjects' => $totalInProgressProjects, 'totalSubmittedProjects' => $totalSubmittedProjects, 'totalAssessedProjects' => $totalAssessedProjectsBasedOnProjectIds, 'totalNonAssessedProjects' => $totalNonAssessedProjectsBasedOnProjectIds, 'joined_date' => $userData->created_at];
 
             return $fetchProjectReportBasedOnOrganization;
         } catch (Exception $e) {

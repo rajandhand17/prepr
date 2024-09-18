@@ -81,23 +81,26 @@
             achievement.
             <div class="enamble-following-heading" style="padding: 10px 0px 0px 0px;">
               <div>
-                <div class="icheck-primary d-inline">
+                <div class="icheck-primary d-inline" onclick="enableDesableRedio()">
                   <input type="checkbox" id="challenge" name="challenge">
                   <label for="challenge">Challenge</label>
                 </div>
               </div>
-              <div style="padding-left:30px"><b style="padding-right: 18px; padding-left: 18px;"> Achivement Type: </b>
-                <div class="radio radio-success d-inline-block p-l-5" style="padding: 5px 5px 5px 0px;">
-                  <input type="radio" id="achievement_type" value="participation" class="achievement_type"
-                    name="achievement_type">
-                  <label for="achievement_type">Participation Achievement</label>
+              <div style="padding-left:30px">
+                <b style="padding-right: 18px; padding-left: 18px;">Achivement Type:</b>
+                
+                <div class="radio radio-success d-inline" style="padding: 5px 5px 5px 0px;">
+                    <input type="radio" id="achievement_type_participation" value="participation" 
+                           class="achievement_type enable-disable" name="achievement_type">
+                    <label for="achievement_type_participation">Participation Achievement</label>
                 </div>
-                <div class="radio radio-success d-inline-block">
-                  <input type="radio" id="achievement_type" value="winner" class="achievement_type"
-                    name="achievement_type">
-                  <label for="achievement_type">Winner Achievement</label>
+
+                <div class="radio radio-success d-inline">
+                    <input type="radio" id="achievement_type_winner" value="winner" 
+                           class="achievement_type enable-disable" name="achievement_type">
+                    <label for="achievement_type_winner">Winner Achievement</label>
                 </div>
-              </div>
+            </div>
 
               <div style="padding: 5px 5px 5px 0px;">
                 <div class="icheck-primary d-inline">
@@ -157,3 +160,19 @@
 </section>
 <!-- /.content -->
 @stop
+@section('scripts')
+  <script>
+    $('.enable-disable').attr("disabled",true);
+
+    function enableDesableRedio() {
+      if ($('#challenge').is(":checked"))
+      {
+        $('.enable-disable').attr("disabled",false);
+        $("#achievement_type_participation").prop('checked', true);
+      } else {
+        $('.enable-disable').attr("disabled",true);
+        $("#achievement_type_winner,#achievement_type_participation").prop('checked', false);
+      }
+    }
+  </script>
+@endsection
