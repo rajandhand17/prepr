@@ -165,10 +165,10 @@ trait NotificationAccessor
                 if ($module && $user) {
                     return [
                         'module' => ['id' => data_get($module, 'id'),
-                            'slug'     => data_get($module, 'slug'),
-                            'type'     => $moduleType,
-                            'title'    => data_get($module, 'title')],
-                        'commented_by' => ['id' => data_get($user, 'id'),
+                            'slug'        => data_get($module, 'slug'),
+                            'type'        => $moduleType,
+                            'title'       => data_get($module, 'title')],
+                        'commented_by' => ['id'    => data_get($user, 'id'),
                             'full_name'            => data_get($user, 'full_name'),
                             'first_name'           => data_get($user, 'first_name'),
                             'username'             => data_get($user, 'username'),

@@ -75,7 +75,7 @@ class DiscussionController extends AppBaseController
                     data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'points')
                 );
 
-                if(auth()->user()->id !== $checkComponentBasedOnSlug->user_id) {
+                if (auth()->user()->id !== $checkComponentBasedOnSlug->user_id) {
                     $checkComponentBasedOnSlug->user?->notify(new CommentNotification($component, $getComponentId, auth()->user()->id));
                 }
 
