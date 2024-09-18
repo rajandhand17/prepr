@@ -151,7 +151,15 @@ class MixpanelHelper
                     $final_challenge_skills = [];
                     $final_challenge_tags = [];
                     if (isset($data->skills)) {
-                        $final_challenge_skills = SkillService::getSkillBasedOnIds($data->skills)->pluck('title');
+                        // Get the skills based on IDs
+                        $skills = SkillService::getSkillBasedOnIds($data->skills);
+
+                        // Check if the result is not false before calling pluck
+                        if ($skills !== false) {
+                            $final_challenge_skills = $skills->pluck('title');
+                        } else {
+                            $final_challenge_skills = collect(); // Handle the case where it returns false (set an empty collection)
+                        }
                     }
                     if (isset($data->tags)) {
                         $final_challenge_tags = TagService::getTagsBasedOnIds($data->tags)->pluck('title');
