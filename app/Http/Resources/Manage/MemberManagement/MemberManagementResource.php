@@ -17,9 +17,8 @@ class MemberManagementResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {   
         $user = UserService::getUserByEmail($this->email);
-
         $username = null;
         $userRank = 0;
         $achievementCount = 0;
@@ -148,7 +147,7 @@ class MemberManagementResource extends JsonResource
             'username'         => $username,
             'learn_rank'       => $userRank,
             'achievement_count'=> $achievementCount,
-            'invited_by'       => UserService::joinName($invtee_user->first_name, $invtee_user->last_name),
+            'invited_by'       => ($invtee_user) ? UserService::joinName($invtee_user->first_name, $invtee_user->last_name) : '',
             'role'             => $this->role,
             'invite_status'    => $invite_status,
             'module_progress'  => $module_progress,
