@@ -31,7 +31,7 @@ class PreBuiltAchievementService
                 }
             } else {
                 $achievement = PreBuiltAchievement::find($id);
-                if($request->file('image')){
+                if ($request->file('image')) {
                     $achievementImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'pre_built_achievement');
                 } else {
                     $achievementImage = $achievement->getRawOriginal('achievement_image');
