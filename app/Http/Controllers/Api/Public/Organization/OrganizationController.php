@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Public\Organization;
 use App\Helpers\ChargebeeHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\Public\Organization\OrganizationRequest;
 use App\Http\Resources\Public\Organization\OrganizationDetailResource;
 use App\Http\Resources\Public\Organization\OrganizationResource;
 use App\Repositories\Api\Public\Organization\OrganizationRepository;
@@ -124,6 +125,18 @@ class OrganizationController extends AppBaseController
             }
 
             return $this->sendError(__('responses.organization_slug_not_found'), 404);
+        } catch (\Exception $exception) {
+            UtilityHelper::logError($exception);
+
+            return $this->sendError(__('Failed to fetch organization member activity.'), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    // Checking title is exits or not in our system./
+    public function checkTitle(OrganizationRequest $request)
+    {
+        try {
+            return $this->sendResponse(null, __('responses.title_available'), 200);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
 
