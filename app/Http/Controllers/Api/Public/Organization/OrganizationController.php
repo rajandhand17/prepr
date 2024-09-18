@@ -133,11 +133,13 @@ class OrganizationController extends AppBaseController
     }
 
     // Checking title is exits or not in our system./
-    public function checkTitle(OrganizationRequest $request){
-        try{
+    public function checkTitle(OrganizationRequest $request)
+    {
+        try {
             return $this->sendResponse(null, __('responses.title_available'), 200);
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
+
             return $this->sendError(__('Failed to fetch organization member activity.'), Response::HTTP_BAD_REQUEST);
         }
     }
