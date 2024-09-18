@@ -5,9 +5,9 @@ namespace App\Traits\Maestro\Project;
 use App\Helpers\UtilityHelper;
 use App\Services\Maestro\CategoryService;
 use App\Services\Maestro\ChallengeService;
-use App\Services\Maestro\LabProgramService;
 use App\Services\Maestro\LabService;
 use App\Services\Maestro\ProjectIndustryService;
+use App\Services\Maestro\ProjectService;
 use App\Services\Maestro\ProjectStageService;
 use App\Services\Maestro\ProjectStatusService;
 use App\Services\Maestro\ProjectTypeService;
@@ -20,7 +20,7 @@ trait ProjectTrait
     private function getProjectsList()
     {
         try {
-            $projects = LabProgramService::getProjectsList();
+            $projects = ProjectService::getProjectsList();
             if ($projects) {
                 return $projects;
             }
@@ -36,7 +36,7 @@ trait ProjectTrait
     private function createProject($request)
     {
         try {
-            if (LabProgramService::createProject($request)) {
+            if (ProjectService::createProject($request)) {
                 return true;
             }
 
@@ -51,7 +51,7 @@ trait ProjectTrait
     private function deleteProjectById($id)
     {
         try {
-            if (LabProgramService::deleteProject($id)) {
+            if (ProjectService::deleteProject($id)) {
                 return true;
             }
 
@@ -66,7 +66,7 @@ trait ProjectTrait
     private function getProjectById($id)
     {
         try {
-            return LabProgramService::getProjectById($id);
+            return ProjectService::getProjectById($id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -77,7 +77,7 @@ trait ProjectTrait
     private function updateProjectById($id, $request)
     {
         try {
-            if (LabProgramService::updateProjectById($id, $request)) {
+            if (ProjectService::updateProjectById($id, $request)) {
                 return true;
             }
 

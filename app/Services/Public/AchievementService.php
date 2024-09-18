@@ -46,7 +46,7 @@ class AchievementService
     {
         try {
             if ($request->has('search') && !empty($request->search)) {
-                $achievement_list = $achievement_list->where('user_achievements.title', 'like', '%'.$request->search.'%');
+                $achievement_list = $achievement_list->where('user_achievements.module_title', 'like', '%'.$request->search.'%');
             }
             $achievementType = $achievementLevel = $achievementPlacement = [];
             if ($request->has('type') && !empty($request->type)) {
@@ -111,10 +111,10 @@ class AchievementService
             if ($request->has('sort_by') && !empty($request->sort_by)) {
                 switch ($request->sort_by) {
                     case 'name-a-to-z':
-                        $achievement_list->orderBy('user_achievements.title', 'ASC');
+                        $achievement_list->orderBy('user_achievements.module_title', 'ASC');
                         break;
                     case 'name-z-to-a':
-                        $achievement_list->orderBy('user_achievements.title', 'DESC');
+                        $achievement_list->orderBy('user_achievements.module_title', 'DESC');
                         break;
                     case 'creation_date':
                         $achievement_list->orderBy('user_achievements.issue_date', 'ASC');

@@ -31,6 +31,7 @@ class NotificationRequest extends BaseRequest
                 NotificationTypes::CHALLENGE,
                 NotificationTypes::ORGANIZATION,
                 NotificationTypes::LAB,
+                NotificationTypes::COMMENT,
             ])],
         ];
     }

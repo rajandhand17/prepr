@@ -31,9 +31,9 @@ class SkillStackController extends Controller
                 return DataTables::eloquent($stacks)
                 ->addColumn('action', static function ($stack) {
                     $html = '';
-                    $html .= '<a href="'.route('skill-stack.show', ['skillstack' => $stack->id]).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="'.route('skill-stack.edit', ['skillstack' =>  $stack->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
-                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skill-stack.destroy', ['skillstack' => $stack->id]).'\')"> <i class="fas fa-trash"></i></a>';
+                    $html .= '<a href="'.route('skill-stack.show', $stack->id).'" class="mr-25 showUser" data-id="'.$stack->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="'.route('skill-stack.edit', $stack->id).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$stack->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
+                    $html .= '<a href="javascript:void(0)" onclick="deleteSkillStack(\''.route('skill-stack.destroy', $stack->id).'\')"> <i class="fas fa-trash"></i></a>';
 
                     return $html;
                 })
@@ -70,7 +70,7 @@ class SkillStackController extends Controller
             $html = $builder->columns($tableColumns)->parameters(['order' => [0, 'desc']]);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skill-stack.index', compact('html', 'languages'));
+            return view('maestro.skillstack.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -87,11 +87,11 @@ class SkillStackController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $selectedSkills = [];
 
-            return view('maestro.skill-stack.create', compact('languages', 'selectedSkills'));
+            return view('maestro.skillstack.create', compact('languages', 'selectedSkills'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
-            return redirect()->route('skillstack.index')->with(['error' => 'Something went wrong.']);
+            return redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);
         }
     }
 
@@ -129,7 +129,7 @@ class SkillStackController extends Controller
                 return redirect()->route('skill-stack.index')->with(['error' => 'Skill not found.']);
             }
 
-            return view('maestro.skill-stack.view', compact('skillstack', 'languages', 'selectedSkills'));
+            return view('maestro.skillstack.view', compact('skillstack', 'languages', 'selectedSkills'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -147,7 +147,7 @@ class SkillStackController extends Controller
             $selectedSkills = SkillService::getSkillBasedOnIds($data->skills);
             $languages = LanguageService::getAllActiveLanguages();
 
-            return view('maestro.skill-stack.edit', compact('selectedSkills', 'languages', 'data'));
+            return view('maestro.skillstack.edit', compact('selectedSkills', 'languages', 'data'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             redirect()->route('skill-stack.index')->with(['error' => 'Something went wrong.']);

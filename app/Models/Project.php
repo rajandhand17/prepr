@@ -197,6 +197,11 @@ class Project extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function getStage()
     {
         return $this->belongsTo(ProjectStage::class, 'stage_id', 'id');

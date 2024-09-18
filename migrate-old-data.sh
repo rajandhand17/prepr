@@ -51,4 +51,5 @@ php artisan migrate-old-data:project-task-value-data
 php artisan migrate-old-data:project-vote-data
 php artisan migrate-old-data:discussion
 php artisan migrate-old-data:project-history
+php artisan migrate-old-data:lab-members-from-member-management-table
 php artisan migrate:feed-chargebee-data-to-data-base

@@ -57,7 +57,7 @@
           <div class="col-md-6">
             <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
               {!! Form::label('status', 'Sponsor Status', ['class' => 'control-label']) !!}
-              {!! Form::select('status', ['1' => 'Active', '0' => 'Not Active'], old('status'), ['class' => 'form-control']) !!}
+              {!! Form::select('status', ['1' => 'Active', '0' => 'DeActive'], old('status'), ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('status')}}</span>
             </div>
           </div>
@@ -66,7 +66,7 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Save</button>
               <a class="btn btn-danger mr-1" href="{{ route('sponsors.index') }}"><i class="icon-cross2"></i> Cancel</a>
             </div>
           </div>

@@ -122,7 +122,7 @@
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('resource_modules')) ? 'has-error' : ''}}">
             {!! Form::label('resource_modules', 'Associated Resources module', ['class' => 'control-label']) !!}
-            {!! Form::select('resource_modules[]', @$labAssociatedItems['resourceModules'] ?? [], @$labAssociatedItems['resourceModules']->keys() , ['class' => 'form-control select2','multiple'=>'multiple','id'=>'resourceModule']) !!}
+            {!! Form::select('resource_modules[]', @$labAssociatedItems['resourceModules'] ?? [], @$labAssociatedItems['resourceModules'] ? @$labAssociatedItems['resourceModules']->keys() : [] , ['class' => 'form-control select2','multiple'=>'multiple','id'=>'resourceModule']) !!}
             <span class="help-block">{{ $errors->first('resource_modules')}}</span>
             <span class="help-block text-danger" id="source_error"></span>
         </div>
