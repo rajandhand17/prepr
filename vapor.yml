@@ -10,7 +10,7 @@ environments:
     warm: 4
     concurrency: 50
     # queue-timeout: 10
-    queues: false
+    # queues: false
     #   - default
     #   - chat
     timeout: 600
@@ -41,7 +41,7 @@ environments:
     warm: 4
     concurrency: 50
     # queue-timeout: 10
-    # queues:
+    # queues: false
     #   - default
     #   - chat
     timeout: 600
@@ -73,7 +73,7 @@ environments:
     concurrency: 50
     scheduler: false
     # queue-timeout: 10
-    queues: false
+    # queues: false
     #   - default
     #   - chat
     timeout: 600

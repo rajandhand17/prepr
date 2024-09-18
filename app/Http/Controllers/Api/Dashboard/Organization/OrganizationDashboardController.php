@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Organization;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Dashboard\UpdateManagerDashboardLayoutRequest;
+use App\Http\Requests\Dashboard\UpdateOrganizationDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
@@ -108,8 +108,13 @@ class OrganizationDashboardController extends AppBaseController
 
             $fetchChallengesBasedOnOrganizationId = $this->organizationDashboardRepository->fetchChallengesBasedOnOrganizationId($organization->id);
             $fetchManagersUpComingDeadlineChallenges = $this->organizationDashboardRepository->fetchManagersUpComingDeadlineChallenges($fetchChallengesBasedOnOrganizationId);
-            if (!empty($fetchManagersUpComingDeadlineChallenges)) {
-                return $this->sendResponse(UpComingDeadlineResource::collection($fetchManagersUpComingDeadlineChallenges), __('responses.manager_upcomming_deadline_retrieved'), 200);
+            if ($fetchManagersUpComingDeadlineChallenges != false) {
+                $response = [
+                    'joined_date'   => $userData->created_at,
+                    'list'          => UpComingDeadlineResource::collection($fetchManagersUpComingDeadlineChallenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.manager_upcomming_deadline_retrieved'));
             }
 
             return $this->sendError(__('responses.not_manager_upcomming_deadline_retrieved'), 404);
@@ -389,7 +394,7 @@ class OrganizationDashboardController extends AppBaseController
         }
     }
 
-    public function updateManagerDashboardLayout(UpdateManagerDashboardLayoutRequest $request)
+    public function updateManagerDashboardLayout(UpdateOrganizationDashboardLayoutRequest $request)
     {
         try {
             $userData = auth()->user();
