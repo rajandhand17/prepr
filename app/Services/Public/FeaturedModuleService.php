@@ -17,7 +17,6 @@ class FeaturedModuleService
             return $featuredModules;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
