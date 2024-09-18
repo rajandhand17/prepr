@@ -43,7 +43,7 @@ class OrganizationRequest extends FormRequest
     {
         return[
             'title.required' => __('responses.title_required'),
-            'title.unique'=>__('responses.title_unique'),
+            'title.unique'   => __('responses.title_unique'),
         ];
     }
 }
