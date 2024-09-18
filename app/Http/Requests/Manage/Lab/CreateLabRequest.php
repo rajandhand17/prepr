@@ -174,7 +174,7 @@ class CreateLabRequest extends FormRequest
             $base_rules['achievement_name'] = 'required';
             $base_rules['achievement_points'] = 'required|integer';
             $base_rules['achievement_conditions'] = 'required|array';
-            $base_rules['achievement_conditions.*'] = Rule::exists('achievement_condition_lists', 'id')->where(function ($query){
+            $base_rules['achievement_conditions.*'] = Rule::exists('achievement_condition_lists', 'id')->where(function ($query) {
                 $query->whereNull('deleted_at');
             });
             $base_rules['achievement_image'] = 'required|mimes:jpeg,jpg,png,webp|max:1024';
