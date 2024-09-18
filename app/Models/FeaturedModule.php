@@ -25,14 +25,14 @@ class FeaturedModule extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
-    
+
     public function getMediaAttribute($value)
     {
         return config('site-settings.aws_url').$value;
     }
+
     public function getLabs()
     {
-        return $this->belongsTo(Lab::class, 'module_id', 'id')->where('module_type','0');
+        return $this->belongsTo(Lab::class, 'module_id', 'id')->where('module_type', '0');
     }
-    
 }

@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class AddColumnsToFeaturedModuleTable extends Migration
 {
@@ -38,7 +38,7 @@ class AddColumnsToFeaturedModuleTable extends Migration
         // Add the column with new enum values
         Schema::table('featured_module', function (Blueprint $table) {
             $table->enum('module_type', [
-                '0', '1', '2', '3', '4', '5', '6', '7'
+                '0', '1', '2', '3', '4', '5', '6', '7',
             ])->comment('0->labs,1->lab_programs,2->challenges,3->challenge_paths,4->resource_modules,5->resource_collections,6->resource_group,7->projects')->after('module_id');
         });
 
@@ -63,7 +63,7 @@ class AddColumnsToFeaturedModuleTable extends Migration
 
             // Recreate the 'module_type' column with original enum values
             $table->enum('module_type', [
-                '0', '1', '2', '3', '4'
+                '0', '1', '2', '3', '4',
             ])->comment('0->labs,1->challenge,2->resource group,3->resource module,4->resource collection')->after('media_type');
         });
     }

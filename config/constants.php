@@ -550,7 +550,7 @@ return [
         'resource_group'          => '6',
         'projects'                => '7',
     ],
-    
+
     'module_type_id' => [
         '0'            => 'labs',
         '1'            => 'lab_programs',
