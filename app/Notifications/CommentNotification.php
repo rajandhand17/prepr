@@ -62,8 +62,8 @@ class CommentNotification extends Notification implements ShouldQueue
     {
         return [
             'module_type' => $this->module,
-            'module_id' => $this->moduleId,
-            'user_id' => $this->userId,
+            'module_id'   => $this->moduleId,
+            'user_id'     => $this->userId,
         ];
     }
 }
