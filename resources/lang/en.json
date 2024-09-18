@@ -1457,5 +1457,6 @@
     "responses.notification_deleted": "Notification deleted.",
     "responses.org_level_permission_error": "You do not have the necessary permissions.",
     "responses.title_available": "Great news! The title you have chosen is available.",
-    "responses.valid_type":"Please upload a valid file type"
+    "responses.valid_type":"Please upload a valid file type",
+    "responses.join_successfully": "Your request to join this Project has been sent successfully!"
 }
