@@ -17,7 +17,7 @@ class MemberManagementResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {   
+    {
         $user = UserService::getUserByEmail($this->email);
         $username = null;
         $userRank = 0;
