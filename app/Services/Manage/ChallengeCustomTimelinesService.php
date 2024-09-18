@@ -4,6 +4,7 @@ namespace App\Services\Manage;
 
 use App\Helpers\UtilityHelper;
 use App\Models\ChallengeCustomTimelines;
+use App\Models\ChallengeFlexibleAnnouncement;
 use Exception;
 
 class ChallengeCustomTimelinesService
@@ -35,7 +36,7 @@ class ChallengeCustomTimelinesService
                         $challengeCustomTimeline->save();
 
                         if ($schedule_custom_notify == '1') {
-                            $storeChallengeFlexibleAnnouncement = ChallengeFlexibleAnnouncementService::storeChallengeFlexibleAnnouncement($request, $challenge_id, $challengeCustomTimeline->id);
+                            $storeChallengeFlexibleAnnouncement = ChallengeFlexibleAnnouncementService::storeChallengeFlexibleAnnouncement($request, $challenge_id, $challengeCustomTimeline->id, $key);
                         }
                     }
                 }
@@ -53,8 +54,9 @@ class ChallengeCustomTimelinesService
     {
         try {
             if ($request->timeline_type == 'flexible') {
+                ChallengeCustomTimelines::where('challenge_id', $challenge_id)->delete();
+                ChallengeFlexibleAnnouncement::where('challenge_id', $challenge_id)->delete();
                 if ($request->custom_timelines_title != null && $request->custom_timelines_number != null) {
-                    ChallengeCustomTimelines::where('challenge_id', $challenge_id)->delete();
                     foreach ($request->custom_timelines_title as $key => $value) {
                         switch ($request->schedule_custom_notify[$key]) {
                             case 'no':
@@ -77,7 +79,7 @@ class ChallengeCustomTimelinesService
                         $challengeCustomTimeline->save();
 
                         if ($schedule_custom_notify == '1') {
-                            $storeChallengeFlexibleAnnouncement = ChallengeFlexibleAnnouncementService::storeChallengeFlexibleAnnouncement($request, $challenge_id, $challengeCustomTimeline->id);
+                            $storeChallengeFlexibleAnnouncement = ChallengeFlexibleAnnouncementService::storeChallengeFlexibleAnnouncement($request, $challenge_id, $challengeCustomTimeline->id, $key);
                         }
                     }
                 }

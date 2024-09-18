@@ -8,11 +8,11 @@ use Exception;
 
 class ChallengeFlexibleAnnouncementService
 {
-    public static function storeChallengeFlexibleAnnouncement($request, $challengeId, $challengeCustomTimelineId)
+    public static function storeChallengeFlexibleAnnouncement($request, $challengeId, $challengeCustomTimelineId, $key)
     {
         try {
-            if ($request->has('schedule_custom_notify')) {
-                foreach ($request->schedule_custom_notify as $key => $value) {
+            if ($request->has('schedule_custom_notify') && $request->schedule_custom_notify == 'yes') {
+
                     $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.email');
                     switch ($request->custom_announcement_type[$key]) {
                         case 'email':
@@ -43,7 +43,7 @@ class ChallengeFlexibleAnnouncementService
                     $challengeFlexibleAnnouncement->custom_announcement_description = $request->custom_announcement_description[$key] ?? null;
                     $challengeFlexibleAnnouncement->custom_announcement_schedule_status = $schedule_status;
                     $challengeFlexibleAnnouncement->save();
-                }
+
             }
 
             return true;
