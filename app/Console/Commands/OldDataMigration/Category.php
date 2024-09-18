@@ -44,7 +44,7 @@ class Category extends Command
             $this->info('Migrating old data for categories table.');
             DB::beginTransaction();
 
-            $categories = DB::connection('mysql2')->table('categories')->get();
+            $categories = DB::connection('mysql2')->table('categories')->whereNull('deleted_at')->get();
 
             if ($categories->count() > 0) {
                 foreach ($categories as $key => $single_category) {
@@ -61,6 +61,8 @@ class Category extends Command
                     $newCategory->fr_CA_title = $single_category->fr_CA_name;
                     $newCategory->components = $single_category->components;
                     $newCategory->parent_id = $single_category->parent_id;
+                    $newCategory->created_at = $single_category->created_at;
+                    $newCategory->updated_at = $single_category->updated_at;
                     $newCategory->save();
                 }
                 DB::commit();

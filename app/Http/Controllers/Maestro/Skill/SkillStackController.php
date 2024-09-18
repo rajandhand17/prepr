@@ -72,7 +72,6 @@ class SkillStackController extends Controller
 
             return view('maestro.skillstack.index', compact('html', 'languages'));
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return redirect()->route('dashboard.index')->with(['error' => 'Something went wrong.']);
