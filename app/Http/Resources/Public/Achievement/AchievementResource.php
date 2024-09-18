@@ -87,7 +87,7 @@ class AchievementResource extends JsonResource
                     $getChallengePath = ChallengePathService::getChallengePathBasedOnId($this->module_id);
                     $associated_data = [
                         'name'            => $getChallengePath->title ?? $this->module_title,
-                        'associated_link' => config('site-settings.frontend_site_url').'challenge-path/' . (isset($getChallengePath->slug) ? $getChallengePath->slug : ''),
+                        'associated_link' => config('site-settings.frontend_site_url').'challenge-path/'.(isset($getChallengePath->slug) ? $getChallengePath->slug : ''),
                     ];
                 }
                 $issued_by = $getIssuerData->title ?? $this->module_parent_title;
