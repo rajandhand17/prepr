@@ -47,7 +47,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
     {
         try {
             $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData);
-            
+
             return $getProjectsIds;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -158,7 +158,7 @@ class TeamMatchingRepository implements TeamMatchingInterface
         try {
             $userData = auth()->user();
             $getProjectsIds = $this->projectMemberManagementService->getPendingRequests($userData)->unique();
-            $projectPendingCount=$this->projectMemberManagementService->getPendingRequestsBasedOnProjectIds($getProjectsIds);
+            $projectPendingCount = $this->projectMemberManagementService->getPendingRequestsBasedOnProjectIds($getProjectsIds);
             $getProjectsPendingList = $this->projectMemberManagementService->getMatchedTeams()->unique();
             $getExistingProjectIds = $this->projectService->getProjects($getProjectsPendingList);
 
