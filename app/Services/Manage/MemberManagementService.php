@@ -618,7 +618,10 @@ class MemberManagementService
                                 $labHistoryService = new LabHistoryService();
                                 $labHistoryService->storeHistory($componentCollectionObject->id, $userId, $activity);
                             }
-                            // MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), $request->ip());
+
+                            if (config('app.isMixPanelEnable')) {
+                                MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), $request->ip());
+                            }
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                             if ($member['invite_type'] === 'join_request') {
@@ -754,7 +757,10 @@ class MemberManagementService
                         $labHistoryService = new LabHistoryService();
                         $labHistoryService->storeHistory($lab->id, $userId, $activity);
                     }
-                    // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+
+                    if (config('app.isMixPanelEnable')) {
+                        MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                    }
                 }
 
                 return true;
@@ -774,8 +780,10 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
-                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
 
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request->only(['lab_id', 'category']), auth()->user(), $request->ip());
+                }
                 // Job for Bulk User Progress updating in table
                 $processType = 'delete';
                 if (in_array($module_type, [config('constants.member_management_component_type.lab'), config('constants.member_management_component_type.lab_program')])) {
@@ -889,7 +897,10 @@ class MemberManagementService
                     $request->privacy = $lab->privacy;
                     $request->title = $lab->title;
                     $request->category = $lab->category_id;
-                    // MixpanelJob::dispatch(config('mixpanel.join_lab'), $request, auth()->user(), $request->ip());
+
+                    if (config('app.isMixPanelEnable')) {
+                        MixpanelJob::dispatch(config('mixpanel.join_lab'), $request->only(['lab_id', 'title', 'privacy']), auth()->user(), $request->ip());
+                    }
                 }
             }
 
