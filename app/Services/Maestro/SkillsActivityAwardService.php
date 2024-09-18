@@ -98,7 +98,7 @@ class SkillsActivityAwardService
                 }
             }
             // Check if the array is not empty and get the first element as an integer
-            $skills = !empty($request->skill) ? (int)$request->skill[0] : null;
+            $skills = !empty($request->skill) ? (int) $request->skill[0] : null;
             $insertArray['skill'] = $skills;
             $insertArray['image'] = $image;
 
