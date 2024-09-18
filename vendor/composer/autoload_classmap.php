@@ -852,6 +852,7 @@ return array(
     'App\\Notifications\\AddLabProgramAchievementNotification' => $baseDir . '/app/Notifications/AddLabProgramAchievementNotification.php',
     'App\\Notifications\\AddResourceGroupAchivementNotification' => $baseDir . '/app/Notifications/AddResourceGroupAchivementNotification.php',
     'App\\Notifications\\AddWinnerAchievementNotification' => $baseDir . '/app/Notifications/AddWinnerAchievementNotification.php',
+    'App\\Notifications\\CommentNotification' => $baseDir . '/app/Notifications/CommentNotification.php',
     'App\\Notifications\\ComponentJoinedNotification' => $baseDir . '/app/Notifications/ComponentJoinedNotification.php',
     'App\\Notifications\\ConversationArchived' => $baseDir . '/app/Notifications/ConversationArchived.php',
     'App\\Notifications\\ConversationCreated' => $baseDir . '/app/Notifications/ConversationCreated.php',

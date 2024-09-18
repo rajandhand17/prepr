@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
+class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -2036,6 +2036,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'App\\Notifications\\AddLabProgramAchievementNotification' => __DIR__ . '/../..' . '/app/Notifications/AddLabProgramAchievementNotification.php',
         'App\\Notifications\\AddResourceGroupAchivementNotification' => __DIR__ . '/../..' . '/app/Notifications/AddResourceGroupAchivementNotification.php',
         'App\\Notifications\\AddWinnerAchievementNotification' => __DIR__ . '/../..' . '/app/Notifications/AddWinnerAchievementNotification.php',
+        'App\\Notifications\\CommentNotification' => __DIR__ . '/../..' . '/app/Notifications/CommentNotification.php',
         'App\\Notifications\\ComponentJoinedNotification' => __DIR__ . '/../..' . '/app/Notifications/ComponentJoinedNotification.php',
         'App\\Notifications\\ConversationArchived' => __DIR__ . '/../..' . '/app/Notifications/ConversationArchived.php',
         'App\\Notifications\\ConversationCreated' => __DIR__ . '/../..' . '/app/Notifications/ConversationCreated.php',
@@ -17929,10 +17930,10 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$classMap;
 
         }, null, ClassLoader::class);
     }
