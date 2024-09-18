@@ -14,7 +14,6 @@ class CustomAnnouncementResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-
         return [
             'custom_announcement_type'           => $this->custom_announcement_type == '0' ? 'email' : 'notification',
             'custom_announcement_number'         => $this->custom_announcement_number,

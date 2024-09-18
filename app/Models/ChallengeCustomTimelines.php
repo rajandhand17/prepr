@@ -21,8 +21,8 @@ class ChallengeCustomTimelines extends Model
         'schedule_custom_notify',
     ];
 
-    public function challengeScheduleCustomAnnouncement () {
-
+    public function challengeScheduleCustomAnnouncement()
+    {
         return $this->hasOne(ChallengeFlexibleAnnouncement::class, 'challenge_custom_timeline_id', 'id')->where('challenge_id', $this->challenge_id);
     }
 }

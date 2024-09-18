@@ -249,7 +249,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
-                    'schedule_custom_announcement' => $item->challengeScheduleCustomAnnouncement ? CustomAnnouncementResource::make($item->challengeScheduleCustomAnnouncement): null
+                    'schedule_custom_announcement' => $item->challengeScheduleCustomAnnouncement ? CustomAnnouncementResource::make($item->challengeScheduleCustomAnnouncement) : null,
                 ];
             });
         }
