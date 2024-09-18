@@ -54,19 +54,21 @@ class TagController extends Controller
                             return $tag->id ?? ' - ';
                         }
                     })
+                    ->rawColumns(['tag_image', 'category', 'action', 'DT_Row_Index'])
                     ->toJson();
             }
             $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
-                ['data' => 'id', 'name' => '', 'title' => 'id', 'orderable' => false, 'searchable' => false],
+                ['data' => 'id', 'name' => '', 'title' => 'id'],
             ];
-            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category']);
-            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image']);
             foreach ($languages as $single) {
                 $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Tag Title'];
                 array_push($tableColumns, $singleLangCol);
             }
+            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category', 'orderable' => false, 'searchable' => false]);
+            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image', 'width' => '10%', 'orderable' => false, 'searchable' => false]);
+
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
             view()->share('module_name', 'Challenge');

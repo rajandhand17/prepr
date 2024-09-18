@@ -8,6 +8,7 @@ enum NotificationTypes
     const ORGANIZATION = 'organization';
     const CHALLENGE = 'challenge';
     const FRIEND_REQUEST = 'friend_request';
+    const COMMENT = 'comment';
     const MEMBER_INVITATION = [
         self::LAB          => 'lab_member_invitation',
         self::CHALLENGE    => 'challenge_member_invitation',
