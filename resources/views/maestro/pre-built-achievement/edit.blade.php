@@ -28,7 +28,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                  {!!Form::model($achievement,array('method'=>'PUT','files'=>true,'route'=>array('pre-built-achievement.update',$achievement->id),'files'=>true))!!}
+                  {!!Form::model($achievement,array('method'=>'PUT','files'=>true,'route'=>array('pre-built-achievement.update',$achievement->id),'files'=>true,'id' => 'priBuiltAchivementForm'))!!}
                     <div class="row">
                       @if($languages->count() > 0)
                           @foreach($languages as $single)
@@ -54,7 +54,7 @@
                       <div class="col-md-{{$notExist}}">
                         <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
                           {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
-                          {!! Form::file('image', ['class' => 'form-control']) !!}
+                          {!! Form::file('image', ['class' => 'form-control', 'id' => 'imageUpload']) !!}
                           <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
                         </div>
                       </div>
@@ -85,6 +85,7 @@
                       <div class="col-md-12">
                           <b>Enable for the following components</b><br>
                           Achievement type is editable for Challenge only, for all other components, the default type is participation achievement.
+                          <div id="checkboxError" style="color: red; margin-top: 5px;"></div>
                           <div class="enamble-following-heading" style="padding: 10px 0px 0px 0px;">
                             @php
                               $challenge = '';
@@ -216,5 +217,32 @@
         $("#achievement_type_winner,#achievement_type_participation").prop('checked', false);
       }
     }
+
+    document.getElementById('imageUpload').addEventListener('change', function(event) {
+        const fileInput = event.target;
+        const file = fileInput.files[0];
+        const errorDiv = document.getElementById('fileError');
+        errorDiv.innerHTML = '';
+        const validImageTypes = ['image/jpeg','image/jpg', 'image/png', 'image/gif'];
+        if (file && !validImageTypes.includes(file.type)) {
+            errorDiv.innerHTML = 'Only image files (JPEG,JPG, PNG, GIF) are allowed!';
+            fileInput.value = ''; 
+        }
+    });
+
+    document.getElementById('priBuiltAchivementForm').addEventListener('submit', function(event) {
+      var challenge = $('#challenge').is(":checked");
+      var challenge_path = $('#challenge_path').is(":checked");
+      var lab = $('#lab').is(":checked");
+      var lab_program = $('#lab_program').is(":checked");
+      var resource_group = $('#resource_group').is(":checked");
+      var learning_path = $('#learning_path').is(":checked");
+      if(challenge == '' && challenge_path == '' && lab == '' && lab_program == '' && resource_group == '' && learning_path == ''){
+        var errorDiv = document.getElementById('checkboxError');
+        errorDiv.innerHTML = '';
+        event.preventDefault();
+        errorDiv.innerHTML = 'Please select at least one option!';
+      }
+    });
   </script>
 @endsection
