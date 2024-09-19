@@ -113,12 +113,12 @@
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You want to made template for this lab!",
+                text: "Do you want to add this Lab to Lab Marketplace.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes'
+                confirmButtonText: 'Yes, Add it.'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -149,7 +149,7 @@
                         error: function (error) {
                             Swal.fire(
                                 'Error!',
-                                'An error occurred while creating the Challenge Template.',
+                                'An error occurred while adding this Lab to Lab Marketplace.',
                                 'error'
                             );
                         }
@@ -157,7 +157,7 @@
                 }else {
                     Swal.fire(
                         'Canceled!',
-                        'Challenge is not cloned!',
+                        'This Lab will not be added to Marketplace',
                         'error'
                     );
                 }
