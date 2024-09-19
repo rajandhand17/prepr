@@ -13,7 +13,7 @@ class ProjectTypeService
     {
         try {
             if ($language == 'en') {
-                $project_type_list = ProjectType::select('id', 'title');
+                $project_type_list = ProjectType::select('id', 'title')->where('status','1');
             //Search categories based on user input
             } else {
                 //get column name based on language
@@ -23,7 +23,7 @@ class ProjectTypeService
                 if (!$column_name || !Schema::hasColumn('project_types', $column_name)) {
                     return false;
                 }
-                $project_type_list = ProjectType::select('id', $column_name.' as title');
+                $project_type_list = ProjectType::select('id', $column_name.' as title')->where('status','1');
             }
 
             //Search categories based on user input
