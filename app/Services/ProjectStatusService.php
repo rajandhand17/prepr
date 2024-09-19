@@ -13,7 +13,7 @@ class ProjectStatusService
     {
         try {
             if ($language == 'en') {
-                $project_status_list = ProjectStatus::select('id', 'title')->where('status','1');
+                $project_status_list = ProjectStatus::select('id', 'title')->where('status', '1');
             //Search categories based on user input
             } else {
                 //get column name based on language
@@ -23,7 +23,7 @@ class ProjectStatusService
                 if (!$column_name || !Schema::hasColumn('project_status', $column_name)) {
                     return false;
                 }
-                $project_status_list = ProjectStatus::select('id', $column_name.' as title')->where('status','1');
+                $project_status_list = ProjectStatus::select('id', $column_name.' as title')->where('status', '1');
             }
 
             //Search categories based on user input
