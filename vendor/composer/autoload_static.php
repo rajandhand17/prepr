@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
+class ComposerStaticInit58cc189ef0a7b0a6c961804127478125
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -348,8 +348,8 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'hollodotme\\FastCGI\\' => 
         array (
@@ -361,12 +361,12 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         ),
         'Yajra\\DataTables\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
-            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
-            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-export/src',
-            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
-            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
-            5 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
+            0 => __DIR__ . '/..' . '/yajra/laravel-datatables-oracle/src',
+            1 => __DIR__ . '/..' . '/yajra/laravel-datatables-html/src',
+            2 => __DIR__ . '/..' . '/yajra/laravel-datatables-buttons/src',
+            3 => __DIR__ . '/..' . '/yajra/laravel-datatables-editor/src',
+            4 => __DIR__ . '/..' . '/yajra/laravel-datatables-fractal/src',
+            5 => __DIR__ . '/..' . '/yajra/laravel-datatables-export/src',
         ),
         'Whoops\\' => 
         array (
@@ -642,8 +642,8 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -743,8 +743,8 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri',
-            1 => __DIR__ . '/..' . '/league/uri-interfaces',
+            0 => __DIR__ . '/..' . '/league/uri-interfaces',
+            1 => __DIR__ . '/..' . '/league/uri',
         ),
         'League\\OAuth2\\Server\\' => 
         array (
@@ -1579,6 +1579,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'App\\Http\\Requests\\Public\\Lab\\JoinLabRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Lab/JoinLabRequest.php',
         'App\\Http\\Requests\\Public\\Notification\\NotificationMarkAsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Notification/NotificationMarkAsRequest.php',
         'App\\Http\\Requests\\Public\\Notification\\NotificationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Notification/NotificationRequest.php',
+        'App\\Http\\Requests\\Public\\Organization\\OrganizationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Organization/OrganizationRequest.php',
         'App\\Http\\Requests\\Public\\ResourceCollection\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceCollection/AddRatingRequest.php',
         'App\\Http\\Requests\\Public\\ResourceGroup\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceGroup/AddRatingRequest.php',
         'App\\Http\\Requests\\Public\\ResourceModule\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceModule/AddRatingRequest.php',
@@ -1596,6 +1597,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'App\\Http\\Resources\\Chat\\ConversationResource' => __DIR__ . '/../..' . '/app/Http/Resources/Chat/ConversationResource.php',
         'App\\Http\\Resources\\Chat\\MessageResource' => __DIR__ . '/../..' . '/app/Http/Resources/Chat/MessageResource.php',
         'App\\Http\\Resources\\ComponentShareResource' => __DIR__ . '/../..' . '/app/Http/Resources/ComponentShareResource.php',
+        'App\\Http\\Resources\\CustomAnnouncementResource' => __DIR__ . '/../..' . '/app/Http/Resources/CustomAnnouncementResource.php',
         'App\\Http\\Resources\\Dashboard\\ChallengeDashboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/ChallengeDashboardResource.php',
         'App\\Http\\Resources\\Dashboard\\ChallengePathDashboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/ChallengePathDashboardResource.php',
         'App\\Http\\Resources\\Dashboard\\DashboardLayoutResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/DashboardLayoutResource.php',
@@ -1610,6 +1612,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'App\\Http\\Resources\\Discussion\\DiscussionResource' => __DIR__ . '/../..' . '/app/Http/Resources/Discussion/DiscussionResource.php',
         'App\\Http\\Resources\\Discussion\\UserResource' => __DIR__ . '/../..' . '/app/Http/Resources/Discussion/UserResource.php',
         'App\\Http\\Resources\\EmailTemplate\\EmailTemplateResource' => __DIR__ . '/../..' . '/app/Http/Resources/EmailTemplate/EmailTemplateResource.php',
+        'App\\Http\\Resources\\Explore\\ExploreResource' => __DIR__ . '/../..' . '/app/Http/Resources/Explore/ExploreResource.php',
         'App\\Http\\Resources\\Explore\\SkillResource' => __DIR__ . '/../..' . '/app/Http/Resources/Explore/SkillResource.php',
         'App\\Http\\Resources\\Leaderboard\\LeaderboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Leaderboard/LeaderboardResource.php',
         'App\\Http\\Resources\\Manage\\Airmeet\\AirmeetEventResource' => __DIR__ . '/../..' . '/app/Http/Resources/Manage/Airmeet/AirmeetEventResource.php',
@@ -11439,12 +11442,14 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'PhpParser\\JsonDecoder' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/JsonDecoder.php',
         'PhpParser\\Lexer' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer.php',
         'PhpParser\\Lexer\\Emulative' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/Emulative.php',
+        'PhpParser\\Lexer\\TokenEmulator\\AsymmetricVisibilityTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/AsymmetricVisibilityTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\AttributeEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/AttributeEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\EnumTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/EnumTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ExplicitOctalEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ExplicitOctalEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\KeywordEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/KeywordEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\MatchTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/MatchTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\NullsafeTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/NullsafeTokenEmulator.php',
+        'PhpParser\\Lexer\\TokenEmulator\\PropertyTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/PropertyTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReadonlyFunctionTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReadonlyFunctionTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReadonlyTokenEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReadonlyTokenEmulator.php',
         'PhpParser\\Lexer\\TokenEmulator\\ReverseEmulator' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Lexer/TokenEmulator/ReverseEmulator.php',
@@ -11578,6 +11583,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'PhpParser\\Node\\Name\\Relative' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Name/Relative.php',
         'PhpParser\\Node\\NullableType' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/NullableType.php',
         'PhpParser\\Node\\Param' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Param.php',
+        'PhpParser\\Node\\PropertyHook' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/PropertyHook.php',
         'PhpParser\\Node\\PropertyItem' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/PropertyItem.php',
         'PhpParser\\Node\\Scalar' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar.php',
         'PhpParser\\Node\\Scalar\\Float_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/Float_.php',
@@ -11591,6 +11597,7 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
         'PhpParser\\Node\\Scalar\\MagicConst\\Line' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Line.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Method' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Method.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Namespace_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Namespace_.php',
+        'PhpParser\\Node\\Scalar\\MagicConst\\Property' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Property.php',
         'PhpParser\\Node\\Scalar\\MagicConst\\Trait_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/MagicConst/Trait_.php',
         'PhpParser\\Node\\Scalar\\String_' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/Scalar/String_.php',
         'PhpParser\\Node\\StaticVar' => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser/Node/StaticVar.php',
@@ -17926,10 +17933,10 @@ class ComposerStaticInit802baeea6b3232aed4471aadf89229ff
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit802baeea6b3232aed4471aadf89229ff::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$classMap;
 
         }, null, ClassLoader::class);
     }
