@@ -49,7 +49,7 @@ class PreBuiltAchievementController extends Controller
                             return ucwords(str_replace('_', ' ', $achievementData->component_type));
                         }
                     })
-                    ->rawColumns(['achievement_image', 'action', 'status', 'DT_Row_Index'])
+                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index'])
                     ->addIndexColumn()
                     ->toJson();
             }
@@ -66,7 +66,6 @@ class PreBuiltAchievementController extends Controller
             }
             array_push($tableColumns, ['data' => 'points', 'name' => 'points', 'title' => 'Points']);
             array_push($tableColumns, ['data' => 'component_type', 'name' => 'component_type', 'title' => 'component']);
-            array_push($tableColumns, ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
 

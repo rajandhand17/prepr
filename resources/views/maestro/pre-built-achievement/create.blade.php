@@ -1,6 +1,12 @@
 @extends('maestro.layouts.default')
 @section('title', 'Create Achievement')
 @section('content')
+<style >
+  .dm-uploader {
+        border: 2px dashed #575757;
+        padding: 5px 5px 15px;
+    }
+</style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <div class="container-fluid">
@@ -47,12 +53,26 @@
           @endif
         </div>
         <div class="row">
-          <div class="col-md-12">
-            <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
+          <div class="col-md-12 text-center">
+            {{-- <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
               {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}<br>
               {!! Form::file('image', ['class' => 'form-control', 'id' => 'imageUpload']) !!}
               <div id="fileError" style="color: red; margin-top: 5px;"></div>
-            </div>
+            </div> --}}
+            <div id="drag-and-drop-zone" class="dm-uploader p-5 sld_brder">
+              <div class="row">
+                  <div class="col-md-12 col-md-12 mb-1 mt-1">
+                      <label class="control-label">Cover Image</label>
+
+                      <p class="mb-0"><br></p>
+                      <div class="btn btn-primary mb-2 showBg1">
+                          <span>Upload Logo</span>
+                          <input type="file" title="labels.labels_click_to_add_files" name="cover_image" id="coverImage" onchange="loadFile1(event)">
+                      </div>
+                      
+                  </div>
+              </div>
+          </div>
           </div>
         </div>
         <div class="row">
@@ -62,15 +82,6 @@
               {!! Form::number('points',null, ['class' => 'form-control incentive_points','min'=>'0','required' =>
               'required']) !!}
               <span class="help-block">{{ $errors->first('points')}}</span>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
-              {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-              {!! Form::select('status', ['1' => 'Active', '0' => 'DeActive'], old('status'), ['class' =>
-              'form-control']) !!}
-              <span class="help-block">{{ $errors->first('status')}}</span>
             </div>
           </div>
         </div>
