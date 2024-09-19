@@ -155,7 +155,7 @@ class ResourceModuleDetailService
 
                 if (!$checkExistsResourceModules) {
                     $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
-                }else{
+                } else {
                     $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
                 }
 
@@ -211,7 +211,7 @@ class ResourceModuleDetailService
 
                 if (!$checkExistsResourceModules) {
                     $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
-                 }else{
+                } else {
                     $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $title, $type, $value['path'], null);
                 }
 
