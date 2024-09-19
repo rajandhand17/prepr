@@ -50,7 +50,7 @@ class LabController extends Controller
                 ->addIndexColumn()
                     ->addColumn('action', static function (Lab $lab) {
                         $html = '';
-                        $html .= '<a href="" class="mr-25 showUser" data-id="'.$lab->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a style="padding-left:5px" class="mr-10" href="'.route('lab.show', ['lab' => $lab->id]).'"><i class="fas fa-eye"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="'.route('lab.edit', ['lab' => $lab->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$lab->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="javascript:void(0)" onclick="deleteLab(\''.route('lab.destroy', ['lab' => $lab->id]).'\')"> <i class="fas fa-trash"></i></a>';
                         if ($lab->is_pre_built == '0') {
@@ -150,7 +150,9 @@ class LabController extends Controller
     public function show(string $id)
     {
         try {
-            return view('maestro.lab.view', compact('lab'));
+            $lab = Lab::find($id);
+
+            return view('maestro.lab.show', compact('lab'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
