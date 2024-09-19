@@ -11,6 +11,7 @@ Route::middleware($middleware)->group(function () {
     Route::get('/', [OrganizationController::class, 'index']);
     Route::get('/compare-plans', [OrganizationController::class, 'plansDetail']);
     Route::get('/{slug}', [OrganizationController::class, 'show']);
+    Route::post('/check-title', [OrganizationController::class, 'checkTitle']);
 });
 Route::middleware(['language', 'auth:api'])->group(function () {
     Route::post('/{slug}/{activity}', [OrganizationController::class, 'socialActivity']);

@@ -42,6 +42,7 @@ class AddCommentRequest extends FormRequest
             'module_id.required' => __('responses.module_id_required'),
             'comment.required'   => __('responses.comments_field'),
             'user_id.exists'     => __('responses.reference_id_exists'),
+            'attachment.*.mimes' => __('responses.valid_type'),
         ];
     }
 
