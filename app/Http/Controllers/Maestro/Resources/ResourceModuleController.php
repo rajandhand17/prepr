@@ -71,7 +71,7 @@ class ResourceModuleController extends Controller
                     ->addColumn('action', static function (ResourceModule $resourceModule) {
                         return '<a class="mr-10" href="'.route('resource-module.edit', ['resource_module' => $resourceModule->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\''.route('resource-module.destroy', ['resource_module' => $resourceModule->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['media', 'privacy', 'is_global','action', 'DT_Row_Index'])
+                    ->rawColumns(['media', 'privacy', 'is_global', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
