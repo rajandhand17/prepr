@@ -151,6 +151,7 @@ class LabController extends Controller
     {
         try {
             $lab = Lab::find($id);
+
             return view('maestro.lab.show', compact('lab'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
