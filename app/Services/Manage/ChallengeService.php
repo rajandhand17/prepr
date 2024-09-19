@@ -673,7 +673,8 @@ class ChallengeService
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->allow_winner_change = '0';
-            $clonedChallenge->is_pre_built = '0';
+            $clonedChallenge->is_pre_built = '1';
+            $clonedChallenge->is_auto_created = '0';
             $clonedChallenge->save();
 
             return $clonedChallenge;

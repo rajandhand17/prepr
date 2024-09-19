@@ -64,6 +64,7 @@ class ChallengeResource extends JsonResource
         $lab_programs = [];
         $resource_modules = [];
         $resource_collections = [];
+        $challenge_joined_date = null;
         $resource_groups = [];
 
         if ($this->getCategory) {
@@ -221,6 +222,8 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
+                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at; 
+
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
@@ -488,6 +491,7 @@ class ChallengeResource extends JsonResource
             'scorm_url'                         => $this->formatted_scorm_url,
             'source'                            => $source,
             'challenge_status'                  => $challenge_status,
+            'challenge_joined_date'             => $challenge_joined_date,
         ];
     }
 }

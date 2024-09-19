@@ -64,6 +64,7 @@ class ChallengeResource extends JsonResource
         $jobs = null;
         $challenge_flexible_announcement = null;
         $module_progress = null;
+        $challenge_joined_date = null;
         $is_authenticated_user = auth('api')->check();
 
         if ($this->getCategory) {
@@ -220,6 +221,8 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
+                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at; 
+
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
@@ -471,6 +474,7 @@ class ChallengeResource extends JsonResource
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
             'challenge_status'                  => $challenge_status,
+            'challenge_joined_date'             => $challenge_joined_date,
         ];
     }
 }
