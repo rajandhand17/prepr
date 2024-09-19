@@ -147,6 +147,7 @@ class TagController extends Controller
             $languages = LanguageService::getAllActiveLanguages();
             $tag_image = Tag::where('id', '=', $id)->value('tag_image');
             $category = explode(',', $data->components);
+
             return view('maestro.tags.tag.edit', compact('data', 'languages', 'category', 'tag_image'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
