@@ -27,12 +27,12 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                {!!Form::model($data,array('method'=>'PUT','files'=>true,'route'=>array('skillstack.update',$data->id)))!!}
+                {!!Form::model($data,array('method'=>'PUT','files'=>true,'route'=>array('skill-stack.update',$data->id)))!!}
                    
                 @include('maestro.skillstack.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('skillstack.index') }}">
+                        <a class="btn btn-danger mr-1" href="{{ route('skill-stack.index') }}">
                             <i class="icon-cross2"></i> Cancel
                         </a>
                     </div>

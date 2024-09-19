@@ -71,7 +71,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <a class="btn btn-danger mr-1" href="{{ route('users.index') }}"><i class="icon-cross2"></i> Cancel</a>
+                            <a class="btn btn-danger mr-1" href="{{ route('vendor-management.index') }}"><i class="icon-cross2"></i> Cancel</a>
                         </div>
                     </div>
                 </div>

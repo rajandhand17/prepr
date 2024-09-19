@@ -168,14 +168,21 @@ class MemberManagementService
         try {
             $organizationIds = [];
             switch ($action) {
+                case 'invited':
                 case 'pending':
                     $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.invited'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
                     break;
                 case 'accepted':
                     $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
                     break;
-                case 'invited':
-                    $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.invited'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
+                case 'my':
+                    $myOrganizationIds = OrganizationService::fetchOrganizationIdsBasedOnUserId(auth()->user()->id)->pluck('id');
+                    $accpetedOrganizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
+
+                    $organizationIds = $myOrganizationIds
+                        ->merge($accpetedOrganizationIds)
+                        ->unique() // Ensure unique results
+                        ->filter();
                     break;
                 default:
                     break;

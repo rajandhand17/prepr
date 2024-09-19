@@ -23,15 +23,20 @@ class PreBuiltAchievementService
     public static function storeUpdatePreBuiltAchievement($request, $id, $moduleMode)
     {
         try {
-            $achievementImage = self::uploadAchievementImage($request);
-
             if ($moduleMode === 'create') {
                 $achievement = new PreBuiltAchievement();
+                $achievementImage = null;
+                if ($request->file('image')) {
+                    $achievementImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'pre_built_achievement');
+                }
             } else {
                 $achievement = PreBuiltAchievement::find($id);
-                $achievementImage = !empty($achievementImage) ? $achievementImage : $achievement->image;
+                if ($request->file('image')) {
+                    $achievementImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'pre_built_achievement');
+                } else {
+                    $achievementImage = $achievement->getRawOriginal('achievement_image');
+                }
             }
-
             $languages = LanguageService::getAllActiveLanguages();
             if (!empty($languages)) {
                 foreach ($languages as $single) {
@@ -42,7 +47,7 @@ class PreBuiltAchievementService
 
             $component_type = self::getComponentType($request);
             $achievement_type = self::getAchievementType($request);
-            $achievement->achievement_image = !empty($achievementImage) ? $achievementImage : null;
+            $achievement->achievement_image = $achievementImage ?? null;
             $achievement->component_type = !empty($component_type) ? implode(',', $component_type) : null;
             $achievement->achievement_type = $achievement_type;
             $achievement->points = $request->points;
@@ -105,22 +110,6 @@ class PreBuiltAchievementService
             }
 
             return $component_type;
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    public static function uploadAchievementImage($request)
-    {
-        try {
-            $achievementImage = null;
-            if ($request->file('image')) {
-                $achievementImage = FileUploadHelper::uploadImageToS3($request->file('image'), 'pre_built_achievement');
-            }
-
-            return $achievementImage;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

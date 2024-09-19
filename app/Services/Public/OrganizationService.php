@@ -161,6 +161,19 @@ class OrganizationService
         }
     }
 
+    public static function fetchOrganizationIdsBasedOnUserId($userId)
+    {
+        try {
+            $organizations = Organization::where('user_id', $userId)->get();
+
+            return $organizations;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function fetchOrganizations($request, $organizationIds)
     {
         try {

@@ -54,7 +54,7 @@ class LabController extends Controller
                         $html .= '<a href="'.route('lab.edit', ['lab' => $lab->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$lab->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="javascript:void(0)" onclick="deleteLab(\''.route('lab.destroy', ['lab' => $lab->id]).'\')"> <i class="fas fa-trash"></i></a>';
                         if ($lab->is_pre_built == '0') {
-                            $html .= '<a href="javascript:void(0)" onclick="ChallengeToLabTemplate(\''.route('lab-template.clone', ['slug' =>$lab->slug]).'\')"> <i class="fas fa-clone"></i></a>';
+                            $html .= '<a href="javascript:void(0)" title="Add to Marketplace" onclick="ChallengeToLabTemplate(\''.route('lab-template.clone', ['slug' =>$lab->slug]).'\')"> <i class="fas fa-clone"></i></a>';
                         }
 
                         return $html;
@@ -73,13 +73,21 @@ class LabController extends Controller
                             return $lab->getCategory->title ?? '';
                         }
                     })
+                    ->editColumn('privacy', static function (Lab $lab) {
+                        if ($lab->privacy == 0) {
+                            return 'Public';
+                        } else {
+                            return 'Private';
+                        }
+                    })
+                    ->rawColumns(['category', 'action', 'DT_Row_Index'])
                     ->toJson();
             }
             $html = $builder->columns([
                 ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title'],
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category'],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
             ])->parameters(['order' => [0, 'desc']]);

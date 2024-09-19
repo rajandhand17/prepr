@@ -392,7 +392,7 @@ class ChallengeService
             $deadlineMissedChallengesCount = ProjectService::fetchDeadlineMissedChallenges($fetchChallenge, $userData);
             $notStartedChallengesCount = $overAllJoinedChallenges - ($completedChallengesCount + $inProgressChallengesCount + $deadlineMissedChallengesCount);
 
-            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount];
+            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount, 'joined_date' => $userData->created_at];
 
             return $fetchMyChallengeProgress;
         } catch (Exception $e) {
