@@ -46,9 +46,18 @@ class ResourceModuleController extends Controller
                     })
                     ->editColumn('privacy', static function (ResourceModule $resourceModule) {
                         if ($resourceModule->privacy == '0') {
-                            $html = "<span class='badge badge-info'>Not available globally</span>";
+                            $html = "<span class='badge badge-info'>Public</span>";
                         } else {
-                            $html = "<span class='badge badge-success'>Available globally</span>";
+                            $html = "<span class='badge badge-success'>Private</span>";
+                        }
+
+                        return $html;
+                    })
+                    ->editColumn('is_global', static function (ResourceModule $resourceModule) {
+                        if ($resourceModule->is_global == '0') {
+                            $html = "<span class='badge badge-info'>No</span>";
+                        } else {
+                            $html = "<span class='badge badge-success'>Yes</span>";
                         }
 
                         return $html;
@@ -62,16 +71,16 @@ class ResourceModuleController extends Controller
                     ->addColumn('action', static function (ResourceModule $resourceModule) {
                         return '<a class="mr-10" href="'.route('resource-module.edit', ['resource_module' => $resourceModule->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteResourceModule(\''.route('resource-module.destroy', ['resource_module' => $resourceModule->id]).'\')"><i class="fas fa-trash"></i></a>';
                     })
-                    ->rawColumns(['media', 'status', 'privacy', 'action', 'DT_Row_Index'])
+                    ->rawColumns(['media', 'privacy', 'is_global','action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Resource Name', 'width' => '55%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Resource Name', 'width' => '45%'],
                 ['data' => 'media', 'name' => 'media', 'title' => 'Cover Image', 'width' => '10%'],
-                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '15%'],
-                ['data' => 'status', 'name' => 'status', 'title' => 'Status', 'width' => '10%'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%'],
+                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '10%'],
+                ['data' => 'is_global', 'name' => 'is_global', 'title' => 'Globally Available?', 'width' => '10%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '8%'],
             ])->parameters([
                 'order' => [[1, 'asc']],
             ]);
