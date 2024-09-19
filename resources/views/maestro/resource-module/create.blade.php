@@ -67,15 +67,15 @@
           <div class="col-md-3">
             <div class="form-group {{($errors->has('privacy')) ? 'has-error' : ''}}">
               {!! Form::label('privacy', 'Privacy', ['class' => 'control-label']) !!}
-              {!! Form::select('privacy', ['0' => 'Not available globally', '1' => 'Available globally'], old('privacy'), ['class' => 'form-control']) !!}
+              {!! Form::select('privacy', ['0' => 'Public', '1' => 'Private'], old('privacy'), ['class' => 'form-control']) !!}
               <span class="help-block">{{ $errors->first('privacy')}}</span>
             </div>
           </div>
           <div class="col-md-3">
-            <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
-              {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-              {!! Form::select('status', ['0' => 'Draft', '1' => 'Published', '2' => 'Archive'], old('status'), ['class' => 'form-control']) !!}
-              <span class="help-block">{{ $errors->first('status')}}</span>
+            <div class="form-group {{($errors->has('is_global')) ? 'has-error' : ''}}">
+              {!! Form::label('is_global', 'Globally Available?', ['class' => 'control-label']) !!}
+              {!! Form::select('is_global', ['1' => 'Yes', '0' => 'No'], old('is_global'), ['class' => 'form-control']) !!}
+              <span class="help-block">{{ $errors->first('is_global')}}</span>
             </div>
           </div>
           <div class="col-md-6">

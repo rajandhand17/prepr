@@ -75,7 +75,7 @@ class AchievementService
                         ];
 
                         if (config('app.isMixPanelEnable')) {
-                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
+                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user(), request()->ip());
                         }
                     }
                 }

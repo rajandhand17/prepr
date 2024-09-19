@@ -41,7 +41,8 @@ class ResourceModuleService
             $resourceModule->description = $request->description;
             $resourceModule->organization_id = $request->organization_id;
             $resourceModule->privacy = $request->privacy;
-            $resourceModule->status = $request->status;
+            $resourceModule->is_global = $request->is_global;
+            $resourceModule->status = '1';
             $resourceModule->media = $resourceCoverImage ? $resourceCoverImage : null;
 
             if ($resourceModule->save()) {
