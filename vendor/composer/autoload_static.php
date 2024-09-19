@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
+class ComposerStaticInit58cc189ef0a7b0a6c961804127478125
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -1579,6 +1579,7 @@ class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
         'App\\Http\\Requests\\Public\\Lab\\JoinLabRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Lab/JoinLabRequest.php',
         'App\\Http\\Requests\\Public\\Notification\\NotificationMarkAsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Notification/NotificationMarkAsRequest.php',
         'App\\Http\\Requests\\Public\\Notification\\NotificationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Notification/NotificationRequest.php',
+        'App\\Http\\Requests\\Public\\Organization\\OrganizationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/Organization/OrganizationRequest.php',
         'App\\Http\\Requests\\Public\\ResourceCollection\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceCollection/AddRatingRequest.php',
         'App\\Http\\Requests\\Public\\ResourceGroup\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceGroup/AddRatingRequest.php',
         'App\\Http\\Requests\\Public\\ResourceModule\\AddRatingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Public/ResourceModule/AddRatingRequest.php',
@@ -1596,6 +1597,7 @@ class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
         'App\\Http\\Resources\\Chat\\ConversationResource' => __DIR__ . '/../..' . '/app/Http/Resources/Chat/ConversationResource.php',
         'App\\Http\\Resources\\Chat\\MessageResource' => __DIR__ . '/../..' . '/app/Http/Resources/Chat/MessageResource.php',
         'App\\Http\\Resources\\ComponentShareResource' => __DIR__ . '/../..' . '/app/Http/Resources/ComponentShareResource.php',
+        'App\\Http\\Resources\\CustomAnnouncementResource' => __DIR__ . '/../..' . '/app/Http/Resources/CustomAnnouncementResource.php',
         'App\\Http\\Resources\\Dashboard\\ChallengeDashboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/ChallengeDashboardResource.php',
         'App\\Http\\Resources\\Dashboard\\ChallengePathDashboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/ChallengePathDashboardResource.php',
         'App\\Http\\Resources\\Dashboard\\DashboardLayoutResource' => __DIR__ . '/../..' . '/app/Http/Resources/Dashboard/DashboardLayoutResource.php',
@@ -1610,6 +1612,7 @@ class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
         'App\\Http\\Resources\\Discussion\\DiscussionResource' => __DIR__ . '/../..' . '/app/Http/Resources/Discussion/DiscussionResource.php',
         'App\\Http\\Resources\\Discussion\\UserResource' => __DIR__ . '/../..' . '/app/Http/Resources/Discussion/UserResource.php',
         'App\\Http\\Resources\\EmailTemplate\\EmailTemplateResource' => __DIR__ . '/../..' . '/app/Http/Resources/EmailTemplate/EmailTemplateResource.php',
+        'App\\Http\\Resources\\Explore\\ExploreResource' => __DIR__ . '/../..' . '/app/Http/Resources/Explore/ExploreResource.php',
         'App\\Http\\Resources\\Explore\\SkillResource' => __DIR__ . '/../..' . '/app/Http/Resources/Explore/SkillResource.php',
         'App\\Http\\Resources\\Leaderboard\\LeaderboardResource' => __DIR__ . '/../..' . '/app/Http/Resources/Leaderboard/LeaderboardResource.php',
         'App\\Http\\Resources\\Manage\\Airmeet\\AirmeetEventResource' => __DIR__ . '/../..' . '/app/Http/Resources/Manage/Airmeet/AirmeetEventResource.php',
@@ -17930,10 +17933,10 @@ class ComposerStaticInit85ee749f2a7789e8df751795ba56a39e
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit85ee749f2a7789e8df751795ba56a39e::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit58cc189ef0a7b0a6c961804127478125::$classMap;
 
         }, null, ClassLoader::class);
     }
