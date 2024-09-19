@@ -13,7 +13,7 @@ class ProjectStageService
     {
         try {
             if ($language == 'en') {
-                $project_stage_list = ProjectStage::select('id', 'title')->where('status','1');
+                $project_stage_list = ProjectStage::select('id', 'title')->where('status', '1');
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -22,7 +22,7 @@ class ProjectStageService
                 if (!$column_name || !Schema::hasColumn('project_stages', $column_name)) {
                     return false;
                 }
-                $project_stage_list = ProjectStage::select('id', $column_name.' as title')->where('status','1');
+                $project_stage_list = ProjectStage::select('id', $column_name.' as title')->where('status', '1');
             }
 
             //Search categories based on user input
