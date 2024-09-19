@@ -29,7 +29,7 @@ class UpdateLabDashboardLayoutRequest extends FormRequest
             'is_active'        => 'required|array',
             'is_active.*'      => 'required|in:yes,no',
             'position_index'   => 'nullable|array',
-            'position_index.*' => 'nullable|integer|min:0|max:10', // Allow nullable values for position_index
+            'position_index.*' => 'integer|min:0|max:10', // Allow nullable values for position_index
         ];
 
         return array_merge($base_rules, [
@@ -83,10 +83,6 @@ class UpdateLabDashboardLayoutRequest extends FormRequest
                                 return;
                             }
                             $positionIndices[] = $position_index[$i];
-                        } elseif ($is_active[$i] === 'no' && !is_null($position_index[$i])) {
-                            $fail('Position index must be null when is_active is "no".');
-
-                            return;
                         }
                     }
                 },
