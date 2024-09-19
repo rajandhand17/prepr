@@ -13,7 +13,7 @@ class ProjectVerticalService
     {
         try {
             if ($language == 'en') {
-                $project_verticals_list = ProjectVertical::select('id', 'title');
+                $project_verticals_list = ProjectVertical::select('id', 'title')->where('status', '1');
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -22,7 +22,7 @@ class ProjectVerticalService
                 if (!$column_name || !Schema::hasColumn('project_verticals', $column_name)) {
                     return false;
                 }
-                $project_verticals_list = ProjectVertical::select('id', $column_name.' as title');
+                $project_verticals_list = ProjectVertical::select('id', $column_name.' as title')->where('status', '1');
             }
 
             //Search categories based on user input
