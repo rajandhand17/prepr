@@ -275,7 +275,7 @@ class User extends Authenticatable
             ->first();
             if ($user->verified_user == 0) {
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, request()->ip());
                 }
                 $response = ['success' => false, 'message' => __('responses.verify_email')];
 
@@ -283,7 +283,7 @@ class User extends Authenticatable
             }
             if ($user->is_deactivated == 1) {
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'email_not_verified', $user, request()->ip());
                 }
                 $response = ['success' => false, 'message' => __('responses.deactivated_account')];
 
@@ -313,20 +313,20 @@ class User extends Authenticatable
                     ->first();
                     // Mixpanel Tracking Code: login attempt (successful)
                     if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.login_success'), 'successful', $data, $request->ip());
+                        MixpanelJob::dispatch(config('mixpanel.login_success'), 'successful', $data, request()->ip());
                     }
 
                     return ['success' => true, 'user' => $data, 'code' => 3, 'token' => $token, 'message' => __('responses.user_login_success')];
                 } else {
                     if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.login_fail'), 'wrong_credentials', null, $request->ip());
+                        MixpanelJob::dispatch(config('mixpanel.login_fail'), 'wrong_credentials', null, request()->ip());
                     }
 
                     return ['success' => false, 'message' => __('responses.invalid_credentials'), 'code' => 4];
                 }
             } else {
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'user_not_found', null, $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.login_fail'), 'user_not_found', null, request()->ip());
                 }
                 $response = ['success' => false, 'message' => __('responses.user_not_found'), 'code' => 5];
 
@@ -425,7 +425,7 @@ class User extends Authenticatable
                         $success = ['success' => true, 'user' => $userresponse];
                         if ($request->register_type == 'organization') {
                             if (config('app.isMixPanelEnable')) {
-                                MixpanelJob::dispatch(config('mixpanel.org_sign_up'), $request->only(['organization_name', 'user_type', 'status']), $user, $request->ip());
+                                MixpanelJob::dispatch(config('mixpanel.org_sign_up'), $request->only(['organization_name', 'user_type', 'status']), $user, request()->ip());
                             }
                         } else {
                             if (config('app.isMixPanelEnable')) {
