@@ -42,10 +42,10 @@ class TagController extends Controller
                              return implode(', ', array_map('ucfirst', explode(',', $tag->components)));
                          })
 
-                        ->editColumn('tag_image', static function (Tag $tag) {
-                            $onerror = 'onerror=this.onerror=null;this.src="'.asset('front/img/no-img.jpg').'";';
-
-                            return "<img src='".asset($tag->tag_image)."' width='100px' ".$onerror.'>';
+                         ->editColumn('tag_image', static function (Tag $tagImageData) {
+                            $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
+    
+                            return "<img src='".$tagImageData->tag_image."' width='50px' ".$onerror.'>';
                         })
                     ->editColumn('id', function (Tag $tag) {
                         if ($tag->id === 0 || $tag->id === '') {
