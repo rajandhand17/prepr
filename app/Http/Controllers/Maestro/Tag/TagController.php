@@ -42,11 +42,11 @@ class TagController extends Controller
                              return implode(', ', array_map('ucfirst', explode(',', $tag->components)));
                          })
 
-                        ->editColumn('tag_image', static function (Tag $tag) {
-                            $onerror = 'onerror=this.onerror=null;this.src="'.asset('front/img/no-img.jpg').'";';
+                         ->editColumn('tag_image', static function (Tag $tagImageData) {
+                             $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
 
-                            return "<img src='".asset($tag->tag_image)."' width='100px' ".$onerror.'>';
-                        })
+                             return "<img src='".$tagImageData->tag_image."' width='50px' ".$onerror.'>';
+                         })
                     ->editColumn('id', function (Tag $tag) {
                         if ($tag->id === 0 || $tag->id === '') {
                             return 'Admin';
@@ -146,7 +146,7 @@ class TagController extends Controller
             $data = Tag::find($id);
             $languages = LanguageService::getAllActiveLanguages();
             $tag_image = Tag::where('id', '=', $id)->value('tag_image');
-            $category = [];
+            $category = explode(',', $data->components);
 
             return view('maestro.tags.tag.edit', compact('data', 'languages', 'category', 'tag_image'));
         } catch (Exception $e) {

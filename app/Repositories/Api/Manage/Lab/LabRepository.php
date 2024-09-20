@@ -254,7 +254,7 @@ class LabRepository implements LabInterface
                         config('mixpanel.create_lab'),               // Event
                         $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
                         auth()->id(),                                // Pass the user ID instead of the user object
-                        $request->ip(),                              // IP address
+                        request()->ip(),                              // IP address
                         $groups_for_mixpanel                         // Ensure this is a serializable array
                     );
                 }
@@ -372,7 +372,7 @@ class LabRepository implements LabInterface
                         config('mixpanel.edit_lab'),               // Event
                         $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
                         auth()->user(),                                // Pass the user ID instead of the user object
-                        $request->ip(),                              // IP address
+                        request()->ip(),                              // IP address
                         $groups_for_mixpanel                         // Ensure this is a serializable array
                     );
                 }
@@ -410,7 +410,7 @@ class LabRepository implements LabInterface
             self::storeHistory($lab->id, $userId, $activity);
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), request()->ip());
             }
             DB::commit();
 
