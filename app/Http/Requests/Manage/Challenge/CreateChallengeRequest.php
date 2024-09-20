@@ -244,7 +244,7 @@ class CreateChallengeRequest extends FormRequest
 
         // For challenge restricted timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
-            $deadlineDate = !empty($this->input('registration_deadline_date')) ? 'after_or_equal:registration_deadline_date': 'after:start_date';
+            $deadlineDate = !empty($this->input('registration_deadline_date')) ? 'after_or_equal:registration_deadline_date' : 'after:start_date';
             $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['start_date_description'] = 'required_if:request_type,publish';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];

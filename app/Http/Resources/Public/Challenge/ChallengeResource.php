@@ -221,7 +221,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
-                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at; 
+                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at;
 
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
