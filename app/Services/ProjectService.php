@@ -605,7 +605,8 @@ class ProjectService
                 $projectData->is_submitted = '1';
                 $projectData->save();
             }
-            $storeSkills=self::verifySkills($projectData->id);
+            $storeSkills = self::verifySkills($projectData->id);
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -1069,11 +1070,13 @@ class ProjectService
         }
     }
 
-    public static function verifySkills($projectId){
-        try{
-            $getChallengeId=self::getProjectBasedOnId($projectId)->challenge_id;
-            $getSkillsBasedOnChallengeIds=ChallengeSkillsGroupsStackService::getSkillsBasedOnChallengeId($getChallengeId);
-            $storeSkills=UserSkillsService::storeVerifySkills($getSkillsBasedOnChallengeIds);
+    public static function verifySkills($projectId)
+    {
+        try {
+            $getChallengeId = self::getProjectBasedOnId($projectId)->challenge_id;
+            $getSkillsBasedOnChallengeIds = ChallengeSkillsGroupsStackService::getSkillsBasedOnChallengeId($getChallengeId);
+            $storeSkills = UserSkillsService::storeVerifySkills($getSkillsBasedOnChallengeIds);
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

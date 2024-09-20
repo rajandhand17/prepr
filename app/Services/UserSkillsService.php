@@ -223,31 +223,30 @@ class UserSkillsService
 
     public static function storeVerifySkills($skills): bool
     {
-    try {
-        if (empty($skills)) {
+        try {
+            if (empty($skills)) {
+                return false;
+            }
+
+            foreach ($skills as $skill) {
+                // Use firstOrNew to either fetch the existing skill or create a new instance
+                $userSkill = UserSkills::firstOrNew(
+                    ['user_id' => auth()->id(), 'skill' => $skill]
+                );
+
+                // Set verification status
+                $userSkill->is_verified = '1';
+
+                // Save the skill (either created or updated)
+                $userSkill->save();
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            // Log the exception and return false
+            UtilityHelper::logError($e);
+
             return false;
         }
-
-        foreach ($skills as $skill) {
-            // Use firstOrNew to either fetch the existing skill or create a new instance
-            $userSkill = UserSkills::firstOrNew(
-                ['user_id' => auth()->id(), 'skill' => $skill]
-            );
-            
-            // Set verification status
-            $userSkill->is_verified = '1';
-            
-            // Save the skill (either created or updated)
-            $userSkill->save();
-        }
-
-        return true;
-    } catch (\Exception $e) {
-        // Log the exception and return false
-        UtilityHelper::logError($e);
-
-        return false;
     }
-   }
-
 }

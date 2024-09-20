@@ -4,9 +4,7 @@ namespace App\Services;
 
 use App\Helpers\LanguageColumnHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Project;
 use App\Models\Skill;
-use App\Services\Manage\ChallengeService;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
