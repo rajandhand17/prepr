@@ -301,7 +301,7 @@ class ChallengeResource extends JsonResource
             }
         }
 
-        if (auth('api')->check() && $join_status === 'Yes'){
+        if (auth('api')->check() && $join_status === 'Yes') {
             $challenge_joined_date = $joined_status->updated_at;
         }
 
