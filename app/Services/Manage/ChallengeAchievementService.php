@@ -94,6 +94,7 @@ class ChallengeAchievementService
 
             if ($request->has('winner_achievement_participation') && $request->winner_achievement_participation[0] === 'no') {
                 ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '1'])->delete();
+
                 return true;
             }
 
