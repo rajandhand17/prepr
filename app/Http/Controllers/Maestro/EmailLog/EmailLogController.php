@@ -53,8 +53,8 @@ class EmailLogController extends Controller
                         return $template->subject;
                     })
                     ->editColumn('body', static function (EmailLog $template) {
-                        $bodyContent = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $template->body);
-                        $bodyContent = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $bodyContent);
+                        $bodyContent = preg_replace('#<style(.*?)>(.*?)</style>|/#is', '', $template->body);
+                        $bodyContent = preg_replace('#<script(.*?)>(.*?)</script>|/#is', '', $bodyContent);
 
                         return strip_tags(html_entity_decode($bodyContent));
                     })
