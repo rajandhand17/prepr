@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard\Lab;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
-use App\Http\Requests\Dashboard\UpdateManagerDashboardLayoutRequest;
+use App\Http\Requests\Dashboard\UpdateLabDashboardLayoutRequest;
 use App\Http\Resources\Chat\ConversationResource;
 use App\Http\Resources\Dashboard\DashboardLayoutResource;
 use App\Http\Resources\Dashboard\UpComingDeadlineResource;
@@ -44,19 +44,19 @@ class LabDashboardController extends AppBaseController
 
             switch ($request->type) {
                 case 'challenges':
-                    $fetchReport = $this->labDashboardRepository->fetchChallengeReportBasedOnOrganization($organization->id);
+                    $fetchReport = $this->labDashboardRepository->fetchChallengeReportBasedOnOrganization($organization->id, $userData);
                     $message = __('responses.retrieve_challenge_report');
                     break;
                 case 'labs':
-                    $fetchReport = $this->labDashboardRepository->fetchLabReportBasedOnOrganization($organization->id);
+                    $fetchReport = $this->labDashboardRepository->fetchLabReportBasedOnOrganization($organization->id, $userData);
                     $message = __('responses.retrieve_lab_report');
                     break;
                 case 'resources':
-                    $fetchReport = $this->labDashboardRepository->fetchResourceReportBasedOnOrganization($organization->id);
+                    $fetchReport = $this->labDashboardRepository->fetchResourceReportBasedOnOrganization($organization->id, $userData);
                     $message = __('responses.retrieve_resource_report');
                     break;
                 case 'projects':
-                    $fetchReport = $this->labDashboardRepository->fetchProjectReportBasedOnOrganization($organization);
+                    $fetchReport = $this->labDashboardRepository->fetchProjectReportBasedOnOrganization($organization, $userData);
                     $message = __('responses.retrieve_project_report');
                     break;
             }
@@ -107,8 +107,13 @@ class LabDashboardController extends AppBaseController
 
             $fetchChallengesBasedOnOrganizationId = $this->labDashboardRepository->fetchChallengesBasedOnOrganizationId($organization->id);
             $fetchManagersUpComingDeadlineChallenges = $this->labDashboardRepository->fetchManagersUpComingDeadlineChallenges($fetchChallengesBasedOnOrganizationId);
-            if (!empty($fetchManagersUpComingDeadlineChallenges)) {
-                return $this->sendResponse(UpComingDeadlineResource::collection($fetchManagersUpComingDeadlineChallenges), __('responses.manager_upcomming_deadline_retrieved'), 200);
+            if ($fetchManagersUpComingDeadlineChallenges != false) {
+                $response = [
+                    'joined_date'   => $userData->created_at,
+                    'list'          => UpComingDeadlineResource::collection($fetchManagersUpComingDeadlineChallenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.manager_upcomming_deadline_retrieved'));
             }
 
             return $this->sendError(__('responses.not_manager_upcomming_deadline_retrieved'), 404);
@@ -361,7 +366,7 @@ class LabDashboardController extends AppBaseController
         }
     }
 
-    public function updateManagerDashboardLayout(UpdateManagerDashboardLayoutRequest $request)
+    public function updateManagerDashboardLayout(UpdateLabDashboardLayoutRequest $request)
     {
         try {
             $userData = auth()->user();

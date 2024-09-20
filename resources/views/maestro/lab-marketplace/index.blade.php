@@ -22,18 +22,19 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-
         <div class="row">
-
-            <div class="col-11">
+            <div class="col-12">
                 <!-- /.card -->
-                <div class="card">
-                    <div class="row">
-                        <div class="col-md-11">
 
-                        </div>
-                        <div class="col-md-1">
-                            @include('maestro/common/language-switcher')
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"></h3>
+                        <div class="row">
+                            <div class="col-md-11">
+                            </div>
+                            <div class="col-md-1">
+                                @include('maestro/common/language-switcher')
+                            </div>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -58,62 +59,62 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @section('scripts')
 
-{!! $html->scripts() !!}
+    {!! $html->scripts() !!}
 
-<script>
-    @if(Session::has('success'))
-        toastr.success("{{ Session::get('success') }}");
-    @endif
-
-    @if(Session::has('error'))
-        toastr.error("{{ Session::get('error') }}");
-    @endif
-
-    function deleteLabMarketplace(url) {
-        var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: url,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': token
-                    },
-                    success: function (result) {
-                        Swal.fire(
-                            'Deleted!',
-                            result.message,
-                            'success'
-                        );
-                        setTimeout(
-                        function () {
-                            window.location.reload(true);
-                        }, 1500);
-                    },
-                    error: function (error) {
-                        Swal.fire(
-                            'Error!',
-                            'An error occurred while deleting the Lab Template from marketplace.',
-                            'error'
-                        );
-                    }
-                });
-            }else {
-                Swal.fire(
-                    'Canceled!',
-                    'You are safe , Record is not deleted!',
-                    'error'
-                );
-            }
-        });
-    }
-</script>
+    <script>
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+    
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+    
+        function deleteLabMarketplace(url) {
+            var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': token
+                        },
+                        success: function (result) {
+                            Swal.fire(
+                                'Deleted!',
+                                result.message,
+                                'success'
+                            );
+                            setTimeout(
+                            function () {
+                                window.location.reload(true);
+                            }, 1500);
+                        },
+                        error: function (error) {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred while deleting the Lab Template from marketplace.',
+                                'error'
+                            );
+                        }
+                    });
+                }else {
+                    Swal.fire(
+                        'Canceled!',
+                        'You are safe , Record is not deleted!',
+                        'error'
+                    );
+                }
+            });
+        }
+    </script>
 @endsection

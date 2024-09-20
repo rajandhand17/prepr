@@ -213,7 +213,9 @@ class ProjectRepository implements ProjectInterface
             if ($createProject['createProject'] && $createProject['createProjectMember']) {
                 $activity = auth()->user()->full_name.' '.__('responses.project_created_activity').' '.$createProject['createProject']->title;
                 self::storeHistory($createProject['createProject']->id, $userId, $activity);
-                // MixpanelJob::dispatch(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), $request->ip());
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.create_project'), $createProject['createProject'], auth()->user(), request()->ip());
+                }
                 $user = UserService::getUserById(auth()->user()->id);
                 $user->notify(new ProjectCreatedNotification(__('responses.noti_project_created'), __('responses.noti_project_created_message')));
 
@@ -447,7 +449,10 @@ class ProjectRepository implements ProjectInterface
                 }
 
                 $addAchievement = $this->achievementService->addAchievement($fetchAcceptedMemberIds, $fetchChallengeAchievement, $fetchChallenge, $projectData);
-                // MixpanelJob::dispatch(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
+
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.submit_project'), $projectData, auth()->user(), request()->ip());
+                }
                 $updateUserPoint = $this->userService->updateUserPoint($fetchAcceptedMemberIds, $fetchChallengeAchievement->achievement_points);
                 // SEND NOTIFICATIONS
                 LearningPointsHelper::sendBulkLearningPointNotification(

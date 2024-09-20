@@ -31,6 +31,24 @@ class ResourceModuleDetailService
         }
     }
 
+    public function updateRecords($existsResourceModule, $resource_module_id, $title, $type, $path, $social_link_id)
+    {
+        try {
+            $existsResourceModule->resource_module_id = $resource_module_id;
+            $existsResourceModule->title = $title;
+            $existsResourceModule->type = $type;
+            $existsResourceModule->path = $path;
+            $existsResourceModule->social_link_id = $social_link_id;
+            $existsResourceModule->save();
+
+            return $existsResourceModule;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function fileUpload($request, $resource_module_id)
     {
         try {
@@ -137,9 +155,12 @@ class ResourceModuleDetailService
 
                 if (!$checkExistsResourceModules) {
                     $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
-                    if (!$resourceModuleDetailed) {
-                        return false;
-                    }
+                } else {
+                    $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
+                }
+
+                if (!$resourceModuleDetailed) {
+                    return false;
                 }
             }
 
@@ -155,6 +176,15 @@ class ResourceModuleDetailService
     {
         try {
             return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$path, 'social_link_id'=>$social_link_id])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkDuplicateEmbeddedMedia($id, $resource_module_id)
+    {
+        try {
+            return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'id'=>$id])->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -176,7 +206,15 @@ class ResourceModuleDetailService
                     default:
                         $type = '';
                 }
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
+
+                $checkExistsResourceModules = self::checkDuplicateEmbeddedMedia($value['id'], $resource_module_id);
+
+                if (!$checkExistsResourceModules) {
+                    $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
+                } else {
+                    $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $title, $type, $value['path'], null);
+                }
+
                 if (!$resourceModuleDetailed) {
                     return false;
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Http\Resources\CustomAnnouncementResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
@@ -248,6 +249,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
+                    'schedule_custom_announcement' => $item->challengeScheduleCustomAnnouncement ? CustomAnnouncementResource::make($item->challengeScheduleCustomAnnouncement) : null,
                 ];
             });
         }
@@ -404,9 +406,9 @@ class ChallengeResource extends JsonResource
             'id'                                => $this->uuid,
             'language'                          => $this->language,
             'user'                              => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization_id'                   => $this->organization->uuid,
-            'organization'                      => $this->organization->title,
-            'organization_slug'                 => $this->organization->slug,
+            'organization_id'                   => $this->organization != null ? $this->organization->uuid : null,
+            'organization'                      => $this->organization != null ? $this->organization->title : null,
+            'organization_slug'                 => $this->organization != null ? $this->organization->slug : null,
             'category_id'                       => $category_id,
             'category'                          => $category,
             'hosted_by'                         => OrganizationHostResource::make($this->organization),

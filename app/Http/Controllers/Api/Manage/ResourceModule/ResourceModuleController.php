@@ -87,7 +87,9 @@ class ResourceModuleController extends AppBaseController
                 // For last visited activity tracking
                 $moduleType = config('constants.module_type.resource_modules');
                 LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
-                // MixpanelJob::dispatch(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
+                }
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
@@ -244,6 +246,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
+
             if ($request->has('links') && !empty($request->links)) {
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addLinks) {
