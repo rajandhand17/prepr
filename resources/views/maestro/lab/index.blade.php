@@ -54,6 +54,16 @@
 @section('scripts')
     {!! $html->scripts() !!}
 
+    <script>
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+    </script>
+
     <script type="text/javascript">
         /* Delete Organisation Function */
         function deleteLab(url) {
@@ -128,30 +138,21 @@
                             'X-CSRF-TOKEN': token
                         },
                         success: function (result) {
-                            if(result.status == 'success'){
-                                Swal.fire(
-                                    'Created!',
-                                    result.message,
-                                    'success'
-                                );
-                            } else if(result.status == 'fail'){
-                                Swal.fire(
-                                    'Error!',
-                                    result.message,
-                                    'fail'
-                                );
+                            console.log(result.status); // To log the status
+
+                            if (result.status == 'success') {
+                                toastr.success(result.message, 'Created!');
+                            } else if (result.status == 'fail') {
+                                toastr.error(result.message, 'Error!');
                             }
-                            setTimeout(
-                                function () {
-                                    window.location.reload(true);
-                                }, 1500);
+
+                            // Reload the page after 1.5 seconds
+                            setTimeout(function () {
+                                window.location.reload(true);
+                            }, 1500);
                         },
                         error: function (error) {
-                            Swal.fire(
-                                'Error!',
-                                'An error occurred while adding this Lab to Lab Marketplace.',
-                                'error'
-                            );
+                            toastr.error('An error occurred while adding this Lab to Lab Marketplace.', 'Error!');
                         }
                     });
                 }else {

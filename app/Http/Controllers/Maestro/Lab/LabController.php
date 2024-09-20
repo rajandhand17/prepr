@@ -84,12 +84,12 @@ class LabController extends Controller
                     ->toJson();
             }
             $html = $builder->columns([
-                ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title'],
-                ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false],
-                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title', 'width' => '20%'],
+                ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name', 'width' => '10%'],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false, 'width' => '8%'],
+                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '5%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
             ])->parameters(['order' => [0, 'desc']]);
             View::share('module_name', 'Lab');
 
