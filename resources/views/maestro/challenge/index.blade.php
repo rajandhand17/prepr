@@ -141,24 +141,17 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: url,//"/challenge-template/".slug."/clone",
+                        method:'POST',
+                        url: url,
                         type: 'create',
                         headers: {
                             'X-CSRF-TOKEN': token
                         },
                         success: function (result) {
                             if(result.status == 'success'){
-                                Swal.fire(
-                                    'Created!',
-                                    result.message,
-                                    'success'
-                                );
+                                toastr.success(result.message, 'Created!');
                             } else if(result.status == 'fail'){
-                                Swal.fire(
-                                    'Error!',
-                                    result.message,
-                                    'fail'
-                                );
+                                toastr.error(result.message, 'Error!');
                             }
                             setTimeout(
                                 function () {
@@ -176,7 +169,7 @@
                 }else {
                     Swal.fire(
                         'Canceled!',
-                        'Challenge is not cloned!',
+                        'Challenge is not added in challenge template!',
                         'error'
                     );
                 }
