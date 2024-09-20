@@ -347,7 +347,7 @@ class OrganizationReportService
             $arr = [
                 ['Organization Title', $organization->display_name],
                 ['Created on', $organization->created_at],
-                ['location', $organization?->address?->first()?->full_address ?? "-"],
+                ['location', $organization?->address?->first()?->full_address ?? '-'],
                 ['Members Joined', $organization->all_members_count],
                 [''],
                 ['Components Overview'],
