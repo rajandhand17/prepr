@@ -31,7 +31,7 @@ class UserCertificateService
             ];
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.add_certificate'), $profile_data, auth()->user(), request()->ip());
             }
 
             return $allCertificates;
