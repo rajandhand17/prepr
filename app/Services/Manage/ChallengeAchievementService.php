@@ -92,6 +92,11 @@ class ChallengeAchievementService
             $challengeAchievement->achievement_image = ($update_participation_achievement_image) ? $update_participation_achievement_image : $challengeAchievement->achievement_image;
             $challengeAchievement->save();
 
+            if ($request->has('winner_achievement_participation') && $request->winner_achievement_participation[0] === 'no') {
+                ChallengeAchievement::where(['challenge_id' => $challenge_id, 'achievement_type' => '1'])->delete();
+                return true;
+            }
+
             // Initialize arrays for the winner achievement data
             $winner_achievement_name = $request->input('winner_achievement_name', []);
             $winner_achievement_prize = $request->input('winner_achievement_prize', []);
