@@ -28,8 +28,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"></h3>
-                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('lab.create')}}" role="menuitem">Create Lab</a>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;" href="{{route('lab.create')}}" role="menuitem">Create Lab</a>
+                            </div>
+                            <div class="col-md-1">
+                                @include('maestro/common/language-switcher')
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered data-table">

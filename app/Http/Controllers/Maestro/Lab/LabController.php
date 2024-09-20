@@ -44,7 +44,7 @@ class LabController extends Controller
         try {
             if (request()->ajax()) {
                 $i = 1;
-                $labes = Lab::orderBy('id', 'desc');
+                $labes = Lab::where('language', LanguageService::getCurrentLanguage())->latest();
 
                 return DataTables::eloquent($labes)
                 ->addIndexColumn()
