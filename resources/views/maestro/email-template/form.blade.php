@@ -34,9 +34,9 @@
                 {{$lableName}}
             </label>
             @if((strpos(Request::url(),'edit')) !== false )
-            {!! Form::text( $inputName, null, array('class' => 'form-control required', 'id' =>  $inputName)) !!}
+            {!! Form::text( $inputName, null, array('class' => 'form-control required', 'id' =>  $inputName,'required' => 'required')) !!}
             @else
-                {!! Form::text( $inputName, null, array('class' => 'form-control required', 'id' =>  $inputName)) !!}
+                {!! Form::text( $inputName, null, array('class' => 'form-control required', 'id' =>  $inputName,'required' => 'required')) !!}
             @endif
         </div>
     </div>
@@ -49,7 +49,7 @@
             <label class="control-label mb-10">
               {{ $lableName2 }}
             </label>
-            {!! Form::textarea( $inputName2, null, array( 'id' =>  $inputName2 ,'style' => 'width:100%; height:500px','name' => $inputName2 )) !!}
+            {!! Form::textarea( $inputName2, null, array( 'id' =>  $inputName2 ,'style' => 'width:100%; height:500px','name' => $inputName2 ,'required' => 'required')) !!}
             <script type="text/javascript">
                 CKEDITOR.editorConfig = function (config) {
                     config.extraPlugins = 'filebrwoser,widget,clipboard,lineutils,widgetselection,html5video,video';
@@ -78,14 +78,14 @@
     <div class="col-md-6">
         <div class=" form-group {{($errors->has('template_type')) ? 'has-error' : ''}}">
             {!! Form::label('template_type', 'Template Type', ['class' => 'control-label ']) !!}
-            {!! Form::select('template_type', ['0'=>'Invitation'] , null , ['class' => 'form-control','placeholder' => 'Please select option']) !!}
+            {!! Form::select('template_type', ['0'=>'Invitation'] , null , ['class' => 'form-control','placeholder' => 'Please select option','required' => 'required']) !!}
             <span class="help-block">{{ $errors->first('template_type')}}</span>
         </div>
     </div>
     <div class="col-md-6">       
         <div class=" form-group {{($errors->has('module_type')) ? 'has-error' : ''}}">
             {!! Form::label('module_type', 'Component Type', ['class' => 'control-label ']) !!}
-            {!! Form::select('module_type', ['0' => 'Organization' , '1' => 'Lab', '2' => 'Lab Program', '3' => 'Challenge', '4' => 'Challenge Path' , '5' => 'Project'] , null , ['class' => 'form-control','placeholder' => 'Please select option']) !!}
+            {!! Form::select('module_type', ['0' => 'Organization' , '1' => 'Lab', '2' => 'Lab Program', '3' => 'Challenge', '4' => 'Challenge Path' , '5' => 'Project'] , null , ['class' => 'form-control','placeholder' => 'Please select option','required' => 'required']) !!}
             <span class="help-block">{{ $errors->first('module_type')}}</span>
         </div>
     </div>

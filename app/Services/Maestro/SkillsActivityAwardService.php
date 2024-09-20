@@ -6,9 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\SkillsActivityAward;
 use Exception;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Validator;
 
 class SkillsActivityAwardService
 {
@@ -17,20 +15,12 @@ class SkillsActivityAwardService
         try {
             $award = SkillsActivityAward::find($id);
             $input = $request->all();
-            $validation_array = [
-                'name'   => 'required|max:25',
-                'skill'  => 'required',
-                'image'  => 'mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
-            ];
+
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-            $validation = Validator::make($request->all(), $validation_array);
-            if ($validation->fails()) {
-                return false;
-            }
+
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
@@ -38,7 +28,7 @@ class SkillsActivityAwardService
                 }
             }
             if ($request->skill) {
-                $skills = json_encode($request->skill);
+                $skills = (int) $request->skill[0];
                 $insertArray['skill'] = $skills;
             }
             if ($image !== '') {
@@ -77,20 +67,12 @@ class SkillsActivityAwardService
     {
         try {
             $input = $request->all();
-            $validation_array = [
-                'name'   => 'required|max:25',
-                'skill'  => 'required',
-                'image'  => 'required|mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
-            ];
+
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-            $validation = Validator::make($request->all(), $validation_array);
-            if ($validation->fails()) {
-                return Redirect::back()->withErrors($validation)->withInput();
-            }
+
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {

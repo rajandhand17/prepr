@@ -28,8 +28,15 @@
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title"></h3>
-                        <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;"
-                            href="{{route('lab.create')}}" role="menuitem">Create Lab</a>
+                        <div class="row">
+                            <div class="col-md-11">
+                                <a class="btn btn-primary btn-rounded btn-small btn-icon left-icon" style="float: right;" href="{{route('lab.create')}}" role="menuitem">Create Lab</a>
+                            </div>
+                            <div class="col-md-1">
+                                @include('maestro/common/language-switcher')
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered data-table">
@@ -53,6 +60,16 @@
 
 @section('scripts')
     {!! $html->scripts() !!}
+
+    <script>
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+
+        @if(Session::has('error'))
+            toastr.error("{{ Session::get('error') }}");
+        @endif
+    </script>
 
     <script type="text/javascript">
         /* Delete Organisation Function */
@@ -113,7 +130,7 @@
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you want to add this Lab to Lab Marketplace.",
+                text: "Do you want to add this Lab to Lab Marketplace?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -128,30 +145,21 @@
                             'X-CSRF-TOKEN': token
                         },
                         success: function (result) {
-                            if(result.status == 'success'){
-                                Swal.fire(
-                                    'Created!',
-                                    result.message,
-                                    'success'
-                                );
-                            } else if(result.status == 'fail'){
-                                Swal.fire(
-                                    'Error!',
-                                    result.message,
-                                    'fail'
-                                );
+                            console.log(result.status); // To log the status
+
+                            if (result.status == 'success') {
+                                toastr.success(result.message, 'Created!');
+                            } else if (result.status == 'fail') {
+                                toastr.error(result.message, 'Error!');
                             }
-                            setTimeout(
-                                function () {
-                                    window.location.reload(true);
-                                }, 1500);
+
+                            // Reload the page after 1.5 seconds
+                            setTimeout(function () {
+                                window.location.reload(true);
+                            }, 1500);
                         },
                         error: function (error) {
-                            Swal.fire(
-                                'Error!',
-                                'An error occurred while adding this Lab to Lab Marketplace.',
-                                'error'
-                            );
+                            toastr.error('An error occurred while adding this Lab to Lab Marketplace.', 'Error!');
                         }
                     });
                 }else {
