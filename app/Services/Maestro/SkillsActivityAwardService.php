@@ -6,9 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\SkillsActivityAward;
 use Exception;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Validator;
 
 class SkillsActivityAwardService
 {
@@ -17,12 +15,12 @@ class SkillsActivityAwardService
         try {
             $award = SkillsActivityAward::find($id);
             $input = $request->all();
-          
+
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-           
+
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
@@ -69,12 +67,12 @@ class SkillsActivityAwardService
     {
         try {
             $input = $request->all();
-           
+
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-            
+
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
