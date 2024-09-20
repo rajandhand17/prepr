@@ -130,7 +130,7 @@
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
                 title: 'Are you sure?',
-                text: "Do you want to add this Lab to Lab Marketplace.",
+                text: "Do you want to add this Lab to Lab Marketplace?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

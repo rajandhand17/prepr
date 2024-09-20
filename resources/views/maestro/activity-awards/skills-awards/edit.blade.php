@@ -32,7 +32,7 @@
                     @include('maestro.activity-awards.skills-awards.form')
                     <div class="form-actions mt-10">
                         {!!Form::submit('Update',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('skillsaward.index') }}">
+                        <a class="btn btn-danger mr-1" href="{{ route('skills-award.index') }}">
                             <i class="icon-cross2"></i> Cancel
                         </a>
                     </div>
@@ -58,6 +58,7 @@
 function getSkills() {
     $('#Skills').select2({
         placeholder: "Select skill",
+        maximumSelectionLength : 1,
         ajax: {
             url: '{{route('getAjaxSkills')}}',
             cache: true,
