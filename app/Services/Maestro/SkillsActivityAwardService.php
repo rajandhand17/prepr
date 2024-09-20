@@ -38,7 +38,7 @@ class SkillsActivityAwardService
                 }
             }
             if ($request->skill) {
-                $skills = json_encode($request->skill);
+                $skills =  (int) $request->skill[0];
                 $insertArray['skill'] = $skills;
             }
             if ($image !== '') {

@@ -58,6 +58,7 @@
 function getSkills() {
     $('#Skills').select2({
         placeholder: "Select skill",
+        maximumSelectionLength : 1,
         ajax: {
             url: '{{route('getAjaxSkills')}}',
             cache: true,

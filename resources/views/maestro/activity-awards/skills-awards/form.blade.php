@@ -27,8 +27,8 @@
         @endphp
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('name')) ? 'has-error' : ''}}">
-        {!! Form::label($inputName, $lableName, ['class' => 'control-label ']) !!}
-        {!! Form::text($inputName, null, ['class' => 'form-control  ']) !!}
+        {!! Form::label($inputName, $lableName, ['class' => 'control-label ', 'required' => 'required']) !!}
+        {!! Form::text($inputName, null, ['class' => 'form-control']) !!}
         <span class="help-block">{{ $errors->first('$inputName')}}</span>
     </div>
     <div class="clearfix"></div>
@@ -44,18 +44,18 @@
 @endif
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('points')) ? 'has-error' : ''}}">
-        {!! Form::label('Point', 'Points', ['class' => 'control-label ']) !!}
+        {!! Form::label('Point', 'Points', ['class' => 'control-label ', 'required' => 'required']) !!}
         {!! Form::number('points', null, ['class' => 'form-control  ', 'id' => 'total_points', 'min'=> 0, 'style' => 'background-color: unset;']) !!}
-        <span class="help-block"></span>
+        <span class="help-block">{{ $errors->first('points')}}</span>
     </div>
     <div class="clearfix"></div>
 </div>
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('image')) ? 'has-error' : ''}}">
-        {!! Form::label('image', 'Image', ['class' => 'control-label ']) !!}
+        {!! Form::label('image', 'Image', ['class' => 'control-label ','required' => 'required']) !!}
         <div class="clearfix"></div>
         <div class="pull-left">
-            {!! Form::file('image',null, ['class' => 'form-control  ']) !!}
+            {!! Form::file('image',null, ['class' => 'form-control']) !!}
         </div>
         @if (isset($award->image) && $award->image != "")
             <div class="pull-right">
@@ -68,7 +68,7 @@
 </div>
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('skill')) ? 'has-error' : ''}}">
-        {!! Form::label('skills', 'Skill', ['class' => 'control-label ']) !!}
+        {!! Form::label('skills', 'Skill', ['class' => 'control-label ', 'required' => 'required']) !!}
         {!! Form::select('skill[]', $selectedSkills, array_keys($selectedSkills),  ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills']) !!}
         <span class="help-block skill_error">{{ $errors->first('skill')}}</span>
     </div>
