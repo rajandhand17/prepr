@@ -304,6 +304,10 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        if (auth('api')->check() && $join_status === 'Yes') {
+            $challenge_joined_date = $joined_status->updated_at;
+        }
+
         if (!empty($this->challenge_association)) {
             foreach ($this->challenge_association as $challenge_association) {
                 if ($challenge_association->lab_id) {

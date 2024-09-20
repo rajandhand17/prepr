@@ -222,8 +222,6 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
-                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at;
-
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
@@ -301,6 +299,10 @@ class ChallengeResource extends JsonResource
                     $join_status = 'No';
                     break;
             }
+        }
+
+        if (auth('api')->check() && $join_status === 'Yes'){
+            $challenge_joined_date = $joined_status->updated_at;
         }
 
         if (!empty($this->challenge_association)) {
