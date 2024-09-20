@@ -27,7 +27,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'email-templates.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'email-templates.store','files'=>'true','role'=>"form"))!!}
                         @include('maestro.email-template.form')
                         <div class="form-actions mt-10">
                             {!!Form::submit('save',array('class'=>'btn btn-primary mr-10'))!!}

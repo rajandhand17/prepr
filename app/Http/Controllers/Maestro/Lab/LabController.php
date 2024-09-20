@@ -44,13 +44,13 @@ class LabController extends Controller
         try {
             if (request()->ajax()) {
                 $i = 1;
-                $labes = Lab::orderBy('id', 'desc');
+                $labes = Lab::where('language', LanguageService::getCurrentLanguage())->latest();
 
                 return DataTables::eloquent($labes)
                 ->addIndexColumn()
                     ->addColumn('action', static function (Lab $lab) {
                         $html = '';
-                        $html .= '<a href="" class="mr-25 showUser" data-id="'.$lab->id.'"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';
+                        $html .= '<a style="padding-left:5px" class="mr-10" href="'.route('lab.show', ['lab' => $lab->id]).'"><i class="fas fa-eye"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="'.route('lab.edit', ['lab' => $lab->id]).'" class="mr-25" data-toggle="tooltip" data-original-title="Edit" data-id="'.$lab->id.'"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;';
                         $html .= '<a href="javascript:void(0)" onclick="deleteLab(\''.route('lab.destroy', ['lab' => $lab->id]).'\')"> <i class="fas fa-trash"></i></a>';
                         if ($lab->is_pre_built == '0') {
@@ -84,12 +84,12 @@ class LabController extends Controller
                     ->toJson();
             }
             $html = $builder->columns([
-                ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title'],
-                ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false],
-                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '10%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'id', 'name' => '', 'title' => 'Id', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Lab Title', 'width' => '20%'],
+                ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name', 'width' => '10%'],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'orderable' => false, 'searchable' => false, 'width' => '8%'],
+                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '5%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
             ])->parameters(['order' => [0, 'desc']]);
             View::share('module_name', 'Lab');
 
@@ -150,7 +150,9 @@ class LabController extends Controller
     public function show(string $id)
     {
         try {
-            return view('maestro.lab.view', compact('lab'));
+            $lab = Lab::find($id);
+
+            return view('maestro.lab.show', compact('lab'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

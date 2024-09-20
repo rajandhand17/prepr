@@ -33,7 +33,7 @@
                         <div class="form-actions mt-10">
                             {!!Form::submit('Save',array('class'=>'btn btn-primary mr-10'))!!}
 
-                            <a class="btn btn-danger mr-1" href="{{ route('skills.index') }}">
+                            <a class="btn btn-danger mr-1" href="{{ route('skillgroup.index') }}">
                                 <i class="icon-cross2"></i> Cancel
                             </a>
                         </div>
