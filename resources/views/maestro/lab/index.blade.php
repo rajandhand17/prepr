@@ -54,7 +54,7 @@
 @section('scripts')
     {!! $html->scripts() !!}
 
-    {{-- <script>
+    <script>
         @if(Session::has('success'))
             toastr.success("{{ Session::get('success') }}");
         @endif
@@ -62,7 +62,7 @@
         @if(Session::has('error'))
             toastr.error("{{ Session::get('error') }}");
         @endif
-    </script> --}}
+    </script>
 
     <script type="text/javascript">
         /* Delete Organisation Function */
