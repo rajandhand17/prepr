@@ -38,9 +38,7 @@ class LabMarketplaceService
             // Deleting lab marketplace
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
             if ($labMarketplace) {
-                // Triggered LabMarketplace related data deletion event
-                event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
-
+                Lab::where('slug',$slug)->update(['is_pre_built'=>'0']);
                 return true;
             }
 
