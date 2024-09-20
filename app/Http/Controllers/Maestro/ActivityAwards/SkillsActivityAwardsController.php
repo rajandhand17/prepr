@@ -101,6 +101,7 @@ class SkillsActivityAwardsController extends Controller
 
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return redirect()->route('skills-award.index')->with(['error' => 'Something went wrong.']);

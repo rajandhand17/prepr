@@ -17,20 +17,12 @@ class SkillsActivityAwardService
         try {
             $award = SkillsActivityAward::find($id);
             $input = $request->all();
-            $validation_array = [
-                'name'   => 'required|max:25',
-                'skill'  => 'required',
-                'image'  => 'mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
-            ];
+          
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-            $validation = Validator::make($request->all(), $validation_array);
-            if ($validation->fails()) {
-                return false;
-            }
+           
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
@@ -77,20 +69,12 @@ class SkillsActivityAwardService
     {
         try {
             $input = $request->all();
-            $validation_array = [
-                'name'   => 'required|max:25',
-                'skill'  => 'required',
-                'image'  => 'required|mimes:jpg,png,jpeg',
-                'points' => 'required|integer|min:0',
-            ];
+           
             $image = '';
             if ($request->image) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'skill_activity_award');
             }
-            $validation = Validator::make($request->all(), $validation_array);
-            if ($validation->fails()) {
-                return Redirect::back()->withErrors($validation)->withInput();
-            }
+            
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('skills_activity_awards', $key)) {
@@ -108,6 +92,7 @@ class SkillsActivityAwardService
                 return true;
             }
         } catch (Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return false;
