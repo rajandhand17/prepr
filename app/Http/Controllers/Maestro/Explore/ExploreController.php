@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Maestro\Explore;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
-use App\Models\Explore;
+use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\LabProgram;
 use App\Models\Project;
@@ -50,7 +51,7 @@ class ExploreController extends Controller
     public function index(Builder $builder)
     {
         try {
-            $data = Explore::get();
+            $data = FeaturedModule::get();
 
             return view('maestro.explore.index', compact('data'));
         } catch (Exception $e) {
@@ -67,7 +68,7 @@ class ExploreController extends Controller
     public function edit($id)
     {
         try {
-            $component = Explore::find($id);
+            $component = FeaturedModule::find($id);
             $roles = $this->getAllRoles();
             $selected_role = json_decode($component->role, true); // true will convert it to an associative array
 
@@ -144,10 +145,11 @@ class ExploreController extends Controller
     }
 
     public function searchComponents(Request $request)
-    {
+    { 
+    try {
         $query = $request->get('query', '');
         $filter = $request->get('filter', ''); // Get the filter from request
-        $exploreIds = Explore::pluck('comp_id')->toArray();
+        $exploreIds = FeaturedModule::pluck('module_id')->toArray();
 
         // Define a base query for each model
         $components = collect();
@@ -215,12 +217,21 @@ class ExploreController extends Controller
         $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
         return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function insertExploreData(Request $request)
     {
+        try {
         if ($this->insertExploreDatas($request)) {
             return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+        }
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
 }
