@@ -440,24 +440,30 @@ class ChallengeService
                                             $convertedDeadline = Carbon::parse($fetchCreatedProject->created_at)->addMonth($fetchChallenge->challenge_timelines->flexible_date_number)->toDateTimeString();
                                             break;
                                     }
-                                    $flexibleDeadline = [
-                                        'id'       => $fetchChallenge->uuid,
-                                        'title'    => $fetchChallenge->title,
-                                        'slug'     => $fetchChallenge->slug,
-                                        'deadline' => UtilityHelper::formatDateTime($convertedDeadline) ?? null,
-                                    ];
-                                    $flexibleDeadlineCollection->push($flexibleDeadline);
+                                    $deadlineDate = $convertedDeadline ?? null;
+                                    if ($deadlineDate != null && $deadlineDate >= now()) {
+                                        $flexibleDeadline = [
+                                            'id'       => $fetchChallenge->uuid,
+                                            'title'    => $fetchChallenge->title,
+                                            'slug'     => $fetchChallenge->slug,
+                                            'deadline' => $deadlineDate,
+                                        ];
+                                        $flexibleDeadlineCollection->push($flexibleDeadline);
+                                    }
                                 }
                             }
                         } elseif ($fetchChallenge->challenge_timelines->timeline_type == '1') {
                             // For restricted challenge
-                            $restrictedDeadline = [
-                                'id'       => $fetchChallenge->uuid,
-                                'title'    => $fetchChallenge->title,
-                                'slug'     => $fetchChallenge->slug,
-                                'deadline' => UtilityHelper::formatDateTime($fetchChallenge->challenge_timelines->submission_deadline_date) ?? null,
-                            ];
-                            $restrictedDeadlineCollection->push($restrictedDeadline);
+                            $deadlineDate = $fetchChallenge->challenge_timelines->submission_deadline_date ?? null;
+                            if ($deadlineDate != null && $deadlineDate >= now()) {
+                                $restrictedDeadline = [
+                                    'id'       => $fetchChallenge->uuid,
+                                    'title'    => $fetchChallenge->title,
+                                    'slug'     => $fetchChallenge->slug,
+                                    'deadline' => $deadlineDate,
+                                ];
+                                $restrictedDeadlineCollection->push($restrictedDeadline);
+                            }
                         }
                     }
                 }

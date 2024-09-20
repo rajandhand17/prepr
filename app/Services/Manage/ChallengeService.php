@@ -1075,13 +1075,14 @@ class ChallengeService
                 foreach ($challengeData as $challenge) {
                     if ($challenge->challenge_timelines) {
                         if ($challenge->challenge_timelines->timeline_type == '1') {
-                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                            $deadlineDate = $challenge->challenge_timelines->submission_deadline_date;
+                            if ($deadlineDate >= now()) {
                                 // For restricted challenge
                                 $restrictedDeadline = [
                                     'id'       => $challenge->uuid,
                                     'title'    => $challenge->title,
                                     'slug'     => $challenge->slug,
-                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                    'deadline' => $deadlineDate,
                                 ];
                                 $restrictedDeadlineCollection->push($restrictedDeadline);
                             }

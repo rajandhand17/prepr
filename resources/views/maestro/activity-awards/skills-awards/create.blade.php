@@ -27,7 +27,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'skills-award.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'skills-award.store','files'=>'true', 'role'=>"form",))!!}
                         @include('maestro.activity-awards.skills-awards.form')
                         <div class="form-actions mt-10">
                             {!!Form::submit('save',array('class'=>'btn btn-primary mr-10'))!!}
@@ -58,6 +58,7 @@
 function getSkills() {
     $('#Skills').select2({
         placeholder: "Select skill",
+        maximumSelectionLength : 1,
         ajax: {
             url: '{{route('getAjaxSkills')}}',
             cache: true,

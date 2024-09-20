@@ -28,7 +28,7 @@
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('name')) ? 'has-error' : ''}}">
         {!! Form::label($inputName, $lableName, ['class' => 'control-label ']) !!}
-        {!! Form::text($inputName, null, ['class' => 'form-control  ']) !!}
+        {!! Form::text($inputName, null, ['class' => 'form-control', 'required' => 'required']) !!}
         <span class="help-block">{{ $errors->first('$inputName')}}</span>
     </div>
     <div class="clearfix"></div>
@@ -45,8 +45,8 @@
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('points')) ? 'has-error' : ''}}">
         {!! Form::label('Point', 'Points', ['class' => 'control-label ']) !!}
-        {!! Form::number('points', null, ['class' => 'form-control  ', 'id' => 'total_points', 'min'=> 0, 'style' => 'background-color: unset;']) !!}
-        <span class="help-block"></span>
+        {!! Form::number('points', null, ['class' => 'form-control  ', 'id' => 'total_points', 'min'=> 0, 'style' => 'background-color: unset;' ,'required' => 'required']) !!}
+        <span class="help-block">{{ $errors->first('points')}}</span>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -55,7 +55,7 @@
         {!! Form::label('image', 'Image', ['class' => 'control-label ']) !!}
         <div class="clearfix"></div>
         <div class="pull-left">
-            {!! Form::file('image',null, ['class' => 'form-control  ']) !!}
+            {!! Form::file('image',null, ['class' => 'form-control','required' => 'required']) !!}
         </div>
         @if (isset($award->image) && $award->image != "")
             <div class="pull-right">
@@ -69,7 +69,7 @@
 <div class="col-sm-6">
     <div class="mt-5 form-group {{($errors->has('skill')) ? 'has-error' : ''}}">
         {!! Form::label('skills', 'Skill', ['class' => 'control-label ']) !!}
-        {!! Form::select('skill[]', $selectedSkills, array_keys($selectedSkills),  ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills']) !!}
+        {!! Form::select('skill[]', $selectedSkills, array_keys($selectedSkills),  ['class' => 'form-control select2', 'multiple'=> 'multiple','id' => 'Skills', 'required' => 'required']) !!}
         <span class="help-block skill_error">{{ $errors->first('skill')}}</span>
     </div>
 </div>
