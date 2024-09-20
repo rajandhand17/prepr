@@ -81,7 +81,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
                 $createLabProgram['resourceModuleSkillsGroupStackService'] &&
                 $createLabProgram['resourceModuleTypeModesService']
             ) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), $request->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.create_resource'), $request, auth()->user(), request()->ip());
                 DB::commit();
 
                 return $createLabProgram['createResourceModule'];
@@ -230,7 +230,7 @@ class ResourceModuleRepository implements ResourceModuleInterface
             if ($updateResourceModule['updateResourceModule'] &&
                 $updateResourceModule['resourceModuleSkillsGroupsStack'] &&
                 $updateResourceModule['resourceModuleTypeModesService']) {
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), $request->ip());
+                MixpanelHelper::mixpanel_tracking(config('mixpanel.edit_resource'), $request, auth()->user(), request()->ip());
                 DB::commit();
 
                 return $updateResourceModule['updateResourceModule'];
