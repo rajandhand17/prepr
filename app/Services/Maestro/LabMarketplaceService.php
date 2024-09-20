@@ -2,7 +2,6 @@
 
 namespace App\Services\Maestro;
 
-use App\Events\LabMarketplace\DeleteLabMarketplaceAssociatedData;
 use App\Helpers\UtilityHelper;
 use App\Models\Lab;
 use App\Models\LabMarketplace;
@@ -38,8 +37,7 @@ class LabMarketplaceService
             // Deleting lab marketplace
             $labMarketplace = LabMarketplace::where('slug', $slug)->delete();
             if ($labMarketplace) {
-                // Triggered LabMarketplace related data deletion event
-                event(new DeleteLabMarketplaceAssociatedData($labMarketplaceId));
+                Lab::where('slug', $slug)->update(['is_pre_built'=>'0']);
 
                 return true;
             }

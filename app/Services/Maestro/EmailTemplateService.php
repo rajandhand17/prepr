@@ -62,14 +62,6 @@ class EmailTemplateService
     {
         try {
             $input = $request->all();
-            $Validate = Validator::make($request->all(), [
-                'subject'      => 'required|max:255',
-                'body_content' => 'required',
-            ]);
-
-            if ($Validate->fails()) {
-                return redirect()->back()->withErrors($Validate)->withInput();
-            }
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('email_templates', $key)) {
