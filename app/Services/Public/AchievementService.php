@@ -129,6 +129,7 @@ class AchievementService
                         $achievement_list->orderBy('user_achievements.id', 'ASC');
                 }
             }
+
             return $achievement_list;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
@@ -192,6 +193,7 @@ class AchievementService
 
                 return config('site-settings.aws_url').$s3BackUrl;
             }
+
             return false;
         } catch(Exception $e) {
             dd($e);
