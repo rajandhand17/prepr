@@ -58,11 +58,11 @@ class TrackUserProgressHelper
         }
     }
 
-    private static function getScormCompletion($resourceModuleDataId) : int
+    private static function getScormCompletion($resourceModuleDataId): int
     {
         $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
 
-        if($scormModuleData?->id){
+        if ($scormModuleData?->id) {
             return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
         }
 
