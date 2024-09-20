@@ -30,7 +30,7 @@ class SkillsActivityAwardService
                 }
             }
             if ($request->skill) {
-                $skills =  (int) $request->skill[0];
+                $skills = (int) $request->skill[0];
                 $insertArray['skill'] = $skills;
             }
             if ($image !== '') {
