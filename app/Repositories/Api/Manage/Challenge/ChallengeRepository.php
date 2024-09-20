@@ -217,7 +217,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['campusConnectStory']
             ) {
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.create_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.create_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), request()->ip());
                 }
 
                 return $createChallenge['createChallenge'];
@@ -461,7 +461,7 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectStory']
             ) {
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.edit_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.edit_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), request()->ip());
                 }
 
                 return $updateChallenge['updateChallenge'];
@@ -501,7 +501,7 @@ class ChallengeRepository implements ChallengeInterface
             }
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), request()->ip());
             }
             DB::commit();
 

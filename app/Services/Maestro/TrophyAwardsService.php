@@ -96,7 +96,7 @@ class TrophyAwardsService
                         // Mixpanel tracking code: update trophy (only triggered if the userlist changes)
 
                         if (config('app.isMixPanelEnable')) {
-                            MixpanelJob::dispatch(config('mixpanel.update_sent_trophy'), $trophy_data, Auth::user(), $request->ip());
+                            MixpanelJob::dispatch(config('mixpanel.update_sent_trophy'), $trophy_data, Auth::user(), request()->ip());
                         }
                     }
                 }
@@ -199,7 +199,7 @@ class TrophyAwardsService
                         // Mixpanel tracking code: send trophy (via maestro)
 
                         if (config('app.isMixPanelEnable')) {
-                            MixpanelJob::dispatch(config('mixpanel.send_trophy'), $trophy_data, Auth::user(), $request->ip());
+                            MixpanelJob::dispatch(config('mixpanel.send_trophy'), $trophy_data, Auth::user(), request()->ip());
                         }
                     }
                 }

@@ -39,7 +39,7 @@ class UserEducationService
             ];
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), request()->ip());
             }
 
             return $allEducation;
