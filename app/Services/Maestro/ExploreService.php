@@ -100,28 +100,28 @@ class ExploreService
                 case 'Resource Group': // Resource Collection
                     $moduleType = '6';
                     break;
-                case 'Project': // project 
+                case 'Project': // project
                     $moduleType = '7';
                     break;
             }
             if ($componentRequest->media) {
-                $start =strpos($componentRequest->media, 'uploads');
+                $start = strpos($componentRequest->media, 'uploads');
                 if ($start !== false) {
                     $uploadsPath = substr($componentRequest->media, $start);
                 }
             } else {
                 $uploadsPath = null;
             }
-           
+
             FeaturedModule::create([
                 'module_type'    => $moduleType,
                 'module_id'      => $request->compId,
-                'role'         => '["user"]',
-                'title'        => $componentRequest->title,
-                'description'  => $description,
-                'button_text'=> 'View',
-                'media_type'   => $componentRequest->media_type,
-                'media'        => $uploadsPath,
+                'role'           => '["user"]',
+                'title'          => $componentRequest->title,
+                'description'    => $description,
+                'button_text'    => 'View',
+                'media_type'     => $componentRequest->media_type,
+                'media'          => $uploadsPath,
             ]);
 
             return true;

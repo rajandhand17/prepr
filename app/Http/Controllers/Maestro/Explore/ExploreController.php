@@ -145,80 +145,81 @@ class ExploreController extends Controller
     }
 
     public function searchComponents(Request $request)
-    { 
-    try {
-        $query = $request->get('query', '');
-        $filter = $request->get('filter', ''); // Get the filter from request
-        $exploreIds = FeaturedModule::pluck('module_id')->toArray();
+    {
+        try {
+            $query = $request->get('query', '');
+            $filter = $request->get('filter', ''); // Get the filter from request
+            $exploreIds = FeaturedModule::pluck('module_id')->toArray();
 
-        // Define a base query for each model
-        $components = collect();
-        $perPage = 10;
-        $currentPage = $request->get('page', 1);
+            // Define a base query for each model
+            $components = collect();
+            $perPage = 10;
+            $currentPage = $request->get('page', 1);
 
-        if ($filter == '' || $filter == 'Lab') {
-            $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Lab';
+            if ($filter == '' || $filter == 'Lab') {
+                $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Lab';
 
-                return $item;
-            });
-            $components = $components->merge($labs);
-        }
+                    return $item;
+                });
+                $components = $components->merge($labs);
+            }
 
-        if ($filter == '' || $filter == 'Challenge') {
-            $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Challenge';
+            if ($filter == '' || $filter == 'Challenge') {
+                $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Challenge';
 
-                return $item;
-            });
-            $components = $components->merge($challenges);
-        }
+                    return $item;
+                });
+                $components = $components->merge($challenges);
+            }
 
-        if ($filter == '' || $filter == 'Project') {
-            $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Project';
+            if ($filter == '' || $filter == 'Project') {
+                $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Project';
 
-                return $item;
-            });
-            $components = $components->merge($projects);
-        }
+                    return $item;
+                });
+                $components = $components->merge($projects);
+            }
 
-        if ($filter == '' || $filter == 'Resource Module') {
-            $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Resource Module';
+            if ($filter == '' || $filter == 'Resource Module') {
+                $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Resource Module';
 
-                return $item;
-            });
-            $components = $components->merge($resources);
-        }
+                    return $item;
+                });
+                $components = $components->merge($resources);
+            }
 
-        if ($filter == '' || $filter == 'Lab Program') {
-            $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Lab Program';
+            if ($filter == '' || $filter == 'Lab Program') {
+                $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Lab Program';
 
-                return $item;
-            });
-            $components = $components->merge($labPrograms);
-        }
+                    return $item;
+                });
+                $components = $components->merge($labPrograms);
+            }
 
-        if ($filter == '' || $filter == 'Challenge Path') {
-            $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                $item->type = 'Challenge Path';
+            if ($filter == '' || $filter == 'Challenge Path') {
+                $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Challenge Path';
 
-                return $item;
-            });
-            $components = $components->merge($challengePaths);
-        }
+                    return $item;
+                });
+                $components = $components->merge($challengePaths);
+            }
 
-        // Paginate the results
-        $total = $components->count();
-        $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
+            // Paginate the results
+            $total = $components->count();
+            $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
 
-        $html = view('maestro.explore.searchableItems', compact('components'))->render();
+            $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
-        return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
+            return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
@@ -226,11 +227,12 @@ class ExploreController extends Controller
     public function insertExploreData(Request $request)
     {
         try {
-        if ($this->insertExploreDatas($request)) {
-            return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
-        }
+            if ($this->insertExploreDatas($request)) {
+                return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+            }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
+
             return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
