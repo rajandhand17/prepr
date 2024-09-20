@@ -165,9 +165,14 @@ class ProfileResource extends JsonResource
             if ($this->userSkills) {
                 $associatedSkills = $this->userSkills->pluck('skill');
                 $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
+                $verifiedSkills = $this->userSkills->where('is_verified', '1')->pluck('skill');
+                
+                $verifySkills = SkillService::getSkillBasedOnIds($verifiedSkills)->pluck('title', 'id');
             } else {
                 $skills = null;
+                $verifySkills=null;
             }
+            
             if ($this->userTags) {
                 $associatedTag = $this->userTags->pluck('tag_id');
                 $userTag = TagService::getTagsBasedOnIds($associatedTag)->pluck('title', 'id');
@@ -258,6 +263,7 @@ class ProfileResource extends JsonResource
                 'user_patents'            => UserPatentResource::collection($this->userPatents),
                 'user_certificates'       => UserCertificateResource::collection($this->userCertificates),
                 'user_skills'             => $skills,
+                'user_verified_skills'     =>$verifySkills,
                 'user_pinned_skills'      => $pinnedSkills,
                 'user_personal_files'     => $personalfiles,
                 'friend_request_privacy'  => $this->userSetting !== null ? ($this->userSetting->friend_request_privacy == '1' ? 'yes' : 'no') : 'no',
