@@ -129,7 +129,6 @@ class AchievementService
                         $achievement_list->orderBy('user_achievements.id', 'ASC');
                 }
             }
-
             return $achievement_list;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
@@ -167,12 +166,17 @@ class AchievementService
                     'user_id'                   => $userData->uuid,
                     'strAchievementName'        => $userAchievement->title,
                 ];
+                $certificateDirectory = storage_path('app/certificate/');
+                if (!file_exists($certificateDirectory)) {
+                    mkdir($certificateDirectory, 0777, true); // Create the directory if it doesn't exist
+                }
                 $dompdf = new Dompdf();
                 $html = view('PDF.achievement_certificate', $data)->render();
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
                 $pdfPath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.pdf');
+
                 if ($format === 'image') {
                     file_put_contents($pdfPath, $dompdf->output());
                     $pdf = new Pdf($pdfPath);
@@ -188,9 +192,9 @@ class AchievementService
 
                 return config('site-settings.aws_url').$s3BackUrl;
             }
-
             return false;
         } catch(Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return false;
