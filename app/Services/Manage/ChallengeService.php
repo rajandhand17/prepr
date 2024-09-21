@@ -190,7 +190,7 @@ class ChallengeService
                         break;
 
                     case 'cloned_by_you':
-                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', '1');
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('cloned_from', '!=', null);
                         break;
                 }
             }
@@ -674,6 +674,8 @@ class ChallengeService
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->allow_winner_change = '0';
             $clonedChallenge->is_pre_built = '0';
+            $clonedChallenge->is_auto_created = '0';
+            $clonedChallenge->cloned_from = $originalChallenge->id;
             $clonedChallenge->save();
 
             return $clonedChallenge;
