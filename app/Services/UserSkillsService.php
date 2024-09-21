@@ -221,32 +221,42 @@ class UserSkillsService
         }
     }
 
-    public static function storeVerifySkills($skills): bool
+    public static function storeVerifySkills($skills,$userId)
     {
         try {
-            if (empty($skills)) {
-                return false;
+            if (!empty($skills)) {
+                $existingSkills = UserSkills::where('user_id', $userId)
+                    ->whereIn('skill', $skills)
+                    ->get()
+                    ->keyBy('skill'); 
+    
+                $newSkills = [];
+    
+                foreach ($skills as $skill) {
+                    if (isset($existingSkills[$skill])) {
+                        $existingSkills[$skill]->is_verified = '1';
+                        $existingSkills[$skill]->save();
+                    } else {
+                        $newSkills[] = [
+                            'user_id' => $userId,
+                            'skill' => $skill,
+                            'is_verified' => '1',
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    }
+                }
+                if (!empty($newSkills)) {
+                    UserSkills::insert($newSkills);
+                }
             }
-
-            foreach ($skills as $skill) {
-                // Use firstOrNew to either fetch the existing skill or create a new instance
-                $userSkill = UserSkills::firstOrNew(
-                    ['user_id' => auth()->id(), 'skill' => $skill]
-                );
-
-                // Set verification status
-                $userSkill->is_verified = '1';
-
-                // Save the skill (either created or updated)
-                $userSkill->save();
-            }
-
+    
             return true;
         } catch (\Exception $e) {
-            // Log the exception and return false
             UtilityHelper::logError($e);
 
             return false;
         }
     }
+    
 }

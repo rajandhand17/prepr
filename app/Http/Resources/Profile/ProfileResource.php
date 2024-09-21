@@ -162,15 +162,13 @@ class ProfileResource extends JsonResource
                 $disability = 'No';
                 $purpose = null;
             }
+            $skills = null;
+            $verifySkills = null;
             if ($this->userSkills) {
                 $associatedSkills = $this->userSkills->pluck('skill');
                 $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
                 $verifiedSkills = $this->userSkills->where('is_verified', '1')->pluck('skill');
-
                 $verifySkills = SkillService::getSkillBasedOnIds($verifiedSkills)->pluck('title', 'id');
-            } else {
-                $skills = null;
-                $verifySkills = null;
             }
 
             if ($this->userTags) {
