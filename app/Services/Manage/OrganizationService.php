@@ -381,6 +381,16 @@ class OrganizationService
                     ]
                 )->pluck('module_id');
             }
+        }elseif($request->owner == 'my'){
+            $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
+                [
+                    'module_type'   => '0',
+                    'email'         => auth()->user()->email,
+                    'role'          => $userRole,
+                    'invite_status' => '1',
+                    'type'          =>'0',
+                ]
+            )->pluck('module_id');
         }
 
         switch ($request->owner) {
@@ -389,9 +399,9 @@ class OrganizationService
                     $organization_list = $organization_list->whereIn('organizations.id', $invited_organization_ids);
                 }
                 break;
-            case 'my':
-                $organization_list = $organization_list->where('organizations.user_id', auth()->user()->id);
-                break;
+            // case 'my':
+            //     $organization_list = $organization_list->where('organizations.user_id', auth()->user()->id);
+            //     break;
             default:
                 $owner_organization_ids = Organization::where('organizations.user_id', auth()->user()->id)->pluck('id');
 
