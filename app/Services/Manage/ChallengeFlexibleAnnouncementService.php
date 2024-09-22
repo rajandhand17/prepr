@@ -11,27 +11,26 @@ class ChallengeFlexibleAnnouncementService
     public static function storeChallengeFlexibleAnnouncement($request, $challengeId, $challengeCustomTimelineId, $key)
     {
         try {
-            if ($request->has('schedule_custom_notify') && $request->schedule_custom_notify == 'yes') {
-                $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.email');
-                switch ($request->custom_announcement_type[$key]) {
-                    case 'email':
-                        $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.email');
-                        break;
-                    case 'notification':
-                        $sendAnnouncementChannelMedium = config('constants.challenge_flexible_announcement_by.notification');
-                        break;
-                }
+            if ($request->has('schedule_custom_notify') && $request->schedule_custom_notify[$key] === 'yes') {
+                // Configuration mappings
+                $announcementTypes = [
+                    'email' => config('constants.challenge_flexible_announcement_by.email'),
+                    'notification' => config('constants.challenge_flexible_announcement_by.notification'),
+                ];
 
-                $schedule_status = config('constants.challenge_flexible_announcement_by.immediately');
-                switch ($request->schedule_status) {
-                    case 'immediately':
-                        $schedule_status = config('constants.challenge_flexible_announcement_by.immediately');
-                        break;
-                    case 'custom':
-                        $schedule_status = config('constants.challenge_flexible_announcement_by.custom');
-                        break;
-                }
+                $scheduleStatuses = [
+                    'immediately' => config('constants.challenge_flexible_announcement_by.immediately'),
+                    'custom' => config('constants.challenge_flexible_announcement_by.custom'),
+                ];
 
+                // Announcement type and schedule status determination
+                $sendAnnouncementChannelMedium = $announcementTypes[$request->custom_announcement_type[$key]]
+                    ?? config('constants.challenge_flexible_announcement_by.email');
+
+                $schedule_status = $scheduleStatuses[$request->schedule_status[$key]]
+                    ?? config('constants.challenge_flexible_announcement_by.immediately');
+
+                // Create and save the announcement
                 $challengeFlexibleAnnouncement = new ChallengeFlexibleAnnouncement();
                 $challengeFlexibleAnnouncement->challenge_id = $challengeId;
                 $challengeFlexibleAnnouncement->challenge_custom_timeline_id = $challengeCustomTimelineId;
