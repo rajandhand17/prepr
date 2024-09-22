@@ -36,7 +36,7 @@ class UserSettingService
                 ['user_id' => $user->id],
                 [
                     'manage_alerts'                        => $request->communication ? config('constants.subscribe_unsubscribe.'.$request->communication) : config('constants.subscribe_unsubscribe.unsubscribe'),
-                    'email_subscription_network_summary'   => $request->network_summary ? config('constants.subscribe_unsubscribe.'.$request->network_summary) : config('constants.subscribe_unsubscribe.unsubscribe'),
+                    'email_subscription_network_summary'   => $request->network_summary ? config('constants.notification_options.'.$request->network_summary) : config('constants.subscribe_unsubscribe.unsubscribe'),
                     'email_subscription_challenge_summary' => $request->challenge_summary ? config('constants.notification_options.'.$request->challenge_summary) : config('constants.notification_options.unsubscribe'),
                     'email_subscription_lab_summary'       => $request->lab_summary ? config('constants.notification_options.'.$request->lab_summary) : config('constants.notification_options.unsubscribe'),
                     'challenge_recommends'                 => $request->challenge_recommendation ? config('constants.notification_options.'.$request->challenge_recommendation) : config('constants.notification_options.unsubscribe'),

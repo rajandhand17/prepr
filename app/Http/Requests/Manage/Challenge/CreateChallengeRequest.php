@@ -91,7 +91,7 @@ class CreateChallengeRequest extends FormRequest
             'agreement'                             => 'required_if:request_type,publish',
             'achievement_image'                     => 'nullable|mimes:jpeg,jpg,png,webp|max:5120',
             'achievement_name'                      => 'nullable',
-            'achievement_prize'                     => 'nullable|numeric',
+            'achievement_prize'                     => 'nullable|string',
             'achievement_points'                    => 'nullable|numeric',
             'winner_achievement_participation'      => 'required_if:request_type,publish|array',
             'winner_achievement_participation.*'    => 'in:yes,no',
@@ -100,7 +100,7 @@ class CreateChallengeRequest extends FormRequest
             'winner_achievement_name'               => 'nullable|array',
             'winner_achievement_name.*'             => 'string',
             'winner_achievement_prize'              => 'nullable|array',
-            'winner_achievement_prize.*'            => 'numeric',
+            'winner_achievement_prize.*'            => 'string',
             'winner_achievement_point'              => 'nullable|array',
             'winner_achievement_point.*'            => 'numeric',
             'max_project_submission'                => 'nullable|numeric',
@@ -244,11 +244,12 @@ class CreateChallengeRequest extends FormRequest
 
         // For challenge restricted timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
+            $deadlineDate = !empty($this->input('registration_deadline_date')) ? 'after_or_equal:registration_deadline_date' : 'after:start_date';
             $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
             $base_rules['start_date_description'] = 'required_if:request_type,publish';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
             $base_rules['registration_deadline_date_description'] = 'nullable';
-            $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', 'after_or_equal:registration_deadline_date'];
+            $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', $deadlineDate];
             $base_rules['submission_deadline_date_description'] = 'required_if:request_type,publish';
         }
 
@@ -265,13 +266,13 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['schedule_custom_notify'] = 'nullable|array';
             $base_rules['schedule_custom_notify.*'] = 'in:yes,no';
             $base_rules['custom_timelines_title'] = 'nullable|array';
-            $base_rules['custom_timelines_title.*'] = 'string';
+            $base_rules['custom_timelines_title.*'] = 'nullable';
             $base_rules['custom_timelines_number'] = 'nullable|array';
             $base_rules['custom_timelines_number.*'] = 'integer|max:100';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
             $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
-            $base_rules['custom_timelines_description.*'] = 'string';
+            $base_rules['custom_timelines_description.*'] = 'nullable';
         }
 
         // For challenge custom announcement only if flexible timeline and schedule custom notify is yes
@@ -285,7 +286,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_announcement_duration'] = 'nullable|array';
             $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
             $base_rules['custom_announcement_description'] = 'nullable|array';
-            $base_rules['custom_announcement_description.*'] = 'string';
+            $base_rules['custom_announcement_description.*'] = 'nullable';
         }
 
         /*** CAMPUS CONNECT JOB RULE */
