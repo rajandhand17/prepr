@@ -133,7 +133,6 @@ class AchievementService
             return $achievement_list;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
-
             return false;
         }
     }
