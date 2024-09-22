@@ -33,7 +33,7 @@ class AchievementResource extends JsonResource
         // Helper to set issuer data
         $issuerData = $this->getIssuerData($this->module_parent_id);
         if ($issuerData) {
-            $issuer_link = config('site-settings.frontend_site_url') . 'organization/' . $issuerData['slug'];
+            $issuer_link = config('site-settings.frontend_site_url').'organization/'.$issuerData['slug'];
             $issuer_username = $issuerData['username'];
             $issued_by = $issuerData['title'];
         }
@@ -77,12 +77,14 @@ class AchievementResource extends JsonResource
         $getIssuerData = OrganizationService::getOrganizationExistBasedOnId($module_parent_id);
         if ($getIssuerData) {
             $getUser = UserService::getUserById($getIssuerData->user_id);
+
             return [
                 'title'    => $getIssuerData->title,
                 'slug'     => $getIssuerData->slug,
                 'username' => UserService::joinName(optional($getUser)->first_name, optional($getUser)->last_name),
             ];
         }
+
         return null;
     }
 
@@ -157,10 +159,11 @@ class AchievementResource extends JsonResource
     {
         if ($data) {
             return [
-                'name' => $data->title ?? $this->module_title,
-                'associated_link' => config('site-settings.frontend_site_url') . "$type/" . ($data->slug ?? ''),
+                'name'            => $data->title ?? $this->module_title,
+                'associated_link' => config('site-settings.frontend_site_url')."$type/".($data->slug ?? ''),
             ];
         }
+
         return [];
     }
 }
