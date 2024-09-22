@@ -24,11 +24,9 @@ class ChallengeFlexibleAnnouncementService
                 ];
 
                 // Announcement type and schedule status determination
-                $sendAnnouncementChannelMedium = $announcementTypes[$request->custom_announcement_type[$key]]
-                    ?? config('constants.challenge_flexible_announcement_by.email');
+                $sendAnnouncementChannelMedium = $announcementTypes[$request->custom_announcement_type[$key]] ?? config('constants.challenge_flexible_announcement_by.email');
 
-                $schedule_status = $scheduleStatuses[$request->schedule_status[$key]]
-                    ?? config('constants.challenge_flexible_announcement_by.immediately');
+                $schedule_status = $scheduleStatuses[$request->schedule_status[$key]] ?? config('constants.challenge_flexible_announcement_by.immediately');
 
                 // Create and save the announcement
                 $challengeFlexibleAnnouncement = new ChallengeFlexibleAnnouncement();
