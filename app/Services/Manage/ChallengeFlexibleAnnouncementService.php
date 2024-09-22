@@ -14,13 +14,13 @@ class ChallengeFlexibleAnnouncementService
             if ($request->has('schedule_custom_notify') && $request->schedule_custom_notify[$key] === 'yes') {
                 // Configuration mappings
                 $announcementTypes = [
-                    'email' => config('constants.challenge_flexible_announcement_by.email'),
+                    'email'        => config('constants.challenge_flexible_announcement_by.email'),
                     'notification' => config('constants.challenge_flexible_announcement_by.notification'),
                 ];
 
                 $scheduleStatuses = [
                     'immediately' => config('constants.challenge_flexible_announcement_by.immediately'),
-                    'custom' => config('constants.challenge_flexible_announcement_by.custom'),
+                    'custom'      => config('constants.challenge_flexible_announcement_by.custom'),
                 ];
 
                 // Announcement type and schedule status determination
