@@ -73,7 +73,7 @@
             <label class="control-label mb-10">
                Button Text
             </label>
-            {!! Form::text( 'action_button', null, array('class' => 'form-control required', 'id' =>  'buttonText', 'maxlength' => '20', 'onkeyup' => 'validateLength(this, 20)')) !!}
+            {!! Form::text( 'button_text', null, array('class' => 'form-control required', 'id' =>  'buttonText', 'maxlength' => '20', 'onkeyup' => 'validateLength(this, 20)')) !!}
             <small id="buttonTextHelp" class="form-text text-muted text-red" style="display:none;">Max 20 characters</small>
         </div>
     </div>

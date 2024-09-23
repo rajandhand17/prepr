@@ -7,9 +7,9 @@
         <div class="d-flex row">
             <div class="col-xl-2 col-lg-5 col-md-5 col-12 col-xs-12 p-2">
                 <div class="my_lab_img cover_image">
-                @if($component->mediaType === 'image')
+                @if($component->media_type === 'image')
                     <img src="{{ $component->media }}" alt="" onerror="imageError(this)" style="width: 100%;">
-                @elseif($component->mediaType === 'embedded')
+                @elseif($component->media_type === 'embedded')
                     <div class="embed-responsive embed-responsive-21by9" style="height:122px !important;">
                         {!! str_replace(env('AWS_URL').'/', " ", $component->media) !!}
                     </div>
