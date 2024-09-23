@@ -53,10 +53,10 @@ class ExploreRepository implements ExploreInterface
         }
     }
 
-    public function getFeaturedLabs()
+    public function getFeaturedModule()
     {
         try {
-            $getFeaturedLabs = $this->featuredModuleService->getFeaturedLabs();
+            $getFeaturedLabs = $this->featuredModuleService->getFeaturedModule();
             if (!empty($getFeaturedLabs)) {
                 return $getFeaturedLabs;
             }
