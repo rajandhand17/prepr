@@ -23,7 +23,7 @@ return new class() extends Migration {
             $table->enum('is_subscribe', ['0', '1'])->comment('0 -> unsubscribed, 1 -> subscribed')->default('0');
             $table->enum('newsfeeds', ['0', '1', '2', '3'])->comment('0 -> friends&followers, 1 -> friends, 2 -> followers, 3 -> none')->default('0');
             $table->enum('email_subscription_notification', ['0', '1'])->comment('0 -> unsubscribed, 1 -> subscribed')->default('0');
-            $table->enum('email_subscription_network_summary', ['0', '1'])->comment('0 -> unsubscribed, 1 -> subscribed')->default('0');
+            $table->enum('email_subscription_network_summary', ['0', '1', '2'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');
             $table->enum('email_subscription_challenge_summary', ['0', '1', '2'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');
             $table->enum('email_subscription_lab_summary', ['0', '1', '2'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');
             $table->enum('display_lab_minionboarding', ['0', '1'])->comment('0 -> unsubscribed, 1 -> monthly, 2 -> weekly')->default('0');

@@ -123,14 +123,14 @@
                             <div class="col-md-6" id='lab_list_div' style="display:none;">
                                 <div class="form-group" >
                                     <label>Select Lab Template(s)</label>
-                                    <select name="lab_list[]" id="lab_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
+                                    <select name="lab_list[]" id="lab_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select Lab Template(s)" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6" id='challenge_list_div' style="display:none;">
                                 <div class="form-group" >
                                     <label>Select Challenge Template(s)</label>
-                                    <select name="challenge_list[]" id="challenge_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
+                                    <select name="challenge_list[]" id="challenge_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select Challenge Template(s)" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
@@ -140,14 +140,14 @@
                             <div class="col-md-6" id='lab_group_list_div' style="display:none;">
                                 <div class="form-group" >
                                     <label>Select Lab Program(s)</label>
-                                    <select name="lab_group_list[]" id="lab_group_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
+                                    <select name="lab_group_list[]" id="lab_group_list" class="select2 select_role_type" multiple="multiple" data-placeholder="Select Lab Program(s)" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6" id='challenge_group_list_div' style="display:none;">
                                 <div class="form-group" >
                                     <label>Select Challenge Path(s)</label>
-                                    <select name="challenge_group_list[]" id="challenge_group_list" class="select2" multiple="multiple" data-placeholder="Select a Lab Templates" style="width: 100%;" required>
+                                    <select name="challenge_group_list[]" id="challenge_group_list" class="select2" multiple="multiple" data-placeholder="Select Challenge Path(s)" style="width: 100%;" required>
                                     </select>
                                 </div>
                             </div>
@@ -192,6 +192,10 @@
     </div>
 </div>
 
+@stop
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@section('scripts')
 <script>
     @if(Session::has('success'))
         toastr.success("{{ Session::get('success') }}");
@@ -200,6 +204,8 @@
     @if(Session::has('error'))
         toastr.error("{{ Session::get('error') }}");
     @endif
+</script>
+<script>
     var challengecheckbox = document.getElementById('clone_challenge_chk');
 
     var checkbox = document.getElementById('clone_lab_chk');

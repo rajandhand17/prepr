@@ -14,14 +14,25 @@ class FeaturedModule extends Model
     protected $table = 'featured_module';
 
     protected $fillable = [
+        'title',
+        'description',
+        'button_text',
+        'role',
+        'media_type',
+        'media',
         'module_type',
         'module_id',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+    public function getMediaAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
+
     public function getLabs()
     {
-        return $this->belongsTo(Lab::class, 'module_id', 'id');
+        return $this->belongsTo(Lab::class, 'module_id', 'id')->where('module_type', '0');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Manage\Challenge;
 
+use App\Http\Resources\CustomAnnouncementResource;
 use App\Http\Resources\Manage\Lab\LabListNameResource;
 use App\Http\Resources\Manage\LabProgram\LabProgramListNameResource;
 use App\Http\Resources\Manage\Organization\OrganizationHostResource;
@@ -63,6 +64,7 @@ class ChallengeResource extends JsonResource
         $lab_programs = [];
         $resource_modules = [];
         $resource_collections = [];
+        $challenge_joined_date = null;
         $resource_groups = [];
 
         if ($this->getCategory) {
@@ -249,6 +251,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
+                    'schedule_custom_announcement' => $item->challengeScheduleCustomAnnouncement ? CustomAnnouncementResource::make($item->challengeScheduleCustomAnnouncement) : null,
                 ];
             });
         }
@@ -296,6 +299,10 @@ class ChallengeResource extends JsonResource
                     $join_status = 'No';
                     break;
             }
+        }
+
+        if (auth('api')->check() && $join_status === 'Yes') {
+            $challenge_joined_date = $joined_status->updated_at;
         }
 
         if (!empty($this->challenge_association)) {
@@ -388,7 +395,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->is_auto_created == '1') {
             $source = 'Onboarding Challenge';
-        } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
+        } elseif ($this->user_id == auth('api')->user()->id && !empty($this->cloned_from)) {
             $source = 'Cloned By You';
         } elseif ($this->user_id == auth('api')->user()->id) {
             $source = 'Created By You';
@@ -486,6 +493,7 @@ class ChallengeResource extends JsonResource
             'scorm_url'                         => $this->formatted_scorm_url,
             'source'                            => $source,
             'challenge_status'                  => $challenge_status,
+            'challenge_joined_date'             => $challenge_joined_date,
         ];
     }
 }

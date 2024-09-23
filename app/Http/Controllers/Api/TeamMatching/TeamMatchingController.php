@@ -90,7 +90,7 @@ class TeamMatchingController extends AppBaseController
             }
             $sendRequest = $this->teamMatchingRepository->sendRequest($checkSlugExistsOrNot->id);
             if ($sendRequest) {
-                return $this->sendResponse([], __('responses.send_request_successfully'));
+                return $this->sendResponse([], __('responses.join_successfully'));
             }
 
             return $this->sendError(__('responses.send_request_failed'), 403);

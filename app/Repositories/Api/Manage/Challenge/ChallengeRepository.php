@@ -25,6 +25,7 @@ use App\Services\Manage\ChallengeSponsorService;
 use App\Services\Manage\ChallengeTimelinesService;
 use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\Manage\ComponentAssociationService;
+use App\Services\Manage\MemberManagementService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use Exception;
@@ -55,8 +56,9 @@ class ChallengeRepository implements ChallengeInterface
     private $achievementService;
     private $challengeTypeModeService;
     private $projectService;
+    private $memberManagementService;
 
-    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService, ProjectService $projectService)
+    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService, ProjectService $projectService, MemberManagementService $memberManagementService)
     {
         $this->challengeService = $challengeService;
         $this->scormRepository = $scormRepository;
@@ -80,6 +82,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->achievementService = $achievementService;
         $this->challengeTypeModeService = $challengeTypeModeService;
         $this->projectService = $projectService;
+        $this->memberManagementService = $memberManagementService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -130,6 +133,9 @@ class ChallengeRepository implements ChallengeInterface
     {
         try {
             $createChallenge = DB::transaction(function () use ($request, $uploaded_cover_image, $uploaded_achievement_image, $uploaded_assessment_attachment, $organizationData) {
+                $userId = auth()->user()->id;
+                $userEmail = auth()->user()->email;
+                $userFullName = auth()->user()->full_name;
                 $updateChallengeDescription = true;
                 $createChallenge = $this->challengeService->createChallenge($request, $uploaded_cover_image, $organizationData->id);
                 if ($request->description_type == 'scorm') {
@@ -148,6 +154,7 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallengeCustomTimelines = $this->challengeCustomTimelinesService->createChallengeCustomTimelines($request, $createChallenge->id);
                 $createChallengeExternalLink = $this->challengeExternalLinkService->createChallengeExternalLink($request, $createChallenge->id);
                 $createChallengeComponentAssociation = $this->componentAssociationService->createChallengeComponentAssociation($request, $createChallenge->id);
+                $createChallengeMember = $this->memberManagementService->autoAssignedMemberFromAssociatedComponent(['type' => '1', 'invite_type' => '1', 'module_id' => $createChallenge->id, 'module_type' => '2', 'inviter_id' => $userId, 'role' => 'user', 'invite_status' => '1', 'email' => $userEmail, 'auto_invite' => '2', 'invitee_name' => $userFullName, 'email_status' => '3', 'email_resend_status' => '0', 'subject_line' => null, 'email_body' => null, 'is_associated_member' => 'no', 'associated_component' => null, 'associated_component_id' => null]);
 
                 $campusConnectOpportunity = true;
                 $campusConnectStory = true;
@@ -173,7 +180,7 @@ class ChallengeRepository implements ChallengeInterface
                     );
                 }
 
-                if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory) {
+                if (!$createChallenge || !$updateChallengeDescription || !$createChallengeAchievement || !$createChallengeTypeMode || !$createChallengeSponsor || !$createChallengeJobs || !$createChallengeSkillsGroupsStack || !$createChallengeRequirement || !$createChallengeAssessmentCriteria || !$createChallengeAssessment || !$createChallengeProjectTemplate || !$createChallengeTimelines || !$createChallengeCustomTimelines || !$createChallengeExternalLink || !$createChallengeComponentAssociation || !$campusConnectOpportunity || !$campusConnectStory || !$createChallengeMember) {
                     throw new Exception('Failed to create challenge');
                 }
 
@@ -195,6 +202,7 @@ class ChallengeRepository implements ChallengeInterface
                     'createChallengeComponentAssociation' => $createChallengeComponentAssociation,
                     'campusConnectOpportunity'            => $campusConnectOpportunity,
                     'campusConnectStory'                  => $campusConnectStory,
+                    'createChallengeMember'               => $createChallengeMember,
                 ];
             });
             if (
@@ -214,9 +222,12 @@ class ChallengeRepository implements ChallengeInterface
                 $createChallenge['createChallengeExternalLink'] &&
                 $createChallenge['createChallengeComponentAssociation'] &&
                 $createChallenge['campusConnectOpportunity'] &&
-                $createChallenge['campusConnectStory']
+                $createChallenge['campusConnectStory'] &&
+                $createChallenge['createChallengeMember']
             ) {
-                // MixpanelJob::dispatch(config('mixpanel.create_challenge'), $request, auth()->user(), $request->ip());
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.create_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), request()->ip());
+                }
 
                 return $createChallenge['createChallenge'];
             }
@@ -458,7 +469,9 @@ class ChallengeRepository implements ChallengeInterface
                 $updateChallenge['campusConnectOpportunity'] &&
                 $updateChallenge['campusConnectStory']
             ) {
-                // MixpanelJob::dispatch(config('mixpanel.edit_challenge'), $request, auth()->user(), $request->ip());
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.edit_challenge'), $request->only(['title', 'category', 'tags']), auth()->user(), request()->ip());
+                }
 
                 return $updateChallenge['updateChallenge'];
             }
@@ -495,7 +508,10 @@ class ChallengeRepository implements ChallengeInterface
 
                 return false;
             }
-            // MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), $request->ip());
+
+            if (config('app.isMixPanelEnable')) {
+                MixpanelJob::dispatch(config('mixpanel.delete_challenge'), $challenge_data, auth()->user(), request()->ip());
+            }
             DB::commit();
 
             return true;
