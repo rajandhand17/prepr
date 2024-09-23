@@ -71,7 +71,6 @@ class TeamMatchingController extends AppBaseController
 
             return $this->sendResponse($response, __('responses.team_matching_list_successfully'));
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
