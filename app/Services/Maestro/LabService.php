@@ -14,11 +14,11 @@ use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Services\Manage\OrganizationService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Services\Manage\OrganizationService;
 
 class LabService
 {
