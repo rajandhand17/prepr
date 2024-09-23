@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\Manage\LabProgram\LabProgramController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['language', 'auth:api'])->group(function () {
+Route::middleware(['language', 'auth:api', 'check-lab-org-level-access'])->group(function () {
     Route::get('/', [LabProgramController::class, 'index'])->middleware('permission:view_lab_programs');
     Route::get('/get-list', [LabProgramController::class, 'getList'])->middleware('permission:view_lab_programs');
     Route::get('{slug}', [LabProgramController::class, 'show'])->middleware('permission:view_lab_programs');

@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Api\Manage\Lab;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\Lab;
 use App\Services\DurationService;
 use App\Services\FeaturedLabService;
@@ -248,13 +248,16 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpanelHelper::mixpanel_tracking(
-                    config('mixpanel.create_lab'),
-                    $request,
-                    auth()->user(),
-                    $request->ip(),
-                    $groups_for_mixpanel
-                );
+
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(
+                        config('mixpanel.create_lab'),               // Event
+                        $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
+                        auth()->id(),                                // Pass the user ID instead of the user object
+                        request()->ip(),                              // IP address
+                        $groups_for_mixpanel                         // Ensure this is a serializable array
+                    );
+                }
 
                 return $createdLab['createdLab'];
             }
@@ -292,6 +295,8 @@ class LabRepository implements LabInterface
                 $labTypeModes = $this->labTypeModesService->labTypeModes($request, $updateLab->id);
                 if ($request->is_achievement_enabled == 'yes') {
                     $updatedLabAchievement = $this->labAcheivementService->updateLabAchievement($request, $updateLab->id, $upload_achievement_image);
+                } elseif ($request->is_achievement_enabled == 'no') {
+                    $this->labAcheivementService->deleteLabAchievement($updateLab->id);
                 }
                 $updatedLabAssociations = $this->componentAssociationService->updateLabAssociation($request, $updateLab->id);
                 /** LIVE EVENT */
@@ -361,13 +366,16 @@ class LabRepository implements LabInterface
                 if ($request->has('lab_programs') && !empty($request->lab_programs)) {
                     $groups_for_mixpanel = LabProgramService::getLabProgramTitleBasedOnUUIDArray($request->lab_programs);
                 }
-                MixpanelHelper::mixpanel_tracking(
-                    config('mixpanel.edit_lab'),
-                    $request,
-                    auth()->user(),
-                    $request->ip(),
-                    $groups_for_mixpanel
-                );
+
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(
+                        config('mixpanel.edit_lab'),               // Event
+                        $request->only(['title', 'tags', 'skills']), // Extract only necessary data from the request
+                        auth()->user(),                                // Pass the user ID instead of the user object
+                        request()->ip(),                              // IP address
+                        $groups_for_mixpanel                         // Ensure this is a serializable array
+                    );
+                }
 
                 return $updatedLab['updatedLab'];
             }
@@ -401,7 +409,9 @@ class LabRepository implements LabInterface
             $activity = auth()->user()->full_name.' '.__('responses.lab_deleted_activity').' '.$lab->title;
             self::storeHistory($lab->id, $userId, $activity);
 
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.delete_lab'), $lab, auth()->user(), $request->ip());
+            if (config('app.isMixPanelEnable')) {
+                MixpanelJob::dispatch(config('mixpanel.delete_lab'), $lab, auth()->user(), request()->ip());
+            }
             DB::commit();
 
             return true;
@@ -483,8 +493,6 @@ class LabRepository implements LabInterface
             self::storeHistory($createdLabUsingAI['createdLabUsingAI']->id, $userId, $activity);
 
             return $createdLabUsingAI['createdLabUsingAI'];
-
-            return false;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             Log::error('Error in createLabUsingAI in LabRepository.php: '.$e->getMessage());

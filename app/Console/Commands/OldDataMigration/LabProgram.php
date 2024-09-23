@@ -150,6 +150,9 @@ class LabProgram extends Command
                     $newLabProgram->is_achievement_enabled = '1';
                     $newLabProgram->is_sequential = '0';
                     $newLabProgram->is_accessible = $labProgram->is_accessable;
+                    $newLabProgram->created_at = $labProgram->created_at;
+                    $newLabProgram->updated_at = $labProgram->updated_at;
+                    $newLabProgram->deleted_at = $labProgram->deleted_at;
                     $newLabProgram->save();
 
                     //for mode and type

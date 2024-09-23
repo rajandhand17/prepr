@@ -88,7 +88,8 @@ class ProjectService
                         $project_list = $project_list->where('projects.privacy', '1');
                         break;
                     default:
-                        $project_list = $project_list;
+                        $project_list = [];
+                        break;
                 }
             }
             if ($request->has('sort_by_team') && !empty($request->sort_by_team)) {
@@ -152,14 +153,14 @@ class ProjectService
             }
 
             if ($request->has('status') && !empty($request->status)) {
-                $status_array = ['in_progress', 'submitted', 'challenge_closed', 'assessment_details_available'];
+                $status_array = ['in_progress', 'submitted', 'late_submitted', 'challenge_closed', 'assessment_details_available'];
                 if (in_array($request->status, $status_array)) {
                     $projectStatusIds = $project_list->get()->map(function ($projectData) use ($request) {
                         $projectIds = [];
                         switch ($request->status) {
                             case 'in_progress':
-                                $projectRequirementData = self::checkProjectRequirementCompleted($projectData);
-                                if ($projectRequirementData === false) {
+
+                                if ($projectData->is_submitted === '0') {
                                     $projectIds = $projectData->id;
                                 }
                                 break;
@@ -444,7 +445,6 @@ class ProjectService
                 $updateProject->media_type = $mediaType;
                 $updateProject->media = $uploadedCoverImage;
                 $updateProject->privacy = $projectPrivacy;
-                $updateProject->challenge_id = $updateProject->challenge_id;
                 $updateProject->lab_id = $labId;
                 $updateProject->save();
 
@@ -768,7 +768,7 @@ class ProjectService
                         $project_list = $project_list->where('projects.privacy', '1');
                         break;
                     default:
-                        $project_list = $project_list;
+                        break;
                 }
             }
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {

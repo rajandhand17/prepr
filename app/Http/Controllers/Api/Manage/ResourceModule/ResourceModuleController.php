@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Manage\ResourceModule;
 
 use App\Helpers\ChargebeeHelper;
-use App\Helpers\MixpanelHelper;
 use App\Helpers\TrackUserProgressHelper;
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
@@ -16,6 +15,7 @@ use App\Http\Requests\Manage\ResourceModule\FileUploadResourceModuleRequest;
 use App\Http\Requests\Manage\ResourceModule\UpdateResourceModuleRequest;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleListNameResource;
 use App\Http\Resources\Manage\ResourceModule\ResourceModuleResource;
+use App\Jobs\MixpanelJob;
 use App\Repositories\Api\Manage\ResourceModule\ResourceModuleRepository;
 use App\Services\LastVisitedActivityModuleService;
 use Exception;
@@ -87,7 +87,9 @@ class ResourceModuleController extends AppBaseController
                 // For last visited activity tracking
                 $moduleType = config('constants.module_type.resource_modules');
                 LastVisitedActivityModuleService::lastVisitedActivityModule($checkResourceModuleExistsOrNot->id, $userId, $moduleType);
-                MixpanelHelper::mixpanel_tracking(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
+                if (config('app.isMixPanelEnable')) {
+                    MixpanelJob::dispatch(config('mixpanel.view_resource'), $checkResourceModuleExistsOrNot, auth()->user(), request()->ip());
+                }
 
                 return $this->sendResponse(ResourceModuleResource::make($checkResourceModuleExistsOrNot), __('responses.found_resource_module_list'));
             }
@@ -244,6 +246,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
+
             if ($request->has('links') && !empty($request->links)) {
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addLinks) {
@@ -403,7 +406,6 @@ class ResourceModuleController extends AppBaseController
                 return $this->sendResponse($createResourceModuleUsingAIPreview, __('responses.resource_modules_previews_created_successfully'), 200);
             } else {
                 return $this->sendResponse([], '', 200);
-                Log::warning('Warning in CreateResourceModuleUsingAIPreview in ResourceModuleController.php: Resource modules\' previews could not be found or created!');
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);

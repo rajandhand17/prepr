@@ -5,6 +5,7 @@ namespace App\Services\Manage;
 use App\Events\ChallengePath\DeleteChallengePathAssociatedData;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\ChallengePath;
 use App\Services\AchievementService;
 use App\Services\ModuleCompletionStatusService;
@@ -80,9 +81,10 @@ class ChallengePathService
                         $getChallengePathList = $getChallengePathList->where('challenge_paths.privacy', '1');
                         break;
                     default:
-                        $getChallengePathList = $getChallengePathList;
+                        break;
                 }
             }
+
             if ($request->has('skills') && !empty($request->skills) && is_array($request->skills)) {
                 $getChallengePathList = $getChallengePathList->whereIn('challenge_paths.id', function ($query) use ($request) {
                     $query->select('challenge_path_skill_group_stacks.challenge_path_id')
@@ -93,11 +95,19 @@ class ChallengePathService
                         ->distinct();
                 })->distinct('challenge_paths.uuid');
             }
+
             if ($request->has('duration_id') && $request->duration_id && is_array($request->duration_id)) {
                 $getChallengePathList = $getChallengePathList->whereIn('duration_id', $request->duration_id);
             }
+
             if ($request->has('level_id') && $request->level_id && is_array($request->level_id)) {
                 $getChallengePathList = $getChallengePathList->whereIn('level_id', $request->level_id);
+            }
+
+            if ($request->has('type') && $request->type) {
+                $getChallengePathList = $getChallengePathList->whereHas('challenge_path_type', function ($query) use ($request) {
+                    $query->where('value', config('constants.resource_types.'.$request->type));
+                });
             }
 
             return $getChallengePathList;
@@ -475,6 +485,10 @@ class ChallengePathService
                                         $addChallengePathAchievement = AchievementService::addChallengePathAchievement($challengePathId, $getUserById->id);
                                         if ($addChallengePathAchievement) {
                                             $markChallengePathCompleted = ModuleCompletionStatusService::markChallengePathCompleted($challengePathId, $getUserById->id);
+
+                                            if (config('app.isMixPanelEnable')) {
+                                                MixpanelJob::dispatch(config('mixpanel.complete_challenge_path'), $markChallengePathCompleted, auth()->user(), request()->ip());
+                                            }
                                         }
                                     }
                                 }

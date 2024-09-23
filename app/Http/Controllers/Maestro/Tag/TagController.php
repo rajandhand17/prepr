@@ -42,11 +42,11 @@ class TagController extends Controller
                              return implode(', ', array_map('ucfirst', explode(',', $tag->components)));
                          })
 
-                        ->editColumn('tag_image', static function (Tag $tag) {
-                            $onerror = 'onerror=this.onerror=null;this.src="'.asset('front/img/no-img.jpg').'";';
+                         ->editColumn('tag_image', static function (Tag $tagImageData) {
+                             $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
 
-                            return "<img src='".asset($tag->tag_image)."' width='100px' ".$onerror.'>';
-                        })
+                             return "<img src='".$tagImageData->tag_image."' width='50px' ".$onerror.'>';
+                         })
                     ->editColumn('id', function (Tag $tag) {
                         if ($tag->id === 0 || $tag->id === '') {
                             return 'Admin';
@@ -54,19 +54,21 @@ class TagController extends Controller
                             return $tag->id ?? ' - ';
                         }
                     })
+                    ->rawColumns(['tag_image', 'category', 'action', 'DT_Row_Index'])
                     ->toJson();
             }
             $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
-                ['data' => 'id', 'name' => '', 'title' => 'id', 'orderable' => false, 'searchable' => false],
+                ['data' => 'id', 'name' => '', 'title' => 'id'],
             ];
-            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category']);
-            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image']);
             foreach ($languages as $single) {
                 $columName = UtilityHelper::getColumName($single->iso, 'title');
                 $singleLangCol = ['data' => $columName, 'name' => $columName, 'title' => $single->name.' Tag Title'];
                 array_push($tableColumns, $singleLangCol);
             }
+            array_push($tableColumns, ['data' => 'category', 'name' => 'category', 'title' => 'category', 'orderable' => false, 'searchable' => false]);
+            array_push($tableColumns, ['data' => 'tag_image', 'name' => 'tag_image', 'title' => 'Tag Image', 'width' => '10%', 'orderable' => false, 'searchable' => false]);
+
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false]);
             $html = $builder->columns($tableColumns);
             view()->share('module_name', 'Challenge');
@@ -144,7 +146,7 @@ class TagController extends Controller
             $data = Tag::find($id);
             $languages = LanguageService::getAllActiveLanguages();
             $tag_image = Tag::where('id', '=', $id)->value('tag_image');
-            $category = [];
+            $category = explode(',', $data->components);
 
             return view('maestro.tags.tag.edit', compact('data', 'languages', 'category', 'tag_image'));
         } catch (Exception $e) {

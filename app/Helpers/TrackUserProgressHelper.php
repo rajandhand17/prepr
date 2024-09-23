@@ -7,6 +7,7 @@ use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
 use App\Services\AchievementService;
+use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService;
@@ -28,14 +29,16 @@ class TrackUserProgressHelper
             // Fetch resource module assets count
             $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $resourceModuleData->id)->count();
             // Fetch resource module scorm asset count
-            $scromModuleData = Scorm::where(['model_id' => $resourceModuleData->id, 'model_type' => ResourceModule::class])->count();
+            $scormCompleted = self::getScormCompletion($resourceModuleData->id);
+
             // Fetch resource module go1 asset count
             $isGo1Resource = $resourceModuleData->go1_course_id ? true : false;
 
             // Fetch resource module overall asset count
-            $moduleAssetsCount = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
+            $moduleAssetsCount = ($fetchResourceModuleAssets + $scormCompleted) + ($isGo1Resource ? 1 : 0);
             // Fetch resource module visited overall asset count
-            $totalUserVisitedModuleAssetCount = ResourceModuleVisit::where(['module_id' => $resourceModuleData->id, 'user_id' => $userId])->count();
+
+            $totalUserVisitedModuleAssetCount = ResourceModuleVisit::where(['module_id' => $resourceModuleData->id, 'user_id' => $userId])->count() + $scormCompleted;
 
             // Fetch resource module progress
             $moduleProgress = 0;
@@ -53,6 +56,17 @@ class TrackUserProgressHelper
 
             return false;
         }
+    }
+
+    private static function getScormCompletion($resourceModuleDataId): int
+    {
+        $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
+
+        if ($scormModuleData?->id) {
+            return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+        }
+
+        return 0;
     }
 
     public static function trackResourceCollectionUserProgress($resourceCollectionData, $userId)
@@ -133,12 +147,12 @@ class TrackUserProgressHelper
                 // Fetch resource module assets count
                 $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $fetchResourceModule->id)->count();
                 // Fetch resource module scorm asset count
-                $scromModuleData = Scorm::where(['model_id' => $fetchResourceModule->id, 'model_type' => ResourceModule::class])->count();
+                $scormModuleData = self::getScormCompletion($fetchResourceModule->id);
                 // Fetch resource module go1 asset count
                 $isGo1Resource = $fetchResourceModule->go1_course_id ? true : false;
 
                 // Fetch resource module overall asset count
-                $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
+                $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scormModuleData) + ($isGo1Resource ? 1 : 0);
                 // Fetch resource module visited overall asset count
                 $totalResourceModuleAssetCountVisited[] = ResourceModuleVisit::where(['module_id' => $fetchResourceModule->id, 'user_id' => $userId])->count();
             }
@@ -301,7 +315,7 @@ class TrackUserProgressHelper
                     }
 
                     if ($lab->lab_resource_collection_association->count() > 0) {
-                        $resourceCollectionIds = collect();
+                        $resourceModuleIds = collect();
                         // Fetch resource collection ids
                         $collectionIds = $lab->lab_resource_collection_association->pluck('resource_collection_id');
                         $fetchResourceCollections = ResourceCollectionService::getResourceCollectionBasedOnArrayIds($collectionIds);
@@ -309,7 +323,7 @@ class TrackUserProgressHelper
                         // Fetch resource module id based on resource collection ids
                         foreach ($fetchResourceCollections as $resourceCollection) {
                             $resourceIds = $resourceCollection->resource_modules->pluck('resource_module_id');
-                            $resourceCollectionIds = $resourceCollectionIds->merge($resourceIds);
+                            $resourceModuleIds = $resourceModuleIds->merge($resourceIds);
                         }
 
                         // Fetch resource module assets counts with visited counts
@@ -427,18 +441,19 @@ class TrackUserProgressHelper
             foreach ($resourceIds->unique() as $resourceId) {
                 // Fetch resource module
                 $fetchResourceModule = ResourceModuleService::getResourceModuleBasedOnId($resourceId);
+                if ($fetchResourceModule) {
+                    // Fetch resource module assets count
+                    $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $fetchResourceModule->id)->count();
+                    // Fetch resource module scorm asset count
+                    $scormModuleData = self::getScormCompletion($fetchResourceModule->id);
+                    // Fetch resource module go1 asset count
+                    $isGo1Resource = $fetchResourceModule->go1_course_id ? true : false;
 
-                // Fetch resource module assets count
-                $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $fetchResourceModule->id)->count();
-                // Fetch resource module scorm asset count
-                $scromModuleData = Scorm::where(['model_id' => $fetchResourceModule->id, 'model_type' => ResourceModule::class])->count();
-                // Fetch resource module go1 asset count
-                $isGo1Resource = $fetchResourceModule->go1_course_id ? true : false;
-
-                // Fetch resource module overall asset count
-                $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
-                // Fetch resource module visited overall asset count
-                $totalResourceModuleAssetCountVisited[] = ResourceModuleVisit::where(['module_id' => $fetchResourceModule->id, 'user_id' => $userId])->count();
+                    // Fetch resource module overall asset count
+                    $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scormModuleData) + ($isGo1Resource ? 1 : 0);
+                    // Fetch resource module visited overall asset count
+                    $totalResourceModuleAssetCountVisited[] = ResourceModuleVisit::where(['module_id' => $fetchResourceModule->id, 'user_id' => $userId])->count();
+                }
             }
 
             $totalResourceModuleAsset = array_sum($totalResourceModuleAssetCount);

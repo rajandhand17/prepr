@@ -6,6 +6,7 @@ use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
+use App\Models\ScormScoTracking;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -23,6 +24,24 @@ class ResourceModuleDetailService
             $resourceModuleDetailed->save();
 
             return $resourceModuleDetailed;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function updateRecords($existsResourceModule, $resource_module_id, $title, $type, $path, $social_link_id)
+    {
+        try {
+            $existsResourceModule->resource_module_id = $resource_module_id;
+            $existsResourceModule->title = $title;
+            $existsResourceModule->type = $type;
+            $existsResourceModule->path = $path;
+            $existsResourceModule->social_link_id = $social_link_id;
+            $existsResourceModule->save();
+
+            return $existsResourceModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -136,9 +155,12 @@ class ResourceModuleDetailService
 
                 if (!$checkExistsResourceModules) {
                     $resourceModuleDetailed = self::insertRecords($resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
-                    if (!$resourceModuleDetailed) {
-                        return false;
-                    }
+                } else {
+                    $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $value['title'], $type, $value['path'], $value['social_link_id']);
+                }
+
+                if (!$resourceModuleDetailed) {
+                    return false;
                 }
             }
 
@@ -154,6 +176,15 @@ class ResourceModuleDetailService
     {
         try {
             return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'path'=>$path, 'social_link_id'=>$social_link_id])->first();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function checkDuplicateEmbeddedMedia($id, $resource_module_id)
+    {
+        try {
+            return ResourceModuleDetail::where(['resource_module_id'=>$resource_module_id, 'id'=>$id])->first();
         } catch (\Exception $e) {
             return false;
         }
@@ -175,7 +206,15 @@ class ResourceModuleDetailService
                     default:
                         $type = '';
                 }
-                $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
+
+                $checkExistsResourceModules = self::checkDuplicateEmbeddedMedia($value['id'], $resource_module_id);
+
+                if (!$checkExistsResourceModules) {
+                    $resourceModuleDetailed = self::insertRecords($resource_module_id, $title, $type, $value['path'], null);
+                } else {
+                    $resourceModuleDetailed = self::updateRecords($checkExistsResourceModules, $resource_module_id, $title, $type, $value['path'], null);
+                }
+
                 if (!$resourceModuleDetailed) {
                     return false;
                 }
@@ -242,6 +281,24 @@ class ResourceModuleDetailService
             ResourceModuleVisit::where(['module_id' => $resource_module_id, 'module_asset_id' => $assetId])->delete();
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkResourceScormCompletedOrNot($userId, $scoId)
+    {
+        try {
+            return ScormScoTracking::query()
+                ->where('user_id', $userId)
+                ->where('sco_id', $scoId)
+                ->where(function ($query) {
+                    return  $query->where('lesson_status', 'passed')
+                    ->orWhere('completion_status', 'completed');
+                })
+                ->exists();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -42,7 +42,7 @@ class SponsorsController extends Controller
                         if ($sponsors->status == 1) {
                             $html = "<span class='badge badge-success'>Active</span>";
                         } else {
-                            $html = "<span class='badge badge-danger'>InActive</span>";
+                            $html = "<span class='badge badge-danger'>DeActive</span>";
                         }
 
                         return $html;

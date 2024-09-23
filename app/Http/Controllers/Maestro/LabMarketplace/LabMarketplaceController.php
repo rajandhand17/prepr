@@ -63,11 +63,11 @@ class LabMarketplaceController extends Controller
 
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Title', 'width' => '5%'],
-                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '10%'],
-                ['data' => 'username', 'name' => 'username', 'title' => 'Username', 'width' => '10%'],
-                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'width' => '10%'],
-                ['data' => 'action', 'name' => 'action', 'title' => 'Action', 'width' => '10%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Title', 'width' => '20%'],
+                ['data' => 'privacy', 'name' => 'privacy', 'title' => 'Privacy', 'width' => '5%'],
+                ['data' => 'username', 'name' => 'username', 'title' => 'Username', 'width' => '5%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'category', 'name' => 'category', 'title' => 'Category', 'width' => '5%', 'orderable' => false, 'searchable' => false],
+                ['data' => 'action', 'name' => 'action', 'title' => 'Action', 'width' => '2%'],
             ])->parameters(['order' => [0, 'desc']]);
 
             return view('maestro.lab-marketplace.index', compact('html'));
@@ -88,7 +88,7 @@ class LabMarketplaceController extends Controller
             }
             // Deleting lab marketplace based on id
             if ($this->deleteLabMarketplaceById($id)) {
-                return response()->json(['status' => 'success', 'message' => 'Lab Marketplace deleted successfully']);
+                return response()->json(['status' => 'success', 'message' => 'Lab Template deleted successfully from Lab Marketplace ']);
             }
 
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
@@ -104,26 +104,29 @@ class LabMarketplaceController extends Controller
         try {
             $checkLabExistsOrNot = $this->getLabBasedOnSlug($slug);
             if (!$checkLabExistsOrNot) {
-                return response()->json(['success' =>'false', 'message'=>'This lab does not exists in the database.']);
+                return response()->json(['status' =>'fail', 'message'=>'This lab does not exist in the database.']);
             }
+
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
             if (!$organization) {
-                return response()->json(['success' =>'false', 'message'=>'This organization does not exists in the database.']);
+                return response()->json(['status' =>'fail', 'message'=>'This organization does not exist in the database.']);
             }
 
             if ($checkLabExistsOrNot->is_accessible == '0') {
-                return response()->json(['success' =>'false', 'message'=>'Sorry, this Lab is not accessible with your existing plan.']);
-            }
-            if ($checkLabExistsOrNot->is_pre_built == '1') {
-                return response()->json(['success' =>'false', 'message'=>'This Lab already cloned in Lab Marketplace']);
-            }
-            $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
-            if ($labMarketplace) {
-                return response()->json(['success' =>'true', 'message'=>'This Lab has cloned in Lab Marketplace successfully']);
+                return response()->json(['status' =>'fail', 'message'=>'Sorry, this Lab is not accessible with your existing plan.']);
             }
 
-            return response()->json(['success' =>'false', 'message'=>'This Lab has failed to clone']);
+            if ($checkLabExistsOrNot->is_pre_built == '1') {
+                return response()->json(['status' =>'fail', 'message'=>'This Lab is already added in Lab Marketplace.']);
+            }
+
+            $labMarketplace = $this->addLabToMarketplace($slug, $checkLabExistsOrNot->id);
+            if ($labMarketplace) {
+                return response()->json(['status' =>'success', 'message'=>'This Lab has been successfully added in Lab Marketplace.']);
+            }
+
+            return response()->json(['status' =>'fail', 'message'=>'This Lab failed to adding in lab marketplace.']);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

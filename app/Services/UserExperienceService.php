@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Helpers\MixpanelHelper;
 use App\Helpers\UtilityHelper;
+use App\Jobs\MixpanelJob;
 use App\Models\UserExperience;
 use App\Models\UserPersonalFile;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +34,9 @@ class UserExperienceService
                 'type' => 'experience',
                 'info' => $input,
             ];
-            MixpanelHelper::mixpanel_tracking(config('mixpanel.update_profile'), $profile_data, auth()->user(), $request->ip());
+            if (config('app.isMixPanelEnable')) {
+                MixpanelJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), request()->ip());
+            }
 
             return $insertRecords;
         } catch (\Exception $e) {

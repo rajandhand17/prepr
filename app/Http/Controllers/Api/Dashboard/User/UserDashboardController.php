@@ -59,7 +59,7 @@ class UserDashboardController extends AppBaseController
                     $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.member_management_invite_status.invited');
+                    $inviteStatus = config('constants.member_management_invite_status.pending');
                     $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -105,7 +105,7 @@ class UserDashboardController extends AppBaseController
                     $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.member_management_invite_status.invited');
+                    $inviteStatus = config('constants.member_management_invite_status.pending');
                     $labIds = $this->userDashboardRepository->labRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -151,7 +151,7 @@ class UserDashboardController extends AppBaseController
                     $projectIds = $this->userDashboardRepository->myProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'invites':
-                    $inviteStatus = config('constants.project_member_management_invite_status.invited');
+                    $inviteStatus = config('constants.project_member_management_invite_status.pending');
                     $projectIds = $this->userDashboardRepository->invitesProjectDashboardRequestIds($userData, $inviteStatus);
                     break;
                 case 'favourite':
@@ -326,8 +326,13 @@ class UserDashboardController extends AppBaseController
             $challengeIds = $this->userDashboardRepository->challengeRequestIds($userData, $inviteStatus);
 
             $fetchUpComingDeadlineChallenges = $this->userDashboardRepository->fetchUpComingDeadlineChallenges($challengeIds, $userData);
-            if (!empty($fetchUpComingDeadlineChallenges)) {
-                return $this->sendResponse(UpComingDeadlineResource::collection($fetchUpComingDeadlineChallenges), __('responses.user_upcomming_deadline_retrieved'), 200);
+            if ($fetchUpComingDeadlineChallenges != false) {
+                $response = [
+                    'joined_date'   => $userData->created_at,
+                    'list'          => UpComingDeadlineResource::collection($fetchUpComingDeadlineChallenges),
+                ];
+
+                return $this->sendResponse($response, __('responses.user_upcomming_deadline_retrieved'));
             }
 
             return $this->sendError(__('responses.not_user_upcomming_deadline_retrieved'), 404);
@@ -382,49 +387,49 @@ class UserDashboardController extends AppBaseController
                 switch ($fetchLastVisited->module_type) {
                     case '0':
                         $fetchComponentData = LabService::getLabBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->lab_completion_status && $fetchComponentData->lab_completion_status->percentage < '100') {
                             return $this->sendResponse(LabDashboardResource::make($fetchComponentData), __('responses.last_visited_lab'), 200);
                         }
                         break;
                     case '1':
                         $fetchComponentData = LabProgramService::getLabProgramBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->lab_program_completion_status && $fetchComponentData->lab_program_completion_status->percentage < '100') {
                             return $this->sendResponse(LabProgramDashboardResource::make($fetchComponentData), __('responses.last_visited_lab_program'), 200);
                         }
                         break;
                     case '2':
                         $fetchComponentData = ChallengeService::getChallengeBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->challenge_completion_status && $fetchComponentData->challenge_completion_status->percentage < '100') {
                             return $this->sendResponse(ChallengeDashboardResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
                         }
                         break;
                     case '3':
                         $fetchComponentData = ChallengePathService::getChallengePathBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->challenge_path_completion_status && $fetchComponentData->challenge_path_completion_status->percentage < '100') {
                             return $this->sendResponse(ChallengePathDashboardResource::make($fetchComponentData), __('responses.last_visited_challenge'), 200);
                         }
                         break;
                     case '4':
                         $fetchComponentData = ResourceModuleService::getResourceModuleBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->resource_module_completion_status && $fetchComponentData->resource_module_completion_status->percentage < '100') {
                             return $this->sendResponse(ResourceModuleDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_module'), 200);
                         }
                         break;
                     case '5':
                         $fetchComponentData = ResourceCollectionService::getResourceCollectionBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->resource_collection_completion_status && $fetchComponentData->resource_collection_completion_status->percentage < '100') {
                             return $this->sendResponse(ResourceCollectionDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_collection'), 200);
                         }
                         break;
                     case '6':
                         $fetchComponentData = ResourceGroupService::getResourceGroupBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->resource_group_completion_status && $fetchComponentData->resource_group_completion_status->percentage < '100') {
                             return $this->sendResponse(ResourceGroupDashboardResource::make($fetchComponentData), __('responses.last_visited_resource_group'), 200);
                         }
                         break;
                     case '7':
                         $fetchComponentData = ProjectService::getProjectBasedOnId($fetchLastVisited->module_id);
-                        if ($fetchComponentData) {
+                        if ($fetchComponentData && $fetchComponentData->is_submitted == '0') {
                             return $this->sendResponse(ProjectDashboardResource::make($fetchComponentData), __('responses.last_visited_project'), 200);
                         }
                         break;

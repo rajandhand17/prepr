@@ -14,6 +14,7 @@ use App\Models\LabTypeModes;
 use App\Models\Organization;
 use App\Models\SocialLink;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
@@ -192,6 +193,10 @@ class Lab extends Command
                         }
                     }
 
+                    $createdAt = $lab->created_at != null ? Carbon::createFromTimestamp($lab->created_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $updatedAt = $lab->updated_at != null ? Carbon::createFromTimestamp($lab->updated_at)->translatedFormat('Y-m-d H:i:s') : null;
+                    $deletedAt = $lab->deleted_at != null ? Carbon::createFromTimestamp($lab->deleted_at)->translatedFormat('Y-m-d H:i:s') : null;
+
                     $newLab->id = $lab->id;
                     $newLab->type = '4';
                     $newLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
@@ -215,6 +220,9 @@ class Lab extends Command
                     $newLab->is_achievement_enabled = $enable_achievement;
                     $newLab->is_notification_enabled = '0';
                     $newLab->is_verified = $lab_verfied;
+                    $newLab->created_at = $createdAt;
+                    $newLab->updated_at = $updatedAt;
+                    $newLab->deleted_at = $deletedAt;
                     $newLab->save();
 
                     // For Lab Address

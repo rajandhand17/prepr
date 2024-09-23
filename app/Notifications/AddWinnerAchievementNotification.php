@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Jobs\MixpanelJob;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -15,13 +16,11 @@ class AddWinnerAchievementNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    private $title;
-    private $body;
+    private $emailData;
 
-    public function __construct($title, $body)
+    public function __construct($emailData)
     {
-        $this->title = $title;
-        $this->body = $body;
+        $this->emailData = $emailData;
     }
 
     /**
@@ -40,9 +39,8 @@ class AddWinnerAchievementNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage())
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject($this->emailData['subject'])
+            ->view('email.challenge_winner', ['emailData' => $this->emailData]);
     }
 
     /**
@@ -59,14 +57,24 @@ class AddWinnerAchievementNotification extends Notification
 
     public function toFcm($notifiable)
     {
+        $notification_data = [
+            'title' => $this->emailData['subject'],
+            'body'  => $this->emailData['body'],
+            'url'   => '',
+        ];
+
+        if (config('app.isMixPanelEnable')) {
+            MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data, auth()->user(), request()->ip());
+        }
+
         return FcmMessage::create()
             ->setData([
-                'title' => $this->title,
-                'body'  => $this->body,
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
             ])
             ->setNotification([
-                'title' => $this->title,
-                'body'  => $this->body,
+                'title' => $this->emailData['subject'],
+                'body'  => $this->emailData['body'],
                 'sound' => true,
             ]);
     }

@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\Discussion\AddCommentRequest;
 use App\Http\Resources\Discussion\DiscussionResource;
+use App\Notifications\CommentNotification;
 use App\Repositories\Api\Discussion\DiscussionRepository;
 use App\Services\DiscussionService;
 use App\Services\DiscussionSocialActivitiesService;
@@ -57,10 +58,13 @@ class DiscussionController extends AppBaseController
             if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
+
             $checkComponentBasedOnSlug = UtilityHelper::checkComponentSlugExistOrNot($component, $slug);
+
             if (!$checkComponentBasedOnSlug) {
                 return $this->sendError(__('responses.slug_not_found'), 404);
             }
+
             $getComponentId = $checkComponentBasedOnSlug->id;
             $addComment = $this->discussionRepository->addComment($component, $request, $getComponentId);
             if ($addComment) {
@@ -70,6 +74,10 @@ class DiscussionController extends AppBaseController
                     data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'type'),
                     data_get(data_get($addComment, 'comment_id') ? LearningPointsHelper::REPLY_TO_A_COMMENT : LearningPointsHelper::POST_A_COMMENT, 'points')
                 );
+
+                if (auth()->user()->id !== $checkComponentBasedOnSlug->user_id) {
+                    $checkComponentBasedOnSlug->user?->notify(new CommentNotification($component, $getComponentId, auth()->user()->id));
+                }
 
                 return $this->sendResponse(DiscussionResource::make($addComment), __('responses.add_comment_successfully'));
             }
@@ -85,7 +93,7 @@ class DiscussionController extends AppBaseController
     public function socialActivity($component, $slug, $id, $activity = null)
     {
         try {
-            if (!in_array($component, ['lab', 'project', 'challenge'])) {
+            if (!in_array($component, ['lab', 'project', 'challenge', 'challenge-path'])) {
                 return $this->sendError(__('responses.handler_bad_request'), 400);
             }
             if (!in_array($activity, ['like', 'dislike'])) {

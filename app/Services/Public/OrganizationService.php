@@ -106,6 +106,13 @@ class OrganizationService
                 }
             }
 
+            if ($request->has('owner') && $request->get('owner')) {
+                $getOrganizationIds = MemberManagementService::getOrganizationIds(auth()->user()->email, $request->get('owner'));
+                if ($getOrganizationIds) {
+                    $organization_list = $organization_list->whereIn('id', $getOrganizationIds);
+                }
+            }
+
             return $organization_list;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
@@ -145,6 +152,19 @@ class OrganizationService
     {
         try {
             $organizations = Organization::where('user_id', $userId)->pluck('id');
+
+            return $organizations;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchOrganizationIdsBasedOnUserId($userId)
+    {
+        try {
+            $organizations = Organization::where('user_id', $userId)->get();
 
             return $organizations;
         } catch (\Exception $e) {

@@ -16,6 +16,7 @@ class NotificationBuilder extends Builder
                 NotificationTypes::CHALLENGE,
                 NotificationTypes::FRIEND_REQUEST,
                 NotificationTypes::LEARNING_POINT,
+                NotificationTypes::COMMENT,
             ]);
         }
 

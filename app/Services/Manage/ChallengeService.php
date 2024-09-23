@@ -70,13 +70,11 @@ class ChallengeService
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
                     $status = ($request->status == 'draft') ? '0' : '1';
-                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                    $challenge_list = $challenge_list->where('challenges.status', $status)->where('challenges.is_open', '0');
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '2';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
-            } else {
-                $challenge_list = $challenge_list->where('challenges.status', '1');
             }
 
             if ($request->filled('social_type') && in_array($request->social_type, ['liked', 'favourites'])) {
@@ -192,7 +190,7 @@ class ChallengeService
                         break;
 
                     case 'cloned_by_you':
-                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', '1');
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('cloned_from', '!=', null);
                         break;
                 }
             }
@@ -281,7 +279,7 @@ class ChallengeService
             }
 
             $is_open = config('constants.challenge_open_close.no');
-            if ($request->is_ai_created) {
+            if ($request->is_ai_created && $request->is_ai_created == 'yes') {
                 $is_open = config('constants.challenge_open_close.yes');
             } else {
                 switch ($request->is_open) {
@@ -472,7 +470,7 @@ class ChallengeService
                     }
                 }
 
-                if ($request->is_ai_created) {
+                if ($request->is_ai_created && $request->is_ai_created == 'yes') {
                     $is_open = config('constants.challenge_open_close.yes');
                 } else {
                     switch ($request->is_open) {
@@ -676,6 +674,8 @@ class ChallengeService
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->allow_winner_change = '0';
             $clonedChallenge->is_pre_built = '0';
+            $clonedChallenge->is_auto_created = '0';
+            $clonedChallenge->cloned_from = $originalChallenge->id;
             $clonedChallenge->save();
 
             return $clonedChallenge;
@@ -1077,13 +1077,14 @@ class ChallengeService
                 foreach ($challengeData as $challenge) {
                     if ($challenge->challenge_timelines) {
                         if ($challenge->challenge_timelines->timeline_type == '1') {
-                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                            $deadlineDate = $challenge->challenge_timelines->submission_deadline_date;
+                            if ($deadlineDate >= now()) {
                                 // For restricted challenge
                                 $restrictedDeadline = [
                                     'id'       => $challenge->uuid,
                                     'title'    => $challenge->title,
                                     'slug'     => $challenge->slug,
-                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                    'deadline' => $deadlineDate,
                                 ];
                                 $restrictedDeadlineCollection->push($restrictedDeadline);
                             }

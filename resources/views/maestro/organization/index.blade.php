@@ -120,12 +120,11 @@
                     this_.attr('data-val' , "0");
                     else
                     this_.attr('data-val', "1");
+                toastr.success(data.message, 'Created!');
+                } else {
+                toastr.success(data.message, 'Error!');
                 }
-                PNotify.removeAll();
-                new PNotify({
-                    text: data.message,
-                    type: data.status
-                });
+                
             });
         });
         @if(Session::has('success'))

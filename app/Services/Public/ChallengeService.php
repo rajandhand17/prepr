@@ -68,13 +68,11 @@ class ChallengeService
             if ($request->has('status') && !empty($request->status)) {
                 if (in_array($request->status, ['draft', 'published'])) {
                     $status = ($request->status == 'draft') ? '0' : '1';
-                    $challenge_list = $challenge_list->where('challenges.status', $status);
+                    $challenge_list = $challenge_list->where('challenges.status', $status)->where('challenges.is_open', '0');
                 } elseif (in_array($request->status, ['deactivated', 'archived'])) {
-                    $status = ($request->status == 'deactivated') ? '1' : '3';
+                    $status = ($request->status == 'deactivated') ? '1' : '2';
                     $challenge_list = $challenge_list->where('challenges.is_open', $status);
                 }
-            } else {
-                $challenge_list = $challenge_list->where('challenges.status', '1');
             }
 
             if ($request->has('category') && !empty($request->category) && is_array($request->category)) {
@@ -140,8 +138,9 @@ class ChallengeService
                     $status_array = ['accepted', 'pending', 'declined', 'all'];
                     if (in_array($request->request_status, $status_array)) {
                         $challenge_list = $challenge_list->join('member_management', 'challenges.id', '=', 'member_management.module_id')
-                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type')
-                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email]);
+                            ->select('challenges.*', 'member_management.invite_status', 'member_management.email', 'member_management.module_type', 'member_management.deleted_at')
+                            ->where(['member_management.module_type' => '2', 'member_management.email' => auth('api')->user()->email])
+                            ->whereNull('member_management.deleted_at');
                         switch ($request->request_status) {
                             case 'accepted':
                                 $challenge_list->where('member_management.invite_status', '1');
@@ -393,7 +392,7 @@ class ChallengeService
             $deadlineMissedChallengesCount = ProjectService::fetchDeadlineMissedChallenges($fetchChallenge, $userData);
             $notStartedChallengesCount = $overAllJoinedChallenges - ($completedChallengesCount + $inProgressChallengesCount + $deadlineMissedChallengesCount);
 
-            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount];
+            $fetchMyChallengeProgress = ['overAllJoined' => $overAllJoinedChallenges, 'completedCount' => $completedChallengesCount, 'inProgressCount' => $inProgressChallengesCount, 'notStartedCount' => $notStartedChallengesCount, 'deadlineMissedCount' => $deadlineMissedChallengesCount, 'joined_date' => $userData->created_at];
 
             return $fetchMyChallengeProgress;
         } catch (Exception $e) {
@@ -441,24 +440,30 @@ class ChallengeService
                                             $convertedDeadline = Carbon::parse($fetchCreatedProject->created_at)->addMonth($fetchChallenge->challenge_timelines->flexible_date_number)->toDateTimeString();
                                             break;
                                     }
-                                    $flexibleDeadline = [
-                                        'id'       => $fetchChallenge->uuid,
-                                        'title'    => $fetchChallenge->title,
-                                        'slug'     => $fetchChallenge->slug,
-                                        'deadline' => UtilityHelper::formatDateTime($convertedDeadline) ?? null,
-                                    ];
-                                    $flexibleDeadlineCollection->push($flexibleDeadline);
+                                    $deadlineDate = $convertedDeadline ?? null;
+                                    if ($deadlineDate != null && $deadlineDate >= now()) {
+                                        $flexibleDeadline = [
+                                            'id'       => $fetchChallenge->uuid,
+                                            'title'    => $fetchChallenge->title,
+                                            'slug'     => $fetchChallenge->slug,
+                                            'deadline' => $deadlineDate,
+                                        ];
+                                        $flexibleDeadlineCollection->push($flexibleDeadline);
+                                    }
                                 }
                             }
                         } elseif ($fetchChallenge->challenge_timelines->timeline_type == '1') {
                             // For restricted challenge
-                            $restrictedDeadline = [
-                                'id'       => $fetchChallenge->uuid,
-                                'title'    => $fetchChallenge->title,
-                                'slug'     => $fetchChallenge->slug,
-                                'deadline' => UtilityHelper::formatDateTime($fetchChallenge->challenge_timelines->submission_deadline_date) ?? null,
-                            ];
-                            $restrictedDeadlineCollection->push($restrictedDeadline);
+                            $deadlineDate = $fetchChallenge->challenge_timelines->submission_deadline_date ?? null;
+                            if ($deadlineDate != null && $deadlineDate >= now()) {
+                                $restrictedDeadline = [
+                                    'id'       => $fetchChallenge->uuid,
+                                    'title'    => $fetchChallenge->title,
+                                    'slug'     => $fetchChallenge->slug,
+                                    'deadline' => $deadlineDate,
+                                ];
+                                $restrictedDeadlineCollection->push($restrictedDeadline);
+                            }
                         }
                     }
                 }
