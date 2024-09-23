@@ -7,7 +7,7 @@ use App\Models\FeaturedModule;
 
 class FeaturedModuleService
 {
-    public static function getFeaturedLabs()
+    public static function getFeaturedModule()
     {
         try {
             $roles = auth()->user()->roles;
