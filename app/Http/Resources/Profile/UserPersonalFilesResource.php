@@ -24,10 +24,11 @@ class UserPersonalFilesResource extends JsonResource
             return [];
         } else {
             return [
-                'id'        => $this->id,
-                'path'      => $this->name,
-                'name'      => end($array),
-                'public'    => $public,
+                'id'            => $this->id,
+                'path'          => $this->name,
+                'name'          => end($array),
+                'original_name' => $this->original,
+                'public'        => $public,
             ];
         }
     }

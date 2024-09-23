@@ -24,7 +24,7 @@
                 @endphp
                 <div class="form-group {{($errors->has('skill')) ? 'has-error' : ''}}">
                     {!! Form::label($lableName, 'Enter '.$lableName, ['class' => 'control-label']) !!}
-                    {!! Form::text($inputName,null, ['class' => 'form-control', 'id'=>'skill']) !!}
+                    {!! Form::text($inputName,null, ['class' => 'form-control', 'id'=>'skill','required' => 'required']) !!}
                     <span class="help-block">{{ $errors->first('skill')}}</span>
                 </div>
             @endforeach

@@ -19,4 +19,9 @@ class Tag extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function getTagImageAttribute($value)
+    {
+        return config('site-settings.aws_url').$value;
+    }
 }

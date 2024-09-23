@@ -13,7 +13,7 @@ class ProjectIndustryService
     {
         try {
             if ($language == 'en') {
-                $project_industry_list = ProjectIndustry::select('id', 'title');
+                $project_industry_list = ProjectIndustry::select('id', 'title')->where('status', '1');
             //Search categories based on user input
             } else {
                 //get column name based on language
@@ -23,7 +23,7 @@ class ProjectIndustryService
                 if (!$column_name || !Schema::hasColumn('skills', $column_name)) {
                     return false;
                 }
-                $project_industry_list = ProjectIndustry::select('id', $column_name.' as title');
+                $project_industry_list = ProjectIndustry::select('id', $column_name.' as title')->where('status', '1');
             }
 
             //Search categories based on user input

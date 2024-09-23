@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Explore;
 
 use App\Helpers\UtilityHelper;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Resources\Explore\ExploreResource;
 use App\Http\Resources\Explore\SkillResource;
 use App\Http\Resources\Public\Challenge\ChallengeResource;
 use App\Http\Resources\Public\Lab\LabResource;
@@ -45,16 +46,16 @@ class ExploreController extends AppBaseController
                     }
                     break;
                 case 'featured':
-                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    $featured = $this->exploreRepository->getFeaturedModule();
                     if ($featured) {
-                        $response = LabResource::collection($featured);
+                        $response = ExploreResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');
                     } else {
                         $message = __('responses.featured_labs_failed');
                     }
                     break;
                 case 'teams':
-                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    $featured = $this->exploreRepository->getFeaturedModule();
                     if ($featured) {
                         $response = LabResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');

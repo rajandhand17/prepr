@@ -42,6 +42,10 @@ class NotificationResource extends JsonResource
             ],
             NotificationTypes::FRIEND_REQUEST => data_get($this, 'friend_request_from'),
             NotificationTypes::LEARNING_POINT => $this->data,
+            NotificationTypes::COMMENT        => [
+                ...data_get($this, 'formatted_module', []),
+                'type' => data_get($this->data, 'type'),
+            ],
         ];
 
         return data_get($data, $this->type);
