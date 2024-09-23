@@ -56,6 +56,7 @@ class StoreLabMemberData extends Command
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             DB::rollBack();
+
             return false;
         }
     }
