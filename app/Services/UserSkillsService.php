@@ -220,4 +220,31 @@ class UserSkillsService
             return false;
         }
     }
+
+    public static function storeVerifySkills($skills, $userId)
+    {
+        try {
+            if (!empty($skills)) {
+                $existingSkills = UserSkills::where('user_id', $userId)
+                    ->whereIn('skill', $skills)
+                    ->get()
+                    ->keyBy('skill');
+
+                $newSkills = [];
+
+                foreach ($skills as $skill) {
+                    if (isset($existingSkills[$skill])) {
+                        $existingSkills[$skill]->is_verified = '1';
+                        $existingSkills[$skill]->save();
+                    }
+                }
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

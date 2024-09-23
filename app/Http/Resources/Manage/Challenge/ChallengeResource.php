@@ -64,6 +64,7 @@ class ChallengeResource extends JsonResource
         $lab_programs = [];
         $resource_modules = [];
         $resource_collections = [];
+        $challenge_joined_date = null;
         $resource_groups = [];
 
         if ($this->getCategory) {
@@ -300,6 +301,10 @@ class ChallengeResource extends JsonResource
             }
         }
 
+        if (auth('api')->check() && $join_status === 'Yes') {
+            $challenge_joined_date = $joined_status->updated_at;
+        }
+
         if (!empty($this->challenge_association)) {
             foreach ($this->challenge_association as $challenge_association) {
                 if ($challenge_association->lab_id) {
@@ -390,7 +395,7 @@ class ChallengeResource extends JsonResource
 
         if ($this->is_auto_created == '1') {
             $source = 'Onboarding Challenge';
-        } elseif ($this->user_id == auth('api')->user()->id && $this->is_pre_built == '1') {
+        } elseif ($this->user_id == auth('api')->user()->id && !empty($this->cloned_from)) {
             $source = 'Cloned By You';
         } elseif ($this->user_id == auth('api')->user()->id) {
             $source = 'Created By You';
@@ -488,6 +493,7 @@ class ChallengeResource extends JsonResource
             'scorm_url'                         => $this->formatted_scorm_url,
             'source'                            => $source,
             'challenge_status'                  => $challenge_status,
+            'challenge_joined_date'             => $challenge_joined_date,
         ];
     }
 }
