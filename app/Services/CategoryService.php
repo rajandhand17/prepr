@@ -14,7 +14,7 @@ class CategoryService
     {
         try {
             if ($language == 'en') {
-                $category_list = Category::select('id', 'title', 'parent_id', 'components');
+                $category_list = Category::select('id', 'title', 'parent_id', 'components')->where('components', '!=', null);
             } else {
                 //get column name based on language
                 $column_name = LanguageColumnHelper::getLanguageColumnName($language, 'title');
@@ -22,7 +22,7 @@ class CategoryService
                 if (!$column_name || !Schema::hasColumn('categories', $column_name)) {
                     return false;
                 }
-                $category_list = Category::select('id', $column_name.' as title', 'parent_id', 'components');
+                $category_list = Category::select('id', $column_name.' as title', 'parent_id', 'components')->where('components', '!=', null);
             }
 
             //Search categories based on user input
