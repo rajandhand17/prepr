@@ -18,8 +18,12 @@ class ChallengeAnnouncementRecipientSeeder extends Seeder
                 'fr_CA_title'=> 'Participant invité au défi',
             ],
             [
-                'title'      => 'Challenge followers',
-                'fr_CA_title'=> 'Défiez les abonnés',
+                'title'      => 'Challenge savers',
+                'fr_CA_title'=> 'Épargnants de défis',
+            ],
+            [
+                'title'      => 'Challenge Achievement Winners',
+                'fr_CA_title'=> 'Gagnants des réalisations du défi',
             ],
             [
                 'title'      => 'Auto-invite accept participants',
@@ -38,12 +42,12 @@ class ChallengeAnnouncementRecipientSeeder extends Seeder
                 'fr_CA_title'=> 'Utilisateurs du projet soumis',
             ],
             [
-                'title'      => 'Participant achievement winners',
-                'fr_CA_title'=> 'Gagnants des réalisations des participants',
+                'title'      => 'Participant trophy winners',
+                'fr_CA_title'=> 'Gagnants du trophée des participants',
             ],
             [
-                'title'      => 'Challenge achievement winners',
-                'fr_CA_title'=> 'Gagnants des réalisations du défi',
+                'title'      => 'Incentive Trophy winners',
+                'fr_CA_title'=> 'Les lauréats du Trophée Incentive',
             ],
         ];
         foreach ($challenge_announcement_recipients as $challenge_announcement_recipient) {
