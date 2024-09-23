@@ -8,6 +8,7 @@ use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\SkillService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -230,9 +231,19 @@ class ProjectResource extends JsonResource
                 break;
         }
 
+        $created_by = [];
+        if (auth('api')->check() && !empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+            $created_by['full_name'] = $userDetails->full_name;
+            $created_by['username'] = $userDetails->username;
+            $created_by['email'] = $userDetails->email;
+            $created_by['profile_image'] = $userDetails->profile_image;
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
+            'created_by'            => $created_by,
             'user_id'               => auth('api')->check() ? $this->user_id : null,
             'title'                 => $this->title,
             'slug'                  => $this->slug,
