@@ -62,13 +62,23 @@ class TrackUserProgressHelper
 
     private static function getScormCompletion($resourceModuleDataId): int
     {
-        $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
+        try {
+            // Fetch the Scorm data using the provided model_id and model_type
+            $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
 
-        if ($scormModuleData?->id) {
-            return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+            // Check if $scormModuleData is not null before accessing its properties
+            if ($scormModuleData !== null && $scormModuleData->id) {
+                return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+            }
+
+            // Return 0 if no data is found
+            return 0;
+        } catch (Exception $e) {
+            // Log the error and return false on exception
+            UtilityHelper::logError($e);
+
+            return false;
         }
-
-        return 0;
     }
 
     public static function trackResourceCollectionUserProgress($resourceCollectionData, $userId)
