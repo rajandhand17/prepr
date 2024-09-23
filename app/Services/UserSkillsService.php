@@ -236,18 +236,7 @@ class UserSkillsService
                     if (isset($existingSkills[$skill])) {
                         $existingSkills[$skill]->is_verified = '1';
                         $existingSkills[$skill]->save();
-                    } else {
-                        $newSkills[] = [
-                            'user_id' => $userId,
-                            'skill' => $skill,
-                            'is_verified' => '1',
-                            'created_at' => now(),
-                            'updated_at' => now(),
-                        ];
                     }
-                }
-                if (!empty($newSkills)) {
-                    UserSkills::insert($newSkills);
                 }
             }
     
