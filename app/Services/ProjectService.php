@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectMemberManagement;
 use App\Services\Manage\ChallengeAssessmentService;
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\LabService;
 use Carbon\Carbon;
 use Exception;
@@ -604,6 +605,7 @@ class ProjectService
                 $projectData->is_submitted = '1';
                 $projectData->save();
             }
+            $storeSkills = self::verifySkills($projectData->challenge_id,$projectData->user_id);
 
             return true;
         } catch (Exception $e) {
@@ -1061,6 +1063,20 @@ class ProjectService
             $project_list = Project::with('getProjectAssessment')->whereIn('projects.id', $getProjectIds);
 
             return $project_list->pluck('id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function verifySkills($challengeId,$userId)
+    {
+        try {
+            $getSkillsBasedOnChallengeIds = ChallengeSkillsGroupsStackService::getSkillsBasedOnChallengeId($challengeId);
+            $storeSkills = UserSkillsService::storeVerifySkills($getSkillsBasedOnChallengeIds,$userId);
+
+            return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
