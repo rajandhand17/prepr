@@ -16,15 +16,17 @@ class ProjectDashboardResource extends JsonResource
     {
         switch ($this->is_submitted) {
             case '0':
-                $project_status = 'in_progress';
+                $module_progress = [
+                    'status'        => 'in_progress',
+                    'percentage'    => '50',
+                ];
                 break;
-
             case '1':
-                $project_status = 'completed';
-                break;
-
             case '2':
-                $project_status = 'completed';
+                $module_progress = [
+                    'status'        => 'completed',
+                    'percentage'    => '100',
+                ];
                 break;
         }
 
@@ -35,7 +37,7 @@ class ProjectDashboardResource extends JsonResource
             'slug'                  => $this->slug,
             'title'                 => $this->title,
             'description'           => $this->description,
-            'module_progress'       => $project_status,
+            'module_progress'       => $module_progress,
             'updated_at'            => $this->updated_at,
         ];
     }
