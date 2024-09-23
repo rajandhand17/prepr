@@ -325,7 +325,7 @@ class CampusConnectHelper
                     'name'    => data_get($organization, 'display_name') ?? data_get($organization, 'title', '-'),
                     'address' => data_get($organization, 'address.0.full_address', '-'),
                     'city'    => data_get($organization, 'address.0.city', '-'),
-                    'state'   => data_get($organization, 'address.0.state', '-'),   
+                    'state'   => data_get($organization, 'address.0.state', '-'),
                 ],
                 'contact' => [
                     'first_name' => data_get($user, 'first_name'),
