@@ -46,7 +46,7 @@ class ExploreController extends AppBaseController
                     }
                     break;
                 case 'featured':
-                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    $featured = $this->exploreRepository->getFeaturedModule();
                     if ($featured) {
                         $response = ExploreResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');
@@ -55,7 +55,7 @@ class ExploreController extends AppBaseController
                     }
                     break;
                 case 'teams':
-                    $featured = $this->exploreRepository->getFeaturedLabs();
+                    $featured = $this->exploreRepository->getFeaturedModule();
                     if ($featured) {
                         $response = LabResource::collection($featured);
                         $message = __('responses.featured_labs_successfully');

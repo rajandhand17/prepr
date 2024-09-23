@@ -15,8 +15,8 @@ class CampusConnectRepository implements CampusConnectInterface
 
             return array_map(function ($item) {
                 return [
-                    'id'    => $item,
-                    'title' => $item,
+                    'id'    => $item['id'],
+                    'title' => $item['name'],
                 ];
             }, $schools);
         } catch (Exception $exception) {
