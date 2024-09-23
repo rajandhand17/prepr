@@ -14,6 +14,7 @@ use App\Models\Organization;
 use App\Models\ResourceModule;
 use App\Models\Skill;
 use App\Models\User;
+use App\Services\Manage\OrganizationService;
 use Exception;
 use HiFolks\RandoPhp\Randomize;
 use Illuminate\Support\Facades\Storage;
@@ -110,8 +111,11 @@ class LabService
     public static function createCloneLab($lab, $organizationId)
     {
         try {
+            $organization = OrganizationService::getOrganizationExistBasedOnId($organizationId);
             $cloneLab = $lab->replicate();
             $cloneLab->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $cloneLab->title = $organization->title.' '.$lab->title;
+            $cloneLab->slug = UtilityHelper::generateSlug($lab->title, $cloneLab);
             $cloneLab->organization_id = $organizationId;
             $cloneLab->user_id = auth()->user()->id;
             $cloneLab->save();
