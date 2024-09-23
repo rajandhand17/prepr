@@ -50,7 +50,7 @@ class UpdateSettingRequest extends FormRequest
         } elseif ($activity == 'notification') {
             $base_rules = [
                 'communication'            => 'in:subscribe,unsubscribe',
-                'network_summary'          => 'in:subscribe,unsubscribe',
+                'network_summary'          => 'in:unsubscribe,monthly,weekly',
                 'lab_summary'              => 'in:unsubscribe,monthly,weekly',
                 'challenge_summary'        => 'in:unsubscribe,monthly,weekly',
                 'challenge_recommendation' => 'in:unsubscribe,monthly,weekly',
