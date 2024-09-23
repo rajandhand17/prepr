@@ -18,11 +18,11 @@ class ChallengeAnnouncementRecipientSeeder extends Seeder
                 'fr_CA_title'=> 'Participant invité au défi',
             ],
             [
-                'title'      => 'Challenge savers', 
+                'title'      => 'Challenge savers',
                 'fr_CA_title'=> 'Épargnants de défis',
             ],
             [
-                'title'      => 'Challenge Achievement Winners',  
+                'title'      => 'Challenge Achievement Winners',
                 'fr_CA_title'=> 'Gagnants des réalisations du défi',
             ],
             [
@@ -42,11 +42,11 @@ class ChallengeAnnouncementRecipientSeeder extends Seeder
                 'fr_CA_title'=> 'Utilisateurs du projet soumis',
             ],
             [
-                'title'      => 'Participant trophy winners', 
+                'title'      => 'Participant trophy winners',
                 'fr_CA_title'=> 'Gagnants du trophée des participants',
             ],
             [
-                'title'      => 'Incentive Trophy winners',  
+                'title'      => 'Incentive Trophy winners',
                 'fr_CA_title'=> 'Les lauréats du Trophée Incentive',
             ],
         ];
