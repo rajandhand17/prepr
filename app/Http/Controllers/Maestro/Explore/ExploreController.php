@@ -10,6 +10,8 @@ use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\LabProgram;
 use App\Models\Project;
+use App\Models\ResourceCollection;
+use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
 use App\Traits\Maestro\Explore\ExploreTrait;
 use Exception;
@@ -190,6 +192,24 @@ class ExploreController extends Controller
                     return $item;
                 });
                 $components = $components->merge($resources);
+            }
+
+            if ($filter == '' || $filter == 'Resource Collection') {
+                $resourceCollection = ResourceCollection::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Resource Collection';
+
+                    return $item;
+                });
+                $components = $components->merge($resourceCollection);
+            }
+
+            if ($filter == '' || $filter == 'Resource Group') {
+                $resourceGroup = ResourceGroup::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                    $item->type = 'Resource Group';
+
+                    return $item;
+                });
+                $components = $components->merge($resourceGroup);
             }
 
             if ($filter == '' || $filter == 'Lab Program') {
