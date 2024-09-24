@@ -38,7 +38,8 @@ class ProjectPitchTemplateService
         try {
             $languages = LanguageService::getAllActiveLanguages();
             if ($moduleMode == 'update') {
-                $pitchTemplate = PitchTemplate::where('id',$id)->update(['title' => $request->title ,'fr_CA_title' => $request->fr_CA_title]);
+                $pitchTemplate = PitchTemplate::where('id', $id)->update(['title' => $request->title, 'fr_CA_title' => $request->fr_CA_title]);
+
                 return PitchTemplate::find($id);
             } else {
                 $pitchTemplate = new PitchTemplate();
@@ -49,9 +50,9 @@ class ProjectPitchTemplateService
                 if ($pitchTemplate->save()) {
                     return $pitchTemplate;
                 }
+
                 return true;
             }
-            
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

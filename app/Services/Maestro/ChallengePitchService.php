@@ -37,7 +37,7 @@ class ChallengePitchService
                 }
             }
             if (!empty($mergedPitchData)) {
-                ChallengePitch::where('template_id',$pitchTemplate->id)->delete();
+                ChallengePitch::where('template_id', $pitchTemplate->id)->delete();
                 ChallengePitch::insert($mergedPitchData);
             }
 
