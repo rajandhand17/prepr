@@ -255,4 +255,19 @@ class ChallengeSkillsGroupsStackService
             return false;
         }
     }
+
+    public static function getSkillsBasedOnChallengeId($challengeId)
+    {
+        try {
+            $getChallengeIds = ChallengeSkillsGroupsStack::where('type', '0')
+                ->where('challenge_id', $challengeId)
+                ->pluck('foreign_id');
+
+            return $getChallengeIds;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

@@ -44,12 +44,17 @@
                                                 <div class="col-xl-9 col-lg-8 col-md-6 col-sm-10" id="searchResults" style="border-radius: 4px; background: #FFF; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25); display: none;">
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-2" id="filterComponent" style="border-radius: 4px; background: #FFF; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25); display: none;">
-                                                    <h6>Filter by Component</h6>
-                                                    <input type="radio" name="filter" class="filter-input" value="Challenge"> Challenge<br>
+                                                    <h6 style="text-transform:uppercase">Filter by Component</h6>
                                                     <input type="radio" name="filter" class="filter-input"  value="Lab"> Lab<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path<br>
                                                     <input type="radio" name="filter"  class="filter-input" value="Lab Program"> Lab Program<br>
+                                                    <hr>
+                                                    <input type="radio" name="filter" class="filter-input" value="Challenge"> Challenge<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path<br>
+                                                    <hr>
                                                     <input type="radio" name="filter"  class="filter-input" value="Resource Module"> Resource Module<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Collection"> Resource Collection<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Group"> Resource Group<br>
+                                                    <hr>
                                                     <input type="radio" name="filter"  class="filter-input" value="Project"> Project<br>
                                                 </div>
                                             </div>

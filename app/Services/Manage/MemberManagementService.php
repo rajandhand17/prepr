@@ -1320,4 +1320,17 @@ class MemberManagementService
             return false;
         }
     }
+
+    public static function getComponentAndUserBasedAcceptedMemberData($componentId, $componentType, $userEmail)
+    {
+        try {
+            $memberData = MemberManagement::where(['module_id' => $componentId, 'module_type' => $componentType, 'email' => $userEmail, 'invite_status' => config('constants.member_management_invite_status.accepted')])->first();
+
+            return $memberData;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

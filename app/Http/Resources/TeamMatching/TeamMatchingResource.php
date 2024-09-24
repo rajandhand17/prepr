@@ -34,8 +34,8 @@ class TeamMatchingResource extends JsonResource
                 $challenges['template_title'] = $challenge_details['template_title'];
                 $challenges['due_date'] = $challenge_details['due_date'];
                 $challenges['challenge_status'] = $challenge_details['challenge_status'];
-                $challenges['duration'] = DurationService::getDurationsBasedOnId($challenge_details['duration_id'])->title;
-                $challenges['level'] = LevelService::getLevelsBasedOnId($challenge_details['level_id'])->title;
+                $challenges['duration'] = ($challenge_details['duration_id'] != null) ? DurationService::getDurationsBasedOnId($challenge_details['duration_id'])->title : null;
+                $challenges['level'] = ($challenge_details['level_id'] != null) ? LevelService::getLevelsBasedOnId($challenge_details['level_id'])->title : null;
             }
         }
         if ($this->skills) {
