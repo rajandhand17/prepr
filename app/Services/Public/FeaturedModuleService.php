@@ -11,8 +11,13 @@ class FeaturedModuleService
     {
         try {
             $roles = auth()->user()->roles;
-            $role = $roles->pluck('name')->first(); // Get the first role
-            $featuredModules = FeaturedModule::where('role', $role)->get();
+            $role = $roles->pluck('id')->unique();
+            $roleArray = $role->toArray();
+            $featuredModules = FeaturedModule::where(function ($query) use ($roleArray) {
+                foreach ($roleArray as $role) {
+                    $query->orWhereRaw('JSON_CONTAINS(role, ?)', [json_encode((string) $role)]);
+                }
+            })->get();
 
             return $featuredModules;
         } catch(\Exception $e) {
