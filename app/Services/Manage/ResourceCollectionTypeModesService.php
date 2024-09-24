@@ -97,14 +97,19 @@ class ResourceCollectionTypeModesService
     public static function cloneResourceCollectionTypeModes($originalResourceCollectionAssociation, $clonedResourceCollectionId)
     {
         try {
-            if ($originalResourceCollectionAssociation) {
-                $cloneResourceModuleSKills = $originalResourceCollectionAssociation->replicate();
-                $cloneResourceModuleSKills->resource_collection_id = $clonedResourceCollectionId;
-                $cloneResourceModuleSKills->save();
+            // Check if the association is a collection
+            if ($originalResourceCollectionAssociation && $originalResourceCollectionAssociation->isNotEmpty()) {
+                foreach ($originalResourceCollectionAssociation as $originalAssociation) {
+                    // Replicate each model in the collection
+                    $cloneResourceModuleSkills = $originalAssociation->replicate();
+                    $cloneResourceModuleSkills->resource_collection_id = $clonedResourceCollectionId;
+                    $cloneResourceModuleSkills->save();
+                }
             }
 
             return true;
         } catch (\Exception $e) {
+            // For debugging purposes, consider removing or logging instead
             UtilityHelper::logError($e);
 
             return false;
