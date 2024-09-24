@@ -7,6 +7,7 @@ use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
 use App\Services\AchievementService;
+use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
@@ -16,6 +17,7 @@ use App\Services\Public\LabService;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceGroupService;
 use App\Services\Public\ResourceModuleService;
+use App\Services\UserService;
 use Exception;
 
 class TrackUserProgressHelper
@@ -60,13 +62,23 @@ class TrackUserProgressHelper
 
     private static function getScormCompletion($resourceModuleDataId): int
     {
-        $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
+        try {
+            // Fetch the Scorm data using the provided model_id and model_type
+            $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
 
-        if ($scormModuleData?->id) {
-            return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+            // Check if $scormModuleData is not null before accessing its properties
+            if ($scormModuleData !== null && $scormModuleData->id) {
+                return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+            }
+
+            // Return 0 if no data is found
+            return 0;
+        } catch (Exception $e) {
+            // Log the error and return false on exception
+            UtilityHelper::logError($e);
+
+            return false;
         }
-
-        return 0;
     }
 
     public static function trackResourceCollectionUserProgress($resourceCollectionData, $userId)
@@ -180,8 +192,10 @@ class TrackUserProgressHelper
             // Default Challenge Progress
             $getUserChallengeProgress = '0';
             // Check is the user has joined the challenge or not
-            $joined_status = $challengeData->joined();
-            if ($joined_status != 'NA' && $joined_status != null) {
+            $userData = UserService::getUserById($userId);
+            $module_type = config('constants.member_management_component_type.challenge');
+            $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+            if ($joined_status != null) {
                 if ($joined_status->invite_status == '1') {
                     // Check the Project status based on Challenge and UserId
                     $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
@@ -222,8 +236,10 @@ class TrackUserProgressHelper
                 if ($getChallengeBasedOnIds->isNotEmpty()) {
                     foreach ($getChallengeBasedOnIds as $challengeData) {
                         // Check is the user has joined the challenge or not
-                        $joined_status = $challengeData->joined();
-                        if ($joined_status != 'NA' && $joined_status != null) {
+                        $userData = UserService::getUserById($userId);
+                        $module_type = config('constants.member_management_component_type.challenge');
+                        $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+                        if ($joined_status != null) {
                             if ($joined_status->invite_status == '1') {
                                 // Check User Joined Challenge or not to get progress
                                 $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
@@ -264,8 +280,10 @@ class TrackUserProgressHelper
     {
         try {
             // Check is the user has joined the lab or not
-            $joined_status = $lab->joined();
-            if ($joined_status != 'NA' && $joined_status != null) {
+            $userData = UserService::getUserById($userId);
+            $module_type = config('constants.member_management_component_type.lab');
+            $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($lab->id, $module_type, $userData->email);
+            if ($joined_status != null) {
                 if ($joined_status->invite_status == '1') {
                     // Initialize default associated count
                     $labChallengeAssociation = 0;
@@ -404,8 +422,10 @@ class TrackUserProgressHelper
             if ($getChallengeBasedOnIds->isNotEmpty()) {
                 foreach ($getChallengeBasedOnIds as $challengeData) {
                     // Check is the user has joined the challenge or not
-                    $joined_status = $challengeData->joined();
-                    if ($joined_status != 'NA' && $joined_status != null) {
+                    $userData = UserService::getUserById($userId);
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+                    if ($joined_status != null) {
                         if ($joined_status->invite_status == '1') {
                             // Check User Joined Challenge or not to get progress
                             $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
