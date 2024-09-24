@@ -527,7 +527,6 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
-                
                 if (!$isMagnet) {
                     $userData = auth()->user();
                     $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
@@ -544,7 +543,6 @@ class MemberManagementService
                             'email'       => $member['invitee_email'],
                         ])->first();
                         if ($checkMemberExists == null) {
-
                             if (!$isMagnet) {
                                 //check user email limit here
                                 $organization->load('chargebee_details');

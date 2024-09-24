@@ -11,5 +11,5 @@ return [
     'update_learner_information' => env('MAGNET_UPDATE_LEARNER_INFO'),
     'update_learning_content'    => env('MAGNET_UPDATE_LEARNING_CONTENT'),
     'magnet_auth_token'          => env('MAGNET_AUTH_TOKEN'),
-    'magnet_organization_id'     => env('MAGNET_ORGANIZATION_ID', 385)
+    'magnet_organization_id'     => env('MAGNET_ORGANIZATION_ID', 385),
 ];

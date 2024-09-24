@@ -272,7 +272,7 @@ return [
         'email'        => '0',
         'notification' => '1',
         'immediately'  => '0',
-        'custom'       => '1'
+        'custom'       => '1',
     ],
 
     'challenge_announcement_send_status' => [
