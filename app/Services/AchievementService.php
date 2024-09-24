@@ -75,7 +75,7 @@ class AchievementService
                         ];
 
                         if (config('app.isMixPanelEnable')) {
-                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
+                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user(), request()->ip());
                         }
                     }
                 }
@@ -129,7 +129,15 @@ class AchievementService
                         $certificate_number++;
                         $user = UserService::getUserById($projectMember);
                         if ($user) {
-                            $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_winner_achievement')));
+                            $email_detail = [
+                                'subject'          => __('responses.noti_winner_achievement'),
+                                'email'            => $user->email,
+                                'name'             => $user->full_name,
+                                'project'          => $project->title,
+                                'challenge'        => $challengeData->title,
+                                'achievementImage' => $fetchChallengeIncentiveAchievement->achievement_image,
+                            ];
+                            $user->notify(new AddWinnerAchievementNotification($email_detail));
                         }
                     }
                 }

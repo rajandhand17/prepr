@@ -64,7 +64,7 @@ class AddAchievementNotification extends Notification
         ];
 
         if (config('app.isMixPanelEnable')) {
-            MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data, auth()->user());
+            MixpanelJob::dispatch(config('mixpanel.push_notification'), $notification_data, auth()->user(), request()->ip());
         }
 
         return FcmMessage::create()

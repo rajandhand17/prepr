@@ -207,7 +207,7 @@ class OrganizationService
             $request->name = $request->title;
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.create_org'), $request->only(['organization_name', 'category']), auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.create_org'), $request->only(['organization_name', 'category']), auth()->user(), request()->ip());
             }
             DB::commit();
 
@@ -257,7 +257,7 @@ class OrganizationService
     {
         try {
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.delete_organization'), $organizationData->only(['id', 'name']), auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.delete_organization'), $organizationData->only(['id', 'name']), auth()->user(), request()->ip());
             }
             $organization = Organization::find($organizationData->id)->delete();
             if ($organization) {
@@ -381,16 +381,24 @@ class OrganizationService
                     ]
                 )->pluck('module_id');
             }
+        } elseif ($request->owner == 'my') {
+            $invited_organization_ids = MemberManagementService::getFilteredMemberManagementList(
+                [
+                    'module_type'   => '0',
+                    'email'         => auth()->user()->email,
+                    'role'          => $userRole,
+                    'invite_status' => '1',
+                    'type'          => '0',
+                ]
+            )->pluck('module_id');
         }
 
         switch ($request->owner) {
             case 'invited':
+            case 'my':
                 if ($invited_organization_ids != null) {
                     $organization_list = $organization_list->whereIn('organizations.id', $invited_organization_ids);
                 }
-                break;
-            case 'my':
-                $organization_list = $organization_list->where('organizations.user_id', auth()->user()->id);
                 break;
             default:
                 $owner_organization_ids = Organization::where('organizations.user_id', auth()->user()->id)->pluck('id');

@@ -31,6 +31,8 @@
                 {!!Form::open(array('method'=>'POST','route' => ['clone-lab.store'],'files'=>true))!!}
                 <h3><b>Clone Lab </b></h3>
                 <hr>
+                <div class="col-md-12">
+                    <div class="row">
                 <div class="col-md-4">
                     <div class="form-group {{($errors->has('language')) ? 'has-error' : ''}}">
                         {!! Form::label('language', 'Language', ['class' => 'control-label ']) !!}
@@ -38,7 +40,6 @@
                         <span class="help-block">{{ $errors->first('language')}}</span>
                     </div>
                 </div>
-                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group {{($errors->has('organization')) ? 'has-error' : ''}}">
                             {!! Form::label('organization', 'Organization', ['class' => 'control-label']) !!}
@@ -46,8 +47,6 @@
                             <span style="color: #ea6c41 !important;" class="help-block org_error">{{ $errors->first('organization')}}</span>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             {!! Form::label('lab', 'Lab', ['class' => 'control-label']) !!}
@@ -55,6 +54,7 @@
                             <span style="color: #ea6c41 !important;" class="help-block lab_error">{{ $errors->first('lab')}}</span>
                         </div>
                     </div>
+                </div>
                 </div>
                 <hr>
                 <div class="row">

@@ -250,9 +250,27 @@ class ProjectMemberManagementService
                 if (UtilityHelper::validEmail($pariticipateData['invitee_email'])) {
                     $checkExistenceEntry = ProjectMemberManagement::where(['project_id' => $projectData->id, 'email' => $pariticipateData['invitee_email']]);
                     if ($checkExistenceEntry->exists() == false || $checkExistenceEntry->first()->invite_status == '3') {
+                        $checkUserExistsOrNot = UserService::getUserByEmail($pariticipateData['invitee_email']);
                         $invite_status = config('constants.project_member_management_invite_status.invited');
                         $email_status = config('constants.project_member_management_email_status.scheduled');
 
+                        switch ($request->auto_invite) {
+                            case 'no':
+                                $auto_invite = config('constants.project_member_management_auto_invite.no');
+                                break;
+                            case 'yes':
+                                $auto_invite = config('constants.project_member_management_auto_invite.yes');
+                                break;
+                            case 'NA':
+                                $auto_invite = config('constants.project_member_management_auto_invite.na');
+                                break;
+                            default:
+                                $auto_invite = config('constants.project_member_management_auto_invite.no');
+                        }
+
+                        if ($checkUserExistsOrNot && $auto_invite == '1') {
+                            $invite_status = config('constants.project_member_management_invite_status.accepted');
+                        }
                         switch (strtolower($pariticipateData['access_level'])) {
                             case 'editor':
                                 $access_level = config('constants.project_access_level.editor');
@@ -286,9 +304,9 @@ class ProjectMemberManagementService
 
                         // feeding in project member management table
                         if ($checkExistenceEntry->exists() == false) {
-                            self::feedParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
+                            self::feedParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody, $auto_invite);
                         } elseif ($checkExistenceEntry->first()->invite_status == '3') {
-                            self::updateParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody);
+                            self::updateParticipatesData($projectData->id, auth()->user()->id, $pariticipateData['invitee_email'], $pariticipateData['invitee_name'], $pariticipateData['invite_type'], $invite_status, $email_status, $access_level, $subject, $emailBody, $auto_invite);
                         }
                         $invitee_name = $pariticipateData['invitee_name'] != null ? $pariticipateData['invitee_name'] : 'Solver';
                         $email_detail = ['invitee_email' => $pariticipateData['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => 'project', 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $projectData->title, 'comp_image' => $projectData->media, 'module_name' => 'Project', 'role' => $pariticipateData['role'] ?? $request->role];
@@ -333,7 +351,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function feedParticipatesData($projectDataId, $inviterId, $inviteeEmail, $invitee_name, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody)
+    public static function feedParticipatesData($projectDataId, $inviterId, $inviteeEmail, $invitee_name, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody, $autoInvite)
     {
         try {
             $participatesData = ProjectMemberManagement::create([
@@ -348,6 +366,7 @@ class ProjectMemberManagementService
                 'inviter_access_level'      => $accessLevel,
                 'subject_line'              => $subject,
                 'email_body'                => $emailBody,
+                'auto_invite'               => $autoInvite,
             ]);
 
             return true;
@@ -358,7 +377,7 @@ class ProjectMemberManagementService
         }
     }
 
-    public static function updateParticipatesData($projectDataId, $inviterId, $inviteeEmail, $invitee_name, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody)
+    public static function updateParticipatesData($projectDataId, $inviterId, $inviteeEmail, $invitee_name, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody, $autoInvite)
     {
         try {
             $participatesData = ProjectMemberManagement::where(['project_id' => $projectDataId, 'email' => $inviteeEmail])->update([
@@ -371,6 +390,7 @@ class ProjectMemberManagementService
                 'inviter_access_level'      => $accessLevel,
                 'subject_line'              => $subject,
                 'email_body'                => $emailBody,
+                'auto_invite'               => $autoInvite,
             ]);
 
             return true;

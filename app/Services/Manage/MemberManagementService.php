@@ -620,7 +620,7 @@ class MemberManagementService
                             }
 
                             if (config('app.isMixPanelEnable')) {
-                                MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), $request->ip());
+                                MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), request()->ip());
                             }
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
                             $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
@@ -759,7 +759,7 @@ class MemberManagementService
                     }
 
                     if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                        MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), request()->ip());
                     }
                 }
 
@@ -782,7 +782,7 @@ class MemberManagementService
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type])->delete();
 
                 if (config('app.isMixPanelEnable')) {
-                    MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request->only(['lab_id', 'category']), auth()->user(), $request->ip());
+                    MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request->only(['lab_id', 'category']), auth()->user(), request()->ip());
                 }
                 // Job for Bulk User Progress updating in table
                 $processType = 'delete';
@@ -807,7 +807,7 @@ class MemberManagementService
             $module_type = self::getModuleType($component);
             if (isset($module_type)) {
                 MemberManagement::where(['module_id' => $checkComponentBasedOnSlug->id, 'module_type' => $module_type, 'type' => '1', 'invite_type' => '2'])->update(['invite_status' => '1']);
-                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), $request->ip());
+                // MixpanelJob::dispatch(config('mixpanel.leave_lab'), $request, auth()->user(), request()->ip());
 
                 // Job for Bulk User Progress updating in table
                 $processType = 'insert';
@@ -899,7 +899,7 @@ class MemberManagementService
                     $request->category = $lab->category_id;
 
                     if (config('app.isMixPanelEnable')) {
-                        MixpanelJob::dispatch(config('mixpanel.join_lab'), $request->only(['lab_id', 'title', 'privacy']), auth()->user(), $request->ip());
+                        MixpanelJob::dispatch(config('mixpanel.join_lab'), $request->only(['lab_id', 'title', 'privacy']), auth()->user(), request()->ip());
                     }
                 }
             }
@@ -1314,6 +1314,19 @@ class MemberManagementService
             $memberManagement = MemberManagement::withTrashed()->where(['module_id' => $moduleId, 'module_type' => $component, 'invite_status' => config('constants.member_management_invite_status.accepted')])->pluck('email');
 
             return $memberManagement;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function getComponentAndUserBasedAcceptedMemberData($componentId, $componentType, $userEmail)
+    {
+        try {
+            $memberData = MemberManagement::where(['module_id' => $componentId, 'module_type' => $componentType, 'email' => $userEmail, 'invite_status' => config('constants.member_management_invite_status.accepted')])->first();
+
+            return $memberData;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

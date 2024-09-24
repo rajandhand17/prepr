@@ -7,6 +7,7 @@ use App\Services\Manage\LabService;
 use App\Services\Manage\ResourceCollectionService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
+use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService as PublicChallengePathService;
 use App\Services\Public\LabProgramService;
 use Illuminate\Http\Request;
@@ -44,6 +45,9 @@ class ExploreResource extends JsonResource
                 break;
             case '6': // Resource Group
                 $moduleDetails = ResourceGroupService::getResourceGroupBasedOnId($this->module_id);
+                break;
+            case '7': // Projects
+                $moduleDetails = ProjectService::getProjectBasedOnId($this->module_id);
                 break;
         }
 
