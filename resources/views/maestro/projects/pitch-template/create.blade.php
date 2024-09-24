@@ -159,7 +159,6 @@
                         </div>
                         <div class="col-md-1">
                           <div class="form-group">
-                            <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
                           </div>
                         </div>
                       </div>
