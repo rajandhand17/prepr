@@ -106,12 +106,13 @@ class ResourceCollectionTypeModesService
                     $cloneResourceModuleSkills->save();
                 }
             }
+
             return true;
         } catch (\Exception $e) {
             // For debugging purposes, consider removing or logging instead
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }
