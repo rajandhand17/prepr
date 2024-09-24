@@ -409,7 +409,7 @@ class LabService
             }
             $overAllJoinedLabs = $fetchLabIds->count();
             $notStartedLabsCount = $overAllJoinedLabs - ($inProgressLabsCount + $completedLabsCount);
-            $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressLabsCount' => $inProgressLabsCount, 'notStartedLabsCount' => $notStartedLabsCount, 'joined_date' => $userData->created_at];
+            $fetchMyLabProgress = ['overAllJoined' => $overAllJoinedLabs, 'completedCount' => $completedLabsCount, 'inProgressCount' => $inProgressLabsCount, 'notStartedCount' => $notStartedLabsCount, 'joined_date' => $userData->created_at];
 
             return $fetchMyLabProgress;
         } catch (\Exception $e) {

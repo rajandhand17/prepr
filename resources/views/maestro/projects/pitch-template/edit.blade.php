@@ -84,70 +84,77 @@
                       @endif
                     </div>
 
-                    <div class="row">
-                      @if($languages->count() > 0)
-                          @foreach($pitchSection as $key => $section)
-                              @foreach($languages as $key => $single)
-                                  @php
-                                    if ($loop->last) {
-                                        $isEnable = 'yes';
-                                        $callSpan = 2;
-                                    } else {
-                                      $isEnable = 'no';
-                                      $callSpan = 3;
-                                    }
-                                      $inputpitchName = "pitch[name][$single->iso][]";
-                                      $inputdescriptionName = "pitch[description][$single->iso][]";
-
-                                    if ($single->iso == 'en') {
-                                        $inputName = 'title';
-                                        $description = 'description';
-                                    } else {
-                                          $columName = $single->iso;
-                                          $inputdescription = $single->iso;
-                                          if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                              $columName = str_replace('-', '_', $columName);
-                                              $inputdescription = str_replace('-', '_', $inputdescription);
-                                          }
-                                          if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                              $columName = str_replace('-', '_', $columName);
-                                              $inputdescription = str_replace('-', '_', $inputdescription);
-                                          }
-                                        
-                                        $inputName = $columName . '_title';
-                                        $description = $inputdescription . '_description';
-                                    }
-                                  @endphp
-                                   <div class="col-md-3">
-                                    <div class="form-group">
-                                      <input type="text" class="form-control" name="{{ $inputpitchName }}" value="{{ $section->inputName }}" required />
-                                    </div>
+                    <div id="dynamicTable">
+                      @if(!empty($pitchSection) && count($pitchSection) > 0)
+                          @foreach($pitchSection as $pitch)
+                          <div class="row dynamicRow">
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[name][en][]" value="{{ $pitch->title }}" required="">
                                   </div>
-                                  <div class="col-md-{{$callSpan}}">
-                                    <div class="form-group">
-                                      <input type="text" class="form-control" name="{{ $inputdescriptionName }}" value="{{ $section->description }}" required/>
-                                    </div>
+                              </div>
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[description][en][]" value="{{ $pitch->description }}" required="">
                                   </div>
-                                  @if($isEnable == 'yes')
-                                    <div class="col-md-1">
-                                      <div class="form-group">
-                                      <a href="javascript:void(0);" class="remove_templ_btn edit"><i class="fa fa-minus-circle"></i></a>
-                                      </div>
-                                    </div>
-                                  @endif
-                              @endforeach
+                              </div>
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[name][fr-CA][]" value="{{ $pitch->fr_CA_title }}" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[description][fr-CA][]" value="{{ $pitch->fr_CA_description }}" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-1">
+                                  <div class="form-group">
+                                      <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                                  </div>
+                              </div>
+                          </div>
                           @endforeach
+                      @else
+                          <div class="row dynamicRow">
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[name][en][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[description][en][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[name][fr-CA][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-2">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[description][fr-CA][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-1">
+                                  <div class="form-group">
+                                      <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                                  </div>
+                              </div>
+                          </div>
                       @endif
-                    </div>
-                    <div class="dynamic_wraP edit" id="appendSectionHtml"> </div>
-                    <div class="row">
+                  </div>
+                  
+                  <div class="row">
                       <div class="col-md-12">
-                        <div class="dynmic_input add-wrp">
-                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addSection"><i class="fa fa-plus-circle"></i> &nbsp; Add Section</a>
-                        </div>
+                          <div class="dynmic_input add-wrp">
+                              <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addRowBtn"><i class="fa fa-plus-circle"></i>&nbsp; Add Section</a>
+                          </div>
                       </div>
-                    </div>
-                    <hr>
+                  </div>
+                  <hr>
+                  
 
                     <div class="row">
                       @if($languages->count() > 0)
@@ -167,67 +174,58 @@
                           @endforeach
                       @endif
                     </div>
-
-                    <div class="row">
-                      @if($languages->count() > 0)
-                        @foreach($pitchTask as $key => $task)
-                          @foreach($languages as $key => $single)
-                              @php
-                                if ($loop->last) {
-                                    $isEnable = 'yes';
-                                    $callSpan = 5;
-                                }else {
-                                  $isEnable = 'no';
-                                  $callSpan = 6;
-                                }
-                                  $inputName = "pitch[task][$single->iso][]";
-                                  if ($single->iso == 'en') {
-                                        $inputValueName = 'title';
-                                  } else {
-                                        $columName = $single->iso;
-                                        if ($columName == trim($columName) && strpos($columName, ' ') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-                                        if ($columName == trim($columName) && strpos($columName, '-') !== false) {
-                                            $columName = str_replace('-', '_', $columName);
-                                        }
-                                      $inputValueName = $columName . '_title';
-                                  }
-                              @endphp
-                              <div class="col-md-{{$callSpan}}">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="{{ $inputName }}" value="{{$task->inputValueName}}" required/>
-                                </div>
-                              </div>
-                              @if($isEnable == 'yes')
-                                <div class="col-md-1">
+                    <div id="dynamicTaskTable">
+                      @if(!empty($pitchTask) && count($pitchTask) > 0)
+                          @foreach($pitchTask as $task)
+                          <div class="row dynamicRow">
+                              <div class="col-md-6">
                                   <div class="form-group">
-                                  <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                                      <input type="text" class="form-control" name="pitch[task][en][]" value="{{ $task->title }}" required="">
                                   </div>
-                                </div>
-                              @endif
-                          @endforeach
-                          @endforeach
-                      @endif
-                    </div>
-                    <div class="dynamic_wraP edit" id="appendTaskHtml"> </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="dynmic_input add-wrp">
-                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addTask"><i class="fa fa-plus-circle"></i> &nbsp; Add Task</a>
-                        </div>
-                      </div>
-                    </div>
-                    <hr>
-                    {{-- <div class="row">
-                        <div class="col-md-12">
-                          <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
-                              {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-                              {!! Form::select('status', $status, old('status'), ['class' => 'form-control']) !!}
-                              <span class="help-block">{{ $errors->first('status')}}</span>
+                              </div>
+                              <div class="col-md-5">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[task][fr-CA][]" value="{{ $task->fr_CA_title }}" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-1">
+                                  <div class="form-group">
+                                      <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                                  </div>
+                              </div>
                           </div>
-                        </div>
-                    </div> --}}
+                          @endforeach
+                      @else
+                          <div class="row dynamicRow">
+                              <div class="col-md-6">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[task][en][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-5">
+                                  <div class="form-group">
+                                      <input type="text" class="form-control" name="pitch[task][fr-CA][]" value="" required="">
+                                  </div>
+                              </div>
+                              <div class="col-md-1">
+                                  <div class="form-group">
+                                      <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                                  </div>
+                              </div>
+                          </div>
+                      @endif
+                  </div>
+                  
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="dynmic_input add-wrp">
+                              <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addTask"><i class="fa fa-plus-circle"></i>&nbsp;  Add Task</a>
+                          </div>
+                      </div>
+                  </div>
+                  <hr>
+
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -250,83 +248,86 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-$(document).ready(function(){
-        var maxField = 100;
-        var wrapper = $('.dynamic_wraP.edit');
+    $(document).ready(function() {
+    let rowCount = {{ count($pitchTask) > 0 ? count($pitchTask) : 1 }};
 
-        var templateHTML = `<div class="row">
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[name][en][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[description][en][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[name][fr-CA][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-2">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[description][fr-CA][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-1">
-                              <div class="form-group">
-                              <a href="javascript:void(0);" class="remove_templ_btn edit"><i class="fa fa-minus-circle"></i></a>
-                              </div>
-                            </div>
-                            </div>`;
-        var taskHTML =`<div class="row">
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="pitch[task][en][]" value=""/ required>
-                                </div>
-                              </div>
-                              <div class="col-md-5">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="pitch[task][fr-CA][]" value=""/ required>
-                                </div>
-                              </div>
-                              <div class="col-md-1">
-                                <div class="form-group">
-                                <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
-                                </div>
-                              </div>
-                              </div>`;
-        var x = 0;
-
-        $('#addTask').click(function(){
-            if(x < maxField){
-                x++;
-                $('#appendTaskHtml').append(taskHTML);
-            }
-        });
-
-        $('#addSection').click(function(){
-            if(x < maxField){
-                x++;
-                $('#appendSectionHtml').append(templateHTML);
-            }
-        });
-
-        //Once remove button is clicked
-        $(wrapper).on('click', '.remove_templ_btn', function(e){
-            e.preventDefault();
-            $(this).parent('.dynamic_wraP').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
-
-        //Once task remove button is clicked
-        $(wrapper).on('click', '.remove_task_btn', function(e){
-            e.preventDefault();
-            $(this).parent('.dynamic_wraPTask').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
+    $('#addTask').on('click', function() {
+        rowCount++;
+        const newRow = `
+            <div class="row dynamicRow" id="row-${rowCount}">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[task][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[task][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
+        $('#dynamicTaskTable').append(newRow);
     });
+
+    $('#dynamicTaskTable').on('click', '.remove_task_btn', function() {
+        if ($('#dynamicTaskTable .dynamicRow').length > 1) {
+            $(this).closest('.dynamicRow').remove();
+        }
+    });
+});
+
+
+$(document).ready(function() {
+    let rowCount = {{ count($pitchSection) > 0 ? count($pitchSection) : 1 }};
+
+    $('#addRowBtn').on('click', function() {
+        rowCount++;
+
+        const newRow = `
+            <div class="row dynamicRow" id="row-${rowCount}">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[name][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[description][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[name][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[description][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('#dynamicTable').append(newRow);
+    });
+
+    $('#dynamicTable').on('click', '.remove_task_btn', function() {
+        if ($('#dynamicTable .dynamicRow').length > 1) {
+            $(this).closest('.dynamicRow').remove();
+        }
+    });
+});
+
 </script>
 @endsection

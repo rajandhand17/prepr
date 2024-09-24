@@ -6,7 +6,7 @@ interface ExploreInterface
 {
     public function recommendedLabsAndChallenges();
 
-    public function getFeaturedLabs();
+    public function getFeaturedModule();
 
     public function recommendedSkills($getUserSkills);
 
