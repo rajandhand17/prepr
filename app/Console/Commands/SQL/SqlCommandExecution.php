@@ -31,7 +31,7 @@ class SqlCommandExecution extends Command
     {
         try {
             Schema::disableForeignKeyConstraints();
-            DB::table('organizations')->where('title', '=', '')->orWhere('slug', '=', '')->delete();
+            DB::table('levels')->truncate();
             Schema::enableForeignKeyConstraints();
             $this->info('Sql command executed successfully.');
         } catch (Exception $e) {
