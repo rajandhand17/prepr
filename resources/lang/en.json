@@ -914,7 +914,7 @@
     "responses.pinned_skills_successfully_removed": "You have successfully removed pinned skill",
     "responses.pinned_skills_failed": "You have failed pinned this skill",
     "responses.list_conversation": "You have successfully retrieved conversations",
-    "responses.conversation_created": "you have successfully created conversation",
+    "responses.conversation_created": "Message sent successfully!",
     "responses.not_found_conversation_list": "The list of conversation has not been retrieved with success.",
     "responses.conversation_stored_failed": "Oops! The creation of conversation has failed.",
     "responses.conversation_not_found": "Conversation not found",

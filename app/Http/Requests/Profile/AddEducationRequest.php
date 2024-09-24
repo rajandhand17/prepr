@@ -29,14 +29,14 @@ class AddEducationRequest extends FormRequest
             'university.*'     => 'max:255',
             'degree'           => 'required|array',
             'degree.*'         => 'max:255',
-            'start_date'       => 'required|array',
+            'start_date'       => 'nullable|array',
             'start_date.*'     => 'before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'         => 'required|array',
+            'end_date'         => 'nullable|array',
             'end_date.*'       => 'after_or_equal:start_date.*',
-            'address'          => 'required|array',
-            'state'            => 'required|array',
-            'country'          => 'required|array',
-            'description'      => 'required|array',
+            'address'          => 'nullable|array',
+            'state'            => 'nullable|array',
+            'country'          => 'nullable|array',
+            'description'      => 'nullable|array',
         ];
         if ($this->enrollment_status == 'yes') {
             $return = [
