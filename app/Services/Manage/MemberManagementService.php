@@ -467,7 +467,7 @@ class MemberManagementService
         }
     }
 
-    public static function addMembers($componentCollectionObject, $component, $request, $memberList, $totalInvitationSent = 0)
+    public static function addMembers($componentCollectionObject, $component, $request, $memberList, $totalInvitationSent = 0, $isMagnet = false)
     {
         try {
             $already_members = [];
@@ -527,10 +527,13 @@ class MemberManagementService
                     $email_status = config('constants.member_management_email_status.scheduled');
             }
             if ($module_type !== null) {
-                $userData = auth()->user();
-                $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-                if (!$organization->chargebee_details) {
-                    ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                
+                if (!$isMagnet) {
+                    $userData = auth()->user();
+                    $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+                    if (!$organization->chargebee_details) {
+                        ChargebeeHelper::createChargebeePlanDetails($organization->id);
+                    }
                 }
                 DB::beginTransaction();
                 foreach ($memberList as $member) {
@@ -541,16 +544,19 @@ class MemberManagementService
                             'email'       => $member['invitee_email'],
                         ])->first();
                         if ($checkMemberExists == null) {
-                            //check user email limit here
-                            $organization->load('chargebee_details');
-                            $userInviteLimit = $organization->chargebee_details->user_invite_limits;
 
-                            $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
-                            if (!$isWithinInviteLimit) {
-                                throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
+                            if (!$isMagnet) {
+                                //check user email limit here
+                                $organization->load('chargebee_details');
+                                $userInviteLimit = $organization->chargebee_details->user_invite_limits;
+
+                                $isWithinInviteLimit = $userInviteLimit == -1 || $userInviteLimit > $totalInvitationSent;
+                                if (!$isWithinInviteLimit) {
+                                    throw new InvitationQuotaExceededException(__('responses.reached_invitation_limit'));
+                                }
+
+                                $totalInvitationSent++;
                             }
-
-                            $totalInvitationSent++;
 
                             $invite_status = config('constants.member_management_invite_status.invited');
                             if ($auto_invite == 0) {
@@ -623,7 +629,7 @@ class MemberManagementService
                                 MixpanelJob::dispatch(config('mixpanel.send_invite'), $invitedMember->id, auth()->user(), request()->ip());
                             }
                             $invitee_name = $member['invitee_name'] != null ? $member['invitee_name'] : 'Solver';
-                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
+                            $email_detail = ['invitee_email' => $member['invitee_email'], 'invitee_name' => $invitee_name, 'subject' => $subject, 'body' => $emailBody, 'slug' => config('site-settings.frontend_site_url'), 'component' => $component, 'inviter_name' =>  $isMagnet ? 'magnet' : auth()->user()->full_name, 'comp_title' =>  $componentCollectionObject->title, 'comp_image' => $componentCollectionObject->media, 'module_name' => $module_name, 'role' => $member['role'] ?? $request->role, 'comp_mediaType'=> $componentCollectionObject->media_type, 'org_image' => $componentCollectionObject->cover_image];
                             if ($member['invite_type'] === 'join_request') {
                                 $user = UserService::getUserById($componentCollectionObject->user_id);
                                 $user->notify(new ComponentJoinedNotification(__('responses.noti_new_user_request'), __('responses.noti_new_user_request_message').$component.'.'));
@@ -710,6 +716,7 @@ class MemberManagementService
         } catch (InvitationQuotaExceededException $e) {
             throw $e;
         } catch (\Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
             DB::rollBack();
 
