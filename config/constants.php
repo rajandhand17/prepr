@@ -483,6 +483,12 @@ return [
         'na'        => '3',
     ],
 
+    'project_member_management_auto_invite' => [
+        'no'  => '0',
+        'yes' => '1',
+        'na'  => '2',
+    ],
+
     'project_access_level' => [
         'viewer'      => '0',
         'editor'      => '1',

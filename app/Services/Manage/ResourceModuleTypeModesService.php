@@ -71,10 +71,14 @@ class ResourceModuleTypeModesService
     public static function cloneResourceModuleTypeModes($originalResourceModuleAssociation, $clonedResourceModuleId)
     {
         try {
-            if ($originalResourceModuleAssociation) {
-                $cloneResourceModuleSKills = $originalResourceModuleAssociation->replicate();
-                $cloneResourceModuleSKills->resource_module_id = $clonedResourceModuleId;
-                $cloneResourceModuleSKills->save();
+            // Check if the association is a module
+            if ($originalResourceModuleAssociation && $originalResourceModuleAssociation->isNotEmpty()) {
+                foreach ($originalResourceModuleAssociation as $originalAssociation) {
+                    // Replicate each model in the module
+                    $cloneResourceModuleSkills = $originalAssociation->replicate();
+                    $cloneResourceModuleSkills->resource_module_id = $clonedResourceModuleId;
+                    $cloneResourceModuleSkills->save();
+                }
             }
 
             return true;
