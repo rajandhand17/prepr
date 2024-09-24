@@ -14,12 +14,12 @@ class FeaturedModuleService
             $role = $roles->pluck('id')->unique();
             $roleArray = $role->toArray();
             $featuredModules = FeaturedModule::where(function ($query) use ($roleArray) {
-            foreach ($roleArray as $role) {
-                $query->orWhereRaw('JSON_CONTAINS(role, ?)', [json_encode((string) $role)]);
-            }
-        })->get();
+                foreach ($roleArray as $role) {
+                    $query->orWhereRaw('JSON_CONTAINS(role, ?)', [json_encode((string) $role)]);
+                }
+            })->get();
+
             return $featuredModules;
-            
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 
