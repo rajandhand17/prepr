@@ -25,20 +25,21 @@ class ChallengePitchService
             $mergedPitchData = [];
             $pitchDataEn = array_map(null, $request->pitch['name']['en'], $request->pitch['description']['en']);
             $pitchDataFr = array_map(null, $request->pitch['name']['fr-CA'], $request->pitch['description']['fr-CA']);
-            if(!empty($pitchDataEn)){
+            if (!empty($pitchDataEn)) {
                 foreach ($pitchDataEn as $index => $enData) {
                     $mergedPitchData[] = [
-                            'title'         => $enData[0],
-                            'description'   => $enData[1],
-                            'fr_CA_title'   => $pitchDataFr[$index][0],
-                            'fr_CA_description' => $pitchDataFr[$index][1],
-                            'template_id'   => $pitchTemplate->id
+                        'title'             => $enData[0],
+                        'description'       => $enData[1],
+                        'fr_CA_title'       => $pitchDataFr[$index][0],
+                        'fr_CA_description' => $pitchDataFr[$index][1],
+                        'template_id'       => $pitchTemplate->id,
                     ];
                 }
             }
-            if(!empty($mergedPitchData)){
+            if (!empty($mergedPitchData)) {
                 ChallengePitch::insert($mergedPitchData);
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
