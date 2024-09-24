@@ -22,17 +22,23 @@ class ChallengePitchService
     public static function saveChallengePitch($request, $pitchTemplate)
     {
         try {
-            $pitchSectionArray = [];
-            $pitchData = array_map(null, $request->pitch['name']['en'], $request->pitch['description']['fr-CA']);
-            foreach ($pitchData as $pitch) {
-                $pitchSection['title'] = $pitch[0];
-                $pitchSection['description'] = $pitch[1];
-                $pitchSection['fr_CA_title'] = $pitch[0];
-                $pitchSection['fr_CA_description'] = $pitch[1];
-                $pitchSection['template_id'] = $pitchTemplate->id;
-                $pitchSectionArray[] = $pitchSection;
+            $mergedPitchData = [];
+            $pitchDataEn = array_map(null, $request->pitch['name']['en'], $request->pitch['description']['en']);
+            $pitchDataFr = array_map(null, $request->pitch['name']['fr-CA'], $request->pitch['description']['fr-CA']);
+            if (!empty($pitchDataEn)) {
+                foreach ($pitchDataEn as $index => $enData) {
+                    $mergedPitchData[] = [
+                        'title'             => $enData[0],
+                        'description'       => $enData[1],
+                        'fr_CA_title'       => $pitchDataFr[$index][0],
+                        'fr_CA_description' => $pitchDataFr[$index][1],
+                        'template_id'       => $pitchTemplate->id,
+                    ];
+                }
             }
-            ChallengePitch::insert($pitchSectionArray);
+            if (!empty($mergedPitchData)) {
+                ChallengePitch::insert($mergedPitchData);
+            }
 
             return true;
         } catch (Exception $e) {
