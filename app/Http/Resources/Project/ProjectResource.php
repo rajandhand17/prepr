@@ -122,7 +122,7 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
-            if($fetchChallenge){
+            if ($fetchChallenge) {
                 $org = OrganizationService::getOrganizationExistBasedOnId($fetchChallenge->organization_id);
             }
             if ($fetchChallenge && $fetchChallenge->participation_achievement) {
