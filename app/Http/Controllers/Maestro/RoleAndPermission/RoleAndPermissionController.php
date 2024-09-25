@@ -15,6 +15,10 @@ class RoleAndPermissionController extends Controller
 {
     use RoleAndPermissionTrait;
 
+    public function __construct()
+    {
+        $this->middleware('auth-check');
+    }
     /**
      * Display a listing of the resource.
      */
