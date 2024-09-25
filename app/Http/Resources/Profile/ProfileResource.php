@@ -163,12 +163,38 @@ class ProfileResource extends JsonResource
             }
             $skills = null;
             $verifySkills = null;
+            
             if ($this->userSkills) {
-                $associatedSkills = $this->userSkills->pluck('skill');
-                $skills = SkillService::getSkillBasedOnIds($associatedSkills)->pluck('title', 'id');
-                $verifiedSkills = $this->userSkills->where('is_verified', '1')->pluck('skill');
-                $verifySkills = SkillService::getSkillBasedOnIds($verifiedSkills)->pluck('title', 'id');
+                // Get the associated skills with verification_count
+                $associatedSkills = $this->userSkills->mapWithKeys(function ($userSkill) {
+                    return [$userSkill->skill => $userSkill->verification_count];
+                });
+            
+                // Fetch all skills from SkillService and map them with the title and id
+                $skills = SkillService::getSkillBasedOnIds($associatedSkills->keys())
+                    ->map(function ($skill) use ($associatedSkills) {
+                        return [
+                            'title' => $skill->title,
+                            'id' => $skill->id,
+                            'verification_count' => $associatedSkills[$skill->id] ?? 0 // Include verification count here
+                        ];
+                    });
+                // Get verified skills (make sure the keys are the skill IDs)
+                $verifiedSkills = $this->userSkills->where('is_verified', '1')->mapWithKeys(function ($userSkill) {
+                    return [$userSkill->skill => $userSkill->verification_count]; // Map skill ID to verification_count
+                });
+            
+                // Fetch verified skills from SkillService and map them with the title, id, and verification count
+                $verifySkills = SkillService::getSkillBasedOnIds($verifiedSkills->keys())
+                    ->map(function ($skill) use ($verifiedSkills) {
+                        return [
+                            'title' => $skill->title,
+                            'id' => $skill->id,
+                            'verification_count' => $verifiedSkills[$skill->id] ?? 0 // Correctly map verification count by skill ID
+                        ];
+                    });
             }
+            
 
             if ($this->userTags) {
                 $associatedTag = $this->userTags->pluck('tag_id');
