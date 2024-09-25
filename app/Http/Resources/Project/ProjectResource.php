@@ -248,7 +248,7 @@ class ProjectResource extends JsonResource
             $created_by['full_name'] = data_get($userDetails, 'full_name');
             $created_by['username'] = data_get($userDetails, 'username');
             $created_by['email'] = data_get($userDetails, 'email');
-            $created_by['profile_image'] = data_get($userDetails,'profile_image');
+            $created_by['profile_image'] = data_get($userDetails, 'profile_image');
         }
 
         return [
