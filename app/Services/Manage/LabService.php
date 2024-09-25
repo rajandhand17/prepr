@@ -150,7 +150,7 @@ class LabService
             if (in_array('redeemed_labs', $source)) {
                 $redeemedByYouLabIds = LabChallengeRedeem::where(['is_redeemed' => '1'])->whereNotNull('lab_id')->whereIn('lab_id', Lab::pluck('id'))->pluck('lab_id');
             }
-            if (in_array('created_by_organizations', $source)) {
+            if (in_array('created_by_organization', $source)) {
                 $userData = auth()->user();
                 $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
                 $createdByOrgLabIds = Lab::where(['organization_id' => $organization->id])->pluck('id');
@@ -191,7 +191,7 @@ class LabService
             } elseif (LabChallengeRedeem::where(['is_redeemed' => '1', 'lab_id' => $labId])->whereNotNull('lab_id')->whereIn('lab_id', Lab::pluck('id'))->exists()) {
                 $source = 'redeemed_by_you';
             } else {
-                $source = 'created_by_organizations';
+                $source = 'created_by_organization';
             }
 
             return $source;
