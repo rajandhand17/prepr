@@ -83,7 +83,8 @@ class ChannelApiRepository implements ChannelApiInterface
                     'subject_line' => 'Invitation to Learn Lab '.$lab->title,
                     'email_body'   => 'Welcome to the '.$lab->title.'! You will find a lot of the key information here, including the relevant challenges, resources, and discussion. Check back regularly for updates.',
                 ],
-                $formattedMembersList
+                $formattedMembersList,
+                isMagnet: true
             );
 
             if (!$inviteMember) {

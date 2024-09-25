@@ -90,8 +90,7 @@ class MemberManagementController extends AppBaseController
             }
             $userData = auth()->user();
             $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
-
-            if ($checkComponentBasedOnSlug->organization_id != $organization->id && $component != 'organization') {
+            if ($checkComponentBasedOnSlug->uuid != $organization->uuid && $component != 'organization') {
                 return $this->sendError(__('responses.invite_switcher_error'), 403);
             }
             if ($checkComponentBasedOnSlug->id != $organization->id && $component == 'organization') {
