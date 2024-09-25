@@ -271,6 +271,8 @@ return [
     'challenge_flexible_announcement_by' => [
         'email'        => '0',
         'notification' => '1',
+        'immediately'  => '0',
+        'custom'       => '1',
     ],
 
     'challenge_announcement_send_status' => [
