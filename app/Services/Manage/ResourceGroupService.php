@@ -435,10 +435,10 @@ class ResourceGroupService
     {
         try {
             $resourceGroup = new ResourceGroup();
-            $slug = UtilityHelper::generateSlug($organization->title . ' ' . $resourceGroupData->title, $resourceGroup);
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$resourceGroupData->title, $resourceGroup);
             $resourceGroup = $resourceGroupData->replicate();
             $resourceGroup->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $resourceGroup->title = $organization->title . ' ' . $resourceGroupData->title;
+            $resourceGroup->title = $organization->title.' '.$resourceGroupData->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organization->id;
