@@ -29,8 +29,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('achievement:add-lab-program-achievement')->everyThirtyMinutes();
         $schedule->command('achievement:add-lab-achievement')->everyThirtyMinutes();
         $schedule->command('solr:sync')->daily();
-        $schedule->command('email-summary-report:monthly-report')->monthly();
-        $schedule->command('email-summary-report:weekly-report')->weekly();
+        // $schedule->command('email-summary-report:monthly-report')->monthly(); Comment for Dummy Production
+        // $schedule->command('email-summary-report:weekly-report')->weekly(); Comment for Dummy Production
     }
 
     /**

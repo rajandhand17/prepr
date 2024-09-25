@@ -144,7 +144,6 @@ class ProfileResource extends JsonResource
                 }
                 $about = $this->userPersonal->about ? $this->userPersonal->about : null;
                 $age = $this->userPersonal->age ? $this->userPersonal->age : null;
-                $gender = $this->userPersonal->gender ? $this->userPersonal->gender : null;
                 $dob = $this->userPersonal->date_of_birth ? $this->userPersonal->date_of_birth : null;
                 $recent_immigrant = $this->userPersonal->recent_immigrant == 1 ? 'Yes' : 'No';
                 $indigenous_group = $this->userPersonal->indigenous_group == 1 ? 'Yes' : 'No';
