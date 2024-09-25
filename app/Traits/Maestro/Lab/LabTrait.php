@@ -177,4 +177,21 @@ trait LabTrait
             return false;
         }
     }
+
+    private function getLabAddress($id)
+    {
+        try {
+            $labAddress = LabAddressService::getLabAddress($id);
+
+            if ($labAddress) {
+                return $labAddress;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
