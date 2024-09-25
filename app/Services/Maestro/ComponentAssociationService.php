@@ -234,7 +234,7 @@ class ComponentAssociationService
             if ($request->has('resource_modules')) {
                 $sequence = 1;
                 if (count($request->resource_modules) > 0) {
-                   // $getResourceGroupIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($res);
+                    // $getResourceGroupIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($res);
                     $existComponentAssociationResourceModuleId = ComponentAssociation::where([
                         ['lab_id', '=', $lab],
                         ['resource_module_id', '!=', null],

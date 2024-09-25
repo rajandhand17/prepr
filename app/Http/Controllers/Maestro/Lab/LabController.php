@@ -172,6 +172,7 @@ class LabController extends Controller
             $labAddress = $this->getLabAddress($data->id);
             $social_name = SocialLinkService::getSocialLinkList();
             $languages = LanguageService::getLanguages();
+
             return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name', 'labAddress'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);

@@ -80,7 +80,7 @@ class LabAddressService
         }
     }
 
-    public static function getLabAddress($id) 
+    public static function getLabAddress($id)
     {
         try {
             $address = LabAddress::where('lab_id', $id)->pluck('address')->first();
@@ -88,6 +88,7 @@ class LabAddressService
             if (!$address) {
                 return null;
             }
+
             return $address;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
