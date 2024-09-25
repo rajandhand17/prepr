@@ -11,5 +11,10 @@ RUN apk update && apk add --no-cache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install -j$(nproc) gd
 
+# Install php Imagick Extension
+RUN apk add imagemagick imagemagick-dev php82-pecl-imagick \
+&& pecl install imagick \
+&& docker-php-ext-enable imagick
+
 # Copy Custom php.ini
 COPY custom-php.ini /usr/local/etc/php/conf.d/custom-php.ini

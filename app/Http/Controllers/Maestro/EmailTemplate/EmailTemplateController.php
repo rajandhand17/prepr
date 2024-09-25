@@ -28,9 +28,9 @@ class EmailTemplateController extends Controller
      */
     use EmailTemplateTrait;
 
-    public function construct()
+    public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     /**
