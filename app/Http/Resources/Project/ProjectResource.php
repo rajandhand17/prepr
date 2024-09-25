@@ -181,7 +181,17 @@ class ProjectResource extends JsonResource
         if ($this->lab_id) {
             $lab_details = LabService::getLabBasedOnId($this->lab_id);
             if ($lab_details) {
-                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug', 'description', 'media', 'media_type', 'privacy', 'status']);
+                $lab_details = [
+                    'id'    => $lab_details->id,
+                    'uuid'  => $lab_details->uuid,
+                    'title' => $lab_details->title,
+                    'slug'  => $lab_details->slug,
+                    'description'  => $lab_details->description,
+                    'media'  => $lab_details->media,
+                    'media_type'  => $lab_details->media_type,
+                    'privacy'  => ($lab_details->privacy == '1') ? 'yes' : 'no',
+                    'status'  => ($lab_details->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+                ];
             }
         }
 
