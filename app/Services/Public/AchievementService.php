@@ -176,13 +176,13 @@ class AchievementService
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
-                $pdfPath = storage_path($userAchievement->certificate_number.'.pdf');
+                $pdfPath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.pdf');
 
                 if ($format === 'image') {
                     file_put_contents($pdfPath, $dompdf->output());
                     $pdf = new Pdf($pdfPath);
                     $pdf->setOutputFormat('jpeg');
-                    $imagePath = storage_path($userAchievement->certificate_number.'.jpeg');
+                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.jpeg');
                     $pdf->saveImage($imagePath);
                     $fileName = $userAchievement->certificate_number.'.jpeg';
                     $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'certificate');
@@ -196,7 +196,6 @@ class AchievementService
 
             return false;
         } catch(Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
