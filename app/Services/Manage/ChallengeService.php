@@ -918,7 +918,6 @@ class ChallengeService
                 return $challenge_details;
             }
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;

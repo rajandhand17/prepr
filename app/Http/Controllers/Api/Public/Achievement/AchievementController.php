@@ -101,7 +101,6 @@ class AchievementController extends AppBaseController
 
             return $this->sendError(__('responses.failed_download_certificate'), 500);
         } catch(Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
