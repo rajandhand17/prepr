@@ -234,7 +234,7 @@ class UserSkillsService
 
                 foreach ($skills as $skill) {
                     if (isset($existingSkills[$skill])) {
-                        $existingSkills[$skill]->verification_count=$existingSkills[$skill]->verification_count+1;
+                        $existingSkills[$skill]->verification_count = $existingSkills[$skill]->verification_count + 1;
                         $existingSkills[$skill]->is_verified = '1';
                         $existingSkills[$skill]->save();
                     }
