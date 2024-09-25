@@ -182,7 +182,6 @@ class ProjectResource extends JsonResource
             $lab_details = LabService::getLabBasedOnId($this->lab_id);
             if ($lab_details) {
                 $lab_details = [
-                    'id'           => $lab_details->id,
                     'uuid'         => $lab_details->uuid,
                     'title'        => $lab_details->title,
                     'slug'         => $lab_details->slug,
