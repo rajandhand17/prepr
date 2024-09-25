@@ -29,7 +29,7 @@ class TrophyAwardsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
     /* -----------------------------------------------------------------------------------------
       @Description: Function for view all trophy awards

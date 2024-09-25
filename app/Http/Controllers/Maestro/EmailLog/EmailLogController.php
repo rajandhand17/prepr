@@ -25,9 +25,9 @@ class EmailLogController extends Controller
      */
     //use EmailLogTrait;
 
-    public function construct()
+    public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     /**
