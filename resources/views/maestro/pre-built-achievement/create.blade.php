@@ -6,6 +6,10 @@
         border: 2px dashed #575757;
         padding: 5px 5px 15px;
     }
+    .break {
+        display: block;
+        margin-top: 15px; /* Adjust as needed */
+    }
 </style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -53,20 +57,18 @@
           @endif
         </div>
         <div class="row">
+          <div class="col-md-12">
+            <b>Upload Badge Image</b><br>
+            This image needs to be at least 200*200 Pixels.
+          </div></div>
+        <div class="row">
           <div class="col-md-12 text-center">
-            {{-- <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
-              {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}<br>
-              {!! Form::file('image', ['class' => 'form-control', 'id' => 'imageUpload']) !!}
-              <div id="fileError" style="color: red; margin-top: 5px;"></div>
-            </div> --}}
             <div id="drag-and-drop-zone" class="dm-uploader p-5 sld_brder">
               <div class="row">
                   <div class="col-md-12 col-md-12 mb-1 mt-1">
-                      <label class="control-label">Cover Image</label>
-
                       <p class="mb-0"><br></p>
-                      <div class="btn btn-primary mb-2 showBg1">
-                          <span>Upload Logo</span>
+                      <div class="btn btn-default mb-2 showBg1">
+                          <span>Upload Badge Image</span>
                           <input type="file" title="labels.labels_click_to_add_files" name="cover_image" id="coverImage" onchange="loadFile1(event)">
                       </div>
                       
@@ -75,6 +77,7 @@
           </div>
           </div>
         </div>
+        
         <div class="row">
           <div class="col-md-6">
             <div class="form-group {{($errors->has('points')) ? 'has-error' : ''}}">
