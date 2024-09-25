@@ -179,8 +179,8 @@ class ProjectService
                                 break;
 
                             case 'challenge_closed':
-                                $getChallenge = Challenge::find($projectData->challenge_id)->is_open;
-                                if ($getChallenge !== '0') {
+                                $getChallenge = ChallengeService::getChallengeBasedOnId($projectData->challenge_id);
+                                if ($getChallenge && $getChallenge->is_open == '1') {
                                     $projectIds = $projectData->id;
                                 }
                                 break;

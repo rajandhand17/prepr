@@ -949,7 +949,7 @@ class ChallengeService
                     'template_title' => __('responses.any_pitch_template'),
                 ];
             } else {
-                $template = PitchTemplate::where('id', $templateId)->first();
+                $template = PitchTemplate::where('id', $templateId)->first() ?? PitchTemplate::first();
                 if ($template) {
                     $templateData = [
                         'template_id'    => $template->id,
