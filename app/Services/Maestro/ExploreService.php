@@ -117,7 +117,7 @@ class ExploreService
             FeaturedModule::create([
                 'module_type'    => $moduleType,
                 'module_id'      => $request->compId,
-                'role'           => '["'. $roleId->id .'"]',
+                'role'           => '["'.$roleId->id.'"]',
                 'title'          => $componentRequest->title,
                 'description'    => $description,
                 'button_text'    => 'View',
