@@ -394,6 +394,13 @@ class User extends Authenticatable
                     $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status' => '1']);
                 }
             }
+            // For Project member management
+            $project_member_manager = ProjectMemberManagement::where(['email' => $request->email, 'auto_invite' => '1'])->get();
+            if ($project_member_manager) {
+                foreach ($project_member_manager as $project_member) {
+                    $project_member_manager = ProjectMemberManagement::where('id', $project_member->id)->update(['invite_status' => '1', 'invitee_name' => $name]);
+                }
+            }
             if ($user->id) {
                 if ($request->register_type == 'organization') {
                     $organization = new Organization();
