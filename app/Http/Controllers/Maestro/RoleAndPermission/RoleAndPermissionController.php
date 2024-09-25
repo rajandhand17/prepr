@@ -19,6 +19,7 @@ class RoleAndPermissionController extends Controller
     {
         $this->middleware('auth-check');
     }
+
     /**
      * Display a listing of the resource.
      */
