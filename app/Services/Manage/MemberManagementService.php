@@ -714,7 +714,6 @@ class MemberManagementService
         } catch (InvitationQuotaExceededException $e) {
             throw $e;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
             DB::rollBack();
 
