@@ -76,15 +76,39 @@
             color: #4992CE;
             margin-top: 10px;
         }
+
+        .image-with-text {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            max-width: 600px;
+            height: 300px; /* Adjust height as needed */
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 
 <body>
+@php $fallbackImage = 'https://dev.learnlab.ai/static/media/organization.b81447a21b1ee865d621.png'; @endphp
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
         <div class="title">You have been invited to join an {{$emailData['module_name']}}</div>
-        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image"><br>
-        <a href="{{ $emailData['slug'] }} " class="cta-button">Join Now</a>
+        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image" 
+           onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';"><br>
+       <div id="fallback" class="image-with-text" style="display: none; background-image: url('{{ $fallbackImage }}');">
+           {{ $emailData['comp_title'] }}
+        </div><br>
+        <a href="{{ $emailData['slug'] }} " class="cta-button"  style="color:white">Join Now</a>
         <div class="message">
             Dear {{ $emailData['invitee_name'] }},
             <br><br>
@@ -95,7 +119,7 @@
             Prepr team
         </div>
         <div class="footer">
-            ©2023 Preprlabs. All rights reserved.
+            ©2024 Preprlabs. All rights reserved.
             <div class="contact">support@prepr.org</div>
             This email message was auto-generated. If you need assistance please contact us.
         </div>

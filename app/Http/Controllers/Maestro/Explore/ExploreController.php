@@ -33,9 +33,9 @@ class ExploreController extends Controller
      */
     use ExploreTrait;
 
-    public function construct()
+    public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
     }
 
     /**

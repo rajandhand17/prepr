@@ -97,9 +97,15 @@
             </label>
             <select name="roles[]" class="select2" multiple="multiple" data-placeholder="Select a Role" style="width: 100%;">
                 @if(!empty($roles))
-                @foreach($roles as $key => $role)
-                    <option value="{{ $role->name }}"  @selected(in_array($role->name, $selected_role))>{{ $role->display_name }}</option>
-                @endforeach
+                    @foreach($roles as $key => $role)
+                        <option value="{{ $role->id }}" @selected(in_array($role->id, $selected_role))>
+                            @if($role->display_name == 'User')
+                                All Users
+                            @else
+                                {{ $role->display_name }}
+                            @endif
+                        </option>
+                    @endforeach
                 @endif
             </select>
             
