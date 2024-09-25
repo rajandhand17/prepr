@@ -95,7 +95,6 @@ class ProjectController extends AppBaseController
 
             return $this->sendError(__('responses.not_found_projects_list'), 404);
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);
