@@ -246,7 +246,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
             $deadlineDate = !empty($this->input('registration_deadline_date')) ? 'after_or_equal:registration_deadline_date' : 'after:start_date';
             $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
-            $base_rules['start_date_description'] = 'required_if:request_type,publish';
+            $base_rules['start_date_description'] = 'nullable';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
             $base_rules['registration_deadline_date_description'] = 'nullable';
             $base_rules['submission_deadline_date'] = ['required_if:request_type,publish', $deadlineDate];
@@ -268,7 +268,7 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_timelines_title'] = 'nullable|array';
             $base_rules['custom_timelines_title.*'] = 'nullable';
             $base_rules['custom_timelines_number'] = 'nullable|array';
-            $base_rules['custom_timelines_number.*'] = 'integer|max:100';
+            $base_rules['custom_timelines_number.*'] = 'nullable|integer|max:100';
             $base_rules['custom_timelines_duration'] = 'nullable|array';
             $base_rules['custom_timelines_duration.*'] = 'in:days,weeks,months';
             $base_rules['custom_timelines_description'] = 'nullable|array';
@@ -280,11 +280,11 @@ class CreateChallengeRequest extends FormRequest
             $base_rules['custom_flexible_announcement'] = 'nullable|array';
             $base_rules['custom_flexible_announcement.*'] = 'required_if:schedule_custom_notify.*,yes|in:yes,no';
             $base_rules['custom_announcement_type'] = 'nullable|array';
-            $base_rules['custom_announcement_type.*'] = 'required_if:custom_flexible_announcement.*,yes|in:email,notification';
+            $base_rules['custom_announcement_type.*'] = 'nullable|required_if:custom_flexible_announcement.*,yes|in:email,notification';
             $base_rules['custom_announcement_number'] = 'nullable|array';
-            $base_rules['custom_announcement_number.*'] = 'integer|max:100';
+            $base_rules['custom_announcement_number.*'] = 'nullable|integer|max:100';
             $base_rules['custom_announcement_duration'] = 'nullable|array';
-            $base_rules['custom_announcement_duration.*'] = 'required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
+            $base_rules['custom_announcement_duration.*'] = 'nullable|required_if:custom_flexible_announcement.*,yes|in:days,weeks,months';
             $base_rules['custom_announcement_description'] = 'nullable|array';
             $base_rules['custom_announcement_description.*'] = 'nullable';
         }
