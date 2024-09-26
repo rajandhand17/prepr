@@ -409,6 +409,16 @@ class ChallengeResource extends JsonResource
             $isActive = 'no';
         }
 
+        if (auth('api')->check() && $isActive === 'yes') {
+            // check challenge is started for user to participate
+            if ($challenge_timelines['timeline_type'] === 'restricted') {
+                $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth('api')->user());
+                if ($checkChallengeProjectCreationEnabled != true) {
+                    $isActive = 'no';
+                } 
+            }
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
