@@ -666,7 +666,7 @@ class ChallengeService
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
-            $title = UtilityHelper::generateTitle($organization->title . ' ' .$originalChallenge->title, $model);
+            $title = UtilityHelper::generateTitle($organization->title.' '.$originalChallenge->title, $model);
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $clonedChallenge->title = $title;
