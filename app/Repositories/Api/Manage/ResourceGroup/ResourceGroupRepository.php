@@ -237,11 +237,9 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $cloneResourceGroups['cloneResourceGroupStack'] &&
                 $cloneResourceGroups['cloneResourceGroupsTypeMode'] &&
                 $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
-                DB::commit();
 
                 return $cloneResourceGroups['cloneResourceGroups'];
             }
-            DB::rollback();
 
             return false;
         } catch(\Exception $e) {

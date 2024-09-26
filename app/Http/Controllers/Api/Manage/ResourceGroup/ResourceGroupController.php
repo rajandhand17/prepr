@@ -85,6 +85,7 @@ class ResourceGroupController extends AppBaseController
             if (!$organization) {
                 return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
+
             if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
                 return $this->sendError(__('responses.resource_group_switcher_error'), 403);
             }
