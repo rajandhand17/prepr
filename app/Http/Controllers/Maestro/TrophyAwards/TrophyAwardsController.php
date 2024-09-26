@@ -27,10 +27,6 @@ class TrophyAwardsController extends Controller
      */
     use TrophyAwardsTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
     /* -----------------------------------------------------------------------------------------
       @Description: Function for view all trophy awards
       @Output: Show all trophy awards on admin panel
