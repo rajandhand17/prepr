@@ -415,7 +415,7 @@ class ChallengeResource extends JsonResource
                 $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth('api')->user());
                 if ($checkChallengeProjectCreationEnabled != true) {
                     $isActive = 'no';
-                } 
+                }
             }
         }
 
