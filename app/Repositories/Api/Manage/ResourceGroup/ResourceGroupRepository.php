@@ -237,7 +237,6 @@ class ResourceGroupRepository implements ResourceGroupInterface
                 $cloneResourceGroups['cloneResourceGroupStack'] &&
                 $cloneResourceGroups['cloneResourceGroupsTypeMode'] &&
                 $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
-
                 return $cloneResourceGroups['cloneResourceGroups'];
             }
 
