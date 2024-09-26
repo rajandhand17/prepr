@@ -17,7 +17,6 @@ class SettingController extends Controller
 
     public function __construct(SettingService $settingService)
     {
-        $this->middleware('web');
         $this->settingService = $settingService;
     }
 
@@ -69,7 +68,7 @@ class SettingController extends Controller
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
                 ['data' => 'code', 'name' => 'code', 'title' => 'Code', 'width' => '5%'],
-                ['data' => 'module_type', 'name' => 'type', 'title' => 'Type', 'width' => '10%'],
+                ['data' => 'module_type', 'name' => 'module_type', 'title' => 'Type', 'width' => '10%'],
                 ['data' => 'label', 'name' => 'label', 'title' => 'Label', 'width' => '10%'],
                 ['data' => 'value', 'name' => 'value', 'title' => 'Value', 'width' => '10%'],
                 ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'width' => '15%', 'orderable' => false, 'searchable' => false],

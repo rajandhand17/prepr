@@ -71,7 +71,7 @@ environments:
     storage: learnlab-serverless-production
     warm: 4
     concurrency: 50
-    scheduler: false
+    # scheduler: false
     # queue-timeout: 10
     # queues: false
     #   - default

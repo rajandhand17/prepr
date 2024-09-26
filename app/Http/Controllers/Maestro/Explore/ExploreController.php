@@ -33,11 +33,6 @@ class ExploreController extends Controller
      */
     use ExploreTrait;
 
-    public function construct()
-    {
-        $this->middleware('web');
-    }
-
     /**
      * Show the application dashboard.
      *

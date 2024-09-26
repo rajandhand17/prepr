@@ -189,14 +189,15 @@ class ProjectRepository implements ProjectInterface
             $inviteStatus = '1';
             $emailStatus = '1';
             $accessLevel = '2';
+            $autoInvite = config('constants.project_member_management_auto_invite.no');
             $getTemplate = EmailTemplateService::getEmailTemplate(config('constants.email_template_type.invitation'), config('constants.member_management_component_type.project'), $request->language);
 
-            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $getTemplate) {
+            $createProject = DB::transaction(function () use ($request, $uploadedCoverMedia, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $getTemplate, $autoInvite) {
                 $createProject = $this->projectService->createProject($request, $uploadedCoverMedia);
                 $getTemplate->body_content = str_replace('user_name', $userFullName, str_replace('component_title', $createProject->title, $getTemplate->body_content));
                 $subject = $getTemplate->subject;
                 $emailBody = $getTemplate->body_content;
-                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody);
+                $createProjectMember = $this->projectMemberManagementService->feedParticipatesData($createProject->id, $userId, $userEmail, $userFullName, $inviteType, $inviteStatus, $emailStatus, $accessLevel, $subject, $emailBody, $autoInvite);
                 $challenge = $this->challengeService->getChallengeBasedOnId($createProject->challenge_id);
                 if ($challenge) {
                     if ($challenge->privacy == '0') {
@@ -481,7 +482,6 @@ class ProjectRepository implements ProjectInterface
                 $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 dispatch(new ProcessChallengePathAchievementJob($fetchAcceptedMemberIds, $fetchChallenge->id));
-                DB::commit();
 
                 return $submitProject['submitProject'];
             }

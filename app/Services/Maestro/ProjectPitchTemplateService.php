@@ -37,17 +37,21 @@ class ProjectPitchTemplateService
     {
         try {
             $languages = LanguageService::getAllActiveLanguages();
-            if ($moduleMode == 'edit') {
-                $pitchTemplate = PitchTemplate::findOrFail($id);
+            if ($moduleMode == 'update') {
+                $pitchTemplate = PitchTemplate::where('id', $id)->update(['title' => $request->title, 'fr_CA_title' => $request->fr_CA_title]);
+
+                return PitchTemplate::find($id);
             } else {
                 $pitchTemplate = new PitchTemplate();
-            }
-            foreach ($languages as $key => $single) {
-                $columName = UtilityHelper::getColumName($single->iso, 'title');
-                $pitchTemplate->$columName = $request->$columName;
-            }
-            if ($pitchTemplate->save()) {
-                return $pitchTemplate;
+                foreach ($languages as $key => $single) {
+                    $columName = UtilityHelper::getColumName($single->iso, 'title');
+                    $pitchTemplate->$columName = $request->$columName;
+                }
+                if ($pitchTemplate->save()) {
+                    return $pitchTemplate;
+                }
+
+                return true;
             }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
