@@ -21,7 +21,7 @@ class UserPatentService
                     'name'       => $input['name'][$key],
                     'patent_date'=> $input['patent_date'][$key] ?? null,
                     'description'=> $input['description'][$key] ?? null,
-            ]);
+                ]);
                 $allPatents[] = $create;
             }
             $profile_data = [
