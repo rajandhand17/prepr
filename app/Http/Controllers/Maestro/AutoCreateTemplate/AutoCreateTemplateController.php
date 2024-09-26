@@ -61,4 +61,20 @@ class AutoCreateTemplateController extends Controller
             return redirect()->back()->with(['error' =>$e->getMessage()]);
         }
     }
+
+    public function getPreSelectList(Request $request)
+    {
+        try {
+            $getPreSelectList = $this->fetchPreSelectList($request);
+            if ($getPreSelectList) {
+                return $getPreSelectList;
+            }
+
+            return redirect()->back()->with(['error' =>'Pre Select List Not Found']);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->back()->with(['error' =>$e->getMessage()]);
+        }
+    }
 }

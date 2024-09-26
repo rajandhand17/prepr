@@ -294,6 +294,15 @@
             default:
                 break;
         }
+        role_selected= $("#role").val();
+        role_type_selected=null;
+        if(role_selected=="2"){
+            role_type_selected= $("#org_type").val();
+        }
+        if(role_selected=="6"){
+            role_type_selected= $("#user_type").val();
+        }
+        getPreSelectList(role_selected, role_type_selected);
     }
 
 
@@ -359,5 +368,50 @@
             $('#cloneModal').modal('show');
         }
     })
+
+    function getPreSelectList(role_selected, role_type_selected)
+{
+    $.ajax({
+            type:'POST',
+            url:"{{ route('getPreSelectList') }}",
+            data:{role_selected:role_selected, role_type_selected:role_type_selected,
+                language : $('#selectlang :selected').val()},
+            success:function(respoonse){
+            if(respoonse.result!= ''){
+                $('#clone_lab_chk').prop('checked',true);
+                $('#lab_list_div').css('display','block')
+                $('#lab_group_list_div').css('display','block')
+
+                if(respoonse.invite_info.invite_labs== '1'){
+                    $('#invite_lab_chk').prop('checked',true);
+                    $('#invite_users_div').css('display','block');
+                    $('#invite_lab_div').css('display','block');
+
+                }else{
+                    $('#invite_lab_chk').prop('checked',false);
+                    $('#invite_users_div').css('display','block');
+                    $('#invite_lab_div').css('display','block');
+                }
+
+            }else{
+                $('#clone_lab_chk').prop('checked',false);
+                $('#lab_list_div').css('display','none')
+
+            }
+
+                $('#lab_list').html('');
+            var toAppend = '';
+            $.each(respoonse.result,function(index,title){
+                toAppend += '<option value='+title.id+' selected>'+title.text+'</option>';
+            });
+
+            $('#lab_list').append(toAppend);
+
+
+            }
+    });
+}
+
+
 </script>
 @endsection

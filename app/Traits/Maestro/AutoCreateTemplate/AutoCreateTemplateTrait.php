@@ -40,4 +40,16 @@ trait AutoCreateTemplateTrait
             return false;
         }
     }
+
+    public function fetchPreSelectList($request)
+    {
+        try {
+            return AutoCreateTemplatesService::fetchPreSelectList($request);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+
+    }
 }
