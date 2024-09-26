@@ -27,15 +27,17 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"></h3>
-                        {{-- <select id="component_type_filter" class="form-control">
-                            <option value="">All Components</option>
-                            <option value="lab">Lab</option>
-                            <option value="lab_program">Lab Program</option>
-                            <option value="challenge">Challenge</option>
-                            <option value="challenge_path">Challenge Path</option>
-                        </select> --}}
-                        
+                        <div class="col-sm-4" style="float: right;">
+                            <select onchange="sortByComponent(this.value)" class="form-control">
+                                <option value="all">Select Component</option>
+                                <option value="challenge">Challenge</option>
+                                <option value="challenge_path">Challenge Path</option>
+                                <option value="lab">Lab</option>
+                                <option value="lab_program">Lab Program</option>
+                                <option value="resource_group">Resource Group</option>
+                                <option value="learning_path">Learning Path</option>
+                            </select>                            
+                        </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -72,6 +74,18 @@
     </script>
 
     <script>
+        function sortByComponent(component){
+            $.ajax({
+                url: '{{ route('setComponentForFilter') }}',
+                type: 'POST',
+                data: {
+                    component: component
+                },
+                success: function (result) {
+                    $('#dataTableBuilder').DataTable().ajax.reload();
+                },
+            });
+        }
         function deleteAchievement(url) {
             var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             Swal.fire({
