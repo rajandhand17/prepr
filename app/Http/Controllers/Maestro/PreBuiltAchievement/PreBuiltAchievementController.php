@@ -21,18 +21,22 @@ class PreBuiltAchievementController extends Controller
         $this->middleware('auth-check');
     }
 
-    public function index(Builder $builder)
+    public function index(Builder $builder, Request $request)
     {
         try {
-            $achievement = $this->getPreBuiltAchievement();
-            if (request()->ajax()) {
+            $achievement = PreBuiltAchievement::query();
+            if ($request->ajax()) {
+                $component = \Session::get('componentFilter');
+                if($component != 'all' && !empty($component)){
+                    $filterIds = PreBuiltAchievement::whereRaw("FIND_IN_SET(?, component_type)", $component)->pluck('id');
+                    $achievement = $achievement->whereIn('id',$filterIds);
+                }
                 return DataTables::eloquent($achievement)
                     ->addColumn('action', static function (PreBuiltAchievement $achievementData) {
                         return '<a style="padding-left:10px" class="mr-10" href="'.route('pre-built-achievement.show', ['pre_built_achievement' => $achievementData->id]).'"><i class="fas fa-eye"></i></a><a style="padding-left:20px" class="mr-10" href="'.route('pre-built-achievement.edit', ['pre_built_achievement' => $achievementData->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteAchievement(\''.route('pre-built-achievement.destroy', ['pre_built_achievement' => $achievementData->id]).'\')"><i class="fas fa-trash" style="color: red;"></i></a>';
                     })
                     ->editColumn('achievement_image', static function (PreBuiltAchievement $achievementData) {
                         $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
-
                         return "<img src='$achievementData->achievement_image' width='60px' ".$onerror.'>';
                     })
                     ->editColumn('component_type', static function (PreBuiltAchievement $achievementData) {
@@ -41,13 +45,14 @@ class PreBuiltAchievementController extends Controller
                         }
                     })
                     ->editColumn('checkmark', function (PreBuiltAchievement $achievementData) {
-                        return '<input type="checkbox" name="check" class="select_ticket" value='.$achievementData->id.' data-id='.$achievementData->id.'>';
+                        return '<input type="checkbox" name="check" class="select_ticket" value=' . $achievementData->id . ' data-id=' . $achievementData->id . '>';
                     })
                     ->rawColumns(['achievement_image', 'action', 'DT_Row_Index', 'checkmark'])
                     ->addIndexColumn()
                     ->toJson();
             }
-
+    
+            // Prepare the columns for the DataTable
             $languages = LanguageService::getAllActiveLanguages();
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
@@ -60,15 +65,27 @@ class PreBuiltAchievementController extends Controller
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'points', 'name' => 'points', 'title' => 'Points']);
-            array_push($tableColumns, ['data' => 'component_type', 'name' => 'component_type', 'title' => 'Component']);
+            array_push($tableColumns, ['data' => 'component_type', 'name' => 'component_type', 'title' => 'Component','orderable' => false]);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
-
+    
             return view('maestro.pre-built-achievement.index', compact('html', 'languages'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
+        }
+    }
+
+    public function setComponentForFilter(Request $request)
+    {
+        try {
+            \Session::put('componentFilter', $request->component);
+
+            return response()->json(['status' => 'success', 'message' => 'Component set successfully.']);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
 
