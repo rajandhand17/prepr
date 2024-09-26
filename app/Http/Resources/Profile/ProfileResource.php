@@ -172,12 +172,8 @@ class ProfileResource extends JsonResource
 
                 // Fetch all skills from SkillService and map them with the title and id
                 $skills = SkillService::getSkillBasedOnIds($associatedSkills->keys())
-                    ->map(function ($skill) use ($associatedSkills) {
-                        return [
-                            'title'              => $skill->title,
-                            'id'                 => $skill->id,
-                            'verification_count' => $associatedSkills[$skill->id] ?? 0, // Include verification count here
-                        ];
+                    ->mapWithKeys(function ($skill) {
+                        return [$skill->id => $skill->title];
                     });
                 // Get verified skills (make sure the keys are the skill IDs)
                 $verifiedSkills = $this->userSkills->where('is_verified', '1')->mapWithKeys(function ($userSkill) {
