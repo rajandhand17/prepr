@@ -18,7 +18,6 @@ class ChallengeController extends Controller
 {
     use ChallengeTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

@@ -15,7 +15,6 @@ class SocialLinkController extends Controller
 {
     use SocialLinkTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

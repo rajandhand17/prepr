@@ -18,7 +18,6 @@ class ResourceModuleController extends Controller
 {
     use ResourceModuleTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

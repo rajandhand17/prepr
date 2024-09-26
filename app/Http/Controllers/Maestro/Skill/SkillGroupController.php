@@ -19,7 +19,6 @@ class SkillGroupController extends Controller
 {
     use SkillGroupTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

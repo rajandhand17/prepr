@@ -16,7 +16,6 @@ class ProjectSubmissionRequirementController extends Controller
 {
     use ProjectSubmissionRequirementTrait;
 
-
     public function index(Builder $builder)
     {
         try {

@@ -18,7 +18,6 @@ class ProjectPitchTemplateController extends Controller
 {
     use ProjectPitchTemplateTrait;
 
-
     public function index(Builder $builder)
     {
         $templates = $this->getPitchTemplate();

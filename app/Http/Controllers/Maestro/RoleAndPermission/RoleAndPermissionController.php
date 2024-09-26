@@ -15,7 +15,6 @@ class RoleAndPermissionController extends Controller
 {
     use RoleAndPermissionTrait;
 
-
     /**
      * Display a listing of the resource.
      */

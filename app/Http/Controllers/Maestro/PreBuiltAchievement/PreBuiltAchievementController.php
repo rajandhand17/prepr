@@ -16,7 +16,6 @@ class PreBuiltAchievementController extends Controller
 {
     use PreBuiltAchievementTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

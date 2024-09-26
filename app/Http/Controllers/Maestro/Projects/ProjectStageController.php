@@ -16,7 +16,6 @@ class ProjectStageController extends Controller
 {
     use ProjectStageTrait;
 
-
     public function index(Builder $builder)
     {
         try {

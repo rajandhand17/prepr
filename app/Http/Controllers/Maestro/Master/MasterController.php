@@ -12,7 +12,6 @@ class MasterController extends Controller
 {
     use MasterTrait;
 
-
     /**
      * Display a listing of the dashboard components.
      */

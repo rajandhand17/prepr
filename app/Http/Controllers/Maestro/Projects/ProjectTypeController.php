@@ -16,7 +16,6 @@ class ProjectTypeController extends Controller
 {
     use ProjectTypeTrait;
 
-
     public function index(Builder $builder)
     {
         try {

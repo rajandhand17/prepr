@@ -16,7 +16,6 @@ class SkillController extends Controller
 {
     use SkillTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

@@ -13,7 +13,6 @@ class VendorManagementController extends Controller
 {
     use VendorManagementTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

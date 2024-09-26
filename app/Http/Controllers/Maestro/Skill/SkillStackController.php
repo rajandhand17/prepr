@@ -17,7 +17,6 @@ class SkillStackController extends Controller
 {
     use SkillStackTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

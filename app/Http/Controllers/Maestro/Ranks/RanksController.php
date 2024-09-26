@@ -16,7 +16,6 @@ class RanksController extends Controller
 {
     use RankTrait;
 
-
     public function index(Builder $builder)
     {
         try {

@@ -16,7 +16,6 @@ class UsersController extends Controller
 {
     use UserTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {
