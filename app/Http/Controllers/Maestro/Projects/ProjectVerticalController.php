@@ -16,7 +16,6 @@ class ProjectVerticalController extends Controller
 {
     use ProjectVerticalTrait;
 
-
     public function index(Builder $builder)
     {
         try {

@@ -13,7 +13,6 @@ class CloneLabController extends Controller
 {
     use CloneLabTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

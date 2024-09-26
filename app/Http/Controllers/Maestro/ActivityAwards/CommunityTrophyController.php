@@ -28,7 +28,6 @@ class CommunityTrophyController extends Controller
      */
     use CommunityTrophyTrait;
 
-
     /* -----------------------------------------------------------------------------------------
       @Description: Function for List all community trophies
       @Output: Show all community trophies on admin panel

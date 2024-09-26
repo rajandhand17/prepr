@@ -15,7 +15,6 @@ class SponsorsController extends Controller
 {
     use SponsorTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

@@ -16,7 +16,6 @@ class ProjectStatusController extends Controller
 {
     use ProjectStatusTrait;
 
-
     public function index(Builder $builder)
     {
         try {

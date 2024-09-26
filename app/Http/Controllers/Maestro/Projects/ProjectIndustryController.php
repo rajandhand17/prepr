@@ -16,7 +16,6 @@ class ProjectIndustryController extends Controller
 {
     use ProjectIndustryTrait;
 
-
     public function index(Builder $builder)
     {
         try {

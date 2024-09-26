@@ -28,7 +28,6 @@ class EmailTemplateController extends Controller
      */
     use EmailTemplateTrait;
 
-
     /**
      * Show the application dashboard.
      *

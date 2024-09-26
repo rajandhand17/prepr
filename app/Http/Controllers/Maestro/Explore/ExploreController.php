@@ -33,7 +33,6 @@ class ExploreController extends Controller
      */
     use ExploreTrait;
 
-
     /**
      * Show the application dashboard.
      *

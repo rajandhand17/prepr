@@ -18,7 +18,6 @@ class TagGroupController extends Controller
 {
     use TagGroupTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

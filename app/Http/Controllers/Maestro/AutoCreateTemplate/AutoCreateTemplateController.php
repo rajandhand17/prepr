@@ -12,7 +12,6 @@ class AutoCreateTemplateController extends Controller
 {
     use AutoCreateTemplateTrait;
 
-
     public function index(Builder $builder)
     {
         try {

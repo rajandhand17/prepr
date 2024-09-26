@@ -17,7 +17,6 @@ class CategoriesController extends Controller
 {
     use CategoryTrait;
 
-
     public function index(Builder $builder)
     {
         try {

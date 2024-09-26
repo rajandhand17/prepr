@@ -16,7 +16,6 @@ class TagController extends Controller
 {
     use TagTrait;
 
-
     public function index(Builder $builder, Request $request)
     {
         try {

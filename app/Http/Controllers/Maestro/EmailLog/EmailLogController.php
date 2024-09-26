@@ -25,7 +25,6 @@ class EmailLogController extends Controller
      */
     //use EmailLogTrait;
 
-
     /**
      * Show the application dashboard.
      *
