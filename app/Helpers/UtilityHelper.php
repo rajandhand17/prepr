@@ -50,6 +50,18 @@ class UtilityHelper
         return $slug;
     }
 
+    public static function generateTitle($titleRequest, $model)
+    {
+        $title = $title_format = $titleRequest;
+        $next = 1;
+        while ($model::where('title', '=', $title)->first()) {
+            $title = "{$title_format} {$next}";
+            $next++;
+        }
+
+        return $title;
+    }
+
     public static function checkComponentSlugExistOrNot($component, $slug)
     {
         try {

@@ -436,10 +436,14 @@ class ResourceGroupService
         try {
             $resourceGroup = new ResourceGroup();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$resourceGroupData->title, $resourceGroup);
+            $title = UtilityHelper::generateTitle($organization->title.' '.$resourceGroupData->title, $resourceGroup);
             $resourceGroup = $resourceGroupData->replicate();
             $resourceGroup->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $resourceGroup->title = $organization->title.' '.$resourceGroupData->title;
+            $resourceGroup->title = $title;
             $resourceGroup->slug = $slug;
+            if ($resourceGroupData->media_type == '') {
+                $resourceGroup->media_type = '0';
+            }
             $resourceGroup->user_id = auth()->user()->id;
             $resourceGroup->organization_id = $organization->id;
             $resourceGroup->save();
