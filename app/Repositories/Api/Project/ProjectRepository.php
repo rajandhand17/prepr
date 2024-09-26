@@ -482,7 +482,6 @@ class ProjectRepository implements ProjectInterface
                 $activity = auth()->user()->full_name.' '.__('responses.project_submit_activty').' '.$projectData->title;
                 self::storeHistory($projectData->id, auth()->user()->id, $activity);
                 dispatch(new ProcessChallengePathAchievementJob($fetchAcceptedMemberIds, $fetchChallenge->id));
-                DB::commit();
 
                 return $submitProject['submitProject'];
             }
