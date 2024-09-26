@@ -5,4 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('pre-built-achievement', PreBuiltAchievementController::class);
+    Route::post('/pre-built-achievement/bulk-delete', [PreBuiltAchievementController::class, 'bulkDelete'])->name('pre-built-achievement.bulk-delete');
 });

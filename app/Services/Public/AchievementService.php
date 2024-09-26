@@ -196,7 +196,6 @@ class AchievementService
 
             return false;
         } catch(Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
