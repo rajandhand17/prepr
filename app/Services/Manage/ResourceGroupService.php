@@ -431,19 +431,17 @@ class ResourceGroupService
         }
     }
 
-    public static function cloneResourceGroup($resourceGroupData)
+    public static function cloneResourceGroup($resourceGroupData, $organization)
     {
         try {
             $resourceGroup = new ResourceGroup();
-            $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $slug = UtilityHelper::generateSlug($resourceGroupData->title.$uuid, $resourceGroup);
+            $slug = UtilityHelper::generateSlug($organization->title.' '.$resourceGroupData->title, $resourceGroup);
             $resourceGroup = $resourceGroupData->replicate();
-            if ($resourceGroupData->media_type == '') {
-                $resourceGroup->media_type = '0';
-            }
-            $resourceGroup->uuid = $uuid;
+            $resourceGroup->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
+            $resourceGroup->title = $organization->title.' '.$resourceGroupData->title;
             $resourceGroup->slug = $slug;
             $resourceGroup->user_id = auth()->user()->id;
+            $resourceGroup->organization_id = $organization->id;
             $resourceGroup->save();
 
             return $resourceGroup;
