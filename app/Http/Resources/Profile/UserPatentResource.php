@@ -19,7 +19,7 @@ class UserPatentResource extends JsonResource
             'id'             => $this->id,
             'company'        => $this->title,
             'name'           => $this->name,
-            'patent_date'    => UtilityHelper::formatDateTime($this->patent_date),
+            'patent_date'    => $this->patent_date,
             'description'    => $this->description,
         ];
     }

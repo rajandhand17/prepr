@@ -20,8 +20,8 @@ class UserCertificateResource extends JsonResource
             'name'          => $this->name,
             'company'       => $this->company,
             'description'   => $this->description,
-            'start_date'    => UtilityHelper::formatDateTime($this->start_date),
-            'end_date'      => UtilityHelper::formatDateTime($this->end_date),
+            'start_date'    => $this->start_date,
+            'end_date'      => $this->end_date,
 
         ];
     }

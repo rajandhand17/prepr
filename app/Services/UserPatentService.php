@@ -19,9 +19,9 @@ class UserPatentService
                     'user_id'    => auth()->user()->id,
                     'title'      => $value,
                     'name'       => $input['name'][$key],
-                    'patent_date'=> $input['patent_date'][$key],
-                    'description'=> $input['description'][$key],
-                ]);
+                    'patent_date'=> $input['patent_date'][$key] ?? null,
+                    'description'=> $input['description'][$key] ?? null,
+            ]);
                 $allPatents[] = $create;
             }
             $profile_data = [
