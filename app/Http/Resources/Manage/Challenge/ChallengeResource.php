@@ -427,6 +427,7 @@ class ChallengeResource extends JsonResource
                 }
             }
         }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
