@@ -10,7 +10,7 @@ use App\Http\Controllers\Maestro\Projects\ProjectTypeController;
 use App\Http\Controllers\Maestro\Projects\ProjectVerticalController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web', 'auth']], function () {
+Route::group(['middleware' => ['web','auth-check']], function () {
     Route::resource('projects', ProjectsController::class);
     Route::resource('projects-stage', ProjectStageController::class);
     Route::resource('projects-vertical', ProjectVerticalController::class);

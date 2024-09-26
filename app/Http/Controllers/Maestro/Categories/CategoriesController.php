@@ -17,10 +17,6 @@ class CategoriesController extends Controller
 {
     use CategoryTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
 
     public function index(Builder $builder)
     {

@@ -12,10 +12,6 @@ class MasterController extends Controller
 {
     use MasterTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
 
     /**
      * Display a listing of the dashboard components.

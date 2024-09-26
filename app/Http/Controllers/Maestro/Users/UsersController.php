@@ -16,10 +16,6 @@ class UsersController extends Controller
 {
     use UserTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
 
     public function index(Builder $builder, Request $request)
     {

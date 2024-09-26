@@ -33,10 +33,6 @@ class ExploreController extends Controller
      */
     use ExploreTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
 
     /**
      * Show the application dashboard.

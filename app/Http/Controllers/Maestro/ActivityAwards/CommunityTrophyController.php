@@ -28,10 +28,6 @@ class CommunityTrophyController extends Controller
      */
     use CommunityTrophyTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
 
     /* -----------------------------------------------------------------------------------------
       @Description: Function for List all community trophies
