@@ -21,7 +21,7 @@ class ChallengeTemplateController extends Controller
 
     public function __construct(ChallengeTemplateService $challengeTemplateService, ChallengeService $challengeService)
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
         $this->challengeTemplateService = $challengeTemplateService;
         $this->challengeService = $challengeService;
     }

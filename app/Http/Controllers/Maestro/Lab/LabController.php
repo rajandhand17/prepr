@@ -21,7 +21,7 @@ class LabController extends Controller
 
     public function __construct()
     {
-        $this->middleware('web');
+        $this->middleware('auth-check');
         View::share('lab_privacy', ['public' => 'Public', 'private' => 'Private']);
     }
 
@@ -169,10 +169,11 @@ class LabController extends Controller
             $data = Lab::find($id);
             $labAssociatedItems = $this->getLabAssociatedItemsById($data);
             $labSocialLink = $this->getLabExternalLinks($data->id);
+            $labAddress = $this->getLabAddress($data->id);
             $social_name = SocialLinkService::getSocialLinkList();
             $languages = LanguageService::getLanguages();
 
-            return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name'));
+            return view('maestro.lab.edit', compact('data', 'labSocialLink', 'languages', 'labAssociatedItems', 'social_name', 'labAddress'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

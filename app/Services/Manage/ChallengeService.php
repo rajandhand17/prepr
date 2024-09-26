@@ -666,9 +666,10 @@ class ChallengeService
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
+            $title = UtilityHelper::generateTitle($organization->title.' '.$originalChallenge->title, $model);
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
+            $clonedChallenge->title = $title;
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
@@ -949,7 +950,7 @@ class ChallengeService
                     'template_title' => __('responses.any_pitch_template'),
                 ];
             } else {
-                $template = PitchTemplate::where('id', $templateId)->first();
+                $template = PitchTemplate::where('id', $templateId)->first() ?? PitchTemplate::first();
                 if ($template) {
                     $templateData = [
                         'template_id'    => $template->id,

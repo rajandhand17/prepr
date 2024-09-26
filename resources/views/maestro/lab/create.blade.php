@@ -27,7 +27,7 @@
             </div>
             <!-- /.card-header -->
                 <div class="card-body">
-                    {!!Form::open(array('method'=>'POST','route'=>'lab.store','files'=>'true', 'data-toggle'=>"validator",'role'=>"form",'novalidate'=>"true"))!!}
+                    {!!Form::open(array('method'=>'POST','route'=>'lab.store','files'=>'true', 'role'=>"form"))!!}
                     
                         @include('maestro.lab.form')
                         <div class="form-actions mt-10">
