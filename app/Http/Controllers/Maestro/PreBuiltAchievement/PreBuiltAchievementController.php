@@ -32,7 +32,6 @@ class PreBuiltAchievementController extends Controller
                     })
                     ->editColumn('achievement_image', static function (PreBuiltAchievement $achievementData) {
                         $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
-
                         return "<img src='$achievementData->achievement_image' width='60px' ".$onerror.'>';
                     })
                     ->editColumn('component_type', static function (PreBuiltAchievement $achievementData) {
@@ -40,7 +39,10 @@ class PreBuiltAchievementController extends Controller
                             return ucwords(str_replace('_', ' ', $achievementData->component_type));
                         }
                     })
-                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index'])
+                    ->editColumn('checkmark', function (PreBuiltAchievement $achievementData) {
+                        return '<input type="checkbox" name="check" class="select_ticket" value=' . $achievementData->id . ' data-id=' . $achievementData->id . '>';
+                    })
+                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index','checkmark'])
                     ->addIndexColumn()
                     ->toJson();
             }
@@ -49,6 +51,7 @@ class PreBuiltAchievementController extends Controller
             $tableColumns = [
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
             ];
+            array_push($tableColumns, ['data' => 'checkmark', 'orderable' => false, 'searchable' => false, 'name' => 'id', 'title' => '<input type="checkbox" onClick="toggle(this)" id="select_all">']);
             array_push($tableColumns, ['data' => 'achievement_image', 'name' => 'achievement_image', 'title' => 'Image']);
             foreach ($languages as $single) {
                 $columName = UtilityHelper::getColumName($single->iso, 'title');
@@ -56,7 +59,7 @@ class PreBuiltAchievementController extends Controller
                 array_push($tableColumns, $singleLangCol);
             }
             array_push($tableColumns, ['data' => 'points', 'name' => 'points', 'title' => 'Points']);
-            array_push($tableColumns, ['data' => 'component_type', 'name' => 'component_type', 'title' => 'component']);
+            array_push($tableColumns, ['data' => 'component_type', 'name' => 'component_type', 'title' => 'Component']);
             array_push($tableColumns, ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '10%']);
             $html = $builder->columns($tableColumns);
 
@@ -173,4 +176,21 @@ class PreBuiltAchievementController extends Controller
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
+    public function bulkDelete(Request $request)
+{
+    try {
+        $ids = $request->ids;
+        
+        if (!empty($ids)) {
+            // Perform the deletion
+            PreBuiltAchievement::whereIn('id', $ids)->delete();
+
+            return response()->json(['success' => true, 'message' => 'Selected records have been deleted.']);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No records selected.']);
+        }
+    } catch (Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.']);
+    }
+}
 }
