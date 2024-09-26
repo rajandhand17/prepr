@@ -181,7 +181,16 @@ class ProjectResource extends JsonResource
         if ($this->lab_id) {
             $lab_details = LabService::getLabBasedOnId($this->lab_id);
             if ($lab_details) {
-                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug', 'description', 'media', 'media_type', 'privacy', 'status']);
+                $lab_details = [
+                    'uuid'         => $lab_details->uuid,
+                    'title'        => $lab_details->title,
+                    'slug'         => $lab_details->slug,
+                    'description'  => $lab_details->description,
+                    'media'        => $lab_details->media,
+                    'media_type'   => $lab_details->media_type,
+                    'privacy'      => ($lab_details->privacy == '1') ? 'yes' : 'no',
+                    'status'       => ($lab_details->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+                ];
             }
         }
 
@@ -235,10 +244,11 @@ class ProjectResource extends JsonResource
         $created_by = [];
         if (auth('api')->check() && !empty($this->user_id)) {
             $userDetails = UserService::getUserById($this->user_id);
-            $created_by['full_name'] = $userDetails->full_name;
-            $created_by['username'] = $userDetails->username;
-            $created_by['email'] = $userDetails->email;
-            $created_by['profile_image'] = $userDetails->profile_image;
+
+            $created_by['full_name'] = data_get($userDetails, 'full_name');
+            $created_by['username'] = data_get($userDetails, 'username');
+            $created_by['email'] = data_get($userDetails, 'email');
+            $created_by['profile_image'] = data_get($userDetails, 'profile_image');
         }
 
         return [
