@@ -32,6 +32,7 @@ class PreBuiltAchievementController extends Controller
                     })
                     ->editColumn('achievement_image', static function (PreBuiltAchievement $achievementData) {
                         $onerror = 'onerror=this.onerror=null;this.src="'.asset('no-img.jpg').'";';
+
                         return "<img src='$achievementData->achievement_image' width='60px' ".$onerror.'>';
                     })
                     ->editColumn('component_type', static function (PreBuiltAchievement $achievementData) {
@@ -40,9 +41,9 @@ class PreBuiltAchievementController extends Controller
                         }
                     })
                     ->editColumn('checkmark', function (PreBuiltAchievement $achievementData) {
-                        return '<input type="checkbox" name="check" class="select_ticket" value=' . $achievementData->id . ' data-id=' . $achievementData->id . '>';
+                        return '<input type="checkbox" name="check" class="select_ticket" value='.$achievementData->id.' data-id='.$achievementData->id.'>';
                     })
-                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index','checkmark'])
+                    ->rawColumns(['achievement_image', 'action', 'DT_Row_Index', 'checkmark'])
                     ->addIndexColumn()
                     ->toJson();
             }
@@ -158,6 +159,7 @@ class PreBuiltAchievementController extends Controller
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
+
     /**
      * Display the specified resource.
      */
@@ -176,21 +178,22 @@ class PreBuiltAchievementController extends Controller
             return redirect()->route('pre-built-achievement.index')->with(['error' => 'Oops! Something went wrong. Please try again later.']);
         }
     }
-    public function bulkDelete(Request $request)
-{
-    try {
-        $ids = $request->ids;
-        
-        if (!empty($ids)) {
-            // Perform the deletion
-            PreBuiltAchievement::whereIn('id', $ids)->delete();
 
-            return response()->json(['success' => true, 'message' => 'Selected records have been deleted.']);
-        } else {
-            return response()->json(['success' => false, 'message' => 'No records selected.']);
+    public function bulkDelete(Request $request)
+    {
+        try {
+            $ids = $request->ids;
+
+            if (!empty($ids)) {
+                // Perform the deletion
+                PreBuiltAchievement::whereIn('id', $ids)->delete();
+
+                return response()->json(['success' => true, 'message' => 'Selected records have been deleted.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'No records selected.']);
+            }
+        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.']);
         }
-    } catch (Exception $e) {
-        return response()->json(['success' => false, 'message' => 'Something went wrong. Please try again.']);
     }
-}
 }
