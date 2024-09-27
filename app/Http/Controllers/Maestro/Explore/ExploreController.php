@@ -155,64 +155,72 @@ class ExploreController extends Controller
 
             // Initialize counts for all component types
             $counts = [
-                'Lab' => 0,
-                'Challenge' => 0,
-                'Project' => 0,
-                'ResourceModule' => 0,
+                'Lab'                => 0,
+                'Challenge'          => 0,
+                'Project'            => 0,
+                'ResourceModule'     => 0,
                 'ResourceCollection' => 0,
-                'ResourceGroup' => 0,
-                'LabProgram' => 0,
-                'ChallengePath' => 0,
+                'ResourceGroup'      => 0,
+                'LabProgram'         => 0,
+                'ChallengePath'      => 0,
             ];
             // Always get the counts for all component types
             $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Lab';
+
                 return $item;
             });
             $counts['Lab'] = $labs->count();
-    
+
             $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Challenge';
+
                 return $item;
             });
             $counts['Challenge'] = $challenges->count();
-    
+
             $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Project';
+
                 return $item;
             });
             $counts['Project'] = $projects->count();
-    
+
             $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Resource Module';
+
                 return $item;
             });
             $counts['ResourceModule'] = $resources->count();
-    
+
             $resourceCollection = ResourceCollection::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Resource Collection';
+
                 return $item;
             });
             $counts['ResourceCollection'] = $resourceCollection->count();
-    
+
             $resourceGroup = ResourceGroup::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Resource Group';
+
                 return $item;
             });
             $counts['ResourceGroup'] = $resourceGroup->count();
-    
+
             $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Lab Program';
+
                 return $item;
             });
             $counts['LabProgram'] = $labPrograms->count();
-    
+
             $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Challenge Path';
+
                 return $item;
             });
             $counts['ChallengePath'] = $challengePaths->count();
-    
+
             // Now apply the filter for the displayed components
             if ($filter == '' || $filter == 'Lab') {
                 $components = $components->merge($labs);
@@ -245,11 +253,11 @@ class ExploreController extends Controller
             $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
             return response()->json([
-                'html' => $html,
-                'total' => $total,
-                'perPage' => $perPage,
+                'html'        => $html,
+                'total'       => $total,
+                'perPage'     => $perPage,
                 'currentPage' => $currentPage,
-                'counts' => $counts, // Send the counts to the frontend for all types
+                'counts'      => $counts, // Send the counts to the frontend for all types
             ]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
