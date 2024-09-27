@@ -7,7 +7,11 @@ use App\Models\ChallengeAnnouncement;
 use App\Models\ChallengeAnnouncementRecipient;
 use App\Models\ChallengeSocialActivity;
 use App\Services\AchievementService;
+use App\Services\Maestro\ComponentAssociationService;
+use App\Services\Manage\ChallengeService;
 use App\Services\Manage\MemberManagementService;
+use App\Services\ProjectService;
+use App\Services\Public\ProjectMemberManagementService;
 use App\Services\UserService;
 use Exception;
 use Illuminate\Console\Command;
@@ -43,7 +47,8 @@ class SendChallengeAnnouncement extends Command
 
             if ($fetchPendingChallengeAnnouncementLists->isNotEmpty()) {
                 foreach ($fetchPendingChallengeAnnouncementLists as $pendingChallengeAnnouncement) {
-                    $fetchInvitedChallengeUserIds = $fetchChallengeAchievementWinnerIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = collect();
+                    $fetchChallengeDetail = ChallengeService::getChallengeBasedOnSlug($pendingChallengeAnnouncement->slug);
+                    $fetchInvitedChallengeUserIds = $fetchChallengeAchievementWinnerIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = collect();
                     $getRecipientList = ChallengeAnnouncementRecipient::whereIn('id', $pendingChallengeAnnouncement->to_recipient_ids)->pluck('title')->all();
                     // for Invited Challenge Participants
                     if (in_array("Invited Challenge Participants", $getRecipientList)) {
@@ -71,7 +76,31 @@ class SendChallengeAnnouncement extends Command
                             $fetchAutoAcceptedEmailsBasedData = UserService::getUserIdsByEmail($fetchEmailArray);
                         }
                     }
-                    dd("in", $fetchInvitedChallengeUserIds->merge($fetchChallengeAchievementWinnerIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->unique());
+
+                    // for Associated Lab Users
+                    if (in_array("Associated Lab Users", $getRecipientList)) {
+                        $fetchLabAssociatedToChallenge = ComponentAssociationService::getChallengeAssociatedLab($fetchChallengeDetail);
+                        if ($fetchLabAssociatedToChallenge->isNotEmpty()) {
+                            $moduleType = config('constants.module_component_type.lab');
+                            $fetchAcceptedLabMembers = MemberManagementService::totalActiveMembersCountBasedOnModuleIds($fetchLabAssociatedToChallenge, $moduleType);
+                            if ($fetchAcceptedLabMembers->isNotEmpty()) {
+                                $fetchInvitedLabUserIds = UserService::getUserIdsByEmail($fetchAcceptedLabMembers->pluck('email'));
+                            }
+                        }
+                    }
+
+                    // for Associated Project Users
+                    if (in_array("Associated Project Users", $getRecipientList)) {
+                        $fetchChallengeProjectIds = ProjectService::fetchProjectIdsBasedOnChallenge($pendingChallengeAnnouncement->challenge_id);
+                        if ($fetchChallengeProjectIds->isNotEmpty()) {
+                            $fetchAcceptedProjectMemberEmails = ProjectMemberManagementService::fetchAcceptedProjectMemberEmails($fetchChallengeProjectIds);
+                            if ($fetchAcceptedProjectMemberEmails->isNotEmpty()) {
+                                $fetchAssociatedProjectUserIds = UserService::getUserIdsByEmail($fetchAcceptedProjectMemberEmails);
+                            }
+                        }
+                    }
+                    dd($fetchInvitedChallengeUserIds, $fetchChallengeAchievementWinnerIds, $challengeFollowersIds, $fetchAutoAcceptedEmailsBasedData, $fetchInvitedLabUserIds, $fetchAssociatedProjectUserIds);
+                    dd("in", $fetchInvitedChallengeUserIds->merge($fetchChallengeAchievementWinnerIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->merge($fetchInvitedLabUserIds)->merge($fetchAssociatedProjectUserIds)->unique());
                 }
             }
             dd($currentDate, $fetchPendingChallengeAnnouncementLists);
