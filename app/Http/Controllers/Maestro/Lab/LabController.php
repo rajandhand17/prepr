@@ -21,7 +21,6 @@ class LabController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth-check');
         View::share('lab_privacy', ['public' => 'Public', 'private' => 'Private']);
     }
 

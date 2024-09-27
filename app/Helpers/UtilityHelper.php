@@ -14,6 +14,7 @@ use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceModuleService;
 use App\Services\ProjectService;
 use Carbon\Carbon;
+use DateTimeZone;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -269,6 +270,43 @@ class UtilityHelper
     {
         try {
             return OrganizationCustomizationService::checkOrganizationCustomizationData($custom_url);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function UserLocationBasedDateTime($userPreferredZone)
+    {
+        try {
+            $userLocationBasedTime = now();
+
+            switch ($userPreferredZone) {
+                case 'EST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/New_York'));
+                    break;
+                case 'CST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/Chicago'));
+                    break;
+                case 'MST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/Denver'));
+                    break;
+                case 'PST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/Los_Angeles'));
+                    break;
+                case 'AST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/Halifax'));
+                    break;
+                case 'NST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/St_Johns'));
+                    break;
+                case 'IST':
+                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('Asia/Kolkata'));
+                    break;
+            }
+
+            return $userLocationBasedTime;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

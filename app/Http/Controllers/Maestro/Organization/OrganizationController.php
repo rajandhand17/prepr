@@ -22,7 +22,6 @@ class OrganizationController extends Controller
 
     public function construct()
     {
-        $this->middleware('auth-check');
         $status_array = [];
         $status_array['0'] = 'Inactive';
         $status_array['1'] = 'Active';

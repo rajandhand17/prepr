@@ -18,11 +18,6 @@ class TagGroupController extends Controller
 {
     use TagGroupTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {
