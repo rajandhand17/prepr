@@ -21,7 +21,7 @@ class AchievementService
             $achievement_list = UserAchievement::select()->where('user_id', auth()->user()->id);
             $achievement_list = self::filterAchievementList($request, $achievement_list);
 
-            return $achievement_list->paginate(config('site-settings.pagination_per_page'));
+            return $achievement_list->paginate(config('site-settings.achivement_pagination_per_page'));
         } catch(Exception $e) {
             UtilityHelper::logError($e);
 
