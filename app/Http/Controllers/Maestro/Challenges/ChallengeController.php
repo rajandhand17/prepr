@@ -44,7 +44,7 @@ class ChallengeController extends Controller
                     })
                     ->addColumn('length', static function (Challenge $challenge) {
                         if ($challenge->challenge_timelines->challenge_duration !== null) {
-                            return $challenge->challenge_timelines->challenge_duration ;
+                            return $challenge->challenge_timelines->challenge_duration;
                         } else {
                             return '--';
                         }
