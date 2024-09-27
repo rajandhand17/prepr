@@ -929,8 +929,8 @@ class MemberManagementService
                         $getOldRole = RolesService::getRoleBasedOnDisplayName($checkMember->role);
                         $getNewRole = RolesService::getRoleBasedOnDisplayName($request->role);
                         if ($getUser && $getOldRole && $getNewRole) {
-                            $getUser->detachRole($getOldRole, $getOrganization);
-                            $getUser->attachRoles($getNewRole, $getOrganization);
+                            $getUser->detachRole($getOldRole->name, $getOrganization);
+                            $getUser->attachRole($getNewRole->name, $getOrganization);
                         }
                     }
                 }
