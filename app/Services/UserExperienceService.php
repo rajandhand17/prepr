@@ -40,7 +40,6 @@ class UserExperienceService
 
             return $insertRecords;
         } catch (\Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;
