@@ -36,7 +36,7 @@ class ProjectMemberManagementService
                     $invite_status = config('constants.member_management_invite_status.declined');
                     break;
             }
-            $project_member = ProjectMemberManagement::where(['email' => $request->email, 'project_id' => $projectData->id, 'invite_status' => '2'])->where('invite_type', '<>', '3')->first();
+            $project_member = ProjectMemberManagement::where(['email' => $request->email, 'project_id' => $projectData->id, 'invite_status' => $invite_status])->where('invite_type', '<>', '3')->first();
             if ($project_member) {
                 $project_member->update(['inviter_id' => auth()->user()->id, 'invite_status' => $invite_status]);
             }
@@ -70,6 +70,19 @@ class ProjectMemberManagementService
             $invitesProjectDashboardRequestIds = ProjectMemberManagement::where(['invite_status' => $inviteStatus, 'email' => $userData->email])->pluck('project_id');
 
             return $invitesProjectDashboardRequestIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchAcceptedProjectMemberEmails($projectIds)
+    {
+        try {
+            $fetchAcceptedProjectMemberEmails = ProjectMemberManagement::whereIn('project_id', $projectIds)->where('invite_status', config('constants.member_management_invite_status.accepted'))->pluck('email');
+
+            return $fetchAcceptedProjectMemberEmails;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

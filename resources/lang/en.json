@@ -203,7 +203,7 @@
     "responses.select_valid_role_error": "Please select valid role for the invitees.",
     "responses.csv_required": "This csv field is required",
     "responses.member_manger_email": "The member manager email should be an array",
-    "responses.member_manger_delete": "The member manager has been deleted successfully!",
+    "responses.member_manger_delete": "The member(s) has been successfully deleted!",
     "responses.all_members_delete": "All the members are deleted successfully!",
     "responses.all_members_accepted": "All pending join request are approved successfully!",
     "responses.member_manger_not_delete": "The member manager has been not deleted!",

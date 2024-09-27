@@ -980,7 +980,7 @@ class ProjectService
         }
     }
 
-    public function fetchProjectIdsBasedOnChallenge($challengeId)
+    public static function fetchProjectIdsBasedOnChallenge($challengeId)
     {
         try {
             $fetchProjectIdsBasedOnChallenge = Project::where('challenge_id', $challengeId)->pluck('id');

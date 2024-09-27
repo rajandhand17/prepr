@@ -322,4 +322,17 @@ class AchievementService
             return false;
         }
     }
+
+    public static function fetchChallengeAchievementWinnerIds($challengeId)
+    {
+        try {
+            $fetchChallengeAchievementWinnerIds = UserAchievement::where(['module_id' => $challengeId, 'achievement_type' => '9'])->pluck('user_id');
+
+            return $fetchChallengeAchievementWinnerIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
