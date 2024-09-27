@@ -68,21 +68,25 @@ class ResourceCollectionController extends AppBaseController
     }
 
     public function cloneResourceCollection($slug)
-    {
+    { 
         try {
             // Checking resource collection based on slug exists or not
             $getResourceCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);
             if (!$getResourceCollection) {
                 return $this->sendError(__('responses.selected_resource_not_found'), 404);
             }
-            // Fetching resource collection is belongs to current users or not
-            if ($getResourceCollection->user_id == auth()->user()->id) {
-                return $this->sendError(__('responses.selected_resource_collection_already_exists'), 403);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
-            // Fetching Resource Collections Based on title and resource current users
-            $getResourceCollectionBasedOnTitle = $this->resourceCollectionRepository->getResourceCollectionBasedOnTitle($getResourceCollection->title);
-            if ($getResourceCollectionBasedOnTitle) {
-                return $this->sendError(__('responses.selected_resource_collection_already_exists'));
+
+            if ($getResourceCollection->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_collection_switcher_error'), 403);
+            }
+
+            if ($getResourceCollection->is_accessible == '0') {
+                return $this->sendError(__('responses.resource_collection_not_accessible'), 403);
             }
             // Cloning resource collections
             $cloneResourceCollection = $this->resourceCollectionRepository->cloneResourceCollection($getResourceCollection->id);
