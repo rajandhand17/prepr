@@ -68,7 +68,7 @@ class ResourceCollectionController extends AppBaseController
     }
 
     public function cloneResourceCollection($slug)
-    { 
+    {
         try {
             // Checking resource collection based on slug exists or not
             $getResourceCollection = $this->resourceCollectionRepository->getResourceCollectionBasedOnSlug($slug);

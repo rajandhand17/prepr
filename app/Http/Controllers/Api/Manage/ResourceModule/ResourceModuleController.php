@@ -485,6 +485,7 @@ class ResourceModuleController extends AppBaseController
             return $this->sendError(__('responses.clone_resource_module_responses_failed'), 400);
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
+
             return $this->sendError(__('responses.send_error'), 500);
         }
     }
