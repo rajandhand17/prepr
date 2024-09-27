@@ -42,7 +42,7 @@ class HandleDeleteChallengePathAssociatedData
             }
             $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.challenge_paths'), $challenge_path_id);
             if (!$featuredModule) {
-                return false; 
+                return false;
             }
 
             return true;
