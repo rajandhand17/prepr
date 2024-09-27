@@ -47,7 +47,7 @@ class HandleDeleteResourceModuleAssociatedData
             if (!$deleteResourceModuleRating) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('4', $resourceModuleId);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_modules'), $resourceModuleId);
             if (!$featuredModule) {
                 return false;
             }

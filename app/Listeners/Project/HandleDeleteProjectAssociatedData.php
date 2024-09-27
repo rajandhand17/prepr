@@ -47,7 +47,7 @@ class HandleDeleteProjectAssociatedData
             if (!$projectAdditionalInfo) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('7', $project_id);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.projects'), $project_id);
             if (!$featuredModule) {
                 return false;
             }

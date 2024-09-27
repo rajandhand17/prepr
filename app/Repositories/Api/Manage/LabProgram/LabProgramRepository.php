@@ -171,7 +171,7 @@ class LabProgramRepository implements LabProgramInterface
         try {
             DB::beginTransaction();
             $delteLabPrograms = $this->labProgramService->delete($id);
-            $featuredModule = $this->featuredModuleService->deleteFeaturedModule('1', $id);
+            $featuredModule = $this->featuredModuleService->deleteFeaturedModule(config('constants.module_type.lab_programs'), $id);
             if ($delteLabPrograms == false && $featuredModule == false) {
                 DB::rollBack();
 

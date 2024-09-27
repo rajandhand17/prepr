@@ -43,7 +43,7 @@ class HandleDeleteResourceGroupAssociatedData
             if (!$deleteAchievementsGroups) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('6', $resourceGroupId);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_group'), $resourceGroupId);
             if (!$featuredModule) {
                 return false;
             }

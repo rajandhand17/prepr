@@ -38,7 +38,7 @@ class HandleDeleteResourceCollectionAssociatedData
             if (!$componentAssociation) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('5', $resourceCollectionId);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_collections'), $resourceCollectionId);
             if (!$featuredModule) {
                 return false;
             }
