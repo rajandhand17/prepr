@@ -45,17 +45,17 @@
                                                 </div>
                                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-2" id="filterComponent" style="border-radius: 4px; background: #FFF; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25); display: none;">
                                                     <h6 style="text-transform:uppercase">Filter by Component</h6>
-                                                    <input type="radio" name="filter" class="filter-input"  value="Lab"> Lab<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Lab Program"> Lab Program<br>
+                                                    <input type="radio" name="filter" class="filter-input"  value="Lab"> Lab (<span id="labCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Lab Program"> Lab Program (<span id="labProgramCount">0</span>)<br>
                                                     <hr>
-                                                    <input type="radio" name="filter" class="filter-input" value="Challenge"> Challenge<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path<br>
+                                                    <input type="radio" name="filter" class="filter-input" value="Challenge"> Challenge (<span id="challengeCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path (<span id="challengePathCount">0</span>)<br>
                                                     <hr>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Module"> Resource Module<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Collection"> Resource Collection<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Group"> Resource Group<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Module"> Resource Module (<span id="resourceCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Collection"> Resource Collection (<span id="resourceCollectionCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Group"> Resource Group (<span id="resourceGroupCount">0</span>)<br>
                                                     <hr>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Project"> Project<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Project"> Project (<span id="projectCount">0</span>)<br>
                                                 </div>
                                             </div>
                                             <button id="viewMoreButton" style="display: none;" class="btn btn-block btn-primary mt-2 col-9">View More</button>
@@ -198,6 +198,16 @@
                         } else {
                             $('#viewMoreButton').hide();
                         }
+                        console.log(response.counts);
+                         // Display the counts for all types
+                        $('#labCount').text(response.counts.Lab);
+                        $('#labProgramCount').text(response.counts.LabProgram);
+                        $('#challengeCount').text(response.counts.Challenge);
+                        $('#challengePathCount').text(response.counts.ChallengePath);
+                        $('#resourceCount').text(response.counts.ResourceModule);
+                        $('#resourceCollectionCount').text(response.counts.ResourceCollection);
+                        $('#resourceGroupCount').text(response.counts.ResourceGroup);
+                        $('#projectCount').text(response.counts.Project);
 
                         $('#searchResults').show(); // Ensure search results are visible
                     },
