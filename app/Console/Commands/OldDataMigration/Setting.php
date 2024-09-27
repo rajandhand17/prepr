@@ -65,11 +65,10 @@ class Setting extends Command
 
             DB::commit();
             $this->info('Settings migration completed successfully.');
-
         } catch (\Exception $e) {
             DB::rollback();
             UtilityHelper::logError($e);
-            $this->error('Error during migration: ' . $e->getMessage());
+            $this->error('Error during migration: '.$e->getMessage());
         }
     }
 
@@ -77,6 +76,7 @@ class Setting extends Command
      * Map setting type from old structure to new type.
      *
      * @param string $type
+     *
      * @return string|null
      */
     private function mapSettingType($type)
