@@ -49,13 +49,13 @@
                                                     <input type="radio" name="filter"  class="filter-input" value="Lab Program"> Lab Program (<span id="labProgramCount">0</span>)<br>
                                                     <hr>
                                                     <input type="radio" name="filter" class="filter-input" value="Challenge"> Challenge (<span id="challengeCount">0</span>)<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path (<span id="ChallengePathCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Challenge Path"> Challenge Path (<span id="challengePathCount">0</span>)<br>
                                                     <hr>
                                                     <input type="radio" name="filter"  class="filter-input" value="Resource Module"> Resource Module (<span id="resourceCount">0</span>)<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Collection"> Resource Collection (<span id="ResourceCollectionCount">0</span>)<br>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Group"> Resource Group (<span id="ResourceGroupCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Collection"> Resource Collection (<span id="resourceCollectionCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Resource Group"> Resource Group (<span id="resourceGroupCount">0</span>)<br>
                                                     <hr>
-                                                    <input type="radio" name="filter"  class="filter-input" value="Project"> Project (<span id="ProjectCount">0</span>)<br>
+                                                    <input type="radio" name="filter"  class="filter-input" value="Project"> Project (<span id="projectCount">0</span>)<br>
                                                 </div>
                                             </div>
                                             <button id="viewMoreButton" style="display: none;" class="btn btn-block btn-primary mt-2 col-9">View More</button>
@@ -199,7 +199,7 @@
                             $('#viewMoreButton').hide();
                         }
                         console.log(response.counts);
-                        // Update the filter counts
+                         // Display the counts for all types
                         $('#labCount').text(response.counts.Lab);
                         $('#labProgramCount').text(response.counts.LabProgram);
                         $('#challengeCount').text(response.counts.Challenge);
