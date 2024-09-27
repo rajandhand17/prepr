@@ -22,6 +22,7 @@ class ResourceGroupListNameResource extends JsonResource
             'uuid'   => $this->uuid,
             'title'  => $this->title,
             'media'  => $this->media,
+            'slug'   => $this->slug,
         ];
     }
 }

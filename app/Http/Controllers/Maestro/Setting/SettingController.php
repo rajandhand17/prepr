@@ -17,7 +17,6 @@ class SettingController extends Controller
 
     public function __construct(SettingService $settingService)
     {
-        $this->middleware('auth-check');
         $this->settingService = $settingService;
     }
 

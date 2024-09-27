@@ -1120,4 +1120,32 @@ class ChallengeService
             return false;
         }
     }
+
+    public static function checkChallengeProjectCreationEnabled($challengeTimeLineData, $userData)
+    {
+        try {
+            // Initialize flag
+            $isProjectCreationEnabled = false;
+
+            // Get user timezone-based current datetime
+            $userLocationBasedTime = UtilityHelper::UserLocationBasedDateTime($userData->preferred_timezone);
+
+            // Ensure challenge timeline data is not empty and has a valid start date
+            if (!empty($challengeTimeLineData) && $challengeTimeLineData['start_date'] != null) {
+                // Check if the current time is after the start date
+                $isProjectCreationEnabled = ($challengeTimeLineData['start_date'] < $userLocationBasedTime);
+
+                // If project creation is enabled, check if within the registration deadline
+                if ($isProjectCreationEnabled && $challengeTimeLineData['registration_deadline_date'] != null) {
+                    $isProjectCreationEnabled = ($challengeTimeLineData['registration_deadline_date'] > $userLocationBasedTime);
+                }
+            }
+
+            return $isProjectCreationEnabled;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
