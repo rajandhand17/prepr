@@ -47,10 +47,11 @@ class HandleDeleteProjectAssociatedData
             if (!$projectAdditionalInfo) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('7',$project_id);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('7', $project_id);
             if (!$featuredModule) {
                 return false;
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

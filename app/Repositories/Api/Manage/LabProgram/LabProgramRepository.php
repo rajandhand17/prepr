@@ -28,7 +28,7 @@ class LabProgramRepository implements LabProgramInterface
     private $labProgramTypeModesService;
     private $featuredModuleService;
 
-    public function __construct(FeaturedModuleService $featuredModuleService,LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService, ComponentAssociationService $componentAssociationService, LabProgramTypeModesService $labProgramTypeModesService)
+    public function __construct(FeaturedModuleService $featuredModuleService, LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService, ComponentAssociationService $componentAssociationService, LabProgramTypeModesService $labProgramTypeModesService)
     {
         $this->labProgramService = $labProgramService;
         $this->labProgramAchievementService = $labProgramAchievementService;
@@ -36,7 +36,7 @@ class LabProgramRepository implements LabProgramInterface
         $this->labProgramTagsGroupsService = $labProgramTagsGroupsService;
         $this->componentAssociationService = $componentAssociationService;
         $this->labProgramTypeModesService = $labProgramTypeModesService;
-        $this->featuredModuleService=$featuredModuleService;
+        $this->featuredModuleService = $featuredModuleService;
     }
 
     public function getLabProgramCountBasedOnOrganization($organizationId)
@@ -170,13 +170,15 @@ class LabProgramRepository implements LabProgramInterface
     {
         try {
             DB::beginTransaction();
-            $delteLabPrograms=$this->labProgramService->delete($id);
-            $featuredModule = $this->featuredModuleService->deleteFeaturedModule('1',$id);
-            if($delteLabPrograms == false && $featuredModule == false){
+            $delteLabPrograms = $this->labProgramService->delete($id);
+            $featuredModule = $this->featuredModuleService->deleteFeaturedModule('1', $id);
+            if ($delteLabPrograms == false && $featuredModule == false) {
                 DB::rollBack();
+
                 return false;
             }
             DB::commit();
+
             return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);

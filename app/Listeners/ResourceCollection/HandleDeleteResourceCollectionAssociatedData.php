@@ -38,10 +38,11 @@ class HandleDeleteResourceCollectionAssociatedData
             if (!$componentAssociation) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('5',$resourceCollectionId);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('5', $resourceCollectionId);
             if (!$featuredModule) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);

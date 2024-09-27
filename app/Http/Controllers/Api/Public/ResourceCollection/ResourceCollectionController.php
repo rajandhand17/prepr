@@ -32,7 +32,7 @@ class ResourceCollectionController extends AppBaseController
                     'current_page' => $responseCollectionList->currentPage(),
                     'total_pages'  => $responseCollectionList->lastPage(),
                     'list'         => ResourceCollectionResource::collection($responseCollectionList),
-                ]; 
+                ];
 
                 return $this->sendResponse($response, __('responses.found_resource_collection_list'));
             }
