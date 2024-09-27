@@ -272,10 +272,11 @@ class LabProgramService
         }
     }
 
-    public static function delete($slug)
+    public static function delete($id)
     {
         try {
-            return LabProgram::where('slug', $slug)->delete();
+            return LabProgram::find($id)->delete();
+    
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

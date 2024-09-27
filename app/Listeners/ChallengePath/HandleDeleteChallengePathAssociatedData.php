@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\Manage\ChallengePathAchievementsService;
 use App\Services\Manage\ChallengePathSkillsGroupsStackService;
 use App\Services\Manage\ComponentAssociationService;
+use App\Services\Public\FeaturedModuleService;
 use Exception;
 
 class HandleDeleteChallengePathAssociatedData
@@ -39,7 +40,10 @@ class HandleDeleteChallengePathAssociatedData
             if (!$componentAssociation) {
                 return false;
             }
-
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('3',$challenge_path_id);
+            if (!$featuredModule) {
+                return false;
+            }
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

@@ -50,7 +50,6 @@ class ExploreResource extends JsonResource
                 $moduleDetails = ProjectService::getProjectBasedOnId($this->module_id);
                 break;
         }
-
         return [
             'id'                     => $this->id,
             'title'                  => $this->title,

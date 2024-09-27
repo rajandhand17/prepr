@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\ProjectAdditionalInfoService;
 use App\Services\ProjectFileService;
 use App\Services\ProjectPitchService;
+use App\Services\Public\FeaturedModuleService;
 use Exception;
 
 class HandleDeleteProjectAssociatedData
@@ -46,7 +47,10 @@ class HandleDeleteProjectAssociatedData
             if (!$projectAdditionalInfo) {
                 return false;
             }
-
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('7',$project_id);
+            if (!$featuredModule) {
+                return false;
+            }
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
