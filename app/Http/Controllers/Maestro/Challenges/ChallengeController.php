@@ -72,7 +72,7 @@ class ChallengeController extends Controller
                         return $html;
                     })
                     ->addColumn('action', static function (Challenge $challenges) {
-                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>'.($challenges->is_pre_built == 0 ? '<a href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"><i class="fas fa-clone"></i></a>' : '');
+                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a>'.($challenges->is_pre_built == 0 ? '<a href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"> <i class="fas fa-clone"></i></a>' : '') . '<a href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"> <i class="fas fa-trash" style="color: red;"></i></a>';
                     })
                     ->rawColumns(['status', 'is_open', 'action', 'DT_Row_Index'])
                     ->make(true);
@@ -81,7 +81,7 @@ class ChallengeController extends Controller
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => true, 'searchable' => false, 'width' => '5%'],
                 ['data' => 'title', 'name' => 'title', 'title' => 'Challenge Title', 'width' => '65%',  'orderable' => true],
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
-                ['data' => 'submission_deadline_date', 'name' => 'submission_deadline_date', 'title' => 'Submission Deadline Date'],
+                ['data' => 'submission_deadline_date', 'name' => 'submission_deadline_date', 'title' => 'Deadline'],
                 ['data' => 'length', 'name' => 'length', 'title' => 'Length'],
                 ['data' => 'is_open', 'name' => 'is_open', 'title' => 'Status', 'width' => '8%'],
                 ['data' => 'status', 'name' => 'status', 'title' => 'Published', 'width' => '8%'],
