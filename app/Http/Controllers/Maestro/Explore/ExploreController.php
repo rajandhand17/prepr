@@ -153,12 +153,24 @@ class ExploreController extends Controller
             $perPage = 10;
             $currentPage = $request->get('page', 1);
 
+             // Initialize counts
+            $counts = [
+                'Lab' => 0,
+                'Challenge' => 0,
+                'Project' => 0,
+                'ResourceModule' => 0,
+                'ResourceCollection' => 0,
+                'ResourceGroup' => 0,
+                'LabProgram' => 0,
+                'ChallengePath' => 0,
+            ];
             if ($filter == '' || $filter == 'Lab') {
                 $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                     $item->type = 'Lab';
 
                     return $item;
                 });
+                $counts['Lab'] = $labs->count();
                 $components = $components->merge($labs);
             }
 
@@ -168,6 +180,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['Challenge'] = $challenges->count();
                 $components = $components->merge($challenges);
             }
 
@@ -177,6 +190,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['Project'] = $projects->count();
                 $components = $components->merge($projects);
             }
 
@@ -186,6 +200,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['ResourceModule'] = $resources->count();
                 $components = $components->merge($resources);
             }
 
@@ -195,6 +210,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['ResourceCollection'] = $resourceCollection->count();
                 $components = $components->merge($resourceCollection);
             }
 
@@ -204,6 +220,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['ResourceGroup'] = $resourceGroup->count();
                 $components = $components->merge($resourceGroup);
             }
 
@@ -213,6 +230,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['LabProgram'] = $labPrograms->count();
                 $components = $components->merge($labPrograms);
             }
 
@@ -222,6 +240,7 @@ class ExploreController extends Controller
 
                     return $item;
                 });
+                $counts['ChallengePath'] = $challengePaths->count();
                 $components = $components->merge($challengePaths);
             }
 
@@ -231,7 +250,7 @@ class ExploreController extends Controller
 
             $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
-            return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
+            return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage, 'counts' => $counts]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
