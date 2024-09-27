@@ -3,7 +3,7 @@
 use App\Http\Controllers\Maestro\Master\MasterController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web', 'auth-check']], function () {
     Route::get('get-orgs', [MasterController::class, 'getOrganizations'])->name('getOrganizations');
     Route::get('get-categories', [MasterController::class, 'getCategories'])->name('getCategories');
     Route::get('get-skills', [MasterController::class, 'getSkills'])->name('getSkills');

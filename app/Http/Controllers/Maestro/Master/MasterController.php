@@ -12,11 +12,6 @@ class MasterController extends Controller
 {
     use MasterTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     /**
      * Display a listing of the dashboard components.
      */

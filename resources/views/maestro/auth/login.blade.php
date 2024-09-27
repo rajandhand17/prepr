@@ -20,7 +20,7 @@
 </head>
 
 <body class="hold-transition login-page" style="background-image: linear-gradient(to right, #d5ffc6, #7BD1F2); color: #000000;">
-  <div class="login-box" style="box-shadow: 11px 10px 5px lightslategrey;">
+  <div class="login-box" style="box-shadow: 11px 10px 5px lightslategrey; width: 430px !important;">
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">

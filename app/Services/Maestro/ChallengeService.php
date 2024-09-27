@@ -24,7 +24,7 @@ class ChallengeService
     public static function getChallengeList()
     {
         try {
-            return Challenge::where('language', LanguageService::getCurrentLanguage())->latest();
+            return Challenge::with('challenge_timelines')->where('language', LanguageService::getCurrentLanguage())->latest();
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

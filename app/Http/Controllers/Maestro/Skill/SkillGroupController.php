@@ -19,11 +19,6 @@ class SkillGroupController extends Controller
 {
     use SkillGroupTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {

@@ -168,7 +168,6 @@ class ResourceGroupResource extends JsonResource
             'mode'                          => $mode,
             'type'                          => $type,
             'level'                         => $level,
-            'resource_modules'              => $resourceModules,
             'organization'                  => $organization,
             'organization_id'               => $organization_id,
             'organization_slug'             => $organization_slug,
@@ -184,6 +183,7 @@ class ResourceGroupResource extends JsonResource
             'favourite'                     => $this->favourite(),
             'module_progress'               => $module_progress,
             'is_accessible'                 => ($this->is_accessible == '1') ? 'yes' : 'no',
+            'resource_modules'              => $resourceModules,
             'resource_collection'           => $resourceCollection,
         ];
     }
