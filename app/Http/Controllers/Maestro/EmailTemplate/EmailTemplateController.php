@@ -28,11 +28,6 @@ class EmailTemplateController extends Controller
      */
     use EmailTemplateTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
-
     /**
      * Show the application dashboard.
      *
