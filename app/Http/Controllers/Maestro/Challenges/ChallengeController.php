@@ -72,7 +72,7 @@ class ChallengeController extends Controller
                         return $html;
                     })
                     ->addColumn('action', static function (Challenge $challenges) {
-                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a>'.($challenges->is_pre_built == 0 ? '<a href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"> <i class="fas fa-clone"></i></a>' : '') . '<a href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"> <i class="fas fa-trash" style="color: red;"></i></a>';
+                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a>'.($challenges->is_pre_built == 0 ? '<a href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"> <i class="fas fa-clone"></i></a>' : '').'<a href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"> <i class="fas fa-trash" style="color: red;"></i></a>';
                     })
                     ->rawColumns(['status', 'is_open', 'action', 'DT_Row_Index'])
                     ->make(true);
