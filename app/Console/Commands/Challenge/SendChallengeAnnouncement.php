@@ -40,7 +40,7 @@ class SendChallengeAnnouncement extends Command
         try {
             $this->error('Challenge announcement command initiated');
             $currentDate = date('Y-m-d H:i:s'); // Getting current date and time
-            $fetchPendingChallengeAnnouncementLists = ChallengeAnnouncement::select('challenge_announcements.challenge_id', 'challenge_announcements.subject', 'challenge_announcements.to_recipient_ids', 'challenge_announcements.sent_by', 'challenge_announcements.description', 'challenge_announcements.schedule_at', 'challenge_announcements.status','challenge_announcements.sent_status', 'challenges.title', 'challenges.slug', 'challenges.organization_id')
+            $fetchPendingChallengeAnnouncementLists = ChallengeAnnouncement::select('challenge_announcements.challenge_id', 'challenge_announcements.subject', 'challenge_announcements.to_recipient_ids', 'challenge_announcements.sent_by', 'challenge_announcements.description', 'challenge_announcements.schedule_at', 'challenge_announcements.status', 'challenge_announcements.sent_status', 'challenges.title', 'challenges.slug', 'challenges.organization_id')
             ->where('sent_status', '0')
             ->join('challenges', 'challenge_announcements.challenge_id', '=', 'challenges.id')
             ->get();
@@ -51,7 +51,7 @@ class SendChallengeAnnouncement extends Command
                     $fetchInvitedChallengeUserIds = $fetchChallengeAchievementWinnerIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = collect();
                     $getRecipientList = ChallengeAnnouncementRecipient::whereIn('id', $pendingChallengeAnnouncement->to_recipient_ids)->pluck('title')->all();
                     // for Invited Challenge Participants
-                    if (in_array("Invited Challenge Participants", $getRecipientList)) {
+                    if (in_array('Invited Challenge Participants', $getRecipientList)) {
                         $fetchEmailArray = MemberManagementService::getMembersBasedOnComponentId('challenge', $pendingChallengeAnnouncement->challenge_id);
                         if ($fetchEmailArray->isNotEmpty()) {
                             $fetchInvitedChallengeUserIds = UserService::getUserIdsByEmail($fetchEmailArray);
@@ -59,17 +59,17 @@ class SendChallengeAnnouncement extends Command
                     }
 
                     // for Challenge Savers
-                    if (in_array("Challenge Savers", $getRecipientList)) {
+                    if (in_array('Challenge Savers', $getRecipientList)) {
                         $challengeFollowersIds = ChallengeSocialActivity::where(['challenge_id' => $pendingChallengeAnnouncement->challenge_id, 'favourite' => '1'])->pluck('user_id');
                     }
 
                     // for Challenge Achievement Winners
-                    if (in_array("Challenge Achievement Winners", $getRecipientList)) {
+                    if (in_array('Challenge Achievement Winners', $getRecipientList)) {
                         $fetchChallengeAchievementWinnerIds = AchievementService::fetchChallengeAchievementWinnerIds($pendingChallengeAnnouncement->challenge_id);
                     }
 
                     // for Auto-invite Accept
-                    if (in_array("Auto-invite Accept", $getRecipientList)) {
+                    if (in_array('Auto-invite Accept', $getRecipientList)) {
                         $componentType = config('constants.module_component_type.challenge');
                         $fetchEmailArray = MemberManagementService::getAutoAcceptedComponentAndEmailsBasedData($pendingChallengeAnnouncement->challenge_id, $componentType);
                         if ($fetchEmailArray->isNotEmpty()) {
@@ -78,7 +78,7 @@ class SendChallengeAnnouncement extends Command
                     }
 
                     // for Associated Lab Users
-                    if (in_array("Associated Lab Users", $getRecipientList)) {
+                    if (in_array('Associated Lab Users', $getRecipientList)) {
                         $fetchLabAssociatedToChallenge = ComponentAssociationService::getChallengeAssociatedLab($fetchChallengeDetail);
                         if ($fetchLabAssociatedToChallenge->isNotEmpty()) {
                             $moduleType = config('constants.module_component_type.lab');
@@ -90,7 +90,7 @@ class SendChallengeAnnouncement extends Command
                     }
 
                     // for Associated Project Users
-                    if (in_array("Associated Project Users", $getRecipientList)) {
+                    if (in_array('Associated Project Users', $getRecipientList)) {
                         $fetchChallengeProjectIds = ProjectService::fetchProjectIdsBasedOnChallenge($pendingChallengeAnnouncement->challenge_id);
                         if ($fetchChallengeProjectIds->isNotEmpty()) {
                             $fetchAcceptedProjectMemberEmails = ProjectMemberManagementService::fetchAcceptedProjectMemberEmails($fetchChallengeProjectIds);
@@ -100,7 +100,7 @@ class SendChallengeAnnouncement extends Command
                         }
                     }
                     dd($fetchInvitedChallengeUserIds, $fetchChallengeAchievementWinnerIds, $challengeFollowersIds, $fetchAutoAcceptedEmailsBasedData, $fetchInvitedLabUserIds, $fetchAssociatedProjectUserIds);
-                    dd("in", $fetchInvitedChallengeUserIds->merge($fetchChallengeAchievementWinnerIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->merge($fetchInvitedLabUserIds)->merge($fetchAssociatedProjectUserIds)->unique());
+                    dd('in', $fetchInvitedChallengeUserIds->merge($fetchChallengeAchievementWinnerIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->merge($fetchInvitedLabUserIds)->merge($fetchAssociatedProjectUserIds)->unique());
                 }
             }
             dd($currentDate, $fetchPendingChallengeAnnouncementLists);

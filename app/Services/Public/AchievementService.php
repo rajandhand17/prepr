@@ -179,21 +179,21 @@ class AchievementService
                 $dompdf->render();
 
                 $pdfContent = $dompdf->output();
-                $pdfPath = 'certificate/upload/' . $userAchievement->certificate_number . '.pdf';
+                $pdfPath = 'certificate/upload/'.$userAchievement->certificate_number.'.pdf';
                 // Store the PDF content directly to S3
                 Storage::disk('s3')->put($pdfPath, $pdfContent);
 
                 if ($format === 'image') {
                     $imagick = new Imagick();
-                    $pdfBinary =  Storage::disk('s3')->get($pdfPath);
+                    $pdfBinary = Storage::disk('s3')->get($pdfPath);
                     $image = $imagick->readImageBlob($pdfBinary);
                     $imagick->setImageFormat('jpeg');
                     $imageData = $imagick->getImageBlob();
-                    $imagePath = 'certificate/upload/' . $userAchievement->certificate_number . '.jpeg';
+                    $imagePath = 'certificate/upload/'.$userAchievement->certificate_number.'.jpeg';
                     Storage::disk('s3')->put($imagePath, $imageData);
-                    $s3BackUrl = config('site-settings.aws_url') . $imagePath;
+                    $s3BackUrl = config('site-settings.aws_url').$imagePath;
                 } elseif ($format === 'pdf') {
-                    $s3BackUrl = config('site-settings.aws_url') . $pdfPath;
+                    $s3BackUrl = config('site-settings.aws_url').$pdfPath;
                 }
 
                 return $s3BackUrl;
