@@ -276,7 +276,6 @@ class LabProgramService
     {
         try {
             return LabProgram::find($id)->delete();
-    
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
