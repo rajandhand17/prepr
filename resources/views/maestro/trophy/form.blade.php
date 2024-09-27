@@ -25,7 +25,7 @@
             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
         </div>
     </div>
-    
+
     <div class=" form-group {{($errors->has('trophy_code_id')) ? 'has-error' : ''}}">
         {!! Form::label('trophy_code_id', 'Trophy Code ID', ['class' => 'control-label ']) !!}
         {!! Form::text('trophy_code_id',null,['class' => 'form-control', 'required' => 'required']) !!}
@@ -55,7 +55,7 @@
                     {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}
                     <div class="clearfix"></div>
                     <div class="pull-left">
-                        {!! Form::file('image', ['class' => 'form-control', 'required' => isset($awardedTrophies) ? '' : 'required']) !!}
+                        {!! Form::file('image', ['class' => 'form-control', !isset($awardedTrophies->image) ? 'required' : '']) !!}
                     </div>
                     @if(isset($awardedTrophies->image) && $awardedTrophies->image !== '')
                         <div class="pull-right">
@@ -92,46 +92,47 @@
 </div>
 
 <script type="text/javascript">
-   $(document).ready(function () {
-    $('#datetimepicker1').datetimepicker({
-        useCurrent: false,
-        format: 'YYYY-MM-DD',
-        <?php if (!isset($awardedTrophies)) { ?>
-        minDate: new Date(),
-        <?php } ?>
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        },
-    }).on('dp.show', function() {
-        if ($(this).data("DateTimePicker").date() === null)
-            $(this).data("DateTimePicker").date(moment());
-    });
-});
+    $(document).ready(function () {
+        // Initialize the date picker for issue_trophy_date
+        setTimeout(function() {
+            $('#issue_trophy_date').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY-MM-DD',
+                <?php if (!isset($awardedTrophies)) { ?>
+                minDate: new Date(),
+                <?php } ?>
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            }).on('dp.show', function() {
+                if ($(this).data("DateTimePicker").date() === null) {
+                    $(this).data("DateTimePicker").date(moment());
+                }
+            });
+        }, 100); // Delay to ensure smooth initialization
 
-
-    $('#datetimepicker2').datetimepicker({
-        useCurrent: false,
-        format: 'YYYY-MM-DD',
-        <?php if (!isset($awardedTrophies)) { ?>
-        minDate:new Date(),
-        <?php } ?>
-        icons: {
-            time: "fa fa-clock-o",
-            date: "fa fa-calendar",
-            up: "fa fa-arrow-up",
-            down: "fa fa-arrow-down"
-        },
-    }).on('dp.show', function() {
-        if ($(this).data("DateTimePicker").date() === null)
-            $(this).data("DateTimePicker").date(moment());
-    });
-
-    $(document).ready(function() {
-        $('.userSelect').select2({
-            placeholder: "Select User",
-        });
+        // Initialize the date picker for expiration_date
+        setTimeout(function() {
+            $('#expiration_date').datetimepicker({
+                useCurrent: false,
+                format: 'YYYY-MM-DD',
+                <?php if (!isset($awardedTrophies)) { ?>
+                minDate: new Date(),
+                <?php } ?>
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            }).on('dp.show', function() {
+                if ($(this).data("DateTimePicker").date() === null) {
+                    $(this).data("DateTimePicker").date(moment());
+                }
+            });
+        }, 200); // Slightly larger delay for the second picker
     });
 </script>

@@ -35,7 +35,20 @@ class ChallengeController extends Controller
                             return ' - ';
                         }
                     })
-
+                    ->addColumn('submission_deadline_date', static function (Challenge $challenge) {
+                        if ($challenge->challenge_timelines->submission_deadline_date !== null && date('Y', strtotime($challenge->challenge_timelines->submission_deadline_date)) !== '1969') {
+                            return date('Y-m-d', strtotime($challenge->challenge_timelines->submission_deadline_date));
+                        } else {
+                            return '--';
+                        }
+                    })
+                    ->addColumn('length', static function (Challenge $challenge) {
+                        if ($challenge->challenge_timelines->challenge_duration !== null) {
+                            return $challenge->challenge_timelines->challenge_duration;
+                        } else {
+                            return '--';
+                        }
+                    })
                     ->editColumn('status', static function (Challenge $challenges) {
                         if ($challenges->status == '0') {
                             $html = "<span class='badge badge-info'>Draft</span>";
@@ -59,18 +72,20 @@ class ChallengeController extends Controller
                         return $html;
                     })
                     ->addColumn('action', static function (Challenge $challenges) {
-                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a style="padding-left:20px" class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a style="padding-left:20px" href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>'.($challenges->is_pre_built == 0 ? '<a style="padding-left:20px" href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"><i class="fas fa-clone"></i></a>' : '');
+                        return '<a class="mr-12" href="'.route('challenge.edit', ['challenge' => $challenges->id]).'"><i class="fas fa-edit"></i></a> <a class="mr-10" href="'.route('challenge.assessment', ['assessment' => $challenges->id]).'"><i class="fas fa-calendar"></i></a> <a href="javascript:void(0)" onclick="deleteChallenge(\''.route('challenge.destroy', ['challenge' => $challenges->id]).'\')"><i class="fas fa-trash"></i></a>'.($challenges->is_pre_built == 0 ? '<a href="javascript:void(0)" onclick="ChallengeToChallengeTemplate(\''.route('challenge-template.clone', ['slug' => $challenges->slug]).'\')"><i class="fas fa-clone"></i></a>' : '');
                     })
                     ->rawColumns(['status', 'is_open', 'action', 'DT_Row_Index'])
                     ->make(true);
             }
             $html = $builder->columns([
-                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => false, 'searchable' => false, 'width' => '5%'],
-                ['data' => 'title', 'name' => 'title', 'title' => 'Challenge Title', 'width' => '65%'],
+                ['data' => 'id', 'name' => 'DT_Row_Index', 'title' => 'S.No.', 'orderable' => true, 'searchable' => false, 'width' => '5%'],
+                ['data' => 'title', 'name' => 'title', 'title' => 'Challenge Title', 'width' => '65%',  'orderable' => true],
                 ['data' => 'user_id', 'name' => 'user_id', 'title' => 'User Name'],
+                ['data' => 'submission_deadline_date', 'name' => 'submission_deadline_date', 'title' => 'Submission Deadline Date'],
+                ['data' => 'length', 'name' => 'length', 'title' => 'Length'],
                 ['data' => 'is_open', 'name' => 'is_open', 'title' => 'Status', 'width' => '8%'],
                 ['data' => 'status', 'name' => 'status', 'title' => 'Published', 'width' => '8%'],
-                ['data' => 'action', 'name' => 'Action', 'title' => 'Action', 'orderable' => false, 'searchable' => false, 'width' => '8%'],
+                ['data' => 'action', 'name' => 'Action', 'title' => 'Action',  'orderable' => true,  'searchable' => false, 'width' => '8%'],
             ])->parameters([
                 'order' => [[1, 'asc']],
             ]);
