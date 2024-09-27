@@ -40,10 +40,11 @@ class HandleDeleteChallengePathAssociatedData
             if (!$componentAssociation) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('3',$challenge_path_id);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('3', $challenge_path_id);
             if (!$featuredModule) {
                 return false;
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

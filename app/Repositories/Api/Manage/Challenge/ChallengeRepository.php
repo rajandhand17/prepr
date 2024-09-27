@@ -504,11 +504,12 @@ class ChallengeRepository implements ChallengeInterface
             DB::beginTransaction();
             $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
-            $featuredModule = $this->featuredModuleService->deleteFeaturedModule('2',$challenge_id);
+            $featuredModule = $this->featuredModuleService->deleteFeaturedModule('2', $challenge_id);
             $challenge_data->skills = $challenge_data->skills?->pluck('foreign_id');
 
-            if ($deleteChallenge == false && $featuredModule== false) {
+            if ($deleteChallenge == false && $featuredModule == false) {
                 DB::rollBack();
+
                 return false;
             }
 

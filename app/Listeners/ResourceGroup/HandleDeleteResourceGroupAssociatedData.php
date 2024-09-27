@@ -43,10 +43,11 @@ class HandleDeleteResourceGroupAssociatedData
             if (!$deleteAchievementsGroups) {
                 return false;
             }
-            $featuredModule = FeaturedModuleService::deleteFeaturedModule('6',$resourceGroupId);
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule('6', $resourceGroupId);
             if (!$featuredModule) {
                 return false;
             }
+
             return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
