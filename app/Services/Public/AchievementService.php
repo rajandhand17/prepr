@@ -235,13 +235,14 @@ class AchievementService
         }
     }
 
-    public function checkachievementActivity($certificate_id, $action)
+    public function checkachievementActivity($certificate_id, $action, $user_id)
     {
         try {
             $checkActivity = UserAchievement::where(
                 [
                     'certificate_number'    => $certificate_id,
                     'is_featured'           => $action,
+                    'user_id' => $user_id,
                 ]
             )->first();
             if ($checkActivity != null) {
@@ -261,6 +262,7 @@ class AchievementService
         try {
             $userAchievement = UserAchievement::where('certificate_number', $certificate_id)->first();
             if ($userAchievement) {
+                $userAchievement->user_id = auth()->user()->id;
                 $userAchievement->is_featured = $action;
                 $userAchievement->save();
 
