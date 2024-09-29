@@ -17,6 +17,7 @@ class ProjectMemberManagement extends Model
         'project_id',
         'inviter_id',
         'email',
+        'auto_invite',
         'invitee_name',
         'invite_type',
         'invite_status',

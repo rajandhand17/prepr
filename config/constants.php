@@ -271,6 +271,8 @@ return [
     'challenge_flexible_announcement_by' => [
         'email'        => '0',
         'notification' => '1',
+        'immediately'  => '0',
+        'custom'       => '1',
     ],
 
     'challenge_announcement_send_status' => [
@@ -483,6 +485,12 @@ return [
         'na'        => '3',
     ],
 
+    'project_member_management_auto_invite' => [
+        'no'  => '0',
+        'yes' => '1',
+        'na'  => '2',
+    ],
+
     'project_access_level' => [
         'viewer'      => '0',
         'editor'      => '1',
@@ -549,6 +557,17 @@ return [
         'resource_collections'    => '5',
         'resource_group'          => '6',
         'projects'                => '7',
+    ],
+
+    'module_type_id' => [
+        '0'            => 'labs',
+        '1'            => 'lab_programs',
+        '2'            => 'challenges',
+        '3'            => 'challenge_paths',
+        '4'            => 'resource_modules',
+        '5'            => 'resource_collections',
+        '6'            => 'resource_group',
+        '7'            => 'projects',
     ],
 
     'assessment_type' => [

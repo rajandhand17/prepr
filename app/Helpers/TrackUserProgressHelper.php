@@ -7,6 +7,8 @@ use App\Models\ResourceModuleDetail;
 use App\Models\ResourceModuleVisit;
 use App\Models\Scorm;
 use App\Services\AchievementService;
+use App\Services\Manage\MemberManagementService;
+use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\ModuleCompletionStatusService;
 use App\Services\ProjectService;
 use App\Services\Public\ChallengePathService;
@@ -15,6 +17,7 @@ use App\Services\Public\LabService;
 use App\Services\Public\ResourceCollectionService;
 use App\Services\Public\ResourceGroupService;
 use App\Services\Public\ResourceModuleService;
+use App\Services\UserService;
 use Exception;
 
 class TrackUserProgressHelper
@@ -28,14 +31,16 @@ class TrackUserProgressHelper
             // Fetch resource module assets count
             $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $resourceModuleData->id)->count();
             // Fetch resource module scorm asset count
-            $scromModuleData = Scorm::where(['model_id' => $resourceModuleData->id, 'model_type' => ResourceModule::class])->count();
+            $scormCompleted = self::getScormCompletion($resourceModuleData->id);
+
             // Fetch resource module go1 asset count
             $isGo1Resource = $resourceModuleData->go1_course_id ? true : false;
 
             // Fetch resource module overall asset count
-            $moduleAssetsCount = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
+            $moduleAssetsCount = ($fetchResourceModuleAssets + $scormCompleted) + ($isGo1Resource ? 1 : 0);
             // Fetch resource module visited overall asset count
-            $totalUserVisitedModuleAssetCount = ResourceModuleVisit::where(['module_id' => $resourceModuleData->id, 'user_id' => $userId])->count();
+
+            $totalUserVisitedModuleAssetCount = ResourceModuleVisit::where(['module_id' => $resourceModuleData->id, 'user_id' => $userId])->count() + $scormCompleted;
 
             // Fetch resource module progress
             $moduleProgress = 0;
@@ -49,6 +54,27 @@ class TrackUserProgressHelper
 
             return true;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    private static function getScormCompletion($resourceModuleDataId): int
+    {
+        try {
+            // Fetch the Scorm data using the provided model_id and model_type
+            $scormModuleData = Scorm::where(['model_id' => $resourceModuleDataId, 'model_type' => ResourceModule::class])->first();
+
+            // Check if $scormModuleData is not null before accessing its properties
+            if ($scormModuleData !== null && $scormModuleData->id) {
+                return ResourceModuleDetailService::checkResourceScormCompletedOrNot(auth('api')->user()->id, $scormModuleData->id) ? 1 : 0;
+            }
+
+            // Return 0 if no data is found
+            return 0;
+        } catch (Exception $e) {
+            // Log the error and return false on exception
             UtilityHelper::logError($e);
 
             return false;
@@ -133,12 +159,12 @@ class TrackUserProgressHelper
                 // Fetch resource module assets count
                 $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $fetchResourceModule->id)->count();
                 // Fetch resource module scorm asset count
-                $scromModuleData = Scorm::where(['model_id' => $fetchResourceModule->id, 'model_type' => ResourceModule::class])->count();
+                $scormModuleData = self::getScormCompletion($fetchResourceModule->id);
                 // Fetch resource module go1 asset count
                 $isGo1Resource = $fetchResourceModule->go1_course_id ? true : false;
 
                 // Fetch resource module overall asset count
-                $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
+                $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scormModuleData) + ($isGo1Resource ? 1 : 0);
                 // Fetch resource module visited overall asset count
                 $totalResourceModuleAssetCountVisited[] = ResourceModuleVisit::where(['module_id' => $fetchResourceModule->id, 'user_id' => $userId])->count();
             }
@@ -166,8 +192,10 @@ class TrackUserProgressHelper
             // Default Challenge Progress
             $getUserChallengeProgress = '0';
             // Check is the user has joined the challenge or not
-            $joined_status = $challengeData->joined();
-            if ($joined_status != 'NA' && $joined_status != null) {
+            $userData = UserService::getUserById($userId);
+            $module_type = config('constants.member_management_component_type.challenge');
+            $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+            if ($joined_status != null) {
                 if ($joined_status->invite_status == '1') {
                     // Check the Project status based on Challenge and UserId
                     $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
@@ -208,8 +236,10 @@ class TrackUserProgressHelper
                 if ($getChallengeBasedOnIds->isNotEmpty()) {
                     foreach ($getChallengeBasedOnIds as $challengeData) {
                         // Check is the user has joined the challenge or not
-                        $joined_status = $challengeData->joined();
-                        if ($joined_status != 'NA' && $joined_status != null) {
+                        $userData = UserService::getUserById($userId);
+                        $module_type = config('constants.member_management_component_type.challenge');
+                        $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+                        if ($joined_status != null) {
                             if ($joined_status->invite_status == '1') {
                                 // Check User Joined Challenge or not to get progress
                                 $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
@@ -250,8 +280,10 @@ class TrackUserProgressHelper
     {
         try {
             // Check is the user has joined the lab or not
-            $joined_status = $lab->joined();
-            if ($joined_status != 'NA' && $joined_status != null) {
+            $userData = UserService::getUserById($userId);
+            $module_type = config('constants.member_management_component_type.lab');
+            $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($lab->id, $module_type, $userData->email);
+            if ($joined_status != null) {
                 if ($joined_status->invite_status == '1') {
                     // Initialize default associated count
                     $labChallengeAssociation = 0;
@@ -390,8 +422,10 @@ class TrackUserProgressHelper
             if ($getChallengeBasedOnIds->isNotEmpty()) {
                 foreach ($getChallengeBasedOnIds as $challengeData) {
                     // Check is the user has joined the challenge or not
-                    $joined_status = $challengeData->joined();
-                    if ($joined_status != 'NA' && $joined_status != null) {
+                    $userData = UserService::getUserById($userId);
+                    $module_type = config('constants.member_management_component_type.challenge');
+                    $joined_status = MemberManagementService::getComponentAndUserBasedAcceptedMemberData($challengeData->id, $module_type, $userData->email);
+                    if ($joined_status != null) {
                         if ($joined_status->invite_status == '1') {
                             // Check User Joined Challenge or not to get progress
                             $checkUserChallengeStatus = ProjectService::checkUserChallengeStatus($challengeData->id, $userId);
@@ -431,12 +465,12 @@ class TrackUserProgressHelper
                     // Fetch resource module assets count
                     $fetchResourceModuleAssets = ResourceModuleDetail::where('resource_module_id', $fetchResourceModule->id)->count();
                     // Fetch resource module scorm asset count
-                    $scromModuleData = Scorm::where(['model_id' => $fetchResourceModule->id, 'model_type' => ResourceModule::class])->count();
+                    $scormModuleData = self::getScormCompletion($fetchResourceModule->id);
                     // Fetch resource module go1 asset count
                     $isGo1Resource = $fetchResourceModule->go1_course_id ? true : false;
 
                     // Fetch resource module overall asset count
-                    $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scromModuleData) + ($isGo1Resource ? 1 : 0);
+                    $totalResourceModuleAssetCount[] = ($fetchResourceModuleAssets + $scormModuleData) + ($isGo1Resource ? 1 : 0);
                     // Fetch resource module visited overall asset count
                     $totalResourceModuleAssetCountVisited[] = ResourceModuleVisit::where(['module_id' => $fetchResourceModule->id, 'user_id' => $userId])->count();
                 }

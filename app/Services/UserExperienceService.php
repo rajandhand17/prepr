@@ -20,13 +20,13 @@ class UserExperienceService
             foreach ($input['company'] as $key => $value) {
                 $userExperience = UserExperience::create(['user_id' => auth()->user()->id,
                     'company'                                       => $value,
-                    'position'                                      => $input['position'][$key],
-                    'start_date'                                    => $input['start_date'][$key],
-                    'end_date'                                      => $input['end_date'][$key],
-                    'address'                                       => $input['address'][$key],
-                    'state'                                         => $input['state'][$key],
-                    'country'                                       => $input['country'][$key],
-                    'description'                                   => $input['description'][$key],
+                    'position'                                      => $input['position'][$key] ?? null,
+                    'start_date'                                    => $input['start_date'][$key] ?? null,
+                    'end_date'                                      => $input['end_date'][$key] ?? null,
+                    'address'                                       => $input['address'][$key] ?? null,
+                    'state'                                         => $input['state'][$key] ?? null,
+                    'country'                                       => $input['country'][$key] ?? null,
+                    'description'                                   => $input['description'][$key] ?? null,
                 ]);
                 $insertRecords[] = $userExperience;
             }
@@ -35,7 +35,7 @@ class UserExperienceService
                 'info' => $input,
             ];
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.add_experience'), $profile_data, auth()->user(), request()->ip());
             }
 
             return $insertRecords;

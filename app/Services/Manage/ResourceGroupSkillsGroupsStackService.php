@@ -163,14 +163,52 @@ class ResourceGroupSkillsGroupsStackService
         }
     }
 
-    public function cloneResourceGroupSkillsGroupsStack($originalResourceGroupAssociation, $clonedResourceGroupId)
+    public function cloneResourceGroupSkills($originalResourceGroupSkills, $clonedResourceGroupId)
     {
         try {
-            $originalResourceGroupAssociation->each(function ($resource_group_skill_group) use ($clonedResourceGroupId) {
-                if ($resource_group_skill_group) {
-                    $cloneResourceGroupSKills = $resource_group_skill_group->replicate();
-                    $cloneResourceGroupSKills->resource_group_id = $clonedResourceGroupId;
-                    $cloneResourceGroupSKills->save();
+            $originalResourceGroupSkills->each(function ($skills) use ($clonedResourceGroupId) {
+                if ($skills) {
+                    $cloneSkill = $skills->replicate();
+                    $cloneSkill->resource_group_id = $clonedResourceGroupId;
+                    $cloneSkill->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceGroupGroups($originalResourceGroupGroups, $clonedResourceGroupId)
+    {
+        try {
+            $originalResourceGroupGroups->each(function ($skill_groups) use ($clonedResourceGroupId) {
+                if ($skill_groups) {
+                    $cloneSkillGroup = $skill_groups->replicate();
+                    $cloneSkillGroup->resource_group_id = $clonedResourceGroupId;
+                    $cloneSkillGroup->save();
+                }
+            });
+
+            return true;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function cloneResourceGroupStack($originalResourceGroupStacks, $clonedResourceGroupId)
+    {
+        try {
+            $originalResourceGroupStacks->each(function ($skill_stacks) use ($clonedResourceGroupId) {
+                if ($skill_stacks) {
+                    $cloneSkillStack = $skill_stacks->replicate();
+                    $cloneSkillStack->resource_group_id = $clonedResourceGroupId;
+                    $cloneSkillStack->save();
                 }
             });
 

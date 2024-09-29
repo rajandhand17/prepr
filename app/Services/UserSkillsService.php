@@ -34,7 +34,7 @@ class UserSkillsService
             ];
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.add_skills'), $profile_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.add_skills'), $profile_data, auth()->user(), request()->ip());
             }
 
             return $allSkills;
@@ -214,6 +214,34 @@ class UserSkillsService
             }
 
             return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function storeVerifySkills($skills, $userId)
+    {
+        try {
+            if (!empty($skills)) {
+                $existingSkills = UserSkills::where('user_id', $userId)
+                    ->whereIn('skill', $skills)
+                    ->get()
+                    ->keyBy('skill');
+
+                $newSkills = [];
+
+                foreach ($skills as $skill) {
+                    if (isset($existingSkills[$skill])) {
+                        $existingSkills[$skill]->verification_count = $existingSkills[$skill]->verification_count + 1;
+                        $existingSkills[$skill]->is_verified = '1';
+                        $existingSkills[$skill]->save();
+                    }
+                }
+            }
+
+            return true;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

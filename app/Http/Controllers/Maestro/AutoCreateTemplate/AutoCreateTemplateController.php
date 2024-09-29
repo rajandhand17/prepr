@@ -12,11 +12,6 @@ class AutoCreateTemplateController extends Controller
 {
     use AutoCreateTemplateTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder)
     {
         try {

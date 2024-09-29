@@ -7,13 +7,19 @@ use App\Models\FeaturedModule;
 
 class FeaturedModuleService
 {
-    public static function getFeaturedLabs()
+    public static function getFeaturedModule()
     {
         try {
-            $featuredLabList = FeaturedModule::where('module_type', '0')->take(config('site-settings.explore_page_limit_min'))->pluck('module_id');
-            $getLabs = LabService::getLabsBasedOnIds($featuredLabList);
+            $roles = auth()->user()->roles;
+            $role = $roles->pluck('id')->unique();
+            $roleArray = $role->toArray();
+            $featuredModules = FeaturedModule::where(function ($query) use ($roleArray) {
+                foreach ($roleArray as $role) {
+                    $query->orWhereRaw('JSON_CONTAINS(role, ?)', [json_encode((string) $role)]);
+                }
+            })->get();
 
-            return $getLabs;
+            return $featuredModules;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 
@@ -21,11 +27,11 @@ class FeaturedModuleService
         }
     }
 
-    public static function deleteFeaturedLab($id)
+    public static function deleteFeaturedModule($moduleType, $id)
     {
         try {
             $deleteFeaturedModule = FeaturedModule::where([
-                ['module_type', '=', '0'],
+                ['module_type', '=', $moduleType],
                 ['module_id', '=', $id],
             ])->delete();
 

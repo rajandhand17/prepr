@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Public\Challenge;
 
+use App\Http\Resources\CustomAnnouncementResource;
 use App\Http\Resources\Project\SubmittedProjectResource;
 use App\Http\Resources\Public\Lab\LabNameListResource;
 use App\Http\Resources\Public\LabProgram\LabProgramListNameResource;
@@ -63,6 +64,7 @@ class ChallengeResource extends JsonResource
         $jobs = null;
         $challenge_flexible_announcement = null;
         $module_progress = null;
+        $challenge_joined_date = null;
         $is_authenticated_user = auth('api')->check();
 
         if ($this->getCategory) {
@@ -219,6 +221,8 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
+                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at;
+
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
@@ -248,6 +252,7 @@ class ChallengeResource extends JsonResource
                     'custom_timelines_description' => $item->custom_timelines_description,
                     'custom_timelines_duration'    => $item->custom_timelines_duration,
                     'schedule_custom_notify'       => $item->schedule_custom_notify == '1' ? 'yes' : 'no',
+                    'schedule_custom_announcement' => $item->challengeScheduleCustomAnnouncement ? CustomAnnouncementResource::make($item->challengeScheduleCustomAnnouncement) : null,
                 ];
             });
         }
@@ -297,6 +302,10 @@ class ChallengeResource extends JsonResource
                     $join_status = 'No';
                     break;
             }
+        }
+
+        if (auth('api')->check() && $join_status === 'Yes') {
+            $challenge_joined_date = $joined_status->updated_at;
         }
 
         if (!empty($this->challenge_association)) {
@@ -400,6 +409,16 @@ class ChallengeResource extends JsonResource
             $isActive = 'no';
         }
 
+        if (auth('api')->check() && $isActive === 'yes') {
+            // check challenge is started for user to participate
+            if ($challenge_timelines['timeline_type'] === 'restricted') {
+                $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth('api')->user());
+                if ($checkChallengeProjectCreationEnabled != true) {
+                    $isActive = 'no';
+                }
+            }
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -469,6 +488,7 @@ class ChallengeResource extends JsonResource
             'resource_collections'              => $resource_collections,
             'resource_groups'                   => $resource_groups,
             'challenge_status'                  => $challenge_status,
+            'challenge_joined_date'             => $challenge_joined_date,
         ];
     }
 }

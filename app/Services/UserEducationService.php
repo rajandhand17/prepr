@@ -21,12 +21,12 @@ class UserEducationService
                     'user_id'     => auth()->user()->id,
                     'university'  => $value,
                     'degree'      => $input['degree'][$key],
-                    'start_date'  => $input['start_date'][$key],
-                    'end_date'    => $input['end_date'][$key],
-                    'address'     => $input['address'][$key],
-                    'state'       => $input['state'][$key],
-                    'country'     => $input['country'][$key],
-                    'description' => $input['description'][$key],
+                    'start_date'  => $input['start_date'][$key] ?? null,
+                    'end_date'    => $input['end_date'][$key] ?? null,
+                    'address'     => $input['address'][$key] ?? null,
+                    'state'       => $input['state'][$key] ?? null,
+                    'country'     => $input['country'][$key] ?? null,
+                    'description' => $input['description'][$key] ?? null,
                 ]);
                 $allEducation[] = $createEducation;
             }
@@ -39,7 +39,7 @@ class UserEducationService
             ];
 
             if (config('app.isMixPanelEnable')) {
-                MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), $request->ip());
+                MixpanelJob::dispatch(config('mixpanel.add_education'), $profile_data, auth()->user(), request()->ip());
             }
 
             return $allEducation;

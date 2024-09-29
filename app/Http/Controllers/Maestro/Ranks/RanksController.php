@@ -16,11 +16,6 @@ class RanksController extends Controller
 {
     use RankTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
-
     public function index(Builder $builder)
     {
         try {

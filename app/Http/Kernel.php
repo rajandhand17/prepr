@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\ChannelApiAuthentication;
+use App\Http\Middleware\CheckAdminLevelAccess;
 use App\Http\Middleware\CheckChallengeForOrgLevelAccess;
 use App\Http\Middleware\CheckLabForOrgLevelAccess;
 use App\Http\Middleware\CheckOrganizationForOrgLevelAccess;
@@ -79,6 +80,7 @@ class Kernel extends HttpKernel
         'channel-api-auth'                      => ChannelApiAuthentication::class,
         'check-lab-org-level-access'            => CheckLabForOrgLevelAccess::class,
         'check-challenge-org-level-access'      => CheckChallengeForOrgLevelAccess::class,
+        'check-admin-level-access'              => CheckAdminLevelAccess::class,
         'check-resource-org-level-access'       => CheckResourceForOrgLevelAccess::class,
         'check-organization-org-level-access'   => CheckOrganizationForOrgLevelAccess::class,
     ];

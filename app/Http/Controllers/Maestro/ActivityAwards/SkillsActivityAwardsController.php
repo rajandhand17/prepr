@@ -22,11 +22,6 @@ class SkillsActivityAwardsController extends Controller
      */
     use SkillsActivityAwardTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {
@@ -37,7 +32,7 @@ class SkillsActivityAwardsController extends Controller
                         return $award->name;
                     })
                     ->editColumn('skill', static function (SkillsActivityAward $award) {
-                        return SkillService::getSelectedSkillsNameByIds(json_decode($award->skill, true));
+                        return SkillService::getSkillById($award->skill)->title;
                     })
                     ->editColumn('image', static function (SkillsActivityAward $award) {
                         $onerror = 'onerror=this.onerror=null;this.src="'.asset('front/img/no-img.jpg').'";';
@@ -130,7 +125,7 @@ class SkillsActivityAwardsController extends Controller
     {
         try {
             $award = SkillsActivityAward::find($id);
-            $selectedSkills = SkillService::getSkillBasedOnIds(json_decode($award->skill, true));
+            $selectedSkills = [SkillService::getSkillById($award->skill)->title];
             $languages = LanguageService::getAllActiveLanguages();
 
             return view('maestro.activity-awards.skills-awards.edit', compact('award', 'selectedSkills', 'languages'));

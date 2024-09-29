@@ -28,11 +28,6 @@ class EmailTemplateController extends Controller
      */
     use EmailTemplateTrait;
 
-    public function construct()
-    {
-        $this->middleware('web');
-    }
-
     /**
      * Show the application dashboard.
      *

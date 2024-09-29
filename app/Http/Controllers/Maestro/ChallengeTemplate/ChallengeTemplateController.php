@@ -21,7 +21,6 @@ class ChallengeTemplateController extends Controller
 
     public function __construct(ChallengeTemplateService $challengeTemplateService, ChallengeService $challengeService)
     {
-        $this->middleware('web');
         $this->challengeTemplateService = $challengeTemplateService;
         $this->challengeService = $challengeService;
     }
@@ -89,7 +88,7 @@ class ChallengeTemplateController extends Controller
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'CHALLENGE TITLE', 'width' => '5%'],
-                ['data' => 'username', 'name' => 'username', 'title' => 'USERNAME', 'width' => '10%'],
+                ['data' => 'username', 'name' => 'username', 'title' => 'USERNAME', 'width' => '10%', 'searchable' => false],
                 ['data' => 'status', 'name' => 'status', 'title' => 'STATUS', 'width' => '10%'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'PUBLISHED', 'width' => '10%'],
                 ['data' => 'action', 'name' => 'action', 'title' => 'ACTION', 'width' => '10%'],
@@ -131,14 +130,14 @@ class ChallengeTemplateController extends Controller
                 return response()->json(['status' => 'fail', 'message' => 'Sorry, this Challenge is not accessible with your existing plan.']);
             }
             if ($checkChallengeBasedOnSlug->is_pre_built == '1') {
-                return response()->json(['status' => 'fail', 'message' => 'This Challenge already cloned in Challenge Template']);
+                return response()->json(['status' => 'fail', 'message' => 'This Challenge already added in Challenge Template']);
             }
             $addChallengeTemplate = $this->createChallengeTemplate($checkChallengeBasedOnSlug->id);
             if ($addChallengeTemplate != false) {
-                return response()->json(['status' => 'success', 'message' => 'Challenge cloned successfully']);
+                return response()->json(['status' => 'success', 'message' => 'Challenge added successfully in challenge template.']);
             }
 
-            return response()->json(['status' => 'fail', 'message' => 'Oops! The clonning Challenge has failed.']);
+            return response()->json(['status' => 'fail', 'message' => 'Oops! The creating Challenge template has failed.']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'fail', 'message' => 'Oops! Something went wrong. Please try again later.']);
         }

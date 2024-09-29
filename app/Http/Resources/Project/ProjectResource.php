@@ -8,6 +8,7 @@ use App\Services\Manage\OrganizationService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
 use App\Services\SkillService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -121,8 +122,9 @@ class ProjectResource extends JsonResource
         if ($this->challenge_id) {
             $challenge_details = ChallengeService::getChallengeDetailedBasedOnChallenges($this->challenge_id, $this->created_at, $templateData);
             $fetchChallenge = ChallengeService::getChallengeBasedOnId($this->challenge_id);
-            $org = OrganizationService::getOrganizationExistBasedOnId($fetchChallenge->organization_id);
-
+            if ($fetchChallenge) {
+                $org = OrganizationService::getOrganizationExistBasedOnId($fetchChallenge->organization_id);
+            }
             if ($fetchChallenge && $fetchChallenge->participation_achievement) {
                 $achievement = [
                     'achievement_name'      => $fetchChallenge->participation_achievement->achievement_name,
@@ -179,7 +181,16 @@ class ProjectResource extends JsonResource
         if ($this->lab_id) {
             $lab_details = LabService::getLabBasedOnId($this->lab_id);
             if ($lab_details) {
-                $lab_details = $lab_details->only(['id', 'uuid', 'title', 'slug', 'description', 'media', 'media_type', 'privacy', 'status']);
+                $lab_details = [
+                    'uuid'         => $lab_details->uuid,
+                    'title'        => $lab_details->title,
+                    'slug'         => $lab_details->slug,
+                    'description'  => $lab_details->description,
+                    'media'        => $lab_details->media,
+                    'media_type'   => $lab_details->media_type,
+                    'privacy'      => ($lab_details->privacy == '1') ? 'yes' : 'no',
+                    'status'       => ($lab_details->status == '0') ? 'draft' : (($this->status == '1') ? 'published' : 'archive'),
+                ];
             }
         }
 
@@ -230,9 +241,20 @@ class ProjectResource extends JsonResource
                 break;
         }
 
+        $created_by = [];
+        if (auth('api')->check() && !empty($this->user_id)) {
+            $userDetails = UserService::getUserById($this->user_id);
+
+            $created_by['full_name'] = data_get($userDetails, 'full_name');
+            $created_by['username'] = data_get($userDetails, 'username');
+            $created_by['email'] = data_get($userDetails, 'email');
+            $created_by['profile_image'] = data_get($userDetails, 'profile_image');
+        }
+
         return [
             'id'                    => $this->uuid,
             'language'              => $this->language,
+            'created_by'            => $created_by,
             'user_id'               => auth('api')->check() ? $this->user_id : null,
             'title'                 => $this->title,
             'slug'                  => $this->slug,

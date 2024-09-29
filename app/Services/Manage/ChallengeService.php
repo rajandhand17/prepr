@@ -190,7 +190,7 @@ class ChallengeService
                         break;
 
                     case 'cloned_by_you':
-                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('is_pre_built', '1');
+                        $challenge_list = $challenge_list->where('user_id', auth()->user()->id)->where('cloned_from', '!=', null);
                         break;
                 }
             }
@@ -666,14 +666,17 @@ class ChallengeService
             $originalChallenge = Challenge::find($challengeId);
             $model = new Challenge();
             $slug = UtilityHelper::generateSlug($organization->title.' '.$originalChallenge->title, $model);
+            $title = UtilityHelper::generateTitle($organization->title.' '.$originalChallenge->title, $model);
             $clonedChallenge = $originalChallenge->replicate();
             $clonedChallenge->uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
-            $clonedChallenge->title = $organization->title.' '.$originalChallenge->title;
+            $clonedChallenge->title = $title;
             $clonedChallenge->slug = $slug;
             $clonedChallenge->user_id = auth()->user()->id;
             $clonedChallenge->organization_id = $organization->id;
             $clonedChallenge->allow_winner_change = '0';
             $clonedChallenge->is_pre_built = '0';
+            $clonedChallenge->is_auto_created = '0';
+            $clonedChallenge->cloned_from = $originalChallenge->id;
             $clonedChallenge->save();
 
             return $clonedChallenge;
@@ -947,7 +950,7 @@ class ChallengeService
                     'template_title' => __('responses.any_pitch_template'),
                 ];
             } else {
-                $template = PitchTemplate::where('id', $templateId)->first();
+                $template = PitchTemplate::where('id', $templateId)->first() ?? PitchTemplate::first();
                 if ($template) {
                     $templateData = [
                         'template_id'    => $template->id,
@@ -1075,13 +1078,14 @@ class ChallengeService
                 foreach ($challengeData as $challenge) {
                     if ($challenge->challenge_timelines) {
                         if ($challenge->challenge_timelines->timeline_type == '1') {
-                            if ($challenge->challenge_timelines->submission_deadline_date >= now()) {
+                            $deadlineDate = $challenge->challenge_timelines->submission_deadline_date;
+                            if ($deadlineDate >= now()) {
                                 // For restricted challenge
                                 $restrictedDeadline = [
                                     'id'       => $challenge->uuid,
                                     'title'    => $challenge->title,
                                     'slug'     => $challenge->slug,
-                                    'deadline' => UtilityHelper::formatDateTime($challenge->challenge_timelines->submission_deadline_date) ?? null,
+                                    'deadline' => $deadlineDate,
                                 ];
                                 $restrictedDeadlineCollection->push($restrictedDeadline);
                             }
@@ -1111,6 +1115,34 @@ class ChallengeService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkChallengeProjectCreationEnabled($challengeTimeLineData, $userData)
+    {
+        try {
+            // Initialize flag
+            $isProjectCreationEnabled = false;
+
+            // Get user timezone-based current datetime
+            $userLocationBasedTime = UtilityHelper::UserLocationBasedDateTime($userData->preferred_timezone);
+
+            // Ensure challenge timeline data is not empty and has a valid start date
+            if (!empty($challengeTimeLineData) && $challengeTimeLineData['start_date'] != null) {
+                // Check if the current time is after the start date
+                $isProjectCreationEnabled = ($challengeTimeLineData['start_date'] < $userLocationBasedTime);
+
+                // If project creation is enabled, check if within the registration deadline
+                if ($isProjectCreationEnabled && $challengeTimeLineData['registration_deadline_date'] != null) {
+                    $isProjectCreationEnabled = ($challengeTimeLineData['registration_deadline_date'] > $userLocationBasedTime);
+                }
+            }
+
+            return $isProjectCreationEnabled;
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

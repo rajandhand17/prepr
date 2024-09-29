@@ -246,6 +246,7 @@ class ResourceModuleController extends AppBaseController
             if ($checkResourceModuleExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
+
             if ($request->has('links') && !empty($request->links)) {
                 $addLinks = $this->resourceModuleRepository->addLinks($request, $checkResourceModuleExistsOrNot->id);
                 if (!$addLinks) {
@@ -462,14 +463,18 @@ class ResourceModuleController extends AppBaseController
             if (!$getResourceModule) {
                 return $this->sendError(__('responses.selected_resource_module_not_found'), 404);
             }
-            // Fetching resource module is belongs to current users or not
-            if ($getResourceModule->user_id == auth()->user()->id) {
-                return $this->sendError(__('responses.selected_resource_module_already_exists'), 403);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
-            // Fetching Resource module Based on title and resource current users
-            $getResourceModuleBasedOnTitle = $this->resourceModuleRepository->getResourceModuleBasedOnTitle($getResourceModule->title);
-            if ($getResourceModuleBasedOnTitle) {
-                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+
+            if ($getResourceModule->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_module_switcher_error'), 403);
+            }
+
+            if ($getResourceModule->is_accessible == '0') {
+                return $this->sendError(__('responses.resource_module_not_accessible'), 403);
             }
             // Cloning resource module based on title and resource group id
             $cloneResourceModule = $this->resourceModuleRepository->cloneResourceModule($getResourceModule->id);

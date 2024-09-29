@@ -97,10 +97,12 @@ class ResourceCollectionTypeModesService
     public static function cloneResourceCollectionTypeModes($originalResourceCollectionAssociation, $clonedResourceCollectionId)
     {
         try {
-            if ($originalResourceCollectionAssociation) {
-                $cloneResourceModuleSKills = $originalResourceCollectionAssociation->replicate();
-                $cloneResourceModuleSKills->resource_collection_id = $clonedResourceCollectionId;
-                $cloneResourceModuleSKills->save();
+            if ($originalResourceCollectionAssociation && $originalResourceCollectionAssociation->isNotEmpty()) {
+                foreach ($originalResourceCollectionAssociation as $originalAssociation) {
+                    $cloneResourceModuleSkills = $originalAssociation->replicate();
+                    $cloneResourceModuleSkills->resource_collection_id = $clonedResourceCollectionId;
+                    $cloneResourceModuleSkills->save();
+                }
             }
 
             return true;

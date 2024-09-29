@@ -34,15 +34,15 @@ class AchievementService
                     $userAchievement = new UserAchievement();
                     $userAchievement->user_id = $projectMember;
                     $userAchievement->certificate_number = $certificate_number;
-                    $userAchievement->title = $projectAchievement->achievement_name;
-                    $userAchievement->description = $projectAchievement->achievement_name;
+                    $userAchievement->title = $projectAchievement->achievement_name ?? 'Challenge Participant';
+                    $userAchievement->description = $projectAchievement->achievement_name ?? 'Challenge Participant';
                     $userAchievement->achievement_type = $achievement_type;
                     $userAchievement->module_id = $projectData->id;
                     $userAchievement->module_title = $projectData->title;
                     $userAchievement->module_parent_id = $fetchChallenge->id;
                     $userAchievement->module_parent_title = $fetchChallenge->title;
-                    $userAchievement->achievement_prize = $projectAchievement->achievement_prize;
-                    $userAchievement->achievement_points = $projectAchievement->achievement_points;
+                    $userAchievement->achievement_prize = $projectAchievement->achievement_prize ?? '0';
+                    $userAchievement->achievement_points = $projectAchievement->achievement_points ?? '0';
                     $userAchievement->achievement_image = $projectAchievement->getRawOriginal('achievement_image');
                     $userAchievement->issue_date = Carbon::now()->toDateTimeString();
                     $userAchievement->valid_date = null;
@@ -75,7 +75,7 @@ class AchievementService
                         ];
 
                         if (config('app.isMixPanelEnable')) {
-                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user());
+                            MixpanelJob::dispatch(config('mixpanel.earn_achievement'), $mixpanel_data, auth()->user(), request()->ip());
                         }
                     }
                 }
@@ -129,7 +129,15 @@ class AchievementService
                         $certificate_number++;
                         $user = UserService::getUserById($projectMember);
                         if ($user) {
-                            $user->notify(new AddWinnerAchievementNotification(__('responses.noti_congratulations'), __('responses.noti_winner_achievement')));
+                            $email_detail = [
+                                'subject'          => __('responses.noti_winner_achievement'),
+                                'email'            => $user->email,
+                                'name'             => $user->full_name,
+                                'project'          => $project->title,
+                                'challenge'        => $challengeData->title,
+                                'achievementImage' => $fetchChallengeIncentiveAchievement->achievement_image,
+                            ];
+                            $user->notify(new AddWinnerAchievementNotification($email_detail));
                         }
                     }
                 }
@@ -308,6 +316,19 @@ class AchievementService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengeAchievementWinnerIds($challengeId)
+    {
+        try {
+            $fetchChallengeAchievementWinnerIds = UserAchievement::where(['module_id' => $challengeId, 'achievement_type' => '9'])->pluck('user_id');
+
+            return $fetchChallengeAchievementWinnerIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
