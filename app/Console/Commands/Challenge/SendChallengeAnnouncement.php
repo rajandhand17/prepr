@@ -118,7 +118,7 @@ class SendChallengeAnnouncement extends Command
                             $fetchChallengeParticipationAchievementUserIds = AchievementService::fetchChallengeAchievementUserIds($pendingChallengeAnnouncement->challenge_id, $achievementType);
                         }
 
-                        $recipientList = ($fetchInvitedChallengeUserIds->merge($fetchChallengeWinnerAchievementUserIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->merge($fetchInvitedLabUserIds)->merge($fetchAssociatedProjectUserIds)->merge($fetchSubmittedProjectUserIds)->merge($fetchChallengeParticipationAchievementUserIds)->unique());
+                        $recipientList = $fetchInvitedChallengeUserIds->merge($fetchChallengeWinnerAchievementUserIds)->merge($challengeFollowersIds)->merge($fetchAutoAcceptedEmailsBasedData)->merge($fetchInvitedLabUserIds)->merge($fetchAssociatedProjectUserIds)->merge($fetchSubmittedProjectUserIds)->merge($fetchChallengeParticipationAchievementUserIds)->unique();
                         if ($recipientList->isEmpty()) {
                             $markAnnouncementCompleted = $this->markAnnouncementCompleted($pendingChallengeAnnouncement->id);
                         }
@@ -145,7 +145,7 @@ class SendChallengeAnnouncement extends Command
                         if ($sendChallengeAnnouncement) {
                             $markAnnouncementCompleted = $this->markAnnouncementCompleted($pendingChallengeAnnouncement->id);
                             if (!$markAnnouncementCompleted) {
-                                throw new Exception('Failed to announcement' . $pendingChallengeAnnouncement->id);
+                                throw new Exception('Failed to announcement'.$pendingChallengeAnnouncement->id);
                             }
                         }
                     }
@@ -185,7 +185,7 @@ class SendChallengeAnnouncement extends Command
                 foreach ($recipientList as $userId) {
                     $fetchUserData = UserService::getUserById($userId);
                     $fetchOrganizationData = OrganizationService::getOrganizationExistBasedOnId($challengeDetail->organization_id);
-                    if($fetchUserData && $fetchOrganizationData) {
+                    if ($fetchUserData && $fetchOrganizationData) {
                         $email_detail = [
                             'subject'           => $announcementData->subject,
                             'email'             => $fetchUserData->email,
