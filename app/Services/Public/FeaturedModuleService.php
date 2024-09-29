@@ -34,7 +34,7 @@ class FeaturedModuleService
                 ['module_type', '=', $moduleType],
                 ['module_id', '=', $id],
             ])->delete();
-                
+
             return $deleteFeaturedModule;
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
