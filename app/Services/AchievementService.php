@@ -30,6 +30,8 @@ class AchievementService
                 $olddata = $key - 1;
                 $certificate_id = $olddata.'00'.$key;
                 $certificate_number = $certificate_date.$certificate_id;
+                $certificate_number = $this->generateUniqueCertificateNumber($certificate_number);
+
                 foreach ($projectMembers as $projectMember) {
                     $userAchievement = new UserAchievement();
                     $userAchievement->user_id = $projectMember;
@@ -107,6 +109,7 @@ class AchievementService
                     $olddata = $key - 1;
                     $certificate_id = $olddata.'00'.$key;
                     $certificate_number = $certificate_date.$certificate_id;
+                    $certificate_number = $this->generateUniqueCertificateNumber($certificate_number);
                     foreach ($fetchAcceptedMemberIds as $projectMember) {
                         $userAchievement = new UserAchievement();
                         $userAchievement->user_id = $projectMember;
@@ -161,7 +164,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -204,7 +207,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -247,7 +250,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -290,7 +293,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -330,6 +333,23 @@ class AchievementService
 
             return $fetchChallengeAchievementUserIds;
         } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function generateUniqueCertificateNumber($base_certificate_number)
+    {
+        try {
+            $certificate_number = $base_certificate_number;
+
+            while (UserAchievement::where(['certificate_number' => $certificate_number])->exists()) {
+                $certificate_number = $base_certificate_number++;
+            }
+
+            return $certificate_number;
+        } catch(Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

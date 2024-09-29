@@ -246,7 +246,7 @@ class LabProgramController extends AppBaseController
             if ($checkLabProgramSlugExistsOrNot->is_accessible == '0') {
                 return $this->sendError(__('responses.lab_program_not_accessible'), 403);
             }
-            $deletLabProgram = $this->labProgramRepository->delete($slug);
+            $deletLabProgram = $this->labProgramRepository->delete($checkLabProgramSlugExistsOrNot->id);
             if ($deletLabProgram) {
                 return $this->sendResponse(null, __('responses.lab_program_delete'));
             }
