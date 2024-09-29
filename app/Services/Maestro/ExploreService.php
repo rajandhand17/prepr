@@ -4,7 +4,8 @@ namespace App\Services\Maestro;
 
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
-use App\Models\Explore;
+use App\Models\FeaturedModule;
+use App\Models\Role;
 use Exception;
 use Schema;
 
@@ -13,7 +14,7 @@ class ExploreService
     public static function updateExploreDataById($id, $request)
     {
         try {
-            $exploreData = Explore::find($id);
+            $exploreData = FeaturedModule::find($id);
             $input = $request->all();
             $insertArray = [];
             foreach ($input as $key => $value) {
@@ -22,7 +23,7 @@ class ExploreService
                 }
             }
             if (!empty($insertArray)) {
-                Explore::where('id', $id)->update($insertArray);
+                FeaturedModule::where('id', $id)->update($insertArray);
                 if ($request->media) {
                     $cover_Image = FileUploadHelper::uploadImageToS3($request->file('media'), 'explore');
                     $exploreData->media = $cover_Image ? $cover_Image : 'NULL';
@@ -44,7 +45,7 @@ class ExploreService
     public static function deleteExploreData($id)
     {
         try {
-            $Explore = Explore::find($id);
+            $Explore = FeaturedModule::find($id);
 
             if ($Explore) {
                 return $Explore->delete();
@@ -61,7 +62,7 @@ class ExploreService
     public static function getExploreData()
     {
         try {
-            return Explore::orderBy('id', 'desc');
+            return FeaturedModule::orderBy('id', 'desc');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -78,15 +79,50 @@ class ExploreService
             // Limit the description to 200 words
             $description = substr($componentRequest->description, 0, 200);
 
-            Explore::create([
-                'comp_type'    => $request->compType,
-                'comp_id'      => $request->compId,
-                'role'         => '["user"]',
-                'title'        => $componentRequest->title,
-                'description'  => $description,
-                'action_button'=> 'View',
-                'media_type'   => $componentRequest->media_type,
-                'media'        => $componentRequest->media,
+            switch($request->compType) {
+                case 'Lab':   // Labs
+                    $moduleType = '0';
+                    break;
+                case 'Lab Program': // Lab Program
+                    $moduleType = '1';
+                    break;
+                case 'Challenge': // Challenge
+                    $moduleType = '2';
+                    break;
+                case 'Challenge Path': // Challenge Path
+                    $moduleType = '3';
+                    break;
+                case 'Resource Module': // Resource Module
+                    $moduleType = '4';
+                    break;
+                case 'Resource Collection': // Resource Collection
+                    $moduleType = '5';
+                    break;
+                case 'Resource Group': // Resource Collection
+                    $moduleType = '6';
+                    break;
+                case 'Project': // project
+                    $moduleType = '7';
+                    break;
+            }
+            if ($componentRequest->media) {
+                $start = strpos($componentRequest->media, 'uploads');
+                if ($start !== false) {
+                    $uploadsPath = substr($componentRequest->media, $start);
+                }
+            } else {
+                $uploadsPath = null;
+            }
+            $roleId = Role::where('name', 'user')->first();
+            FeaturedModule::create([
+                'module_type'    => $moduleType,
+                'module_id'      => $request->compId,
+                'role'           => '["'.$roleId->id.'"]',
+                'title'          => $componentRequest->title,
+                'description'    => $description,
+                'button_text'    => 'View',
+                'media_type'     => $componentRequest->media_type,
+                'media'          => $uploadsPath,
             ]);
 
             return true;

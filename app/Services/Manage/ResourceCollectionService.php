@@ -477,6 +477,7 @@ class ResourceCollectionService
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $slug = UtilityHelper::generateSlug($resourceCollections->title.$uuid, $resourceCollection);
             $resourceCollection = $resourceCollections->replicate();
+            $resourceCollection->media_type = (empty($resourceCollection->media_type)) ? '0' : $resourceCollection->media_type;
             $resourceCollection->uuid = $uuid;
             $resourceCollection->user_id = auth()->user()->id;
             $resourceCollection->slug = $slug;

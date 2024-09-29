@@ -19,8 +19,8 @@
   <link rel="stylesheet" href="{{config('site-settings.aws_url').'public/maestro/dist/css/adminlte.min.css'}}">
 </head>
 
-<body class="hold-transition login-page">
-  <div class="login-box">
+<body class="hold-transition login-page" style="background-image: linear-gradient(to right, #d5ffc6, #7BD1F2); color: #000000;">
+  <div class="login-box" style="box-shadow: 11px 10px 5px lightslategrey; width: 430px !important;">
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
@@ -32,9 +32,11 @@
         <form method="POST" action="{{ route('login') }}">
           @csrf
           @if (session('error'))
+          <center>
               <span class="errorblock" style="padding: 10px 1px 10px 1px;color: red;">
                   {{ session('error') }}
               </span>
+          </center>
           @endif
 
           <div class="input-group mb-3" style="padding-top: 10px;">

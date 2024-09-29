@@ -2,6 +2,7 @@
 
 return [
     'pagination_per_page'                => '10',
+    'achivement_pagination_per_page'     => '15',
     'association_pagination_per_page'    => '6',
     'notification_pagination_per_page'   => '8',
     'dashboard_pagination_per_page'      => '5',

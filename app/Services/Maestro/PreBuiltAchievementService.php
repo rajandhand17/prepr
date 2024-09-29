@@ -51,7 +51,7 @@ class PreBuiltAchievementService
             $achievement->component_type = !empty($component_type) ? implode(',', $component_type) : null;
             $achievement->achievement_type = $achievement_type;
             $achievement->points = $request->points;
-            $achievement->status = $request->status;
+            $achievement->status = '1';
             if ($achievement->save()) {
                 return true;
             }

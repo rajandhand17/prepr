@@ -271,6 +271,8 @@ return [
     'challenge_flexible_announcement_by' => [
         'email'        => '0',
         'notification' => '1',
+        'immediately'  => '0',
+        'custom'       => '1',
     ],
 
     'challenge_announcement_send_status' => [
@@ -481,6 +483,12 @@ return [
         'sent'      => '1',
         'fail'      => '2',
         'na'        => '3',
+    ],
+
+    'project_member_management_auto_invite' => [
+        'no'  => '0',
+        'yes' => '1',
+        'na'  => '2',
     ],
 
     'project_access_level' => [

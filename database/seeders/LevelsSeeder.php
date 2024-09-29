@@ -14,20 +14,17 @@ class LevelsSeeder extends Seeder
     {
         $levels = [
             [
-                'title'      => 'Beginner Level',
-                'fr_CA_title'=> 'Niveau DEBUTANT',
+                'title'      => 'Beginner',
+                'fr_CA_title'=> 'DEBUTANT',
             ], [
-                'title'      => 'Intermediate Level',
-                'fr_CA_title'=> 'Niveau intermédiaire',
+                'title'      => 'Intermediate',
+                'fr_CA_title'=> 'intermédiaire',
             ], [
-                'title'      => 'Senior Level',
-                'fr_CA_title'=> 'Niveau supérieur',
+                'title'      => 'Advanced',
+                'fr_CA_title'=> 'avancé',
             ], [
-                'title'      => 'Advanced Level',
-                'fr_CA_title'=> 'Niveau avancé',
-            ], [
-                'title'      => 'Junior Level',
-                'fr_CA_title'=> 'Niveau Junior',
+                'title'      => 'Mixed',
+                'fr_CA_title'=> 'Mixed',
             ],
         ];
         foreach ($levels as $level) {

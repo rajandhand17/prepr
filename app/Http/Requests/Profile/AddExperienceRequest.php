@@ -27,15 +27,15 @@ class AddExperienceRequest extends FormRequest
         return [
             'company'      => 'required|array',
             'company.*'    => 'max:255',
-            'description'  => 'required|array',
-            'start_date'   => 'required|array',
+            'description'  => 'nullable|array',
+            'start_date'   => 'nullable|array',
             'start_date.*' => 'before_or_equal:'.Carbon::now()->toDateTimeString(),
-            'end_date'     => 'required|array',
+            'end_date'     => 'nullable|array',
             'end_date.*'   => 'after_or_equal:start_date.*',
-            'position'     => 'required|array',
-            'address'      => 'required|array',
-            'state'        => 'required|array',
-            'country'      => 'required|array',
+            'position'     => 'nullable|array',
+            'address'      => 'nullable|array',
+            'state'        => 'nullable|array',
+            'country'      => 'nullable|array',
         ];
     }
 

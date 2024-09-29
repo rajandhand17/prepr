@@ -234,15 +234,15 @@ class ComponentAssociationService
             if ($request->has('resource_modules')) {
                 $sequence = 1;
                 if (count($request->resource_modules) > 0) {
-                    $getResourceGroupIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($request->resource_modules);
+                    // $getResourceGroupIds = ResourceModuleService::getResourceModuleBasedOnUUIDArray($res);
                     $existComponentAssociationResourceModuleId = ComponentAssociation::where([
                         ['lab_id', '=', $lab],
                         ['resource_module_id', '!=', null],
                     ])->pluck('resource_module_id')->all();
-                    $nonExistingIdsResourceModuleId = array_diff($existComponentAssociationResourceModuleId, $getResourceGroupIds);
+                    $nonExistingIdsResourceModuleId = array_diff($existComponentAssociationResourceModuleId, $request->resource_modules);
                     $deleteNonExistingResourceModuleId = ComponentAssociation::where('lab_id', $lab)->whereIn('resource_module_id', $nonExistingIdsResourceModuleId)->delete();
 
-                    $newComponentAssociationResourceModuleId = array_diff($getResourceGroupIds, $existComponentAssociationResourceModuleId);
+                    $newComponentAssociationResourceModuleId = array_diff($request->resource_modules, $existComponentAssociationResourceModuleId);
                     $sequences = ComponentAssociation::where([
                         ['lab_id', '=', $lab],
                         ['resource_module_id', '!=', null],
@@ -401,7 +401,7 @@ class ComponentAssociationService
     public static function getChallengeAssociatedLab($challenge)
     {
         try {
-            return ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('lab_id');
+            return ComponentAssociation::where(['challenge_id' => $challenge->id])->whereNotNull('lab_id')->pluck('lab_id');
         } catch (Exception $e) {
             return false;
         }
@@ -410,7 +410,7 @@ class ComponentAssociationService
     public static function getChallengeAssociatedResourceModule($challenge)
     {
         try {
-            return ComponentAssociation::where(['challenge_id' => (int) $challenge->id])->pluck('resource_module_id');
+            return ComponentAssociation::where(['challenge_id' => (int) $challenge->id])->whereNotNull('resource_module_id')->pluck('resource_module_id');
         } catch (Exception $e) {
             return false;
         }

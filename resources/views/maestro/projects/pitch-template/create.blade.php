@@ -84,50 +84,47 @@
                       @endif
                     </div>
 
-                    <div class="row">
-                      @if($languages->count() > 0)
-                          @foreach($languages as $key => $single)
-                              @php
-                                if ($loop->last) {
-                                    $isEnable = 'yes';
-                                    $callSpan = 2;
-                                } else {
-                                  $isEnable = 'no';
-                                  $callSpan = 3;
-                                }
-                                  $inputpitchName = "pitch[name][$single->iso][]";
-                                  $inputdescriptionName = "pitch[description][$single->iso][]";
-                              @endphp
-                              <div class="col-md-3">
-                                <div class="form-group">
-                                  <input type="text" class="form-control" name="{{ $inputpitchName }}" value="" required />
-                                </div>
+                  {{-- Start section for pitch and placeholder--}}
+                  <div id="dynamicTable">
+                      <div class="row dynamicRow">
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <input type="text" class="form-control" name="pitch[name][en][]" value="" required="">
                               </div>
-                              <div class="col-md-{{$callSpan}}">
-                                <div class="form-group">
-                                  <input type="text" class="form-control" name="{{ $inputdescriptionName }}" value="" required/>
-                                </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <input type="text" class="form-control" name="pitch[description][en][]" value="" required="">
                               </div>
-                              @if($isEnable == 'yes')
-                                <div class="col-md-1">
-                                  <div class="form-group">
-                                  <a href="javascript:void(0);" class="remove_templ_btn edit"><i class="fa fa-minus-circle"></i></a>
-                                  </div>
-                                </div>
-                              @endif
-                          @endforeach
-                      @endif
-                    </div>
-                    <div class="dynamic_wraP edit" id="appendSectionHtml"> </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <input type="text" class="form-control" name="pitch[name][fr-CA][]" value="" required="">
+                              </div>
+                          </div>
+                          <div class="col-md-2">
+                              <div class="form-group">
+                                  <input type="text" class="form-control" name="pitch[description][fr-CA][]" value="" required="">
+                              </div>
+                          </div>
+                          <div class="col-md-1">
+                              <div class="form-group">
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
                     <div class="row">
                       <div class="col-md-12">
                         <div class="dynmic_input add-wrp">
-                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addSection"><i class="fa fa-plus-circle"></i> &nbsp; Add Section</a>
+                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addRowBtn"><i class="fa fa-plus-circle"></i> &nbsp; Add Section</a>
                         </div>
                       </div>
                     </div>
                     <hr>
+                    {{-- End section for pitch and placeholder--}}
 
+                    {{-- Start section for task--}}
                     <div class="row">
                       @if($languages->count() > 0)
                           @foreach($languages as $single)
@@ -147,42 +144,35 @@
                       @endif
                     </div>
 
-                    <div class="row">
-                      @if($languages->count() > 0)
-                          @foreach($languages as $key => $single)
-                              @php
-                                if ($loop->last) {
-                                    $isEnable = 'yes';
-                                    $callSpan = 5;
-                                }else {
-                                  $isEnable = 'no';
-                                  $callSpan = 6;
-                                }
-                                  $inputName = "pitch[task][$single->iso][]";
-                              @endphp
-                              <div class="col-md-{{$callSpan}}">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="{{ $inputName }}" value="" required/>
-                                </div>
-                              </div>
-                              @if($isEnable == 'yes')
-                                <div class="col-md-1">
-                                  <div class="form-group">
-                                  <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
-                                  </div>
-                                </div>
-                              @endif
-                          @endforeach
-                      @endif
-                    </div>
-                    <div class="dynamic_wraP edit" id="appendTaskHtml"> </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="dynmic_input add-wrp">
-                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addTask"><i class="fa fa-plus-circle"></i> &nbsp; Add Task</a>
+      
+                    <div id="dynamicTaskTable">
+                      <div class="row dynamicRow">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <input type="text" class="form-control" name="pitch[task][en][]" value="" required="">
+                          </div>
+                        </div>
+                        <div class="col-md-5">
+                          <div class="form-group">
+                            <input type="text" class="form-control" name="pitch[task][fr-CA][]" value="" required="">
+                          </div>
+                        </div>
+                        <div class="col-md-1">
+                          <div class="form-group">
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="dynmic_input add-wrp">
+                          <a href="javascript:void(0);" class="add_templt_btn" title="Add field" id="addTask"><i class="fa fa-plus-circle"></i>&nbsp;  Add Task</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    {{-- End section for task--}}
+                    
                     <hr>
                     <div class="row">
                         <div class="col-md-6">
@@ -206,83 +196,88 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-$(document).ready(function(){
-        var maxField = 100;
-        var wrapper = $('.dynamic_wraP.edit');
+    $(document).ready(function() {
+    let rowCount = 1; 
 
-        var templateHTML = `<div class="row">
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[name][en][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[description][en][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-3">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[name][fr-CA][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-2">
-                              <div class="form-group">
-                              <input type="text" class="form-control" name="pitch[description][fr-CA][]" value=""/ required>
-                              </div>
-                            </div>
-                            <div class="col-md-1">
-                              <div class="form-group">
-                              <a href="javascript:void(0);" class="remove_templ_btn edit"><i class="fa fa-minus-circle"></i></a>
-                              </div>
-                            </div>
-                            </div>`;
-        var taskHTML =`<div class="row">
-                              <div class="col-md-6">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="pitch[task][en][]" value=""/ required>
-                                </div>
-                              </div>
-                              <div class="col-md-5">
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="pitch[task][fr-CA][]" value=""/ required>
-                                </div>
-                              </div>
-                              <div class="col-md-1">
-                                <div class="form-group">
-                                <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
-                                </div>
-                              </div>
-                              </div>`;
-        var x = 0;
+    $('#addRowBtn').on('click', function() {
+        rowCount++;
+        const newRow = `
+            <div class="row dynamicRow" id="row-${rowCount}">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[name][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[description][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[name][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[description][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" class="remove_templ_btn edit"><i class="fa fa-minus-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
 
-        $('#addTask').click(function(){
-            if(x < maxField){
-                x++;
-                $('#appendTaskHtml').append(taskHTML);
-            }
-        });
-
-        $('#addSection').click(function(){
-            if(x < maxField){
-                x++;
-                $('#appendSectionHtml').append(templateHTML);
-            }
-        });
-
-        //Once remove button is clicked
-        $(wrapper).on('click', '.remove_templ_btn', function(e){
-            e.preventDefault();
-            $(this).parent('.dynamic_wraP').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
-
-        //Once task remove button is clicked
-        $(wrapper).on('click', '.remove_task_btn', function(e){
-            e.preventDefault();
-            $(this).parent('.dynamic_wraPTask').remove(); //Remove field html
-            x--; //Decrement field counter
-        });
+        $('#dynamicTable').append(newRow);
     });
+
+    $('#dynamicTable').on('click', '.remove_templ_btn', function() {
+        if ($('#dynamicTable .dynamicRow').length > 1) {
+            $(this).closest('.dynamicRow').remove();
+        }
+    });
+});
+
+
+
+$(document).ready(function() {
+    let rowCount = 1;
+
+    $('#addTask').on('click', function() {
+        rowCount++;
+
+        const newRow = `
+            <div class="row dynamicRow" id="row-${rowCount}">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[task][en][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="pitch[task][fr-CA][]" value="" required="">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <a href="javascript:void(0);" class="remove_task_btn"><i class="fa fa-minus-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $('#dynamicTaskTable').append(newRow);
+    });
+
+    $('#dynamicTaskTable').on('click', '.remove_task_btn', function() {
+        if ($('#dynamicTaskTable .dynamicRow').length > 1) {
+            $(this).closest('.dynamicRow').remove();
+        }
+    });
+});
+
 </script>
 @endsection

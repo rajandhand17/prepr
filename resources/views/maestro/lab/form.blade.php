@@ -35,7 +35,7 @@
     <div class="col-sm-6 col-xs-6">
         <div class="form-group {{($errors->has('title')) ? 'has-error' : ''}}">
             {!! Form::label('title', 'Title', ['class' => 'control-label ']) !!}
-            {!! Form::text('title',null, ['class' => 'form-control  ']) !!}
+            {!! Form::text('title',null, ['class' => 'form-control  ', 'required' => 'required']) !!}
             <span class="help-block">{{ $errors->first('title')}}</span>
         </div>
     </div>
@@ -59,7 +59,7 @@
         <div class="col-sm-3 col-xs-3">
             <div class="form-group {{($errors->has('user_id')) ? 'has-error' : ''}}">
                 {!! Form::label('user_id', 'Lab User', ['class' => 'control-label ']) !!}
-                {!! Form::select('user_id', $lab_member_labManager, old('user_id'), ['class' => 'form-control  ']) !!}
+                {!! Form::select('user_id', $lab_member_labManager, old('user_id'), ['class' => 'form-control  ', 'required' => 'required']) !!}
                 <span class="help-block">{{ $errors->first('user_id')}}</span>
             </div>
         </div>
@@ -84,9 +84,9 @@
                 <i class="fa fa-question-circle"></i>
             </div>
             @if((strpos(Request::url(),'edit')) !== false )
-                {{ Form::select('category', @$labAssociatedItems['category'], [], ['class' => 'form-control select2 ','id' => 'listCategory']) }}
+                {{ Form::select('category', @$labAssociatedItems['category'], [], ['class' => 'form-control select2 ','id' => 'listCategory', 'required' => 'required']) }}
             @else
-                {{ Form::select('category', @$labAssociatedItems['category'] ?? [], old('category'), ['class' => 'form-control select2 ','id' => 'listCategory']) }}
+                {{ Form::select('category', @$labAssociatedItems['category'] ?? [], old('category'), ['class' => 'form-control select2 ','id' => 'listCategory', 'required' => 'required']) }}
             @endif
             <span class="help-block">{{ $errors->first('category')}}</span>
         </div>
@@ -112,7 +112,7 @@
         <div class="form-group {{($errors->has('labSkills')) ? 'has-error' : ''}}">
             {!! Form::label('labSkills', 'Skills', ['class' => 'control-label ']) !!}
               {!! Form::select('labSkills[]', @$labAssociatedItems['skills'] ?? [], @$labAssociatedItems['skillIds'] ?? [], ['class' => 'form-control
-              select2','multiple'=>'multiple', 'id'=>'Skills']) !!}
+              select2','multiple'=>'multiple', 'id'=>'Skills', 'required' => 'required']) !!}
               <span class="help-block">{{ $errors->first('labSkills')}}</span>
 
         </div>
@@ -130,7 +130,7 @@
     <div class="col-sm-6 col-xs-6">
         {!! Form::label('Location', 'Location', ['class' => 'control-label ']) !!}
         <input type="text" class="form-control" placeholder="Location" name="address" id="searchTextField"
-               value="{{ isset($data) ? $data->address : old('address') }}">
+               value="{{ isset($labAddress) ? $labAddress : old('address') }}" required>
         <input type="hidden" id="city2" name="city2" value="{{ isset($data)  ? $data->city : old('city2') }}"/>
         <input type="hidden" id="country2" name="country2"
                value="{{ isset($data)  ? $data->country : old('country2') }}"/>

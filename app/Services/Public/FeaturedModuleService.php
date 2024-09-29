@@ -7,12 +7,17 @@ use App\Models\FeaturedModule;
 
 class FeaturedModuleService
 {
-    public static function getFeaturedLabs()
+    public static function getFeaturedModule()
     {
         try {
             $roles = auth()->user()->roles;
-            $role = $roles->pluck('name')->first(); // Get the first role
-            $featuredModules = FeaturedModule::where('role', $role)->get();
+            $role = $roles->pluck('id')->unique();
+            $roleArray = $role->toArray();
+            $featuredModules = FeaturedModule::where(function ($query) use ($roleArray) {
+                foreach ($roleArray as $role) {
+                    $query->orWhereRaw('JSON_CONTAINS(role, ?)', [json_encode((string) $role)]);
+                }
+            })->get();
 
             return $featuredModules;
         } catch(\Exception $e) {
@@ -22,11 +27,11 @@ class FeaturedModuleService
         }
     }
 
-    public static function deleteFeaturedLab($id)
+    public static function deleteFeaturedModule($moduleType, $id)
     {
         try {
             $deleteFeaturedModule = FeaturedModule::where([
-                ['module_type', '=', '0'],
+                ['module_type', '=', $moduleType],
                 ['module_id', '=', $id],
             ])->delete();
 

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Maestro\Explore;
 
+use App\Helpers\UtilityHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Challenge;
 use App\Models\ChallengePath;
-use App\Models\Explore;
+use App\Models\FeaturedModule;
 use App\Models\Lab;
 use App\Models\LabProgram;
 use App\Models\Project;
+use App\Models\ResourceCollection;
+use App\Models\ResourceGroup;
 use App\Models\ResourceModule;
 use App\Traits\Maestro\Explore\ExploreTrait;
 use Exception;
@@ -30,11 +33,6 @@ class ExploreController extends Controller
      */
     use ExploreTrait;
 
-    public function construct()
-    {
-        $this->middleware('web');
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -50,7 +48,7 @@ class ExploreController extends Controller
     public function index(Builder $builder)
     {
         try {
-            $data = Explore::get();
+            $data = FeaturedModule::get();
 
             return view('maestro.explore.index', compact('data'));
         } catch (Exception $e) {
@@ -67,7 +65,7 @@ class ExploreController extends Controller
     public function edit($id)
     {
         try {
-            $component = Explore::find($id);
+            $component = FeaturedModule::find($id);
             $roles = $this->getAllRoles();
             $selected_role = json_decode($component->role, true); // true will convert it to an associative array
 
@@ -145,82 +143,139 @@ class ExploreController extends Controller
 
     public function searchComponents(Request $request)
     {
-        $query = $request->get('query', '');
-        $filter = $request->get('filter', ''); // Get the filter from request
-        $exploreIds = Explore::pluck('comp_id')->toArray();
+        try {
+            $query = $request->get('query', '');
+            $filter = $request->get('filter', ''); // Get the filter from request
+            $exploreIds = FeaturedModule::pluck('module_id')->toArray();
 
-        // Define a base query for each model
-        $components = collect();
-        $perPage = 10;
-        $currentPage = $request->get('page', 1);
+            // Define a base query for each model
+            $components = collect();
+            $perPage = 10;
+            $currentPage = $request->get('page', 1);
 
-        if ($filter == '' || $filter == 'Lab') {
+            // Initialize counts for all component types
+            $counts = [
+                'Lab'                => 0,
+                'Challenge'          => 0,
+                'Project'            => 0,
+                'ResourceModule'     => 0,
+                'ResourceCollection' => 0,
+                'ResourceGroup'      => 0,
+                'LabProgram'         => 0,
+                'ChallengePath'      => 0,
+            ];
+            // Always get the counts for all component types
             $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Lab';
 
                 return $item;
             });
-            $components = $components->merge($labs);
-        }
+            $counts['Lab'] = $labs->count();
 
-        if ($filter == '' || $filter == 'Challenge') {
             $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Challenge';
 
                 return $item;
             });
-            $components = $components->merge($challenges);
-        }
+            $counts['Challenge'] = $challenges->count();
 
-        if ($filter == '' || $filter == 'Project') {
             $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Project';
 
                 return $item;
             });
-            $components = $components->merge($projects);
-        }
+            $counts['Project'] = $projects->count();
 
-        if ($filter == '' || $filter == 'Resource Module') {
             $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Resource Module';
 
                 return $item;
             });
-            $components = $components->merge($resources);
-        }
+            $counts['ResourceModule'] = $resources->count();
 
-        if ($filter == '' || $filter == 'Lab Program') {
+            $resourceCollection = ResourceCollection::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Resource Collection';
+
+                return $item;
+            });
+            $counts['ResourceCollection'] = $resourceCollection->count();
+
+            $resourceGroup = ResourceGroup::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Resource Group';
+
+                return $item;
+            });
+            $counts['ResourceGroup'] = $resourceGroup->count();
+
             $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Lab Program';
 
                 return $item;
             });
-            $components = $components->merge($labPrograms);
-        }
+            $counts['LabProgram'] = $labPrograms->count();
 
-        if ($filter == '' || $filter == 'Challenge Path') {
             $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
                 $item->type = 'Challenge Path';
 
                 return $item;
             });
-            $components = $components->merge($challengePaths);
+            $counts['ChallengePath'] = $challengePaths->count();
+
+            // Now apply the filter for the displayed components
+            if ($filter == '' || $filter == 'Lab') {
+                $components = $components->merge($labs);
+            }
+            if ($filter == '' || $filter == 'Challenge') {
+                $components = $components->merge($challenges);
+            }
+            if ($filter == '' || $filter == 'Project') {
+                $components = $components->merge($projects);
+            }
+            if ($filter == '' || $filter == 'Resource Module') {
+                $components = $components->merge($resources);
+            }
+            if ($filter == '' || $filter == 'Resource Collection') {
+                $components = $components->merge($resourceCollection);
+            }
+            if ($filter == '' || $filter == 'Resource Group') {
+                $components = $components->merge($resourceGroup);
+            }
+            if ($filter == '' || $filter == 'Lab Program') {
+                $components = $components->merge($labPrograms);
+            }
+            if ($filter == '' || $filter == 'Challenge Path') {
+                $components = $components->merge($challengePaths);
+            }
+            // Paginate the filtered results
+            $total = $components->count();
+            $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
+
+            $html = view('maestro.explore.searchableItems', compact('components'))->render();
+
+            return response()->json([
+                'html'        => $html,
+                'total'       => $total,
+                'perPage'     => $perPage,
+                'currentPage' => $currentPage,
+                'counts'      => $counts, // Send the counts to the frontend for all types
+            ]);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
         }
-
-        // Paginate the results
-        $total = $components->count();
-        $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
-
-        $html = view('maestro.explore.searchableItems', compact('components'))->render();
-
-        return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
     }
 
     public function insertExploreData(Request $request)
     {
-        if ($this->insertExploreDatas($request)) {
-            return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+        try {
+            if ($this->insertExploreDatas($request)) {
+                return response()->json(['status' => 'success', 'message' => 'Data has been added successfully'], 200);
+            }
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return redirect()->route('explore.index')->withErrors(['error' => $e->getMessage()]);
         }
     }
 }

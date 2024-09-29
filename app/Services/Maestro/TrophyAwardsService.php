@@ -131,30 +131,11 @@ class TrophyAwardsService
     {
         try {
             $input = $request->all();
-
-            $validation_array = [
-                'name'                  => 'required|max:25',
-                'criteria'              => 'required|max:100',
-                'issue_trophy_date'     => 'required',
-                'expiration_date'       => 'required',
-                'no_of_times_issued'    => 'required',
-                'status'                => 'required',
-                'description'           => 'required|max:500',
-                'image'                 => 'required|mimes:jpg,png,jpeg',
-                'user_id'               => 'required',
-                'points_gained'         => 'required|integer|min:0',
-                'badge_type'            => 'required',
-
-            ];
-
             $image = '';
             if ($request->hasFile('image')) {
                 $image = FileUploadHelper::uploadImageToS3($request->image, 'awarded_trophy');
             }
-            $validation = Validator::make($request->all(), $validation_array);
-            if ($validation->fails()) {
-                return redirect()->back()->withErrors($validation)->withInput();
-            }
+
             $insertArray = [];
             foreach ($input as $key => $value) {
                 if (Schema::hasColumn('trophy_awards', $key)) {

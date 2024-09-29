@@ -8,8 +8,8 @@ use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupTypeModesService;
-use DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class ResourceGroupRepository implements ResourceGroupInterface
 {
@@ -207,35 +207,38 @@ class ResourceGroupRepository implements ResourceGroupInterface
         }
     }
 
-    public function cloneResourceGroup($resourceGroupId)
+    public function cloneResourceGroup($resourceGroupId, $organization)
     {
         try {
             $getResourceGroup = $this->resourceGroupService->getResourcesWithRelations($resourceGroupId);
-            $cloneResourceGroups = DB::transaction(function () use ($getResourceGroup) {
-                $cloneResourceGroup = $this->resourceGroupService->cloneResourceGroup($getResourceGroup);
-                $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($cloneResourceGroup->component_association, $getResourceGroup->id);
-                $cloneResourceGroupSkillsGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkillsGroupsStack($cloneResourceGroup->skills_group_stack, $getResourceGroup->id);
-                $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($cloneResourceGroup->resource_group_achievement, $getResourceGroup->id);
-                $cloneResourceGroupsTypeMode = $this->resourceGroupTypeModesService->cloneResourceGroupTypeModes($cloneResourceGroup->resource_group_type_mode, $getResourceGroup->id);
+            $cloneResourceGroups = DB::transaction(function () use ($getResourceGroup, $organization) {
+                $cloneResourceGroup = $this->resourceGroupService->cloneResourceGroup($getResourceGroup, $organization);
+                $cloneResourceGroupComponentAssociation = $this->componentAssociationService->cloneResourceGroupComponentAssociation($getResourceGroup->component_association, $cloneResourceGroup->id);
+                $cloneResourceGroupSkills = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupSkills($getResourceGroup->skills, $cloneResourceGroup->id);
+                $cloneResourceGroupGroups = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupGroups($getResourceGroup->skill_groups, $cloneResourceGroup->id);
+                $cloneResourceGroupStack = $this->resourceGroupSkillsGroupStackService->cloneResourceGroupStack($getResourceGroup->skill_stacks, $cloneResourceGroup->id);
+                $cloneResourceGroupsAchievements = $this->resourceGroupAchievementsService->cloneResourceGroupsAchievements($getResourceGroup->resource_group_achievement, $cloneResourceGroup->id);
+                $cloneResourceGroupsTypeMode = $this->resourceGroupTypeModesService->cloneResourceGroupTypeModes($getResourceGroup->resource_group_type_mode, $cloneResourceGroup->id);
 
                 return[
                     'cloneResourceGroups'                            => $cloneResourceGroup,
                     'cloneResourceGroupComponentAssociation'         => $cloneResourceGroupComponentAssociation,
-                    'cloneResourceGroupSkillsGroupStack'             => $cloneResourceGroupSkillsGroupStack,
+                    'cloneResourceGroupSkills'                       => $cloneResourceGroupSkills,
+                    'cloneResourceGroupGroups'                       => $cloneResourceGroupGroups,
+                    'cloneResourceGroupStack'                        => $cloneResourceGroupStack,
                     'cloneResourceGroupTagsGroups'                   => $cloneResourceGroupsAchievements,
                     'cloneResourceGroupsTypeMode'                    => $cloneResourceGroupsTypeMode,
                 ];
             });
             if ($cloneResourceGroups['cloneResourceGroups'] &&
                 $cloneResourceGroups['cloneResourceGroupComponentAssociation'] &&
-                $cloneResourceGroups['cloneResourceGroupSkillsGroupStack'] &&
+                $cloneResourceGroups['cloneResourceGroupSkills'] &&
+                $cloneResourceGroups['cloneResourceGroupGroups'] &&
+                $cloneResourceGroups['cloneResourceGroupStack'] &&
                 $cloneResourceGroups['cloneResourceGroupsTypeMode'] &&
                 $cloneResourceGroups['cloneResourceGroupTagsGroups']) {
-                DB::commit();
-
                 return $cloneResourceGroups['cloneResourceGroups'];
             }
-            DB::rollback();
 
             return false;
         } catch(\Exception $e) {

@@ -32,7 +32,7 @@
                     <div class="form-actions mt-10">
                     
                         {!!Form::submit('Save',array('class'=>'btn btn-primary mr-10'))!!}
-                        <a class="btn btn-danger mr-1" href="{{ route('explore.index') }}">
+                        <a class="btn btn-danger mr-1" style="color:white" href="{{ route('explore.index') }}">
                             Cancel
                         </a>
                     </div>

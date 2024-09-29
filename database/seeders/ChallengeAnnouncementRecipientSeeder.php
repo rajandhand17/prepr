@@ -14,36 +14,36 @@ class ChallengeAnnouncementRecipientSeeder extends Seeder
     {
         $challenge_announcement_recipients = [
             [
-                'title'      => 'Invited Challenge participant',
-                'fr_CA_title'=> 'Participant invité au défi',
+                'title'      => 'Invited Challenge Participants',
+                'fr_CA_title'=> 'Participants invités au défi',
             ],
             [
-                'title'      => 'Challenge followers',
-                'fr_CA_title'=> 'Défiez les abonnés',
+                'title'      => 'Challenge Savers',
+                'fr_CA_title'=> 'Épargnants de défis',
             ],
             [
-                'title'      => 'Auto-invite accept participants',
-                'fr_CA_title'=> 'Inviter automatiquement accepter les participants',
+                'title'      => 'Challenge Achievement Winners',
+                'fr_CA_title'=> 'Gagnants des réalisations du défi',
             ],
             [
-                'title'      => 'Associated Lab users',
+                'title'      => 'Auto-invite Accept Participants',
+                'fr_CA_title'=> 'Inviter automatiquement Accepter les participants',
+            ],
+            [
+                'title'      => 'Associated Lab Users',
                 'fr_CA_title'=> 'Utilisateurs du laboratoire associés',
             ],
             [
-                'title'      => 'Associated project users',
+                'title'      => 'Associated Project Users',
                 'fr_CA_title'=> 'Utilisateurs du projet associés',
             ],
             [
-                'title'      => 'Submitted project users',
+                'title'      => 'Submitted Project Users',
                 'fr_CA_title'=> 'Utilisateurs du projet soumis',
             ],
             [
-                'title'      => 'Participant achievement winners',
+                'title'      => 'Participant Achievement Winners',
                 'fr_CA_title'=> 'Gagnants des réalisations des participants',
-            ],
-            [
-                'title'      => 'Challenge achievement winners',
-                'fr_CA_title'=> 'Gagnants des réalisations du défi',
             ],
         ];
         foreach ($challenge_announcement_recipients as $challenge_announcement_recipient) {

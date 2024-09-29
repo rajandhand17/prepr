@@ -44,6 +44,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'preferred_language',
+        'preferred_timezone',
         'preferred_organization',
         'first_name',
         'last_name',
@@ -227,7 +228,7 @@ class User extends Authenticatable
 
     public function userSkills()
     {
-        return $this->hasMany(UserSkills::class)->where('pinned', '0');
+        return $this->hasMany(UserSkills::class);
     }
 
     public function userJobs()
@@ -392,6 +393,13 @@ class User extends Authenticatable
                 foreach ($member_manager as $member) {
                     $user->attachRole($member->role, $member->module_id);
                     $member_manager = MemberManagement::where('id', $member->id)->update(['invite_status' => '1']);
+                }
+            }
+            // For Project member management
+            $project_member_manager = ProjectMemberManagement::where(['email' => $request->email, 'auto_invite' => '1'])->get();
+            if ($project_member_manager) {
+                foreach ($project_member_manager as $project_member) {
+                    $project_member_manager = ProjectMemberManagement::where('id', $project_member->id)->update(['invite_status' => '1', 'invitee_name' => $name]);
                 }
             }
             if ($user->id) {
