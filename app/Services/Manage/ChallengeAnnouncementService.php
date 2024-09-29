@@ -104,4 +104,17 @@ class ChallengeAnnouncementService
             return false;
         }
     }
+
+    public static function fetchChallengeAnnouncement($challengeAnnouncementId)
+    {
+        try {
+            $fetchChallengeAnnouncement = ChallengeAnnouncement::find($challengeAnnouncementId);
+
+            return $fetchChallengeAnnouncement;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

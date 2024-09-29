@@ -905,7 +905,7 @@ class ProjectService
     public static function fetchCompletedChallenges($challengeIds, $userData)
     {
         try {
-            $fetchCompletedChallenges = Project::whereIn('challenge_id', $challengeIds)->where(['user_id' => $userData->id, 'is_submitted' => '1'])->count();
+            $fetchCompletedChallenges = Project::whereIn('challenge_id', $challengeIds)->where('user_id', $userData->id)->whereIn('is_submitted', ['1', '2'])->count();
 
             return $fetchCompletedChallenges;
         } catch (Exception $e) {
@@ -1083,4 +1083,18 @@ class ProjectService
             return false;
         }
     }
+
+    public static function fetchCompletedChallengeUserIds($challengeId)
+    {
+        try {
+            $fetchCompletedChallengeUserIds = Project::where('challenge_id', $challengeId)->whereIn('is_submitted', ['1', '2'])->pluck('user_id');
+
+            return $fetchCompletedChallengeUserIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
 }
