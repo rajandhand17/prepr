@@ -355,4 +355,17 @@ class AchievementService
             return false;
         }
     }
+
+    public static function checkAchievementAssignedOrNot($challengePathId, $userId, $achievementType)
+    {
+        try {
+            $checkChallengePathAchievementAssignedOrNot = UserAchievement::where(['user_id' => $userId, 'achievement_type' => $achievementType, 'module_id' => $challengePathId])->exists();
+
+            return $checkChallengePathAchievementAssignedOrNot;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
