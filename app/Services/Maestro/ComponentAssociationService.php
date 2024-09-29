@@ -401,7 +401,7 @@ class ComponentAssociationService
     public static function getChallengeAssociatedLab($challenge)
     {
         try {
-            return ComponentAssociation::where(['challenge_id' => $challenge->id])->pluck('lab_id');
+            return ComponentAssociation::where(['challenge_id' => $challenge->id])->whereNotNull('lab_id')->pluck('lab_id');
         } catch (Exception $e) {
             return false;
         }
@@ -410,7 +410,7 @@ class ComponentAssociationService
     public static function getChallengeAssociatedResourceModule($challenge)
     {
         try {
-            return ComponentAssociation::where(['challenge_id' => (int) $challenge->id])->pluck('resource_module_id');
+            return ComponentAssociation::where(['challenge_id' => (int) $challenge->id])->whereNotNull('resource_module_id')->pluck('resource_module_id');
         } catch (Exception $e) {
             return false;
         }

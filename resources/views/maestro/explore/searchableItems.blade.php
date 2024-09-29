@@ -3,6 +3,7 @@
     $displayedTypes = [];
 @endphp
 
+@if($components->count() >= 1)
 @foreach($components as $component)
 <div class="col-12 my-2">
     <div class="explore_section explore-item">
@@ -53,3 +54,8 @@
     </div>
 </div>
 @endforeach
+@else
+<div class ="col-12 my-2">
+    <h6> No result found, please try different keywords.</h6>
+</div>
+@endif

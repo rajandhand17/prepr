@@ -2,7 +2,6 @@
 
 namespace App\Services\Public;
 
-use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Organization;
@@ -10,6 +9,8 @@ use App\Models\User;
 use App\Models\UserAchievement;
 use Dompdf\Dompdf;
 use Exception;
+use Illuminate\Support\Facades\Storage;
+use Imagick;
 use Spatie\PdfToImage\Pdf;
 
 class AchievementService
@@ -20,7 +21,7 @@ class AchievementService
             $achievement_list = UserAchievement::select()->where('user_id', auth()->user()->id);
             $achievement_list = self::filterAchievementList($request, $achievement_list);
 
-            return $achievement_list->paginate(config('site-settings.pagination_per_page'));
+            return $achievement_list->paginate(config('site-settings.achivement_pagination_per_page'));
         } catch(Exception $e) {
             UtilityHelper::logError($e);
 
@@ -176,26 +177,31 @@ class AchievementService
                 $dompdf->loadHtml($html);
                 $dompdf->setPaper('legal', 'landscape');
                 $dompdf->render();
-                $pdfPath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.pdf');
+
+                $pdfContent = $dompdf->output();
+                $pdfPath = 'certificate/upload/'.$userAchievement->certificate_number.'.pdf';
+                // Store the PDF content directly to S3
+                Storage::disk('s3')->put($pdfPath, $pdfContent);
 
                 if ($format === 'image') {
-                    file_put_contents($pdfPath, $dompdf->output());
-                    $pdf = new Pdf($pdfPath);
-                    $pdf->setOutputFormat('jpeg');
-                    $imagePath = storage_path('app/certificate/'.$userAchievement->certificate_number.'.jpeg');
-                    $pdf->saveImage($imagePath);
-                    $fileName = $userAchievement->certificate_number.'.jpeg';
-                    $s3BackUrl = FileUploadHelper::uploadLocalStorageImageToS3(response()->download($imagePath), 'certificate');
+                    $imagick = new Imagick();
+                    $pdfBinary = Storage::disk('s3')->get($pdfPath);
+                    $image = $imagick->readImageBlob($pdfBinary);
+                    $imagick->setImageFormat('jpeg');
+                    $imageData = $imagick->getImageBlob();
+                    $imagePath = 'certificate/upload/'.$userAchievement->certificate_number.'.jpeg';
+                    Storage::disk('s3')->put($imagePath, $imageData);
+                    $s3BackUrl = config('site-settings.aws_url').$imagePath;
                 } elseif ($format === 'pdf') {
-                    file_put_contents($pdfPath, $dompdf->output());
-                    $s3BackUrl = FileUploadHelper::uploadLocalStoragePDFToS3(response()->download($pdfPath), 'certificate');
+                    $s3BackUrl = config('site-settings.aws_url').$pdfPath;
                 }
 
-                return config('site-settings.aws_url').$s3BackUrl;
+                return $s3BackUrl;
             }
 
             return false;
         } catch(Exception $e) {
+            dd($e);
             UtilityHelper::logError($e);
 
             return false;
