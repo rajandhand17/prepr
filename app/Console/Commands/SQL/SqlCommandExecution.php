@@ -53,7 +53,7 @@ class SqlCommandExecution extends Command
                 ->join('DuplicateCerts as dc', 'ua.id', '=', 'dc.id')
                 ->where('dc.row_num', '>', 1)
                 ->update([
-                    'ua.certificate_number' => DB::raw("CONCAT(LEFT(dc.certificate_number, LENGTH(dc.certificate_number) - 3), LPAD(dc.row_num, 3, '0'))")
+                    'ua.certificate_number' => DB::raw("CONCAT(LEFT(dc.certificate_number, LENGTH(dc.certificate_number) - 3), LPAD(dc.row_num, 3, '0'))"),
                 ]);
 
             // Step 3: Get the updated results
@@ -84,7 +84,7 @@ class SqlCommandExecution extends Command
             $this->info('SQL command executed successfully.');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
-            $this->error('An error occurred: ' . $e->getMessage());
+            $this->error('An error occurred: '.$e->getMessage());
         }
     }
 }
