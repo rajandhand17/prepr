@@ -340,18 +340,20 @@ class AchievementService
         }
     }
 
-    public static function generateUniqueCertificateNumber($base_certificate_number){
+    public static function generateUniqueCertificateNumber($base_certificate_number)
+    {
         try {
             $certificate_number = $base_certificate_number;
 
             while (UserAchievement::where(['certificate_number' => $certificate_number])->exists()) {
                 $certificate_number = $base_certificate_number++;
             }
+
             return $certificate_number;
         } catch(Exception $e) {
             UtilityHelper::logError($e);
+
             return false;
         }
     }
-
 }
