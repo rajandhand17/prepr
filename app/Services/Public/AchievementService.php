@@ -242,7 +242,7 @@ class AchievementService
                 [
                     'certificate_number'    => $certificate_id,
                     'is_featured'           => $action,
-                    'user_id' => $user_id,
+                    'user_id'               => $user_id,
                 ]
             )->first();
             if ($checkActivity != null) {
