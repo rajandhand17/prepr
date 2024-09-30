@@ -18,7 +18,6 @@ use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
 use App\Services\Public\ProjectMemberManagementService;
 use App\Services\UserService;
-use DateTimeZone;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -45,7 +44,6 @@ class SendChallengeAnnouncement extends Command
     {
         try {
             $this->error('Challenge announcement command initiated');
-            $currentDate = date('Y-m-d H:i:s'); // Getting current date and time
             $fetchPendingChallengeAnnouncementLists = ChallengeAnnouncement::select('challenge_announcements.id', 'challenge_announcements.challenge_id', 'challenge_announcements.subject', 'challenge_announcements.to_recipient_ids', 'challenge_announcements.sent_by', 'challenge_announcements.description', 'challenge_announcements.schedule_at', 'challenge_announcements.status', 'challenge_announcements.sent_status', 'challenges.title', 'challenges.slug', 'challenges.organization_id')
             ->where('sent_status', '0')
             ->join('challenges', 'challenge_announcements.challenge_id', '=', 'challenges.id')
@@ -53,7 +51,7 @@ class SendChallengeAnnouncement extends Command
 
             if ($fetchPendingChallengeAnnouncementLists->isNotEmpty()) {
                 foreach ($fetchPendingChallengeAnnouncementLists as $pendingChallengeAnnouncement) {
-                    $userLocationBasedTime = now()->setTimezone(new DateTimeZone('America/New_York'));
+                    $userLocationBasedTime = now(); // Sending using UTC format
                     if ($pendingChallengeAnnouncement->schedule_at < $userLocationBasedTime) {
                         $fetchChallengeDetail = ChallengeService::getChallengeBasedOnSlug($pendingChallengeAnnouncement->slug);
                         $fetchInvitedChallengeUserIds = $fetchChallengeWinnerAchievementUserIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = $fetchChallengeParticipationAchievementUserIds = collect();
