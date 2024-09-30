@@ -7,6 +7,7 @@ use App\Helpers\UtilityHelper;
 use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionTagsGroupsService;
+use App\Services\Public\FeaturedModuleService;
 
 class HandleDeleteResourceCollectionAssociatedData
 {
@@ -35,6 +36,10 @@ class HandleDeleteResourceCollectionAssociatedData
             }
             $componentAssociation = ComponentAssociationService::deleteResourceCollectionAssociation($resourceCollectionId);
             if (!$componentAssociation) {
+                return false;
+            }
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_collections'), $resourceCollectionId);
+            if (!$featuredModule) {
                 return false;
             }
 

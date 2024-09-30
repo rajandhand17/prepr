@@ -70,10 +70,10 @@ class AchievementRepository implements AchievementInterface
         }
     }
 
-    public function checkachievementActivity($certificate_id, $action)
+    public function checkachievementActivity($certificate_id, $action, $user_id)
     {
         try {
-            return $this->achievementService->checkachievementActivity($certificate_id, $action);
+            return $this->achievementService->checkachievementActivity($certificate_id, $action, $user_id);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
