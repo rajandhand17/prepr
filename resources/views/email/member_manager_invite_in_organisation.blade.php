@@ -103,11 +103,19 @@
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
         <div class="title">You have been invited to join an {{$emailData['module_name']}}</div>
-        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image" 
-           onerror="this.style.display='none'; document.getElementById('fallback').style.display='block';"><br>
-       <div id="fallback" class="image-with-text" style="display: none; background-image: url('{{ $fallbackImage }}');">
+    @php
+        $s3BaseUrl = env('CDN_URL');
+        $imagePath = str_replace($s3BaseUrl, '', $emailData['org_image']);
+        $imageExists = Illuminate\Support\Facades\Storage::disk('s3')->exists($imagePath);
+    @endphp
+
+        @if($imageExists)
+        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image"><br>
+        @else
+        <div class="image-with-text" style="background-image: url('{{ $fallbackImage }}');">
            {{ $emailData['comp_title'] }}
         </div><br>
+        @endif
         <a href="{{ $emailData['slug'] }} " class="cta-button"  style="color:white">Join Now</a>
         <div class="message">
             Dear {{ $emailData['invitee_name'] }},
