@@ -201,7 +201,7 @@ class ConversationService
     {
         try {
             DB::beginTransaction();
-            $created_by = ($data['type'] == '2') ? $data['created_by'] : auth()->user()->id;
+            $created_by = ($data['type'] == config('constants.conversation_type.announcement')) ? $data['created_by'] : auth()->user()->id;
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $conversation = Conversation::create([
                 'uuid'        => $uuid,
@@ -218,7 +218,7 @@ class ConversationService
                 return false;
             }
 
-            $notify_type = ($data['type'] == '2') ? 'announcement' : 'created';
+            $notify_type = ($data['type'] == config('constants.conversation_type.announcement')) ? 'announcement' : 'created';
             $notification = $this->notify($conversation->id, $notify_type);
 
             if (!$notification) {
@@ -295,10 +295,8 @@ class ConversationService
         try {
             $preparedData = $this->prepareData($data);
 
-            if ($preparedData['type'] != '2') {
-                if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type'])) {
-                    return $this->getConversationByUsers($preparedData['users'], $preparedData['type']);
-                }
+            if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type']) && $preparedData['type'] != config('constants.conversation_type.announcement')) {
+                return $this->getConversationByUsers($preparedData['users'], $preparedData['type']);
             }
 
             return $this->store($preparedData);
