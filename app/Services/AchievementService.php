@@ -326,12 +326,12 @@ class AchievementService
         }
     }
 
-    public static function fetchChallengeAchievementWinnerIds($challengeId)
+    public static function fetchChallengeAchievementUserIds($challengeId, $achievementType)
     {
         try {
-            $fetchChallengeAchievementWinnerIds = UserAchievement::where(['module_id' => $challengeId, 'achievement_type' => '9'])->pluck('user_id');
+            $fetchChallengeAchievementUserIds = UserAchievement::where(['module_id' => $challengeId, 'achievement_type' => $achievementType])->pluck('user_id');
 
-            return $fetchChallengeAchievementWinnerIds;
+            return $fetchChallengeAchievementUserIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -350,6 +350,19 @@ class AchievementService
 
             return $certificate_number;
         } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkAchievementAssignedOrNot($challengePathId, $userId, $achievementType)
+    {
+        try {
+            $checkChallengePathAchievementAssignedOrNot = UserAchievement::where(['user_id' => $userId, 'achievement_type' => $achievementType, 'module_id' => $challengePathId])->exists();
+
+            return $checkChallengePathAchievementAssignedOrNot;
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

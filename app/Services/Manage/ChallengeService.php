@@ -514,9 +514,6 @@ class ChallengeService
                     case 'embedded':
                         $media_type = 'embedded';
                         break;
-                    case 'none':
-                        $media_type = 'none';
-                        break;
                 }
 
                 $campusConnectStatus = $request->get('integrate_campus_connect', 'no');
