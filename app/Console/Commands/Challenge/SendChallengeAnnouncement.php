@@ -8,6 +8,8 @@ use App\Models\ChallengeAnnouncementRecipient;
 use App\Models\ChallengeSocialActivity;
 use App\Notifications\SendChallengeAnnouncementNotification;
 use App\Services\AchievementService;
+use App\Services\Chat\ConversationService;
+use App\Services\Chat\MessageService;
 use App\Services\Maestro\ComponentAssociationService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeService;
@@ -130,13 +132,13 @@ class SendChallengeAnnouncement extends Command
 
                         // for inbox medium
                         if ($pendingChallengeAnnouncement->sent_by == '1') {
-                            // $sendChallengeAnnouncement = $this->sendChallengeAnnouncementViaInbox($pendingChallengeAnnouncement, $fetchChallengeDetail, $recipientList);
+                            $sendChallengeAnnouncement = $this->sendChallengeAnnouncementViaInbox($pendingChallengeAnnouncement, $fetchChallengeDetail, $recipientList);
                         }
 
                         // for both mediums
                         if ($pendingChallengeAnnouncement->sent_by == '2') {
                             $sendAnnouncementViaEmail = $this->sendChallengeAnnouncementViaEmail($pendingChallengeAnnouncement, $fetchChallengeDetail, $recipientList);
-                            // $sendAnnouncementViaInbox = $this->sendChallengeAnnouncementViaInbox($pendingChallengeAnnouncement, $fetchChallengeDetail, $recipientList);
+                            $sendAnnouncementViaInbox = $this->sendChallengeAnnouncementViaInbox($pendingChallengeAnnouncement, $fetchChallengeDetail, $recipientList);
                             if ($sendAnnouncementViaEmail && $sendAnnouncementViaInbox) {
                                 $sendChallengeAnnouncement = true;
                             }
@@ -203,6 +205,44 @@ class SendChallengeAnnouncement extends Command
         } catch (Exception $e) {
             UtilityHelper::logError($e);
             $this->error('Challenge announcement not sent via email');
+
+            return false;
+        }
+    }
+
+    public function sendChallengeAnnouncementViaInbox($announcementData, $challengeDetail, $recipientList)
+    {
+        try {
+            if ($recipientList->isNotEmpty()) {
+                $fetchUserNames = UserService::getUserNamesByIds($recipientList)->all();
+                $type = 'announcement';
+                // Prepare the response
+                $conversationData = [
+                    'usernames'     => $fetchUserNames,
+                    'type'          => $type,
+                    'created_by'    => $challengeDetail->user_id,
+                ];
+                if (!empty($fetchUserNames)) {
+                    $conversations = new ConversationService();
+                    $createConversation = $conversations->create($conversationData);
+                    if ($createConversation) {
+                        $messageData = [
+                            'conversation_id' => $createConversation->id,
+                            'message'         => data_get($announcementData, 'description'),
+                            'sent_by'         => $challengeDetail->user_id,
+                        ];
+                        $createMessage = MessageService::sendAnnouncement($messageData);
+                        if (!$createMessage) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+            $this->error('Challenge announcement not sent via inbox');
 
             return false;
         }
