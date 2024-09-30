@@ -117,7 +117,7 @@ class AchievementController extends AppBaseController
                     return $this->sendError(__('responses.handler_bad_request'), 400);
                 }
 
-                $checkActivity = $this->achievementRepository->checkachievementActivity($certificate_id, $getColumnValue['action']);
+                $checkActivity = $this->achievementRepository->checkachievementActivity($certificate_id, $getColumnValue['action'], auth()->user()->id);
                 switch ($getColumnValue['action']) {
                     case '0':
                         $action = 'unpinned';

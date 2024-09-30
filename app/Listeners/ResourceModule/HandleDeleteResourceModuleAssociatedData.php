@@ -8,6 +8,7 @@ use App\Services\Manage\ResourceModuleDetailService;
 use App\Services\Manage\ResourceModuleRatingService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleTagsGroupsService;
+use App\Services\Public\FeaturedModuleService;
 
 class HandleDeleteResourceModuleAssociatedData
 {
@@ -44,6 +45,10 @@ class HandleDeleteResourceModuleAssociatedData
             }
             $deleteResourceModuleRating = ResourceModuleRatingService::deleteResourceModuleRating($resourceModuleId);
             if (!$deleteResourceModuleRating) {
+                return false;
+            }
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_modules'), $resourceModuleId);
+            if (!$featuredModule) {
                 return false;
             }
 

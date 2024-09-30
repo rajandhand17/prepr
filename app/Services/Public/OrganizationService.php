@@ -100,14 +100,14 @@ class OrganizationService
             }
 
             if ($request->has('request') && $request->get('request')) {
-                $getOrganizationIds = MemberManagementService::getOrganizationIds(auth()->user()->email, $request->get('request'));
+                $getOrganizationIds = MemberManagementService::getOrganizationIds(auth('api')->user()->email, $request->get('request'));
                 if ($getOrganizationIds) {
                     $organization_list = $organization_list->whereIn('id', $getOrganizationIds);
                 }
             }
 
             if ($request->has('owner') && $request->get('owner')) {
-                $getOrganizationIds = MemberManagementService::getOrganizationIds(auth()->user()->email, $request->get('owner'));
+                $getOrganizationIds = MemberManagementService::getOrganizationIds(auth('api')->user()->email, $request->get('owner'));
                 if ($getOrganizationIds) {
                     $organization_list = $organization_list->whereIn('id', $getOrganizationIds);
                 }

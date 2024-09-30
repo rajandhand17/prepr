@@ -210,7 +210,7 @@
     "responses.pending_request_not_accepted": "All pending join request are not accepted!",
     "responses.found_role_list": "The role list has been successfully retrieved!",
     "responses.not_found_role_list": "The list of role has not been retrieved with success.",
-    "responses.role_assigned_successfully": "The role allocated successfully.",
+    "responses.role_assigned_successfully": "You have successfully updated the role for the selected user.",
     "responses.role_assigned_failed": "The role allocation failed.",
     "responses.found_user_list": "The users list has been successfully retrieved!",
     "responses.not_found_user_list": "The list of user has not been retrieved with success.",
