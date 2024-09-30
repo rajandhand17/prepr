@@ -23,7 +23,7 @@ class ConversationService
     private function prepareData(array $data)
     {
         try {
-            if (($data['type'] != 'announcement')) {
+            if ($data['type'] != 'announcement') {
                 $data['usernames'][] = auth()->user()->username;
             }
             $userIds = User::whereIn('username', $data['usernames'])
@@ -134,7 +134,7 @@ class ConversationService
         try {
             if ($type === 'delete') {
                 $conversationUserIds = $deletedUserIds;
-            } elseif ($type === 'archived' || $type ==='created' || $type === 'unarchived' || $type === 'announcement') {
+            } elseif ($type === 'archived' || $type === 'created' || $type === 'unarchived' || $type === 'announcement') {
                 $conversationUserIds = $this->getConversationUsersId($conversationId);
             } else {
                 return false;
