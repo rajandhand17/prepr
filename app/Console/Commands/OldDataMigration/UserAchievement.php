@@ -3,6 +3,7 @@
 namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
+use App\Services\AchievementService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Console\Command;
@@ -36,6 +37,8 @@ class UserAchievement extends Command
                 $olddata = $key - 1;
                 $certificate_id = $olddata.'00'.$key;
                 $certificate_number = $certificate_date.$certificate_id;
+                $certificate_number = AchievementService::generateUniqueCertificateNumber($certificate_number);
+
                 foreach ($userAchievement as $single_user_achievement) {
                     $achievement_type = null;
                     $checkUsers = \App\Models\User::find($single_user_achievement->user_id);

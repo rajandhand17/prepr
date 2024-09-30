@@ -475,8 +475,9 @@ class ChallengePathService
                     $fetchChallengePathIdsBasedOnChallengeId = ComponentAssociationService::fetchChallengePathIdsBasedOnChallengeId($challengeId);
                     if (!empty($fetchChallengePathIdsBasedOnChallengeId)) {
                         foreach ($fetchChallengePathIdsBasedOnChallengeId as $challengePathId) {
-                            $checkChallengePathAchievementAssignedOrNot = ModuleCompletionStatusService::checkChallengePathAchievementAssignedOrNot($challengePathId, $getUserById->id);
-                            if ($checkChallengePathAchievementAssignedOrNot === false) {
+                            $achievement_type = config('constants.user_achievement_type.challenge_path');
+                            $checkChallengePathAchievementAssignedOrNot = AchievementService::checkAchievementAssignedOrNot($challengePathId, $getUserById->id, $achievement_type);
+                            if ($checkChallengePathAchievementAssignedOrNot == false) {
                                 $fetchChallengeIdsBasedOnChallengePathId = ComponentAssociationService::fetchChallengeIdsBasedOnChallengePathId($challengePathId);
                                 if (!empty($fetchChallengeIdsBasedOnChallengePathId)) {
                                     $fetchSubmittedProjectsChallengeId = ProjectService::fetchSubmittedProjectsChallengeId($getUserById);
