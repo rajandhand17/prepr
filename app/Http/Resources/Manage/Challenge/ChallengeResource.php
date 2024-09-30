@@ -504,6 +504,7 @@ class ChallengeResource extends JsonResource
             'source'                            => $source,
             'challenge_status'                  => $challenge_status,
             'challenge_joined_date'             => $challenge_joined_date,
+            'project'                           => isset($checkProjectStatus) ? SubmittedProjectResource::make($checkProjectStatus) : null,
         ];
     }
 }
