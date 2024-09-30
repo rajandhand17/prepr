@@ -15,7 +15,7 @@ return new class() extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('preferred_language')->default('en');
-            $table->string('preferred_timezone')->nullable();
+            $table->string('preferred_timezone')->default('EST')->comment('Setting default EST');
             $table->string('preferred_organization')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
