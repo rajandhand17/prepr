@@ -1,0 +1,18 @@
+<!-- policy.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<policymap>
+    <!-- Allow sufficient memory and disk space -->
+    <policy domain="resource" name="memory" value="2GiB"/>
+    <policy domain="resource" name="map" value="2GiB"/>
+    <policy domain="resource" name="area" value="8GiB"/>
+    <policy domain="resource" name="disk" value="10GiB"/>
+
+    <!-- Allow PDF write permissions -->
+    <policy domain="coder" rights="read|write" pattern="PDF"/>
+    
+    <!-- Allow certain image formats -->
+    <policy domain="coder" rights="read|write" pattern="*"/>
+
+    <!-- Optional: Limit the number of threads for processing -->
+    <policy domain="thread" name="limit" value="4"/>
+</policymap>
