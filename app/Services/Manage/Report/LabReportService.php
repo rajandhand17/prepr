@@ -99,7 +99,7 @@ class LabReportService
                 'not_started' => $notStarted,
                 'in_progress' => $inProgress,
                 'completed'   => $completed,
-                'total'       => $lab->members_count,
+                'total'       => $notStarted + $inProgress + $completed,
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);

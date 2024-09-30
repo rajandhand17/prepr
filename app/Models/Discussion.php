@@ -22,6 +22,7 @@ class Discussion extends Model
         'comments',
         'attachment',
         'comment_id',
+        'attachment_names',
     ];
 
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
@@ -56,5 +57,14 @@ class Discussion extends Model
         return array_map(function ($attachment) use ($aws_url) {
             return $aws_url.$attachment;
         }, json_decode($attachments));
+    }
+
+    public function getAttachmentNamesAttribute($attachment_names): array
+    {
+        if (empty($attachment_names)) {
+            return [];
+        }
+
+        return json_decode($attachment_names);
     }
 }

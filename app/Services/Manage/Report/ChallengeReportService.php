@@ -27,17 +27,17 @@ class ChallengeReportService
 
             $notStarted = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
                 $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
-                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                    $query->where('module_type', '=', '2')->where('module_id', '=', $challenge->id)->where(function ($query) {
                         $query->where('status', '=', '0');
                     });
                 })->orWhereDoesntHave('moduleCompletionStatus', function ($query) use ($challenge) {
-                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id);
+                    $query->where('module_type', '=', '2')->where('module_id', '=', $challenge->id);
                 });
             })->count();
 
             $inProgress = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
                 $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
-                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                    $query->where('module_type', '=', '2')->where('module_id', '=', $challenge->id)->where(function ($query) {
                         $query->where('status', '=', '1');
                     });
                 });
@@ -45,7 +45,7 @@ class ChallengeReportService
 
             $completed = $challenge->members()->whereHas('user', function ($query) use ($challenge) {
                 $query->whereHas('moduleCompletionStatus', function ($query) use ($challenge) {
-                    $query->where('module_type', '=', '0')->where('module_id', '=', $challenge->id)->where(function ($query) {
+                    $query->where('module_type', '=', '2')->where('module_id', '=', $challenge->id)->where(function ($query) {
                         $query->where('status', '=', '2');
                     });
                 });
@@ -62,7 +62,7 @@ class ChallengeReportService
                 'not_started'     => $notStarted,
                 'in_progress'     => $inProgress,
                 'completed'       => $completed,
-                'total'           => $challenge->challenge_progress_count,
+                'total'           => $notStarted + $inProgress + $completed,
                 'late_submission' => $late_submission,
                 'deadline_missed' => $deadline_missed,
             ];
