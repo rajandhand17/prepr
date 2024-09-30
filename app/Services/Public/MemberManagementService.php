@@ -176,7 +176,7 @@ class MemberManagementService
                     $organizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
                     break;
                 case 'my':
-                    $myOrganizationIds = OrganizationService::fetchOrganizationIdsBasedOnUserId(auth()->user()->id)->pluck('id');
+                    $myOrganizationIds = OrganizationService::fetchOrganizationIdsBasedOnUserId(auth()->api()->user()->id)->pluck('id');
                     $accpetedOrganizationIds = MemberManagement::where(['invite_status'=>config('constants.member_management_invite_status.accepted'), 'module_type'=>'0', 'email'=>$email])->pluck('module_id');
 
                     $organizationIds = $myOrganizationIds

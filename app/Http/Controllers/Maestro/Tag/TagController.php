@@ -16,11 +16,6 @@ class TagController extends Controller
 {
     use TagTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {

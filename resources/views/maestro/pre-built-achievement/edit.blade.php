@@ -1,18 +1,24 @@
 @extends('maestro.layouts.default')
 @section('title', 'Edit Achievement')
 @section('content')
+<style >
+  .dm-uploader {
+        border: 2px dashed #575757;
+        padding: 5px 5px 15px;
+    }
+    .break {
+        display: block;
+        margin-top: 15px; /* Adjust as needed */
+    }
+</style>
      <!-- Content Header (Page header) -->
      <section class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Edit Pre Built Achievement</h1>
+              <h1>Edit Pre-Built Achievement</h1>
             </div>
             <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                <li class="breadcrumb-item active">Edit Achievement</li>
-              </ol>
             </div>
           </div>
         </div><!-- /.container-fluid -->
@@ -23,9 +29,6 @@
         <div class="container-fluid">
           <!-- SELECT2 EXAMPLE -->
           <div class="card card-default">
-            <div class="card-header">
-              <h3 class="card-title">Edit Achievement</h3>
-            </div>
             <!-- /.card-header -->
                 <div class="card-body">
                   {!!Form::model($achievement,array('method'=>'PUT','files'=>true,'route'=>array('pre-built-achievement.update',$achievement->id),'files'=>true,'id' => 'priBuiltAchivementForm'))!!}
@@ -36,7 +39,7 @@
                                 $titleColumName = \App\Helpers\UtilityHelper::getColumName($single->iso, 'title');
                                 $titleLableName = \App\Helpers\UtilityHelper::getLabelName($single->name, 'Achievement Title');
                             @endphp
-                              <div class="col-md-6">
+                              <div class="col-md-5">
                                 <div class="form-group">
                                     {!! Form::label($titleColumName, $titleLableName, ['class' => 'control-label']) !!}
                                     {!! Form::text($titleColumName,$achievement->$titleColumName, ['class' => 'form-control','required' => 'required']) !!}
@@ -44,44 +47,38 @@
                               </div>
                           @endforeach
                       @endif
-                    </div>
-                    <div class="row">
-                      @if(empty($achievement->getRawOriginal('achievement_image')))
-                        @php $notExist = 12;  $exist = 0; @endphp
-                      @else 
-                        @php $notExist = 10;  $exist = 2; @endphp
-                      @endif
-                      <div class="col-md-{{$notExist}}">
-                        <div class="form-group {{($errors->has('image')) ? 'has-error' : ''}}">
-                          {!! Form::label('image', 'Image', ['class' => 'control-label']) !!}</br>
-                          {!! Form::file('image', ['class' => 'form-control', 'id' => 'imageUpload']) !!}
-                          <span style="color: #ea6c41 !important;" class="help-block">{{ $errors->first('image')}}</span>
+
+                      <div class="col-md-2">
+                        <div class="form-group {{($errors->has('points')) ? 'has-error' : ''}}">
+                            {!! Form::label('points', 'Points', ['class' => 'control-label']) !!}
+                            {!! Form::number('points',$achievement->points, ['class' => 'form-control incentive_points','min'=>'0','required' => 'required']) !!}
+                            <span class="help-block">{{ $errors->first('points')}}</span>
                         </div>
                       </div>
-                      @if($exist > 0)
-                        <div class="col-md-{{$exist}}" style="text-align: center; padding-top: 34px;">
-                          <img src='{{$achievement->achievement_image}}' width='50px'>
-                        </div>
-                      @endif
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group {{($errors->has('points')) ? 'has-error' : ''}}">
-                              {!! Form::label('points', 'Points', ['class' => 'control-label']) !!}
-                              {!! Form::number('points',$achievement->points, ['class' => 'form-control incentive_points','min'=>'0','required' => 'required']) !!}
-                              <span class="help-block">{{ $errors->first('points')}}</span>
-                          </div>
-                        </div>
 
-                        <div class="col-md-6">
-                          <div class="form-group {{($errors->has('status')) ? 'has-error' : ''}}">
-                              {!! Form::label('status', 'Status', ['class' => 'control-label']) !!}
-                              {!! Form::select('status', ['1' => 'Active', '0' => 'DeActive'], $achievement->status, ['class' => 'form-control']) !!}
-                              <span class="help-block">{{ $errors->first('status')}}</span>
-                          </div>
-                        </div>
                     </div>
                     <div class="row">
+                      <div class="col-md-12">
+                        <b>Upload Badge Image</b><br>
+                        This image needs to be at least 200*200 Pixels.
+                      </div></div>
+                    <div class="row">
+                      <div class="col-md-12 text-center">
+                        <div id="drag-and-drop-zone" class="dm-uploader p-5 sld_brder">
+                          <div class="row">
+                              <div class="col-md-12 col-md-12 mb-1 mt-1">
+                                  <p class="mb-0"><br></p>
+                                  <div class="btn btn-default mb-2 showBg1">
+                                      <span>Upload Badge Image</span>
+                                      <input type="file" title="labels.labels_click_to_add_files" name="image" id="coverImage" onchange="loadFile1(event)">
+                                  </div>
+                                  
+                              </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                    <div class="row" style="padding-top: 20px; !implement">
                       <div class="col-md-12">
                           <b>Enable for the following components</b><br>
                           Achievement type is editable for Challenge only, for all other components, the default type is participation achievement.

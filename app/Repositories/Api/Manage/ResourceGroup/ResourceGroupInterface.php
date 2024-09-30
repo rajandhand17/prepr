@@ -14,6 +14,8 @@ interface ResourceGroupInterface
 
     public function getResourceGroupBasedOnSlug($slug);
 
+    public function getResourceGroupBasedOnTitle($title);
+
     public function deleteGroupModule($checkResourceGroupId);
 
     public function checkName($slug);
@@ -23,4 +25,6 @@ interface ResourceGroupInterface
     public function getResourceGroupList($request, $organization);
 
     public function getResourceGroupListName($request, $organization);
+
+    public function cloneResourceGroup($resourceGroupId, $organization);
 }

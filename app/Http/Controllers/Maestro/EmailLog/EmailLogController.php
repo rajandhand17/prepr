@@ -25,11 +25,6 @@ class EmailLogController extends Controller
      */
     //use EmailLogTrait;
 
-    public function construct()
-    {
-        $this->middleware('web');
-    }
-
     /**
      * Show the application dashboard.
      *

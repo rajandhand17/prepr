@@ -53,6 +53,7 @@ class UnifiedIntegrationRequest extends BaseRequest
             'organization_member_invite' => Rule::exists('organizations', 'slug'),
             'lab_member_invite'          => Rule::exists('labs', 'slug'),
             'challenge_member_invite'    => Rule::exists('challenges', 'slug'),
+            'lab_program_member_invite'  => Rule::exists('lab_programs', 'slug'),
             default                      => '',
         };
     }
@@ -68,6 +69,7 @@ class UnifiedIntegrationRequest extends BaseRequest
             'organization_member_invite' => __('responses.organization_not_found'),
             'lab_member_invite'          => __('responses.lab_slug_not_found'),
             'challenge_member_invite'    => __('responses.challenge_not_found'),
+            'lab_program_member_invite'  => __('responses.lab_program_not_found'),
             default                      => '',
         };
     }

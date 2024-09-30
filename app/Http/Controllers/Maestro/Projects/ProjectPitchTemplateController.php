@@ -18,11 +18,6 @@ class ProjectPitchTemplateController extends Controller
 {
     use ProjectPitchTemplateTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder)
     {
         $templates = $this->getPitchTemplate();

@@ -9,6 +9,7 @@ use App\Services\Manage\LabProgramService;
 use App\Services\Manage\LabProgramSkillsGroupsStackService;
 use App\Services\Manage\LabProgramTagsGroupsService;
 use App\Services\Manage\LabProgramTypeModesService;
+use App\Services\Public\FeaturedModuleService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -25,8 +26,9 @@ class LabProgramRepository implements LabProgramInterface
     private $componentAssociationService;
 
     private $labProgramTypeModesService;
+    private $featuredModuleService;
 
-    public function __construct(LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService, ComponentAssociationService $componentAssociationService, LabProgramTypeModesService $labProgramTypeModesService)
+    public function __construct(FeaturedModuleService $featuredModuleService, LabProgramService $labProgramService, LabProgramAchievementsService $labProgramAchievementService, LabProgramSkillsGroupsStackService $labProgramSkillsGroupsStackService, LabProgramTagsGroupsService $labProgramTagsGroupsService, ComponentAssociationService $componentAssociationService, LabProgramTypeModesService $labProgramTypeModesService)
     {
         $this->labProgramService = $labProgramService;
         $this->labProgramAchievementService = $labProgramAchievementService;
@@ -34,6 +36,7 @@ class LabProgramRepository implements LabProgramInterface
         $this->labProgramTagsGroupsService = $labProgramTagsGroupsService;
         $this->componentAssociationService = $componentAssociationService;
         $this->labProgramTypeModesService = $labProgramTypeModesService;
+        $this->featuredModuleService = $featuredModuleService;
     }
 
     public function getLabProgramCountBasedOnOrganization($organizationId)
@@ -163,10 +166,20 @@ class LabProgramRepository implements LabProgramInterface
         }
     }
 
-    public function delete($slug)
+    public function delete($id)
     {
         try {
-            return $this->labProgramService->delete($slug);
+            DB::beginTransaction();
+            $delteLabPrograms = $this->labProgramService->delete($id);
+            $featuredModule = $this->featuredModuleService->deleteFeaturedModule(config('constants.module_type.lab_programs'), $id);
+            if ($delteLabPrograms == false && $featuredModule == false) {
+                DB::rollBack();
+
+                return false;
+            }
+            DB::commit();
+
+            return true;
         } catch(\Exception $e) {
             UtilityHelper::logError($e);
 

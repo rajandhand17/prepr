@@ -221,8 +221,6 @@ class ChallengeResource extends JsonResource
 
         if ($this->challenge_timelines) {
             if ($this->challenge_timelines->timeline_type == '0') {
-                $challenge_joined_date = $this->projects()->where('user_id', auth('api')->user()->id)->first()?->created_at;
-
                 $challenge_timelines = [
                     'timeline_type'                 => 'flexible',
                     'flexible_date_number'          => $this->challenge_timelines->flexible_date_number,
@@ -409,6 +407,16 @@ class ChallengeResource extends JsonResource
             $isActive = 'no';
         }
 
+        if (auth('api')->check() && $isActive === 'yes') {
+            // check challenge is started for user to participate
+            if ($challenge_timelines['timeline_type'] === 'restricted') {
+                $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth('api')->user());
+                if ($checkChallengeProjectCreationEnabled != true) {
+                    $isActive = 'no';
+                }
+            }
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -479,6 +487,7 @@ class ChallengeResource extends JsonResource
             'resource_groups'                   => $resource_groups,
             'challenge_status'                  => $challenge_status,
             'challenge_joined_date'             => $challenge_joined_date,
+            'project'                           => isset($checkProjectStatus) ? SubmittedProjectResource::make($checkProjectStatus) : null,
         ];
     }
 }
