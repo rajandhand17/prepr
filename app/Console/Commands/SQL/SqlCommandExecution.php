@@ -32,6 +32,7 @@ class SqlCommandExecution extends Command
         try {
             Schema::disableForeignKeyConstraints();
             DB::table('users')->whereNull('preferred_timezone')->update(['preferred_timezone' => 'EST']);
+            DB::statement("ALTER TABLE `users` CHANGE `preferred_timezone` `preferred_timezone` VARCHAR(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'EST'");
             Schema::enableForeignKeyConstraints();
             $this->info('SQL command executed successfully.');
         } catch (Exception $e) {
