@@ -85,7 +85,6 @@ class ExploreController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->construct();
             if ($this->updateExploreDataById($id, $request)) {
                 return redirect()->route('explore.index')->with('success', 'Data has Updated successfully');
             }
@@ -106,7 +105,6 @@ class ExploreController extends Controller
     public function destroy($id)
     {
         try {
-            $this->construct();
             if ($this->deleteExploreDataById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }
@@ -153,85 +151,112 @@ class ExploreController extends Controller
             $perPage = 10;
             $currentPage = $request->get('page', 1);
 
-            if ($filter == '' || $filter == 'Lab') {
-                $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Lab';
+            // Initialize counts for all component types
+            $counts = [
+                'Lab'                => 0,
+                'Challenge'          => 0,
+                'Project'            => 0,
+                'ResourceModule'     => 0,
+                'ResourceCollection' => 0,
+                'ResourceGroup'      => 0,
+                'LabProgram'         => 0,
+                'ChallengePath'      => 0,
+            ];
+            // Always get the counts for all component types
+            $labs = Lab::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Lab';
 
-                    return $item;
-                });
+                return $item;
+            });
+            $counts['Lab'] = $labs->count();
+
+            $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Challenge';
+
+                return $item;
+            });
+            $counts['Challenge'] = $challenges->count();
+
+            $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Project';
+
+                return $item;
+            });
+            $counts['Project'] = $projects->count();
+
+            $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Resource Module';
+
+                return $item;
+            });
+            $counts['ResourceModule'] = $resources->count();
+
+            $resourceCollection = ResourceCollection::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Resource Collection';
+
+                return $item;
+            });
+            $counts['ResourceCollection'] = $resourceCollection->count();
+
+            $resourceGroup = ResourceGroup::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Resource Group';
+
+                return $item;
+            });
+            $counts['ResourceGroup'] = $resourceGroup->count();
+
+            $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Lab Program';
+
+                return $item;
+            });
+            $counts['LabProgram'] = $labPrograms->count();
+
+            $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
+                $item->type = 'Challenge Path';
+
+                return $item;
+            });
+            $counts['ChallengePath'] = $challengePaths->count();
+
+            // Now apply the filter for the displayed components
+            if ($filter == '' || $filter == 'Lab') {
                 $components = $components->merge($labs);
             }
-
             if ($filter == '' || $filter == 'Challenge') {
-                $challenges = Challenge::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Challenge';
-
-                    return $item;
-                });
                 $components = $components->merge($challenges);
             }
-
             if ($filter == '' || $filter == 'Project') {
-                $projects = Project::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Project';
-
-                    return $item;
-                });
                 $components = $components->merge($projects);
             }
-
             if ($filter == '' || $filter == 'Resource Module') {
-                $resources = ResourceModule::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Resource Module';
-
-                    return $item;
-                });
                 $components = $components->merge($resources);
             }
-
             if ($filter == '' || $filter == 'Resource Collection') {
-                $resourceCollection = ResourceCollection::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Resource Collection';
-
-                    return $item;
-                });
                 $components = $components->merge($resourceCollection);
             }
-
             if ($filter == '' || $filter == 'Resource Group') {
-                $resourceGroup = ResourceGroup::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Resource Group';
-
-                    return $item;
-                });
                 $components = $components->merge($resourceGroup);
             }
-
             if ($filter == '' || $filter == 'Lab Program') {
-                $labPrograms = LabProgram::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Lab Program';
-
-                    return $item;
-                });
                 $components = $components->merge($labPrograms);
             }
-
             if ($filter == '' || $filter == 'Challenge Path') {
-                $challengePaths = ChallengePath::where('title', 'like', '%'.$query.'%')->whereNotIn('id', $exploreIds)->get()->map(function ($item) {
-                    $item->type = 'Challenge Path';
-
-                    return $item;
-                });
                 $components = $components->merge($challengePaths);
             }
-
-            // Paginate the results
+            // Paginate the filtered results
             $total = $components->count();
             $components = $components->slice(($currentPage - 1) * $perPage, $perPage);
 
             $html = view('maestro.explore.searchableItems', compact('components'))->render();
 
-            return response()->json(['html' => $html, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage]);
+            return response()->json([
+                'html'        => $html,
+                'total'       => $total,
+                'perPage'     => $perPage,
+                'currentPage' => $currentPage,
+                'counts'      => $counts, // Send the counts to the frontend for all types
+            ]);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

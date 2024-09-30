@@ -8,6 +8,7 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\ResourceGroupAchievementService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupTagsGroupsService;
+use App\Services\Public\FeaturedModuleService;
 
 class HandleDeleteResourceGroupAssociatedData
 {
@@ -40,6 +41,10 @@ class HandleDeleteResourceGroupAssociatedData
             }
             $deleteAchievementsGroups = ResourceGroupAchievementService::deleteResourceGroupAchievements($resourceGroupId);
             if (!$deleteAchievementsGroups) {
+                return false;
+            }
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.resource_group'), $resourceGroupId);
+            if (!$featuredModule) {
                 return false;
             }
 

@@ -59,8 +59,8 @@ class HandleDeleteLabAssociatedData
             if (!$labAddress) {
                 return false;
             }
-            $featuredLab = FeaturedModuleService::deleteFeaturedLab($lab_id);
-            if (!$featuredLab) {
+            $featuredModule = FeaturedModuleService::deleteFeaturedModule(config('constants.module_type.labs'), $lab_id);
+            if (!$featuredModule) {
                 return false;
             }
 

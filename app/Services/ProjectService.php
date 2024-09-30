@@ -464,47 +464,51 @@ class ProjectService
             $challengeData = ChallengeService::getChallengeBasedOnId($projectData->challenge_id);
 
             $challenge_conditions = [];
-            if ($challengeData->challenge_requirements) {
-                foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
-                    $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
-                    if ($challengeData->challenge_project_template) {
-                        $requirementStatus = '';
+            if ($challengeData != null) {
+                if ($challengeData->challenge_requirements) {
+                    foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
+                        $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
+                        if ($challengeData->challenge_project_template) {
+                            $requirementStatus = '';
 
-                        switch ($check_achievement_condition->id) {
-                            case '1':
-                                $type = 'pitch';
-                                $requirementStatus = ProjectPitchService::checkProjectPitch($projectData->id, $challengeData->challenge_project_template->template_id);
-                                break;
-                            case '2':
-                                $type = 'task';
-                                $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
-                                break;
-                            case '3':
-                                $type = 'links';
-                                $requirementStatus = ProjectExternalLinksService::checkProjectExternalLink($projectData->id);
-                                break;
-                            case '4':
-                                $type = 'gallery';
-                                $requirementStatus = ProjectFileService::checkProjectGallery($projectData->id);
-                                break;
-                            case '5':
-                                $type = 'file';
-                                $requirementStatus = ProjectFileService::checkProjectFile($projectData->id);
-                                break;
+                            switch ($check_achievement_condition->id) {
+                                case '1':
+                                    $type = 'pitch';
+                                    $requirementStatus = ProjectPitchService::checkProjectPitch($projectData->id, $challengeData->challenge_project_template->template_id);
+                                    break;
+                                case '2':
+                                    $type = 'task';
+                                    $requirementStatus = ProjectPitchService::checkProjectTask($projectData->id, $challengeData->challenge_project_template->template_id);
+                                    break;
+                                case '3':
+                                    $type = 'links';
+                                    $requirementStatus = ProjectExternalLinksService::checkProjectExternalLink($projectData->id);
+                                    break;
+                                case '4':
+                                    $type = 'gallery';
+                                    $requirementStatus = ProjectFileService::checkProjectGallery($projectData->id);
+                                    break;
+                                case '5':
+                                    $type = 'file';
+                                    $requirementStatus = ProjectFileService::checkProjectFile($projectData->id);
+                                    break;
+                            }
+                            $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
+                            $projectState = [
+                                'type'              => $type,
+                                'status'            => $projectStatus,
+                                'Requirement Title' => $check_achievement_condition->title,
+                            ];
+
+                            $challenge_conditions[$check_achievement_condition->id] = $projectState;
                         }
-                        $projectStatus = ($requirementStatus) ? 'completed' : 'pending';
-                        $projectState = [
-                            'type'              => $type,
-                            'status'            => $projectStatus,
-                            'Requirement Title' => $check_achievement_condition->title,
-                        ];
-
-                        $challenge_conditions[$check_achievement_condition->id] = $projectState;
                     }
                 }
-            }
 
-            return $challenge_conditions;
+                return $challenge_conditions;
+            } else {
+                return [];
+            }
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -905,7 +909,7 @@ class ProjectService
     public static function fetchCompletedChallenges($challengeIds, $userData)
     {
         try {
-            $fetchCompletedChallenges = Project::whereIn('challenge_id', $challengeIds)->where(['user_id' => $userData->id, 'is_submitted' => '1'])->count();
+            $fetchCompletedChallenges = Project::whereIn('challenge_id', $challengeIds)->where('user_id', $userData->id)->whereIn('is_submitted', ['1', '2'])->count();
 
             return $fetchCompletedChallenges;
         } catch (Exception $e) {
@@ -1077,6 +1081,19 @@ class ProjectService
             $storeSkills = UserSkillsService::storeVerifySkills($getSkillsBasedOnChallengeIds, $userId);
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchCompletedChallengeUserIds($challengeId)
+    {
+        try {
+            $fetchCompletedChallengeUserIds = Project::where('challenge_id', $challengeId)->whereIn('is_submitted', ['1', '2'])->pluck('user_id');
+
+            return $fetchCompletedChallengeUserIds;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

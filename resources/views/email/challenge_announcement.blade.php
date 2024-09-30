@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitation Email</title>
+    <title>{{ $emailData['announcementData']->subject }}</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
     <style>
         * {
@@ -20,7 +20,7 @@
         .content-container {
             width: 100%;
             max-width: 600px;
-            background: #F3F7FC;;
+            background: #F3F7FC;
             margin: 40px auto;
             padding: 40px;
             text-align: center;
@@ -76,7 +76,6 @@
             color: #4992CE;
             margin-top: 10px;
         }
-
         .image-with-text {
             background-size: cover;
             background-position: center;
@@ -99,37 +98,49 @@
 </head>
 
 <body>
-@php $fallbackImage = 'https://dev.learnlab.ai/static/media/organization.b81447a21b1ee865d621.png'; @endphp
     <div class="content-container">
         <img class="header-logo" src="https://preprlabs.org/uploads/settings/site_logo.png" alt="Preprlabs Logo">
-        <div class="title">You have been invited to join an {{$emailData['module_name']}}</div>
-    @php
-        $s3BaseUrl = env('CDN_URL');
-        $imagePath = str_replace($s3BaseUrl, '', $emailData['org_image']);
-        $imageExists = Illuminate\Support\Facades\Storage::disk('s3')->exists($imagePath);
-    @endphp
-
-        @if($imageExists)
-        <img class="image-container" src="{{ $emailData['org_image'] }}" alt="Image"><br>
+        <div class="title">{{$emailData['challenge']->title}}</div>
+        @php
+            $fallbackImage = 'https://dev.learnlab.ai/static/media/challenge.18b606241bc34ddc5e8b.png';
+        @endphp
+        @if($emailData['challenge']->media_type == 'image' && $emailData['challenge']->media)
+        <img class="image-container" src="{{ $emailData['challenge']->media }}" alt="Image"><br>
+        @elseif($emailData['challenge']->media_type == 'embedded' && $emailData['challenge']->media )
+            @php
+                $dom = new DOMDocument();
+                libxml_use_internal_errors(true); // Ignore warnings related to malformed HTML
+                $dom->loadHTML($emailData['challenge']->media);
+                libxml_clear_errors(); // Clear errors after parsing
+                $xpath = new DOMXPath($dom);
+                $src = $xpath->evaluate('string(//iframe/@src)'); // Extract the src from iframe
+            @endphp
+            @if(!empty($src))
+                <div class="image-with-text" style="background-image: url('{{ $fallbackImage }}');">
+                    <a href="{{ $src }}" target="_blank" style="color: black; margin:auto;">{{ $emailData['challenge']->title }}</a>
+                </div>
+                <p>Click the image above to view the embedded content.</p>
+            @else
+                <p>Invalid embedded code.</p>
+            @endif
         @else
         <div class="image-with-text" style="background-image: url('{{ $fallbackImage }}');">
-           {{ $emailData['comp_title'] }}
+            {{ $emailData['challenge']->title }}
         </div><br>
         @endif
-        <a href="{{ $emailData['slug'] }} " class="cta-button"  style="color:white">Join Now</a>
         <div class="message">
-            Dear {{ $emailData['invitee_name'] }},
+            Dear {{ $emailData['name'] }}, <strong>{{ $emailData['organization']->title }}</strong> has made an announcement regarding <strong>{{$emailData['challenge']->title}}</strong>
+            {{ $emailData['announcementData']->description }}
             <br><br>
-            {{$emailData['inviter_name']}} has invited you to join an organization on the Prepr Network as {{$emailData['role']}} : {{$emailData['comp_title']}} Feel free to write to us at support@prepr.org for any assistance. We will be happy to help. 
+            <a href="https://dev.learnlab.ai/challenge/{{ $emailData['challenge']->slug}}" target="_blank">{{ $emailData['challenge']->title}} </a> Click here to view challenge
             <br><br>
             Regards,
             <br>
             Prepr team
         </div>
         <div class="footer">
+            This email message was auto-generated. If you need assistance please contact <div class="contact">support@prepr.org</div>.
             ©2024 Preprlabs. All rights reserved.
-            <div class="contact">support@prepr.org</div>
-            This email message was auto-generated. If you need assistance please contact us.
         </div>
     </div>
 </body>

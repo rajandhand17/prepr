@@ -28,6 +28,7 @@ use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\ProjectPitchService;
 use App\Services\ProjectService;
+use App\Services\Public\FeaturedModuleService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -57,8 +58,9 @@ class ChallengeRepository implements ChallengeInterface
     private $challengeTypeModeService;
     private $projectService;
     private $memberManagementService;
+    private $featuredModuleService;
 
-    public function __construct(ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService, ProjectService $projectService, MemberManagementService $memberManagementService)
+    public function __construct(FeaturedModuleService $featuredModuleService, ChallengeService $challengeService, ScormRepository $scormRepository, ChallengeAchievementService $challengeAchievementService, ChallengeSponsorService $challengeSponsorService, ChallengeSkillsGroupsStackService $challengeSkillsGroupsStackService, ChallengeRequirementService $challengeRequirementService, ChallengeAssessmentCriteriaService $challengeAssessmentCriteriaService, ChallengeProjectTemplateService $challengeProjectTemplateService, ChallengeAssessmentService $challengeAssessmentService, ChallengeTimelinesService $challengeTimelinesService, ChallengeCustomTimelinesService $challengeCustomTimelinesService, ChallengeExternalLinkService $challengeExternalLinkService, ChallengeAnnouncementService $challengeAnnouncementService, ChallengeJobsService $challengeJobsService, AIService $aiService, ComponentAssociationService $componentAssociationService, ProjectPitchService $projectPitchService, CampusConnectOpportunityService $campusConnectOpportunityService, CampusConnectStoryService $campusConnectStoryService, AchievementService $achievementService, ChallengeTypeModeService $challengeTypeModeService, ProjectService $projectService, MemberManagementService $memberManagementService)
     {
         $this->challengeService = $challengeService;
         $this->scormRepository = $scormRepository;
@@ -83,6 +85,7 @@ class ChallengeRepository implements ChallengeInterface
         $this->challengeTypeModeService = $challengeTypeModeService;
         $this->projectService = $projectService;
         $this->memberManagementService = $memberManagementService;
+        $this->featuredModuleService = $featuredModuleService;
     }
 
     public function getChallengeCountBasedOnOrganization($organizationId)
@@ -501,9 +504,10 @@ class ChallengeRepository implements ChallengeInterface
             DB::beginTransaction();
             $challenge_data = ChallengeService::getChallengeBasedOnId($challenge_id);
             $deleteChallenge = $this->challengeService->deleteChallenge($challenge_id);
+            $featuredModule = $this->featuredModuleService->deleteFeaturedModule(config('constants.module_type.challenges'), $challenge_id);
             $challenge_data->skills = $challenge_data->skills?->pluck('foreign_id');
 
-            if ($deleteChallenge == false) {
+            if ($deleteChallenge == false && $featuredModule == false) {
                 DB::rollBack();
 
                 return false;
