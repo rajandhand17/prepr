@@ -130,7 +130,7 @@
             {{ $emailData['comp_title'] }}
         </div><br>
         @endif
-        <a href="{{ $emailData['slug'] }}" class="cta-button">Join {{$emailData['module_name']}}</a>
+        <a href="{{ $emailData['slug'] }}" class="cta-button"  style="color:white" >Join {{$emailData['module_name']}}</a>
         <div class="message">
             Dear {{ $emailData['invitee_name'] }},
             <br><br>
@@ -146,7 +146,7 @@
         </div>
         <div class="footer">
             This email message was auto-generated. If you need assistance please contact <div class="contact">support@prepr.org</div>.
-            ©2023 Preprlabs. All rights reserved.
+            ©2024 Preprlabs. All rights reserved.
         </div>
     </div>
 </body>

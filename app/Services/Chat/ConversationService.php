@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\ConversationMessage;
 use App\Models\ConversationSeenMessage;
 use App\Models\User;
+use App\Notifications\AnnouncementConversationCreated;
 use App\Notifications\ConversationArchived;
 use App\Notifications\ConversationCreated;
 use App\Notifications\ConversationDeleted;
@@ -22,7 +23,9 @@ class ConversationService
     private function prepareData(array $data)
     {
         try {
-            $data['usernames'][] = auth()->user()->username;
+            if ($data['type'] != 'announcement') {
+                $data['usernames'][] = auth()->user()->username;
+            }
             $userIds = User::whereIn('username', $data['usernames'])
                 ->pluck('id')
                 ->toArray();
@@ -131,7 +134,7 @@ class ConversationService
         try {
             if ($type === 'delete') {
                 $conversationUserIds = $deletedUserIds;
-            } elseif ($type === 'archived' || $type === 'created' || $type === 'unarchived') {
+            } elseif ($type === 'archived' || $type === 'created' || $type === 'unarchived' || $type === 'announcement') {
                 $conversationUserIds = $this->getConversationUsersId($conversationId);
             } else {
                 return false;
@@ -144,9 +147,13 @@ class ConversationService
                 $conversation = ['uuid' => request()->route()->parameter('uuid')];
             }
 
-            $userIds = array_filter($conversationUserIds, function ($item) {
-                return $item !== auth()->user()->id;
-            });
+            if ($type === 'announcement') {
+                $userIds = $conversationUserIds;
+            } else {
+                $userIds = array_filter($conversationUserIds, function ($item) {
+                    return $item !== auth()->user()->id;
+                });
+            }
 
             $users = User::whereIn('id', $userIds)->get();
             switch ($type) {
@@ -161,6 +168,9 @@ class ConversationService
                     break;
                 case 'unarchived':
                     Notification::send($users, new ConversationUnArchived($conversation, $userIds));
+                    break;
+                case 'announcement':
+                    Notification::send($users, new AnnouncementConversationCreated($conversation, $userIds));
                     break;
                 default:
                     return false;
@@ -191,13 +201,14 @@ class ConversationService
     {
         try {
             DB::beginTransaction();
+            $created_by = ($data['type'] == config('constants.conversation_type.announcement')) ? $data['created_by'] : auth()->user()->id;
             $uuid = Randomize::chars(10)->alphanumeric()->unique()->generate();
             $conversation = Conversation::create([
                 'uuid'        => $uuid,
                 'name'        => null,
                 'type'        => $data['type'],
                 'group_photo' => $data['group_photo'] ?? null,
-                'created_by'  => auth()->user()->id,
+                'created_by'  => $created_by,
             ]);
             $conversationUsers = $this->addMembers($conversation, $data['users']);
 
@@ -207,7 +218,8 @@ class ConversationService
                 return false;
             }
 
-            $notification = $this->notify($conversation->id, 'created');
+            $notify_type = ($data['type'] == config('constants.conversation_type.announcement')) ? 'announcement' : 'created';
+            $notification = $this->notify($conversation->id, $notify_type);
 
             if (!$notification) {
                 return false;
@@ -283,7 +295,7 @@ class ConversationService
         try {
             $preparedData = $this->prepareData($data);
 
-            if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type'])) {
+            if ($this->isConversationAlreadyExists($preparedData['users'], $preparedData['type']) && $preparedData['type'] != config('constants.conversation_type.announcement')) {
                 return $this->getConversationByUsers($preparedData['users'], $preparedData['type']);
             }
 

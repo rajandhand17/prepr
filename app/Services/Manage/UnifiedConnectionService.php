@@ -7,6 +7,7 @@ use App\Helpers\Unified\UnifiedHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\Challenge;
 use App\Models\Lab;
+use App\Models\LabProgram;
 use App\Models\Organization;
 use App\Models\Role;
 use App\Models\UnifiedConnection;
@@ -102,6 +103,7 @@ class UnifiedConnectionService
             'organization_member_invite' => Organization::class,
             'lab_member_invite'          => Lab::class,
             'challenge_member_invite'    => Challenge::class,
+            'lab_program_member_invite'  => LabProgram::class,
             default                      => false
         };
     }
@@ -195,6 +197,7 @@ class UnifiedConnectionService
             'organization_member_invite' => 'organization',
             'lab_member_invite'          => 'lab',
             'challenge_member_invite'    => 'challenge',
+            'lab_program_member_invite'  => 'lab_program',
             default                      => false
         };
     }

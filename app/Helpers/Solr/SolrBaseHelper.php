@@ -251,11 +251,8 @@ abstract class SolrBaseHelper
                 ])
             );
 
-//            $total = data_get($result, 'response.numFound');
-//            dd($result);
             return [
                 'data' => data_get($result, 'response.docs', []),
-                //                'data' => $result,
             ];
         } catch (\Exception $exception) {
             return false;

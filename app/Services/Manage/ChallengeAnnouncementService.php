@@ -57,7 +57,6 @@ class ChallengeAnnouncementService
             $challengeAnnouncement->description = $request->description;
             $challengeAnnouncement->schedule_at = $schedule_date;
             $challengeAnnouncement->status = $sendAnnouncementSendStatus;
-            $challengeAnnouncement->sent_status = '1';
             $challengeAnnouncement->save();
 
             return $challengeAnnouncement;
@@ -99,6 +98,19 @@ class ChallengeAnnouncementService
             ChallengeAnnouncement::find($challengeAnnouncementId)->delete();
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengeAnnouncement($challengeAnnouncementId)
+    {
+        try {
+            $fetchChallengeAnnouncement = ChallengeAnnouncement::find($challengeAnnouncementId);
+
+            return $fetchChallengeAnnouncement;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -196,19 +196,20 @@ class ChallengeService
         try {
             $userID = auth()->user()->id;
             $userEmail = auth()->user()->email;
+            $userLocationBasedTime = UtilityHelper::UserLocationBasedDateTime(auth()->user()->preferred_timezone);
             $challengeUsedIds = Project::where('user_id', $userID)->pluck('challenge_id');
             $challengeMemberIds = MemberManagement::where(['module_type' => '2', 'invite_status' => '1', 'email' => $userEmail])->pluck('module_id');
             $publicChallengeIds = Challenge::where(['language' => $request->language, 'privacy' => '0', 'status' => '1', 'is_open' => '0'])->pluck('id');
             $challengesDiffIds = $challengeMemberIds->merge($publicChallengeIds)->unique()->diff($challengeUsedIds);
 
             $challenge_list = Challenge::select('uuid', 'title', 'slug', 'media_type', 'media')->whereIn('id', $challengesDiffIds)->where(['status' => '1', 'is_accessible' => '1', 'is_open' => '0'])
-                ->whereHas('challenge_timelines', function ($query) {
-                    $query->where(function ($q) {
+                ->whereHas('challenge_timelines', function ($query) use ($userLocationBasedTime) {
+                    $query->where(function ($q) use ($userLocationBasedTime) {
                         $q->where('timeline_type', '1')
-                            ->where('start_date', '<', now())
-                            ->where(function ($subQuery) {
+                            ->where('start_date', '<', $userLocationBasedTime)
+                            ->where(function ($subQuery) use ($userLocationBasedTime) {
                                 $subQuery->whereNotNull('registration_deadline_date')
-                                    ->where('registration_deadline_date', '>', now())
+                                    ->where('registration_deadline_date', '>', $userLocationBasedTime)
                                     ->orWhereNull('registration_deadline_date');
                             });
                     })->orWhere(function ($q) {
@@ -549,6 +550,34 @@ class ChallengeService
 
             return true;
         } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkChallengeProjectCreationEnabled($challengeTimeLineData, $userData)
+    {
+        try {
+            // Initialize flag
+            $isProjectCreationEnabled = false;
+
+            // Get user timezone-based current datetime
+            $userLocationBasedTime = UtilityHelper::UserLocationBasedDateTime($userData->preferred_timezone);
+
+            // Ensure challenge timeline data is not empty and has a valid start date
+            if (!empty($challengeTimeLineData) && $challengeTimeLineData['start_date'] != null) {
+                // Check if the current time is after the start date
+                $isProjectCreationEnabled = ($challengeTimeLineData['start_date'] < $userLocationBasedTime);
+
+                // If project creation is enabled, check if within the registration deadline
+                if ($isProjectCreationEnabled && $challengeTimeLineData['registration_deadline_date'] != null) {
+                    $isProjectCreationEnabled = ($challengeTimeLineData['registration_deadline_date'] > $userLocationBasedTime);
+                }
+            }
+
+            return $isProjectCreationEnabled;
+        } catch (Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

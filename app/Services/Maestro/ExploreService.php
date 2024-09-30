@@ -5,6 +5,7 @@ namespace App\Services\Maestro;
 use App\Helpers\FileUploadHelper;
 use App\Helpers\UtilityHelper;
 use App\Models\FeaturedModule;
+use App\Models\Role;
 use Exception;
 use Schema;
 
@@ -112,11 +113,11 @@ class ExploreService
             } else {
                 $uploadsPath = null;
             }
-
+            $roleId = Role::where('name', 'user')->first();
             FeaturedModule::create([
                 'module_type'    => $moduleType,
                 'module_id'      => $request->compId,
-                'role'           => '["user"]',
+                'role'           => '["'.$roleId->id.'"]',
                 'title'          => $componentRequest->title,
                 'description'    => $description,
                 'button_text'    => 'View',

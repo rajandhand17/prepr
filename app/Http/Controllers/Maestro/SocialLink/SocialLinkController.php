@@ -15,11 +15,6 @@ class SocialLinkController extends Controller
 {
     use SocialLinkTrait;
 
-    public function __construct()
-    {
-        $this->middleware('auth-check');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {

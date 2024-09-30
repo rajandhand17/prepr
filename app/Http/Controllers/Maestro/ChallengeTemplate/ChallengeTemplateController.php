@@ -21,7 +21,6 @@ class ChallengeTemplateController extends Controller
 
     public function __construct(ChallengeTemplateService $challengeTemplateService, ChallengeService $challengeService)
     {
-        $this->middleware('web');
         $this->challengeTemplateService = $challengeTemplateService;
         $this->challengeService = $challengeService;
     }
@@ -89,7 +88,7 @@ class ChallengeTemplateController extends Controller
             $html = $builder->columns([
                 ['data' => 'id', 'name' => 'DT_Row_Index', 'width' => '5%', 'orderable' => false, 'searchable' => false],
                 ['data' => 'title', 'name' => 'title', 'title' => 'CHALLENGE TITLE', 'width' => '5%'],
-                ['data' => 'username', 'name' => 'username', 'title' => 'USERNAME', 'width' => '10%'],
+                ['data' => 'username', 'name' => 'username', 'title' => 'USERNAME', 'width' => '10%', 'searchable' => false],
                 ['data' => 'status', 'name' => 'status', 'title' => 'STATUS', 'width' => '10%'],
                 ['data' => 'privacy', 'name' => 'privacy', 'title' => 'PUBLISHED', 'width' => '10%'],
                 ['data' => 'action', 'name' => 'action', 'title' => 'ACTION', 'width' => '10%'],

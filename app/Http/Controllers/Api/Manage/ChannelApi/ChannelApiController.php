@@ -104,7 +104,9 @@ class ChannelApiController extends AppBaseController
         try {
             $lab = LabService::getLabBasedOnId($request->lab_id);
 
-            if (!$lab) {
+            $getMagnetOrganization = OrganizationService::getOrganizationBasedOnCommunityId(config('magnet.magnet_organization_id'));
+
+            if (!$lab || $lab->organization_id !== $getMagnetOrganization->id) {
                 return $this->sendError(__('responses.lab_not_found'), 404);
             }
 

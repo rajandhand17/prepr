@@ -30,19 +30,21 @@ class AchievementService
                 $olddata = $key - 1;
                 $certificate_id = $olddata.'00'.$key;
                 $certificate_number = $certificate_date.$certificate_id;
+                $certificate_number = $this->generateUniqueCertificateNumber($certificate_number);
+
                 foreach ($projectMembers as $projectMember) {
                     $userAchievement = new UserAchievement();
                     $userAchievement->user_id = $projectMember;
                     $userAchievement->certificate_number = $certificate_number;
-                    $userAchievement->title = $projectAchievement->achievement_name;
-                    $userAchievement->description = $projectAchievement->achievement_name;
+                    $userAchievement->title = $projectAchievement->achievement_name ?? 'Challenge Participant';
+                    $userAchievement->description = $projectAchievement->achievement_name ?? 'Challenge Participant';
                     $userAchievement->achievement_type = $achievement_type;
                     $userAchievement->module_id = $projectData->id;
                     $userAchievement->module_title = $projectData->title;
                     $userAchievement->module_parent_id = $fetchChallenge->id;
                     $userAchievement->module_parent_title = $fetchChallenge->title;
-                    $userAchievement->achievement_prize = $projectAchievement->achievement_prize;
-                    $userAchievement->achievement_points = $projectAchievement->achievement_points;
+                    $userAchievement->achievement_prize = $projectAchievement->achievement_prize ?? '0';
+                    $userAchievement->achievement_points = $projectAchievement->achievement_points ?? '0';
                     $userAchievement->achievement_image = $projectAchievement->getRawOriginal('achievement_image');
                     $userAchievement->issue_date = Carbon::now()->toDateTimeString();
                     $userAchievement->valid_date = null;
@@ -107,6 +109,7 @@ class AchievementService
                     $olddata = $key - 1;
                     $certificate_id = $olddata.'00'.$key;
                     $certificate_number = $certificate_date.$certificate_id;
+                    $certificate_number = $this->generateUniqueCertificateNumber($certificate_number);
                     foreach ($fetchAcceptedMemberIds as $projectMember) {
                         $userAchievement = new UserAchievement();
                         $userAchievement->user_id = $projectMember;
@@ -161,7 +164,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -204,7 +207,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -247,7 +250,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -290,7 +293,7 @@ class AchievementService
             $olddata = $key - 1;
             $certificate_id = $olddata.'00'.$key;
             $certificate_number = $certificate_date.$certificate_id;
-
+            $certificate_number = self::generateUniqueCertificateNumber($certificate_number);
             $userAchievement = new UserAchievement();
             $userAchievement->user_id = $userId;
             $userAchievement->certificate_number = $certificate_number;
@@ -316,6 +319,49 @@ class AchievementService
             }
 
             return true;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function fetchChallengeAchievementUserIds($challengeId, $achievementType)
+    {
+        try {
+            $fetchChallengeAchievementUserIds = UserAchievement::where(['module_id' => $challengeId, 'achievement_type' => $achievementType])->pluck('user_id');
+
+            return $fetchChallengeAchievementUserIds;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function generateUniqueCertificateNumber($base_certificate_number)
+    {
+        try {
+            $certificate_number = $base_certificate_number;
+
+            while (UserAchievement::where(['certificate_number' => $certificate_number])->exists()) {
+                $certificate_number = $base_certificate_number++;
+            }
+
+            return $certificate_number;
+        } catch(Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public static function checkAchievementAssignedOrNot($challengePathId, $userId, $achievementType)
+    {
+        try {
+            $checkChallengePathAchievementAssignedOrNot = UserAchievement::where(['user_id' => $userId, 'achievement_type' => $achievementType, 'module_id' => $challengePathId])->exists();
+
+            return $checkChallengePathAchievementAssignedOrNot;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 

@@ -58,7 +58,7 @@ class ExploreResource extends JsonResource
             'module_id'              => $this->module_id,
             'module_type'            => config('constants.module_type_id.'.$this->module_type),
             'media'                  => $this->media,
-            'module_slug'            => $moduleDetails->slug,
+            'module_slug'            => $moduleDetails !== null ? $moduleDetails->slug : null,
             'button_text'            => $this->button_text,
         ];
     }
