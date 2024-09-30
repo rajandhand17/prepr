@@ -238,6 +238,7 @@ class SendChallengeAnnouncement extends Command
                     }
                 }
             }
+
             return true;
         } catch (Exception $e) {
             UtilityHelper::logError($e);
