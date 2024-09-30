@@ -134,5 +134,12 @@
                 }
             });
         }, 200); // Slightly larger delay for the second picker
+
+         // Set expiration_date's minDate based on issue_trophy_date
+        $("#issue_trophy_date").on("change.datetimepicker", function (e) {
+            $('#expiration_date').datetimepicker('minDate', e.date);
+        });
     });
+
+   
 </script>
