@@ -76,22 +76,34 @@ class ResourceGroupController extends AppBaseController
     public function cloneResourceGroup($slug)
     {
         try {
-            // Checking resource group based on slug exists or not
-            $getResourceGroup = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
-            if (!$getResourceGroup) {
-                return $this->sendError(__('responses.selected_resource_not_found'), 404);
+            $checkResourceGroupExistsOrNot = $this->resourceGroupRepository->getResourceGroupBasedOnSlug($slug);
+            if ($checkResourceGroupExistsOrNot == false) {
+                return $this->sendError(__('responses.resource_group_slug_not_available'), 404);
             }
-            // Fetching resource group is belongs to current users or not
-            if ($getResourceGroup->user_id == auth()->user()->id) {
-                return $this->sendError(__('responses.selected_resource_group_already_exists'), 403);
+            $userData = auth()->user();
+            $organization = UtilityHelper::UserIdBasedPreferredOrganization($userData);
+            if (!$organization) {
+                return $this->sendError(__('responses.selected_organization_not_found'), 404);
             }
-            // Fetching Resource group Based on title and resource current users
-            $getResourceCollectionBasedOnTitle = $this->resourceGroupRepository->getResourceGroupBasedOnTitle($getResourceGroup->title);
-            if ($getResourceCollectionBasedOnTitle) {
-                return $this->sendError(__('responses.selected_resource_group_already_exists'));
+
+            if ($checkResourceGroupExistsOrNot->organization_id != $organization->id) {
+                return $this->sendError(__('responses.resource_group_switcher_error'), 403);
+            }
+
+            if ($checkResourceGroupExistsOrNot->is_accessible == '0') {
+                return $this->sendError(__('responses.resource_group_not_accessible'), 403);
+            }
+
+            // checks creation limits of the Resource Group
+            $checkResourceGroupLimit = ChargebeeHelper::checkComponentLimitBasedOnOrganization($organization->id, 'resourceGroup');
+            if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] !== 'Unlimited') {
+                $checkResourceGroupCount = $this->resourceGroupRepository->getResourceGroupCountBasedOnOrganization($checkResourceGroupLimit['organizationId']);
+                if ($checkResourceGroupLimit['fetchOrganizationPlanDetails'] <= $checkResourceGroupCount) {
+                    return $this->sendError(__('responses.reached_resource_group_limit'), 400);
+                }
             }
             // Cloning resource groups based on title and resource group id
-            $cloneResourceModule = $this->resourceGroupRepository->cloneResourceGroup($getResourceGroup->id);
+            $cloneResourceModule = $this->resourceGroupRepository->cloneResourceGroup($checkResourceGroupExistsOrNot->id, $organization);
             if ($cloneResourceModule) {
                 return $this->sendResponse(ResourceGroupResource::make($cloneResourceModule), __('responses.clone_resource_group_successfully'));
             }

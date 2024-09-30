@@ -63,6 +63,7 @@ return [
         'organization_member_invite' => '0', // INVITING MEMBER INTO THE ORGANIZATION
         'lab_member_invite'          => '1', // INVITING MEMBER TO THE LAB
         'challenge_member_invite'    => '2', // INVITING MEMBER TO THE CHALLENGE
+        'lab_program_member_invite'  => '3', // INVITING MEMBER TO THE LAB PROGRAM
     ],
 
     /*

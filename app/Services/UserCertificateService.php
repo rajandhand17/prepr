@@ -19,9 +19,9 @@ class UserCertificateService
                     'user_id'    => auth()->user()->id,
                     'company'    => $value,
                     'name'       => $inputs['name'][$key],
-                    'start_date' => $inputs['start_date'][$key],
-                    'end_date'   => $inputs['end_date'][$key],
-                    'description'=> $inputs['description'][$key],
+                    'start_date' => $inputs['start_date'][$key] ?? null,
+                    'end_date'   => $inputs['end_date'][$key] ?? null,
+                    'description'=> $inputs['description'][$key] ?? null,
                 ]);
                 $allCertificates[] = $certificate;
             }

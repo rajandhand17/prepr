@@ -17,11 +17,6 @@ class SkillStackController extends Controller
 {
     use SkillStackTrait;
 
-    public function __construct()
-    {
-        $this->middleware('web');
-    }
-
     public function index(Builder $builder, Request $request)
     {
         try {

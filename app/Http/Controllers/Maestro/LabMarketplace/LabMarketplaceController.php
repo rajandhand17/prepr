@@ -20,7 +20,6 @@ class LabMarketplaceController extends Controller
 
     public function __construct(LabMarketplaceService $labMarketplaceService)
     {
-        $this->middleware('web');
         $this->labMarketplaceService = $labMarketplaceService;
     }
 

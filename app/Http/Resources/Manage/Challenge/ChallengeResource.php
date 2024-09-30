@@ -418,6 +418,16 @@ class ChallengeResource extends JsonResource
             $isActive = 'no';
         }
 
+        if ($isActive === 'yes') {
+            // check challenge is started for user to participate
+            if ($challenge_timelines['timeline_type'] === 'restricted') {
+                $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth()->user());
+                if ($checkChallengeProjectCreationEnabled != true) {
+                    $isActive = 'no';
+                }
+            }
+        }
+
         return [
             'id'                                => $this->uuid,
             'language'                          => $this->language,
@@ -494,6 +504,7 @@ class ChallengeResource extends JsonResource
             'source'                            => $source,
             'challenge_status'                  => $challenge_status,
             'challenge_joined_date'             => $challenge_joined_date,
+            'project'                           => isset($checkProjectStatus) ? SubmittedProjectResource::make($checkProjectStatus) : null,
         ];
     }
 }
