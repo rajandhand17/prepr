@@ -81,6 +81,9 @@ class SqlCommandExecution extends Command
             }
 
             DB::statement("UPDATE `user_achievements` SET `certificate_number` = '2309050002' WHERE `user_achievements`.`id` = 7756");
+
+            DB::table('challenge_announcement_recipients')->truncate();
+            Schema::enableForeignKeyConstraints();
             $this->info('SQL command executed successfully.');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
