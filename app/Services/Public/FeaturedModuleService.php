@@ -27,11 +27,11 @@ class FeaturedModuleService
         }
     }
 
-    public static function deleteFeaturedLab($id)
+    public static function deleteFeaturedModule($moduleType, $id)
     {
         try {
             $deleteFeaturedModule = FeaturedModule::where([
-                ['module_type', '=', '0'],
+                ['module_type', '=', $moduleType],
                 ['module_id', '=', $id],
             ])->delete();
 

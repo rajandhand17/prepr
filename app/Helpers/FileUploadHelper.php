@@ -92,42 +92,6 @@ class FileUploadHelper
         }
     }
 
-    public static function uploadLocalStorageImageToS3($request, $type)
-    {
-        try {
-            $pathsarray = config('s3-upload-path');
-            $image_cover = Image::make($request->getFile()->getRealPath());
-            $image_cover->encode('webp', 75);
-            $image_contents_cover = $image_cover->__toString();
-            $fileOriginalName = $request->getFile()->getFileName();
-            $webp_path_cover = $pathsarray[$type].$fileOriginalName;
-            Storage::disk('s3')->put($webp_path_cover, $image_contents_cover);
-
-            return $webp_path_cover;
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    public static function uploadLocalStoragePDFToS3($request, $type)
-    {
-        try {
-            $pathsarray = config('s3-upload-path');
-            $filePath = $request->getFile()->getRealPath();
-            $fileOriginalName = $request->getFile()->getFileName();
-            $webp_path_cover = $pathsarray[$type].$fileOriginalName;
-            Storage::disk('s3')->put($webp_path_cover, file_get_contents($filePath));
-
-            return $webp_path_cover;
-        } catch (\Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
     public static function UploadVideoDocToS3($request, $type)
     {
         try {
