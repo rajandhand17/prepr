@@ -464,7 +464,7 @@ class ProjectService
             $challengeData = ChallengeService::getChallengeBasedOnId($projectData->challenge_id);
 
             $challenge_conditions = [];
-            if($challengeData != Null) {
+            if ($challengeData != null) {
                 if ($challengeData->challenge_requirements) {
                     foreach ($challengeData->challenge_requirements->project_submission_requirement_ids as $project_submission_requirement) {
                         $check_achievement_condition = ProjectSubmissionRequirementService::getProjectSubmissionRequirementByID($challengeData->language, $project_submission_requirement);
@@ -504,6 +504,7 @@ class ProjectService
                         }
                     }
                 }
+
                 return $challenge_conditions;
             } else {
                 return [];
