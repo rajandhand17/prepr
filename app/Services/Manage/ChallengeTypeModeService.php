@@ -2,8 +2,10 @@
 
 namespace App\Services\Manage;
 
+use App\Helpers\UtilityHelper;
 use App\Models\ChallengeTypeMode;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class ChallengeTypeModeService
 {
@@ -51,6 +53,39 @@ class ChallengeTypeModeService
 
             return true;
         } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public static function getChallengeType($challengeType)
+    {
+        try {
+            $assessChallengeIds = collect([]);
+            $onboardChallengeIds = collect([]);
+            $engageChallengeIds = collect([]);
+            $growChallengeIds = collect([]);
+            if (in_array('assess', $challengeType)) {
+                $assessChallengeIds = collect(config('constants.resource_types.assess'));
+            }
+            if (in_array('onboard', $challengeType)) {
+                $onboardChallengeIds = collect(config('constants.resource_types.onboard'));
+            }
+            if (in_array('engage', $challengeType)) {
+                $engageChallengeIds = collect(config('constants.resource_types.engage'));
+            }
+            if (in_array('grow', $challengeType)) {
+                $growChallengeIds = collect(config('constants.resource_types.grow'));
+            }
+            $challengeCollection = new Collection();
+            $challengeCollection = $challengeCollection->concat($assessChallengeIds);
+            $challengeCollection = $challengeCollection->concat($onboardChallengeIds);
+            $challengeCollection = $challengeCollection->concat($engageChallengeIds);
+            $challengeCollection = $challengeCollection->concat($growChallengeIds);
+
+            return ChallengeTypeMode::where(['type_mode' => '0'])->whereIn('value', $challengeCollection)->pluck('challenge_id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
             return false;
         }
     }

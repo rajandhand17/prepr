@@ -10,6 +10,7 @@ use App\Models\MemberManagement;
 use App\Models\PitchTemplate;
 use App\Models\Project;
 use App\Services\Manage\ChallengeSkillsGroupsStackService;
+use App\Services\Manage\ChallengeTypeModeService;
 use App\Services\ProjectService;
 use App\Services\ProjectSubmissionRequirementService;
 use App\Services\UserService;
@@ -163,13 +164,14 @@ class ChallengeService
                     $query->where('user_id', auth('api')->user()->id)->where('is_submitted', '1');
                 });
             }
-            if ($request->has('type') && $request->type) {
-                $challenge_list = $challenge_list->whereHas('challengeType', function ($query) use ($request) {
-                    $query->where('value', config('constants.resource_types.'.$request->type));
-                });
-            }
+
             if ($request->has('challenge_uuid') && !empty($request->challenge_uuid)) {
                 $challenge_list = $challenge_list->where('uuid', $request->challenge_uuid);
+            }
+
+            if ($request->has('type') && !empty($request->type)) {
+                $typeBaseChallengeIds = ChallengeTypeModeService::getChallengeType($request->type);
+                $challenge_list = $challenge_list->whereIn('challenges.id', $typeBaseChallengeIds);
             }
 
             return $challenge_list;
