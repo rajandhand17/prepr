@@ -14,6 +14,7 @@ class OrganizationReportService
         try {
             $data = $organization->challenges_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('members')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
 
@@ -177,6 +178,7 @@ class OrganizationReportService
         try {
             $data = $organization->challenge_paths_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('challengePathProgress')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
 
@@ -202,6 +204,7 @@ class OrganizationReportService
         try {
             $data = $organization->resource_modules_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceProgress')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
 
@@ -227,6 +230,7 @@ class OrganizationReportService
         try {
             $data = $organization->labs()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('members')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
             $metadata = $this->prepareMetaData($data);
@@ -251,6 +255,7 @@ class OrganizationReportService
             $data = $organization
                 ->lab_programs_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('labProgramProgress')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
             $metadata = $this->prepareMetaData($data);
@@ -274,6 +279,7 @@ class OrganizationReportService
         try {
             $data = $organization->resource_collections_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceCollectionProgress')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
             $metadata = $this->prepareMetaData($data);
@@ -297,6 +303,7 @@ class OrganizationReportService
         try {
             $data = $organization->resource_groups_count()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceGroupProgress')
                 ->paginate(config('site-settings.pagination_lab_report_challenge'));
             $metadata = $this->prepareMetaData($data);

@@ -99,7 +99,7 @@ class LabReportService
                 'not_started' => $notStarted,
                 'in_progress' => $inProgress,
                 'completed'   => $completed,
-                'total'       => $lab->members_count,
+                'total'       => $notStarted + $inProgress + $completed,
             ];
         } catch (\Exception $exception) {
             UtilityHelper::logError($exception);
@@ -299,6 +299,7 @@ class LabReportService
         try {
             $data = $lab->challenges()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('members')
                 ->paginate(config('site-settings.pagination_lab_report'));
 
@@ -329,6 +330,7 @@ class LabReportService
         try {
             $data = $lab->resourceModules()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceProgress')
                 ->paginate(config('site-settings.pagination_lab_report'));
 
@@ -359,6 +361,7 @@ class LabReportService
         try {
             $data = $lab->resourceCollections()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceCollectionProgress')
                 ->paginate(config('site-settings.pagination_lab_report'));
 
@@ -389,6 +392,7 @@ class LabReportService
         try {
             $data = $lab->resourceGroups()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceGroupProgress')
                 ->paginate(config('site-settings.pagination_lab_report'));
 
@@ -419,6 +423,7 @@ class LabReportService
         try {
             $data = $lab->challengePaths()
                 ->whereSearchFilter(request()->get('search'))
+                ->where('is_accessible', '1')
                 ->paginate(config('site-settings.pagination_lab_report'));
 
             $metadata = $this->prepareMetaData($data);

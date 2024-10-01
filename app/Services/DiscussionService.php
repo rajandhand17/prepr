@@ -63,6 +63,7 @@ class DiscussionService
     {
         try {
             $attachmentPath = null;
+            $attachmentNames = null;
             $file_upload = $request->file('attachment');
 
             if (isset($file_upload) && !empty($file_upload)) {
@@ -74,6 +75,8 @@ class DiscussionService
                         $file_type = (mb_strpos($discussion_attachment->getMimeType(), 'video') !== false) ? config('constants.file_type.video') : config('constants.file_type.document');
                         $attachmentPath[] = FileUploadHelper::UploadVideoDocToS3($discussion_attachment, 'discussion');
                     }
+
+                    $attachmentNames[] = $discussion_attachment->getClientOriginalName();
                 }
             }
 
@@ -84,6 +87,7 @@ class DiscussionService
             $addComment->module_type = config('constants.discussion_module_type.'.$component);
             $addComment->comments = $request->comment ? $request->comment : null;
             $addComment->attachment = empty($attachmentPath) ? $attachmentPath : json_encode($attachmentPath);
+            $addComment->attachment_names = empty($attachmentNames) ? $attachmentNames : json_encode($attachmentNames);
             $addComment->comment_id = isset($request->comment_id) ? $request->comment_id : null;
             $addComment->save();
             $comment_data = [
