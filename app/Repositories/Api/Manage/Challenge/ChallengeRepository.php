@@ -3,6 +3,7 @@
 namespace App\Repositories\Api\Manage\Challenge;
 
 use App\Helpers\UtilityHelper;
+use App\Jobs\Challenge\SendChallengeAnnouncement;
 use App\Jobs\MixpanelJob;
 use App\Models\Challenge;
 use App\Repositories\Api\Manage\Scorm\ScormRepository;
@@ -674,6 +675,10 @@ class ChallengeRepository implements ChallengeInterface
 
                 if (!$createAnnouncement) {
                     throw new Exception('Failed to create announcement');
+                }
+
+                if ($createAnnouncement->schedule_at == null && $createAnnouncement->status == config('constants.challenge_announcement_send_status.send')) {
+                    dispatch(new SendChallengeAnnouncement($createAnnouncement->id));
                 }
 
                 return [

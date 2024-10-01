@@ -1356,7 +1356,7 @@ class ComponentAssociationService
         }
     }
 
-    public function fetchLabIdsAssociatedChallengeId($challengeId)
+    public static function fetchLabIdsAssociatedChallengeId($challengeId)
     {
         try {
             $fetchLabIdsAssociatedChallengeId = ComponentAssociation::where('challenge_id', $challengeId)->whereNotNull('lab_id')->pluck('lab_id');
