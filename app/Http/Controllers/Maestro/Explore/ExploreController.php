@@ -85,7 +85,6 @@ class ExploreController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $this->construct();
             if ($this->updateExploreDataById($id, $request)) {
                 return redirect()->route('explore.index')->with('success', 'Data has Updated successfully');
             }
@@ -106,7 +105,6 @@ class ExploreController extends Controller
     public function destroy($id)
     {
         try {
-            $this->construct();
             if ($this->deleteExploreDataById($id)) {
                 return response()->json(['status' => 'success', 'message' => 'Record deleted successfully']);
             }

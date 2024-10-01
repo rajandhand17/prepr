@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('challenges:update-challenge-passed-winner-date')->everyMinute();
         $schedule->command('member-manger:send-email')->everyMinute();
         $schedule->command('chargebee-subscription:daily-chronicle-accessed-non-accessed-data')->everyMinute();
+        $schedule->command('challenge:send-challenge-announcement')->everyMinute();
         $schedule->command('module-progress:resource-module-progress-status')->everyThirtyMinutes();
         $schedule->command('module-progress:resource-collection-progress-status')->everyThirtyMinutes();
         $schedule->command('module-progress:resource-group-progress-status')->everyThirtyMinutes();

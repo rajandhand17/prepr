@@ -600,4 +600,17 @@ class UserService
             return false;
         }
     }
+
+    public static function getUserNamesByIds($ids)
+    {
+        try {
+            $fetchusers = User::whereIn('id', $ids)->pluck('username');
+
+            return $fetchusers;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
