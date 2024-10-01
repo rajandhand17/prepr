@@ -167,7 +167,8 @@ class ChallengeReportService
     {
         try {
             $query = $challenge->labPrograms()
-                ->whereSearchFilter(request()->get('keyword'));
+                ->whereSearchFilter(request()->get('keyword'))
+                ->where('is_accessible', '1');
 
             if ($paginate) {
                 $data = $query->paginate(config('site-settings.pagination_per_page'));
@@ -200,6 +201,7 @@ class ChallengeReportService
         try {
             $query = $challenge->resourceModules()
                 ->whereSearchFilter(request()->get('keyword'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceProgress');
 
             if ($paginate) {
@@ -232,6 +234,7 @@ class ChallengeReportService
         try {
             $query = $challenge->resourceCollections()
                 ->whereSearchFilter(request()->get('keyword'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceCollectionProgress');
 
             if ($paginate) {
@@ -265,6 +268,7 @@ class ChallengeReportService
         try {
             $query = $challenge->resourceGroups()
                 ->whereSearchFilter(request()->get('keyword'))
+                ->where('is_accessible', '1')
                 ->withCount('resourceGroupProgress');
 
             if ($paginate) {
