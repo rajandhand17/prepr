@@ -161,4 +161,27 @@ class MessageService
             return false;
         }
     }
+
+    public static function sendAnnouncement(array $data)
+    {
+        try {
+            DB::beginTransaction();
+            $messageFiles = [];
+            $message = ConversationMessage::create([
+                'uuid'            => Randomize::chars(10)->alphanumeric()->unique()->generate(),
+                'conversation_id' => $data['conversation_id'],
+                'message'         => $data['message'],
+                'attachments'     => $messageFiles,
+                'sender_id'       => $data['sent_by'],
+            ]);
+            DB::commit();
+
+            return $message;
+        } catch (Exception $exception) {
+            UtilityHelper::logError($exception);
+            DB::rollBack();
+
+            return false;
+        }
+    }
 }

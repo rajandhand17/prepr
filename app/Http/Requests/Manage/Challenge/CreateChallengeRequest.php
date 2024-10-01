@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Rules\ScormFile;
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,6 +26,7 @@ class CreateChallengeRequest extends FormRequest
      */
     public function rules()
     {
+        $userLocationBasedTime = UtilityHelper::UserLocationBasedDateTime(auth()->user()->preferred_timezone);
         $base_rules = [
             'request_type'                          => 'required|in:draft,publish',
             'is_auto_created'                       => 'required_if:request_type,publish|in:yes,no',
@@ -245,7 +246,7 @@ class CreateChallengeRequest extends FormRequest
         // For challenge restricted timeline
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'restricted') {
             $deadlineDate = !empty($this->input('registration_deadline_date')) ? 'after_or_equal:registration_deadline_date' : 'after:start_date';
-            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['start_date'] = ['required_if:request_type,publish', 'after_or_equal:'.$userLocationBasedTime->toDateTimeString()];
             $base_rules['start_date_description'] = 'nullable';
             $base_rules['registration_deadline_date'] = ['nullable', 'after_or_equal:start_date'];
             $base_rules['registration_deadline_date_description'] = 'nullable';
@@ -257,7 +258,7 @@ class CreateChallengeRequest extends FormRequest
         if ($this->has('timeline_type') && $this->input('timeline_type') == 'flexible') {
             $base_rules['flexible_date_number'] = 'required_if:request_type,publish|numeric';
             $base_rules['flexible_date_duration'] = 'required_if:request_type,publish|in:days,weeks,months';
-            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.Carbon::now()->toDateTimeString()];
+            $base_rules['flexible_expire_deadline'] = ['nullable', 'after_or_equal:'.$userLocationBasedTime->toDateTimeString()];
             $base_rules['automatic_alert'] = 'required_if:request_type,publish|in:day,week';
         }
 

@@ -31,7 +31,6 @@ class SqlCommandExecution extends Command
     {
         try {
             Schema::disableForeignKeyConstraints();
-
             // Step 1: Create a temporary table and update duplicate certificate_numbers
             DB::statement("
                 CREATE TEMPORARY TABLE DuplicateCerts AS
@@ -50,7 +49,7 @@ class SqlCommandExecution extends Command
 
             // Step 2: Update duplicate certificate_number values
             DB::table('user_achievements as ua')
-                ->join('DuplicateCerts as dc', 'ua.id', '=', 'dc.id')
+            ->join('DuplicateCerts as dc', 'ua.id', '=', 'dc.id')
                 ->where('dc.row_num', '>', 1)
                 ->update([
                     'ua.certificate_number' => DB::raw("CONCAT(LEFT(dc.certificate_number, LENGTH(dc.certificate_number) - 3), LPAD(dc.row_num, 3, '0'))"),
@@ -58,13 +57,13 @@ class SqlCommandExecution extends Command
 
             // Step 3: Get the updated results
             $results = DB::table('user_achievements')
-                ->select('id', 'certificate_number')
-                ->whereIn('certificate_number', function ($query) {
-                    $query->select(DB::raw('DISTINCT LEFT(certificate_number, LENGTH(certificate_number) - 3) AS base_cert'))
-                        ->from('user_achievements')
-                        ->groupBy('certificate_number')
-                        ->havingRaw('COUNT(*) > 1');
-                })
+            ->select('id', 'certificate_number')
+            ->whereIn('certificate_number', function ($query) {
+                $query->select(DB::raw('DISTINCT LEFT(certificate_number, LENGTH(certificate_number) - 3) AS base_cert'))
+                ->from('user_achievements')
+                ->groupBy('certificate_number')
+                ->havingRaw('COUNT(*) > 1');
+            })
                 ->orderBy('certificate_number')
                 ->orderBy('id')
                 ->get();
@@ -81,6 +80,11 @@ class SqlCommandExecution extends Command
             }
 
             DB::statement("UPDATE `user_achievements` SET `certificate_number` = '2309050002' WHERE `user_achievements`.`id` = 7756");
+
+            DB::table('challenge_announcement_recipients')->truncate();
+            DB::table('users')->whereNull('preferred_timezone')->update(['preferred_timezone' => 'EST']);
+            DB::statement("ALTER TABLE `users` CHANGE `preferred_timezone` `preferred_timezone` VARCHAR(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'EST'");
+            Schema::enableForeignKeyConstraints();
             $this->info('SQL command executed successfully.');
         } catch (Exception $e) {
             UtilityHelper::logError($e);
