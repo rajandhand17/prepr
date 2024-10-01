@@ -54,7 +54,7 @@ class SendChallengeAnnouncement extends Command
                     $userLocationBasedTime = now(); // Sending using UTC format
                     if ($pendingChallengeAnnouncement->schedule_at < $userLocationBasedTime) {
                         $fetchChallengeDetail = ChallengeService::getChallengeBasedOnSlug($pendingChallengeAnnouncement->slug);
-                        $fetchInvitedChallengeUserIds = $fetchChallengeWinnerAchievementUserIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = $fetchChallengeParticipationAchievementUserIds = collect();
+                        $fetchInvitedChallengeUserIds = $fetchChallengeWinnerAchievementUserIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = $fetchSubmittedProjectUserIds = $fetchChallengeParticipationAchievementUserIds = collect();
                         $getRecipientList = ChallengeAnnouncementRecipient::whereIn('id', $pendingChallengeAnnouncement->to_recipient_ids)->pluck('title')->all();
                         // for Invited Challenge Participants
                         if (in_array('Invited Challenge Participants', $getRecipientList)) {
