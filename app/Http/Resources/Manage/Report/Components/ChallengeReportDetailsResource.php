@@ -52,7 +52,7 @@ class ChallengeReportDetailsResource extends JsonResource
             'sponsors'           => $this->whenCounted('hosts'),
             'submitted_projects' => $this->whenCounted('submitted_projects'),
             'is_pre_build'       => ($this->is_pre_built == '1' ? 'yes' : 'no'),
-            'flexible_date'     => $flexible_date,
+            'flexible_date'      => $flexible_date,
             'component_counts'   => [
                 'labs_count'                 => $this->whenCounted('labs'),
                 'lab_programs_count'         => $this->whenCounted('labPrograms'),
