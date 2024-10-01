@@ -680,6 +680,7 @@ class ChallengeRepository implements ChallengeInterface
                 if ($createAnnouncement->schedule_at == null && $createAnnouncement->status == config('constants.challenge_announcement_send_status.send')) {
                     dispatch(new SendChallengeAnnouncement($createAnnouncement->id));
                 }
+
                 return [
                     'createAnnouncement' => $createAnnouncement,
                 ];

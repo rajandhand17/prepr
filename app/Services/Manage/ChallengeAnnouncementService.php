@@ -14,7 +14,6 @@ use App\Services\Chat\MessageService;
 use App\Services\ProjectService;
 use App\Services\Public\ProjectMemberManagementService;
 use App\Services\UserService;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Schema;
 
@@ -222,7 +221,7 @@ class ChallengeAnnouncementService
                 if ($sendChallengeAnnouncement) {
                     $markAnnouncementCompleted = $this->markAnnouncementCompleted($pendingChallengeAnnouncement->id);
                     if (!$markAnnouncementCompleted) {
-                        throw new Exception('Failed to announcement' . $pendingChallengeAnnouncement->id);
+                        throw new Exception('Failed to announcement'.$pendingChallengeAnnouncement->id);
                     }
                 }
             }
