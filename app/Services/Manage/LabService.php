@@ -34,6 +34,7 @@ class LabService
             $lab_list = Lab::select()->where('organization_id', '=', $organization->id);
 
             $lab_list = self::filterLabList($lab_list, $request);
+
             return $lab_list->paginate(config('site-settings.association_pagination_per_page'));
         } catch (Exception $e) {
             UtilityHelper::logError($e);
@@ -185,13 +186,14 @@ class LabService
         try {
             if (LabChallengeRedeem::where(['is_redeemed' => '1', 'lab_id' => $labId])->whereNotNull('lab_id')->whereIn('lab_id', Lab::pluck('id'))->exists()) {
                 $source = 'redeemed_by_you';
-            }elseif (Lab::where(['id' => $labId, 'user_id' => auth('api')->user()->id])->exists()) {
+            } elseif (Lab::where(['id' => $labId, 'user_id' => auth('api')->user()->id])->exists()) {
                 $source = 'created_by_you';
             } elseif (Lab::where(['id' => $labId, 'is_auto_created' => '1'])->exists()) {
                 $source = 'onboarding_labs';
             } else {
                 $source = 'created_by_organization';
             }
+
             return $source;
         } catch (Exception $e) {
             UtilityHelper::logError($e);

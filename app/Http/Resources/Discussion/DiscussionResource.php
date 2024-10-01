@@ -34,12 +34,26 @@ class DiscussionResource extends JsonResource
             'likes'           => $getLikedByUser,
             'dislikes'        => $getDislikedByUser,
             'by_me'           => $byMe,
-            'attachment'      => $this->attachment,
+            'attachment'      => $this->getAttachments($this->attachment, $this->attachment_names),
             'user_details'    => UserResource::make($this->users),
             'comment_replies' => CommentReplies::collection($this->comments_reply),
             'created_at'      => $this->created_at,
         ];
 
         return $data;
+    }
+
+    private function getAttachments($attachments, $attachment_names)
+    {
+        if (!$attachments) {
+            return [];
+        }
+
+        return array_map(function ($attachment, $name) {
+            return [
+                'name' => $name ?? $attachment,
+                'link' => $attachment,
+            ];
+        }, $attachments, $attachment_names);
     }
 }
