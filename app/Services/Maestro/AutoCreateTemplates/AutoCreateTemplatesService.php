@@ -21,7 +21,7 @@ class AutoCreateTemplatesService
             $getRoleType = Role::where('name', 'like', '%'.$request->role_selected.'%')->first()->id;
 
             $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=>$getRoleType, 'user_type'=>'4'])->pluck($request->plucked);
-             // Rajan why we are picking these from template table not from the lab table? in maestro we were fatching from the lab table.
+            // Rajan why we are picking these from template table not from the lab table? in maestro we were fatching from the lab table.
             switch ($request->plucked) {
                 case 'lab_template_id':
                     $getList = LabMarketplaceService::getList($getPreSelectedLabTemplates, $request->language);
@@ -169,31 +169,31 @@ class AutoCreateTemplatesService
     public static function fetchPreSelectList($request)
     {
         try {
-        $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'user_type'=> $request->role_type_selected])->pluck('lab_template_id')->first();
-        $explodeLabIdsArray= explode(',', $getPreSelectedLabTemplates);
-        $data = [];
-        dd($explodeLabIdsArray);
-        $labs = Lab::whereIn('id', $explodeLabIdsArray)->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
-        $count = 0;
-        dd($labs);
-        foreach ($labs as $key => $title) {
-            $labsr[$count]['id'] = $key;
-            $labsr[$count]['text'] = $title;
-            $count++;
+            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'user_type'=> $request->role_type_selected])->pluck('lab_template_id')->first();
+            $explodeLabIdsArray = explode(',', $getPreSelectedLabTemplates);
+            $data = [];
+            dd($explodeLabIdsArray);
+            $labs = Lab::whereIn('id', $explodeLabIdsArray)->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            $count = 0;
+            dd($labs);
+            foreach ($labs as $key => $title) {
+                $labsr[$count]['id'] = $key;
+                $labsr[$count]['text'] = $title;
+                $count++;
+            }
+            dd($labsr);
+            $inviteInfo = self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
+
+            $data['result'] = $labsr ?? [];
+            $data['invite_info'] = $inviteInfo ?? [];
+            dd($data);
+
+            return  response()->json($data);
+        } catch (Exception $e) {
+            dd($e);
+            UtilityHelper::logError($e);
+
+            return false;
         }
-        dd($labsr);
-        $inviteInfo= self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
-
-        $data['result'] = $labsr ?? [];
-        $data['invite_info'] = $inviteInfo ?? [];
-dd($data);
-        return  response()->json($data);
-    }  catch (Exception $e) {
-        dd($e);
-    UtilityHelper::logError($e);
-
-    return false;
-}
     }
-
 }
