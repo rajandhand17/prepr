@@ -10,8 +10,8 @@ return new class() extends Migration {
      */
     public function up(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->text('value')->change();
+        Schema::table('discussions', function (Blueprint $table) {
+            $table->string('attachment_names')->nullable();
         });
     }
 
@@ -20,8 +20,8 @@ return new class() extends Migration {
      */
     public function down(): void
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->string('value')->change();
+        Schema::table('discussions', function (Blueprint $table) {
+            $table->dropColumn('attachment_names');
         });
     }
 };
