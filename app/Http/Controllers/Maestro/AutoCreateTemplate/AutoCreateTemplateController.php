@@ -17,7 +17,7 @@ class AutoCreateTemplateController extends Controller
         try {
             $roles = $this->getRole();
 
-            return view('maestro.autocreatetemplate.index', compact('roles'));
+            return view('maestro.autocreatetemplate.index1', compact('roles'));
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

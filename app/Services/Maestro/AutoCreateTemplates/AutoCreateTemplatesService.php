@@ -169,28 +169,36 @@ class AutoCreateTemplatesService
     public static function fetchPreSelectList($request)
     {
         try {
-            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'user_type'=> $request->role_type_selected])->pluck('lab_template_id')->first();
-            $explodeLabIdsArray = explode(',', $getPreSelectedLabTemplates);
+            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected])->first();
+            if(!empty($getPreSelectedLabTemplates)){
+                $labIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('lab_template_id')->toArray();
+                $labProgramIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('lab_program_id')->toArray();
+                $challengeIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('challenge_template_id')->toArray();
+                $challengePathIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('challenge_path_id')->toArray();
+                $isInviteStatus = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->first();
+            }
+            $preSelectedComponent['autoCreateTemplate'] = $getPreSelectedLabTemplates;
+            $preSelectedComponent['labIds']             = $labIds;
+            $preSelectedComponent['labProgramIds']      = $labProgramIds;
+            $preSelectedComponent['challengeIds']       = $challengeIds;
+            $preSelectedComponent['challengePathIds']   = $challengePathIds;
+            $preSelectedComponent['isInviteLab']        = $isInviteStatus ? $isInviteStatus->invite_labs : '0';
+            $preSelectedComponent['isInviteChallenge']  = $isInviteStatus ? $isInviteStatus->invite_challenges: '0';
+            dd($preSelectedComponent);
             $data = [];
-            dd($explodeLabIdsArray);
             $labs = Lab::whereIn('id', $explodeLabIdsArray)->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
             $count = 0;
-            dd($labs);
             foreach ($labs as $key => $title) {
                 $labsr[$count]['id'] = $key;
                 $labsr[$count]['text'] = $title;
                 $count++;
             }
-            dd($labsr);
             $inviteInfo = self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
 
             $data['result'] = $labsr ?? [];
             $data['invite_info'] = $inviteInfo ?? [];
-            dd($data);
-
             return  response()->json($data);
         } catch (Exception $e) {
-            dd($e);
             UtilityHelper::logError($e);
 
             return false;

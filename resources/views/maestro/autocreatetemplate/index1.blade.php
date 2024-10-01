@@ -34,7 +34,23 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                @include('maestro/common/language-switcher')
+                                <div class="pull-right">
+                                    <select class="form-control" id="selectlang" onchange="switchLanguage(this.value)">
+                                        @php
+                                        $languages = \App\Models\Language::where('status', 1)->get();
+                                        if(!empty(Session::get('globalLocale'))){
+                                            $selectedLanguage = \Session::get('globalLocale');
+                                        } else {
+                                            $selectedLanguage = 'en';
+                                        }
+                                        @endphp
+                                        @if(!empty($languages))
+                                            @foreach($languages as $key => $lang)
+                                                <option value="{{ $lang->iso }}" @if($lang->iso == $selectedLanguage) selected @endif> {{ $lang->name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
@@ -206,6 +222,61 @@
     @endif
 </script>
 <script>
+// On change role 
+    function changeRoles(role) {
+        const elements = ['#org_type','#clonecheckbox_div','#lab_list_div','#lab_group_list_div','#challenge_list_div','#challenge_group_list_div','#invite_users_div','#invite_lab_div','#invite_challenge_div'];
+
+        elements.forEach(el => $(el).css('display', 'none'));
+
+        $('#lab_list').html('');
+        $('#lab_group_list').html('');
+
+        $('#challenge_group_list').html('');
+        $('#challenge_list').html('');
+
+        $('#clone_lab_chk').prop('checked', false);
+        $('#clone_challenge_chk').prop('checked', false);
+
+        $('#clonecheckbox_div').css('display', 'flex');
+        $('#user_type').css('display', 'none');
+
+        switch (role) {
+            case "2":
+                $('#org_type').css('display', 'block');
+                break;
+            case "1":
+            case "3":
+            case "4":
+            case "5":
+                break;
+            case "6":
+                $('#invite_users_div').css('display', 'flex');
+                $('#user_type').css('display', 'flex');
+                break;
+            default:
+                break;
+        }
+
+        role_selected = $("#role").val();
+        role_type_selected = null;
+
+        if(role_selected == "2" ){
+            role_type_selected= $("#org_type").val();
+        }
+
+        if(role_selected == "6" ){
+            role_type_selected= $("#user_type").val();
+        }
+
+        selectedLanguage = $("#selectlang").val();
+        alert(role_selected);
+        alert(role_type_selected);
+        alert(selectedLanguage);
+
+        getPreSelectList(role_selected, role_type_selected,selectedLanguage);
+    }
+
+
     var challengecheckbox = document.getElementById('clone_challenge_chk');
 
     var checkbox = document.getElementById('clone_lab_chk');
@@ -251,59 +322,21 @@
         });
     }
 
-    function changeRoles(role) {
-        const elements = [
-            '#org_type',
-            '#clonecheckbox_div',
-            '#lab_list_div',
-            '#lab_group_list_div',
-            '#challenge_list_div',
-            '#challenge_group_list_div',
-            '#invite_users_div',
-            '#invite_lab_div',
-            '#invite_challenge_div'
-        ];
-        // Hide all elements initially
-        elements.forEach(el => $(el).css('display', 'none'));
-        // Clear lists
-        $('#lab_list').html('');
-        $('#lab_group_list').html('');
-        $('#challenge_group_list').html('');
-        $('#challenge_list').html('');
-        // Reset checkboxes
-        $('#clone_lab_chk').prop('checked', false);
-        $('#clone_challenge_chk').prop('checked', false);
-        // Show the clonecheckbox_div by default
-        $('#clonecheckbox_div').css('display', 'flex');
-        $('#user_type').css('display', 'none');
-        // Handle role-specific logic
-        switch (role) {
-            case "2":
-                $('#org_type').css('display', 'block');
-                break;
-            case "1":
-            case "3":
-            case "4":
-            case "5":
-                // These roles only need the clonecheckbox_div which is already displayed
-                break;
-            case "6":
-                $('#invite_users_div').css('display', 'flex');
-                $('#user_type').css('display', 'flex');
-                break;
-            default:
-                break;
-        }
-        role_selected= $("#role").val();
-        role_type_selected=null;
-        if(role_selected=="2"){
-            role_type_selected= $("#org_type").val();
-        }
-        if(role_selected=="6"){
-            role_type_selected= $("#user_type").val();
-        }
-        getPreSelectList(role_selected, role_type_selected);
-    }
+    $('#org_type').change(function(){
+         role_type_selected = $( "#org_type option:selected" ).val()
+         if(role_type_selected!= ''){
+            $('#clonecheckbox_div').css('display','block')
+            role_selected= $("#role").val();
+            role_type_selected=null;
+            if(role_selected=="2"){
+                role_type_selected= $("#org_type").val();
+            }
+            if(role_selected=="6"){
+                role_type_selected= $("#user_type").val();
+            }
+            getPreSelectList(role_selected, role_type_selected);
+         }
+    });
 
 
     $('.clonebtn').click(function(){
@@ -369,7 +402,7 @@
         }
     })
 
-    function getPreSelectList(role_selected, role_type_selected)
+    function getPreSelectList(role_selected, role_type_selected,selectedLanguage)
 {
     $.ajax({
             type:'GET',
