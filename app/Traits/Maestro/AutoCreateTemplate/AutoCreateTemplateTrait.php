@@ -50,6 +50,5 @@ trait AutoCreateTemplateTrait
 
             return false;
         }
-
     }
 }
