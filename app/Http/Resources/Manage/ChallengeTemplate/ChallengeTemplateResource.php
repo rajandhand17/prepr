@@ -254,8 +254,8 @@ class ChallengeTemplateResource extends JsonResource
         }
 
         $is_redeemed = 'yes';
-        $organizationCheck = $this->organization->uuid;
-        if ($request->has('organization_id')) {
+        $organizationCheck = isset($this->organization->uuid) ? $this->organization->uuid : null;
+        if ($request->has('organization_id') && $organizationCheck != null) {
             $organizationCheck = $request->organization_id;
         }
 
@@ -299,8 +299,9 @@ class ChallengeTemplateResource extends JsonResource
             'id'                            => $this->uuid,
             'language'                      => $this->language,
             'user'                          => UserService::joinName($this->user->first_name, $this->user->last_name),
-            'organization_id'               => $this->organization->uuid,
-            'organization'                  => $this->organization->title,
+            'organization_id'               => isset($this->organization->uuid) ? $this->organization->uuid : null,
+            'organization'                  => isset($this->organization->title) ? $this->organization->title : null,
+            'organization_slug'             => isset($this->organization->slug) ? $this->organization->slug : null,
             'hosted_by'                     => OrganizationHostResource::make($this->organization),
             'category_id'                   => $category_id,
             'category'                      => $category,
