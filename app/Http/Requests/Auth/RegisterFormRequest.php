@@ -33,7 +33,6 @@ class RegisterFormRequest extends FormRequest
             'password_confirmation'  => 'required_if:sso_registration,==,no|same:password|nullable',
             'email'                  => 'required|email|max:50|unique:users,email',
             'user_type'              => 'required|in:learner,job_seeker,employee,educator,employer,mentor,enterprise,small,startup,community,ngo,government,educational,others',
-            'purpose'                => 'required|in:looking_mentor,looking_teams,looking_teammates,looking_invest,looking_employees,looking_employers,looking_to_build_skills,looking_to_learn,looking_to_solve_problems,looking_to_create_social_impact,looking_for_investors',
             'phone_number'           => 'nullable|numeric|unique:users,phone_number|regex:/^\+?(\d{1,3})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/',
             'country_code'           => 'nullable|numeric',
             'register_type'          => 'required|in:organization,user',
