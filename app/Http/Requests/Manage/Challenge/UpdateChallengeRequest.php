@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Manage\Challenge;
 
+use App\Helpers\UtilityHelper;
 use App\Rules\ScormFile;
 use App\Services\Manage\ChallengeService;
 use Illuminate\Contracts\Validation\Validator;

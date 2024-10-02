@@ -10,9 +10,9 @@ use App\Notifications\SendChallengeAnnouncementNotification;
 use App\Services\AchievementService;
 use App\Services\Chat\ConversationService;
 use App\Services\Chat\MessageService;
-use App\Services\Maestro\ComponentAssociationService;
 use App\Services\Manage\ChallengeAnnouncementService;
 use App\Services\Manage\ChallengeService;
+use App\Services\Manage\ComponentAssociationService;
 use App\Services\Manage\MemberManagementService;
 use App\Services\Manage\OrganizationService;
 use App\Services\ProjectService;
@@ -46,13 +46,14 @@ class SendChallengeAnnouncement extends Command
             $this->error('Challenge announcement command initiated');
             $fetchPendingChallengeAnnouncementLists = ChallengeAnnouncement::select('challenge_announcements.id', 'challenge_announcements.challenge_id', 'challenge_announcements.subject', 'challenge_announcements.to_recipient_ids', 'challenge_announcements.sent_by', 'challenge_announcements.description', 'challenge_announcements.schedule_at', 'challenge_announcements.status', 'challenge_announcements.sent_status', 'challenges.title', 'challenges.slug', 'challenges.organization_id')
             ->where('sent_status', '0')
+            ->whereNotNull('schedule_at')
             ->join('challenges', 'challenge_announcements.challenge_id', '=', 'challenges.id')
             ->get();
 
             if ($fetchPendingChallengeAnnouncementLists->isNotEmpty()) {
                 foreach ($fetchPendingChallengeAnnouncementLists as $pendingChallengeAnnouncement) {
-                    $userLocationBasedTime = now(); // Sending using UTC format
-                    if ($pendingChallengeAnnouncement->schedule_at < $userLocationBasedTime) {
+                    $currentLocationBasedTime = now(); // Sending using UTC format
+                    if ($pendingChallengeAnnouncement->schedule_at < $currentLocationBasedTime) {
                         $fetchChallengeDetail = ChallengeService::getChallengeBasedOnSlug($pendingChallengeAnnouncement->slug);
                         $fetchInvitedChallengeUserIds = $fetchChallengeWinnerAchievementUserIds = $challengeFollowersIds = $fetchAutoAcceptedEmailsBasedData = $fetchInvitedLabUserIds = $fetchAssociatedProjectUserIds = $fetchSubmittedProjectUserIds = $fetchChallengeParticipationAchievementUserIds = collect();
                         $getRecipientList = ChallengeAnnouncementRecipient::whereIn('id', $pendingChallengeAnnouncement->to_recipient_ids)->pluck('title')->all();
@@ -86,7 +87,7 @@ class SendChallengeAnnouncement extends Command
 
                         // for Associated Lab Users
                         if (in_array('Associated Lab Users', $getRecipientList)) {
-                            $fetchLabAssociatedToChallenge = ComponentAssociationService::getChallengeAssociatedLab($fetchChallengeDetail);
+                            $fetchLabAssociatedToChallenge = ComponentAssociationService::fetchLabIdsAssociatedChallengeId($fetchChallengeDetail->id);
                             if ($fetchLabAssociatedToChallenge->isNotEmpty()) {
                                 $moduleType = config('constants.module_component_type.lab');
                                 $fetchAcceptedLabMembers = MemberManagementService::totalActiveMembersCountBasedOnModuleIds($fetchLabAssociatedToChallenge, $moduleType);
