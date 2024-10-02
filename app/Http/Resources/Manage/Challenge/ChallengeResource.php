@@ -420,7 +420,7 @@ class ChallengeResource extends JsonResource
 
         if ($isActive === 'yes') {
             // check challenge is started for user to participate
-            if ($challenge_timelines['timeline_type'] === 'restricted') {
+            if ($challenge_timelines && $challenge_timelines['timeline_type'] === 'restricted') {
                 $checkChallengeProjectCreationEnabled = ChallengeService::checkChallengeProjectCreationEnabled($challenge_timelines, auth()->user());
                 if ($checkChallengeProjectCreationEnabled != true) {
                     $isActive = 'no';
