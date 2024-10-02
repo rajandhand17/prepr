@@ -4,9 +4,7 @@ namespace App\Console\Commands\OldDataMigration;
 
 use App\Helpers\UtilityHelper;
 use App\Models\AutoCreateTemplate as AutoCreateTemplateTable;
-use Carbon\Carbon;
 use DB;
-use HiFolks\RandoPhp\Randomize;
 use Illuminate\Console\Command;
 
 class AutoCreateTemplate extends Command
@@ -47,34 +45,34 @@ class AutoCreateTemplate extends Command
             DB::beginTransaction();
 
             $autoCreateTemplateData = DB::connection('mysql2')->table('auto_create_templates')->get();
-            if(!empty($autoCreateTemplateData)){
-                foreach($autoCreateTemplateData as $autoCreateTemplate){
+            if (!empty($autoCreateTemplateData)) {
+                foreach ($autoCreateTemplateData as $autoCreateTemplate) {
                     $roleType = '';
-                    if(!empty($autoCreateTemplate->role_type)){
+                    if (!empty($autoCreateTemplate->role_type)) {
                         switch ($autoCreateTemplate->role_type) {
                             case 'free_organisation_manager':
                                 $roleType = 'organization_manager';
-                              break;
+                                break;
                             case 'organisation_manager':
                                 $roleType = 'organization_owner';
-                              break;
+                                break;
                             case 'org_lab_manager':
                                 $roleType = 'lab_manager';
-                              break;
+                                break;
                             case 'org_challenge_manager':
                                 $roleType = 'challenge_manager';
-                              break;
+                                break;
                             case 'org_resource_manager':
                                 $roleType = 'resource_manager';
-                              break;
+                                break;
                             case 'user':
                                 $roleType = 'user';
-                              break;
+                                break;
                             default:
                                 $roleType = $autoCreateTemplate->role_type;
                         }
                     }
-                    if(!empty($roleType)){
+                    if (!empty($roleType)) {
                         $data = [
                             'language'            => $autoCreateTemplate->language,
                             'role_type'           => $roleType,
@@ -87,7 +85,7 @@ class AutoCreateTemplate extends Command
                             'invite_labs'         => $autoCreateTemplate->invite_labs,
                             'invite_challenges'   => $autoCreateTemplate->invite_challenges,
                         ];
-    
+
                         AutoCreateTemplateTable::create($data);
                     }
                 }
