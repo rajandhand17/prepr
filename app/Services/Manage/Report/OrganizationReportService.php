@@ -16,7 +16,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('members')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
 
             $metadata = $this->prepareMetaData($data);
 
@@ -180,7 +180,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('challengePathProgress')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
 
             $metadata = $this->prepareMetaData($data);
 
@@ -206,7 +206,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('resourceProgress')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
 
             $metadata = $this->prepareMetaData($data);
 
@@ -232,7 +232,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('members')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
             $metadata = $this->prepareMetaData($data);
             if (!$metadata) {
                 return false;
@@ -257,7 +257,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('labProgramProgress')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
             $metadata = $this->prepareMetaData($data);
             if (!$metadata) {
                 return false;
@@ -281,7 +281,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('resourceCollectionProgress')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
             $metadata = $this->prepareMetaData($data);
             if (!$metadata) {
                 return false;
@@ -305,7 +305,7 @@ class OrganizationReportService
                 ->whereSearchFilter(request()->get('search'))
                 ->where('is_accessible', '1')
                 ->withCount('resourceGroupProgress')
-                ->paginate(config('site-settings.pagination_lab_report_challenge'));
+                ->paginate(config('site-settings.pagination_lab_report'));
             $metadata = $this->prepareMetaData($data);
             if (!$metadata) {
                 return false;
