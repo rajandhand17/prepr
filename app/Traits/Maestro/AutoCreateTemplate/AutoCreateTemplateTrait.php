@@ -4,7 +4,6 @@ namespace App\Traits\Maestro\AutoCreateTemplate;
 
 use App\Helpers\UtilityHelper;
 use App\Services\Maestro\AutoCreateTemplates\AutoCreateTemplatesService;
-use App\Services\Manage\RolesService;
 
 trait AutoCreateTemplateTrait
 {
