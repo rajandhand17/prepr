@@ -4,8 +4,18 @@ use App\Http\Controllers\Maestro\AutoCreateTemplate\AutoCreateTemplateController
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['web', 'auth-check']], function () {
-    Route::resource('auto-create', AutoCreateTemplateController::class);
-    Route::post('clone-module', [AutoCreateTemplateController::class, 'cloneModule'])->name('cloneInfo');
-    Route::post('get-module-list', [AutoCreateTemplateController::class, 'getModuleList'])->name('getModuleList');
-    Route::get('getPreSelectList', [AutoCreateTemplateController::class, 'getPreSelectList'])->name('getPreSelectList');
+    Route::get('auto-create', [AutoCreateTemplateController::class, 'index'])->name('auto-create.index');
+    Route::post('auto-create-update', [AutoCreateTemplateController::class, 'createUpdate'])->name('createUpdate');
+    Route::post('changePrivacyOfLab', [AutoCreateTemplateController::class, 'changePrivacyOfLab'])->name('changePrivacyOfLab');
+    Route::post('changePrivacyOfChallenge', [AutoCreateTemplateController::class, 'changePrivacyOfChallenge'])->name('changePrivacyOfChallenge');
+    Route::post('getCloneResult', [AutoCreateTemplateController::class, 'getCloneResult'])->name('getCloneResult');
+    Route::post('fetchLabAndChallengeDetails', [AutoCreateTemplateController::class, 'fetchLabAndChallengeDetails'])->name('fetchLabAndChallengeDetails');
+    Route::get('fetchLabList', [AutoCreateTemplateController::class, 'fetchLabList'])->name('fetchLabList');
+    Route::get('fetchChallengeList', [AutoCreateTemplateController::class, 'fetchChallengeList'])->name('fetchChallengeList');
+    Route::get('fetchChallengeGroupList', [AutoCreateTemplateController::class, 'fetchChallengeGroupList'])->name('fetchChallengeGroupList');
+    Route::post('getPreSelectLabList', [AutoCreateTemplateController::class, 'getPreSelectLabList'])->name('getPreSelectLabList');
+    Route::post('getPreSelectedChallengeList', [AutoCreateTemplateController::class, 'getPreSelectedChallengeList'])->name('getPreSelectedChallengeList');
+    Route::post('getPreSelectLabGroupList', [AutoCreateTemplateController::class, 'getPreSelectLabGroupList'])->name('getPreSelectLabGroupList');
+    Route::post('getPreSelectChallengeGroupList', [AutoCreateTemplateController::class, 'getPreSelectChallengeGroupList'])->name('getPreSelectChallengeGroupList');
+    Route::get('fetchLabGroupList', [AutoCreateTemplateController::class, 'fetchLabGroupList'])->name('fetchLabGroupList');
 });

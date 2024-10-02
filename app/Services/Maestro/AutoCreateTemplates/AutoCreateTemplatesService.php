@@ -5,92 +5,78 @@ namespace App\Services\Maestro\AutoCreateTemplates;
 use App\Helpers\UtilityHelper;
 use App\Models\AutoCreateTemplate;
 use App\Models\Lab;
+use App\Models\Challenge;
+use App\Models\ChallengePath;
 use App\Models\Role;
-use App\Services\Maestro\ChallengePathService;
-use App\Services\Maestro\ChallengeTemplateService;
-use App\Services\Maestro\LabMarketplaceService;
-use App\Services\Maestro\LabProgramService;
-use App\Services\Maestro\ProjectService;
+use App\Models\LabProgram;
 use Exception;
 
 class AutoCreateTemplatesService
 {
-    public static function getList($request)
+    public static function createUpdateAutoTemplate($request)
     {
         try {
-            $getRoleType = Role::where('name', 'like', '%'.$request->role_selected.'%')->first()->id;
+            if(!empty($request->selected_role)){
 
-            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=>$getRoleType, 'user_type'=>'4'])->pluck($request->plucked);
-            // Rajan why we are picking these from template table not from the lab table? in maestro we were fatching from the lab table.
-            switch ($request->plucked) {
-                case 'lab_template_id':
-                    $getList = LabMarketplaceService::getList($getPreSelectedLabTemplates, $request->language);
-                    break;
-                case 'challenge_template_id':
-                    $getList = ChallengeTemplateService::getList($getPreSelectedLabTemplates, $request->language);
-                    break;
-                case 'project_id':
-                    $getList = ProjectService::getList($getPreSelectedLabTemplates, $request->language);
-                    break;
-                case 'lab_program_id':
-                    $getList = LabProgramService::getList($getPreSelectedLabTemplates, $request->language);
-                    break;
-                case 'challenge_path_id':
-                    $getList = ChallengePathService::getList($getPreSelectedLabTemplates, $request->language);
-                    break;
-                default:
-                    $getList = '';
-                    break;
+           
+            if ($request->sdc_lab== 'true') {
+                AutoCreateTemplate::updateOrCreate(
+                    ['role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected],
+                    ['language'=>$request->selected_language,'role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected,'lab_id'=> $request->selected_lab_ids, 'lab_group_id'=> $request->selected_group_lab_ids,'invite_labs'=>$request->invite_lab]
+                );
             }
-            if ($getList !== '') {
-                $request->language = 'en';
-                $count = 0;
-                $data = [];
-                $labsr = [];
-                foreach ($getList as $key => $title) {
-                    $labsr[$count]['id'] = $key;
-                    $labsr[$count]['text'] = $title;
-                    $count++;
-                }
-                $data['result'] = $labsr ?? [];
-
-                return $data;
+            if ($request->sdc_lab== 'false') {
+                AutoCreateTemplate::updateOrCreate(
+                    ['role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected],
+                    ['language'=>$request->selected_language,'role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected,'lab_id'=> null, 'lab_group_id'=> null,'invite_labs'=> '0']
+                );
             }
+            if ($request->sdc_challenge== 'true') {
+                AutoCreateTemplate::updateOrCreate(
+                    ['role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected],
+                    ['language'=>$request->selected_language,'role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected,'challenge_id'=> $request->selected_challenge_ids,'challenge_group_id'=> $request->selected_group_challenge_ids,'invite_challenges'=>$request->invite_challenge]
+                );
+            }
+            if ($request->sdc_challenge== 'false') {
+                AutoCreateTemplate::updateOrCreate(
+                    ['role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected],
+                    ['language'=>$request->selected_language,'role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected,'challenge_id'=> null,'challenge_group_id'=> null,'invite_challenges'=> '0']
+                );
+            }
+            if ($request->sdc_lab== 'false' && $request->sdc_challenge== 'false') {
+                AutoCreateTemplate::updateOrCreate(
+                    ['role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected],
+                    ['language'=>$request->selected_language,'role_type'=> $request->selected_role,'role_user_type'=> $request->role_user_type_slected,'lab_id'=> null, 'lab_group_id'=> null,'invite_labs'=>'0','challenge_id'=> null,'challenge_group_id'=> null,'invite_challenges'=> '0']
+                );
+            }
+            return true;
+        } 
+        return false;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
-            return false;
-        } catch (\Exception $e) {
             return false;
         }
     }
 
-    public static function fetchModuleList($request)
+    public static function getPreSelectLabList($request)
     {
         try {
-            $modules = [];
-            $data = [];
-            switch ($request->module) {
-                case 'lab_template':
-                    $modules = LabMarketplaceService::getLabMarketplaceList($request);
-                    break;
-                case 'lab_program':
-                    $modules = LabProgramService::getLabProgramList($request);
-                    break;
-                case 'challenge_template':
-                    $modules = ChallengeTemplateService::getChallengesTemplateList($request);
-                    break;
-                case 'challenge_path':
-                    $modules = ChallengePathService::getChallengePathList($request);
-                    break;
-            }
+            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('lab_id')->first();
+            $explodeLabIdsArray= explode(',', $getPreSelectedLabTemplates);
 
+            $data = [];
+            $labs = Lab::whereIn('id', $explodeLabIdsArray)->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
             $count = 0;
-            if (!empty($modules)) {
-                foreach ($modules as $key => $title) {
-                    $data[$count]['id'] = $key;
-                    $data[$count]['title'] = $title;
-                    $count++;
-                }
+            foreach ($labs as $key => $title) {
+                $labsr[$count]['id'] = $key;
+                $labsr[$count]['text'] = $title;
+                $count++;
             }
+            $inviteInfo= self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
+
+            $data['result'] = $labsr ?? [];
+            $data['invite_info'] = $inviteInfo ?? [];
 
             return  response()->json($data);
         } catch (Exception $e) {
@@ -100,47 +86,175 @@ class AutoCreateTemplatesService
         }
     }
 
-    public static function cloneModule($request)
+    public static function getPreSelectedChallengeList($request)
     {
         try {
-            $labTemplateIds = [];
-            $challengeTemplateId = [];
-            $labProgramId = [];
-            $challengePathId = [];
-            if (isset($request->selected_lab_ids) && !empty($request->selected_lab_ids)) {
-                $labTemplateIds = explode(',', $request->selected_lab_ids);
+            $getPreSelectedChallengeTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('challenge_id')->first();
+            $explodeChallengeIdsArray= explode(',', $getPreSelectedChallengeTemplates);
+
+            $data = [];
+            $challenges = Challenge::whereIn('id', $explodeChallengeIdsArray)->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            $count = 0;
+            foreach ($challenges as $key => $title) {
+                $challenegsr[$count]['id'] = $key;
+                $challenegsr[$count]['text'] = $title;
+                $count++;
             }
-            if (isset($request->selected_challenge_ids) && !empty($request->selected_challenge_ids)) {
-                $challengeTemplateId = explode(',', $request->selected_challenge_ids);
+            $inviteInfo= self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
+
+            $data['result'] = $challenegsr ?? [];
+            $data['invite_info'] = $inviteInfo ?? [];
+
+            return  response()->json($data);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+
+    public static function fetchLabList($request)
+    {
+        $searched = $request->search;
+        try {
+            $data = [];
+            if (!empty($searched)) {
+                $labs = Lab::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->where('title', 'like', '%' . $searched . '%')->pluck('title', 'id')->toArray();
+            } else {
+                $labs = Lab::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->pluck('title', 'id')->toArray();
             }
-            if (isset($request->selected_group_challenge_ids) && !empty($request->selected_group_challenge_ids)) {
-                $challengePathId = explode(',', $request->selected_group_challenge_ids);
+            $count = 0;
+            foreach ($labs as $key => $title) {
+                $labsr[$count]['id'] = $key;
+                $labsr[$count]['text'] = $title;
+                $count++;
             }
-            if (isset($request->selected_group_lab_ids) && !empty($request->selected_group_lab_ids)) {
-                $labProgramId = explode(',', $request->selected_group_lab_ids);
+            $data['result'] = $labsr;
+            return  response()->json($data);
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+
+
+    public static function fetchChallengeList($request)
+    {
+        $searched = $request->search;
+        try {
+            $data = [];
+            if (!empty($searched)) {
+                $challenges = Challenge::orderBy('id', 'DESC')->where('language', $request->language)->where('privacy', '0')->where('title', 'like', '%' . $searched . '%')->pluck('title', 'id')->toArray();
+            } else {
+                $challenges = Challenge::orderBy('id', 'DESC')->where('language', $request->language)->where('privacy', '0')->pluck('title', 'id')->toArray();
             }
-            $arrays = [$labTemplateIds, $challengeTemplateId, $labProgramId, $challengePathId];
-            $maxArray = array_reduce($arrays, function ($max, $array) {
-                return count($array) > count($max) ? $array : $max;
-            }, []);
-            $maxCount = count($maxArray);
-            $autoCreateTemplate = AutoCreateTemplate::where(['role_type'=>$request->selected_role, 'user_type'=>$request->role_user_type_slected])->delete();
-            for ($i = 0; $i < $maxCount; $i++) {
-                $autoCreateTemplate = new AutoCreateTemplate();
-                $autoCreateTemplate->role_type = $request->selected_role;
-                $autoCreateTemplate->user_type = $request->role_user_type_slected;
-                $autoCreateTemplate->lab_template_id = isset($labTemplateIds[$i]) ? $labTemplateIds[$i] : null;
-                $autoCreateTemplate->challenge_template_id = isset($challengeTemplateId[$i]) ? $challengeTemplateId[$i] : null;
-                $autoCreateTemplate->lab_program_id = isset($labProgramId[$i]) ? $labProgramId[$i] : null;
-                $autoCreateTemplate->challenge_path_id = isset($challengePathId[$i]) ? $challengePathId[$i] : null;
-                $autoCreateTemplate->invite_labs = $request->invite_lab;
-                $autoCreateTemplate->invite_challenges = $request->invite_challenge;
-                if (!$autoCreateTemplate->save()) {
-                    return false;
-                }
+            $count = 0;
+            foreach ($challenges as $key => $title) {
+                $challengeSr[$count]['id'] = $key;
+                $challengeSr[$count]['text'] = $title;
+                $count++;
+            }
+            $data['result'] = $challengeSr;
+            return  response()->json($data);
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public static function fetchChallengeGroupList($request)
+    {
+        $searched = $request->search;
+        try {
+            $data = [];
+            if (!empty($searched)) {
+                $challengeGroups= ChallengePath::where('language', $request->language)->where('privacy', '0')->where('title', 'like', '%' . $searched . '%')->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            } else {
+                $challengeGroups= ChallengePath::where('language', $request->language)->where('privacy', '0')->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            }
+            $count = 0;
+            foreach ($challengeGroups as $key => $title) {
+                $challengeGroupSr[$count]['id'] = $key;
+                $challengeGroupSr[$count]['text'] = $title;
+                $count++;
+            }
+            $data['result'] = $challengeGroupSr;
+            return  response()->json($data);
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public static function fetchLabGroupList($request)
+    {
+        $searched = $request->search;
+        try {
+            $data = [];
+            if (!empty($searched)) {
+                $labGroups = LabProgram::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->where('title', 'like', '%' . $searched . '%')->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            } else {
+                $labGroups = LabProgram::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            }
+            $count = 0;
+            foreach ($labGroups as $key => $title) {
+                $labGroupSr[$count]['id'] = $key;
+                $labGroupSr[$count]['text'] = $title;
+                $count++;
+            }
+            $data['result'] = $labGroupSr;
+            return  response()->json($data);
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => $e->getMessage()]);
+        }
+    }
+
+
+    public static function getPreSelectLabGroupList($request)
+    {
+        try {
+            $getPreSelectedLabGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('lab_group_id')->first();
+            $explodeLabGroupIdsArray= explode(',', $getPreSelectedLabGroupTemplates);
+
+            $data = [];
+            $labGroups = LabProgram::whereIn('id', $explodeLabGroupIdsArray)->where('privacy', '0')->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            $count = 0;
+            foreach ($labGroups as $key => $title) {
+                $labsr[$count]['id'] = $key;
+                $labsr[$count]['text'] = $title;
+                $count++;
             }
 
-            return true;
+            $data['result'] = $labsr ?? [];
+
+            return  response()->json($data);
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+
+    public static function getPreSelectChallengeGroupList($request)
+    {
+        try {
+            $getPreSelectedChallengeGroupTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected, 'role_user_type'=> $request->role_type_selected])->pluck('challenge_group_id')->first();
+            $explodeChallengeGroupIdsArray= explode(',', $getPreSelectedChallengeGroupTemplates);
+
+            $data = [];
+            $challengeGroups = ChallengePath::whereIn('id', $explodeChallengeGroupIdsArray)->where('privacy', '0')->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
+            $count = 0;
+            foreach ($challengeGroups as $key => $title) {
+                $challengesr[$count]['id'] = $key;
+                $challengesr[$count]['text'] = $title;
+                $count++;
+            }
+
+            $data['result'] = $challengesr ?? [];
+
+            return  response()->json($data);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
@@ -153,51 +267,13 @@ class AutoCreateTemplatesService
         try {
             $data = [];
             $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $roleSelected, 'role_user_type'=> $roleTypeSelected])->first();
+
             if ($getPreSelectedLabTemplates !== null) {
-                $data['invite_labs'] = $getPreSelectedLabTemplates->invite_labs;
-                $data['invite_challenges'] = $getPreSelectedLabTemplates->invite_challenges;
+                $data['invite_labs']= $getPreSelectedLabTemplates->invite_labs;
+                $data['invite_challenges']= $getPreSelectedLabTemplates->invite_challenges;
             }
 
             return $data;
-        } catch (Exception $e) {
-            UtilityHelper::logError($e);
-
-            return false;
-        }
-    }
-
-    public static function fetchPreSelectList($request)
-    {
-        try {
-            $getPreSelectedLabTemplates = AutoCreateTemplate::where(['role_type'=> $request->role_selected])->first();
-            if(!empty($getPreSelectedLabTemplates)){
-                $labIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('lab_template_id')->toArray();
-                $labProgramIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('lab_program_id')->toArray();
-                $challengeIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('challenge_template_id')->toArray();
-                $challengePathIds = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->pluck('challenge_path_id')->toArray();
-                $isInviteStatus = AutoCreateTemplate::where(['role_type'=> $getPreSelectedLabTemplates->role_type])->first();
-            }
-            $preSelectedComponent['autoCreateTemplate'] = $getPreSelectedLabTemplates;
-            $preSelectedComponent['labIds']             = $labIds;
-            $preSelectedComponent['labProgramIds']      = $labProgramIds;
-            $preSelectedComponent['challengeIds']       = $challengeIds;
-            $preSelectedComponent['challengePathIds']   = $challengePathIds;
-            $preSelectedComponent['isInviteLab']        = $isInviteStatus ? $isInviteStatus->invite_labs : '0';
-            $preSelectedComponent['isInviteChallenge']  = $isInviteStatus ? $isInviteStatus->invite_challenges: '0';
-            dd($preSelectedComponent);
-            $data = [];
-            $labs = Lab::whereIn('id', $explodeLabIdsArray)->where('language', $request->language)->orderBy('id', 'DESC')->pluck('title', 'id')->toArray();
-            $count = 0;
-            foreach ($labs as $key => $title) {
-                $labsr[$count]['id'] = $key;
-                $labsr[$count]['text'] = $title;
-                $count++;
-            }
-            $inviteInfo = self::getInviteUserInfo($request->role_selected, $request->role_type_selected);
-
-            $data['result'] = $labsr ?? [];
-            $data['invite_info'] = $inviteInfo ?? [];
-            return  response()->json($data);
         } catch (Exception $e) {
             UtilityHelper::logError($e);
 
