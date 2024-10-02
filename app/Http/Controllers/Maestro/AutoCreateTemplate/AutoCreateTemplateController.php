@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Maestro\AutoCreateTemplate;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Traits\Maestro\AutoCreateTemplate\AutoCreateTemplateTrait;
 use App\Services\Maestro\AutoCreateTemplates\AutoCreateTemplatesService;
+use App\Traits\Maestro\AutoCreateTemplate\AutoCreateTemplateTrait;
 use Exception;
+use Illuminate\Http\Request;
 
 class AutoCreateTemplateController extends Controller
 {
@@ -24,9 +24,10 @@ class AutoCreateTemplateController extends Controller
     public function createUpdate(Request $request)
     {
         try {
-            if($this->createUpdateAutoTemplate($request)){
+            if ($this->createUpdateAutoTemplate($request)) {
                 return redirect()->back()->with(['success' => 'Auto-create template process completed successfully.']);
             }
+
             return redirect()->back()->with(['error' => 'Auto-create template process fail please select role and try again.']);
         } catch (Exception $e) {
             return redirect()->back()->with(['error' => $e->getMessage()]);
