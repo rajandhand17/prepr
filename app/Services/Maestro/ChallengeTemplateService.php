@@ -145,21 +145,21 @@ class ChallengeTemplateService
         }
     }
 
-    // public static function getChallengesTemplateList($request)
-    // {
-    //     try {
-    //         $searched = $request->search;
-    //         $modules = ChallengeTemplate::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
-    //         if (!empty($searched)) {
-    //             $modules = $modules->where('title', 'like', '%'.$searched.'%');
-    //         }
-    //         $modules = $modules->pluck('title', 'id');
+    public static function getChallengesTemplateList($request)
+    {
+        try {
+            $searched = $request->search;
+            $modules = ChallengeTemplate::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
+            if (!empty($searched)) {
+                $modules = $modules->where('title', 'like', '%'.$searched.'%');
+            }
+            $modules = $modules->pluck('title', 'id');
 
-    //         return $modules;
-    //     } catch (Exception $e) {
-    //         UtilityHelper::logError($e);
+            return $modules;
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
-    //         return false;
-    //     }
-    // }
+            return false;
+        }
+    }
 }

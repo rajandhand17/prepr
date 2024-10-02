@@ -102,20 +102,20 @@ class LabMarketplaceService
         }
     }
 
-    // public static function getLabMarketplaceList($request)
-    // {
-    //     try {
-    //         $searched = $request->search;
-    //         $modules = LabMarketplace::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
-    //         if (!empty($searched)) {
-    //             $modules = $modules->where('title', 'like', '%'.$searched.'%');
-    //         }
+    public static function getLabMarketplaceList($request)
+    {
+        try {
+            $searched = $request->search;
+            $modules = LabMarketplace::orderBy('id', 'DESC')->where('privacy', '0')->where('language', $request->language);
+            if (!empty($searched)) {
+                $modules = $modules->where('title', 'like', '%'.$searched.'%');
+            }
 
-    //         return $modules->pluck('title', 'id');
-    //     } catch (Exception $e) {
-    //         UtilityHelper::logError($e);
+            return $modules->pluck('title', 'id');
+        } catch (Exception $e) {
+            UtilityHelper::logError($e);
 
-    //         return false;
-    //     }
-    // }
+            return false;
+        }
+    }
 }
