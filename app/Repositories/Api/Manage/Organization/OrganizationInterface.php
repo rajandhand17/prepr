@@ -38,6 +38,8 @@ interface OrganizationInterface
 
     public function checkSlug($slug);
 
+    public function checkNameExistsOrNot($title);
+
     public function getOrganizationListOnlyNameAndUuid($request);
 
     public function selectPlan($organization, $request);

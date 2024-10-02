@@ -210,6 +210,19 @@ class OrganizationRepository implements OrganizationInterface
         }
     }
 
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $organizationSlug = $this->organizationService->checkNameExistsOrNot($title);
+
+            return $organizationSlug;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public function getOrganizationListOnlyNameAndUuid($request)
     {
         try {

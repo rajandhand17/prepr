@@ -290,6 +290,22 @@ class OrganizationService
         }
     }
 
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checkOrganizationName = Organization::where('title', $title)->first();
+            if ($checkOrganizationName) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     public static function getOrganizationExistBasedOnId($id)
     {
         try {
