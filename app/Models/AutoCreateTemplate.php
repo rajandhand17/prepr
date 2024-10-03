@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AutoCreateTemplate extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'auto_create_templates';
+    protected $table = 'auto_create_templates_table';
 
     protected $fillable = [
         'language',
