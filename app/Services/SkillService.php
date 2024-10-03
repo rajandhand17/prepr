@@ -9,14 +9,12 @@ use App\Services\Manage\ChallengeSkillsGroupsStackService;
 use App\Services\Manage\ResourceCollectionSkillsGroupsStackService;
 use App\Services\Manage\ResourceGroupSkillsGroupsStackService;
 use App\Services\Manage\ResourceModuleSkillsGroupsStackService;
-use App\Services\SkillGroupService;
-use App\Services\SkillStackService;
 use DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillService
 {
-    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null,$skill_group_id = null, $skill_set_id = null)
+    public static function getSkills($language = 'en', $search = null, $sortBy = null, $skill_id, $pagination = null, $skill_group_id = null, $skill_set_id = null)
     {
         try {
             if ($language == 'en') {
@@ -64,17 +62,17 @@ class SkillService
                 }
             }
             // Get skills which is only associated with skill group id
-            if(!empty($skill_group_id)) {
+            if (!empty($skill_group_id)) {
                 $skill_id = SkillGroupService::getSkillBasedOnSkillGroupsId($skill_group_id);
-                if(!empty($skill_id)) {
-                    $skill_list = $skill_list->whereIn('id',array_merge(...$skill_id));
+                if (!empty($skill_id)) {
+                    $skill_list = $skill_list->whereIn('id', array_merge(...$skill_id));
                 }
             }
             // Get skills which is only associated with skill stack id
-            if(!empty($skill_set_id)) {
+            if (!empty($skill_set_id)) {
                 $skill_id = SkillStackService::getSkillBasedOnSkillStacksId($skill_set_id);
-                if(!empty($skill_id)) {
-                    $skill_list = $skill_list->whereIn('id',array_merge(...$skill_id));
+                if (!empty($skill_id)) {
+                    $skill_list = $skill_list->whereIn('id', array_merge(...$skill_id));
                 }
             }
             //take 20 results based from the table
