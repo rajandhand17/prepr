@@ -54,3 +54,4 @@ php artisan migrate-old-data:project-history
 php artisan migrate-old-data:lab-members-from-member-management-table
 php artisan migrate:feed-chargebee-data-to-data-base
 php artisan migrate-old-data:setting
+php artisan migrate-old-data:auto-create-template
