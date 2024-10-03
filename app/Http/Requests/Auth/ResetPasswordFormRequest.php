@@ -32,7 +32,6 @@ class ResetPasswordFormRequest extends FormRequest
             }),
             'password'              => 'required|min:6',
             'password_confirmation' => 'required|same:password',
-            'otp'                   => 'required',
         ];
     }
 
@@ -55,7 +54,6 @@ class ResetPasswordFormRequest extends FormRequest
             'password.min'                   => __('responses.min_content_6'),
             'password_confirmation.required' => __('responses.password_confirmation_required_field'),
             'password_confirmation.same'     => __('responses.match_confirmed_password'),
-            'otp.required'                   => __('responses.required_otp'),
         ];
     }
 }

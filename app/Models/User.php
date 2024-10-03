@@ -617,6 +617,32 @@ class User extends Authenticatable
         }
     }
 
+    /**Verify otp */
+    public function verifyResetCode($request)
+    {
+        try {
+            /**get records of particular user by using email */
+            $user = User::where(['email' => $request->email])->first();
+            /**Matching otp is same or not */
+            if ($user->otp == $request->otp) {
+                $token = $user->createToken(env('APP_NAME') . '_verify');
+                $token->token->expires_at = now()->addMinutes(5);
+                $token->token->save();
+                $success = ['success' => true, 'token' => $token->accessToken, 'message' => __('responses.reset_otp_verified')];
+
+                return $success;
+            } else {
+                $response = ['success' => false, 'message' => __('responses.reset_otp_not_verified')];
+
+                return $response;
+            }
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
     /**check referal code exists or not */
     public function referralCode($request)
     {
@@ -677,23 +703,17 @@ class User extends Authenticatable
                 return $response;
             }
             /**checking otp same or not */
-            if ($user->otp == $request->otp) {
-                $user->password = Hash::make($request->password);
-                if ($user->save()) {
-                    $data = ['subject' => __('responses.email_subject_reset_password'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name']];
-                    $mail = SendMailHelper::sendMail($user, 'email.reset_password', $data);
-                    if ($mail) {
-                        $success = ['success' => true, 'user' => $user];
+            $user->password = Hash::make($request->password);
+            if ($user->save()) {
+                $data = ['subject' => __('responses.email_subject_reset_password'), 'first_name' => $user['first_name'], 'last_name' => $user['last_name']];
+                $mail = SendMailHelper::sendMail($user, 'email.reset_password', $data);
+                if ($mail) {
+                    $success = ['success' => true, 'user' => $user];
 
-                        return $success;
-                    }
-
-                    return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
+                    return $success;
                 }
-            } else {
-                $response = ['success' => false, 'message' => __('responses.otp_correct_required'), 'code' => 3];
 
-                return $response;
+                return ['success' => false, 'message' => __('responses.failed_email'), 'code' => 2];
             }
 
             return false;

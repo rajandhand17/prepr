@@ -26,16 +26,16 @@ class RegisterFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'register_type'          => 'required|in:organization,user,custom',
             'first_name'             => 'required|max:20|string',
             'last_name'              => 'required|string|max:20',
             'username'               => 'required|max:20|regex:/^[A-Za-z0-9_-]*$/|unique:users,username',
             'password'               => 'required_if:sso_registration,==,no|min:6|nullable',
             'password_confirmation'  => 'required_if:sso_registration,==,no|same:password|nullable',
             'email'                  => 'required|email|max:50|unique:users,email',
-            'user_type'              => 'required|in:learner,job_seeker,employee,educator,employer,mentor,enterprise,small,startup,community,ngo,government,educational,others',
+            'user_type'              => 'required_if:register_type,==,user,organization|in:learner,job_seeker,employee,educator,employer,mentor,enterprise,small,startup,community,ngo,government,educational,others',
             'phone_number'           => 'nullable|numeric|unique:users,phone_number|regex:/^\+?(\d{1,3})?\s?\(?(\d{3})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})$/',
             'country_code'           => 'nullable|numeric',
-            'register_type'          => 'required|in:organization,user',
             'organization_title'     => 'required_if:register_type,==,organization|unique:organizations,title',
             'sso_registration'       => 'required|in:yes,no',
         ];
