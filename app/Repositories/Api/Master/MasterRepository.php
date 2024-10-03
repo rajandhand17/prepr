@@ -106,7 +106,7 @@ class MasterRepository implements MasterInterface
     public function getSkills($request)
     {
         try {
-            return $this->skillService->getSkills($request->language, $request->search, $sortBy = null, $skill_id = null, $pagination = null);
+            return $this->skillService->getSkills($request->language, $request->search, $sortBy = null, $skill_id = null, $pagination = null, $request->skill_group_id, $request->skill_set_id);
         } catch (\Exception $e) {
             UtilityHelper::logError($e);
 

@@ -61,4 +61,20 @@ class SkillStackService
             return false;
         }
     }
+
+    public static function getSkillBasedOnSkillStacksId($skill_set_id)
+    {
+        try {
+            $getSkills = SkillStack::where('id', $skill_set_id)->pluck('skills');
+            if ($getSkills) {
+                return json_decode($getSkills);
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }

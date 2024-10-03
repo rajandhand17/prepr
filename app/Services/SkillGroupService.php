@@ -75,4 +75,20 @@ class SkillGroupService
             return false;
         }
     }
+
+    public static function getSkillBasedOnSkillGroupsId($skill_group_ids)
+    {
+        try {
+            $getSkills = SkillGroup::where('id', $skill_group_ids)->pluck('skills');
+            if ($getSkills) {
+                return json_decode($getSkills);
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
 }
