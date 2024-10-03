@@ -8,6 +8,7 @@ use App\Http\Middleware\CheckChallengeForOrgLevelAccess;
 use App\Http\Middleware\CheckLabForOrgLevelAccess;
 use App\Http\Middleware\CheckOrganizationForOrgLevelAccess;
 use App\Http\Middleware\CheckResourceForOrgLevelAccess;
+use App\Http\Middleware\CheckTokenValidation;
 use App\Http\Middleware\ScormUserIdentifier;
 use App\Http\Middleware\VerifyGO1Access;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -83,5 +84,6 @@ class Kernel extends HttpKernel
         'check-admin-level-access'              => CheckAdminLevelAccess::class,
         'check-resource-org-level-access'       => CheckResourceForOrgLevelAccess::class,
         'check-organization-org-level-access'   => CheckOrganizationForOrgLevelAccess::class,
+        'check-token-validation'                => CheckTokenValidation::class,
     ];
 }

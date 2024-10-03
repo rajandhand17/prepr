@@ -13,4 +13,5 @@ Route::middleware(['language', 'auth:api', 'check-organization-org-level-access'
     Route::put('/{slug}/update', [OrganizationController::class, 'update'])->middleware('permission:edit_organization');
     Route::delete('/{slug}/delete', [OrganizationController::class, 'delete'])->middleware('permission:delete_organization');
     Route::get('/check-slug/{slug}', [OrganizationController::class, 'checkSlug'])->middleware('permission:create_organization');
+    Route::get('/check-title/{title}', [OrganizationController::class, 'checkName'])->middleware('permission:create_organization');
 });
