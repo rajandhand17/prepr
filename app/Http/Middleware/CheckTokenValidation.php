@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use InfyOm\Generator\Utils\ResponseUtil;
 use Response;
 
-
 class CheckTokenValidation
 {
     /**

@@ -625,7 +625,7 @@ class User extends Authenticatable
             $user = User::where(['email' => $request->email])->first();
             /**Matching otp is same or not */
             if ($user->otp == $request->otp) {
-                $token = $user->createToken(env('APP_NAME') . '_verify');
+                $token = $user->createToken(env('APP_NAME').'_verify');
                 $token->token->expires_at = now()->addMinutes(5);
                 $token->token->save();
                 $success = ['success' => true, 'token' => $token->accessToken, 'message' => __('responses.reset_otp_verified')];

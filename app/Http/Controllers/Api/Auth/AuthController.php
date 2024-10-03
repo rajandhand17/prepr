@@ -877,7 +877,6 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
-
     public function verifyOtp(VerifyOtpRequest $request)
     {
         try {
