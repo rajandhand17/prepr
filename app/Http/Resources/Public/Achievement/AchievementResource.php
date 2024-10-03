@@ -66,6 +66,7 @@ class AchievementResource extends JsonResource
             'image'            => $this->achievement_image,
             'promo_code'       => $this->promo_code,
             'achievement_type' => $activity,
+            'level'            => $request->level,
         ];
     }
 
