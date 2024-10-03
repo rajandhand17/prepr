@@ -518,7 +518,7 @@ class User extends Authenticatable
         try {
             /**getting records of user by using email */
             $user = User::where(['email' => $request->email])->first();
-            if ($user != '') {
+            if ($user != null) {
                 /**generating otp */
                 $otp = random_int(1000, 9999);
                 $user->otp = $otp;
