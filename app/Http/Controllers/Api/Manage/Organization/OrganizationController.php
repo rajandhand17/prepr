@@ -666,11 +666,27 @@ class OrganizationController extends AppBaseController
         try {
             $organization = $this->organizationRepository->checkSlug($slug);
             if (!$organization) {
-                return $this->sendResponse([], __('responses.lab_slug_available'), 200);
+                return $this->sendResponse([], __('responses.organization_slug_available'), 200);
             }
 
             return $this->sendError(__('responses.already_exists'), 400);
         } catch(\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
+    public function checkName($title)
+    {
+        try {
+            $checkLabNameExistsOrNot = $this->organizationRepository->checkNameExistsOrNot($title);
+            if ($checkLabNameExistsOrNot) {
+                return $this->sendError(__('responses.organization_name_not_available'));
+            }
+
+            return $this->sendResponse([], __('responses.organization_name_available'), 400);
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return $this->sendError(__('responses.send_error'), 500);

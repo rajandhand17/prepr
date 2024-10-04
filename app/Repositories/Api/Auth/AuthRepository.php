@@ -98,7 +98,18 @@ class AuthRepository implements AuthInterface
     {
         try {
             return $this->user->verifyAccount($request);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function verifyResetCode($request)
+    {
+        try {
+            return $this->user->verifyResetCode($request);
+        } catch (\Exception $e) {
             UtilityHelper::logError($e);
 
             return false;

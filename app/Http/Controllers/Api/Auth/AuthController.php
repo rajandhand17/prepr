@@ -22,9 +22,9 @@ use App\Http\Requests\Public\User\UpdateFcmTokenFormRequest;
 use App\Http\Resources\Auth\LoginResource;
 use App\Http\Resources\Auth\OrganizationCustomizationResource;
 use App\Http\Resources\User\UserResource;
-use App\Models\User;
 use App\Models\UserActivity;
 use App\Repositories\Api\Auth\AuthRepository;
+use Illuminate\Support\Facades\Request;
 
 class AuthController extends AppBaseController
 {
@@ -877,6 +877,27 @@ class AuthController extends AppBaseController
      *     ),
      * )
      */
+    public function verifyOtp(VerifyOtpRequest $request)
+    {
+        try {
+            $verify = $this->authRepository->verifyResetCode($request);
+            if ($verify['success'] === true) {
+                $response = ['token' => $verify['token']];
+
+                return $this->sendResponse($response, $verify['message'], 200);
+            }
+            if ($verify['success'] === false) {
+                return $this->sendError($verify['message'], 208);
+            }
+
+            return $this->sendError(__('responses.send_error'), 500);
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return $this->sendError(__('responses.send_error'), 500);
+        }
+    }
+
     public function resetPassword(ResetPasswordFormRequest $request)
     {
         try {

@@ -193,7 +193,7 @@ class OrganizationService
             $organization->title = $request->title;
             $organization->display_name = $request->title;
             $organization->description = isset($request->description) ? $request->description : null;
-            $organization->slug = UtilityHelper::generateSlug($request->slug, $model);
+            $organization->slug = UtilityHelper::generateSlug($request->title, $model);
             $organization->cover_image = $cover_image_path;
             $organization->profile_image = $profile_image_path;
             $organization->vanity_slug = $request->vanity_slug;
@@ -279,6 +279,22 @@ class OrganizationService
         try {
             $slug = Organization::where('slug', $slug)->first();
             if ($slug) {
+                return true;
+            }
+
+            return false;
+        } catch (\Exception $e) {
+            UtilityHelper::logError($e);
+
+            return false;
+        }
+    }
+
+    public function checkNameExistsOrNot($title)
+    {
+        try {
+            $checkOrganizationName = Organization::where('title', $title)->first();
+            if ($checkOrganizationName) {
                 return true;
             }
 

@@ -16,7 +16,8 @@ Route::middleware(['language'])->group(function () {
     Route::post('/verify-account', [AuthController::class, 'verifyAccount']);
     Route::post('/verify-referral-code', [AuthController::class, 'referralCode']);
     Route::post('/forget-password', [AuthController::class, 'forgetPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('/verify-reset-code', [AuthController::class, 'verifyOtp']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware(['auth:api', 'check-token-validation']);
     Route::get('/get-otp-for-automation/{email}', [AuthController::class, 'getOTPForAutomation']);
     Route::get('/organization/{custom_url}', [AuthController::class, 'organizationCustomLoginRegistration']);
     Route::post('/update-fcm-token', [AuthController::class, 'updateFcmToken'])->middleware('auth:api');
