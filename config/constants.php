@@ -667,4 +667,18 @@ return [
         'continue-left'     => '11',
         'achievement'       => '12',
     ],
+
+    'user_achievement_type'=>[
+        '0' => 'Lab',
+        '1' => 'Lab Program',
+        '2' => 'Challenge',
+        '3' => 'Challenge Path',
+        '4' => 'Resource Group',
+        '5' => 'Appreciation Award',
+        '6' => 'Activity Award',
+        '7' => 'Skill Activity',
+        '8' => 'Imported Award',
+        '9' => 'Winner Award',
+        '10'=> 'Participation Award',
+    ],
 ];
