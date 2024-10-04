@@ -46,7 +46,7 @@ class AchievementResource extends JsonResource
 
         // Receiver name
         $issue_to = UserService::joinName($this->user->first_name, $this->user->last_name);
-            
+
         return [
             'id'               => $this->certificate_number,
             'issue_to'         => $issue_to,
@@ -66,7 +66,7 @@ class AchievementResource extends JsonResource
             'image'            => $this->achievement_image,
             'promo_code'       => $this->promo_code,
             'achievement_type' => $activity,
-            'level'            => ($this->achievement_type!=null) ? config('constants.user_achievement_type.'.$this->achievement_type) : null,
+            'level'            => ($this->achievement_type != null) ? config('constants.user_achievement_type.'.$this->achievement_type) : null,
         ];
     }
 
