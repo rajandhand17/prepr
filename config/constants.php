@@ -668,7 +668,7 @@ return [
         'achievement'       => '12',
     ],
 
-    'user_achievement_type'=> [
+    'user_achievement_type_id'=> [
         '0' => 'Lab',
         '1' => 'Lab Program',
         '2' => 'Challenge',

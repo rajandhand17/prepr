@@ -40,13 +40,10 @@ class AchievementResource extends JsonResource
 
         // Handle achievement types
         $activity = $this->getActivityType($issuerData, $associated_data, $challenge_name, $project_name);
-
         // Handle featured status
         $is_featured = $this->is_featured === '1' ? 'yes' : 'no';
-
         // Receiver name
         $issue_to = UserService::joinName($this->user->first_name, $this->user->last_name);
-
         return [
             'id'               => $this->certificate_number,
             'issue_to'         => $issue_to,
@@ -66,7 +63,7 @@ class AchievementResource extends JsonResource
             'image'            => $this->achievement_image,
             'promo_code'       => $this->promo_code,
             'achievement_type' => $activity,
-            'level'            => ($this->achievement_type != null) ? config('constants.user_achievement_type.'.$this->achievement_type) : null,
+            'level'            => ($this->achievement_type != null) ? config('constants.user_achievement_type_id.'.$this->achievement_type) : null,
         ];
     }
 
@@ -93,7 +90,7 @@ class AchievementResource extends JsonResource
      * Helper method to handle activity types.
      */
     private function getActivityType($issuerData, &$associated_data, &$challenge_name, &$project_name)
-    {
+    {   
         switch ($this->achievement_type) {
             case '0': // Lab
                 $activity = 'lab';
